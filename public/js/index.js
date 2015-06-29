@@ -1,13 +1,22 @@
-/* globals $, googleColumnChart, google, googleLineChart, googlePieChart, googleStackedColumnChart */
-google.setOnLoadCallback(drawChart);
+/* globals $, columnChart, google, lineChart, pieChart, stackedColumnChart, areaChart */
 
+$(function () {
+    "use strict";
+    if (typeof google !== 'undefined') {
+        // do google charts:
+        google.setOnLoadCallback(drawChart);
+    } else {
+        // do chart JS stuff.
+        drawChart();
+    }
+});
 
 function drawChart() {
     "use strict";
-    googleAreaChart('chart/account/frontpage', 'accounts-chart');
-    googlePieChart('chart/bill/frontpage', 'bills-chart');
-    googleStackedColumnChart('chart/budget/frontpage', 'budgets-chart');
-    googleColumnChart('chart/category/frontpage', 'categories-chart');
+    areaChart('chart/account/frontpage', 'accounts-chart');
+    pieChart('chart/bill/frontpage', 'bills-chart');
+    stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
+    columnChart('chart/category/frontpage', 'categories-chart');
 
 
     getBoxAmounts();

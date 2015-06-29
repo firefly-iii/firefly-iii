@@ -3,7 +3,6 @@
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQuery;
 use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\Transaction;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -81,20 +80,18 @@ class ReportQueryTest extends TestCase
             );
 
             $amount = 100;
-            if($i == 8) {
+            if ($i == 8) {
                 $amount = 0; // at least one "empty" journal.
             }
 
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = $amount * -1;
+            $journal->transactions[0]->amount     = $amount * -1;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = $amount;
+            $journal->transactions[1]->amount     = $amount;
             $journal->transactions[1]->save();
-
-
 
 
         }
@@ -151,17 +148,17 @@ class ReportQueryTest extends TestCase
             );
 
             $amount = 100;
-            if($i == 8) {
+            if ($i == 8) {
                 $amount = 0; // at least one "empty" journal.
             }
 
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = $amount * -1;
+            $journal->transactions[0]->amount     = $amount * -1;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = $amount;
+            $journal->transactions[1]->amount     = $amount;
             $journal->transactions[1]->save();
 
         }
@@ -271,17 +268,17 @@ class ReportQueryTest extends TestCase
             );
 
             $amount = 100;
-            if($i == 8) {
+            if ($i == 8) {
                 $amount = 0; // at least one "empty" journal.
             }
 
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = $amount;
+            $journal->transactions[0]->amount     = $amount;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = $amount * -1;
+            $journal->transactions[1]->amount     = $amount * -1;
             $journal->transactions[1]->save();
 
         }
@@ -337,17 +334,17 @@ class ReportQueryTest extends TestCase
             );
 
             $amount = 100;
-            if($i == 8) {
+            if ($i == 8) {
                 $amount = 0; // at least one "empty" journal.
             }
 
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = $amount * -1;
+            $journal->transactions[0]->amount     = $amount * -1;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = $amount;
+            $journal->transactions[1]->amount     = $amount;
             $journal->transactions[1]->save();
 
         }

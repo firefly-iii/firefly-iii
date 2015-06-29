@@ -1,5 +1,6 @@
 <?php
 
+use FireflyIII\Models\TransactionJournal;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -55,8 +56,11 @@ class TransactionJournalModelTest extends TestCase
     }
 
     /**
+     * Journal has one tag.
+     *
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
      * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::save
      * @covers FireflyIII\Models\TransactionJournal::amountByTags
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
@@ -111,6 +115,8 @@ class TransactionJournalModelTest extends TestCase
 
         $withdrawal->save();
         $deposit->save();
+        $withdrawal = TransactionJournal::find($withdrawal->id);
+        $deposit    = TransactionJournal::find($deposit->id);
 
         // amount should be 210.12:
         $this->assertEquals('210.12', $withdrawal->amount);
@@ -121,6 +127,8 @@ class TransactionJournalModelTest extends TestCase
 
 
     /**
+     * Journal has one tag.
+     *
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
      * @covers FireflyIII\Models\TransactionJournal::amountByTag
      * @covers FireflyIII\Models\TransactionJournal::amountByTags
@@ -179,14 +187,18 @@ class TransactionJournalModelTest extends TestCase
         $transfer->transactions[1]->save();
 
         $withdrawal->save();
-        $amount = $withdrawal->amount;
 
+        $withdrawal = TransactionJournal::find($withdrawal->id);
+
+        $amount = $withdrawal->amount;
 
 
         $this->assertEquals('0', $amount);
     }
 
     /**
+     * Journal has no tags.
+     *
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
      * @covers FireflyIII\Models\TransactionJournal::amountByTag
      * @covers FireflyIII\Models\TransactionJournal::amountByTags
@@ -208,6 +220,9 @@ class TransactionJournalModelTest extends TestCase
     }
 
     /**
+     *
+     * Journal has one tag.
+     *
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
      * @covers FireflyIII\Models\TransactionJournal::amountByTag
      * @covers FireflyIII\Models\TransactionJournal::amountByTags
@@ -244,13 +259,16 @@ class TransactionJournalModelTest extends TestCase
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
 
+        $withdrawal->save();
+        $withdrawal = TransactionJournal::find($withdrawal->id);
+
         $this->assertEquals('300', $withdrawal->amount);
 
 
     }
 
     /**
-     * Multiple tags, withdrawal.
+     * Journal has multiple tags, withdrawal. All default tag.
      *
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
      * @covers FireflyIII\Models\TransactionJournal::amountByTag
@@ -290,6 +308,10 @@ class TransactionJournalModelTest extends TestCase
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
         $tag2->transactionJournals()->save($withdrawal);
+
+        // grab withdrawal again to update tag count:
+        $withdrawal->save();
+        $withdrawal = TransactionJournal::find($withdrawal->id);
 
         $this->assertEquals('300', $withdrawal->amount);
 
@@ -340,6 +362,9 @@ class TransactionJournalModelTest extends TestCase
         $tag->transactionJournals()->save($transfer);
         $tag2->transactionJournals()->save($transfer);
 
+        $transfer->save();
+        $transfer = TransactionJournal::find($transfer->id);
+
         $this->assertEquals('300', $transfer->amount);
 
 
@@ -389,6 +414,9 @@ class TransactionJournalModelTest extends TestCase
         $tag->transactionJournals()->save($transfer);
         $tag2->transactionJournals()->save($transfer);
 
+        $transfer->save();
+        $transfer = TransactionJournal::find($transfer->id);
+
         $this->assertEquals('300', $transfer->amount);
 
 
@@ -415,8 +443,8 @@ class TransactionJournalModelTest extends TestCase
         $tag2->save();
 
         // make withdrawal
-        $withdrawalType = FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $withdrawalType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $withdrawal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $withdrawal->transaction_type_id = $withdrawalType->id;
         $withdrawal->save();
 
@@ -435,6 +463,9 @@ class TransactionJournalModelTest extends TestCase
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
         $tag2->transactionJournals()->save($withdrawal);
+
+        $withdrawal->save();
+        $withdrawal = TransactionJournal::find($withdrawal->id);
 
         $this->assertEquals('300', $withdrawal->amount);
 

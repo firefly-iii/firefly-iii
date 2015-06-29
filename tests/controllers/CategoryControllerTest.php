@@ -107,6 +107,7 @@ class CategoryControllerTest extends TestCase
         $collection->push($category);
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('xx');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $repository->shouldReceive('getCategories')->andReturn($collection);
@@ -129,6 +130,7 @@ class CategoryControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('xx');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
 
         $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
@@ -159,6 +161,7 @@ class CategoryControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('xx');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('formatJournal')->andReturn('xx');
 
         $this->call('GET', '/categories/show/' . $category->id);

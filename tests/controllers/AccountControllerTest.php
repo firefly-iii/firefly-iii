@@ -81,6 +81,7 @@ class AccountControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $lastActivity->data = microtime();
         Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
@@ -152,6 +153,7 @@ class AccountControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         // get edit page:
         $this->call('GET', '/accounts/edit/' . $this->account->id);
@@ -182,6 +184,7 @@ class AccountControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('');
         Amount::shouldReceive('getCurrencyCode')->andReturn('A');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
 
         // put stuff in session:
@@ -204,6 +207,7 @@ class AccountControllerTest extends TestCase
 
         // mock!
         Amount::shouldReceive('getCurrencyCode')->andReturn('A');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $repository->shouldReceive('getJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 

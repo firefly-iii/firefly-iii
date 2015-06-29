@@ -1,38 +1,38 @@
 <table class="table table-hover sortable">
     <thead>
-        <tr>
-            <th data-defaultsort="disabled">&nbsp;</th>
-            <th>{{ trans('list.name') }}</th>
-            <th>{{ trans('list.lastActivity') }}</th>
-        </tr>
+    <tr>
+        <th data-defaultsort="disabled">&nbsp;</th>
+        <th>{{ trans('list.name') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+    </tr>
     </thead>
     <tbody>
     <tr>
         <td>&nbsp;</td>
         <td><a href="{{ route('categories.noCategory') }}"><em>{{ 'without_category'|_ }}</em></a></td>
-        <td>&nbsp;</td>
+        <td class="hidden-sm hidden-xs">&nbsp;</td>
     </tr>
     {% for category in categories %}
-    <tr>
-        <td>
-            <div class="btn-group btn-group-xs">
-                <a href="{{ route('categories.edit', category.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
-                <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
-            </div>
-        </td>
-        <td>
-            <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
-        </td>
-        {% if category.lastActivity %}
-            <td data-value="{{ category.lastActivity.format('U') }}">
-                {{category.lastActivity.formatLocalized(monthAndDayFormat) }}
+        <tr>
+            <td>
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('categories.edit', category.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
             </td>
-        {% else %}
-            <td data-value="0">
-                <em>{{ 'never'|_ }}</em>
+            <td>
+                <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
             </td>
-        {% endif %}
-    </tr>
+            {% if category.lastActivity %}
+                <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('U') }}">
+                    {{ category.lastActivity.formatLocalized(monthAndDayFormat) }}
+                </td>
+            {% else %}
+                <td class="hidden-sm hidden-xs" data-value="0">
+                    <em>{{ 'never'|_ }}</em>
+                </td>
+            {% endif %}
+        </tr>
     {% endfor %}
     </tbody>
 </table>

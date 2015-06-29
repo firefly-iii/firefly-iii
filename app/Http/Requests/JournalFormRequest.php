@@ -61,7 +61,6 @@ class JournalFormRequest extends Request
             'what'               => 'required|in:withdrawal,deposit,transfer',
             'amount'             => 'numeric|required|min:0.01',
             'date'               => 'required|date',
-            'reminder_id'        => 'numeric|exists:reminders,id',
             'amount_currency_id' => 'required|exists:transaction_currencies,id',
 
         ];

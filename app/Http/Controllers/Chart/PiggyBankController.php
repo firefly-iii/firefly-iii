@@ -2,11 +2,11 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use Carbon\Carbon;
+use App;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use Grumpydictator\Gchart\GChart;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
 
@@ -18,32 +18,44 @@ use Response;
  */
 class PiggyBankController extends Controller
 {
+
+    /** @var  \FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator */
+    protected $generator;
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        // create chart generator:
+        $this->generator = App::make('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator');
+    }
+
     /**
      * Shows the piggy bank history.
      *
-     * @param GChart                       $chart
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function history(GChart $chart, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $chart->addColumn(trans('firefly.date'), 'date');
-        $chart->addColumn(trans('firefly.balance'), 'number');
-
-        /** @var Collection $set */
-        $set = $repository->getEventSummarySet($piggyBank);
-        $sum = 0;
-
-        foreach ($set as $entry) {
-            $sum += floatval($entry->sum);
-            $chart->addRow(new Carbon($entry->date), $sum);
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('piggy-history');
+        $cache->addProperty($piggyBank->id);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $chart->generate();
+        /** @var Collection $set */
+        $set  = new Collection($repository->getEventSummarySet($piggyBank));
+        $data = $this->generator->history($set);
+        $cache->store($data);
 
-        return Response::json($chart->getData());
+        return Response::json($data);
 
     }
 }

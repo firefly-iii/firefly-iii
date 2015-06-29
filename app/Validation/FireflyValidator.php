@@ -3,16 +3,15 @@
 namespace FireflyIII\Validation;
 
 use Auth;
-use Carbon\Carbon;
 use Config;
 use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Navigation;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -56,35 +55,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @return bool
-     */
-    public function validatePiggyBankReminder()
-    {
-        $array = $this->data;
-        // no reminder? dont care.
-        if (!isset($array['remind_me'])) {
-            return true;
-        }
-
-        // get or set start date & target date:
-        $startDate  = isset($array['startdate']) ? new Carbon($array['startdate']) : new Carbon;
-        $targetDate = isset($array['targetdate']) && strlen($array['targetdate']) > 0 ? new Carbon($array['targetdate']) : null;
-
-        // target date is null? reminder period is always good.
-        if ($array['remind_me'] == '1' && is_null($targetDate)) {
-            return true;
-        }
-
-        $nextReminder = Navigation::addPeriod($startDate, $array['reminder'], 0);
-        // reminder is beyond target?
-        if ($nextReminder > $targetDate) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -105,6 +75,10 @@ class FireflyValidator extends Validator
         if (isset($this->data['account_type_id'])) {
             return $this->validateByAccountTypeId($value, $parameters);
         }
+        if (isset($this->data['id'])) {
+            return $this->validateByAccountId($value);
+        }
+
 
         return false;
     }
@@ -198,6 +172,33 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    protected function validateByAccountId($value)
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($this->data['id']);
+
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
+        $value  = $this->tryDecrypt($value);
+
+        $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->name == $value) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -273,6 +274,7 @@ class FireflyValidator extends Validator
         }
         $set = $query->get(['piggy_banks.*']);
 
+        /** @var PiggyBank $entry */
         foreach ($set as $entry) {
             $fieldValue = $this->tryDecrypt($entry->name);
             if ($fieldValue == $value) {

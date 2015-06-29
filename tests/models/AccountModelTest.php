@@ -137,4 +137,26 @@ class AccountModelTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Models\Account::getNameForEditformAttribute
+     */
+    public function testGetNameForEditformAttribute()
+    {
+        // normal name is normal
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $this->assertEquals($account->name, $account->getNameForEditformAttribute());
+    }
+    /**
+     * @covers FireflyIII\Models\Account::getNameForEditformAttribute
+     */
+    public function testGetNameForEditformAttributeCash()
+    {
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        // cash name is empty
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $this->assertEquals('', $account->getNameForEditformAttribute());
+    }
+
 }

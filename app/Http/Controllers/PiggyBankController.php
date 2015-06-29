@@ -142,8 +142,6 @@ class PiggyBankController extends Controller
                       'account_id'   => $piggyBank->account_id,
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
-                      'reminder'     => $piggyBank->reminder,
-                      'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'piggy-banks');
@@ -299,12 +297,7 @@ class PiggyBankController extends Controller
      */
     public function show(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $events = $repository->getEvents($piggyBank);
-
-        /*
-         * Number of reminders:
-         */
-
+        $events   = $repository->getEvents($piggyBank);
         $subTitle = e($piggyBank->name);
 
         return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle'));
@@ -321,13 +314,13 @@ class PiggyBankController extends Controller
     {
 
         $piggyBankData = [
-            'name'         => $request->get('name'),
-            'startdate'    => new Carbon,
-            'account_id'   => intval($request->get('account_id')),
-            'targetamount' => floatval($request->get('targetamount')),
-            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
-            'reminder'     => $request->get('reminder'),
-            'remind_me'    => $request->get('remind_me'),
+            'name'          => $request->get('name'),
+            'startdate'     => new Carbon,
+            'account_id'    => intval($request->get('account_id')),
+            'targetamount'  => floatval($request->get('targetamount')),
+            'remind_me'     => false,
+            'reminder_skip' => 0,
+            'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
         $piggyBank = $repository->store($piggyBankData);
@@ -356,13 +349,13 @@ class PiggyBankController extends Controller
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {
         $piggyBankData = [
-            'name'         => $request->get('name'),
-            'startdate'    => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
-            'account_id'   => intval($request->get('account_id')),
-            'targetamount' => floatval($request->get('targetamount')),
-            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
-            'reminder'     => $request->get('reminder'),
-            'remind_me'    => $request->get('remind_me')
+            'name'          => $request->get('name'),
+            'startdate'     => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
+            'account_id'    => intval($request->get('account_id')),
+            'targetamount'  => floatval($request->get('targetamount')),
+            'remind_me'     => false,
+            'reminder_skip' => 0,
+            'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);

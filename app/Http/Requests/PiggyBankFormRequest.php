@@ -42,9 +42,6 @@ class PiggyBankFormRequest extends Request
             'amount_currency_id' => 'exists:transaction_currencies,id',
             'startdate'          => 'date',
             'targetdate'         => $targetDateRule,
-            'reminder'           => 'in:day,week,quarter,month,year',
-            'reminder_skip'      => 'integer|min:0|max:99',
-            'remind_me'          => 'boolean|piggyBankReminder',
             'order'              => 'integer|min:1',
 
         ];

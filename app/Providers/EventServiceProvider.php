@@ -5,7 +5,6 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Navigation;
@@ -53,8 +52,6 @@ class EventServiceProvider extends ServiceProvider
         $this->registerCreateEvents();
         BudgetLimit::saved(
             function (BudgetLimit $budgetLimit) {
-                Log::debug('Saved!');
-
                 $end = Navigation::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
                 $end->subDay();
                 $set = $budgetLimit->limitrepetitions()
@@ -98,15 +95,6 @@ class EventServiceProvider extends ServiceProvider
                 /** @var Transaction $transaction */
                 foreach ($journal->transactions()->get() as $transaction) {
                     $transaction->delete();
-                }
-            }
-        );
-        PiggyBank::deleting(
-            function (PiggyBank $piggyBank) {
-                $reminders = $piggyBank->reminders()->get();
-                /** @var Reminder $reminder */
-                foreach ($reminders as $reminder) {
-                    $reminder->delete();
                 }
             }
         );

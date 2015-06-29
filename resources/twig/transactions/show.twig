@@ -5,124 +5,124 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Metadata</h3>
-            </div>
-            <div class="box-body table-responsive no-padding">
-                <table class="table table-hover sortable">
-                    <tr>
-                        <td>{{ trans('list.date') }}</td>
-                        <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ trans('list.type') }}</td>
-                        <td>{{ journal.transactiontype.type|_ }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ trans('list.completed') }}</td>
-                        <td>
-                            {% if journal.completed %}
-                            <span class="text-success">{{ 'yes'|_ }}</span>
-                            {% else %}
-                            <span class="text-danger">{{ 'no'|_ }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% for budget in journal.budgets %}
-                        <tr>
-                            <td>{{ 'budget'|_ }}</td>
-                            <td><a href="{{route('budgets.show',budget.id)}}">{{ budget.name }}</a></td>
-                        </tr>
-                    {% endfor %}
-                    {% for category in journal.categories %}
-                        <tr>
-                            <td>{{ 'category'|_ }}</td>
-                            <td><a href="{{route('categories.show',category.id)}}">{{ category.name }}</a></td>
-                        </tr>
-                    {% endfor %}
-                    {% if journal.tags|length > 0 %}
-                        <tr>
-                            <td>{{ 'tags'|_ }}</td>
-                            <td>
-                                {% for tag in journal.tags %}
-
-                                    <h4 style="display: inline;"><a class="label label-success" href="{{route('tags.show',tag)}}">
-                                            {% if tag.tagMode == 'nothing' %}
-                                                <i class="fa fa-fw fa-tag"></i>
-                                            {% endif %}
-                                            {% if tag.tagMode == 'balancingAct' %}
-                                                <i class="fa fa-fw fa-refresh"></i>
-                                            {% endif %}
-                                            {% if tag.tagMode == 'advancePayment' %}
-                                                <i class="fa fa-fw fa-sort-numeric-desc"></i>
-                                            {% endif %}
-                                            {{tag.tag}}</a>
-                                    </h4>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    {% endif %}
-                </table>
-            </div>
-            <div class="box-footer">
-                <div class="pull-right">
-                    <a class="btn btn-default" href="{{route('transactions.edit',journal.id)}}">{{ 'edit'|_ }}</a>
-                    <a href="{{route('transactions.delete',journal.id)}}" class="btn btn-danger">{{ 'delete'|_ }}</a>
-                </div>
-            </div>
-        </div>
-        <!-- events, if present -->
-        {% if journal.piggyBankEvents|length > 0 %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    {{ 'piggyBanks'|_ }}
+                    <h3 class="box-title">Metadata</h3>
                 </div>
-                <div class="box-body">
-                    {% include 'list/piggy-bank-events' with {'events': journal.piggyBankEvents, 'showPiggyBank':true} %}
-                </div>
-            </div>
-        {% endif %}
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <tr>
+                            <td>{{ trans('list.date') }}</td>
+                            <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.type') }}</td>
+                            <td>{{ journal.transactiontype.type|_ }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.completed') }}</td>
+                            <td>
+                                {% if journal.completed %}
+                                    <span class="text-success">{{ 'yes'|_ }}</span>
+                                {% else %}
+                                    <span class="text-danger">{{ 'no'|_ }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% for budget in journal.budgets %}
+                            <tr>
+                                <td>{{ 'budget'|_ }}</td>
+                                <td><a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a></td>
+                            </tr>
+                        {% endfor %}
+                        {% for category in journal.categories %}
+                            <tr>
+                                <td>{{ 'category'|_ }}</td>
+                                <td><a href="{{ route('categories.show',category.id) }}">{{ category.name }}</a></td>
+                            </tr>
+                        {% endfor %}
+                        {% if journal.tags|length > 0 %}
+                            <tr>
+                                <td>{{ 'tags'|_ }}</td>
+                                <td>
+                                    {% for tag in journal.tags %}
 
-    {% for t in journal.transactions %}
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">{{ t.account.name }}</h3>
+                                        <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show',tag) }}">
+                                                {% if tag.tagMode == 'nothing' %}
+                                                    <i class="fa fa-fw fa-tag"></i>
+                                                {% endif %}
+                                                {% if tag.tagMode == 'balancingAct' %}
+                                                    <i class="fa fa-fw fa-refresh"></i>
+                                                {% endif %}
+                                                {% if tag.tagMode == 'advancePayment' %}
+                                                    <i class="fa fa-fw fa-sort-numeric-desc"></i>
+                                                {% endif %}
+                                                {{ tag.tag }}</a>
+                                        </h4>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <div class="pull-right">
+                        <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}">{{ 'edit'|_ }}</a>
+                        <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger">{{ 'delete'|_ }}</a>
+                    </div>
+                </div>
             </div>
-                <table class="table table-hover sortable">
-                    <tr>
-                        <td>{{ 'account'|_ }}</td>
-                        <td><a href="{{route('accounts.show',t.account.id)}}">{{ t.account.name }}</a></td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'account_type'|_ }}</td>
-                        <td>{{ t.account.accounttype.type|_ }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'amount'|_ }}</td>
-                        <td>{{ t|formatTransaction }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'newBalance'|_ }}</td>
-                        <td>{{ t.before|formatAmount }} &rarr; {{ t.after|formatAmount }}</td>
-                    </tr>
-                    {% if t.description %}
-                    <tr>
-                        <td>Description</td>
-                        <td>{{ t.description }}</td>
-                    </tr>
-                    {% endif %}
-                </table>
+            <!-- events, if present -->
+            {% if journal.piggyBankEvents|length > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        {{ 'piggyBanks'|_ }}
+                    </div>
+                    <div class="box-body">
+                        {% include 'list/piggy-bank-events' with {'events': journal.piggyBankEvents, 'showPiggyBank':true} %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    {% endfor %}
+        <div class="col-lg-6 col-md-6 col-sm-12">
+
+            {% for t in journal.transactions %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ t.account.name }}</h3>
+                    </div>
+                    <table class="table table-hover sortable">
+                        <tr>
+                            <td>{{ 'account'|_ }}</td>
+                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'account_type'|_ }}</td>
+                            <td>{{ t.account.accounttype.type|_ }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'amount'|_ }}</td>
+                            <td>{{ t|formatTransaction }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'newBalance'|_ }}</td>
+                            <td>{{ t.before|formatAmount }} &rarr; {{ t.after|formatAmount }}</td>
+                        </tr>
+                        {% if t.description %}
+                            <tr>
+                                <td>Description</td>
+                                <td>{{ t.description }}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
 
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript" src="js/transactions.js"></script>
+    <script type="text/javascript" src="js/transactions.js"></script>
 {% endblock %}

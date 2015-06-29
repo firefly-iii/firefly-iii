@@ -7,6 +7,8 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class PiggyBank
  *
  * @package FireflyIII\Support\Twig

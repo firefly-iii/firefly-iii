@@ -1,4 +1,4 @@
-/* globals $, googleLineChart, token, piggyBankID */
+/* globals $, lineChart, token, piggyBankID */
 
 // Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
@@ -17,8 +17,8 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    if (typeof(googleLineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
-        googleLineChart('chart/piggyBank/' + piggyBankID, 'piggy-bank-history');
+    if (typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
+        lineChart('chart/piggyBank/' + piggyBankID, 'piggy-bank-history');
     }
 
     $('#sortable tbody').sortable(

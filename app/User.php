@@ -10,6 +10,8 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 /**
  * Class User
  *
+ * @codeCoverageIgnore
+ *
  * @package FireflyIII
  * @property integer                                                                               $id
  * @property \Carbon\Carbon                                                                        $created_at
@@ -24,7 +26,6 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]             $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]           $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[]         $preferences
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Reminder[]           $reminders
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereCreatedAt($value)
@@ -121,14 +122,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function preferences()
     {
         return $this->hasMany('FireflyIII\Models\Preference');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function reminders()
-    {
-        return $this->hasMany('FireflyIII\Models\Reminder');
     }
 
     /**

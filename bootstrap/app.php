@@ -28,7 +28,6 @@ $app = new Illuminate\Foundation\Application(
 */
 
 
-
 $app->singleton(
     'Illuminate\Contracts\Http\Kernel',
     'FireflyIII\Http\Kernel'
@@ -43,8 +42,6 @@ $app->singleton(
     'Illuminate\Contracts\Debug\ExceptionHandler',
     'FireflyIII\Exceptions\Handler'
 );
-
-
 
 
 /*

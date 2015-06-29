@@ -2,13 +2,13 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use App;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
@@ -22,19 +22,30 @@ use Session;
  */
 class BudgetController extends Controller
 {
+
+    /** @var  \FireflyIII\Generator\Chart\Budget\BudgetChartGenerator */
+    protected $generator;
+
     /**
-     * @param GChart                    $chart
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        // create chart generator:
+        $this->generator = App::make('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator');
+    }
+
+    /**
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budget(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget)
+    public function budget(BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $chart->addColumn(trans('firefly.period'), 'date');
-        $chart->addColumn(trans('firefly.spent'), 'number');
 
-
+        // dates and times
         $first = $repository->getFirstBudgetLimitDate($budget);
         $range = Preferences::get('viewRange', '1M')->data;
         $last  = Session::get('end', new Carbon);
@@ -47,33 +58,23 @@ class BudgetController extends Controller
         $cache->addProperty($first);
         $cache->addProperty($last);
         $cache->addProperty('budget');
-        $cache->addProperty('budget');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        $entries = new Collection;
 
         while ($first < $last) {
             $end = Navigation::addPeriod($first, $range, 0);
             $end->subDay();
-
-            // start date for chart.
             $chartDate = clone $end;
             $chartDate->startOfMonth();
-
             $spent = $repository->spentInPeriodCorrected($budget, $first, $end);
-            $chart->addRow($chartDate, $spent);
-
+            $entries->push([$chartDate, $spent]);
             $first = Navigation::addPeriod($first, $range, 0);
-
-
         }
 
-        $chart->generate();
-
-        $data = $chart->getData();
-
-
+        $data = $this->generator->budget($entries);
         $cache->store($data);
 
         return Response::json($data);
@@ -82,14 +83,13 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      * @param LimitRepetition           $repetition
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budgetLimit(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition)
+    public function budgetLimit(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition)
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
@@ -106,11 +106,8 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $chart->addColumn(trans('firefly.day'), 'date');
-        $chart->addColumn(trans('firefly.left'), 'number');
-
-
-        $amount = $repetition->amount;
+        $entries = new Collection;
+        $amount  = $repetition->amount;
 
         while ($start <= $end) {
             /*
@@ -118,12 +115,11 @@ class BudgetController extends Controller
              */
             $sum = $repository->expensesOnDayCorrected($budget, $start);
             $amount += $sum;
-            $chart->addRow(clone $start, $amount);
+            $entries->push([clone $start, $amount]);
             $start->addDay();
         }
-        $chart->generate();
 
-        $data = $chart->getData();
+        $data = $this->generator->budgetLimit($entries);
         $cache->store($data);
 
         return Response::json($data);
@@ -133,18 +129,12 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(GChart $chart, BudgetRepositoryInterface $repository)
+    public function frontpage(BudgetRepositoryInterface $repository)
     {
-        $chart->addColumn(trans('firefly.budget'), 'string');
-        $chart->addColumn(trans('firefly.left'), 'number');
-        $chart->addColumn(trans('firefly.spent'), 'number');
-        $chart->addColumn(trans('firefly.overspent'), 'number');
-
         $budgets    = $repository->getBudgets();
         $start      = Session::get('start', Carbon::now()->startOfMonth());
         $end        = Session::get('end', Carbon::now()->endOfMonth());
@@ -160,43 +150,38 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        bcscale(2);
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
                 $expenses = $repository->spentInPeriodCorrected($budget, $start, $end, true);
-                $allEntries->push([$budget->name, 0, 0, $expenses]);
+                $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses  = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, true);
-                $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
-                $spent     = $expenses > floatval($repetition->amount) ? floatval($repetition->amount) : $expenses;
-                $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
-                $allEntries->push(
-                    [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
-                     $left,
-                     $spent,
-                     $overspent
-                    ]
-                );
+                $expenses = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, true);
+                // $left can be less than zero.
+                // $overspent can be more than zero ( = overspending)
+
+                $left      = max(bcsub($repetition->amount, $expenses), 0); // limited at zero.
+                $overspent = max(bcsub($expenses, $repetition->amount), 0); // limited at zero.
+                $name      = $budget->name;
+
+                // $spent is maxed to the repetition amount:
+                $spent = $expenses > $repetition->amount ? $repetition->amount : $expenses;
+
+
+                $allEntries->push([$name, $left, $spent, $overspent, $repetition->amount, $expenses]);
             }
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end) * -1;
-        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
+        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses, 0, 0]);
 
-        foreach ($allEntries as $entry) {
-            if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
-                $chart->addRow($entry[0], $entry[1], $entry[2], $entry[3]);
-            }
-        }
-
-        $chart->generate();
-
-        $data = $chart->getData();
+        $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
 
         return Response::json($data);
@@ -206,14 +191,13 @@ class BudgetController extends Controller
     /**
      * Show a yearly overview for a budget.
      *
-     * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
      * @param                           $year
      * @param bool                      $shared
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function year(GChart $chart, BudgetRepositoryInterface $repository, $year, $shared = false)
+    public function year(BudgetRepositoryInterface $repository, $year, $shared = false)
     {
         $start   = new Carbon($year . '-01-01');
         $end     = new Carbon($year . '-12-31');
@@ -230,17 +214,12 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        // add columns:
-        $chart->addColumn(trans('firefly.month'), 'date');
-        foreach ($budgets as $budget) {
-            $chart->addColumn($budget->name, 'number');
-        }
+        $entries = new Collection;
 
         while ($start < $end) {
             // month is the current end of the period:
             $month = clone $start;
             $month->endOfMonth();
-            // make a row:
             $row = [clone $start];
 
             // each budget, fill the row:
@@ -248,14 +227,11 @@ class BudgetController extends Controller
                 $spent = $repository->spentInPeriodCorrected($budget, $start, $month, $shared);
                 $row[] = $spent;
             }
-            $chart->addRowArray($row);
-
+            $entries->push($row);
             $start->endOfMonth()->addDay();
         }
 
-        $chart->generate();
-
-        $data = $chart->getData();
+        $data = $this->generator->year($budgets, $entries);
         $cache->store($data);
 
         return Response::json($data);

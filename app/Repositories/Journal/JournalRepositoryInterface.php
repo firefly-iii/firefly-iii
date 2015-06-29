@@ -17,13 +17,6 @@ use Illuminate\Support\Collection;
 interface JournalRepositoryInterface
 {
     /**
-     * @param int $reminderId
-     *
-     * @return bool
-     */
-    public function deactivateReminder($reminderId);
-
-    /**
      * @param TransactionJournal $journal
      *
      * @return bool

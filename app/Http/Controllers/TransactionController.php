@@ -159,19 +159,11 @@ class TransactionController extends Controller
 
         if ($journal->transactionType->type == 'Withdrawal') {
             $preFilled['account_id']      = $journal->source_account->id;
-            $preFilled['expense_account'] = $journal->destination_account->name;
+            $preFilled['expense_account'] = $journal->destination_account->name_for_editform;
         } else {
             $preFilled['account_id']      = $journal->destination_account->id;
-            $preFilled['revenue_account'] = $journal->source_account->name;
+            $preFilled['revenue_account'] = $journal->source_account->name_for_editform;
         }
-
-        if ($journal->destination_account->accountType->type == 'Cash account') {
-            $preFilled['expense_account'] = '';
-        }
-        if ($journal->source_account->accountType->type == 'Cash account') {
-            $preFilled['revenue_account'] = '';
-        }
-
 
         $preFilled['account_from_id'] = $journal->source_account->id;
         $preFilled['account_to_id']   = $journal->destination_account->id;
@@ -295,8 +287,6 @@ class TransactionController extends Controller
         if ($journal->transactionType->type == 'Transfer' && intval($request->get('piggy_bank_id')) > 0) {
             event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
         }
-
-        $repository->deactivateReminder($request->get('reminder_id'));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
         Preferences::mark();

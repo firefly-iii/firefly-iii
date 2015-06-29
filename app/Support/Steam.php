@@ -35,7 +35,7 @@ class Steam
 
         bcscale(2);
 
-        $balance     = $account->transactions()->leftJoin(
+        $balance = $account->transactions()->leftJoin(
             'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
         )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount');
 

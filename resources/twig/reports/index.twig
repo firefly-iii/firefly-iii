@@ -14,11 +14,11 @@
                 <div class="box-body">
 
                     {% for year, entries in months %}
-                    <h4><a href="{{route('reports.year',year)}}">{{ year }}</a></h4>
+                        <h4><a href="{{ route('reports.year',year) }}">{{ year }}</a></h4>
                         <ul class="list-inline">
-                        {% for month in entries %}
-                            <li><a href="{{route('reports.month',[month.year, month.month])}}">{{ month.formatted}}</a></li>
-                        {% endfor %}
+                            {% for month in entries %}
+                                <li><a href="{{ route('reports.month',[month.year, month.month]) }}">{{ month.formatted }}</a></li>
+                            {% endfor %}
                         </ul>
                     {% endfor %}
                 </div>
@@ -35,10 +35,10 @@
                 <div class="box-body">
 
                     {% for year, entries in months %}
-                        <h4><a href="{{route('reports.year',[year, 'shared'])}}">{{ year }}</a></h4>
+                        <h4><a href="{{ route('reports.year',[year, 'shared']) }}">{{ year }}</a></h4>
                         <ul class="list-inline">
                             {% for month in entries %}
-                                <li><a href="{{route('reports.month',[month.year, month.month,'shared'])}}">{{ month.formatted}}</a></li>
+                                <li><a href="{{ route('reports.month',[month.year, month.month,'shared']) }}">{{ month.formatted }}</a></li>
                             {% endfor %}
                         </ul>
                     {% endfor %}

@@ -148,6 +148,98 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::edit
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function testEditCashDestination()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+        // make complete journal:
+        $journal     = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        //$expense     = FactoryMuffin::create('FireflyIII\Models\Account'); // expense account
+        //$revenue     = FactoryMuffin::create('FireflyIII\Models\Account'); // revenue account
+        $asset       = FactoryMuffin::create('FireflyIII\Models\Account'); // asset account
+        $cash        = FactoryMuffin::create('FireflyIII\Models\Account'); // cash account
+
+        $journal->transactions[0]->account_id = $asset->id;
+        $journal->transactions[0]->amount = -300;
+        $journal->transactions[0]->save();
+
+        $journal->transactions[0]->account_id = $cash->id;
+        $journal->transactions[0]->amount = 300;
+        $journal->transactions[0]->save();
+
+        $this->be($journal->user);
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
+        // fake!
+        $repository->shouldReceive('getAccounts')->andReturn(new Collection);
+
+        $this->call('GET', '/transaction/edit/' . $journal->id);
+
+        $this->assertResponseOk();
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::edit
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function testEditDeposit()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+        // make complete journal:
+        $accountType = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        $journal      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $account      = FactoryMuffin::create('FireflyIII\Models\Account');
+        $transaction1 = FactoryMuffin::create('FireflyIII\Models\Transaction');
+        $transaction2 = FactoryMuffin::create('FireflyIII\Models\Transaction');
+
+        $accountType->type        = 'Asset account';
+        $account->account_type_id = $accountType->id;
+
+        $account->save();
+        $transaction1->account_id             = $account->id;
+        $transaction1->transaction_journal_id = $journal->id;
+        $transaction1->save();
+
+        $transaction2->account_id             = $account->id;
+        $transaction2->transaction_journal_id = $journal->id;
+        $transaction2->save();
+
+        // also add some tags:
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->transactionJournals()->save($journal);
+
+        // and a category and a budget:
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+        $category->transactionJournals()->save($journal);
+        $budget->transactionJournals()->save($journal);
+
+        // and a piggy bank event:
+        $pbEvent                         = FactoryMuffin::create('FireflyIII\Models\PiggyBankEvent');
+        $pbEvent->transaction_journal_id = $journal->id;
+        $pbEvent->save();
+
+        $this->be($journal->user);
+
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
+
+        // fake!
+        $repository->shouldReceive('getAccounts')->andReturn(new Collection);
+
+        $this->call('GET', '/transaction/edit/' . $journal->id);
+        $this->assertResponseOk();
+    }
+
+    /**
      * @covers FireflyIII\Http\Controllers\TransactionController::index
      */
     public function testIndexRevenue()
@@ -247,12 +339,57 @@ class TransactionControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('formatTransaction')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
 
 
         $this->call('GET', '/transaction/show/' . $journal->id);
         $this->assertResponseOk();
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Http\Controllers\TransactionController::store
+     */
+    public function testStore()
+    {
+        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $this->be($account->user);
+
+        $data = [
+            'what'               => 'withdrawal',
+            'description'        => 'Bla bla bla',
+            'account_id'         => $account->id,
+            'expense_account'    => 'Bla bla',
+            'amount'             => '100',
+            'amount_currency_id' => $currency->id,
+            'date'               => '2015-05-05',
+            'budget_id'          => '0',
+            'category'           => '',
+            'tags'               => 'fat-test',
+            'piggy_bank_id'      => '0',
+            '_token'             => 'replaceMe',
+        ];
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+
+        // fake!
+        $repository->shouldReceive('store')->andReturn($journal);
+
+
+        $this->call('POST', '/transactions/store/withdrawal', $data);
+
+        //$this->assertSessionHas('errors','bla');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
     }
 
     /**
@@ -270,7 +407,6 @@ class TransactionControllerTest extends TestCase
         $this->be($account->user);
 
         $data = [
-            'reminder_id'        => '',
             'what'               => 'withdrawal',
             'description'        => 'Bla bla bla',
             'account_id'         => $account->id,
@@ -291,53 +427,6 @@ class TransactionControllerTest extends TestCase
 
         // fake!
         $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('deactivateReminder')->andReturnNull();
-
-
-        $this->call('POST', '/transactions/store/withdrawal', $data);
-
-        //$this->assertSessionHas('errors','bla');
-        $this->assertResponseStatus(302);
-        $this->assertSessionHas('success');
-
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @covers FireflyIII\Http\Controllers\TransactionController::store
-     */
-    public function testStore()
-    {
-        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
-        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $this->be($account->user);
-
-        $data = [
-            'reminder_id'        => '',
-            'what'               => 'withdrawal',
-            'description'        => 'Bla bla bla',
-            'account_id'         => $account->id,
-            'expense_account'    => 'Bla bla',
-            'amount'             => '100',
-            'amount_currency_id' => $currency->id,
-            'date'               => '2015-05-05',
-            'budget_id'          => '0',
-            'category'           => '',
-            'tags'               => 'fat-test',
-            'piggy_bank_id'      => '0',
-            '_token'             => 'replaceMe',
-        ];
-
-        // mock!
-        $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
-
-        // fake!
-        $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('deactivateReminder')->andReturnNull();
 
 
         $this->call('POST', '/transactions/store/withdrawal', $data);
@@ -377,7 +466,6 @@ class TransactionControllerTest extends TestCase
         $piggy->save();
 
         $data = [
-            'reminder_id'        => '',
             'what'               => 'transfer',
             'description'        => 'Bla bla bla',
             'account_from_id'    => $account->id,
@@ -398,7 +486,6 @@ class TransactionControllerTest extends TestCase
 
         // fake!
         $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('deactivateReminder')->andReturnNull();
 
 
         $this->call('POST', '/transactions/store/withdrawal', $data);

@@ -1,17 +1,17 @@
 <div class="list-group">
     {% for journal in transactions %}
 
-    <a class="list-group-item" title="{{journal.date.format('jS M Y')}}" href="{{route('transactions.show',journal.id)}}">
+        <a class="list-group-item" title="{{ journal.date.format('jS M Y') }}" href="{{ route('transactions.show',journal.id) }}">
 
-    {{ journal|typeIcon }}
+            {{ journal|typeIcon }}
 
-    {{ journal.description }}
+            {{ journal.description }}
 
-    <span class="pull-right small">
+            <span class="pull-right small">
     {{ journal|formatJournal }}
 
     </span>
 
-    </a>
-{% endfor %}
+        </a>
+    {% endfor %}
 </div>

@@ -87,11 +87,11 @@
     </li>
     <!-- money management -->
     <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }} treeview">
-            <a href="#">
-                <i class="fa fa-euro fa-fw"></i>
-                <span>{{ 'moneyManagement'|_ }}</span>
-                <i class="fa fa-angle-left pull-right"></i>
-            </a>
+        <a href="#">
+            <i class="fa fa-euro fa-fw"></i>
+            <span>{{ 'moneyManagement'|_ }}</span>
+            <i class="fa fa-angle-left pull-right"></i>
+        </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('piggy-banks') }}">
                 <a href="{{ route('piggy-banks.index') }}">
@@ -132,7 +132,6 @@
     <!-- other options -->
 
 
-
     <li>
         <a href="{{ route('logout') }}">
             <i class="fa fa-sign-out fa-fw"></i>
@@ -140,5 +139,4 @@
         </a>
     </li>
 
-    <!-- reminders, again-->
 </ul>

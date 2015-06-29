@@ -156,6 +156,7 @@ class BudgetControllerTest extends TestCase
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         $this->call('GET', '/budgets');
 
@@ -221,6 +222,7 @@ class BudgetControllerTest extends TestCase
         $paginator = new LengthAwarePaginator(new Collection, 0, 20, 1);
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('x');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('x');
         $repository->shouldReceive('getJournals')->andReturn($paginator);
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
@@ -247,6 +249,7 @@ class BudgetControllerTest extends TestCase
         $this->be($otherBudget->user);
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('x');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('x');
         $repository->shouldReceive('getJournals')->andReturn(new Collection);
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
@@ -271,6 +274,7 @@ class BudgetControllerTest extends TestCase
         $paginator = new LengthAwarePaginator(new Collection, 0, 20, 1);
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('x');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('x');
         $repository->shouldReceive('getJournals')->andReturn($paginator);
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
@@ -411,6 +415,7 @@ class BudgetControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['budgetIncomeTotal' . $date, 1000])->andReturn($pref);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $lastActivity->data = microtime();

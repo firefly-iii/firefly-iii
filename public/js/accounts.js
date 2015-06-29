@@ -1,4 +1,4 @@
-/* global $, googleLineChart, accountID, token */
+/* global $, lineChart, accountID, token */
 
 
 // Return a helper with preserved width of cells
@@ -12,8 +12,8 @@ var fixHelper = function (e, ui) {
 
 $(function () {
     "use strict";
-    if (typeof(googleLineChart) === "function" && typeof accountID !== 'undefined') {
-        googleLineChart('chart/account/' + accountID, 'overview-chart');
+    if (typeof(lineChart) === "function" && typeof accountID !== 'undefined') {
+        lineChart('chart/account/' + accountID, 'overview-chart');
     }
 
     // sortable!

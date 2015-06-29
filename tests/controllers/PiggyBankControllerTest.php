@@ -58,6 +58,7 @@ class PiggyBankControllerTest extends TestCase
         Amount::shouldReceive('format')->andReturn('XXxx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/piggy-banks/add/' . $piggyBank->id);
         $this->assertResponseOk();
@@ -208,6 +209,7 @@ class PiggyBankControllerTest extends TestCase
         $accounts->shouldReceive('leftOnAccount')->andReturn(12);
         Amount::shouldReceive('format')->andReturn('123');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
 
         $this->call('GET', '/piggy-banks');
@@ -254,6 +256,7 @@ class PiggyBankControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('something');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe']);
         $this->assertResponseStatus(302);
@@ -273,6 +276,7 @@ class PiggyBankControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('something');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe', 'amount' => '10000']);
         $this->assertResponseStatus(302);
@@ -363,7 +367,6 @@ class PiggyBankControllerTest extends TestCase
             'account_id'   => $piggyBank->account_id,
             'targetamount' => 100,
             'targetdate'   => '',
-            'reminder'     => 'month',
             '_token'       => 'replaceMe'
         ];
 
@@ -388,7 +391,6 @@ class PiggyBankControllerTest extends TestCase
             'account_id'     => $piggyBank->account_id,
             'targetamount'   => 100,
             'targetdate'     => '',
-            'reminder'       => 'month',
             'create_another' => 1,
             '_token'         => 'replaceMe'
         ];
@@ -414,7 +416,6 @@ class PiggyBankControllerTest extends TestCase
             'account_id'   => $piggyBank->account_id,
             'targetamount' => 200,
             'targetdate'   => '',
-            'reminder'     => 'month',
             '_token'       => 'replaceMe'
         ];
 
@@ -440,7 +441,6 @@ class PiggyBankControllerTest extends TestCase
             'targetamount'   => 200,
             'targetdate'     => '',
             'return_to_edit' => 1,
-            'reminder'       => 'month',
             '_token'         => 'replaceMe'
         ];
 

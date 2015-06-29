@@ -7,7 +7,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -285,25 +284,6 @@ Breadcrumbs::register(
 
 }
 );
-
-// reminders
-Breadcrumbs::register(
-    'reminders.index', function (Generator $breadcrumbs) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.reminders'), route('reminders.index'));
-
-}
-);
-
-// reminders
-Breadcrumbs::register(
-    'reminders.show', function (Generator $breadcrumbs, Reminder $reminder) {
-    $breadcrumbs->parent('reminders.index');
-    $breadcrumbs->push(trans('breadcrumbs.reminder', ['id' => e($reminder->id)]), route('reminders.show', [$reminder->id]));
-
-}
-);
-
 
 // reports
 Breadcrumbs::register(

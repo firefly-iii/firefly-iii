@@ -5,7 +5,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -82,19 +81,6 @@ Route::bind(
 );
 
 Route::bind(
-    'reminder', function ($value) {
-    if (Auth::check()) {
-        $object = Reminder::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
     'limitrepetition', function ($value) {
     if (Auth::check()) {
         $object = LimitRepetition::where('limit_repetitions.id', $value)
@@ -140,23 +126,6 @@ Route::bind(
 }
 );
 
-/** @noinspection PhpUnusedParameterInspection */
-Route::bind(
-    'reminder', function ($value) {
-    if (Auth::check()) {
-        /** @var \FireflyIII\Models\Reminder $object */
-        $object = Reminder::find($value);
-        if ($object) {
-            if ($object->remindersable->account->user_id == Auth::user()->id) {
-                return $object;
-            }
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
 Route::bind(
     'tag', function ($value) {
     if (Auth::check()) {
@@ -185,7 +154,7 @@ Route::controllers(
 
 
 Route::group(
-    ['middleware' => ['auth', 'range', 'reminders']], function () {
+    ['middleware' => ['auth', 'range']], function () {
 
     /**
      * Home Controller
@@ -354,14 +323,6 @@ Route::group(
     Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'profile.delete-account']);
     Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account-post']);
     Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
-
-    /**
-     * Reminder Controller
-     */
-    Route::get('/reminders', ['uses' => 'ReminderController@index', 'as' => 'reminders.index']);
-    Route::get('/reminder/dismiss/{reminder}', ['uses' => 'ReminderController@dismiss', 'as' => 'reminders.dismiss']);
-    Route::get('/reminder/act/{reminder}', ['uses' => 'ReminderController@act', 'as' => 'reminders.act']);
-    Route::get('/reminder/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
 
     /**
      * Report Controller

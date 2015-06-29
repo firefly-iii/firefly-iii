@@ -88,28 +88,22 @@ class ConnectJournalToPiggyBankTest extends TestCase
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @covers FireflyIII\Handlers\Events\ConnectJournalToPiggyBank::handle
      */
     public function testWithRepetition()
     {
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-
         $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // deposit
 
-        $journal               = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $account1              = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account2              = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account1->user_id     = $user->id;
-        $account2->user_id     = $user->id;
-        $piggyBank->account_id = $account1->id;
-        $account1->save();
-        $account2->save();
-        $piggyBank->save();
+        $journal   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
 
+        $journal->user_id = $user->id;
+        $journal->save();
+
+        // create piggy bank event to continue handler:
         $start = clone $journal->date;
         $end   = clone $journal->date;
         $start->subDay();
@@ -124,59 +118,22 @@ class ConnectJournalToPiggyBankTest extends TestCase
             ]
         );
 
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($transaction->amount < 0) {
+                $piggyBank->account_id = $transaction->account_id;
+                $account               = $transaction->account;
+                $account->user_id      = $user->id;
+                $account->save();
+                $piggyBank->account_id = $account->id;
+                $piggyBank->save();
+            }
+        }
         $event  = new JournalCreated($journal, $piggyBank->id);
         $class  = new ConnectJournalToPiggyBank();
         $result = $class->handle($event);
 
-
         $this->assertTrue($result);
-        $this->assertCount(1, $piggyBank->piggyBankEvents()->get());
     }
-
-    /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @covers FireflyIII\Handlers\Events\ConnectJournalToPiggyBank::handle
-     */
-    public function testWithRepetitionReversed()
-    {
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-
-        $journal               = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $account1              = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account2              = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account1->user_id     = $user->id;
-        $account2->user_id     = $user->id;
-        $piggyBank->account_id = $account1->id;
-        $account1->save();
-        $account2->save();
-        $piggyBank->save();
-
-        $start = clone $journal->date;
-        $end   = clone $journal->date;
-        $start->subDay();
-        $end->addDay();
-
-        PiggyBankRepetition::create(
-            [
-                'piggy_bank_id' => $piggyBank->id,
-                'startdate'     => $start->format('Y-m-d'),
-                'targetdate'    => $end->format('Y-m-d'),
-                'currentamount' => 0,
-            ]
-        );
-
-        $event  = new JournalCreated($journal, $piggyBank->id);
-        $class  = new ConnectJournalToPiggyBank();
-        $result = $class->handle($event);
-
-
-        $this->assertTrue($result);
-        $this->assertCount(1, $piggyBank->piggyBankEvents()->get());
-    }
-
 }

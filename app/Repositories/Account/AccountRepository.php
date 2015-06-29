@@ -225,6 +225,7 @@ class AccountRepository implements AccountRepositoryInterface
         $accountIds = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']);
         $accounts   = new Collection;
 
+        /** @var PiggyBank $id */
         foreach ($accountIds as $id) {
             $ids[] = intval($id->account_id);
         }
@@ -432,7 +433,6 @@ class AccountRepository implements AccountRepositoryInterface
         $account->virtual_balance = $data['virtualBalance'];
         $account->save();
 
-        // update meta data:
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
 

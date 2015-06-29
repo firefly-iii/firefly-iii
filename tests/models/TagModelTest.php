@@ -1,6 +1,7 @@
 <?php
 
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -72,6 +73,23 @@ class TagModelTest extends TestCase
         $result = Tag::firstOrCreateEncrypted($search);
 
         $this->assertNotEquals($tag->id, $result->id);
+    }
+
+    /**
+     * @covers FireflyIII\Models\Tag::save
+     */
+    public function testSave()
+    {
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+        // connect some transaction journals to the tag:
+        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->tags()->save($tag);
+        $tag->save();
+        $journal = TransactionJournal::find($journal->id);
+
+        $this->assertEquals(1, $journal->tag_count);
+
+
     }
 
 }

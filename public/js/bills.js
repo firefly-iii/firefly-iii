@@ -1,9 +1,9 @@
-/* global googleComboChart, billID */
+/* global comboChart, billID */
 
-$(document).ready(function () {
-                      "use strict";
-                      if (typeof(googleComboChart) === 'function' && typeof(billID) !== 'undefined') {
-                          googleComboChart('chart/bill/' + billID, 'bill-overview');
-                      }
-                  }
+$(function () {
+      "use strict";
+      if (typeof(comboChart) === 'function' && typeof(billID) !== 'undefined') {
+          comboChart('chart/bill/' + billID, 'bill-overview');
+      }
+  }
 );

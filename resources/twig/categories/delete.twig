@@ -16,9 +16,11 @@
                     <p class="text-danger">
                         {{ trans('form.permDeleteWarning') }}
                     </p>
+
                     <p>
                         {{ trans('form.category_areYouSure', {'name': category.name}) }}
                     </p>
+
                     <p>
                         {% if category.transactionjournals|length > 0 %}
                             {{ Lang.choice('form.category_keep_transactions', category.transactionjournals|length, {count: category.transactionjournals|length}) }}

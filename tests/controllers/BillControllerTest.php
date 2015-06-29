@@ -52,6 +52,7 @@ class BillControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/bills/create');
         $this->assertViewHas('subTitle', 'Create new bill');
@@ -101,6 +102,7 @@ class BillControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/bills/edit/' . $bill->id);
         $this->assertViewHas('subTitle', 'Edit bill "' . e($bill->name) . '"');
@@ -120,6 +122,7 @@ class BillControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('XX');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
         $repository->shouldReceive('getBills')->once()->andReturn($collection);
@@ -190,6 +193,7 @@ class BillControllerTest extends TestCase
         Amount::shouldReceive('format')->andReturn('XX');
         Amount::shouldReceive('formatJournal')->andReturn('XX');
         Amount::shouldReceive('getCurrencyCode')->andReturn('XX');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
 
         $this->call('GET', '/bills/show/' . $bill->id);

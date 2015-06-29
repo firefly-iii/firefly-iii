@@ -1,6 +1,5 @@
 <?php
 use Carbon\Carbon;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepository;
@@ -35,21 +34,6 @@ class JournalRepositoryTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    /**
-     * @covers FireflyIII\Repositories\Journal\JournalRepository::deactivateReminder
-     */
-    public function testDeactivateReminder()
-    {
-        $reminder         = FactoryMuffin::create('FireflyIII\Models\Reminder');
-        $reminder->active = 1;
-        $reminder->save();
-        $this->be($reminder->user);
-
-        $this->object->deactivateReminder($reminder->id);
-
-        $this->assertEquals(1, Reminder::where('id', $reminder->id)->where('active', 0)->count());
     }
 
     /**
@@ -96,20 +80,21 @@ class JournalRepositoryTest extends TestCase
         $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
 
         // create five journals with incrementing dates:
-        $today = new Carbon('2015-01-01');
-        for($i=0;$i<5;$i++) {
+        $today   = new Carbon('2015-01-01');
+        $journal = null;
+        for ($i = 0; $i < 5; $i++) {
             // create journal:
-            $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            $journal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
             $journal->transaction_type_id = $withdrawal;
-            $journal->date = $today;
+            $journal->date                = $today;
             $journal->save();
 
             // update transactions:
-            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->amount     = -100;
             $journal->transactions[0]->account_id = $asset->id;
             $journal->transactions[0]->save();
 
-            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->amount     = 100;
             $journal->transactions[1]->account_id = $expense->id;
             $journal->transactions[1]->save();
 
@@ -118,7 +103,7 @@ class JournalRepositoryTest extends TestCase
         }
 
 
-        $before  = $this->object->getAmountBefore($journal, $journal->transactions[1]);
+        $before = $this->object->getAmountBefore($journal, $journal->transactions[1]);
         // five transactions, we check the last one, so amount should be 400.
         $this->assertEquals(400, $before);
     }

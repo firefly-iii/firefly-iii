@@ -73,6 +73,11 @@ class HomeControllerTest extends TestCase
         $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
 
+        // create at least one tag:
+        $tag     = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->tags()->save($tag);
+
         $this->call('GET', '/flush');
         $this->assertResponseStatus(302);
 
@@ -114,6 +119,7 @@ class HomeControllerTest extends TestCase
 
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('EUR');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('xxx');
         Amount::shouldReceive('formatJournal')->with($journal)->andReturn('xxx');
 

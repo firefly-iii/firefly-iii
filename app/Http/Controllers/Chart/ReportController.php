@@ -3,10 +3,12 @@
 namespace FireflyIII\Http\Controllers\Chart;
 
 
+use App;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Controllers\Controller;
-use Grumpydictator\Gchart\GChart;
+use FireflyIII\Support\CacheProperties;
+use Illuminate\Support\Collection;
 use Response;
 
 /**
@@ -17,85 +19,108 @@ use Response;
 class ReportController extends Controller
 {
 
+    /** @var  \FireflyIII\Generator\Chart\Report\ReportChartGenerator */
+    protected $generator;
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        // create chart generator:
+        $this->generator = App::make('FireflyIII\Generator\Chart\Report\ReportChartGenerator');
+    }
+
 
     /**
      * Summarizes all income and expenses, per month, for a given year.
      *
-     * @param GChart               $chart
      * @param ReportQueryInterface $query
      * @param                      $year
      * @param bool                 $shared
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInOut(GChart $chart, ReportQueryInterface $query, $year, $shared = false)
+    public function yearInOut(ReportQueryInterface $query, $year, $shared = false)
     {
         // get start and end of year
         $start  = new Carbon($year . '-01-01');
         $end    = new Carbon($year . '-12-31');
         $shared = $shared == 'shared' ? true : false;
 
-        $chart->addColumn(trans('firefly.month'), 'date');
-        $chart->addColumn(trans('firefly.income'), 'number');
-        $chart->addColumn(trans('firefly.expenses'), 'number');
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('yearInOut');
+        $cache->addProperty($year);
+        $cache->addProperty($shared);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
 
+        $entries = new Collection;
         while ($start < $end) {
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $incomeSum  = floatval($query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount'));
-            $expenseSum = floatval($query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount'));
+            $incomeSum  = $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount');
+            $expenseSum = $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount');
 
-            $chart->addRow(clone $start, $incomeSum, $expenseSum);
+            $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addMonth();
         }
-        $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $this->generator->yearInOut($entries);
+        $cache->store($data);
+
+        return Response::json($data);
 
     }
 
     /**
      * Summarizes all income and expenses for a given year. Gives a total and an average.
      *
-     * @param GChart               $chart
      * @param ReportQueryInterface $query
      * @param                      $year
      * @param bool                 $shared
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInOutSummarized(GChart $chart, ReportQueryInterface $query, $year, $shared = false)
+    public function yearInOutSummarized(ReportQueryInterface $query, $year, $shared = false)
     {
+
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('yearInOutSummarized');
+        $cache->addProperty($year);
+        $cache->addProperty($shared);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
         $start   = new Carbon($year . '-01-01');
         $end     = new Carbon($year . '-12-31');
         $shared  = $shared == 'shared' ? true : false;
-        $income  = 0;
-        $expense = 0;
+        $income  = '0';
+        $expense = '0';
         $count   = 0;
 
-        $chart->addColumn(trans('firefly.summary'), 'string');
-        $chart->addColumn(trans('firefly.income'), 'number');
-        $chart->addColumn(trans('firefly.expenses'), 'number');
+        bcscale(2);
 
         while ($start < $end) {
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $income += floatval($query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount'));
-            $expense += floatval($query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount'));
+            $income  = bcadd($income, $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount'));
+            $expense = bcadd($expense, $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount'));
             $count++;
             $start->addMonth();
         }
 
-        // add total + average:
-        $chart->addRow(trans('firefly.sum'), $income, $expense);
-        $count = $count > 0 ? $count : 1;
-        $chart->addRow(trans('firefly.average'), ($income / $count), ($expense / $count));
+        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
+        $cache->store($data);
 
-        $chart->generate();
-
-        return Response::json($chart->getData());
+        return Response::json($data);
 
     }
 }

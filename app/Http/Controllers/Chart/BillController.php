@@ -2,14 +2,13 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use App;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Response;
 use Session;
@@ -22,60 +21,30 @@ use Steam;
  */
 class BillController extends Controller
 {
+
+    /** @var  \FireflyIII\Generator\Chart\Bill\BillChartGenerator */
+    protected $generator;
+
     /**
-     * Shows the overview for a bill. The min/max amount and matched journals.
-     *
-     * @param GChart                  $chart
-     * @param BillRepositoryInterface $repository
-     * @param Bill                    $bill
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @codeCoverageIgnore
      */
-    public function single(GChart $chart, BillRepositoryInterface $repository, Bill $bill)
+    public function __construct()
     {
-
-        $chart->addColumn(trans('firefly.date'), 'date');
-        $chart->addColumn(trans('firefly.maxAmount'), 'number');
-        $chart->addColumn(trans('firefly.minAmount'), 'number');
-        $chart->addColumn(trans('firefly.billEntry'), 'number');
-
-        $cache = new CacheProperties;
-        $cache->addProperty('single');
-        $cache->addProperty('bill');
-        $cache->addProperty($bill->id);
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        // get first transaction or today for start:
-        $results = $repository->getJournals($bill);
-        /** @var TransactionJournal $result */
-        foreach ($results as $result) {
-            $chart->addRow(clone $result->date, floatval($bill->amount_max), floatval($bill->amount_min), floatval($result->amount));
-        }
-
-        $chart->generate();
-
-        $data = $chart->getData();
-        $cache->store($data);
-
-        return Response::json($data);
+        parent::__construct();
+        // create chart generator:
+        $this->generator = App::make('FireflyIII\Generator\Chart\Bill\BillChartGenerator');
     }
 
     /**
      * Shows all bills and whether or not theyve been paid this month (pie chart).
-     *
-     * @param GChart                     $chart
      *
      * @param BillRepositoryInterface    $repository
      * @param AccountRepositoryInterface $accounts
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(GChart $chart, BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
+    public function frontpage(BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
     {
-        $chart->addColumn(trans('firefly.name'), 'string');
-        $chart->addColumn(trans('firefly.amount'), 'number');
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -88,17 +57,13 @@ class BillController extends Controller
         $cache->addProperty('bills');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $bills  = $repository->getActiveBills();
         $paid   = new Collection; // journals.
         $unpaid = new Collection; // bills
-        // loop paid and create single entry:
-        $paidDescriptions   = [];
-        $paidAmount         = 0;
-        $unpaidDescriptions = [];
-        $unpaidAmount       = 0;
+
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -136,30 +101,35 @@ class BillController extends Controller
             }
         }
 
+        // build chart:
+        $data = $this->generator->frontpage($paid, $unpaid);
+        $cache->store($data);
 
-        /** @var TransactionJournal $entry */
-        foreach ($paid as $entry) {
+        return Response::json($data);
+    }
 
-            $paidDescriptions[] = $entry->description;
-            $paidAmount += floatval($entry->amount);
+    /**
+     * Shows the overview for a bill. The min/max amount and matched journals.
+     *
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function single(BillRepositoryInterface $repository, Bill $bill)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('single');
+        $cache->addProperty('bill');
+        $cache->addProperty($bill->id);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        // loop unpaid:
-        /** @var Bill $entry */
-        foreach ($unpaid as $entry) {
-            $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-            $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
-            $unpaidDescriptions[] = $description;
-            $unpaidAmount += $amount;
-            unset($amount, $description);
-        }
+        // get first transaction or today for start:
+        $results = $repository->getJournals($bill);
 
-        $chart->addRow(trans('firefly.unpaid') . ': ' . join(', ', $unpaidDescriptions), $unpaidAmount);
-        $chart->addRow(trans('firefly.paid') . ': ' . join(', ', $paidDescriptions), $paidAmount);
-
-        $chart->generate();
-
-        $data = $chart->getData();
+        $data = $this->generator->single($bill, $results);
         $cache->store($data);
 
         return Response::json($data);

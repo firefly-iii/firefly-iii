@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'version' => '3.4.5',
+    'chart'                    => 'chartjs', // or 'chartjs'
+    'version'                  => '3.4.6',
     'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'piggy_bank_periods'       => [
@@ -57,7 +58,7 @@ return [
             'asset'   => 'Asset accounts',
             'expense' => 'Expense accounts',
             'revenue' => 'Revenue accounts',
-            'cash' => 'Cash accounts',
+            'cash'    => 'Cash accounts',
         ],
     'subIconsByIdentifier'     =>
         [
