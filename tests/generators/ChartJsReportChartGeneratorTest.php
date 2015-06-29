@@ -67,13 +67,6 @@ class ChartJsReportChartGeneratorTest extends TestCase
      */
     public function testYearInOutSummarized()
     {
-        $preference       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $preference->data = 'en';
-        $preference->save();
-
-        // mock language preference:
-        Preferences::shouldReceive('get')->withArgs(['language', 'en'])->andReturn($preference);
-
         // make set:
         $income  = 2400;
         $expense = 1200;

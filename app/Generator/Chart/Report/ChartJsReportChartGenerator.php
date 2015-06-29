@@ -60,10 +60,6 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
     public function yearInOutSummarized($income, $expense, $count)
     {
 
-        // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.month.' . $language);
-
         $data                          = [
             'count'    => 2,
             'labels'   => [],
