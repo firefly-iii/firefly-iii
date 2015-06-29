@@ -12,6 +12,8 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class Journal
  *
  * @package FireflyIII\Support\Twig

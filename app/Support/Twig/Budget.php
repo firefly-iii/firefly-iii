@@ -9,6 +9,7 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
+ * @codeCoverageIgnore
  * Class Budget
  *
  * @package FireflyIII\Support\Twig

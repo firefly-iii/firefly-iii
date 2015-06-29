@@ -6,6 +6,8 @@ use Twig_Extension;
 use Twig_SimpleFilter;
 
 /**
+ * @codeCoverageIgnore
+ * 
  * Class Budget
  *
  * @package FireflyIII\Support\Twig
