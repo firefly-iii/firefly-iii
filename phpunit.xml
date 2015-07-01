@@ -20,10 +20,11 @@
         </whitelist>
     </filter>
 
-    <!-- code coverage -->
+    <!-- code coverage
     <logging>
         <log type="coverage-clover" target="./build/logs/clover.xml" charset="UTF-8" />
     </logging>
+     -->
 
     <php>
         <env name="APP_ENV" value="testing"/>

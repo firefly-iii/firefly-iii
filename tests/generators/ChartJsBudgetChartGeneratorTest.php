@@ -41,10 +41,17 @@ class ChartJsBudgetChartGeneratorTest extends TestCase
      */
     public function testBudget()
     {
+        $preference       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $preference->data = 'en';
+        $preference->save();
+
+        // mock language preference:
+        Preferences::shouldReceive('get')->withArgs(['language', 'en'])->andReturn($preference);
+
         // make a collection with some amounts in them.
         $collection = new Collection;
         for ($i = 0; $i < 5; $i++) {
-            $collection->push([null, 100]);
+            $collection->push([new Carbon, 100]);
         }
 
         $data = $this->object->budget($collection);
