@@ -87,6 +87,7 @@ var defaultLineOptions = {
     scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
 };
 
 var defaultColumnOptions = {
