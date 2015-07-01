@@ -44,6 +44,7 @@ class TestDataSeeder extends Seeder
         $this->createAssetAccounts();
         $this->createExpenseAccounts();
         $this->createRevenueAccounts();
+        $this->createBills();
 
         // dates:
         $start = Carbon::now()->subyear()->startOfMonth();
@@ -171,6 +172,38 @@ class TestDataSeeder extends Seeder
                 ]
             );
         }
+    }
+
+    public function createBills()
+    {
+        Bill::create(
+            [
+                'name'        => 'Rent',
+                'match'       => 'rent,land,lord',
+                'amount_min'  => 795,
+                'amount_max'  => 805,
+                'user_id'     => $this->user->id,
+                'date'        => '2015-01-01',
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+        Bill::create(
+            [
+                'name'        => 'Health insurance',
+                'match'       => 'zilveren,kruis,health',
+                'amount_min'  => 120,
+                'amount_max'  => 140,
+                'user_id'     => $this->user->id,
+                'date'        => '2015-01-01',
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
     }
 
     /**
@@ -499,7 +532,7 @@ class TestDataSeeder extends Seeder
             $toAccount   = $this->findAccount('Cafe Central');
             $category    = Category::firstOrCreateEncrypted(['name' => 'Drinks', 'user_id' => $this->user->id]);
             $budget      = Budget::firstOrCreateEncrypted(['name' => 'Going out', 'user_id' => $this->user->id]);
-            $amount = rand(1500, 3600) / 100;
+            $amount      = rand(1500, 3600) / 100;
             $journal     = TransactionJournal::create(
                 [
                     'user_id'                 => $this->user->id,

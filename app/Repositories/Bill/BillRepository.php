@@ -93,6 +93,12 @@ class BillRepository implements BillRepositoryInterface
         /** @var Collection $set */
         $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
 
+        $set = $set->sortBy(
+            function (Bill $bill) {
+                return strtolower($bill->name);
+            }
+        );
+
         return $set;
     }
 
