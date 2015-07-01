@@ -289,6 +289,7 @@ class TestDataSeeder extends Seeder
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => 1,
                 'transaction_currency_id' => 1,
+                'bill_id'                 => 1,
                 'description'             => $description,
                 'completed'               => 1,
                 'date'                    => $date,

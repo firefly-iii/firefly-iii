@@ -6,6 +6,7 @@ use App;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -57,7 +58,7 @@ class BillController extends Controller
         $cache->addProperty('bills');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $bills  = $repository->getActiveBills();
@@ -128,6 +129,13 @@ class BillController extends Controller
 
         // get first transaction or today for start:
         $results = $repository->getJournals($bill);
+
+        // resort:
+        $results = $results->sortBy(
+            function (TransactionJournal $journal) {
+                return $journal->date->format('U');
+            }
+        );
 
         $data = $this->generator->single($bill, $results);
         $cache->store($data);
