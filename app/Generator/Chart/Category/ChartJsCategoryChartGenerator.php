@@ -17,11 +17,17 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
 
     /**
      * @param Collection $entries
+     * @param string $dateFormat
      *
      * @return array
      */
-    public function all(Collection $entries)
+    public function all(Collection $entries, $dateFormat = 'month')
     {
+
+        // language:
+        $language = Preferences::get('language', 'en')->data;
+        $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
+
         $data = [
             'count'    => 1,
             'labels'   => [],
@@ -34,7 +40,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         ];
 
         foreach ($entries as $entry) {
-            $data['labels'][]              = trans('firefly.spent');
+            $data['labels'][]              = $entry[0]->formatLocalized($format);
             $data['datasets'][0]['data'][] = round($entry[1], 2);
         }
 
@@ -76,7 +82,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
      */
     public function month(Collection $entries)
     {
-        return $this->all($entries);
+        return $this->all($entries, 'monthAndDay');
 
     }
 
