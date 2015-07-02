@@ -39,7 +39,8 @@
         "mockery/mockery": "0.9.*",
         "league/factory-muffin": "~2.1",
         "codeclimate/php-test-reporter": "^0.1.2",
-        "fzaninotto/faker": "^1.4"
+        "fzaninotto/faker": "^1.4",
+        "codeception/codeception": "*"
 
 
 
