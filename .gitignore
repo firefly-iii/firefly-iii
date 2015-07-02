@@ -31,3 +31,5 @@ addNewLines.php
 .phpstorm.meta.php
 .env.backup
 .env.local
+
+tests/_output/*
