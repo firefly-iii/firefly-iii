@@ -33,40 +33,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         parent::setUp();
 
-        // if the database copy does not exist, call migrate.
-        $copy     = __DIR__ . '/../storage/database/testing-copy.db';
-        $original = __DIR__ . '/../storage/database/testing.db';
-
-        FactoryMuffin::loadFactories(__DIR__ . '/factories');
-
-        if (!file_exists($copy)) {
-            touch($original);
-            Artisan::call('migrate');
-
-
-            // create EUR currency
-            /** @var TransactionCurrency $currency */
-            $currency       = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-            $currency->code = 'EUR';
-            $currency->save();
-            copy($original, $copy);
-        } else {
-
-            if (file_exists($copy)) {
-                copy($copy, $original);
-            }
-        }
-        // if the database copy does exists, copy back as original.
-
-        $this->session(
-            [
-                'start' => Carbon::now()->startOfMonth(),
-                'end'   => Carbon::now()->endOfMonth(),
-                'first' => Carbon::now()->startOfYear()
-            ]
-        );
-
-
     }
 
     /**
@@ -86,10 +52,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function tearDown()
     {
         parent::tearDown();
-
-        // delete copy original.
-        //$original = __DIR__.'/../storage/database/testing.db';
-        //unlink($original);
 
     }
 
