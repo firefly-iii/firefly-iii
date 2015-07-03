@@ -20,7 +20,14 @@ return [
     'search_results_for'            => 'Zoekresultaten voor ":query"',
 
     // csv import:
-    'csv_import'                    => 'Import CSV file',
+    'csv_import'                    => 'Importeer CSV-bestand',
+    'csv'                           => 'CSV',
+    'csv_index_text'                => 'Hier komt uitleg.',
+    'csv_upload_form'               => 'Upload formulier',
+    'upload_csv_file'               => 'Upload CSV-bestand',
+    'csv_header_help'               => 'Check dit als bla bla',
+    'csv_row'                       => 'rij',
+    'upload_not_writeable'          => 'Cannot write to the path mentioned here. Cannot upload',
 
     // create new stuff:
     'create_new_withdrawal'         => 'Nieuwe uitgave',

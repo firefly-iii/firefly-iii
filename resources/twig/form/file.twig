@@ -2,11 +2,7 @@
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
 
     <div class="col-sm-8">
-        <div class="checkbox">
-            <label>
-                {{ Form.checkbox(name, value, options.checked, options) }}
-            </label>
-        </div>
+        {{ Form.file(name, options) }}
         {% include 'form/help.twig' %}
         {% include 'form/feedback.twig' %}
     </div>

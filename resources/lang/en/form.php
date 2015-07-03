@@ -45,6 +45,8 @@ return [
     'under'                       => 'Under',
     'symbol'                      => 'Symbol',
     'code'                        => 'Code',
+    'csv'                         => 'CSV file',
+    'has_headers'                 => 'Headers',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',

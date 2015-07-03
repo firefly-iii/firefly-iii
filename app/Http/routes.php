@@ -224,6 +224,7 @@ Route::group(
      * CSV controller
      */
     Route::get('/csv', ['uses' => 'CsvController@index', 'as' => 'csv.index']);
+    Route::post('/csv/upload', ['uses' => 'CsvController@upload', 'as' => 'csv.upload']);
 
     /**
      * Currency Controller

@@ -21,6 +21,13 @@ return [
 
     // csv import:
     'csv_import'                    => 'Import CSV file',
+    'csv'                           => 'CSV',
+    'csv_index_text'                => 'Here be explanation.',
+    'csv_upload_form'               => 'Upload form',
+    'upload_csv_file'               => 'Upload CSV file',
+    'csv_header_help'               => 'Check this when bla bla',
+    'csv_row'                       => 'row',
+    'upload_not_writeable' => 'Cannot write to the path mentioned here. Cannot upload',
 
     // create new stuff:
     'create_new_withdrawal'         => 'Create new withdrawal',

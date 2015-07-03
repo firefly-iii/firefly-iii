@@ -45,6 +45,8 @@ return [
     'under'                       => 'Onder',
     'symbol'                      => 'Symbool',
     'code'                        => 'Code',
+    'csv'                         => 'CSV-bestand',
+    'has_headers'                 => 'Eerste rij zijn kolomnamen',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',
