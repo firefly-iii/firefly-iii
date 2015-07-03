@@ -219,6 +219,12 @@ Route::group(
     Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
     Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
+
+    /**
+     * CSV controller
+     */
+    Route::get('/csv', ['uses' => 'CsvController@index', 'as' => 'csv.index']);
+
     /**
      * Currency Controller
      */

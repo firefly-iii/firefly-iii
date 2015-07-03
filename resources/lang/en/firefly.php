@@ -19,6 +19,9 @@ return [
     'never'                         => 'Never',
     'search_results_for'            => 'Search results for ":query"',
 
+    // csv import:
+    'csv_import'                    => 'Import CSV file',
+
     // create new stuff:
     'create_new_withdrawal'         => 'Create new withdrawal',
     'create_new_deposit'            => 'Create new deposit',

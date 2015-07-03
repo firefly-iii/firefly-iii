@@ -19,6 +19,9 @@ return [
     'never'                         => 'Nooit',
     'search_results_for'            => 'Zoekresultaten voor ":query"',
 
+    // csv import:
+    'csv_import'                    => 'Import CSV file',
+
     // create new stuff:
     'create_new_withdrawal'         => 'Nieuwe uitgave',
     'create_new_deposit'            => 'Nieuwe inkomsten',
