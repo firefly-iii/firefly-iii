@@ -401,6 +401,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'virtualBalance' => 0,
                 'name'           => $data['name'] . ' initial balance',
                 'active'         => false,
+                'iban'           => '',
             ];
             $opposing     = $this->storeAccount($opposingData);
             $this->storeInitialBalance($newAccount, $opposing, $data);
@@ -431,6 +432,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->name            = $data['name'];
         $account->active          = $data['active'] == '1' ? true : false;
         $account->virtual_balance = $data['virtualBalance'];
+        $account->iban            = $data['iban'];
         $account->save();
 
         $this->updateMetadata($account, $data);
@@ -481,6 +483,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'name'            => $data['name'],
                 'virtual_balance' => $data['virtualBalance'],
                 'active'          => $data['active'] === true ? true : false,
+                'iban'            => $data['iban'],
             ]
         );
 
@@ -490,7 +493,8 @@ class AccountRepository implements AccountRepositoryInterface
                 'user_id'         => $data['user'],
                 'account_type_id' => $accountType->id,
                 'virtual_balance' => $data['virtualBalance'],
-                'name'            => $data['name']
+                'name'            => $data['name'],
+                'iban'            => $data['iban'],
             ];
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {

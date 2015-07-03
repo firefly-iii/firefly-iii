@@ -45,6 +45,7 @@ return [
     'under'                       => 'Onder',
     'symbol'                      => 'Symbool',
     'code'                        => 'Code',
+    'iban'                        => 'IBAN',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

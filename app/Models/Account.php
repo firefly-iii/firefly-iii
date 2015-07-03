@@ -47,6 +47,9 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                          piggyBalance
  * @property mixed                                                                          difference
  * @property mixed                                                                          percentage
+ * @property string                                                                         $iban
+ * @property-read mixed                                                                     $name_for_editform
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereIban($value)
  */
 class Account extends Model
 {
@@ -144,6 +147,22 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function getIbanAttribute($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Crypt::decrypt($value);
+    }
+
+    /**
      *
      * @param string $fieldName
      *
@@ -234,6 +253,16 @@ class Account extends Model
         }
         );
         $query->where($joinName . '.data', json_encode($value));
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     */
+    public function setIbanAttribute($value)
+    {
+        $this->attributes['iban'] = Crypt::encrypt($value);
     }
 
     /**

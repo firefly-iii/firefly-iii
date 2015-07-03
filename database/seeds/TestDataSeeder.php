@@ -126,6 +126,7 @@ class TestDataSeeder extends Seeder
                     'name'            => $name,
                     'active'          => 1,
                     'encrypted'       => 1,
+                    'iban'            => 'GB82WEST12345698765432'
                 ]
             );
             foreach ($assetMeta[$index] as $name => $value) {
