@@ -4,7 +4,6 @@
 [![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads)](https://packagist.org/packages/grumpydictator/firefly-iii)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/build.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/build-status/master)
 
 ## About
