@@ -45,6 +45,7 @@ return [
     'under'                       => 'Under',
     'symbol'                      => 'Symbol',
     'code'                        => 'Code',
+    'iban'                          => 'IBAN',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',
