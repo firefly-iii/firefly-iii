@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV3451
@@ -14,11 +15,12 @@ class ChangesForV3451 extends Migration
      */
     public function down()
     {
-
+        Schema::table(
+            'accounts', function (Blueprint $table) {
+            $table->dropColumn('iban');
+        }
+        );
     }
-
-    //$table->smallInteger('reminder_skip')->unsigned();
-    //$table->boolean('remind_me');
 
     /**
      * Run the migrations.
@@ -27,7 +29,11 @@ class ChangesForV3451 extends Migration
      */
     public function up()
     {
-
+        Schema::table(
+            'accounts', function (Blueprint $table) {
+            $table->string('iban', 38)->nullable();
+        }
+        );
 
     }
 }
