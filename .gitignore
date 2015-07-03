@@ -33,3 +33,4 @@ addNewLines.php
 .env.local
 
 tests/_output/*
+tests/_output/*
