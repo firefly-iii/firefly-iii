@@ -18,7 +18,7 @@
     <div class="register-box-body">
         <p class="login-box-msg">Register a new account</p>
 
-        <form role="form" id="register" method="POST" action="/auth/register">
+        <form role="form" id="register" method="POST" action="{{ URL.to('/auth/register' }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group has-feedback">
@@ -38,8 +38,8 @@
             </div>
         </form>
 
-        <a href="/auth/login">I want to login</a><br>
-        <a href="/password/email">I forgot my password</a>
+        <a href="{{ URL.to('/auth/login' }}">I want to login</a><br>
+        <a href="{{ URL.to('/password/email' }}">I forgot my password</a>
     </div><!-- /.form-box -->
 
 {% endblock %}
