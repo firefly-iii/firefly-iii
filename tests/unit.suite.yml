@@ -7,3 +7,4 @@ modules:
     enabled:
         - Asserts
         - \Helper\Unit
+        - Laravel5
