@@ -9,7 +9,7 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class Transaction
  *
- * @codeCoverageIgnore
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
  * @property integer                                    $id
  * @property \Carbon\Carbon                             $created_at

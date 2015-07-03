@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class PiggyBank
  *
- * @codeCoverageIgnore
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
  * @property integer                                                                                $id
  * @property \Carbon\Carbon                                                                         $created_at
@@ -37,6 +37,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereOrder($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
  * @property PiggyBankRepetition                                                                    currentRep
+ * @property string $reminder 
+ * @property integer $reminder_skip 
+ * @property boolean $remind_me 
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminderSkip($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereRemindMe($value)
  */
 class PiggyBank extends Model
 {
