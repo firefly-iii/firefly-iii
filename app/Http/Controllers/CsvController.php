@@ -8,6 +8,8 @@
 
 namespace FireflyIII\Http\Controllers;
 
+use Auth;
+use Crypt;
 use Illuminate\Http\Request;
 use Input;
 use League\Csv\Reader;
@@ -42,7 +44,7 @@ class CsvController extends Controller
         $subTitle = trans('firefly.csv_import');
 
         // can actually upload?
-        $uploadPossible = !is_writable(storage_path('upload'));
+        $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
 
@@ -54,6 +56,21 @@ class CsvController extends Controller
      */
     public function upload(Request $request)
     {
+        // possible column roles:
+        $roles = [
+            '(ignore this column)',
+            'Asset account name',
+            'Expense or revenue account name',
+            'Amount',
+            'Date',
+            'Currency',
+            'Description',
+            'Category',
+            'Budget',
+
+        ];
+
+
         if (!$request->hasFile('csv')) {
             Session::flash('warning', 'No file uploaded.');
 
@@ -64,29 +81,31 @@ class CsvController extends Controller
         $reader     = Reader::createFromPath($request->file('csv')->getRealPath());
         $data       = $reader->query();
         $data->next(); // go to first row:
-        if ($hasHeaders) {
 
-            // first row = headers.
+        $count   = count($data->current());
+        $headers = [];
+        for ($i = 1; $i <= $count; $i++) {
+            $headers[] = trans('firefly.csv_row') . ' #' . $i;
+        }
+        if ($hasHeaders) {
             $headers = $data->current();
-        } else {
-            $count   = count($data->current());
-            $headers = [];
-            for ($i = 1; $i <= $count; $i++) {
-                $headers[] = trans('firefly.csv_row') . ' #' . $i;
-            }
         }
 
         // example data is always the second row:
         $data->next();
         $example = $data->current();
+        // store file somewhere temporary (encrypted)?
+        $time     = str_replace(' ', '-', microtime());
+        $fileName = 'csv-upload-' . Auth::user()->id . '-' . $time . '.csv.encrypted';
+        $fullPath = storage_path('upload') . DIRECTORY_SEPARATOR . $fileName;
+        $content  = file_get_contents($request->file('csv')->getRealPath());
+        $content  = Crypt::encrypt($content);
+        file_put_contents($fullPath, $content);
+        Session::put('latestCSVUpload', $fullPath);
 
-        var_dump($headers);
-        var_dump($example);
+        $subTitle = trans('firefly.csv_process');
 
-        // store file somewhere temporary?
-
-
-        exit;
+        return view('csv.upload', compact('headers', 'example', 'roles', 'subTitle'));
 
     }
 }
