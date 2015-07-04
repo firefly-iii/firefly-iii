@@ -1,0 +1,83 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'csv_map'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
+                </div>
+                <div class="box-body">
+                    <p>{{ 'csv_map_text'|_ }}</p>
+                    <h4>{{ 'csv_more_information' }}</h4>
+
+                    <p>{{ 'csv_more_information_text'|_ }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <form action="{{ route('csv.save_mapping') }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+        {% for index,columnName in map %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ columnName }}</h3>
+
+                            <!-- ACTIONS MENU -->
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+
+                        </div>
+                        <div class="box-body">
+                            <table class="table">
+                                <thead>
+                                <th>{{ 'cvs_field_value'|_ }}</th>
+                                <th>{{ 'csv_field_mapped_to'|_ }}</th>
+                                </thead>
+                                <tbody>
+                                {% for value in values[index] %}
+                                    <tr>
+                                        <td>{{ value }}</td>
+                                        <td>
+                                            {{ Form.select('mapping['~index~']['~value~']',options[index]) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <p>
+            <button type="submit" class="btn btn-success">
+                {{ 'save_mapping'|_ }}
+            </button>
+        </p>
+    </form>
+
+
+{% endblock %}

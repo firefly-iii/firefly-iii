@@ -98,7 +98,7 @@ class TestDataSeeder extends Seeder
 
     protected function createAssetAccounts()
     {
-        $assets    = ['MyBank Checking Account', 'Savings', 'Shared', 'Creditcard'];
+        $assets    = ['MyBank Checking Account', 'Savings', 'Shared', 'Creditcard', 'Emergencies', 'STE'];
         $assetMeta = [
             [
                 'accountRole' => 'defaultAsset',
@@ -113,6 +113,12 @@ class TestDataSeeder extends Seeder
                 'accountRole'          => 'ccAsset',
                 'ccMonthlyPaymentDate' => '2015-05-27',
                 'ccType'               => 'monthlyFull'
+            ],
+            [
+                'accountRole' => 'savingAsset',
+            ],
+            [
+                'accountRole' => 'savingAsset',
             ],
 
         ];

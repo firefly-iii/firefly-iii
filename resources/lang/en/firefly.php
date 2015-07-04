@@ -26,8 +26,11 @@ return [
     'csv_upload_form'               => 'Upload form',
     'upload_csv_file'               => 'Upload CSV file',
     'csv_header_help'               => 'Check this when bla bla',
+    'csv_date_help'                 => 'Date time format in your CSV. Follow the format like <a href="https://secure.' .
+                                       'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this' .
+                                       ' page</a> indicates.',
     'csv_row'                       => 'row',
-    'upload_not_writeable' => 'Cannot write to the path mentioned here. Cannot upload',
+    'upload_not_writeable'          => 'Cannot write to the path mentioned here. Cannot upload',
 
     // create new stuff:
     'create_new_withdrawal'         => 'Create new withdrawal',

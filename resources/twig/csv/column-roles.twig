@@ -20,7 +20,9 @@
 
             </div>
             <div class="box-body">
-                {{ 'csv_process_text'|_ }}
+                <p>{{ 'csv_process_text'|_ }}</p>
+                <h4>{{ 'csv_more_information' }}</h4>
+                <p>{{ 'csv_more_information_text'|_ }}</p>
             </div>
         </div>
 
@@ -39,7 +41,8 @@
 
                 </div>
                 <div class="box-body">
-
+                    <form action="{{ route('csv.initial_parse') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                     <table class="table">
                         <thead>
                             <th>{{ 'cvs_column_name'|_ }}</th>
@@ -52,16 +55,21 @@
                             <td>{{ header }}</td>
                             <td>{{ example[index] }}</td>
                             <td>
-                                {{ Form.select(('role_'~index), roles) }}
+                                {{ Form.select(('role['~index~']'), roles) }}
                             </td>
                             <td>
-                                {{ Form.checkbox(('map_'~index),false) }}
+                                {{ Form.checkbox(('map['~index~']'),1,false) }}
                             </td>
 
                         </tr>
                         {% endfor %}
                     </table>
-
+                        <p>
+                            <button type="submit" class="btn btn-success">
+                                {{ 'process_csv_file'|_ }}
+                            </button>
+                        </p>
+                    </form>
 
                 </div>
             </div>

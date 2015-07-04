@@ -47,6 +47,7 @@ return [
     'code'                        => 'Code',
     'csv'                         => 'CSV file',
     'has_headers'                 => 'Headers',
+    'date_format'                 => 'Date format',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',

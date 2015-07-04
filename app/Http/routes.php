@@ -225,6 +225,11 @@ Route::group(
      */
     Route::get('/csv', ['uses' => 'CsvController@index', 'as' => 'csv.index']);
     Route::post('/csv/upload', ['uses' => 'CsvController@upload', 'as' => 'csv.upload']);
+    Route::get('/csv/column_roles', ['uses' => 'CsvController@columnRoles', 'as' => 'csv.column-roles']);
+    Route::post('/csv/initial_parse', ['uses' => 'CsvController@initialParse', 'as' => 'csv.initial_parse']);
+    Route::get('/csv/map', ['uses' => 'CsvController@map', 'as' => 'csv.map']);
+    Route::post('/csv/save_mapping', ['uses' => 'CsvController@saveMapping', 'as' => 'csv.save_mapping']);
+    Route::get('/csv/process', ['uses' => 'CsvController@process', 'as' => 'csv.process']);
 
     /**
      * Currency Controller
