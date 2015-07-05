@@ -11,6 +11,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 use Auth;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use Log;
 
 /**
  * Class AccountIban
@@ -36,9 +37,13 @@ class AccountIban extends BasicConverter implements ConverterInterface
                     'name'            => $this->value,
                     //'iban'            => $this->value,
                     'user_id'         => Auth::user()->id,
-                    'account_type_id' => $accountType->id
+                    'account_type_id' => $accountType->id,
+                    'active'          => true,
                 ]
             );
+            if ($account->getErrors()->count() > 0) {
+                Log::error('Create or find asset account: ' . json_encode($account->getErrors()->all()));
+            }
         }
 
         return $account;

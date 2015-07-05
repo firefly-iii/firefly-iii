@@ -34,8 +34,10 @@ return [
             'mappable' => true,
         ],
         'description'       => [
-            'name'     => 'Description',
-            'mappable' => false,
+            'name'      => 'Description',
+            'mappable'  => false,
+            'converter' => 'Description',
+            'field'     => 'description',
         ],
         'date-transaction'  => [
             'name'      => 'Date',
@@ -44,8 +46,8 @@ return [
             'field'     => 'date',
         ],
         'date-rent'         => [
-            'name'     => 'Rent calculation date',
-            'mappable' => false,
+            'name'      => 'Rent calculation date',
+            'mappable'  => false,
             'converter' => 'Date',
             'field'     => 'date-rent',
         ],
@@ -114,16 +116,22 @@ return [
             'field'     => 'amount',
         ],
         'sepa-ct-id'        => [
-            'name'     => 'SEPA Credit Transfer end-to-end ID',
-            'mappable' => false,
+            'name'      => 'SEPA Credit Transfer end-to-end ID',
+            'mappable'  => false,
+            'converter' => 'Description',
+            'field'     => 'description',
         ],
         'sepa-ct-op'        => [
-            'name'     => 'SEPA Credit Transfer opposing account',
-            'mappable' => false,
+            'name'      => 'SEPA Credit Transfer opposing account',
+            'mappable'  => false,
+            'converter' => 'Description',
+            'field'     => 'description',
         ],
         'sepa-db'           => [
-            'name'     => 'SEPA Direct Debet',
-            'mappable' => false,
+            'name'      => 'SEPA Direct Debet',
+            'mappable'  => false,
+            'converter' => 'Description',
+            'field'     => 'description',
         ],
     ]
 ];
