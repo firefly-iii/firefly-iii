@@ -4,11 +4,11 @@ return [
         'RabobankDescription'
     ],
     'post_processors' => [
-        'OpposingAccount',
         'Description',
         'Amount',
         'Currency',
-        'Bill'
+        'Bill',
+        'OpposingAccount', // must be after Amount!
 
     ],
     'roles'           => [

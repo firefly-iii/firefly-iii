@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use FireflyIII\Models\Account;
+use Log;
 
 /**
  * Class OpposingAccountIban
@@ -25,11 +26,15 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
 
             return $account;
         } else {
-            $set = Auth::user()->accounts()->get();
-            /** @var Account $account */
-            foreach ($set as $account) {
-                if ($account->iban == $this->value) {
-                    return $account;
+            if (strlen($this->value) > 0) {
+                $set = Auth::user()->accounts()->get();
+                /** @var Account $account */
+                foreach ($set as $account) {
+                    if ($account->iban == $this->value) {
+                        Log::debug('OpposingAccountIban::convert found an Account (#' . $account->id . ': ' . $account->name . ') with IBAN ' . $this->value);
+
+                        return $account;
+                    }
                 }
             }
 

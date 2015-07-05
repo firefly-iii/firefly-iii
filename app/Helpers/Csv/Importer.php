@@ -239,7 +239,7 @@ class Importer
             $transactionType = TransactionType::where('type', 'Withdrawal')->first();
         }
 
-        if ($data['opposing-account-object']->accountType->type == 'Asset account') {
+        if (in_array($data['opposing-account-object']->accountType->type, ['Asset account', 'Default account'])) {
             $transactionType = TransactionType::where('type', 'Transfer')->first();
         }
 
