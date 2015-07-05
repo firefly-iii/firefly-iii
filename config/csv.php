@@ -122,19 +122,22 @@ return [
             'mapper'    => 'AssetAccount'
         ],
         'opposing-id'       => [
-            'name'     => 'Opposing account account ID (matching Firefly)',
-            'mappable' => true,
-            'field'    => 'opposing-account-id',
+            'name'      => 'Opposing account account ID (matching Firefly)',
+            'mappable'  => true,
+            'field'     => 'opposing-account-id',
+            'converter' => 'OpposingAccountId'
         ],
         'opposing-name'     => [
             'name'     => 'Opposing account name',
             'mappable' => true,
             'field'    => 'opposing-account-name',
+            'converter' => 'OpposingAccountName'
         ],
         'opposing-iban'     => [
             'name'     => 'Opposing account IBAN',
             'mappable' => true,
             'field'    => 'opposing-account-iban',
+            'converter' => 'OpposingAccountIban'
         ],
         'amount'            => [
             'name'      => 'Amount',

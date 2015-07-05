@@ -150,12 +150,15 @@ class Importer
     {
         $filler = [];
         foreach (Config::get('csv.roles') as $role) {
-            $fieldName          = $role['field'];
-            $filler[$fieldName] = null;
+            if (isset($role['field'])) {
+                $fieldName          = $role['field'];
+                $filler[$fieldName] = null;
+            }
         }
         // some extra's:
         $filler['bill-id']                 = null;
         $filler['opposing-account-object'] = null;
+        $filler['amount-modifier']         = '1';
 
         return $filler;
 
@@ -175,17 +178,9 @@ class Importer
         $data['description'] = trim($data['description']);
         $data['amount']      = bcmul($data['amount'], $data['amount-modifier']);
 
+
         // get opposing account, which is quite complex:
         $data['opposing-account-object'] = $this->processOpposingAccount($data);
-
-        // opposing account type:
-        if ($data['amount'] < 0) {
-            // create expense account:
-            $accountType = AccountType::where('type', 'Expense account')->first();
-        } else {
-            // create revenue account:
-            $accountType = AccountType::where('type', 'Revenue account')->first();
-        }
 
         if (strlen($data['description']) == 0) {
             $data['description'] = trans('firefly.csv_empty_description');
@@ -205,18 +200,8 @@ class Importer
         $specifix->setData($data);
         $specifix->setRow($row);
         //$specifix->fix($data, $row); // TODO
-
         // get data back:
         //$data = $specifix->getData(); // TODO
-
-        $data['opposing-account-object'] = Account::firstOrCreateEncrypted(
-            [
-                'user_id'         => Auth::user()->id,
-                'name'            => ucwords($data['opposing-account']),
-                'account_type_id' => $accountType->id,
-                'active'          => 1,
-            ]
-        );
 
         return $data;
     }
@@ -224,17 +209,92 @@ class Importer
     /**
      * @param array $data
      */
-    public function processOpposingAccount(array $data)
+    protected function processOpposingAccount(array $data)
     {
         // first priority. try to find the account based on ID,
         // if any.
+        if ($data['opposing-account-id'] instanceof Account) {
+            return $data['opposing-account-id'];
+        }
 
         // second: try to find the account based on IBAN, if any.
+        if ($data['opposing-account-iban'] instanceof Account) {
+            return $data['opposing-account-iban'];
+        }
+
+        $accountType = $this->getAccountType($data['amount']);
+
+        if (is_string($data['opposing-account-iban'])) {
+            $accounts = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
+            foreach ($accounts as $entry) {
+                if ($entry->iban == $data['opposing-account-iban']) {
+
+                    //return $entry;
+                }
+            }
+            // create if not exists:
+            $account = Account::firstOrCreateEncrypted(
+                [
+                    'user_id'         => Auth::user()->id,
+                    'account_type_id' => $accountType->id,
+                    'name'            => $data['opposing-account-iban'],
+                    'iban'            => $data['opposing-account-iban'],
+                    'active'          => true,
+                ]
+            );
+
+            return $account;
+
+        }
 
         // third: try to find account based on name, if any.
+        if ($data['opposing-account-name'] instanceof Account) {
+            return $data['opposing-account-name'];
+        }
 
-        // if nothing, create expense/revenue, never asset.
+        if (is_string($data['opposing-account-name'])) {
+            $accounts = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
+            foreach ($accounts as $entry) {
+                if ($entry->name == $data['opposing-account-name']) {
+                    return $entry;
+                }
+            }
+            // create if not exists:
+            $account = Account::firstOrCreateEncrypted(
+                [
+                    'user_id'         => Auth::user()->id,
+                    'account_type_id' => $accountType->id,
+                    'name'            => $data['opposing-account-name'],
+                    'iban'            => '',
+                    'active'          => true,
+                ]
+            );
 
+            return $account;
+        }
+        return null;
+
+        // if nothing, create expense/revenue, never asset. TODO
+
+    }
+
+    /**
+     * @param $amount
+     *
+     * @return AccountType
+     */
+    protected function getAccountType($amount)
+    {
+        // opposing account type:
+        if ($amount < 0) {
+            // create expense account:
+
+            return AccountType::where('type', 'Expense account')->first();
+        } else {
+            // create revenue account:
+
+            return AccountType::where('type', 'Revenue account')->first();
+        }
     }
 
     /**
@@ -246,9 +306,6 @@ class Importer
     {
         if (is_null($data['date']) && is_null($data['date-rent'])) {
             return 'No date value for this row.';
-        }
-        if (strlen($data['description']) == 0) {
-            return 'No valid description';
         }
         if (is_null($data['opposing-account-object'])) {
             return 'Opposing account is null';
