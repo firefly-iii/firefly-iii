@@ -46,6 +46,10 @@ return [
     'symbol'                      => 'Symbol',
     'code'                        => 'Code',
     'iban'                          => 'IBAN',
+    'csv'                         => 'CSV file',
+    'has_headers'                 => 'Headers',
+    'date_format'                 => 'Date format',
+    'csv_config'                  => 'CSV import configuration',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',

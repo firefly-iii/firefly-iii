@@ -19,6 +19,57 @@ return [
     'never'                         => 'Never',
     'search_results_for'            => 'Search results for ":query"',
 
+    // csv import:
+    'csv_import'                    => 'Import CSV file',
+    'csv'                           => 'CSV',
+    'csv_index_title'               => 'Upload and import a CSV file',
+    'csv_index_text'                =>
+        'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by' .
+        ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.',
+    'csv_index_beta_warning'        => 'This tool is very much in beta. Please proceed with caution',
+    'csv_header_help'               => 'Check this box when your CSV file\'s first row consists of column names, not actual data',
+    'csv_date_help'                 => 'Date time format in your CSV. Follow the format like <a href="https://secure.' .
+                                       'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this' .
+                                       ' page</a> indicates. The default value will parse dates that look like this: ' . date('Ymd'),
+    'csv_csv_file_help'             => 'Select the CSV file here. You can only upload one file at a time',
+    'csv_csv_config_file_help'      => 'Select your CSV import configuration here. If you do not know what this is, ignore it. It will be explained later.',
+    'csv_upload_button'             => 'Start importing CSV',
+    'csv_column_roles_title'        => 'Define column roles',
+    'csv_column_roles_text'         => 'Firefly does not know what each column means. You need to indicate what every column is. Please check out the example '
+                                       . 'data if you\'re not sure yourself. Click on the question mark (top right of the page) to learn what'
+                                       . ' each column means. If you want to map imported data onto existing data in Firefly, use the checkbox. '
+                                       . 'The next step will show you what this button does.',
+    'csv_column_roles_table'        => 'Column roles',
+    'csv_column'                    => 'CSV column',
+    'cvs_column_name'               => 'CSV column name',
+    'cvs_column_example'            => 'Column example data',
+    'cvs_column_role'               => 'Column contains?',
+    'csv_do_map_value'              => 'Map value?',
+    'csv_continue'                  => 'Continue to the next step',
+    'csv_go_back'                   => 'Go back to the previous step',
+    'csv_map_title'                 => 'Map found values to existing values',
+    'csv_map_text'                  =>
+        'This page allows you to map the values from the CSV file to existing entries in your database. This ensures that accounts and other'
+        . ' things won\'t be created twice.',
+    'cvs_field_value'               => 'Field value from CSV',
+    'csv_field_mapped_to'           => 'Must be mapped to...',
+    'csv_download_config_title'     => 'Download CSV configuration',
+    'csv_download_config_text'      => 'Everything you\'ve just set up can be downloaded as a configuration file. Click the button to do so.',
+    'csv_more_information_text'     => 'If the import fails, you can use this configuration file so you don\'t have to start all over again.',
+    'csv_do_download_config'        => 'Download configuration file.',
+    'csv_empty_description'         => '(empty description)',
+    'csv_upload_form'               => 'CSV upload form',
+    'csv_index_unsupported_warning' => 'The CSV importer is yet incapable of doing the following:',
+    'csv_unsupported_map'           => 'The importer cannot map the column ":columnRole" to existing values in the database.',
+    'csv_unsupported_value'         => 'The importer does not know how to handle values in columns marked as ":columnRole".',
+    //    'csv_index_text'                => 'Here be explanation.',
+    //    'csv_upload_form'               => 'Upload form',
+    //    'upload_csv_file'               => 'Upload CSV file',
+    //    'csv_header_help'               => 'Check this when bla bla',
+    //    'csv_date_help'                 =>
+    //    'csv_row'                       => 'row',
+    'csv_upload_not_writeable'      => 'Cannot write to the path mentioned here. Cannot upload',
+
     // create new stuff:
     'create_new_withdrawal'         => 'Create new withdrawal',
     'create_new_deposit'            => 'Create new deposit',

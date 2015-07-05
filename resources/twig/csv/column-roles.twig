@@ -1,0 +1,87 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'csv_column_roles_title'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
+                </div>
+                <div class="box-body">
+                    <p>{{ 'csv_column_roles_text'|_ }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <form action="{{ route('csv.initial_parse') }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'csv_column_roles_table'|_ }}</h3>
+
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+
+                    </div>
+                    <div class="box-body">
+
+                        <table class="table">
+                            <thead>
+                            <th>{{ 'cvs_column_name'|_ }}</th>
+                            <th>{{ 'cvs_column_example'|_ }}</th>
+                            <th>{{ 'cvs_column_role'|_ }}</th>
+                            <th>{{ 'csv_do_map_value'|_ }}</th>
+                            </thead>
+                            {% for index,header in headers %}
+                                <tr>
+                                    <td>{{ header }}</td>
+                                    <td>{{ example[index] }}</td>
+                                    <td>
+                                        {{ Form.select(('role['~index~']'), availableRoles,roles[index]) }}
+                                    </td>
+                                    <td>
+                                        {{ Form.checkbox(('map['~index~']'),1,map[index]) }}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-body">
+                        <a href="{{ route('csv.index') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> {{ 'csv_go_back'|_ }}</a>
+                        <button type="submit" class="btn btn-success pull-right">
+                            {{ 'csv_continue'|_ }} <i class="fa fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

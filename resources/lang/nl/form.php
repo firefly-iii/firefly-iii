@@ -46,6 +46,9 @@ return [
     'symbol'                      => 'Symbool',
     'code'                        => 'Code',
     'iban'                        => 'IBAN',
+    'csv'                         => 'CSV-bestand',
+    'has_headers'                 => 'Eerste rij zijn kolomnamen',
+    'date_format'                 => 'Datumformaat',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

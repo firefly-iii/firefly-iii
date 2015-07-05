@@ -123,6 +123,11 @@
             <li class="{{ activeRoutePartial('currency') }}">
                 <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
             </li>
+            {% if Config.get('firefly.csv_import_enabled') %}
+            <li class="{{ activeRoutePartial('csv') }}">
+                <a href="{{ route('csv.index') }}"><i class="fa fa-file-text-o fa-fw"></i> {{ 'csv_import'|_ }}</a>
+            </li>
+            {% endif %}
         </ul>
 
 

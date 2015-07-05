@@ -354,6 +354,24 @@ class ExpandedForm
      *
      * @return string
      */
+    public function file($name, array $options = [])
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $html    = View::make('form.file', compact('classes', 'name', 'label', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
     public function text($name, $value = null, array $options = [])
     {
         $label   = $this->label($name, $options);
