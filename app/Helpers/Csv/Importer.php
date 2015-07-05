@@ -16,6 +16,8 @@ use FireflyIII\Models\TransactionType;
 use Illuminate\Support\MessageBag;
 use Log;
 
+set_time_limit(0);
+
 /**
  * Class Importer
  *
@@ -106,7 +108,7 @@ class Importer
             //            }
 
         }
-        $data   = $this->postProcess($data);
+        $data   = $this->postProcess($data, $row);
         $result = $this->validateData($data);
         if ($result === true) {
             $result = $this->createTransactionJournal($data);
@@ -142,11 +144,14 @@ class Importer
     }
 
     /**
+     * Row denotes the original data.
+     *
      * @param array $data
+     * @param array $row
      *
      * @return array
      */
-    protected function postProcess(array $data)
+    protected function postProcess(array $data, array $row)
     {
         bcscale(2);
         $data['description'] = trim($data['description']);
@@ -158,6 +163,16 @@ class Importer
             // create revenue account:
             $accountType = AccountType::where('type', 'Revenue account')->first();
         }
+
+        // do bank specific fixes:
+
+        $specifix = new Specifix();
+        $specifix->setData($data);
+        $specifix->setRow($row);
+        $specifix->fix($data, $row);
+
+        // get data back:
+        $data = $specifix->getData();
 
         $data['opposing-account-object'] = Account::firstOrCreateEncrypted(
             [
@@ -208,7 +223,7 @@ class Importer
         } else {
             $transactionType = TransactionType::where('type', 'Deposit')->first();
         }
-        $errors = new MessageBag;
+        $errors  = new MessageBag;
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => Auth::user()->id,
@@ -220,7 +235,7 @@ class Importer
                 'date'                    => $date,
             ]
         );
-        $errors = $journal->getErrors()->merge($errors);
+        $errors  = $journal->getErrors()->merge($errors);
         if ($journal->getErrors()->count() == 0) {
             // create both transactions:
             $transaction = Transaction::create(
@@ -230,7 +245,7 @@ class Importer
                     'amount'                 => $data['amount']
                 ]
             );
-            $errors = $transaction->getErrors()->merge($errors);
+            $errors      = $transaction->getErrors()->merge($errors);
 
             $transaction = Transaction::create(
                 [
@@ -239,9 +254,9 @@ class Importer
                     'amount'                 => bcmul($data['amount'], -1)
                 ]
             );
-            $errors = $transaction->getErrors()->merge($errors);
+            $errors      = $transaction->getErrors()->merge($errors);
         }
-        if($errors->count() == 0) {
+        if ($errors->count() == 0) {
             $journal->completed = 1;
             $journal->save();
         }
