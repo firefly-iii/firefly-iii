@@ -148,20 +148,16 @@ class Importer
      */
     protected function getFiller()
     {
-        return [
-            'description'             => '',
-            'asset-account'           => null,
-            'opposing-account'        => '',
-            'opposing-account-object' => null,
-            'date'                    => null,
-            'currency'                => null,
-            'amount'                  => null,
-            'amount-modifier'         => 1,
-            'ignored'                 => null,
-            'date-rent'               => null,
-            'bill'                    => null,
-            'bill-id'                 => null,
-        ];
+        $filler = [];
+        foreach (Config::get('csv.roles') as $role) {
+            $fieldName          = $role['field'];
+            $filler[$fieldName] = null;
+        }
+        // some extra's:
+        $filler['bill-id']                 = null;
+        $filler['opposing-account-object'] = null;
+
+        return $filler;
 
     }
 
@@ -178,6 +174,11 @@ class Importer
         bcscale(2);
         $data['description'] = trim($data['description']);
         $data['amount']      = bcmul($data['amount'], $data['amount-modifier']);
+
+        // get opposing account, which is quite complex:
+        $data['opposing-account-object'] = $this->processOpposingAccount($data);
+
+        // opposing account type:
         if ($data['amount'] < 0) {
             // create expense account:
             $accountType = AccountType::where('type', 'Expense account')->first();
@@ -218,6 +219,22 @@ class Importer
         );
 
         return $data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function processOpposingAccount(array $data)
+    {
+        // first priority. try to find the account based on ID,
+        // if any.
+
+        // second: try to find the account based on IBAN, if any.
+
+        // third: try to find account based on name, if any.
+
+        // if nothing, create expense/revenue, never asset.
+
     }
 
     /**
@@ -293,6 +310,16 @@ class Importer
         if ($errors->count() == 0) {
             $journal->completed = 1;
             $journal->save();
+        }
+
+        // add budget:
+        if (!is_null($data['budget'])) {
+            $journal->budgets()->save($data['budget']);
+        }
+
+        // add category:
+        if (!is_null($data['category'])) {
+            $journal->categories()->save($data['category']);
         }
 
         return $journal;

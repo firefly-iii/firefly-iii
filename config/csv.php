@@ -20,12 +20,16 @@ return [
             'field'     => 'bill',
         ],
         'currency-id'       => [
-            'name'     => 'Currency ID (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Currency ID (matching Firefly)',
+            'mappable'  => true,
+            'converter' => 'CurrencyId',
+            'field'     => 'currency',
         ],
         'currency-name'     => [
-            'name'     => 'Currency name (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Currency name (matching Firefly)',
+            'mappable'  => true,
+            'converter' => 'CurrencyName',
+            'field'     => 'currency',
         ],
         'currency-code'     => [
             'name'      => 'Currency code (ISO 4217)',
@@ -35,8 +39,10 @@ return [
             'mapper'    => 'TransactionCurrency'
         ],
         'currency-symbol'   => [
-            'name'     => 'Currency symbol (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Currency symbol (matching Firefly)',
+            'mappable'  => true,
+            'converter' => 'CurrencySymbol',
+            'field'     => 'currency',
         ],
         'description'       => [
             'name'      => 'Description',
@@ -57,12 +63,16 @@ return [
             'field'     => 'date-rent',
         ],
         'budget-id'         => [
-            'name'     => 'Budget ID (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Budget ID (matching Firefly)',
+            'mappable'  => true,
+            'converter' => 'BudgetId',
+            'field'     => 'budget'
         ],
         'budget-name'       => [
-            'name'     => 'Budget name',
-            'mappable' => true,
+            'name'      => 'Budget name',
+            'mappable'  => true,
+            'converter' => 'BudgetName',
+            'field'     => 'budget'
         ],
         'rabo-debet-credit' => [
             'name'      => 'Rabobank specific debet/credit indicator',
@@ -71,12 +81,16 @@ return [
             'field'     => 'amount-modifier',
         ],
         'category-id'       => [
-            'name'     => 'Category ID (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Category ID (matching Firefly)',
+            'mappable'  => true,
+            'converter' => 'CategoryId',
+            'field'     => 'category'
         ],
         'category-name'     => [
-            'name'     => 'Category name',
-            'mappable' => true,
+            'name'      => 'Category name',
+            'mappable'  => true,
+            'converter' => 'CategoryName',
+            'field'     => 'category'
         ],
         'tags-comma'        => [
             'name'     => 'Tags (comma separated)',
@@ -110,16 +124,17 @@ return [
         'opposing-id'       => [
             'name'     => 'Opposing account account ID (matching Firefly)',
             'mappable' => true,
+            'field'    => 'opposing-account-id',
         ],
         'opposing-name'     => [
-            'name'      => 'Opposing account name',
-            'mappable'  => true,
-            'converter' => 'OpposingName',
-            'field'     => 'opposing-account'
+            'name'     => 'Opposing account name',
+            'mappable' => true,
+            'field'    => 'opposing-account-name',
         ],
         'opposing-iban'     => [
             'name'     => 'Opposing account IBAN',
             'mappable' => true,
+            'field'    => 'opposing-account-iban',
         ],
         'amount'            => [
             'name'      => 'Amount',
