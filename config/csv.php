@@ -11,25 +11,29 @@ return [
             'name'      => 'Bill ID (matching Firefly)',
             'mappable'  => false,
             'field'     => 'bill',
-            'converter' => 'BillId'
+            'converter' => 'BillId',
+            'mapper'    => 'Bill',
         ],
         'bill-name'         => [
             'name'      => 'Bill name',
             'mappable'  => true,
             'converter' => 'BillName',
             'field'     => 'bill',
+            'mapper'    => 'Bill',
         ],
         'currency-id'       => [
             'name'      => 'Currency ID (matching Firefly)',
             'mappable'  => true,
             'converter' => 'CurrencyId',
             'field'     => 'currency',
+            'mapper'    => 'TransactionCurrency'
         ],
         'currency-name'     => [
             'name'      => 'Currency name (matching Firefly)',
             'mappable'  => true,
             'converter' => 'CurrencyName',
             'field'     => 'currency',
+            'mapper'    => 'TransactionCurrency'
         ],
         'currency-code'     => [
             'name'      => 'Currency code (ISO 4217)',
@@ -43,6 +47,7 @@ return [
             'mappable'  => true,
             'converter' => 'CurrencySymbol',
             'field'     => 'currency',
+            'mapper'    => 'TransactionCurrency'
         ],
         'description'       => [
             'name'      => 'Description',
@@ -66,13 +71,15 @@ return [
             'name'      => 'Budget ID (matching Firefly)',
             'mappable'  => true,
             'converter' => 'BudgetId',
-            'field'     => 'budget'
+            'field'     => 'budget',
+            'mapper'    => 'Budget',
         ],
         'budget-name'       => [
             'name'      => 'Budget name',
             'mappable'  => true,
             'converter' => 'BudgetName',
-            'field'     => 'budget'
+            'field'     => 'budget',
+            'mapper'    => 'Budget',
         ],
         'rabo-debet-credit' => [
             'name'      => 'Rabobank specific debet/credit indicator',
@@ -84,21 +91,29 @@ return [
             'name'      => 'Category ID (matching Firefly)',
             'mappable'  => true,
             'converter' => 'CategoryId',
-            'field'     => 'category'
+            'field'     => 'category',
+            'mapper'    => 'Category',
         ],
         'category-name'     => [
             'name'      => 'Category name',
             'mappable'  => true,
             'converter' => 'CategoryName',
-            'field'     => 'category'
+            'field'     => 'category',
+            'mapper'    => 'Category',
         ],
         'tags-comma'        => [
-            'name'     => 'Tags (comma separated)',
-            'mappable' => true,
+            'name'      => 'Tags (comma separated)',
+            'mappable'  => true,
+            'field'     => 'tags',
+            'converter' => 'TagsComma',
+            'mapper'    => 'Tag',
         ],
         'tags-space'        => [
-            'name'     => 'Tags (space separated)',
-            'mappable' => true,
+            'name'      => 'Tags (space separated)',
+            'mappable'  => true,
+            'field'     => 'tags',
+            'converter' => 'TagsSpace',
+            'mapper'    => 'Tag',
         ],
         'account-id'        => [
             'name'      => 'Asset account ID (matching Firefly)',
@@ -125,19 +140,22 @@ return [
             'name'      => 'Opposing account account ID (matching Firefly)',
             'mappable'  => true,
             'field'     => 'opposing-account-id',
-            'converter' => 'OpposingAccountId'
+            'converter' => 'OpposingAccountId',
+            'mapper'    => 'AnyAccount',
         ],
         'opposing-name'     => [
-            'name'     => 'Opposing account name',
-            'mappable' => true,
-            'field'    => 'opposing-account-name',
-            'converter' => 'OpposingAccountName'
+            'name'      => 'Opposing account name',
+            'mappable'  => true,
+            'field'     => 'opposing-account-name',
+            'converter' => 'OpposingAccountName',
+            'mapper'    => 'AnyAccount',
         ],
         'opposing-iban'     => [
-            'name'     => 'Opposing account IBAN',
-            'mappable' => true,
-            'field'    => 'opposing-account-iban',
-            'converter' => 'OpposingAccountIban'
+            'name'      => 'Opposing account IBAN',
+            'mappable'  => true,
+            'field'     => 'opposing-account-iban',
+            'converter' => 'OpposingAccountIban',
+            'mapper'    => 'AnyAccount',
         ],
         'amount'            => [
             'name'      => 'Amount',

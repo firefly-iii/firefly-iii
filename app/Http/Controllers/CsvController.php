@@ -151,6 +151,7 @@ class CsvController extends Controller
         Session::forget('csv-map');
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
+        Session::forget('csv-specifix');
 
         // get values which are yet unsaveable or unmappable:
         $unsupported = [];

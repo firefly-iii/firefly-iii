@@ -31,6 +31,8 @@ class AssetAccount implements MapperInterface
             $list[$account->id] = $account->name;
         }
 
+        asort($list);
+
         return $list;
     }
 }

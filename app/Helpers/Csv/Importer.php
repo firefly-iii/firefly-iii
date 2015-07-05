@@ -7,8 +7,6 @@ use Auth;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -16,7 +14,6 @@ use FireflyIII\Models\TransactionType;
 use Illuminate\Support\MessageBag;
 use Log;
 use Preferences;
-use ReflectionException;
 
 set_time_limit(0);
 
@@ -75,10 +72,10 @@ class Importer
         $this->map    = $this->data->getMap();
         $this->roles  = $this->data->getRoles();
         $this->mapped = $this->data->getMapped();
+
         foreach ($this->data->getReader() as $index => $row) {
-            if (($this->data->getHasHeaders() && $index > 1) || !$this->data->getHasHeaders()) {
+            if ($this->parseRow($index)) {
                 $this->rows++;
-                Log::debug('Now at row ' . $index);
                 $result = $this->importRow($row);
                 if (!($result === true)) {
                     Log::error('Caught error at row #' . $index . ': ' . $result);
@@ -88,6 +85,16 @@ class Importer
                 }
             }
         }
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return bool
+     */
+    protected function parseRow($index)
+    {
+        return (($this->data->getHasHeaders() && $index > 1) || !$this->data->getHasHeaders());
     }
 
     /**
@@ -107,18 +114,8 @@ class Importer
             $class = Config::get('csv.roles.' . $role . '.converter');
             $field = Config::get('csv.roles.' . $role . '.field');
 
-            if (is_null($class)) {
-                throw new FireflyException('No converter for field of type "' . $role . '".');
-            }
-            if (is_null($field)) {
-                throw new FireflyException('No place to store value of type "' . $role . '".');
-            }
-            try {
-                /** @var ConverterInterface $converter */
-                $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
-            } catch (ReflectionException $e) {
-                throw new FireflyException('Cannot continue with column of type "' . $role . '" because class "' . $class . '" cannot be found.');
-            }
+            /** @var ConverterInterface $converter */
+            $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
             $converter->setData($data); // the complete array so far.
             $converter->setField($field);
             $converter->setIndex($index);
@@ -128,7 +125,8 @@ class Importer
             $data[$field] = $converter->convert();
 
         }
-        $data   = $this->postProcess($data, $row);
+        // post processing and validating.
+        $data   = $this->postProcess($data);
         $result = $this->validateData($data);
         if ($result === true) {
             $result = $this->createTransactionJournal($data);
@@ -168,133 +166,47 @@ class Importer
      * Row denotes the original data.
      *
      * @param array $data
-     * @param array $row
      *
      * @return array
      */
-    protected function postProcess(array $data, array $row)
+    protected function postProcess(array $data)
     {
+        // fix two simple fields:
         bcscale(2);
         $data['description'] = trim($data['description']);
         $data['amount']      = bcmul($data['amount'], $data['amount-modifier']);
 
-
-        // get opposing account, which is quite complex:
-        $data['opposing-account-object'] = $this->processOpposingAccount($data);
-
         if (strlen($data['description']) == 0) {
             $data['description'] = trans('firefly.csv_empty_description');
         }
+
         // fix currency
         if (is_null($data['currency'])) {
             $currencyPreference = Preferences::get('currencyPreference', 'EUR');
             $data['currency']   = TransactionCurrency::whereCode($currencyPreference->data)->first();
         }
+
+        // get bill id.
         if (!is_null($data['bill'])) {
             $data['bill-id'] = $data['bill']->id;
         }
 
+        // opposing account can be difficult.
+
+        // get opposing account, which is quite complex:
+        $opposingAccount                 = new OpposingAccount($data);
+        $data['opposing-account-object'] = $opposingAccount->parse();
+
         // do bank specific fixes:
 
-        $specifix = new Specifix();
-        $specifix->setData($data);
-        $specifix->setRow($row);
+        //        $specifix = new Specifix();
+        //        $specifix->setData($data);
+        //        $specifix->setRow($row);
         //$specifix->fix($data, $row); // TODO
         // get data back:
         //$data = $specifix->getData(); // TODO
 
         return $data;
-    }
-
-    /**
-     * @param array $data
-     */
-    protected function processOpposingAccount(array $data)
-    {
-        // first priority. try to find the account based on ID,
-        // if any.
-        if ($data['opposing-account-id'] instanceof Account) {
-            return $data['opposing-account-id'];
-        }
-
-        // second: try to find the account based on IBAN, if any.
-        if ($data['opposing-account-iban'] instanceof Account) {
-            return $data['opposing-account-iban'];
-        }
-
-        $accountType = $this->getAccountType($data['amount']);
-
-        if (is_string($data['opposing-account-iban'])) {
-            $accounts = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
-            foreach ($accounts as $entry) {
-                if ($entry->iban == $data['opposing-account-iban']) {
-
-                    //return $entry;
-                }
-            }
-            // create if not exists:
-            $account = Account::firstOrCreateEncrypted(
-                [
-                    'user_id'         => Auth::user()->id,
-                    'account_type_id' => $accountType->id,
-                    'name'            => $data['opposing-account-iban'],
-                    'iban'            => $data['opposing-account-iban'],
-                    'active'          => true,
-                ]
-            );
-
-            return $account;
-
-        }
-
-        // third: try to find account based on name, if any.
-        if ($data['opposing-account-name'] instanceof Account) {
-            return $data['opposing-account-name'];
-        }
-
-        if (is_string($data['opposing-account-name'])) {
-            $accounts = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
-            foreach ($accounts as $entry) {
-                if ($entry->name == $data['opposing-account-name']) {
-                    return $entry;
-                }
-            }
-            // create if not exists:
-            $account = Account::firstOrCreateEncrypted(
-                [
-                    'user_id'         => Auth::user()->id,
-                    'account_type_id' => $accountType->id,
-                    'name'            => $data['opposing-account-name'],
-                    'iban'            => '',
-                    'active'          => true,
-                ]
-            );
-
-            return $account;
-        }
-        return null;
-
-        // if nothing, create expense/revenue, never asset. TODO
-
-    }
-
-    /**
-     * @param $amount
-     *
-     * @return AccountType
-     */
-    protected function getAccountType($amount)
-    {
-        // opposing account type:
-        if ($amount < 0) {
-            // create expense account:
-
-            return AccountType::where('type', 'Expense account')->first();
-        } else {
-            // create revenue account:
-
-            return AccountType::where('type', 'Revenue account')->first();
-        }
     }
 
     /**
@@ -326,11 +238,17 @@ class Importer
         if (is_null($data['date'])) {
             $date = $data['date-rent'];
         }
+
+        // defaults to deposit
+        $transactionType = TransactionType::where('type', 'Deposit')->first();
         if ($data['amount'] < 0) {
             $transactionType = TransactionType::where('type', 'Withdrawal')->first();
-        } else {
-            $transactionType = TransactionType::where('type', 'Deposit')->first();
         }
+
+        if ($data['opposing-account-object']->accountType->type == 'Asset account') {
+            $transactionType = TransactionType::where('type', 'Transfer')->first();
+        }
+
         $errors  = new MessageBag;
         $journal = TransactionJournal::create(
             [
@@ -378,6 +296,11 @@ class Importer
         if (!is_null($data['category'])) {
             $journal->categories()->save($data['category']);
         }
+        if (!is_null($data['tags'])) {
+            foreach ($data['tags'] as $tag) {
+                $journal->tags()->save($tag);
+            }
+        }
 
         return $journal;
 
@@ -391,6 +314,4 @@ class Importer
     {
         $this->data = $data;
     }
-
-
 }
