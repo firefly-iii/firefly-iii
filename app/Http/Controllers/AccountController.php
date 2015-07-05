@@ -248,6 +248,7 @@ class AccountController extends Controller
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
 
+
         $repository->update($account, $accountData);
 
         Session::flash('success', 'Account "' . $account->name . '" updated.');

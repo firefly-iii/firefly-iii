@@ -55,13 +55,13 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance','iban'];
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
                         = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required|between:1,1024|uniqueAccountForUser',
+            'name'            => 'required',
             'active'          => 'required|boolean'
         ];
 
