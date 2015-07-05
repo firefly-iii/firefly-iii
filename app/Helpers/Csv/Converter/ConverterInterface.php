@@ -22,30 +22,34 @@ interface ConverterInterface
     public function convert();
 
     /**
-     * @param $index
+     * @param int $index
      */
     public function setIndex($index);
 
     /**
-     * @param $mapped
+     * @param array $mapped
      */
     public function setMapped($mapped);
 
     /**
-     * @param $role
+     * @param string $role
      */
     public function setRole($role);
 
     /**
-     * @param $value
+     * @param string $value
      */
     public function setValue($value);
 
     /**
      * @param array $data
-     *
-     * @return mixed
      */
     public function setData(array $data);
+
+    /**
+     * @param string $field
+     *
+     */
+    public function setField($field);
 
 }

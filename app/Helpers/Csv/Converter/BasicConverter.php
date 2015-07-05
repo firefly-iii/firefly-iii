@@ -11,10 +11,15 @@ class BasicConverter
 {
     /** @var  array */
     protected $data;
+    /** @var string */
+    protected $field;
+    /** @var int */
     protected $index;
     /** @var  array */
     protected $mapped;
+    /** @var string */
     protected $role;
+    /** @var string */
     protected $value;
 
     /**
@@ -28,13 +33,29 @@ class BasicConverter
     /**
      * @param array $data
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $this->data = $data;
     }
 
     /**
-     * @return mixed
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param string $field
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+    }
+
+    /**
+     * @return int
      */
     public function getIndex()
     {
@@ -42,7 +63,7 @@ class BasicConverter
     }
 
     /**
-     * @param mixed $index
+     * @param int $index
      */
     public function setIndex($index)
     {
@@ -66,7 +87,7 @@ class BasicConverter
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRole()
     {
@@ -74,7 +95,7 @@ class BasicConverter
     }
 
     /**
-     * @param mixed $role
+     * @param string $role
      */
     public function setRole($role)
     {
@@ -82,7 +103,7 @@ class BasicConverter
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getValue()
     {
@@ -90,7 +111,7 @@ class BasicConverter
     }
 
     /**
-     * @param mixed $value
+     * @param string $value
      */
     public function setValue($value)
     {

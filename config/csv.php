@@ -2,8 +2,8 @@
 return [
     'roles' => [
         '_ignore'           => [
-            'name'     => '(ignore this column)',
-            'mappable' => false,
+            'name'      => '(ignore this column)',
+            'mappable'  => false,
             'converter' => 'Ignore',
             'field'     => 'ignored',
         ],
@@ -46,6 +46,8 @@ return [
         'date-rent'         => [
             'name'     => 'Rent calculation date',
             'mappable' => false,
+            'converter' => 'Date',
+            'field'     => 'date-rent',
         ],
         'budget-id'         => [
             'name'     => 'Budget ID (matching Firefly)',
@@ -96,8 +98,10 @@ return [
             'mappable' => true,
         ],
         'opposing-name'     => [
-            'name'     => 'Expense or revenue account name',
-            'mappable' => true,
+            'name'      => 'Expense or revenue account name',
+            'mappable'  => true,
+            'converter' => 'OpposingName',
+            'field'     => 'opposing-account'
         ],
         'opposing-iban'     => [
             'name'     => 'Expense or revenue account IBAN',

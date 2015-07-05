@@ -78,6 +78,7 @@ class Importer
             /** @var ConverterInterface $converter */
             $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
             $converter->setData($data); // the complete array so far.
+            $converter->setField($field);
             $converter->setIndex($index);
             $converter->setValue($value);
             $converter->setRole($role);
