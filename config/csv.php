@@ -8,12 +8,16 @@ return [
             'field'     => 'ignored',
         ],
         'bill-id'           => [
-            'name'     => 'Bill ID (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Bill ID (matching Firefly)',
+            'mappable'  => false,
+            'field'     => 'bill',
+            'converter' => 'BillId'
         ],
         'bill-name'         => [
-            'name'     => 'Bill name',
-            'mappable' => true,
+            'name'      => 'Bill name',
+            'mappable'  => true,
+            'converter' => 'BillName',
+            'field'     => 'bill',
         ],
         'currency-id'       => [
             'name'     => 'Currency ID (matching Firefly)',
@@ -83,32 +87,38 @@ return [
             'mappable' => true,
         ],
         'account-id'        => [
-            'name'     => 'Asset account ID (matching Firefly)',
-            'mappable' => true,
+            'name'      => 'Asset account ID (matching Firefly)',
+            'mappable'  => true,
+            'mapper'    => 'AssetAccount',
+            'field'     => 'asset-account',
+            'converter' => 'AccountId'
         ],
         'account-name'      => [
-            'name'     => 'Asset account name',
-            'mappable' => true,
+            'name'      => 'Asset account name',
+            'mappable'  => true,
+            'mapper'    => 'AssetAccount',
+            'field'     => 'asset-account',
+            'converter' => 'AssetAccountName'
         ],
         'account-iban'      => [
             'name'      => 'Asset account IBAN',
             'mappable'  => true,
-            'converter' => 'AccountIban',
+            'converter' => 'AssetAccountIban',
             'field'     => 'asset-account',
             'mapper'    => 'AssetAccount'
         ],
         'opposing-id'       => [
-            'name'     => 'Expense or revenue account ID (matching Firefly)',
+            'name'     => 'Opposing account account ID (matching Firefly)',
             'mappable' => true,
         ],
         'opposing-name'     => [
-            'name'      => 'Expense or revenue account name',
+            'name'      => 'Opposing account name',
             'mappable'  => true,
             'converter' => 'OpposingName',
             'field'     => 'opposing-account'
         ],
         'opposing-iban'     => [
-            'name'     => 'Expense or revenue account IBAN',
+            'name'     => 'Opposing account IBAN',
             'mappable' => true,
         ],
         'amount'            => [

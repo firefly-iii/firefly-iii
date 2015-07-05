@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 05/07/15
- * Time: 08:35
- */
 
 namespace FireflyIII\Helpers\Csv\Mapper;
 

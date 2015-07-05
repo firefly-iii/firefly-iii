@@ -40,6 +40,9 @@ class HomeController extends Controller
      */
     public function flush()
     {
+
+        Preferences::mark();
+
         // get all tags.
         // update all counts:
         $tags = Tag::get();
@@ -52,6 +55,7 @@ class HomeController extends Controller
                 $journal->save();
             }
         }
+
 
 
         Session::clear();

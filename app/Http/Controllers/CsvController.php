@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 03/07/15
- * Time: 10:37
- */
 
 namespace FireflyIII\Http\Controllers;
 
@@ -17,6 +11,7 @@ use FireflyIII\Helpers\Csv\WizardInterface;
 use Illuminate\Http\Request;
 use Input;
 use Log;
+use Preferences;
 use Redirect;
 use Session;
 use View;
@@ -74,7 +69,7 @@ class CsvController extends Controller
         $firstRow       = $this->data->getReader()->fetchOne();
         $count          = count($firstRow);
         $headers        = [];
-        $example        = $this->data->getReader()->fetchOne();
+        $example        = $this->data->getReader()->fetchOne(1);
         $availableRoles = [];
         $roles          = $this->data->getRoles();
         $map            = $this->data->getMap();
@@ -165,6 +160,9 @@ class CsvController extends Controller
             }
             if ($role['mappable'] === true && !isset($role['mapper'])) {
                 $unsupported[] = trans('firefly.csv_unsupported_map', ['columnRole' => $role['name']]);
+            }
+            if (!isset($role['field'])) {
+                $unsupported[] = trans('firefly.csv_cannot_store_value', ['columnRole' => $role['name']]);
             }
         }
         sort($unsupported);
@@ -309,8 +307,13 @@ class CsvController extends Controller
         }
         Log::debug('Done importing!');
 
-        echo 'display result';
-        exit;
+        $rows     = $importer->getRows();
+        $errors   = $importer->getErrors();
+        $imported = $importer->getImported();
+
+        Preferences::mark();
+
+        return view('csv.process', compact('rows', 'errors', 'imported'));
 
     }
 

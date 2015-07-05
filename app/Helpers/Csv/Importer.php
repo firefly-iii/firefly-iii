@@ -4,17 +4,19 @@ namespace FireflyIII\Helpers\Csv;
 
 use App;
 use Auth;
-use Carbon\Carbon;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\MessageBag;
 use Log;
+use Preferences;
+use ReflectionException;
 
 set_time_limit(0);
 
@@ -30,15 +32,43 @@ class Importer
     protected $data;
     /** @var array */
     protected $errors;
+    /** @var int */
+    protected $imported;
     /** @var array */
     protected $map;
     /** @var  array */
     protected $mapped;
     /** @var  array */
     protected $roles;
+    /** @var  int */
+    protected $rows = 0;
 
     /**
-     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImported()
+    {
+        return $this->imported;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
+    /**
+     * @throws FireflyException
      */
     public function run()
     {
@@ -46,15 +76,18 @@ class Importer
         $this->roles  = $this->data->getRoles();
         $this->mapped = $this->data->getMapped();
         foreach ($this->data->getReader() as $index => $row) {
-            Log::debug('Now at row ' . $index);
-            $result = $this->importRow($row);
-            if (!($result === true)) {
-                Log::error('Caught error at row #' . $index . ': ' . $result);
-                $this->errors[$index] = $result;
+            if (($this->data->getHasHeaders() && $index > 1) || !$this->data->getHasHeaders()) {
+                $this->rows++;
+                Log::debug('Now at row ' . $index);
+                $result = $this->importRow($row);
+                if (!($result === true)) {
+                    Log::error('Caught error at row #' . $index . ': ' . $result);
+                    $this->errors[$index] = $result;
+                } else {
+                    $this->imported++;
+                }
             }
         }
-
-        return count($this->errors);
     }
 
     /**
@@ -80,8 +113,12 @@ class Importer
             if (is_null($field)) {
                 throw new FireflyException('No place to store value of type "' . $role . '".');
             }
-            /** @var ConverterInterface $converter */
-            $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
+            try {
+                /** @var ConverterInterface $converter */
+                $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
+            } catch (ReflectionException $e) {
+                throw new FireflyException('Cannot continue with column of type "' . $role . '" because class "' . $class . '" cannot be found.');
+            }
             $converter->setData($data); // the complete array so far.
             $converter->setField($field);
             $converter->setIndex($index);
@@ -122,6 +159,8 @@ class Importer
             'amount-modifier'         => 1,
             'ignored'                 => null,
             'date-rent'               => null,
+            'bill'                    => null,
+            'bill-id'                 => null,
         ];
 
     }
@@ -147,8 +186,16 @@ class Importer
             $accountType = AccountType::where('type', 'Revenue account')->first();
         }
 
-        if(strlen($data['description']) == 0) {
+        if (strlen($data['description']) == 0) {
             $data['description'] = trans('firefly.csv_empty_description');
+        }
+        // fix currency
+        if (is_null($data['currency'])) {
+            $currencyPreference = Preferences::get('currencyPreference', 'EUR');
+            $data['currency']   = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        }
+        if (!is_null($data['bill'])) {
+            $data['bill-id'] = $data['bill']->id;
         }
 
         // do bank specific fixes:
@@ -156,10 +203,10 @@ class Importer
         $specifix = new Specifix();
         $specifix->setData($data);
         $specifix->setRow($row);
-        $specifix->fix($data, $row);
+        //$specifix->fix($data, $row); // TODO
 
         // get data back:
-        $data = $specifix->getData();
+        //$data = $specifix->getData(); // TODO
 
         $data['opposing-account-object'] = Account::firstOrCreateEncrypted(
             [
@@ -215,11 +262,11 @@ class Importer
             [
                 'user_id'                 => Auth::user()->id,
                 'transaction_type_id'     => $transactionType->id,
-                'bill_id'                 => null,
                 'transaction_currency_id' => $data['currency']->id,
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $date,
+                'bill_id'                 => $data['bill-id'],
             ]
         );
         $errors  = $journal->getErrors()->merge($errors);
@@ -261,14 +308,5 @@ class Importer
         $this->data = $data;
     }
 
-    /**
-     * @param $value
-     *
-     * @return Carbon
-     */
-    protected function parseDate($value)
-    {
-        return Carbon::createFromFormat($this->data->getDateFormat(), $value);
-    }
 
 }

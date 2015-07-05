@@ -76,7 +76,7 @@ class Account extends Model
         // everything but the name:
         $query = Account::orderBy('id');
         foreach ($fields as $name => $value) {
-            if ($name != 'name') {
+            if ($name != 'name' && $name != 'iban') {
                 $query->where($name, $value);
             }
         }
@@ -87,6 +87,11 @@ class Account extends Model
                 return $account;
             }
         }
+        // account must have a name. If not set, use IBAN.
+        if (!isset($fields['name'])) {
+            $fields['name'] = $fields['iban'];
+        }
+
         // create it!
         $account = Account::create($fields);
 

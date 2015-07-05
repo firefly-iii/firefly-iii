@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 27/06/15
- * Time: 17:21
- */
 
 namespace FireflyIII\Generator\Chart\Bill;
 
