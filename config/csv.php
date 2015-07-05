@@ -1,6 +1,17 @@
 <?php
 return [
-    'roles' => [
+    'specifix'        => [
+        'rabo_description'
+    ],
+    'post_processors' => [
+        'OpposingAccount',
+        'Description',
+        'Amount',
+        'Currency',
+        'Bill'
+
+    ],
+    'roles'           => [
         '_ignore'           => [
             'name'      => '(ignore this column)',
             'mappable'  => false,

@@ -1,65 +1,74 @@
 <?php
 
-namespace FireflyIII\Helpers\Csv;
-
-use Auth;
+namespace FireflyIII\Helpers\Csv\PostProcessing;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use Auth;
 
 /**
  * Class OpposingAccount
  *
- * @package FireflyIII\Helpers\Csv
+ * @package FireflyIII\Helpers\Csv\PostProcessing
  */
-class OpposingAccount
+class OpposingAccount implements PostProcessorInterface
 {
+
     /** @var  array */
     protected $data;
 
     /**
-     * @param array $data
+     * @return array
      */
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @return \FireflyIII\Models\Account|null
-     */
-    public function parse()
+    public function process()
     {
         // first priority. try to find the account based on ID,
         // if any.
         if ($this->data['opposing-account-id'] instanceof Account) {
+            $this->data['opposing-account-object'] = $this->data['opposing-account-id'];
 
-            return $this->data['opposing-account-id'];
+            return $this->data;
         }
 
         // second: try to find the account based on IBAN, if any.
         if ($this->data['opposing-account-iban'] instanceof Account) {
-            return $this->data['opposing-account-iban'];
+            $this->data['opposing-account-object'] = $this->data['opposing-account-iban'];
+
+            return $this->data;
         }
 
 
         if (is_string($this->data['opposing-account-iban'])) {
 
-            return $this->parseIbanString();
+            $this->data['opposing-account-object'] = $this->parseIbanString();
+
+            return $this->data;
         }
 
         // third: try to find account based on name, if any.
         if ($this->data['opposing-account-name'] instanceof Account) {
 
-            return $this->data['opposing-account-name'];
+            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
+
+            return $this->data;
         }
 
         if (is_string($this->data['opposing-account-name'])) {
-            return $this->parseNameString();
+            $this->data['opposing-account-object'] = $this->parseNameString();
+
+            return $this->data;
         }
 
         return null;
 
-        // if nothing, create expense/revenue, never asset. TODO
+
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
     }
 
     /**

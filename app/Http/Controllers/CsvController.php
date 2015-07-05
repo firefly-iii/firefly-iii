@@ -153,6 +153,8 @@ class CsvController extends Controller
         Session::forget('csv-mapped');
         Session::forget('csv-specifix');
 
+        // specifix TODO
+
         // get values which are yet unsaveable or unmappable:
         $unsupported = [];
         foreach (Config::get('csv.roles') as $role) {

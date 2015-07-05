@@ -7,6 +7,7 @@ use Auth;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
+use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -171,33 +172,15 @@ class Importer
      */
     protected function postProcess(array $data)
     {
-        // fix two simple fields:
-        bcscale(2);
-        $data['description'] = trim($data['description']);
-        $data['amount']      = bcmul($data['amount'], $data['amount-modifier']);
-
-        if (strlen($data['description']) == 0) {
-            $data['description'] = trans('firefly.csv_empty_description');
+        $set = Config::get('csv.post_processors');
+        foreach ($set as $className) {
+            /** @var PostProcessorInterface $postProcessor */
+            $postProcessor = App::make('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
+            $postProcessor->setData($data);
+            $data = $postProcessor->process();
         }
 
-        // fix currency
-        if (is_null($data['currency'])) {
-            $currencyPreference = Preferences::get('currencyPreference', 'EUR');
-            $data['currency']   = TransactionCurrency::whereCode($currencyPreference->data)->first();
-        }
-
-        // get bill id.
-        if (!is_null($data['bill'])) {
-            $data['bill-id'] = $data['bill']->id;
-        }
-
-        // opposing account can be difficult.
-
-        // get opposing account, which is quite complex:
-        $opposingAccount                 = new OpposingAccount($data);
-        $data['opposing-account-object'] = $opposingAccount->parse();
-
-        // do bank specific fixes:
+        // do bank specific fixes: TODO
 
         //        $specifix = new Specifix();
         //        $specifix->setData($data);
