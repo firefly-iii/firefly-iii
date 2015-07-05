@@ -24,7 +24,7 @@
 
         <div class="col-sm-8">
             <div class="radio"><label>
-                    {{ Form.checkbox(name ~ '_return_to_edit', '1', Input.old('return_to_edit') == '1', {'id': name ~ '_return_to_edit'}) }}
+                    {{ Form.checkbox('return_to_edit', '1', Input.old('return_to_edit') == '1', {'id': name ~ '_return_to_edit'}) }}
                     {{ trans('form.returnHereUpdateExplanation') }}
                 </label>
             </div>
