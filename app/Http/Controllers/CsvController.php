@@ -43,6 +43,10 @@ class CsvController extends Controller
         View::share('title', trans('firefly.csv'));
         View::share('mainTitleIcon', 'fa-file-text-o');
 
+        if (Config::get('firefly.csv_import_enabled') === false) {
+            throw new FireflyException('CSV Import is not enabled.');
+        }
+
         $this->wizard = App::make('FireflyIII\Helpers\Csv\WizardInterface');
         $this->data   = App::make('FireflyIII\Helpers\Csv\Data');
 
@@ -170,7 +174,7 @@ class CsvController extends Controller
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path','unsupported'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'unsupported'));
     }
 
     /**
