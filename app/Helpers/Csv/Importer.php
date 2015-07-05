@@ -8,13 +8,12 @@ use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
+use FireflyIII\Helpers\Csv\Specifix\SpecifixInterface;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\MessageBag;
 use Log;
-use Preferences;
 
 set_time_limit(0);
 
@@ -127,7 +126,7 @@ class Importer
 
         }
         // post processing and validating.
-        $data   = $this->postProcess($data);
+        $data   = $this->postProcess($data, $row);
         $result = $this->validateData($data);
         if ($result === true) {
             $result = $this->createTransactionJournal($data);
@@ -167,11 +166,24 @@ class Importer
      * Row denotes the original data.
      *
      * @param array $data
+     * @param array $row
      *
      * @return array
      */
-    protected function postProcess(array $data)
+    protected function postProcess(array $data, array $row)
     {
+        // do bank specific fixes (must be enabled but now all of them.
+
+        $set = Config::get('csv.specifix');
+        foreach ($set as $className) {
+            /** @var SpecifixInterface $specifix */
+            $specifix = App::make('FireflyIII\Helpers\Csv\Specifix\\' . $className);
+            $specifix->setData($data);
+            $specifix->setRow($row);
+            $data = $specifix->fix();
+        }
+
+
         $set = Config::get('csv.post_processors');
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
@@ -180,7 +192,6 @@ class Importer
             $data = $postProcessor->process();
         }
 
-        // do bank specific fixes: TODO
 
         //        $specifix = new Specifix();
         //        $specifix->setData($data);

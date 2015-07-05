@@ -4,6 +4,8 @@ namespace FireflyIII\Helpers\Csv\PostProcessing;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Auth;
+use FireflyIII\Validation\FireflyValidator;
+use Validator;
 
 /**
  * Class OpposingAccount
@@ -36,8 +38,11 @@ class OpposingAccount implements PostProcessorInterface
             return $this->data;
         }
 
+        $rules     = ['iban' => 'iban'];
+        $check     = ['iban' => $this->data['opposing-account-iban']];
+        $validator = Validator::make($check, $rules);
 
-        if (is_string($this->data['opposing-account-iban'])) {
+        if (is_string($this->data['opposing-account-iban']) && $validator->valid()) {
 
             $this->data['opposing-account-object'] = $this->parseIbanString();
 

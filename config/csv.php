@@ -1,7 +1,7 @@
 <?php
 return [
     'specifix'        => [
-        'rabo_description'
+        'RabobankDescription'
     ],
     'post_processors' => [
         'OpposingAccount',

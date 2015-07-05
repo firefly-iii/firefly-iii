@@ -1,13 +1,13 @@
 <?php
 
-namespace FireflyIII\Helpers\Csv;
+namespace FireflyIII\Helpers\Csv\Specifix;
 
 /**
- * Class Specifix
+ * Class RabobankDescription
  *
- * @package FireflyIII\Helpers\Csv
+ * @package FireflyIII\Helpers\Csv\Specifix
  */
-class Specifix
+class RabobankDescription
 {
     /** @var array */
     protected $data;
@@ -17,11 +17,13 @@ class Specifix
 
 
     /**
-     * Implement bank and locale related fixes.
+     * @return array
      */
     public function fix()
     {
         $this->rabobankFixEmptyOpposing();
+
+        return $this->data;
 
     }
 
@@ -30,19 +32,10 @@ class Specifix
      */
     protected function rabobankFixEmptyOpposing()
     {
-        if (strlen($this->data['opposing-account']) == 0) {
-            $this->data['opposing-account'] = $this->row[10];
+        if (strlen($this->data['opposing-account-name']) == 0) {
+            $this->data['opposing-account-name'] = $this->row[10];
         }
         $this->data['description'] = trim(str_replace($this->row[10], '', $this->data['description']));
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 
     /**
@@ -51,14 +44,6 @@ class Specifix
     public function setData($data)
     {
         $this->data = $data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRow()
-    {
-        return $this->row;
     }
 
     /**
