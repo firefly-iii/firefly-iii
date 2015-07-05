@@ -55,7 +55,7 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance'];
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance','iban'];
     protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
                         = [
