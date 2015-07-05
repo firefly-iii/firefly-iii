@@ -55,16 +55,17 @@
                             <td>{{ header }}</td>
                             <td>{{ example[index] }}</td>
                             <td>
-                                {{ Form.select(('role['~index~']'), roles) }}
+                                {{ Form.select(('role['~index~']'), availableRoles,roles[index]) }}
                             </td>
                             <td>
-                                {{ Form.checkbox(('map['~index~']'),1,false) }}
+                                {{ Form.checkbox(('map['~index~']'),1,map[index]) }}
                             </td>
 
                         </tr>
                         {% endfor %}
                     </table>
                         <p>
+                            <a href="{{ route('csv.index') }}" class="btn btn-danger pull-right">{{ 'go_back'|_ }}</a>
                             <button type="submit" class="btn btn-success">
                                 {{ 'process_csv_file'|_ }}
                             </button>

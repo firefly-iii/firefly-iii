@@ -8,17 +8,19 @@
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
+use App;
 use Carbon\Carbon;
 use Config;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Csv\Data;
+use FireflyIII\Helpers\Csv\Importer;
+use FireflyIII\Helpers\Csv\WizardInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Http\Request;
 use Input;
 use League\Csv\Reader;
-use Log;
 use Redirect;
 use Session;
 use View;
@@ -31,6 +33,11 @@ use View;
 class CsvController extends Controller
 {
 
+    /** @var  Data */
+    protected $data;
+    /** @var  WizardInterface */
+    protected $wizard;
+
     /**
      *
      */
@@ -39,6 +46,9 @@ class CsvController extends Controller
         parent::__construct();
         View::share('title', trans('firefly.csv'));
         View::share('mainTitleIcon', 'fa-file-text-o');
+
+        $this->wizard = App::make('FireflyIII\Helpers\Csv\WizardInterface');
+        $this->data   = App::make('FireflyIII\Helpers\Csv\Data');
 
     }
 
@@ -52,48 +62,81 @@ class CsvController extends Controller
      */
     public function columnRoles()
     {
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers'];
-        foreach ($fields as $field) {
-            if (!Session::has($field)) {
-                Session::flash('warning', 'Could not recover upload (' . $field . ' missing).');
 
-                return Redirect::route('csv.index');
-            }
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers'];
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
+
+            return Redirect::route('csv.index');
         }
 
-        $subTitle         = trans('firefly.csv_process');
-        $fullPath         = Session::get('csv-file');
-        $hasHeaders       = Session::get('csv-has-headers');
-        $content          = file_get_contents($fullPath);
-        $contentDecrypted = Crypt::decrypt($content);
-        $reader           = Reader::createFromString($contentDecrypted);
+        $subTitle       = trans('firefly.csv_process');
+        $firstRow       = $this->data->getReader()->fetchOne();
+        $count          = count($firstRow);
+        $headers        = [];
+        $example        = $this->data->getReader()->fetchOne();
+        $availableRoles = [];
+        $roles          = $this->data->getRoles();
+        $map            = $this->data->getMap();
 
-
-        Log::debug('Get uploaded content from ' . $fullPath);
-        Log::debug('Strlen of original content is ' . strlen($contentDecrypted));
-        Log::debug('MD5 of original content is ' . md5($contentDecrypted));
-
-        $firstRow = $reader->fetchOne();
-
-        $count   = count($firstRow);
-        $headers = [];
         for ($i = 1; $i <= $count; $i++) {
             $headers[] = trans('firefly.csv_row') . ' #' . $i;
         }
-        if ($hasHeaders) {
+        if ($this->data->getHasHeaders()) {
             $headers = $firstRow;
         }
 
-        // example data is always the second row:
-        $example = $reader->fetchOne();
-        $roles   = [];
         foreach (Config::get('csv.roles') as $name => $role) {
-            $roles[$name] = $role['name'];
+            $availableRoles[$name] = $role['name'];
         }
-        ksort($roles);
+        ksort($availableRoles);
 
+        return view('csv.column-roles', compact('availableRoles', 'map', 'roles', 'headers', 'example', 'subTitle'));
+    }
 
-        return view('csv.column-roles', compact('roles', 'headers', 'example', 'subTitle'));
+    /**
+     * Optional download of mapping.
+     *
+     * STEP FOUR THREE-A
+     */
+    public function downloadConfig()
+    {
+        $fields = ['csv-date-format', 'csv-has-headers'];
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
+
+            return Redirect::route('csv.index');
+        }
+        $data = [
+            'date-format' => Session::get('date-format'),
+            'has-headers' => Session::get('csv-has-headers')
+        ];
+        //        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped'];
+        if (Session::has('csv-map')) {
+            $data['map'] = Session::get('csv-map');
+        }
+        if (Session::has('csv-roles')) {
+            $data['roles'] = Session::get('csv-roles');
+        }
+        if (Session::has('csv-mapped')) {
+            $data['mapped'] = Session::get('csv-mapped');
+        }
+
+        $result = json_encode($data, JSON_PRETTY_PRINT);
+        $name   = 'csv-configuration-' . date('Y-m-d') . '.json';
+
+        header('Content-disposition: attachment; filename=' . $name);
+        header('Content-type: application/json');
+        echo $result;
+        exit;
+    }
+
+    /**
+     * @return View
+     */
+    public function downloadConfigPage()
+    {
+        return view('csv.download-config');
     }
 
     /**
@@ -110,6 +153,9 @@ class CsvController extends Controller
         Session::forget('csv-date-format');
         Session::forget('csv-has-headers');
         Session::forget('csv-file');
+        Session::forget('csv-map');
+        Session::forget('csv-roles');
+        Session::forget('csv-mapped');
 
 
         // can actually upload?
@@ -129,28 +175,20 @@ class CsvController extends Controller
     public function initialParse()
     {
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers'];
-        foreach ($fields as $field) {
-            if (!Session::has($field)) {
-                Session::flash('warning', 'Could not recover upload (' . $field . ' missing).');
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
 
-                return Redirect::route('csv.index');
-            }
+            return Redirect::route('csv.index');
         }
-        $configRoles = Config::get('csv.roles');
-        $roles       = [];
 
-        /*
-         * Store all rows for each column:
-         */
-        if (is_array(Input::get('role'))) {
-            $roles = [];
-            foreach (Input::get('role') as $index => $role) {
-                if ($role != '_ignore') {
-                    $roles[$index] = $role;
-                }
 
-            }
-        }
+        // process given roles and mapping:
+        $roles = $this->wizard->processSelectedRoles(Input::get('role'));
+        $maps  = $this->wizard->processSelectedMapping($roles, Input::get('map'));
+
+        Session::put('csv-map', $maps);
+        Session::put('csv-roles', $roles);
+
         /*
          * Go back when no roles defined:
          */
@@ -159,28 +197,19 @@ class CsvController extends Controller
 
             return Redirect::route('csv.column-roles');
         }
-        Session::put('csv-roles', $roles);
 
         /*
-         * Show user map thing:
+         * Continue with map specification when necessary.
          */
-        if (is_array(Input::get('map'))) {
-            $maps = [];
-            foreach (Input::get('map') as $index => $map) {
-                $name = $roles[$index];
-                if ($configRoles[$name]['mappable']) {
-                    $maps[$index] = $name;
-                }
-            }
-            // redirect to map routine.
-            Session::put('csv-map', $maps);
-
+        if (count($maps) > 0) {
             return Redirect::route('csv.map');
         }
 
-        var_dump($roles);
-        var_dump($_POST);
-        exit;
+        /*
+         * Or simply start processing.
+         */
+
+        return Redirect::route('csv.process');
 
     }
 
@@ -200,19 +229,11 @@ class CsvController extends Controller
          * Make sure all fields we need are accounted for.
          */
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
-        foreach ($fields as $field) {
-            if (!Session::has($field)) {
-                Session::flash('warning', 'Could not recover upload (' . $field . ' missing).');
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
 
-                return Redirect::route('csv.index');
-            }
+            return Redirect::route('csv.index');
         }
-
-        /*
-         * The $map array contains all columns
-         * the user wishes to map on to data already in the system.
-         */
-        $map = Session::get('csv-map');
 
         /*
          * The "options" array contains all options the user has
@@ -220,86 +241,30 @@ class CsvController extends Controller
          *
          * For each key there is an array which in turn represents
          * all the options available: grouped by ID.
+         *
+         * Aka:
+         *
+         * options[column index] = [
+         * field id => field identifier.
+         * ]
          */
-        $options = [];
-
-        /*
-         * Loop each field the user whishes to map.
-         */
-        foreach ($map as $index => $columnRole) {
-
-            /*
-             * Depending on the column role, get the relevant data from the database.
-             * This needs some work to be optimal.
-             */
-            switch ($columnRole) {
-                default:
-                    throw new FireflyException('Cannot map field of type "' . $columnRole . '".');
-                    break;
-                case 'account-iban':
-                    // get content for this column.
-                    $content = Auth::user()->accounts()->where('account_type_id', 3)->get(['accounts.*']);
-                    $list    = [];
-                    // make user friendly list:
-
-                    foreach ($content as $account) {
-                        $list[$account->id] = $account->name;
-                        //if(!is_null($account->iban)) {
-                        //$list[$account->id] .= ' ('.$account->iban.')';
-                        //}
-                    }
-                    $options[$index] = $list;
-                    break;
-                case 'currency-code':
-                    $currencies = TransactionCurrency::get();
-                    $list       = [];
-                    foreach ($currencies as $currency) {
-                        $list[$currency->id] = $currency->name . ' (' . $currency->code . ')';
-                    }
-                    $options[$index] = $list;
-                    break;
-                case 'opposing-name':
-                    // get content for this column.
-                    $content = Auth::user()->accounts()->whereIn('account_type_id', [4, 5])->get(['accounts.*']);
-                    $list    = [];
-                    // make user friendly list:
-
-                    foreach ($content as $account) {
-                        $list[$account->id] = $account->name . ' (' . $account->accountType->type . ')';
-                    }
-                    $options[$index] = $list;
-                    break;
-
-            }
-
+        try {
+            $options = $this->wizard->showOptions($this->data->getMap());
+        } catch (FireflyException $e) {
+            return view('error', ['message' => $e->getMessage()]);
         }
-
 
         /*
          * After these values are prepped, read the actual CSV file
          */
-        $content    = file_get_contents(Session::get('csv-file'));
-        $hasHeaders = Session::get('csv-has-headers');
-        $reader     = Reader::createFromString(Crypt::decrypt($content));
-        $values     = [];
+        $reader     = $this->data->getReader();
+        $map        = $this->data->getMap();
+        $hasHeaders = $this->data->getHasHeaders();
+        $values     = $this->wizard->getMappableValues($reader, $map, $hasHeaders);
+        $map        = $this->data->getMap();
+        $mapped     = $this->data->getMapped();
 
-        /*
-         * Loop over the CSV and collect mappable data:
-         */
-        foreach ($reader as $index => $row) {
-            if (($hasHeaders && $index > 1) || !$hasHeaders) {
-                // collect all map values
-                foreach ($map as $column => $irrelevant) {
-                    // check if $irrelevant is mappable!
-                    $values[$column][] = $row[$column];
-                }
-            }
-        }
-        foreach ($values as $column => $found) {
-            $values[$column] = array_unique($found);
-        }
-
-        return view('csv.map', compact('map', 'options', 'values'));
+        return view('csv.map', compact('map', 'options', 'values', 'mapped'));
     }
 
     /**
@@ -313,13 +278,23 @@ class CsvController extends Controller
          * Make sure all fields we need are accounted for.
          */
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped'];
-        foreach ($fields as $field) {
-            if (!Session::has($field)) {
-                Session::flash('warning', 'Could not recover upload (' . $field . ' missing).');
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
 
-                return Redirect::route('csv.index');
-            }
+            return Redirect::route('csv.index');
         }
+
+        //
+        $importer = new Importer;
+        $importer->setData($this->data);
+        try {
+            $importer->run();
+        } catch (FireflyException $e) {
+            return view('error', ['message' => $e->getMessage()]);
+        }
+
+
+        exit;
 
         // loop the original file again:
         $content    = file_get_contents(Session::get('csv-file'));
@@ -330,10 +305,6 @@ class CsvController extends Controller
         $dateFormat = Session::get('csv-date-format');
         $roles      = Session::get('csv-roles');
         $mapped     = Session::get('csv-mapped');
-
-        var_dump($roles);
-        var_dump(Session::get('csv-mapped'));
-
 
         /*
          * Loop over the CSV and collect mappable data:
@@ -424,13 +395,12 @@ class CsvController extends Controller
          * Make sure all fields we need are accounted for.
          */
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
-        foreach ($fields as $field) {
-            if (!Session::has($field)) {
-                Session::flash('warning', 'Could not recover upload (' . $field . ' missing).');
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
 
-                return Redirect::route('csv.index');
-            }
+            return Redirect::route('csv.index');
         }
+
         // save mapping to session.
         $mapped = [];
         if (!is_array(Input::get('mapping'))) {
@@ -448,7 +418,7 @@ class CsvController extends Controller
         Session::put('csv-mapped', $mapped);
 
         // proceed to process.
-        return Redirect::route('csv.process');
+        return Redirect::route('csv.download-config-page');
 
     }
 
@@ -468,40 +438,46 @@ class CsvController extends Controller
         if (!$request->hasFile('csv')) {
             Session::flash('warning', 'No file uploaded.');
 
-
             return Redirect::route('csv.index');
         }
 
-
+        /*
+         * Store CSV and put in session.
+         */
+        $fullPath   = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
         $dateFormat = Input::get('date_format');
         $hasHeaders = intval(Input::get('has_headers')) === 1;
-        // store file somewhere temporary (encrypted)?
-        $time     = str_replace(' ', '-', microtime());
-        $fileName = 'csv-upload-' . Auth::user()->id . '-' . $time . '.csv.encrypted';
-        $fullPath = storage_path('upload') . DIRECTORY_SEPARATOR . $fileName;
-        $content  = file_get_contents($request->file('csv')->getRealPath());
-
-        Log::debug('Stored uploaded content in ' . $fullPath);
-        Log::debug('Strlen of uploaded content is ' . strlen($content));
-        Log::debug('MD5 of uploaded content is ' . md5($content));
-
-        $content = Crypt::encrypt($content);
-        file_put_contents($fullPath, $content);
+        $map        = [];
+        $roles      = [];
+        $mapped     = [];
 
 
-        Session::put('csv-date-format', $dateFormat);
-        Session::put('csv-has-headers', $hasHeaders);
-        Session::put('csv-file', $fullPath);
+        /*
+         * Process config file if present.
+         */
+        if ($request->hasFile('csv_config')) {
+
+            $data = file_get_contents($request->file('csv_config')->getRealPath());
+            $json = json_decode($data, true);
+
+            if (!is_null($json)) {
+                $dateFormat = isset($json['date-format']) ? $json['date-format'] : $dateFormat;
+                $hasHeaders = isset($json['has-headers']) ? $json['has-headers'] : $hasHeaders;
+                $map        = isset($json['map']) && is_array($json['map']) ? $json['map'] : [];
+                $mapped     = isset($json['mapped']) && is_array($json['mapped']) ? $json['mapped'] : [];
+                $roles      = isset($json['roles']) && is_array($json['roles']) ? $json['roles'] : [];
+            }
+        }
+
+        $this->data->setCsvFileLocation($fullPath);
+        $this->data->setDateFormat($dateFormat);
+        $this->data->setHasHeaders($hasHeaders);
+        $this->data->setMap($map);
+        $this->data->setMapped($mapped);
+        $this->data->setRoles($roles);
+
 
         return Redirect::route('csv.column-roles');
-
-
-        //
-        //
-        //
-
-        //
-        //        return view('csv.upload', compact('headers', 'example', 'roles', 'subTitle'));
 
     }
 }

@@ -228,7 +228,10 @@ Route::group(
     Route::get('/csv/column_roles', ['uses' => 'CsvController@columnRoles', 'as' => 'csv.column-roles']);
     Route::post('/csv/initial_parse', ['uses' => 'CsvController@initialParse', 'as' => 'csv.initial_parse']);
     Route::get('/csv/map', ['uses' => 'CsvController@map', 'as' => 'csv.map']);
+    Route::get('/csv/download-config', ['uses' => 'CsvController@downloadConfig', 'as' => 'csv.download-config']);
+    Route::get('/csv/download', ['uses' => 'CsvController@downloadConfigPage', 'as' => 'csv.download-config-page']);
     Route::post('/csv/save_mapping', ['uses' => 'CsvController@saveMapping', 'as' => 'csv.save_mapping']);
+
     Route::get('/csv/process', ['uses' => 'CsvController@process', 'as' => 'csv.process']);
 
     /**

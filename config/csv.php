@@ -4,6 +4,8 @@ return [
         '_ignore'           => [
             'name'     => '(ignore this column)',
             'mappable' => false,
+            'converter' => 'Ignore',
+            'field'     => 'ignored',
         ],
         'bill-id'           => [
             'name'     => 'Bill ID (matching Firefly)',
@@ -22,8 +24,10 @@ return [
             'mappable' => true,
         ],
         'currency-code'     => [
-            'name'     => 'Currency code (ISO 4217)',
-            'mappable' => true,
+            'name'      => 'Currency code (ISO 4217)',
+            'mappable'  => true,
+            'converter' => 'CurrencyCode',
+            'field'     => 'currency'
         ],
         'currency-symbol'   => [
             'name'     => 'Currency symbol (matching Firefly)',
@@ -34,8 +38,10 @@ return [
             'mappable' => false,
         ],
         'date-transaction'  => [
-            'name'     => 'Date',
-            'mappable' => false,
+            'name'      => 'Date',
+            'mappable'  => false,
+            'converter' => 'Date',
+            'field'     => 'date',
         ],
         'date-rent'         => [
             'name'     => 'Rent calculation date',
@@ -49,9 +55,11 @@ return [
             'name'     => 'Budget name',
             'mappable' => true,
         ],
-        'rabo-debet-credet' => [
-            'name'     => 'Rabobank specific debet/credet indicator',
-            'mappable' => false,
+        'rabo-debet-credit' => [
+            'name'      => 'Rabobank specific debet/credit indicator',
+            'mappable'  => false,
+            'converter' => 'RabobankDebetCredit',
+            'field'     => 'amount-modifier',
         ],
         'category-id'       => [
             'name'     => 'Category ID (matching Firefly)',
@@ -78,8 +86,10 @@ return [
             'mappable' => true,
         ],
         'account-iban'      => [
-            'name'     => 'Asset account IBAN',
-            'mappable' => true,
+            'name'      => 'Asset account IBAN',
+            'mappable'  => true,
+            'converter' => 'AccountIban',
+            'field'     => 'asset-account'
         ],
         'opposing-id'       => [
             'name'     => 'Expense or revenue account ID (matching Firefly)',
@@ -94,8 +104,10 @@ return [
             'mappable' => true,
         ],
         'amount'            => [
-            'name'     => 'Amount',
-            'mappable' => false,
+            'name'      => 'Amount',
+            'mappable'  => false,
+            'converter' => 'Amount',
+            'field'     => 'amount',
         ],
         'sepa-ct-id'        => [
             'name'     => 'SEPA Credit Transfer end-to-end ID',

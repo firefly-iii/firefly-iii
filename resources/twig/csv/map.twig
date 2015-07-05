@@ -20,10 +20,7 @@
 
                 </div>
                 <div class="box-body">
-                    <p>{{ 'csv_map_text'|_ }}</p>
-                    <h4>{{ 'csv_more_information' }}</h4>
-
-                    <p>{{ 'csv_more_information_text'|_ }}</p>
+                    <a href="{{ route('csv.download-config') }}">Download config for use again</a>
                 </div>
             </div>
 
@@ -57,7 +54,7 @@
                                     <tr>
                                         <td>{{ value }}</td>
                                         <td>
-                                            {{ Form.select('mapping['~index~']['~value~']',options[index]) }}
+                                            {{ Form.select('mapping['~index~']['~value~']',options[index], mapped[index][value]) }}
                                         </td>
                                     </tr>
                                 {% endfor %}
