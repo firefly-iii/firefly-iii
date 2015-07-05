@@ -9,18 +9,14 @@
 namespace FireflyIII\Http\Controllers;
 
 use App;
-use Carbon\Carbon;
 use Config;
-use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
 use FireflyIII\Helpers\Csv\Importer;
 use FireflyIII\Helpers\Csv\WizardInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Http\Request;
 use Input;
-use League\Csv\Reader;
+use Log;
 use Redirect;
 use Session;
 use View;
@@ -80,7 +76,7 @@ class CsvController extends Controller
         $map            = $this->data->getMap();
 
         for ($i = 1; $i <= $count; $i++) {
-            $headers[] = trans('firefly.csv_row') . ' #' . $i;
+            $headers[] = trans('firefly.csv_column') . ' #' . $i;
         }
         if ($this->data->getHasHeaders()) {
             $headers = $firstRow;
@@ -157,12 +153,24 @@ class CsvController extends Controller
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
 
+        // get values which are yet unsaveable or unmappable:
+        $unsupported = [];
+        foreach (Config::get('csv.roles') as $role) {
+            if (!isset($role['converter'])) {
+                $unsupported[] = trans('firefly.csv_unsupported_value', ['columnRole' => $role['name']]);
+            }
+            if ($role['mappable'] === true && !isset($role['mapper'])) {
+                $unsupported[] = trans('firefly.csv_unsupported_map', ['columnRole' => $role['name']]);
+            }
+        }
+        sort($unsupported);
+
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path','unsupported'));
     }
 
     /**
@@ -209,7 +217,8 @@ class CsvController extends Controller
          * Or simply start processing.
          */
 
-        return Redirect::route('csv.process');
+        // proceed to download config
+        return Redirect::route('csv.download-config-page');
 
     }
 
@@ -284,103 +293,20 @@ class CsvController extends Controller
             return Redirect::route('csv.index');
         }
 
-        //
+        Log::debug('Created importer');
         $importer = new Importer;
         $importer->setData($this->data);
         try {
             $importer->run();
         } catch (FireflyException $e) {
+            Log::error('Catch error: ' . $e->getMessage());
+
             return view('error', ['message' => $e->getMessage()]);
         }
+        Log::debug('Done importing!');
 
-
+        echo 'display result';
         exit;
-
-        // loop the original file again:
-        $content    = file_get_contents(Session::get('csv-file'));
-        $hasHeaders = Session::get('csv-has-headers');
-        $reader     = Reader::createFromString(Crypt::decrypt($content));
-
-        // dump stuff
-        $dateFormat = Session::get('csv-date-format');
-        $roles      = Session::get('csv-roles');
-        $mapped     = Session::get('csv-mapped');
-
-        /*
-         * Loop over the CSV and collect mappable data:
-         */
-        foreach ($reader as $index => $row) {
-            if (($hasHeaders && $index > 1) || !$hasHeaders) {
-                // this is the data we need to store the new transaction:
-                $amount          = 0;
-                $amountModifier  = 1;
-                $description     = '';
-                $assetAccount    = null;
-                $opposingAccount = null;
-                $currency        = null;
-                $date            = null;
-
-                foreach ($row as $index => $value) {
-                    if (isset($roles[$index])) {
-                        switch ($roles[$index]) {
-                            default:
-                                throw new FireflyException('Cannot process role "' . $roles[$index] . '"');
-                                break;
-                            case 'account-iban':
-                                // find ID in "mapped" (if present).
-                                if (isset($mapped[$index])) {
-                                    $searchID     = $mapped[$index][$value];
-                                    $assetAccount = Account::find($searchID);
-                                } else {
-                                    // create account
-                                }
-                                break;
-                            case 'opposing-name':
-                                // don't know yet if its going to be a
-                                // revenue or expense account.
-                                $opposingAccount = $value;
-                                break;
-                            case 'currency-code':
-                                // find ID in "mapped" (if present).
-                                if (isset($mapped[$index])) {
-                                    $searchValue = $mapped[$index][$value];
-                                    $currency    = TransactionCurrency::whereCode($searchValue);
-                                } else {
-                                    // create account
-                                }
-                                break;
-                            case 'date-transaction':
-                                // unmappable:
-                                $date = Carbon::createFromFormat($dateFormat, $value);
-
-                                break;
-                            case 'rabo-debet-credet':
-                                if ($value == 'D') {
-                                    $amountModifier = -1;
-                                }
-                                break;
-                            case 'amount':
-                                $amount = $value;
-                                break;
-                            case 'description':
-                                $description .= ' ' . $value;
-                                break;
-                            case 'sepa-ct-id':
-                                $description .= ' ' . $value;
-                                break;
-
-                        }
-                    }
-                }
-                // do something with all this data:
-
-
-                // do something.
-                var_dump($row);
-
-            }
-        }
-
 
     }
 

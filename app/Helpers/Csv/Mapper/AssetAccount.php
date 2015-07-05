@@ -1,26 +1,29 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: sander
+ * Date: 05/07/15
+ * Time: 08:35
+ */
 
-namespace FireflyIII\Helpers\Csv;
+namespace FireflyIII\Helpers\Csv\Mapper;
 
 use Auth;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class DataGrabber
+ * Class AssetAccount
  *
- * Class dedicated to retreiving all sorts of data related to the CSV import.
- *
- * @package FireflyIII\Helpers\Csv
+ * @package FireflyIII\Helpers\Csv\Mapper
  */
-class DataGrabber
+class AssetAccount implements MapperInterface
 {
 
     /**
      * @return array
      */
-    public function getAssetAccounts()
+    public function getMap()
     {
         $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
@@ -36,19 +39,4 @@ class DataGrabber
 
         return $list;
     }
-
-    /**
-     * @return array
-     */
-    public function getCurrencies()
-    {
-        $currencies = TransactionCurrency::get();
-        $list       = [];
-        foreach ($currencies as $currency) {
-            $list[$currency->id] = $currency->name . ' (' . $currency->code . ')';
-        }
-
-        return $list;
-    }
-
 }

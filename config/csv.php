@@ -27,7 +27,8 @@ return [
             'name'      => 'Currency code (ISO 4217)',
             'mappable'  => true,
             'converter' => 'CurrencyCode',
-            'field'     => 'currency'
+            'field'     => 'currency',
+            'mapper'    => 'TransactionCurrency'
         ],
         'currency-symbol'   => [
             'name'     => 'Currency symbol (matching Firefly)',
@@ -93,7 +94,8 @@ return [
             'name'      => 'Asset account IBAN',
             'mappable'  => true,
             'converter' => 'AccountIban',
-            'field'     => 'asset-account'
+            'field'     => 'asset-account',
+            'mapper'    => 'AssetAccount'
         ],
         'opposing-id'       => [
             'name'     => 'Expense or revenue account ID (matching Firefly)',

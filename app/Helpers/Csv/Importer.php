@@ -38,18 +38,6 @@ class Importer
     protected $roles;
 
     /**
-     * @param $value
-     */
-    public function parseRaboDebetCredit($value)
-    {
-        if ($value == 'D') {
-            return -1;
-        }
-
-        return 1;
-    }
-
-    /**
      *
      */
     public function run()
@@ -58,10 +46,11 @@ class Importer
         $this->roles  = $this->data->getRoles();
         $this->mapped = $this->data->getMapped();
         foreach ($this->data->getReader() as $index => $row) {
+            Log::debug('Now at row ' . $index);
             $result = $this->importRow($row);
             if (!($result === true)) {
+                Log::error('Caught error at row #' . $index . ': ' . $result);
                 $this->errors[$index] = $result;
-                Log::error('ImportRow: ' . $result);
             }
         }
 
@@ -96,16 +85,10 @@ class Importer
             $converter->setData($data); // the complete array so far.
             $converter->setField($field);
             $converter->setIndex($index);
+            $converter->setMapped($this->mapped);
             $converter->setValue($value);
             $converter->setRole($role);
-            //            if (is_array($field)) {
-            //                $convertResult = $converter->convert();
-            //                foreach ($field as $fieldName) {
-            //                    $data[$fieldName] = $convertResult[$fieldName];
-            //                }
-            //            } else {
             $data[$field] = $converter->convert();
-            //            }
 
         }
         $data   = $this->postProcess($data, $row);
@@ -162,6 +145,10 @@ class Importer
         } else {
             // create revenue account:
             $accountType = AccountType::where('type', 'Revenue account')->first();
+        }
+
+        if(strlen($data['description']) == 0) {
+            $data['description'] = trans('firefly.csv_empty_description');
         }
 
         // do bank specific fixes:

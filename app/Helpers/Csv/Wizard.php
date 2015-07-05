@@ -1,11 +1,14 @@
 <?php
 namespace FireflyIII\Helpers\Csv;
 
+use App;
 use Auth;
 use Config;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Csv\Mapper\MapperInterface;
 use League\Csv\Reader;
+use ReflectionException;
 use Session;
 
 /**
@@ -126,33 +129,23 @@ class Wizard implements WizardInterface
      */
     public function showOptions(array $map)
     {
-        $dataGrabber = new DataGrabber;
         $options     = [];
         foreach ($map as $index => $columnRole) {
 
-            /*
-             * Depending on the column role, get the relevant data from the database.
-             * This needs some work to be optimal.
-             */
-            switch ($columnRole) {
-                default:
-                    throw new FireflyException('Cannot map field of type "' . $columnRole . '".');
-                    break;
-                case 'account-iban':
-                    $set = $dataGrabber->getAssetAccounts();
-                    break;
-                case 'currency-code':
-                    $set = $dataGrabber->getCurrencies();
-                    break;
+            $mapper = Config::get('csv.roles.' . $columnRole . '.mapper');
+            if (is_null($mapper)) {
+                throw new FireflyException('Cannot map field of type "' . $columnRole . '".');
             }
-
-            /*
-             * Make select list kind of thing:
-             */
-
+            $class = 'FireflyIII\Helpers\Csv\Mapper\\' . $mapper;
+            try {
+                /** @var MapperInterface $mapObject */
+                $mapObject = App::make($class);
+            } catch (ReflectionException $e) {
+                throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because class ' . $mapper . ' does not exist.');
+            }
+            $set             = $mapObject->getMap();
             $options[$index] = $set;
         }
-
 
         return $options;
     }
