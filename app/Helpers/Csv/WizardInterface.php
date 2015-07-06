@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Helpers\Csv;
+
 use League\Csv\Reader;
 
 /**

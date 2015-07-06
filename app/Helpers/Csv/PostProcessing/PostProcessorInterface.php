@@ -14,15 +14,16 @@ namespace FireflyIII\Helpers\Csv\PostProcessing;
  *
  * @package FireflyIII\Helpers\Csv\PostProcessing
  */
-interface PostProcessorInterface {
-
-    /**
-     * @param array $data
-     */
-    public function setData(array $data);
+interface PostProcessorInterface
+{
 
     /**
      * @return array
      */
     public function process();
+
+    /**
+     * @param array $data
+     */
+    public function setData(array $data);
 }

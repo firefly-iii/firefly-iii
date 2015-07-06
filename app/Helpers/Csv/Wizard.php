@@ -129,7 +129,7 @@ class Wizard implements WizardInterface
      */
     public function showOptions(array $map)
     {
-        $options     = [];
+        $options = [];
         foreach ($map as $index => $columnRole) {
 
             $mapper = Config::get('csv.roles.' . $columnRole . '.mapper');

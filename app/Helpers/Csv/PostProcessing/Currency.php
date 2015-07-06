@@ -1,8 +1,9 @@
 <?php
 
 namespace FireflyIII\Helpers\Csv\PostProcessing;
-use Preferences;
+
 use FireflyIII\Models\TransactionCurrency;
+use Preferences;
 
 /**
  * Class Currency
@@ -23,8 +24,8 @@ class Currency implements PostProcessorInterface
 
         // fix currency
         if (is_null($this->data['currency'])) {
-            $currencyPreference = Preferences::get('currencyPreference', 'EUR');
-            $this->data['currency']   = TransactionCurrency::whereCode($currencyPreference->data)->first();
+            $currencyPreference     = Preferences::get('currencyPreference', 'EUR');
+            $this->data['currency'] = TransactionCurrency::whereCode($currencyPreference->data)->first();
         }
 
         return $this->data;

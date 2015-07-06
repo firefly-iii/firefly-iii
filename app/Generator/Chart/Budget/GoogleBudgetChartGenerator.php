@@ -37,6 +37,7 @@ class GoogleBudgetChartGenerator implements BudgetChartGenerator
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Collection $entries
      *
      * @return array

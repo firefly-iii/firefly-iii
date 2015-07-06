@@ -17,7 +17,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
 
     /**
      * @param Collection $entries
-     * @param string $dateFormat
+     * @param string     $dateFormat
      *
      * @return array
      */
@@ -76,6 +76,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Collection $entries
      *
      * @return array

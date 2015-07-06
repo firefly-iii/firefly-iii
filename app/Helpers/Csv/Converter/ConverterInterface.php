@@ -16,6 +16,17 @@ interface ConverterInterface
     public function convert();
 
     /**
+     * @param array $data
+     */
+    public function setData(array $data);
+
+    /**
+     * @param string $field
+     *
+     */
+    public function setField($field);
+
+    /**
      * @param int $index
      */
     public function setIndex($index);
@@ -34,16 +45,5 @@ interface ConverterInterface
      * @param string $value
      */
     public function setValue($value);
-
-    /**
-     * @param array $data
-     */
-    public function setData(array $data);
-
-    /**
-     * @param string $field
-     *
-     */
-    public function setField($field);
 
 }

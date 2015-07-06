@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
  * FireflyIII\Models\Bill
  *
  * @codeCoverageIgnore Class Bill
- * @package FireflyIII\Models
+ * @package            FireflyIII\Models
  * @property integer                                                                               $id
  * @property \Carbon\Carbon                                                                        $created_at
  * @property \Carbon\Carbon                                                                        $updated_at

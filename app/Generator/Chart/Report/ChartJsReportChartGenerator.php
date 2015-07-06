@@ -3,7 +3,6 @@
 namespace FireflyIII\Generator\Chart\Report;
 
 use Config;
-use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Preferences;
 
@@ -78,6 +77,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
         $data['datasets'][1]['data'][] = round($expense, 2);
         $data['datasets'][0]['data'][] = round(($income / $count), 2);
         $data['datasets'][1]['data'][] = round(($expense / $count), 2);
+
         return $data;
     }
 }
