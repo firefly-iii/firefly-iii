@@ -27,6 +27,10 @@ class Importer
     protected $data;
     /** @var array */
     protected $errors;
+    /** @var  array */
+    protected $importData;
+    /** @var  array */
+    protected $importRow;
     /** @var int */
     protected $imported = 0;
     /** @var array */
@@ -41,6 +45,8 @@ class Importer
     protected $specifix;
 
     /**
+     * Used by CsvController.
+     *
      * @return array
      */
     public function getErrors()
@@ -49,6 +55,8 @@ class Importer
     }
 
     /**
+     * Used by CsvController
+     *
      * @return int
      */
     public function getImported()
@@ -57,6 +65,8 @@ class Importer
     }
 
     /**
+     * Used by CsvController
+     *
      * @return int
      */
     public function getRows()
@@ -108,10 +118,7 @@ class Importer
      */
     protected function importRow($row)
     {
-        /*
-         * These fields are necessary to create a new transaction journal. Some are optional:
-         */
-        $data = $this->getFiller();
+        $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
             $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
             $class = Config::get('csv.roles.' . $role . '.converter');
@@ -128,20 +135,23 @@ class Importer
             $data[$field] = $converter->convert();
 
         }
+        // move to class vars.
+        $this->importData = $data;
+        $this->importRow  = $row;
+        unset($data, $row);
         // post processing and validating.
-        $data   = $this->postProcess($data, $row);
-        $result = $this->validateData($data);
-        if ($result === true) {
-            $journal = $this->createTransactionJournal($data);
-        } else {
-            return $result;
+        $this->postProcess();
+        $result = $this->validateData();
+
+        if (!($result === true)) {
+            return $result; // return error.
         }
+        $journal = $this->createTransactionJournal();
         if ($journal instanceof TransactionJournal) {
             return true;
         }
 
-        return $journal;
-
+        return false;
     }
 
     /**
@@ -168,21 +178,18 @@ class Importer
     /**
      * Row denotes the original data.
      *
-     * @param array $data
-     * @param array $row
-     *
-     * @return array
+     * @return void
      */
-    protected function postProcess(array $data, array $row)
+    protected function postProcess()
     {
         // do bank specific fixes (must be enabled but now all of them.
 
         foreach ($this->getSpecifix() as $className) {
             /** @var SpecifixInterface $specifix */
             $specifix = App::make('FireflyIII\Helpers\Csv\Specifix\\' . $className);
-            $specifix->setData($data);
-            $specifix->setRow($row);
-            $data = $specifix->fix();
+            $specifix->setData($this->importData);
+            $specifix->setRow($this->importRow);
+            $this->importData = $specifix->fix();
         }
 
 
@@ -190,11 +197,10 @@ class Importer
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
             $postProcessor = App::make('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
-            $postProcessor->setData($data);
-            $data = $postProcessor->process();
+            $postProcessor->setData($this->importData);
+            $this->importData = $postProcessor->process();
         }
 
-        return $data;
     }
 
     /**
@@ -206,16 +212,15 @@ class Importer
     }
 
     /**
-     * @param $data
      *
      * @return bool|string
      */
-    protected function validateData($data)
+    protected function validateData()
     {
-        if (is_null($data['date']) && is_null($data['date-rent'])) {
+        if (is_null($this->importData['date']) && is_null($this->importData['date-rent'])) {
             return 'No date value for this row.';
         }
-        if (is_null($data['opposing-account-object'])) {
+        if (is_null($this->importData['opposing-account-object'])) {
             return 'Opposing account is null';
         }
 
@@ -223,59 +228,30 @@ class Importer
     }
 
     /**
-     * @param array $data
      *
      * @return TransactionJournal|string
      */
-    protected function createTransactionJournal(array $data)
+    protected function createTransactionJournal()
     {
         bcscale(2);
-        $date = $data['date'];
-        if (is_null($data['date'])) {
-            $date = $data['date-rent'];
+        $date = $this->importData['date'];
+        if (is_null($this->importData['date'])) {
+            $date = $this->importData['date-rent'];
         }
-
-        // defaults to deposit
-        $transactionType = TransactionType::where('type', 'Deposit')->first();
-        if ($data['amount'] < 0) {
-            $transactionType = TransactionType::where('type', 'Withdrawal')->first();
-        }
-
-        if (in_array($data['opposing-account-object']->accountType->type, ['Asset account', 'Default account'])) {
-            $transactionType = TransactionType::where('type', 'Transfer')->first();
-        }
-
-        $errors  = new MessageBag;
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => Auth::user()->id,
-                'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['currency']->id,
-                'description'             => $data['description'],
-                'completed'               => 0,
-                'date'                    => $date,
-                'bill_id'                 => $data['bill-id'],
-            ]
+        $transactionType = $this->getTransactionType(); // defaults to deposit
+        $errors          = new MessageBag;
+        $journal         = TransactionJournal::create(
+            ['user_id'     => Auth::user()->id, 'transaction_type_id' => $transactionType->id, 'transaction_currency_id' => $this->importData['currency']->id,
+             'description' => $this->importData['description'], 'completed' => 0, 'date' => $date, 'bill_id' => $this->importData['bill-id'],]
         );
-        $errors  = $journal->getErrors()->merge($errors);
         if ($journal->getErrors()->count() == 0) {
-            // create both transactions:
-            $transaction = Transaction::create(
-                [
-                    'transaction_journal_id' => $journal->id,
-                    'account_id'             => $data['asset-account']->id,
-                    'amount'                 => $data['amount']
-                ]
-            );
-            $errors      = $transaction->getErrors()->merge($errors);
-
-            $transaction = Transaction::create(
-                [
-                    'transaction_journal_id' => $journal->id,
-                    'account_id'             => $data['opposing-account-object']->id,
-                    'amount'                 => bcmul($data['amount'], -1)
-                ]
-            );
+            $accountId   = $this->importData['asset-account']->id; // create first transaction:
+            $amount      = $this->importData['amount'];
+            $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
+            $errors      = $transaction->getErrors();
+            $accountId   = $this->importData['opposing-account-object']->id; // create second transaction:
+            $amount      = bcmul($this->importData['amount'], -1);
+            $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
             $errors      = $transaction->getErrors()->merge($errors);
         }
         if ($errors->count() == 0) {
@@ -286,25 +262,62 @@ class Importer
 
             return $text;
         }
+        $this->saveBudget($journal);
+        $this->saveCategory($journal);
+        $this->saveTags($journal);
 
+        return $journal;
+    }
+
+    /**
+     * @return TransactionType
+     */
+    protected function getTransactionType()
+    {
+        $transactionType = TransactionType::where('type', 'Deposit')->first();
+        if ($this->importData['amount'] < 0) {
+            $transactionType = TransactionType::where('type', 'Withdrawal')->first();
+        }
+
+        if (in_array($this->importData['opposing-account-object']->accountType->type, ['Asset account', 'Default account'])) {
+            $transactionType = TransactionType::where('type', 'Transfer')->first();
+        }
+
+        return $transactionType;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     */
+    protected function saveBudget(TransactionJournal $journal)
+    {
         // add budget:
-        if (!is_null($data['budget'])) {
-            $journal->budgets()->save($data['budget']);
+        if (!is_null($this->importData['budget'])) {
+            $journal->budgets()->save($this->importData['budget']);
         }
+    }
 
+    /**
+     * @param TransactionJournal $journal
+     */
+    protected function saveCategory(TransactionJournal $journal)
+    {
         // add category:
-        if (!is_null($data['category'])) {
-            $journal->categories()->save($data['category']);
+        if (!is_null($this->importData['category'])) {
+            $journal->categories()->save($this->importData['category']);
         }
-        if (!is_null($data['tags'])) {
-            foreach ($data['tags'] as $tag) {
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     */
+    protected function saveTags(TransactionJournal $journal)
+    {
+        if (!is_null($this->importData['tags'])) {
+            foreach ($this->importData['tags'] as $tag) {
                 $journal->tags()->save($tag);
             }
         }
-
-        return $journal;
-
-
     }
 
     /**
