@@ -23,6 +23,9 @@ return [
     'csv_import'                    => 'Import CSV file',
     'csv'                           => 'CSV',
     'csv_index_title'               => 'Upload and import a CSV file',
+    'csv_define_column_roles'       => 'Define column roles',
+    'csv_map_values'                => 'Map found values to existing values',
+    'csv_download_config'           => 'Download CSV configuration file.',
     'csv_index_text'                =>
         'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by' .
         ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.' .
@@ -56,7 +59,8 @@ return [
     'csv_field_mapped_to'           => 'Must be mapped to...',
     'csv_download_config_title'     => 'Download CSV configuration',
     'csv_download_config_text'      => 'Everything you\'ve just set up can be downloaded as a configuration file. Click the button to do so.',
-    'csv_more_information_text'     => 'If the import fails, you can use this configuration file so you don\'t have to start all over again.',
+    'csv_more_information_text'     => 'If the import fails, you can use this configuration file so you don\'t have to start all over again.'
+                                       . ' But, if the import succeeds, it will be easier to upload similar CSV files.',
     'csv_do_download_config'        => 'Download configuration file.',
     'csv_empty_description'         => '(empty description)',
     'csv_upload_form'               => 'CSV upload form',
@@ -64,7 +68,7 @@ return [
     'csv_unsupported_map'           => 'The importer cannot map the column ":columnRole" to existing values in the database.',
     'csv_unsupported_value'         => 'The importer does not know how to handle values in columns marked as ":columnRole".',
     'csv_cannot_store_value'        => 'The importer has not reserved space for columns marked ":columnRole" and will be incapable of processing them.',
-    'csv_process_title'             => 'CVS import finished',
+    'csv_process_title'             => 'CVS import finished!',
     'csv_process_text'              => 'The CVS importer has finished and has imported :rows rows',
     'csv_row'                       => 'Row',
     'csv_import_with_errors'        => 'There was one error.|There were :errors errors.',

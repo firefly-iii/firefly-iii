@@ -65,7 +65,7 @@ class CsvController extends Controller
             return Redirect::route('csv.index');
         }
 
-        $subTitle       = trans('firefly.csv_process');
+        $subTitle       = trans('firefly.csv_define_column_roles');
         $firstRow       = $this->data->getReader()->fetchOne();
         $count          = count($firstRow);
         $headers        = [];
@@ -131,7 +131,9 @@ class CsvController extends Controller
      */
     public function downloadConfigPage()
     {
-        return view('csv.download-config');
+        $subTitle = trans('firefly.csv_download_config_title');
+
+        return view('csv.download-config', compact('subTitle'));
     }
 
     /**
@@ -277,8 +279,9 @@ class CsvController extends Controller
         $values     = $this->wizard->getMappableValues($reader, $map, $hasHeaders);
         $map        = $this->data->getMap();
         $mapped     = $this->data->getMapped();
+        $subTitle   = trans('firefly.csv_map_values');
 
-        return view('csv.map', compact('map', 'options', 'values', 'mapped'));
+        return view('csv.map', compact('map', 'options', 'values', 'mapped', 'subTitle'));
     }
 
     /**
@@ -316,7 +319,9 @@ class CsvController extends Controller
 
         Preferences::mark();
 
-        return view('csv.process', compact('rows', 'errors', 'imported'));
+        $subTitle = trans('firefly.csv_process_title');
+
+        return view('csv.process', compact('rows', 'errors', 'imported', 'subTitle'));
 
     }
 
@@ -348,7 +353,9 @@ class CsvController extends Controller
         foreach (Input::get('mapping') as $index => $data) {
             $mapped[$index] = [];
             foreach ($data as $value => $mapping) {
-                $mapped[$index][$value] = $mapping;
+                if (intval($mapping) !== 0) {
+                    $mapped[$index][$value] = $mapping;
+                }
             }
         }
         Session::put('csv-mapped', $mapped);
