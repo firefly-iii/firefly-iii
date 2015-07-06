@@ -220,9 +220,9 @@ class TagController extends Controller
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {
         if (Input::get('setTag') == 'true') {
-            $latitude  = strlen($request->get('latitude')) > 0 ? $request->get('latitude') : null;
-            $longitude = strlen($request->get('longitude')) > 0 ? $request->get('longitude') : null;
-            $zoomLevel = strlen($request->get('zoomLevel')) > 0 ? $request->get('zoomLevel') : null;
+            $latitude  = $request->get('latitude');
+            $longitude = $request->get('longitude');
+            $zoomLevel = $request->get('zoomLevel');
         } else {
             $latitude  = null;
             $longitude = null;

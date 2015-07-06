@@ -229,16 +229,13 @@ class CsvController extends Controller
     public function map()
     {
 
-        /*
-         * Make sure all fields we need are accounted for.
-         */
+        // Make sure all fields we need are accounted for.
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
             return redirect(route('csv.index'));
         }
-
         /*
          * The "options" array contains all options the user has
          * per column, where the key represents the column.
@@ -246,10 +243,8 @@ class CsvController extends Controller
          * For each key there is an array which in turn represents
          * all the options available: grouped by ID.
          *
-         * Aka:
-         *
          * options[column index] = [
-         * field id => field identifier.
+         *       field id => field identifier.
          * ]
          */
         try {
@@ -258,9 +253,7 @@ class CsvController extends Controller
             return view('error', ['message' => $e->getMessage()]);
         }
 
-        /*
-         * After these values are prepped, read the actual CSV file
-         */
+        // After these values are prepped, read the actual CSV file
         $reader     = $this->data->getReader();
         $map        = $this->data->getMap();
         $hasHeaders = $this->data->getHasHeaders();

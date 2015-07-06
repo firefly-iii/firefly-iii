@@ -19,6 +19,14 @@ return [
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
 
+    // transaction index
+    'title_expenses'                   => 'Expenses',
+    'title_withdrawal'                 => 'Expenses',
+    'title_revenue'                    => 'Revenue / income',
+    'title_deposit'                    => 'Revenue / income',
+    'title_transfer'                   => 'Transfers',
+    'title_transfers'                  => 'Transfers',
+
     // csv import:
     'csv_import'                       => 'Import CSV file',
     'csv'                              => 'CSV',

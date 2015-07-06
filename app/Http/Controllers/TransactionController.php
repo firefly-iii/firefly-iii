@@ -2,6 +2,7 @@
 
 use Auth;
 use Carbon\Carbon;
+use Config;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
@@ -189,31 +190,12 @@ class TransactionController extends Controller
      */
     public function index(JournalRepositoryInterface $repository, $what)
     {
-        $types = [];
-        switch ($what) {
-            case 'expenses':
-            case 'withdrawal':
-                $subTitleIcon = 'fa-long-arrow-left';
-                $subTitle     = trans('firefly.expenses');
-                $types        = ['Withdrawal'];
-                break;
-            case 'revenue':
-            case 'deposit':
-                $subTitleIcon = 'fa-long-arrow-right';
-                $subTitle     = trans('firefly.income');
-                $types        = ['Deposit'];
-                break;
-            case 'transfer':
-            case 'transfers':
-                $subTitleIcon = 'fa-exchange';
-                $subTitle     = trans('firefly.transfers');
-                $types        = ['Transfer'];
-                break;
-        }
-
-        $page     = intval(Input::get('page'));
-        $offset   = $page > 0 ? ($page - 1) * 50 : 0;
-        $journals = $repository->getJournalsOfTypes($types, $offset, $page);
+        $subTitleIcon = Config::get('firefly.transactionIconsByWhat.' . $what);
+        $types        = Config::get('firefly.transactionTypesByWhat.' . $what);
+        $subTitle     = trans('firefly.title_' . $what);
+        $page         = intval(Input::get('page'));
+        $offset       = $page > 0 ? ($page - 1) * 50 : 0;
+        $journals     = $repository->getJournalsOfTypes($types, $offset, $page);
 
         $journals->setPath('transactions/' . $what);
 

@@ -102,6 +102,24 @@ return [
         'en' => ['en', 'English', 'en_US', 'en_US.utf8'],
         'nl' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
     ],
+    'transactionTypesByWhat'   => [
+        'expenses'   => ['Withdrawal'],
+        'withdrawal' => ['Withdrawal'],
+        'revenue'    => ['Deposit'],
+        'deposit'    => ['Deposit'],
+        'transfer'   => ['Transfer'],
+        'transfers'  => ['Transfer'],
+    ],
+    'transactionIconsByWhat'   => [
+        'expenses'   => 'fa-long-arrow-left',
+        'withdrawal' => 'fa-long-arrow-left',
+        'revenue'    => 'fa-long-arrow-right',
+        'deposit'    => 'fa-long-arrow-right',
+        'transfer'   => 'fa-exchange',
+        'transfers'  => 'fa-exchange',
+
+    ],
+
     'month'                    => [
         'en' => '%B %Y',
         'nl' => '%B %Y',

@@ -227,11 +227,10 @@ class ReportQuery implements ReportQueryInterface
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
-     * @param bool    $shared
      *
      * @return string
      */
-    public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false)
+    public function spentNoBudget(Account $account, Carbon $start, Carbon $end)
     {
         return
             Auth::user()->transactionjournals()
