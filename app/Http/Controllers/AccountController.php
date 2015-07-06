@@ -205,7 +205,8 @@ class AccountController extends Controller
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
 
         ];
-        $account     = $repository->store($accountData);
+
+        $account = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
         Preferences::mark();

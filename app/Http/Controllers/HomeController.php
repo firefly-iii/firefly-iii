@@ -70,6 +70,7 @@ class HomeController extends Controller
     {
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
+        bcscale(2);
 
 
         if ($count == 0) {
@@ -92,7 +93,7 @@ class HomeController extends Controller
 
         $savingsTotal = 0;
         foreach ($savings as $savingAccount) {
-            $savingsTotal += Steam::balance($savingAccount, $end);
+            $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
         }
 
         $sum = $repository->sumOfEverything();

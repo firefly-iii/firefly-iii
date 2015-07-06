@@ -166,6 +166,7 @@ class PiggyBankController extends Controller
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
         $end        = Session::get('end', Carbon::now()->endOfMonth());
+        bcscale(2);
 
         $accounts = [];
         /** @var PiggyBank $piggyBank */
@@ -188,9 +189,9 @@ class PiggyBankController extends Controller
                     'leftToSave'        => $piggyBank->leftToSave
                 ];
             } else {
-                $accounts[$account->id]['sumOfSaved'] += $piggyBank->savedSoFar;
-                $accounts[$account->id]['sumOfTargets'] += floatval($piggyBank->targetamount);
-                $accounts[$account->id]['leftToSave'] += $piggyBank->leftToSave;
+                $accounts[$account->id]['sumOfSaved']   = bcadd($accounts[$account->id]['sumOfSaved'], $piggyBank->savedSoFar);
+                $accounts[$account->id]['sumOfTargets'] = bcadd($accounts[$account->id]['sumOfTargets'], $piggyBank->targetamount);
+                $accounts[$account->id]['leftToSave']   = bcadd($accounts[$account->id]['leftToSave'], $piggyBank->leftToSave);
             }
         }
 
@@ -230,10 +231,11 @@ class PiggyBankController extends Controller
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = $piggyBank->targetamount - $savedSoFar;
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
+        bcscale(2);
 
         if ($amount <= $maxAmount) {
-            $repetition = $piggyBank->currentRelevantRep();
-            $repetition->currentamount += $amount;
+            $repetition                = $piggyBank->currentRelevantRep();
+            $repetition->currentamount = bcadd($repetition->currentamount, $amount);
             $repetition->save();
 
             // create event

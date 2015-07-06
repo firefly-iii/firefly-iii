@@ -60,9 +60,10 @@ class ReportHelper implements ReportHelperInterface
 
 
         $accounts = $this->query->getAllAccounts($date, $end, $shared);
-        $start    = 0;
-        $end      = 0;
-        $diff     = 0;
+        $start    = '0';
+        $end      = '0';
+        $diff     = '0';
+        bcscale(2);
 
         // remove cash account, if any:
         $accounts = $accounts->filter(
@@ -77,9 +78,9 @@ class ReportHelper implements ReportHelperInterface
 
         // summarize:
         foreach ($accounts as $account) {
-            $start += $account->startBalance;
-            $end += $account->endBalance;
-            $diff += ($account->endBalance - $account->startBalance);
+            $start = bcadd($start, $account->startBalance);
+            $end   = bcadd($end, $account->endBalance);
+            $diff  = bcadd($diff, ($account->endBalance - $account->startBalance));
         }
 
         $object = new AccountCollection;
