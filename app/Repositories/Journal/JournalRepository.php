@@ -248,7 +248,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        list($from, $to) = $this->storeAccounts($journal->transactionType, $data);
+        list($fromAccount, $toAccount) = $this->storeAccounts($journal->transactionType, $data);
 
         // update the from and to transaction.
         /** @var Transaction $transaction */
@@ -256,12 +256,12 @@ class JournalRepository implements JournalRepositoryInterface
             if (floatval($transaction->amount) < 0) {
                 // this is the from transaction, negative amount:
                 $transaction->amount     = $data['amount'] * -1;
-                $transaction->account_id = $from->id;
+                $transaction->account_id = $fromAccount->id;
                 $transaction->save();
             }
             if (floatval($transaction->amount) > 0) {
                 $transaction->amount     = $data['amount'];
-                $transaction->account_id = $to->id;
+                $transaction->account_id = $toAccount->id;
                 $transaction->save();
             }
         }
