@@ -30,7 +30,7 @@ class Importer
     /** @var array */
     protected $errors;
     /** @var int */
-    protected $imported;
+    protected $imported = 0;
     /** @var array */
     protected $map;
     /** @var  array */
@@ -131,12 +131,14 @@ class Importer
         $journal = null;
         if ($result === true) {
             $journal = $this->createTransactionJournal($data);
+        } else {
+            return $result;
         }
         if ($journal instanceof TransactionJournal) {
             return true;
         }
 
-        return 'Not a journal.';
+        return $journal;
 
     }
 
@@ -278,6 +280,9 @@ class Importer
         if ($errors->count() == 0) {
             $journal->completed = 1;
             $journal->save();
+        } else {
+            $text = join(',', $errors->all());
+            return $text;
         }
 
         // add budget:

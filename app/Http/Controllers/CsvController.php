@@ -50,10 +50,9 @@ class CsvController extends Controller
     /**
      * Define column roles and mapping.
      *
-     *
      * STEP THREE
      *
-     * @return View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function columnRoles()
     {
@@ -82,7 +81,7 @@ class CsvController extends Controller
         }
 
         foreach (Config::get('csv.roles') as $name => $role) {
-            $availableRoles[$name] = $role['name'];
+            $availableRoles[$name] = trans('firefly.csv_column_' . $name);//$role['name'];
         }
         ksort($availableRoles);
 

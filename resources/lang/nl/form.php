@@ -47,8 +47,9 @@ return [
     'code'                        => 'Code',
     'iban'                        => 'IBAN',
     'csv'                         => 'CSV-bestand',
-    'has_headers'                 => 'Eerste rij zijn kolomnamen',
+    'has_headers'                 => 'Kolomnamen op de eerste rij?',
     'date_format'                 => 'Datumformaat',
+    'csv_config'                  => 'Configuratiebestand',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

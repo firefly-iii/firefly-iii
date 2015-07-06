@@ -36,6 +36,12 @@
                             {{ trans('firefly.csv_error_see_logs') }}
                         </p>
                     {% endif %}
+
+                    <p>
+
+                        {{ trans('firefly.csv_process_new_entries',{imported: imported}) }}
+                    </p>
+
                     <p>
                         <a href="{{ route('csv.index') }}" class="btn btn-warning">{{ 'csv_start_over'|_ }}</a>
                         <a href="{{ route('index') }}" class="btn btn-success">{{ 'csv_to_index'|_ }}</a>

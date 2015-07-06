@@ -22,13 +22,84 @@ return [
     // csv import:
     'csv_import'                    => 'Importeer CSV-bestand',
     'csv'                           => 'CSV',
-    'csv_index_text'                => 'Hier komt uitleg.',
-    'csv_upload_form'               => 'Upload formulier',
-    'upload_csv_file'               => 'Upload CSV-bestand',
-    'csv_header_help'               => 'Check dit als bla bla',
-    'csv_row'                       => 'rij',
-    'upload_not_writeable'          => 'Cannot write to the path mentioned here. Cannot upload',
-
+    'csv_index_title'               => 'Upload en importeer een kommagescheiden tekstbestand',
+    'csv_index_text'                => 'Met deze (en de komende) pagina\'s kan je kommagescheiden tekstbestanden importeren. Deze tool is gebaseerd '
+                                       . 'op de prachtige tool van <a href="https://www.atlassian.com/">Atlassian</a>. Om te beginnen selecteer' .
+                                       ' je jouw tekstbestand bij "CSV-bestand". '
+                                       . 'Als je hulp nodig hebt, klik dan op het <i class="fa fa-question-circle"></i>-icoontje rechtsboven.',
+    'csv_index_beta_warning'        => 'Deze tool is nog erg experimenteel. Wees dus voorzichtig.',
+    'csv_header_help'               => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen, en niet uit daadwerkelijke gegevens.',
+    'csv_date_help'                 => 'Het gebruikte datumformaat in jouw bestand. Gebruik het formaat zoals <a href="https://secure.' .
+                                       'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">deze' .
+                                       ' pagina</a> het uitlegt (Engels). Het standaardformaat kan omgaan met data zoals deze: ' . date('Ymd'),
+    'csv_csv_file_help'             => 'Voer hier je kommagescheiden tekstbestand in. Je kan er maar één tegelijkertijd invoeren.',
+    'csv_csv_config_file_help'      => 'Voer hier je configuratiebestand in. Als je deze niet hebt, geen zorgen. Latere stappen leggen dit uit.',
+    'csv_upload_button'             => 'Begin de import',
+    'csv_define_column_roles'       => 'Bepaal kolominhoud',
+    'csv_column_roles_title'        => 'Bepaal de inhoud van elke kolom',
+    'csv_column_roles_text'         => 'Firefly kan niet automatisch ontdekken wat elke kolom betekent. Je moet het zelf aangeven. Gebruik de' .
+                                       ' voorbeeldgegevens als je het ook niet zeker weet. Klik op het <i class="fa fa-question-circle"></i>-icoontje ' .
+                                       'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe relatie heeft met gegevens' .
+                                       ' die al in Firefly staan, gebruik dan het vinkje. Tijdens de volgende stap komt Firefly hier dan op terug.',
+    'csv_column'                    => 'CSV-kolom',
+    'cvs_column_name'               => 'CSV-kolomnaam',
+    'cvs_column_example'            => 'Voorbeeldgegevens',
+    'cvs_column_role'               => 'Kolom bevat?',
+    'csv_do_map_value'              => 'Directe relatie?',
+    'csv_column__ignore'            => '(negeer deze kolom)',
+    'csv_column_account-iban'       => 'Betaalrekening (IBAN)',
+    'csv_column_account-id'         => 'Betaalrekening (ID gelijk aan Firefly)',
+    'csv_column_account-name'       => 'Betaalrekeningnaam',
+    'csv_column_amount'             => 'Bedrag',
+    'csv_column_bill-id'            => 'Contract (ID gelijk aan Firefly)',
+    'csv_column_bill-name'          => 'Contractnaam',
+    'csv_column_budget-id'          => 'Budget (ID gelijk aan Firefly)',
+    'csv_column_budget-name'        => 'Budgetnaam',
+    'csv_column_category-id'        => 'Categorie (ID gelijk aan Firefly)',
+    'csv_column_category-name'      => 'Categorienaam',
+    'csv_column_currency-code'      => 'Valutacode (ISO 4217)',
+    'csv_column_currency-id'        => 'Valuta (ID gelijk aan Firefly)',
+    'csv_column_currency-name'      => 'Valutanaam',
+    'csv_column_currency-symbol'    => 'Valuta',
+    'csv_column_date-rent'          => 'Datum (renteberekening)',
+    'csv_column_date-transaction'   => 'Datum (transactie)',
+    'csv_column_description'        => 'Beschrijving',
+    'csv_column_opposing-iban'      => 'Tegenrekening (IBAN)',
+    'csv_column_opposing-id'        => 'Tegenrekening (ID gelijk aan Firefly)',
+    'csv_column_opposing-name'      => 'Tegenrekeningnaam',
+    'csv_column_rabo-debet-credit'  => 'Rabobankspecifiek bij/af indicator',
+    'csv_column_sepa-ct-id'         => 'SEPA transactienummer',
+    'csv_column_sepa-ct-op'         => 'SEPA tegenrekeningnummer',
+    'csv_column_sepa-db'            => 'SEPA "direct debet"-nummer',
+    'csv_column_tags-comma'         => 'Tags (kommagescheiden)',
+    'csv_column_tags-space'         => 'Tags (spatiegescheiden)',
+    'csv_column_roles_table'        => 'Kolominhoud',
+    'csv_continue'                  => 'Naar de volgende stap',
+    'csv_go_back'                   => 'Terug naar de vorige stap',
+    'csv_map_values'                => 'Leg relaties met kolomwaardes',
+    'csv_map_title'                 => 'Leg relaties met kolomwaardes',
+    'csv_map_text'                  => 'Sommige kolommen bevatten waardes die misschien al in Firefly bestaan. Selecteer hier de juiste combinaties' .
+                                       'zodat het importeren netjes aansluit bij je huidige gegevens.',
+    'cvs_field_value'               => 'Veldwaarde',
+    'csv_field_mapped_to'           => 'Is gelijk aan',
+    'csv_do_not_map'                => 'Geen relatie',
+    'csv_download_config_title'     => 'Download importconfiguratie',
+    'csv_download_config_text'      =>
+        'Firefly is klaar om je bestand te importeren. De instellingen en selecties die je zojuist hebt gemaakt kan je downloaden'
+        . ' en opslaan. Bij de volgende keer kan je dit bestand ook uploaden. Als je kommagescheiden bestand dezelfde indeling'
+        . ' heeft, zullen alle selecties goed staan. Dat scheelt weer!',
+    'csv_more_information_text'     => 'Ook als het importeren fout gaat is dit bestand handig. Na het importeren krijg je nogmaals de gelegenheid dit bestand'
+                                       . 'te downloaden.',
+    'csv_do_download_config'        => 'Download het configuratiebestand',
+    'csv_process_title'             => 'Het importeren is klaar',
+    'csv_row'                       => 'Rij',
+    'csv_error_see_logs'            => 'De logboeken bevatten mogelijk meer details.',
+    'csv_process_new_entries'       => 'Firefly heeft :imported nieuwe transactie(s) gemaakt.',
+    'csv_start_over'                => 'Begin opnieuw',
+    'csv_to_index'                  => 'Naar de index',
+    'csv_process_text'              => ':rows rijen zijn verwerkt.',
+    'csv_import_with_errors'        => 'Er was één fout. Deze foutmelding is mogelijk in het Engels.|Er zijn :errors fouten opgetreden. De foutmeldingen'
+                                       . ' zijn mogelijk in het Engels.',
     // create new stuff:
     'create_new_withdrawal'         => 'Nieuwe uitgave',
     'create_new_deposit'            => 'Nieuwe inkomsten',
