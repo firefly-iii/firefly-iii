@@ -31,12 +31,13 @@ class ChartJsBillChartGenerator implements BillChartGenerator
         $unpaidDescriptions = [];
         $unpaidAmount       = 0;
 
+        bcscale(2);
 
         /** @var TransactionJournal $entry */
         foreach ($paid as $entry) {
 
             $paidDescriptions[] = $entry->description;
-            $paidAmount += floatval($entry->amount);
+            $paidAmount         = bcadd($paidAmount, $entry->amount);
         }
 
         // loop unpaid:
@@ -45,7 +46,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
             $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
             $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
             $unpaidDescriptions[] = $description;
-            $unpaidAmount += $amount;
+            $unpaidAmount         = bcadd($unpaidAmount, $amount);
             unset($amount, $description);
         }
 

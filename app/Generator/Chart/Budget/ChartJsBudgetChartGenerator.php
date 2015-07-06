@@ -28,7 +28,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
-            'count'    => 1,
             'labels'   => [],
             'datasets' => [
                 [
@@ -44,6 +43,8 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
             $data['datasets'][0]['data'][] = $entry[1];
 
         }
+
+        $data['count'] = count($data['datasets']);
 
         return $data;
     }
@@ -118,7 +119,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         $format   = Config::get('firefly.month.' . $language);
 
         $data = [
-            'count'    => 0,
             'labels'   => [],
             'datasets' => [],
         ];
