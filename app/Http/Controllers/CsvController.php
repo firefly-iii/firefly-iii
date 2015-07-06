@@ -75,7 +75,7 @@ class CsvController extends Controller
         for ($i = 1; $i <= $count; $i++) {
             $headers[] = trans('firefly.csv_column') . ' #' . $i;
         }
-        if ($this->data->getHasHeaders()) {
+        if ($this->data->hasHeaders()) {
             $headers = $firstRow;
         }
 
@@ -184,7 +184,6 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
 
-
         // process given roles and mapping:
         $roles = $this->wizard->processSelectedRoles(Input::get('role'));
         $maps  = $this->wizard->processSelectedMapping($roles, Input::get('map'));
@@ -192,9 +191,7 @@ class CsvController extends Controller
         Session::put('csv-map', $maps);
         Session::put('csv-roles', $roles);
 
-        /*
-         * Go back when no roles defined:
-         */
+        // Go back when no roles defined:
         if (count($roles) === 0) {
             Session::flash('warning', 'Please select some roles.');
 
@@ -256,7 +253,7 @@ class CsvController extends Controller
         // After these values are prepped, read the actual CSV file
         $reader     = $this->data->getReader();
         $map        = $this->data->getMap();
-        $hasHeaders = $this->data->getHasHeaders();
+        $hasHeaders = $this->data->hasHeaders();
         $values     = $this->wizard->getMappableValues($reader, $map, $hasHeaders);
         $map        = $this->data->getMap();
         $mapped     = $this->data->getMapped();

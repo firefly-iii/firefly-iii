@@ -7,6 +7,11 @@ namespace _generated;
 
 use Helper\Functional;
 
+/**
+ * Class FunctionalTesterActions
+ *
+ * @package _generated
+ */
 trait FunctionalTesterActions
 {
     /**

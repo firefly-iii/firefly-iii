@@ -115,14 +115,14 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param        $id
+     * @param int    $journalId
      * @param Carbon $date
      *
      * @return TransactionJournal
      */
-    public function getWithDate($id, Carbon $date)
+    public function getWithDate($journalId, Carbon $date)
     {
-        return Auth::user()->transactionjournals()->where('id', $id)->where('date', $date->format('Y-m-d 00:00:00'))->first();
+        return Auth::user()->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
     }
 
     /**

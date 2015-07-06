@@ -3,6 +3,11 @@
 namespace FireflyIII\Helpers\Csv\Converter;
 
 
+/**
+ * Class RabobankDebetCredit
+ *
+ * @package FireflyIII\Helpers\Csv\Converter
+ */
 class RabobankDebetCredit extends BasicConverter implements ConverterInterface
 {
 

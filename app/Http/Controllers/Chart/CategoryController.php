@@ -176,9 +176,7 @@ class CategoryController extends Controller
         $start = new Carbon($year . '-01-01');
         $end   = new Carbon($year . '-12-31');
 
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category');
@@ -192,14 +190,11 @@ class CategoryController extends Controller
         $entries    = new Collection;
 
         while ($start < $end) {
-            // month is the current end of the period:
-            $month = clone $start;
+            $month = clone $start; // month is the current end of the period
             $month->endOfMonth();
-            // make a row:
-            $row = [clone $start];
+            $row = [clone $start]; // make a row:
 
-            // each budget, fill the row:
-            foreach ($categories as $category) {
+            foreach ($categories as $category) { // each budget, fill the row
                 $spent = $repository->spentInPeriodCorrected($category, $start, $month, $shared);
                 $row[] = $spent;
             }

@@ -8,6 +8,11 @@ namespace _generated;
 use Codeception\Module\PhpBrowser;
 use Helper\Acceptance;
 
+/**
+ * Class AcceptanceTesterActions
+ *
+ * @package _generated
+ */
 trait AcceptanceTesterActions
 {
     /**

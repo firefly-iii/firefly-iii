@@ -57,7 +57,8 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
-     * @param $parameters
+     *
+     * @return bool
      */
     public function validateIban($attribute, $value)
     {
@@ -200,9 +201,10 @@ class FireflyValidator extends Validator
 
     /**
      * @param $value
-     * @param $parameters
      *
      * @return bool
+     * @internal param $parameters
+     *
      */
     protected function validateByAccountId($value)
     {

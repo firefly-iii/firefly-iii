@@ -24,25 +24,19 @@ class ChartJsBillChartGenerator implements BillChartGenerator
      */
     public function frontpage(Collection $paid, Collection $unpaid)
     {
-
-        // loop paid and create single entry:
         $paidDescriptions   = [];
         $paidAmount         = 0;
         $unpaidDescriptions = [];
         $unpaidAmount       = 0;
-
         bcscale(2);
 
         /** @var TransactionJournal $entry */
-        foreach ($paid as $entry) {
-
+        foreach ($paid as $entry) { // loop paid and create single entry:
             $paidDescriptions[] = $entry->description;
             $paidAmount         = bcadd($paidAmount, $entry->amount);
         }
-
-        // loop unpaid:
         /** @var Bill $entry */
-        foreach ($unpaid as $entry) {
+        foreach ($unpaid as $entry) { // loop unpaid:
             $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
             $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
             $unpaidDescriptions[] = $description;

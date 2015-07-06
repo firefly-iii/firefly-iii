@@ -202,11 +202,10 @@ class ReportHelper implements ReportHelperInterface
      *
      * @param Carbon  $start
      * @param Carbon  $end
-     * @param boolean $shared
      *
      * @return BillCollection
      */
-    public function getBillReport(Carbon $start, Carbon $end, $shared)
+    public function getBillReport(Carbon $start, Carbon $end)
     {
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');

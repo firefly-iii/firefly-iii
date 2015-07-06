@@ -24,26 +24,20 @@ class OpposingAccount implements PostProcessorInterface
      */
     public function process()
     {
-        // first priority. try to find the account based on ID, if any.
-        if ($this->data['opposing-account-id'] instanceof Account) {
+        if ($this->data['opposing-account-id'] instanceof Account) { // first priority. try to find the account based on ID, if any
             $this->data['opposing-account-object'] = $this->data['opposing-account-id'];
 
             return $this->data;
         }
-
-        // second: try to find the account based on IBAN, if any.
-        if ($this->data['opposing-account-iban'] instanceof Account) {
+        if ($this->data['opposing-account-iban'] instanceof Account) { // second: try to find the account based on IBAN, if any.
             $this->data['opposing-account-object'] = $this->data['opposing-account-iban'];
 
             return $this->data;
         }
-
         $rules     = ['iban' => 'iban'];
         $check     = ['iban' => $this->data['opposing-account-iban']];
         $validator = Validator::make($check, $rules);
         $result    = !$validator->fails();
-
-
         if (is_string($this->data['opposing-account-iban']) && strlen($this->data['opposing-account-iban']) > 0) {
             if ($result) {
                 $this->data['opposing-account-object'] = $this->parseIbanString();
@@ -51,14 +45,11 @@ class OpposingAccount implements PostProcessorInterface
                 return $this->data;
             }
         }
-
-        // third: try to find account based on name, if any.
-        if ($this->data['opposing-account-name'] instanceof Account) {
+        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
             $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
 
             return $this->data;
         }
-
         if (is_string($this->data['opposing-account-name'])) {
             $this->data['opposing-account-object'] = $this->parseNameString();
 

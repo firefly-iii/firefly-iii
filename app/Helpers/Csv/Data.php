@@ -119,7 +119,7 @@ class Data
     /**
      * @return bool
      */
-    public function getHasHeaders()
+    public function hasHeaders()
     {
         return $this->hasHeaders;
     }

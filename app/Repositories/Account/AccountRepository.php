@@ -566,7 +566,6 @@ class AccountRepository implements AccountRepositoryInterface
         );
         $journal->save();
 
-
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
@@ -578,26 +577,11 @@ class AccountRepository implements AccountRepositoryInterface
             $firstAmount   = $data['openingBalance'];
             $secondAmount  = $data['openingBalance'] * -1;
         }
+        $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
+        $one->save();// first transaction: from
 
-        // first transaction: from
-        $one = new Transaction(
-            [
-                'account_id'             => $firstAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $firstAmount
-            ]
-        );
-        $one->save();
-
-        // second transaction: to
-        $two = new Transaction(
-            [
-                'account_id'             => $secondAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $secondAmount
-            ]
-        );
-        $two->save();
+        $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
+        $two->save(); // second transaction: to
 
         return $journal;
 
@@ -606,6 +590,8 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function updateMetadata(Account $account, array $data)
     {

@@ -9,6 +9,11 @@ use Codeception\Module\Laravel5;
 use Codeception\Module\Asserts;
 use Helper\Unit;
 
+/**
+ * Class UnitTesterActions
+ *
+ * @package _generated
+ */
 trait UnitTesterActions
 {
     /**
