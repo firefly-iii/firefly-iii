@@ -59,7 +59,7 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      */
-    public function validateIban($attribute, $value, $parameters)
+    public function validateIban($attribute, $value)
     {
 
         $value = strtoupper($value);

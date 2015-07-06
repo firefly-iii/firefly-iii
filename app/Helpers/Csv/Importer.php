@@ -126,9 +126,8 @@ class Importer
 
         }
         // post processing and validating.
-        $data    = $this->postProcess($data, $row);
-        $result  = $this->validateData($data);
-        $journal = null;
+        $data   = $this->postProcess($data, $row);
+        $result = $this->validateData($data);
         if ($result === true) {
             $journal = $this->createTransactionJournal($data);
         } else {
@@ -274,6 +273,7 @@ class Importer
             $journal->save();
         } else {
             $text = join(',', $errors->all());
+
             return $text;
         }
 

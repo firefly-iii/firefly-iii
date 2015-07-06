@@ -106,7 +106,6 @@ class CsvController extends Controller
             'date-format' => Session::get('date-format'),
             'has-headers' => Session::get('csv-has-headers')
         ];
-        //        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped'];
         if (Session::has('csv-map')) {
             $data['map'] = Session::get('csv-map');
         }
