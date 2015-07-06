@@ -15,8 +15,6 @@ use FireflyIII\Models\TransactionType;
 use Illuminate\Support\MessageBag;
 use Log;
 
-set_time_limit(0);
-
 /**
  * Class Importer
  *
@@ -69,6 +67,8 @@ class Importer
      */
     public function run()
     {
+        set_time_limit(0);
+
         $this->map    = $this->data->getMap();
         $this->roles  = $this->data->getRoles();
         $this->mapped = $this->data->getMapped();
@@ -193,14 +193,6 @@ class Importer
             $data = $postProcessor->process();
         }
 
-
-        //        $specifix = new Specifix();
-        //        $specifix->setData($data);
-        //        $specifix->setRow($row);
-        //$specifix->fix($data, $row); // TODO
-        // get data back:
-        //$data = $specifix->getData(); // TODO
-
         return $data;
     }
 
@@ -224,7 +216,7 @@ class Importer
     /**
      * @param array $data
      *
-     * @return static
+     * @return TransactionJournal|string
      */
     protected function createTransactionJournal(array $data)
     {
