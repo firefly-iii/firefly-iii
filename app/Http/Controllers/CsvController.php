@@ -61,7 +61,7 @@ class CsvController extends Controller
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
 
         $subTitle       = trans('firefly.csv_define_column_roles');
@@ -92,6 +92,8 @@ class CsvController extends Controller
      * Optional download of mapping.
      *
      * STEP FOUR THREE-A
+     *
+     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function downloadConfig()
     {
@@ -99,7 +101,7 @@ class CsvController extends Controller
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
         $data = [
             'date-format' => Session::get('date-format'),
@@ -122,11 +124,12 @@ class CsvController extends Controller
         header('Content-disposition: attachment; filename=' . $name);
         header('Content-type: application/json');
         echo $result;
-        exit;
+
+        return '';
     }
 
     /**
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function downloadConfigPage()
     {
@@ -140,7 +143,7 @@ class CsvController extends Controller
      *
      * STEP ONE
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -158,19 +161,6 @@ class CsvController extends Controller
 
         // get values which are yet unsaveable or unmappable:
         $unsupported = [];
-        foreach (Config::get('csv.roles') as $role) {
-            if (!isset($role['converter'])) {
-                $unsupported[] = trans('firefly.csv_unsupported_value', ['columnRole' => $role['name']]);
-            }
-            if ($role['mappable'] === true && !isset($role['mapper'])) {
-                $unsupported[] = trans('firefly.csv_unsupported_map', ['columnRole' => $role['name']]);
-            }
-            if (!isset($role['field'])) {
-                $unsupported[] = trans('firefly.csv_cannot_store_value', ['columnRole' => $role['name']]);
-            }
-        }
-        sort($unsupported);
-
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));
@@ -192,7 +182,7 @@ class CsvController extends Controller
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
 
 
@@ -209,14 +199,14 @@ class CsvController extends Controller
         if (count($roles) === 0) {
             Session::flash('warning', 'Please select some roles.');
 
-            return Redirect::route('csv.column-roles');
+            return redirect(route('csv.column-roles'));
         }
 
         /*
          * Continue with map specification when necessary.
          */
         if (count($maps) > 0) {
-            return Redirect::route('csv.map');
+            return redirect(route('csv.map'));
         }
 
         /*
@@ -224,7 +214,7 @@ class CsvController extends Controller
          */
 
         // proceed to download config
-        return Redirect::route('csv.download-config-page');
+        return redirect(route('csv.download-config-page'));
 
     }
 
@@ -234,7 +224,7 @@ class CsvController extends Controller
      *
      * STEP FIVE.
      *
-     * @return \Illuminate\Http\RedirectResponse|View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      * @throws FireflyException
      */
     public function map()
@@ -247,7 +237,7 @@ class CsvController extends Controller
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
 
         /*
@@ -284,9 +274,12 @@ class CsvController extends Controller
     }
 
     /**
+     *
      * Finally actually process the CSV file.
      *
      * STEP SEVEN
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function process()
     {
@@ -297,7 +290,7 @@ class CsvController extends Controller
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
 
         Log::debug('Created importer');
@@ -328,6 +321,8 @@ class CsvController extends Controller
      * Store the mapping the user has made. This is
      *
      * STEP SIX
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function saveMapping()
     {
@@ -338,7 +333,7 @@ class CsvController extends Controller
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
 
         // save mapping to session.
@@ -346,7 +341,7 @@ class CsvController extends Controller
         if (!is_array(Input::get('mapping'))) {
             Session::flash('warning', 'Invalid mapping.');
 
-            return Redirect::route('csv.map');
+            return redirect(route('csv.map'));
         }
 
         foreach (Input::get('mapping') as $index => $data) {
@@ -360,7 +355,7 @@ class CsvController extends Controller
         Session::put('csv-mapped', $mapped);
 
         // proceed to process.
-        return Redirect::route('csv.download-config-page');
+        return redirect(route('csv.download-config-page'));
 
     }
 
@@ -380,46 +375,36 @@ class CsvController extends Controller
         if (!$request->hasFile('csv')) {
             Session::flash('warning', 'No file uploaded.');
 
-            return Redirect::route('csv.index');
+            return redirect(route('csv.index'));
         }
 
-        /*
-         * Store CSV and put in session.
-         */
-        $fullPath   = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
-        $dateFormat = Input::get('date_format');
-        $hasHeaders = intval(Input::get('has_headers')) === 1;
-        $map        = [];
-        $roles      = [];
-        $mapped     = [];
-
+        $fullPath                = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
+        $settings                = [];
+        $settings['date-format'] = Input::get('date_format');
+        $settings['has-headers'] = intval(Input::get('has_headers')) === 1;
+        $settings['map']         = [];
+        $settings['mapped']      = [];
+        $settings['roles']       = [];
 
         /*
          * Process config file if present.
          */
         if ($request->hasFile('csv_config')) {
-
             $data = file_get_contents($request->file('csv_config')->getRealPath());
             $json = json_decode($data, true);
-
-            if (!is_null($json)) {
-                $dateFormat = isset($json['date-format']) ? $json['date-format'] : $dateFormat;
-                $hasHeaders = isset($json['has-headers']) ? $json['has-headers'] : $hasHeaders;
-                $map        = isset($json['map']) && is_array($json['map']) ? $json['map'] : [];
-                $mapped     = isset($json['mapped']) && is_array($json['mapped']) ? $json['mapped'] : [];
-                $roles      = isset($json['roles']) && is_array($json['roles']) ? $json['roles'] : [];
+            if (is_array($json)) {
+                $settings = array_merge($settings, $json);
             }
         }
 
         $this->data->setCsvFileLocation($fullPath);
-        $this->data->setDateFormat($dateFormat);
-        $this->data->setHasHeaders($hasHeaders);
-        $this->data->setMap($map);
-        $this->data->setMapped($mapped);
-        $this->data->setRoles($roles);
+        $this->data->setDateFormat($settings['date-format']);
+        $this->data->setHasHeaders($settings['has-headers']);
+        $this->data->setMap($settings['map']);
+        $this->data->setMapped($settings['mapped']);
+        $this->data->setRoles($settings['roles']);
 
-
-        return Redirect::route('csv.column-roles');
+        return redirect(route('csv.column-roles'));
 
     }
 }
