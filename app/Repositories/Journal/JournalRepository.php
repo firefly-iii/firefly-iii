@@ -143,7 +143,9 @@ class JournalRepository implements JournalRepositoryInterface
         foreach ($array as $name) {
             if (strlen(trim($name)) > 0) {
                 $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                $tagRepository->connect($journal, $tag);
+                if (!is_null($tag)) {
+                    $tagRepository->connect($journal, $tag);
+                }
             }
         }
     }
@@ -186,19 +188,19 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        list($from, $to) = $this->storeAccounts($transactionType, $data);
+        list($fromAccount, $toAccount) = $this->storeAccounts($transactionType, $data);
 
         // store accompanying transactions.
         Transaction::create( // first transaction.
             [
-                'account_id'             => $from->id,
+                'account_id'             => $fromAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $data['amount'] * -1
             ]
         );
         Transaction::create( // second transaction.
             [
-                'account_id'             => $to->id,
+                'account_id'             => $toAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $data['amount']
             ]

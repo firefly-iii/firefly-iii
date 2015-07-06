@@ -389,7 +389,9 @@ class AccountRepository implements AccountRepositoryInterface
     public function store(array $data)
     {
         $newAccount = $this->storeAccount($data);
-        $this->storeMetadata($newAccount, $data);
+        if (!is_null($newAccount)) {
+            $this->storeMetadata($newAccount, $data);
+        }
 
 
         // continue with the opposing account:
@@ -457,7 +459,9 @@ class AccountRepository implements AccountRepositoryInterface
                     'virtualBalance' => 0,
                 ];
                 $opposing     = $this->storeAccount($opposingData);
-                $this->storeInitialBalance($account, $opposing, $data);
+                if (!is_null($opposing)) {
+                    $this->storeInitialBalance($account, $opposing, $data);
+                }
             }
 
         } else {
