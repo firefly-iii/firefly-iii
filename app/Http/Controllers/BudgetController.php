@@ -9,7 +9,6 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Response;
 use Session;
 use URL;
@@ -106,7 +105,7 @@ class BudgetController extends Controller
         Preferences::mark();
 
 
-        return Redirect::to(Session::get('budgets.delete.url'));
+        return redirect(Session::get('budgets.delete.url'));
     }
 
     /**
@@ -200,7 +199,7 @@ class BudgetController extends Controller
         Preferences::set('budgetIncomeTotal' . $date, intval(Input::get('amount')));
         Preferences::mark();
 
-        return Redirect::route('budgets.index');
+        return redirect(route('budgets.index'));
     }
 
     /**
@@ -254,11 +253,11 @@ class BudgetController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('budgets.create.fromStore', true);
 
-            return Redirect::route('budgets.create')->withInput();
+            return redirect(route('budgets.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('budgets.create.url'));
+        return redirect(Session::get('budgets.create.url'));
 
     }
 
@@ -285,11 +284,11 @@ class BudgetController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('budgets.edit.fromUpdate', true);
 
-            return Redirect::route('budgets.edit', [$budget->id])->withInput(['return_to_edit' => 1]);
+            return redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('budgets.edit.url'));
+        return redirect(Session::get('budgets.edit.url'));
 
     }
 

@@ -8,7 +8,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 use Steam;
 use URL;
@@ -89,7 +88,7 @@ class AccountController extends Controller
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
         Preferences::mark();
 
-        return Redirect::to(Session::get('accounts.delete.url'));
+        return redirect(Session::get('accounts.delete.url'));
     }
 
     /**

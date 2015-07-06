@@ -11,7 +11,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 use Steam;
 use URL;
@@ -112,7 +111,7 @@ class PiggyBankController extends Controller
         Preferences::mark();
         $repository->destroy($piggyBank);
 
-        return Redirect::to(Session::get('piggy-banks.delete.url'));
+        return redirect(Session::get('piggy-banks.delete.url'));
     }
 
     /**
@@ -246,7 +245,7 @@ class PiggyBankController extends Controller
             Session::flash('error', 'Could not add ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         }
 
-        return Redirect::route('piggy-banks.index');
+        return redirect(route('piggy-banks.index'));
     }
 
     /**
@@ -275,7 +274,7 @@ class PiggyBankController extends Controller
             Session::flash('error', 'Could not remove ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
         }
 
-        return Redirect::route('piggy-banks.index');
+        return redirect(route('piggy-banks.index'));
     }
 
     /**
@@ -331,12 +330,12 @@ class PiggyBankController extends Controller
         if (intval(Input::get('create_another')) === 1) {
             Session::put('piggy-banks.create.fromStore', true);
 
-            return Redirect::route('piggy-banks.create')->withInput();
+            return redirect(route('piggy-banks.create'))->withInput();
         }
 
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('piggy-banks.create.url'));
+        return redirect(Session::get('piggy-banks.create.url'));
     }
 
     /**
@@ -366,12 +365,12 @@ class PiggyBankController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('piggy-banks.edit.fromUpdate', true);
 
-            return Redirect::route('piggy-banks.edit', [$piggyBank->id]);
+            return redirect(route('piggy-banks.edit', [$piggyBank->id]));
         }
 
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('piggy-banks.edit.url'));
+        return redirect(Session::get('piggy-banks.edit.url'));
 
 
     }

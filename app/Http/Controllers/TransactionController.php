@@ -12,7 +12,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Response;
 use Session;
 use URL;
@@ -108,7 +107,7 @@ class TransactionController extends Controller
         Preferences::mark();
 
         // redirect to previous URL:
-        return Redirect::to(Session::get('transactions.delete.url'));
+        return redirect(Session::get('transactions.delete.url'));
     }
 
     /**
@@ -295,11 +294,11 @@ class TransactionController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('transactions.create.fromStore', true);
 
-            return Redirect::route('transactions.create', [$request->input('what')])->withInput();
+            return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('transactions.create.url'));
+        return redirect(Session::get('transactions.create.url'));
 
     }
 
@@ -327,11 +326,11 @@ class TransactionController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit.fromUpdate', true);
 
-            return Redirect::route('transactions.edit', [$journal->id])->withInput(['return_to_edit' => 1]);
+            return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('transactions.edit.url'));
+        return redirect(Session::get('transactions.edit.url'));
 
     }
 

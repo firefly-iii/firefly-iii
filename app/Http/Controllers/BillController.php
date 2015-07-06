@@ -7,7 +7,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 use URL;
 use View;
@@ -79,8 +78,7 @@ class BillController extends Controller
         Session::flash('success', 'The bill was deleted.');
         Preferences::mark();
 
-        return Redirect::to(Session::get('bills.delete.url'));
-
+        return redirect(Session::get('bills.delete.url'));
     }
 
     /**
@@ -133,7 +131,7 @@ class BillController extends Controller
         if (intval($bill->active) == 0) {
             Session::flash('warning', 'Inactive bills cannot be scanned.');
 
-            return Redirect::to(URL::previous());
+            return redirect(URL::previous());
         }
 
         $journals = $repository->getPossiblyRelatedJournals($bill);
@@ -146,7 +144,7 @@ class BillController extends Controller
         Session::flash('success', 'Rescanned everything.');
         Preferences::mark();
 
-        return Redirect::to(URL::previous());
+        return redirect(URL::previous());
     }
 
     /**
@@ -182,11 +180,11 @@ class BillController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('bills.create.fromStore', true);
 
-            return Redirect::route('bills.create')->withInput();
+            return redirect(route('bills.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('bills.create.url'));
+        return redirect(Session::get('bills.create.url'));
 
     }
 
@@ -209,11 +207,11 @@ class BillController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('bills.edit.fromUpdate', true);
 
-            return Redirect::route('bills.edit', [$bill->id])->withInput(['return_to_edit' => 1]);
+            return redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('bills.edit.url'));
+        return redirect(Session::get('bills.edit.url'));
 
     }
 

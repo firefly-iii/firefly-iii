@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Input;
 use Log;
 use Preferences;
-use Redirect;
 use Session;
 use View;
 
