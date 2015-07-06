@@ -404,7 +404,9 @@ class AccountRepository implements AccountRepositoryInterface
                 'iban'           => '',
             ];
             $opposing     = $this->storeAccount($opposingData);
-            $this->storeInitialBalance($newAccount, $opposing, $data);
+            if (!is_null($opposing)) {
+                $this->storeInitialBalance($newAccount, $opposing, $data);
+            }
 
         }
 

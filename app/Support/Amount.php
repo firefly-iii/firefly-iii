@@ -65,7 +65,6 @@ class Amount
             return '<span class="text-danger">' . $symbol . ' ' . $string . '</span>';
         }
 
-        // &#8364;
         return $symbol . ' ' . $string;
     }
 
