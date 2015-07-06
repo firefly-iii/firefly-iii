@@ -62,6 +62,13 @@ class FireflyValidator extends Validator
      */
     public function validateIban($attribute, $value)
     {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        if (strlen($value) === 0) {
+            return false;
+        }
 
         $value = strtoupper($value);
         if (strlen($value) < 6) {

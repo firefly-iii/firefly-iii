@@ -27,18 +27,31 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
             return $account;
         } else {
             if (strlen($this->value) > 0) {
-                $set = Auth::user()->accounts()->get();
-                /** @var Account $account */
-                foreach ($set as $account) {
-                    if ($account->iban == $this->value) {
-                        Log::debug('OpposingAccountIban::convert found an Account (#' . $account->id . ': ' . $account->name . ') with IBAN ' . $this->value);
-
-                        return $account;
-                    }
+                $account = $this->findAccount();
+                if (!is_null($account)) {
+                    return $account;
                 }
             }
 
             return $this->value;
         }
+    }
+
+    /**
+     * @return Account|null
+     */
+    protected function findAccount()
+    {
+        $set = Auth::user()->accounts()->get();
+        /** @var Account $account */
+        foreach ($set as $account) {
+            if ($account->iban == $this->value) {
+                Log::debug('OpposingAccountIban::convert found an Account (#' . $account->id . ': ' . $account->name . ') with IBAN ' . $this->value);
+
+                return $account;
+            }
+        }
+
+        return null;
     }
 }

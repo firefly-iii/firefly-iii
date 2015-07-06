@@ -24,36 +24,19 @@ class OpposingAccount implements PostProcessorInterface
      */
     public function process()
     {
-        if ($this->data['opposing-account-id'] instanceof Account) { // first priority. try to find the account based on ID, if any
-            $this->data['opposing-account-object'] = $this->data['opposing-account-id'];
-
-            return $this->data;
+        $result = $this->checkIdNameObject();
+        if (!is_null($result)) {
+            return $result;
         }
-        if ($this->data['opposing-account-iban'] instanceof Account) { // second: try to find the account based on IBAN, if any.
-            $this->data['opposing-account-object'] = $this->data['opposing-account-iban'];
 
-            return $this->data;
+        $result = $this->checkIbanString();
+        if (!is_null($result)) {
+            return $result;
         }
-        $rules     = ['iban' => 'iban'];
-        $check     = ['iban' => $this->data['opposing-account-iban']];
-        $validator = Validator::make($check, $rules);
-        $result    = !$validator->fails();
-        if (is_string($this->data['opposing-account-iban']) && strlen($this->data['opposing-account-iban']) > 0) {
-            if ($result) {
-                $this->data['opposing-account-object'] = $this->parseIbanString();
 
-                return $this->data;
-            }
-        }
-        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
-            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
-
-            return $this->data;
-        }
-        if (is_string($this->data['opposing-account-name'])) {
-            $this->data['opposing-account-object'] = $this->parseNameString();
-
-            return $this->data;
+        $result = $this->checkNameString();
+        if (!is_null($result)) {
+            return $result;
         }
 
         return null;
@@ -68,19 +51,66 @@ class OpposingAccount implements PostProcessorInterface
     }
 
     /**
+     * @return array
+     */
+    protected function checkIdNameObject()
+    {
+        if ($this->data['opposing-account-id'] instanceof Account) { // first priority. try to find the account based on ID, if any
+            $this->data['opposing-account-object'] = $this->data['opposing-account-id'];
+
+            return $this->data;
+        }
+        if ($this->data['opposing-account-iban'] instanceof Account) { // second: try to find the account based on IBAN, if any.
+            $this->data['opposing-account-object'] = $this->data['opposing-account-iban'];
+
+            return $this->data;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function checkIbanString()
+    {
+        $rules     = ['iban' => 'iban'];
+        $check     = ['iban' => $this->data['opposing-account-iban']];
+        $validator = Validator::make($check, $rules);
+        if (!$validator->fails()) {
+            $this->data['opposing-account-object'] = $this->parseIbanString();
+
+            return $this->data;
+        }
+
+        return null;
+    }
+
+    /**
      * @return Account|null
      */
     protected function parseIbanString()
     {
         // create by name and/or iban.
-        $accountType = $this->getAccountType();
-        $accounts    = Auth::user()->accounts()->get();
+        $accounts = Auth::user()->accounts()->get();
         foreach ($accounts as $entry) {
             if ($entry->iban == $this->data['opposing-account-iban']) {
 
                 return $entry;
             }
         }
+        $account = $this->createAccount();
+
+        return $account;
+    }
+
+    /**
+     * @return Account|null
+     */
+    protected function createAccount()
+    {
+        $accountType = $this->getAccountType();
+
         // create if not exists:
         $name    = is_string($this->data['opposing-account-name']) && strlen($this->data['opposing-account-name']) > 0 ? $this->data['opposing-account-name']
             : $this->data['opposing-account-iban'];
@@ -115,6 +145,25 @@ class OpposingAccount implements PostProcessorInterface
 
 
         }
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function checkNameString()
+    {
+        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
+            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
+
+            return $this->data;
+        }
+        if (is_string($this->data['opposing-account-name'])) {
+            $this->data['opposing-account-object'] = $this->parseNameString();
+
+            return $this->data;
+        }
+
+        return null;
     }
 
     /**
