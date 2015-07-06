@@ -23,6 +23,10 @@ class TransactionCurrency implements MapperInterface
             $list[$currency->id] = $currency->name . ' (' . $currency->code . ')';
         }
 
+        asort($list);
+
+        array_unshift($list, trans('firefly.csv_do_not_map'));
+
         return $list;
     }
 }

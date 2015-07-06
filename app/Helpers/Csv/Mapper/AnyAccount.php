@@ -20,12 +20,14 @@ class AnyAccount implements MapperInterface
     {
         $result = Auth::user()->accounts()->with('accountType')->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 
-        $list = [];
+        $list    = [];
         /** @var Account $account */
         foreach ($result as $account) {
             $list[$account->id] = $account->name . ' (' . $account->accountType->type . ')';
         }
         asort($list);
+
+        array_unshift($list, trans('firefly.csv_do_not_map'));
 
         return $list;
     }

@@ -126,14 +126,13 @@ class Importer
 
         }
         // post processing and validating.
-        $data   = $this->postProcess($data, $row);
-        $result = $this->validateData($data);
+        $data    = $this->postProcess($data, $row);
+        $result  = $this->validateData($data);
+        $journal = null;
         if ($result === true) {
-            $result = $this->createTransactionJournal($data);
-        } else {
-            Log::error('Validator: ' . $result);
+            $journal = $this->createTransactionJournal($data);
         }
-        if ($result instanceof TransactionJournal) {
+        if ($journal instanceof TransactionJournal) {
             return true;
         }
 

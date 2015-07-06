@@ -26,12 +26,19 @@ class AssetAccount implements MapperInterface
         )->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 
         $list = [];
+
         /** @var Account $account */
         foreach ($result as $account) {
-            $list[$account->id] = $account->name;
+            $name = $account->name;
+            if (strlen($account->iban) > 0) {
+                $name .= ' (' . $account->iban . ')';
+            }
+            $list[$account->id] = $name;
         }
 
         asort($list);
+
+        array_unshift($list, trans('firefly.csv_do_not_map'));
 
         return $list;
     }

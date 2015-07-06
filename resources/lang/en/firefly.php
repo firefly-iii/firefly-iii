@@ -25,7 +25,8 @@ return [
     'csv_index_title'               => 'Upload and import a CSV file',
     'csv_index_text'                =>
         'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by' .
-        ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.',
+        ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.' .
+        ' If you would like to learn more, please click on the <i class="fa fa-question-circle"></i> button at the top of this page.',
     'csv_index_beta_warning'        => 'This tool is very much in beta. Please proceed with caution',
     'csv_header_help'               => 'Check this box when your CSV file\'s first row consists of column names, not actual data',
     'csv_date_help'                 => 'Date time format in your CSV. Follow the format like <a href="https://secure.' .
@@ -70,6 +71,7 @@ return [
     'csv_error_see_logs'            => 'Check the log files to see details.',
     'csv_start_over'                => 'Import again',
     'csv_to_index'                  => 'Back home',
+    'csv_do_not_map'                => 'Do not map this value',
     //    'csv_index_text'                => 'Here be explanation.',
     //    'csv_upload_form'               => 'Upload form',
     //    'upload_csv_file'               => 'Upload CSV file',

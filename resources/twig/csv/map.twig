@@ -21,7 +21,7 @@
                 </div>
                 <div class="box-body">
                     <p>
-                    {{ 'csv_map_text'|_ }}
+                        {{ 'csv_map_text'|_ }}
                     </p>
                 </div>
             </div>
@@ -45,18 +45,18 @@
                             </div>
 
                         </div>
-                        <div class="box-body">
-                            <table class="table">
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
                                 <thead>
-                                <th>{{ 'cvs_field_value'|_ }}</th>
+                                <th style="width:50%;">{{ 'cvs_field_value'|_ }}</th>
                                 <th>{{ 'csv_field_mapped_to'|_ }}</th>
                                 </thead>
                                 <tbody>
                                 {% for value in values[index] %}
                                     <tr>
-                                        <td>{{ value }}</td>
+                                        <td><code>{{ value }}</code></td>
                                         <td>
-                                            {{ Form.select('mapping['~index~']['~value~']',options[index], mapped[index][value]) }}
+                                            {{ Form.select('mapping['~index~']['~value~']',options[index], mapped[index][value], {class: 'form-control'}) }}
                                         </td>
                                     </tr>
                                 {% endfor %}

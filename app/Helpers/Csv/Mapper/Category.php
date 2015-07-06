@@ -27,6 +27,8 @@ class Category implements MapperInterface
         }
         asort($list);
 
+        array_unshift($list, trans('firefly.csv_do_not_map'));
+
         return $list;
     }
 }
