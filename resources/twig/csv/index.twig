@@ -61,7 +61,7 @@
 
                         {{ ExpandedForm.file('csv_config',{helpText: 'csv_csv_config_file_help'|_}) }}
 
-                        <!-- ExpandedForm.multiCheckbox('specifix',Config.get('csv.specifix')) -->
+                        {{ ExpandedForm.multiCheckbox('specifix', specifix) }}
 
                         {% if not uploadPossible %}
                             <div class="form-group" id="csv_holder">

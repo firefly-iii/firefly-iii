@@ -100,6 +100,8 @@ return [
     'csv_process_text'              => ':rows rijen zijn verwerkt.',
     'csv_import_with_errors'        => 'Er was één fout. Deze foutmelding is mogelijk in het Engels.|Er zijn :errors fouten opgetreden. De foutmeldingen'
                                        . ' zijn mogelijk in het Engels.',
+    'csv_specifix_RabobankDescription' => 'Vink dit aan als je Rabobank bestanden importeert.',
+    'csv_specifix_Dummy'               => 'Dit vinkje doet niks (dummy).',
     // create new stuff:
     'create_new_withdrawal'         => 'Nieuwe uitgave',
     'create_new_deposit'            => 'Nieuwe inkomsten',

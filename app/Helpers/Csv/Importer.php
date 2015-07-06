@@ -37,6 +37,8 @@ class Importer
     protected $roles;
     /** @var  int */
     protected $rows = 0;
+    /** @var array */
+    protected $specifix;
 
     /**
      * @return array
@@ -69,9 +71,10 @@ class Importer
     {
         set_time_limit(0);
 
-        $this->map    = $this->data->getMap();
-        $this->roles  = $this->data->getRoles();
-        $this->mapped = $this->data->getMapped();
+        $this->map      = $this->data->getMap();
+        $this->roles    = $this->data->getRoles();
+        $this->mapped   = $this->data->getMapped();
+        $this->specifix = $this->data->getSpecifix();
 
         foreach ($this->data->getReader() as $index => $row) {
             if ($this->parseRow($index)) {
@@ -174,8 +177,7 @@ class Importer
     {
         // do bank specific fixes (must be enabled but now all of them.
 
-        $set = Config::get('csv.specifix');
-        foreach ($set as $className) {
+        foreach ($this->getSpecifix() as $className) {
             /** @var SpecifixInterface $specifix */
             $specifix = App::make('FireflyIII\Helpers\Csv\Specifix\\' . $className);
             $specifix->setData($data);
@@ -193,6 +195,14 @@ class Importer
         }
 
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSpecifix()
+    {
+        return $this->specifix;
     }
 
     /**
@@ -304,4 +314,5 @@ class Importer
     {
         $this->data = $data;
     }
+
 }

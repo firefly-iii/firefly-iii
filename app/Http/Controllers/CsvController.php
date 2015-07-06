@@ -155,14 +155,17 @@ class CsvController extends Controller
         Session::forget('csv-mapped');
         Session::forget('csv-specifix');
 
-        // get values which are yet unsaveable or unmappable:
-        $unsupported = [];
+        // get list of supported specifix
+        $specifix = [];
+        foreach (Config::get('csv.specifix') as $entry) {
+            $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
+        }
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'unsupported'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix'));
     }
 
     /**
@@ -378,6 +381,7 @@ class CsvController extends Controller
         $settings                = [];
         $settings['date-format'] = Input::get('date_format');
         $settings['has-headers'] = intval(Input::get('has_headers')) === 1;
+        $settings['specifix']    = Input::get('specifix');
         $settings['map']         = [];
         $settings['mapped']      = [];
         $settings['roles']       = [];
@@ -399,6 +403,7 @@ class CsvController extends Controller
         $this->data->setMap($settings['map']);
         $this->data->setMapped($settings['mapped']);
         $this->data->setRoles($settings['roles']);
+        $this->data->setSpecifix($settings['specifix']);
 
         return redirect(route('csv.column-roles'));
 

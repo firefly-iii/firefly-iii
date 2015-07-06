@@ -1,7 +1,8 @@
 <?php
 return [
     'specifix'        => [
-        'RabobankDescription'
+        'RabobankDescription',
+        'Dummy'
     ],
     'post_processors' => [
         'Description',

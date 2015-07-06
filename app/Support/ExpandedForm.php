@@ -270,6 +270,27 @@ class ExpandedForm
      *
      * @return string
      */
+    public function multiCheckbox($name, array $list = [], $selected = null, array $options = [])
+    {
+        $label    = $this->label($name, $options);
+        $options  = $this->expandOptionArray($name, $label, $options);
+        $classes  = $this->getHolderClasses($name);
+        $selected = $this->fillFieldValue($name, $selected);
+
+        unset($options['class']);
+        $html = View::make('form.multiCheckbox', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param       $name
+     * @param array $list
+     * @param null  $selected
+     * @param array $options
+     *
+     * @return string
+     */
     public function multiRadio($name, array $list = [], $selected = null, array $options = [])
     {
         $label    = $this->label($name, $options);

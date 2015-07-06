@@ -33,6 +33,9 @@ class Data
     /** @var  array */
     protected $roles;
 
+    /** @var  array */
+    protected $specifix;
+
     /**
      *
      */
@@ -44,6 +47,7 @@ class Data
         $this->sessionMap();
         $this->sessionRoles();
         $this->sessionMapped();
+        $this->sessionSpecifix();
     }
 
     protected function sessionHasHeaders()
@@ -85,6 +89,13 @@ class Data
     {
         if (Session::has('csv-mapped')) {
             $this->mapped = (array)Session::get('csv-mapped');
+        }
+    }
+
+    protected function sessionSpecifix()
+    {
+        if (Session::has('csv-specifix')) {
+            $this->specifix = (array)Session::get('csv-specifix');
         }
     }
 
@@ -229,6 +240,23 @@ class Data
     {
         Session::put('csv-roles', $roles);
         $this->roles = $roles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSpecifix()
+    {
+        return $this->specifix;
+    }
+
+    /**
+     * @param array $specifix
+     */
+    public function setSpecifix($specifix)
+    {
+        Session::put('csv-specifix', $specifix);
+        $this->specifix = $specifix;
     }
 
 

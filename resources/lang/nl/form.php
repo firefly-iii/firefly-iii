@@ -50,6 +50,7 @@ return [
     'has_headers'                 => 'Kolomnamen op de eerste rij?',
     'date_format'                 => 'Datumformaat',
     'csv_config'                  => 'Configuratiebestand',
+    'specifix'                    => 'Bank- or of bestandsspecifieke opties',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',
