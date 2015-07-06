@@ -259,12 +259,13 @@ class PiggyBankController extends Controller
     public function postRemove(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $amount = floatval(Input::get('amount'));
+        bcscale(2);
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
         if ($amount <= $savedSoFar) {
-            $repetition = $piggyBank->currentRelevantRep();
-            $repetition->currentamount -= $amount;
+            $repetition                = $piggyBank->currentRelevantRep();
+            $repetition->currentamount = bcsub($repetition->currentamount, $amount);
             $repetition->save();
 
             // create event
