@@ -48,11 +48,11 @@ class Budget extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query = Budget::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'name') {
-                $query->where($name, $value);
-            }
+        $query  = Budget::orderBy('id');
+        $search = $fields;
+        unset($search['name']);
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
         }
         $set = $query->get(['budgets.*']);
         /** @var Budget $budget */

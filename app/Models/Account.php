@@ -74,11 +74,12 @@ class Account extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query = Account::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'name' && $name != 'iban') {
-                $query->where($name, $value);
-            }
+        $query  = Account::orderBy('id');
+        $search = $fields;
+        unset($search['name'], $search['iban']);
+
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
         }
         $set = $query->get(['accounts.*']);
         /** @var Account $account */
@@ -107,11 +108,11 @@ class Account extends Model
     public static function firstOrNullEncrypted(array $fields)
     {
         // everything but the name:
-        $query = Account::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'name') {
-                $query->where($name, $value);
-            }
+        $query  = Account::orderBy('id');
+        $search = $fields;
+        unset($search['name']);
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
         }
         $set = $query->get(['accounts.*']);
         /** @var Account $account */

@@ -43,11 +43,12 @@ class Category extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query = Category::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'name') {
-                $query->where($name, $value);
-            }
+        $query  = Category::orderBy('id');
+        $search = $fields;
+        unset($search['name']);
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
+
         }
         $set = $query->get(['categories.*']);
         /** @var Category $category */
