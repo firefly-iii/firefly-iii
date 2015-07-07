@@ -5,7 +5,6 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use Hash;
-use Redirect;
 use Session;
 
 /**
@@ -56,13 +55,13 @@ class ProfileController extends Controller
         if (!Hash::check($request->get('current_password'), Auth::user()->password)) {
             Session::flash('error', 'Invalid current password!');
 
-            return Redirect::route('profile.change-password');
+            return redirect(route('profile.change-password'));
         }
         $result = $this->validatePassword($request->get('current_password'), $request->get('new_password'));
         if (!($result === true)) {
             Session::flash('error', $result);
 
-            return Redirect::route('profile.change-password');
+            return redirect(route('profile.change-password'));
         }
 
         // update the user with the new password.
@@ -71,7 +70,7 @@ class ProfileController extends Controller
 
         Session::flash('success', 'Password changed!');
 
-        return Redirect::route('profile');
+        return redirect(route('profile'));
     }
 
     /**
@@ -103,7 +102,7 @@ class ProfileController extends Controller
         if (!Hash::check($request->get('password'), Auth::user()->password)) {
             Session::flash('error', 'Invalid password!');
 
-            return Redirect::route('profile.delete-account');
+            return redirect(route('profile.delete-account'));
         }
 
         // DELETE!
@@ -112,7 +111,7 @@ class ProfileController extends Controller
         Session::flash('gaEventCategory', 'user');
         Session::flash('gaEventAction', 'delete-account');
 
-        return Redirect::route('index');
+        return redirect(route('index'));
     }
 
 

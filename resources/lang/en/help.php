@@ -28,6 +28,7 @@ return [
     'categories-delete'       => 'categories.delete',
     'categories-show'         => 'categories.show',
     'categories-noCategory'   => 'categories.noCategory',
+    'csv-index'               => 'Upload and import a CSV file',
     'currency-index'          => 'currency.index',
     'currency-create'         => 'currency.create',
     'currency-edit'           => 'currency.edit',

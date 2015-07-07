@@ -54,9 +54,7 @@ class ReportQuery implements ReportQueryInterface
             $query->where('transaction_types.type', 'Withdrawal'); // any withdrawal is fine.
         }
         $query->orderBy('transaction_journals.date');
-
-        // get everything
-        $data = $query->get(
+        $data = $query->get( // get everything
             ['transaction_journals.*', 'transaction_types.type', 'ac_to.name as name', 'ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']
         );
 
@@ -227,11 +225,10 @@ class ReportQuery implements ReportQueryInterface
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
-     * @param bool    $shared
      *
      * @return string
      */
-    public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false)
+    public function spentNoBudget(Account $account, Carbon $start, Carbon $end)
     {
         return
             Auth::user()->transactionjournals()

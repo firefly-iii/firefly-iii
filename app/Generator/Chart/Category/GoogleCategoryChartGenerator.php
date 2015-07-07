@@ -99,6 +99,7 @@ class GoogleCategoryChartGenerator implements CategoryChartGenerator
             $chart->addRowArray($entry);
         }
         $chart->generate();
+
         return $chart->getData();
 
     }

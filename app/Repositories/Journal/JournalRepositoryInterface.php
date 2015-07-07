@@ -62,12 +62,12 @@ interface JournalRepositoryInterface
     public function getTransactionType($type);
 
     /**
-     * @param        $id
+     * @param  int   $journalId
      * @param Carbon $date
      *
      * @return TransactionJournal
      */
-    public function getWithDate($id, Carbon $date);
+    public function getWithDate($journalId, Carbon $date);
 
     /**
      * @param TransactionJournal $journal

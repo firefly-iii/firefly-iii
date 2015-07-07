@@ -11,7 +11,6 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * Class User
  *
  * @codeCoverageIgnore
- *
  * @package FireflyIII
  * @property integer                                                                               $id
  * @property \Carbon\Carbon                                                                        $created_at

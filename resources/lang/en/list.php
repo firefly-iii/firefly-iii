@@ -29,4 +29,5 @@ return [
     'transfer'       => 'Transfer',
     'type'           => 'Type',
     'completed'      => 'Completed',
+    'iban'           => 'IBAN',
 ];

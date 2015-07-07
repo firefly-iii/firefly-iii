@@ -1,0 +1,17 @@
+<div class="{{ classes }}" id="{{ name }}_holder">
+    <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
+
+    <div class="col-sm-8">
+        {% for value,description in list %}
+            <div class="checkbox">
+                <label>
+                    {{ Form.checkbox(name~'[]', value, (selected == value), options) }}
+                    {{ description }}
+                </label>
+            </div>
+        {% endfor %}
+        {% include 'form/help.twig' %}
+        {% include 'form/feedback.twig' %}
+
+    </div>
+</div>

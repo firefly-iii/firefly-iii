@@ -389,7 +389,9 @@ class AccountRepository implements AccountRepositoryInterface
     public function store(array $data)
     {
         $newAccount = $this->storeAccount($data);
-        $this->storeMetadata($newAccount, $data);
+        if (!is_null($newAccount)) {
+            $this->storeMetadata($newAccount, $data);
+        }
 
 
         // continue with the opposing account:
@@ -401,9 +403,12 @@ class AccountRepository implements AccountRepositoryInterface
                 'virtualBalance' => 0,
                 'name'           => $data['name'] . ' initial balance',
                 'active'         => false,
+                'iban'           => '',
             ];
             $opposing     = $this->storeAccount($opposingData);
-            $this->storeInitialBalance($newAccount, $opposing, $data);
+            if (!is_null($opposing) && !is_null($newAccount)) {
+                $this->storeInitialBalance($newAccount, $opposing, $data);
+            }
 
         }
 
@@ -431,6 +436,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->name            = $data['name'];
         $account->active          = $data['active'] == '1' ? true : false;
         $account->virtual_balance = $data['virtualBalance'];
+        $account->iban            = $data['iban'];
         $account->save();
 
         $this->updateMetadata($account, $data);
@@ -453,7 +459,9 @@ class AccountRepository implements AccountRepositoryInterface
                     'virtualBalance' => 0,
                 ];
                 $opposing     = $this->storeAccount($opposingData);
-                $this->storeInitialBalance($account, $opposing, $data);
+                if (!is_null($opposing)) {
+                    $this->storeInitialBalance($account, $opposing, $data);
+                }
             }
 
         } else {
@@ -481,6 +489,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'name'            => $data['name'],
                 'virtual_balance' => $data['virtualBalance'],
                 'active'          => $data['active'] === true ? true : false,
+                'iban'            => $data['iban'],
             ]
         );
 
@@ -490,7 +499,8 @@ class AccountRepository implements AccountRepositoryInterface
                 'user_id'         => $data['user'],
                 'account_type_id' => $accountType->id,
                 'virtual_balance' => $data['virtualBalance'],
-                'name'            => $data['name']
+                'name'            => $data['name'],
+                'iban'            => $data['iban'],
             ];
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
@@ -556,7 +566,6 @@ class AccountRepository implements AccountRepositoryInterface
         );
         $journal->save();
 
-
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
@@ -568,26 +577,11 @@ class AccountRepository implements AccountRepositoryInterface
             $firstAmount   = $data['openingBalance'];
             $secondAmount  = $data['openingBalance'] * -1;
         }
+        $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
+        $one->save();// first transaction: from
 
-        // first transaction: from
-        $one = new Transaction(
-            [
-                'account_id'             => $firstAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $firstAmount
-            ]
-        );
-        $one->save();
-
-        // second transaction: to
-        $two = new Transaction(
-            [
-                'account_id'             => $secondAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $secondAmount
-            ]
-        );
-        $two->save();
+        $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
+        $two->save(); // second transaction: to
 
         return $journal;
 
@@ -596,6 +590,8 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function updateMetadata(Account $account, array $data)
     {

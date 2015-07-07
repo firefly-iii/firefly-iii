@@ -7,7 +7,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 use URL;
 use View;
@@ -65,7 +64,7 @@ class CurrencyController extends Controller
         Cache::forget('FFCURRENCYSYMBOL');
         Cache::forget('FFCURRENCYCODE');
 
-        return Redirect::route('currency.index');
+        return redirect(route('currency.index'));
 
     }
 
@@ -81,7 +80,7 @@ class CurrencyController extends Controller
         if ($repository->countJournals($currency) > 0) {
             Session::flash('error', 'Cannot delete ' . e($currency->name) . ' because there are still transactions attached to it.');
 
-            return Redirect::route('currency.index');
+            return redirect(route('currency.index'));
         }
 
         // put previous url in session
@@ -106,7 +105,7 @@ class CurrencyController extends Controller
         if ($repository->countJournals($currency) > 0) {
             Session::flash('error', 'Cannot destroy ' . e($currency->name) . ' because there are still transactions attached to it.');
 
-            return Redirect::route('currency.index');
+            return redirect(route('currency.index'));
         }
 
         Session::flash('success', 'Currency "' . e($currency->name) . '" deleted');
@@ -114,7 +113,7 @@ class CurrencyController extends Controller
             $currency->delete();
         }
 
-        return Redirect::to(Session::get('currency.delete.url'));
+        return redirect(Session::get('currency.delete.url'));
     }
 
     /**
@@ -178,11 +177,11 @@ class CurrencyController extends Controller
         if (intval(Input::get('create_another')) === 1) {
             Session::put('currency.create.fromStore', true);
 
-            return Redirect::route('currency.create')->withInput();
+            return redirect(route('currency.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('currency.create.url'));
+        return redirect(Session::get('currency.create.url'));
 
 
     }
@@ -207,11 +206,11 @@ class CurrencyController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('currency.edit.fromUpdate', true);
 
-            return Redirect::route('currency.edit', [$currency->id]);
+            return redirect(route('currency.edit', [$currency->id]));
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('currency.edit.url'));
+        return redirect(Session::get('currency.edit.url'));
 
     }
 

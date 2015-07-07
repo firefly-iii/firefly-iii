@@ -44,6 +44,7 @@ class AccountFormRequest extends Request
             'id'                   => $idRule,
             'name'                 => $nameRule,
             'openingBalance'       => 'numeric',
+            'iban'                 => 'iban',
             'virtualBalance'       => 'numeric',
             'openingBalanceDate'   => 'date',
             'accountRole'          => 'in:' . $accountRoles,

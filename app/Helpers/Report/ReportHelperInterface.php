@@ -37,11 +37,10 @@ interface ReportHelperInterface
      *
      * @param Carbon  $start
      * @param Carbon  $end
-     * @param boolean $shared
      *
      * @return BillCollection
      */
-    public function getBillReport(Carbon $start, Carbon $end, $shared);
+    public function getBillReport(Carbon $start, Carbon $end);
 
     /**
      * @param Carbon  $start

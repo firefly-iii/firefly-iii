@@ -88,7 +88,7 @@ class ReportController extends Controller
         $budgets    = $this->helper->getBudgetReport($start, $end, $shared);
         $categories = $this->helper->getCategoryReport($start, $end, $shared);
         $balance    = $this->helper->getBalanceReport($start, $end, $shared);
-        $bills      = $this->helper->getBillReport($start, $end, $shared);
+        $bills      = $this->helper->getBillReport($start, $end);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'month');

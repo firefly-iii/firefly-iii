@@ -10,7 +10,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Response;
 use Session;
 use URL;
@@ -108,7 +107,7 @@ class TagController extends Controller
         Session::flash('success', 'Tag "' . e($tagName) . '" was deleted.');
         Preferences::mark();
 
-        return Redirect::to(route('tags.index'));
+        return redirect(route('tags.index'));
     }
 
     /**
@@ -221,9 +220,9 @@ class TagController extends Controller
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {
         if (Input::get('setTag') == 'true') {
-            $latitude  = strlen($request->get('latitude')) > 0 ? $request->get('latitude') : null;
-            $longitude = strlen($request->get('longitude')) > 0 ? $request->get('longitude') : null;
-            $zoomLevel = strlen($request->get('zoomLevel')) > 0 ? $request->get('zoomLevel') : null;
+            $latitude  = $request->get('latitude');
+            $longitude = $request->get('longitude');
+            $zoomLevel = $request->get('zoomLevel');
         } else {
             $latitude  = null;
             $longitude = null;
@@ -248,11 +247,11 @@ class TagController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('tags.create.fromStore', true);
 
-            return Redirect::route('tags.create')->withInput();
+            return redirect(route('tags.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('tags.create.url'));
+        return redirect(Session::get('tags.create.url'));
 
     }
 
@@ -295,10 +294,10 @@ class TagController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('tags.edit.fromUpdate', true);
 
-            return Redirect::route('tags.edit', [$tag->id])->withInput(['return_to_edit' => 1]);
+            return redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('tags.edit.url'));
+        return redirect(Session::get('tags.edit.url'));
     }
 }

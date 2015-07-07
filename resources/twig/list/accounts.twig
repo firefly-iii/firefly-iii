@@ -6,6 +6,7 @@
         {% if what == 'asset' %}
             <th class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
         {% endif %}
+        <th>{{ trans('list.iban') }}</th>
         <th>{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
@@ -31,6 +32,7 @@
                     {% endfor %}
                 </td>
             {% endif %}
+            <td>{{ account.iban }}</td>
             <td data-value="{{ account|balance }}">{{ account|balance|formatAmount }}</td>
             <td class="hidden-sm hidden-xs" data-value="{{ account.active }}">
                 {% if account.active %}

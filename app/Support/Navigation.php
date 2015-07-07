@@ -83,7 +83,7 @@ class Navigation
         $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'year', 'yearly'];
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException('Cannot do endOfPeriod for $repeat_freq "' . $repeatFreq.'"');
+            throw new FireflyException('Cannot do endOfPeriod for $repeat_freq "' . $repeatFreq . '"');
         }
         $function = $functionMap[$repeatFreq];
         if (isset($modifierMap[$repeatFreq])) {
@@ -204,7 +204,7 @@ class Navigation
 
             return $date;
         }
-        throw new FireflyException('Cannot do startOfPeriod for $repeat_freq "' . $repeatFreq.'"');
+        throw new FireflyException('Cannot do startOfPeriod for $repeat_freq "' . $repeatFreq . '"');
     }
 
     /**
@@ -246,7 +246,7 @@ class Navigation
             return $date;
         }
 
-        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq "' . $repeatFreq.'"');
+        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq "' . $repeatFreq . '"');
     }
 
     /**
@@ -282,7 +282,7 @@ class Navigation
 
             return $end;
         }
-        throw new FireflyException('updateEndDate cannot handle $range "' . $range.'"');
+        throw new FireflyException('updateEndDate cannot handle $range "' . $range . '"');
     }
 
     /**
@@ -316,7 +316,7 @@ class Navigation
 
             return $start;
         }
-        throw new FireflyException('updateStartDate cannot handle $range "' . $range.'"');
+        throw new FireflyException('updateStartDate cannot handle $range "' . $range . '"');
     }
 
 

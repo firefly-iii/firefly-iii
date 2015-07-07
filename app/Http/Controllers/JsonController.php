@@ -36,6 +36,7 @@ class JsonController extends Controller
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
+        bcscale(2);
 
         // works for json too!
         $cache = new CacheProperties;
@@ -54,7 +55,7 @@ class JsonController extends Controller
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $amount += $repository->billPaymentsInRange($bill, $start, $end);
+            $amount = bcadd($amount, $repository->billPaymentsInRange($bill, $start, $end));
         }
         unset($bill, $bills);
 
@@ -69,7 +70,7 @@ class JsonController extends Controller
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
-                $amount += $accountRepository->getTransfersInRange($creditCard, $start, $end)->sum('amount');
+                $amount = bcadd($amount, $accountRepository->getTransfersInRange($creditCard, $start, $end)->sum('amount'));
             }
         }
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
@@ -90,6 +91,7 @@ class JsonController extends Controller
         $amount = 0;
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
+        bcscale(2);
 
         // works for json too!
         $cache = new CacheProperties;
@@ -131,7 +133,7 @@ class JsonController extends Controller
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
             $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
-            $amount += $current;
+            $amount = bcadd($amount, $current);
         }
 
         $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];

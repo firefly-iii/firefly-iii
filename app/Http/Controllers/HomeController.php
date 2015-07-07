@@ -7,7 +7,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Route;
 use Session;
 use Steam;
@@ -40,6 +39,9 @@ class HomeController extends Controller
      */
     public function flush()
     {
+
+        Preferences::mark();
+
         // get all tags.
         // update all counts:
         $tags = Tag::get();
@@ -56,7 +58,7 @@ class HomeController extends Controller
 
         Session::clear();
 
-        return Redirect::route('index');
+        return redirect(route('index'));
     }
 
     /**
@@ -68,10 +70,11 @@ class HomeController extends Controller
     {
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
+        bcscale(2);
 
 
         if ($count == 0) {
-            return Redirect::route('new-user.index');
+            return redirect(route('new-user.index'));
         }
 
         $title         = 'Firefly';
@@ -90,7 +93,7 @@ class HomeController extends Controller
 
         $savingsTotal = 0;
         foreach ($savings as $savingAccount) {
-            $savingsTotal += Steam::balance($savingAccount, $end);
+            $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
         }
 
         $sum = $repository->sumOfEverything();
@@ -123,7 +126,7 @@ class HomeController extends Controller
         if (!Auth::user()->hasRole('owner')) {
             Session::flash('warning', 'This page is broken.');
 
-            return Redirect::route('index');
+            return redirect(route('index'));
         }
 
         // get all routes:

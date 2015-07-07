@@ -4,7 +4,6 @@ use Config;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 use View;
 
@@ -79,7 +78,7 @@ class PreferencesController extends Controller
         Session::flash('success', 'Preferences saved!');
         Preferences::mark();
 
-        return Redirect::route('preferences');
+        return redirect(route('preferences'));
     }
 
 }

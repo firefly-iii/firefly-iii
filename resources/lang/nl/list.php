@@ -28,6 +28,6 @@ return [
     'deposit'        => 'Inkomsten',
     'transfer'       => 'Overschrijving',
     'type'           => 'Type',
-    'completed'      => 'Opgeslagen'
-
+    'completed'      => 'Opgeslagen',
+    'iban'           => 'IBAN',
 ];

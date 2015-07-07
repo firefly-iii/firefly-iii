@@ -62,14 +62,13 @@ class Tag extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the tag:
-        if (isset($fields['tagMode'])) {
-            unset($fields['tagMode']);
-        }
+        unset($fields['tagMode']);
+        $search = $fields;
+        unset($search['name']);
+
         $query = Tag::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'tag') {
-                $query->where($name, $value);
-            }
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
         }
         $set = $query->get(['tags.*']);
         /** @var Tag $tag */

@@ -8,7 +8,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 use Steam;
 use URL;
@@ -89,7 +88,7 @@ class AccountController extends Controller
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
         Preferences::mark();
 
-        return Redirect::to(Session::get('accounts.delete.url'));
+        return redirect(Session::get('accounts.delete.url'));
     }
 
     /**
@@ -199,13 +198,15 @@ class AccountController extends Controller
             'virtualBalance'         => floatval($request->input('virtualBalance')),
             'active'                 => true,
             'user'                   => Auth::user()->id,
+            'iban'                   => $request->input('iban'),
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => floatval($request->input('openingBalance')),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
 
         ];
-        $account     = $repository->store($accountData);
+
+        $account = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
         Preferences::mark();
@@ -214,13 +215,11 @@ class AccountController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('accounts.create.fromStore', true);
 
-            return Redirect::route('accounts.create')->withInput();
+            return redirect(route('accounts.create', [$request->input('what')]))->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('accounts.create.url'));
-
-
+        return redirect(Session::get('accounts.create.url'));
     }
 
     /**
@@ -237,6 +236,7 @@ class AccountController extends Controller
             'name'                   => $request->input('name'),
             'active'                 => $request->input('active'),
             'user'                   => Auth::user()->id,
+            'iban'                   => $request->input('iban'),
             'accountRole'            => $request->input('accountRole'),
             'virtualBalance'         => floatval($request->input('virtualBalance')),
             'openingBalance'         => floatval($request->input('openingBalance')),
@@ -245,6 +245,7 @@ class AccountController extends Controller
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
+
 
         $repository->update($account, $accountData);
 
@@ -255,11 +256,11 @@ class AccountController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('accounts.edit.fromUpdate', true);
 
-            return Redirect::route('accounts.edit', [$account->id])->withInput(['return_to_edit' => 1]);
+            return redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('accounts.edit.url'));
+        return redirect(Session::get('accounts.edit.url'));
 
     }
 

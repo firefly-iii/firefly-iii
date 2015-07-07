@@ -64,32 +64,7 @@ class GoogleAccountChartGenerator implements AccountChartGenerator
      */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $chart = new GChart;
-        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
-
-        $index = 1;
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
-            $chart->addCertainty($index);
-            $index++;
-        }
-        $current = clone $start;
-        $current->subDay();
-        $today = Carbon::now();
-        while ($end >= $current) {
-            $row     = [clone $current];
-            $certain = $current < $today;
-            foreach ($accounts as $account) {
-                $row[] = Steam::balance($account, $current);
-                $row[] = $certain;
-            }
-            $chart->addRowArray($row);
-            $current->addDay();
-        }
-        $chart->generate();
-
-        return $chart->getData();
+        return $this->all($accounts, $start, $end);
     }
 
     /**

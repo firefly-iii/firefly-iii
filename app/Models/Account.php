@@ -47,18 +47,21 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                          piggyBalance
  * @property mixed                                                                          difference
  * @property mixed                                                                          percentage
+ * @property string                                                                         $iban
+ * @property-read mixed                                                                     $name_for_editform
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereIban($value)
  */
 class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance'];
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
                         = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required|between:1,1024|uniqueAccountForUser',
+            'name'            => 'required',
             'active'          => 'required|boolean'
         ];
 
@@ -71,11 +74,12 @@ class Account extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query = Account::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'name') {
-                $query->where($name, $value);
-            }
+        $query  = Account::orderBy('id');
+        $search = $fields;
+        unset($search['name'], $search['iban']);
+
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
         }
         $set = $query->get(['accounts.*']);
         /** @var Account $account */
@@ -84,6 +88,11 @@ class Account extends Model
                 return $account;
             }
         }
+        // account must have a name. If not set, use IBAN.
+        if (!isset($fields['name'])) {
+            $fields['name'] = $fields['iban'];
+        }
+
         // create it!
         $account = Account::create($fields);
 
@@ -99,11 +108,11 @@ class Account extends Model
     public static function firstOrNullEncrypted(array $fields)
     {
         // everything but the name:
-        $query = Account::orderBy('id');
-        foreach ($fields as $name => $value) {
-            if ($name != 'name') {
-                $query->where($name, $value);
-            }
+        $query  = Account::orderBy('id');
+        $search = $fields;
+        unset($search['name']);
+        foreach ($search as $name => $value) {
+            $query->where($name, $value);
         }
         $set = $query->get(['accounts.*']);
         /** @var Account $account */
@@ -141,6 +150,22 @@ class Account extends Model
     public function getDates()
     {
         return ['created_at', 'updated_at', 'deleted_at'];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function getIbanAttribute($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Crypt::decrypt($value);
     }
 
     /**
@@ -234,6 +259,16 @@ class Account extends Model
         }
         );
         $query->where($joinName . '.data', json_encode($value));
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     */
+    public function setIbanAttribute($value)
+    {
+        $this->attributes['iban'] = Crypt::encrypt($value);
     }
 
     /**

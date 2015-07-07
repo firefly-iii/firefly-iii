@@ -1,0 +1,56 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'csv_process_title'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
+                </div>
+                <div class="box-body">
+                    <p>
+
+                        {{ trans('firefly.csv_process_text',{rows: rows}) }}
+                    </p>
+
+                    {% if errors|length > 0 %}
+                        <p class="text-danger">{{ Lang.choice('firefly.csv_import_with_errors',errors|length,{errors: errors|length}) }}</p>
+                        <ul>
+                            {% for index,err in errors %}
+                                <li>{{ 'csv_row'|_ }} #{{ index }}: {{ err }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>
+                            {{ trans('firefly.csv_error_see_logs') }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+
+                        {{ trans('firefly.csv_process_new_entries',{imported: imported}) }}
+                    </p>
+
+                    <p>
+                        <a href="{{ route('csv.index') }}" class="btn btn-warning">{{ 'csv_start_over'|_ }}</a>
+                        <a href="{{ route('index') }}" class="btn btn-success">{{ 'csv_to_index'|_ }}</a>
+                        <a href="{{ route('csv.download-config') }}" class="btn btn-info"><i class="fa fa-download"></i> {{ 'csv_do_download_config'|_ }}</a>
+
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

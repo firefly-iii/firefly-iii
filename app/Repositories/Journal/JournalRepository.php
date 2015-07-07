@@ -115,14 +115,14 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param        $id
+     * @param int    $journalId
      * @param Carbon $date
      *
      * @return TransactionJournal
      */
-    public function getWithDate($id, Carbon $date)
+    public function getWithDate($journalId, Carbon $date)
     {
-        return Auth::user()->transactionjournals()->where('id', $id)->where('date', $date->format('Y-m-d 00:00:00'))->first();
+        return Auth::user()->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
     }
 
     /**
@@ -143,7 +143,9 @@ class JournalRepository implements JournalRepositoryInterface
         foreach ($array as $name) {
             if (strlen(trim($name)) > 0) {
                 $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                $tagRepository->connect($journal, $tag);
+                if (!is_null($tag)) {
+                    $tagRepository->connect($journal, $tag);
+                }
             }
         }
     }
@@ -186,19 +188,19 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        list($from, $to) = $this->storeAccounts($transactionType, $data);
+        list($fromAccount, $toAccount) = $this->storeAccounts($transactionType, $data);
 
         // store accompanying transactions.
         Transaction::create( // first transaction.
             [
-                'account_id'             => $from->id,
+                'account_id'             => $fromAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $data['amount'] * -1
             ]
         );
         Transaction::create( // second transaction.
             [
-                'account_id'             => $to->id,
+                'account_id'             => $toAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $data['amount']
             ]
@@ -246,7 +248,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        list($from, $to) = $this->storeAccounts($journal->transactionType, $data);
+        list($fromAccount, $toAccount) = $this->storeAccounts($journal->transactionType, $data);
 
         // update the from and to transaction.
         /** @var Transaction $transaction */
@@ -254,12 +256,12 @@ class JournalRepository implements JournalRepositoryInterface
             if (floatval($transaction->amount) < 0) {
                 // this is the from transaction, negative amount:
                 $transaction->amount     = $data['amount'] * -1;
-                $transaction->account_id = $from->id;
+                $transaction->account_id = $fromAccount->id;
                 $transaction->save();
             }
             if (floatval($transaction->amount) > 0) {
                 $transaction->amount     = $data['amount'];
-                $transaction->account_id = $to->id;
+                $transaction->account_id = $toAccount->id;
                 $transaction->save();
             }
         }

@@ -1,10 +1,11 @@
 <?php
 
 return [
-    'chart'                    => 'chartjs', // or 'chartjs'
-    'version'                  => '3.4.6',
+    'chart'                    => 'chartjs',
+    'version'                  => '3.4.7',
     'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'csv_import_enabled'       => true,
     'piggy_bank_periods'       => [
         'week'    => 'Week',
         'month'   => 'Month',
@@ -101,6 +102,24 @@ return [
         'en' => ['en', 'English', 'en_US', 'en_US.utf8'],
         'nl' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
     ],
+    'transactionTypesByWhat'   => [
+        'expenses'   => ['Withdrawal'],
+        'withdrawal' => ['Withdrawal'],
+        'revenue'    => ['Deposit'],
+        'deposit'    => ['Deposit'],
+        'transfer'   => ['Transfer'],
+        'transfers'  => ['Transfer'],
+    ],
+    'transactionIconsByWhat'   => [
+        'expenses'   => 'fa-long-arrow-left',
+        'withdrawal' => 'fa-long-arrow-left',
+        'revenue'    => 'fa-long-arrow-right',
+        'deposit'    => 'fa-long-arrow-right',
+        'transfer'   => 'fa-exchange',
+        'transfers'  => 'fa-exchange',
+
+    ],
+
     'month'                    => [
         'en' => '%B %Y',
         'nl' => '%B %Y',

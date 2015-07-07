@@ -161,6 +161,43 @@ Breadcrumbs::register(
 }
 );
 
+// CSV:
+Breadcrumbs::register(
+    'csv.index', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.csv_index_title'), route('csv.index'));
+}
+);
+
+Breadcrumbs::register(
+    'csv.column-roles', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('csv.index');
+    $breadcrumbs->push(trans('firefly.csv_define_column_roles'), route('csv.column-roles'));
+}
+);
+
+Breadcrumbs::register(
+    'csv.map', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('csv.index');
+    $breadcrumbs->push(trans('firefly.csv_map_values'), route('csv.map'));
+}
+);
+
+Breadcrumbs::register(
+    'csv.download-config-page', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('csv.index');
+    $breadcrumbs->push(trans('firefly.csv_download_config'), route('csv.download-config-page'));
+}
+);
+
+Breadcrumbs::register(
+    'csv.process', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('csv.index');
+    $breadcrumbs->push(trans('firefly.csv_process_title'), route('csv.process'));
+}
+);
+
+
 // currencies.
 Breadcrumbs::register(
     'currency.index', function (Generator $breadcrumbs) {

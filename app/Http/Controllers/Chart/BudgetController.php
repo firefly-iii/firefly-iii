@@ -93,6 +93,7 @@ class BudgetController extends Controller
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
+        bcscale(2);
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -113,8 +114,8 @@ class BudgetController extends Controller
             /*
              * Sum of expenses on this day:
              */
-            $sum = $repository->expensesOnDayCorrected($budget, $start);
-            $amount += $sum;
+            $sum    = $repository->expensesOnDayCorrected($budget, $start);
+            $amount = bcadd($amount, $sum);
             $entries->push([clone $start, $amount]);
             $start->addDay();
         }

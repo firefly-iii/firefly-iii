@@ -181,7 +181,7 @@ Route::group(
      * Bills Controller
      */
     Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);
-    Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
+    Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']);
     Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
     Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
     Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
@@ -194,7 +194,7 @@ Route::group(
      * Budget Controller
      */
     Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.index']);
-    Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']); # extra.
+    Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']);
     Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
     Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
     Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
@@ -218,6 +218,21 @@ Route::group(
     Route::post('/categories/store', ['uses' => 'CategoryController@store', 'as' => 'categories.store']);
     Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
     Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
+
+
+    /**
+     * CSV controller
+     */
+    Route::get('/csv', ['uses' => 'CsvController@index', 'as' => 'csv.index']);
+    Route::post('/csv/upload', ['uses' => 'CsvController@upload', 'as' => 'csv.upload']);
+    Route::get('/csv/column_roles', ['uses' => 'CsvController@columnRoles', 'as' => 'csv.column-roles']);
+    Route::post('/csv/initial_parse', ['uses' => 'CsvController@initialParse', 'as' => 'csv.initial_parse']);
+    Route::get('/csv/map', ['uses' => 'CsvController@map', 'as' => 'csv.map']);
+    Route::get('/csv/download-config', ['uses' => 'CsvController@downloadConfig', 'as' => 'csv.download-config']);
+    Route::get('/csv/download', ['uses' => 'CsvController@downloadConfigPage', 'as' => 'csv.download-config-page']);
+    Route::post('/csv/save_mapping', ['uses' => 'CsvController@saveMapping', 'as' => 'csv.save_mapping']);
+
+    Route::get('/csv/process', ['uses' => 'CsvController@process', 'as' => 'csv.process']);
 
     /**
      * Currency Controller
@@ -297,8 +312,8 @@ Route::group(
      * Piggy Bank Controller
      */
     Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
-    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']); # add money
-    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']); #remove money
+    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']);
+    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']);
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
@@ -306,8 +321,8 @@ Route::group(
     Route::post('/piggy-banks/store', ['uses' => 'PiggyBankController@store', 'as' => 'piggy-banks.store']);
     Route::post('/piggy-banks/update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'piggy-banks.update']);
     Route::post('/piggy-banks/destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'piggy-banks.destroy']);
-    Route::post('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy-banks.add']); # add money
-    Route::post('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy-banks.remove']); # remove money.
+    Route::post('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy-banks.add']);
+    Route::post('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy-banks.remove']);
     Route::post('/piggy-banks/sort', ['uses' => 'PiggyBankController@order', 'as' => 'piggy-banks.order']);
 
     /**

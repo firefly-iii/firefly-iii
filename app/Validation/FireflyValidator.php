@@ -57,6 +57,41 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
+     *
+     * @return bool
+     */
+    public function validateIban($attribute, $value)
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        if (strlen($value) === 0) {
+            return false;
+        }
+
+        $value = strtoupper($value);
+        if (strlen($value) < 6) {
+            return false;
+        }
+
+        $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        $replace = ['', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31',
+                    '32', '33', '34', '35'];
+
+        // take
+        $first    = substr($value, 0, 4);
+        $last     = substr($value, 4);
+        $iban     = $last . $first;
+        $iban     = str_replace($search, $replace, $iban);
+        $checksum = bcmod($iban, '97');
+
+        return (intval($checksum) === 1);
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
      * @param $parameters
      *
      * @return bool
@@ -173,9 +208,10 @@ class FireflyValidator extends Validator
 
     /**
      * @param $value
-     * @param $parameters
      *
      * @return bool
+     * @internal param $parameters
+     *
      */
     protected function validateByAccountId($value)
     {
