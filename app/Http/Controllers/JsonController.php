@@ -133,7 +133,7 @@ class JsonController extends Controller
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
             $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
-            $amount = bcadd($amount, $current);
+            $amount  = bcadd($amount, $current);
         }
 
         $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];

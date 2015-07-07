@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Repositories\Journal;
 
-use App;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -138,7 +137,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function saveTags(TransactionJournal $journal, array $array)
     {
         /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
 
         foreach ($array as $name) {
             if (strlen(trim($name)) > 0) {
@@ -287,7 +286,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         // create tag repository
         /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
 
 
         // find or create all tags:
@@ -344,14 +343,15 @@ class JournalRepository implements JournalRepositoryInterface
 
         if (is_null($toAccount)) {
             Log::error('"to"-account is null, so we cannot continue!');
-            App::abort(500, '"to"-account is null, so we cannot continue!');
+            abort(500, '"to"-account is null, so we cannot continue!');
             // @codeCoverageIgnoreStart
         }
         // @codeCoverageIgnoreEnd
 
         if (is_null($fromAccount)) {
             Log::error('"from"-account is null, so we cannot continue!');
-            App::abort(500, '"from"-account is null, so we cannot continue!');
+            abort(500, '"from"-account is null, so we cannot continue!');
+
             // @codeCoverageIgnoreStart
         }
 

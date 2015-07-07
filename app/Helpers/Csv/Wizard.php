@@ -1,7 +1,6 @@
 <?php
 namespace FireflyIII\Helpers\Csv;
 
-use App;
 use Auth;
 use Config;
 use Crypt;
@@ -137,7 +136,7 @@ class Wizard implements WizardInterface
             $class = 'FireflyIII\Helpers\Csv\Mapper\\' . $mapper;
             try {
                 /** @var MapperInterface $mapObject */
-                $mapObject = App::make($class);
+                $mapObject = app($class);
             } catch (ReflectionException $e) {
                 throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because class ' . $mapper . ' does not exist.');
             }

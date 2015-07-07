@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Repositories\Account;
 
-use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -505,7 +504,7 @@ class AccountRepository implements AccountRepositoryInterface
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                App::abort(500);
+                abort(500);
                 // @codeCoverageIgnoreStart
             }
             // @codeCoverageIgnoreEnd

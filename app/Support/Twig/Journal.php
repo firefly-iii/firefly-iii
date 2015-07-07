@@ -3,7 +3,6 @@
 namespace FireflyIII\Support\Twig;
 
 
-use App;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
@@ -156,7 +155,7 @@ class Journal extends Twig_Extension
      */
     protected function relevantTagsNoTags(TransactionJournal $journal)
     {
-        return App::make('amount')->formatJournal($journal);
+        return app('amount')->formatJournal($journal);
     }
 
     /**
@@ -182,7 +181,7 @@ class Journal extends Twig_Extension
         if ($tag->tagMode == 'balancingAct') {
             // return tag formatted for a "balancing act", even if other
             // tags are present.
-            $amount = App::make('amount')->format($journal->actual_amount, false);
+            $amount = app('amount')->format($journal->actual_amount, false);
             $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
                       . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
 
@@ -191,7 +190,7 @@ class Journal extends Twig_Extension
 
         if ($tag->tagMode == 'advancePayment') {
             if ($journal->transactionType->type == 'Deposit') {
-                $amount = App::make('amount')->formatJournal($journal, false);
+                $amount = app('amount')->formatJournal($journal, false);
                 $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
                           . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
 
@@ -203,7 +202,7 @@ class Journal extends Twig_Extension
             * the tag. The TransactionJournal should properly calculate the amount.
            */
             if ($journal->transactionType->type == 'Withdrawal') {
-                $amount = App::make('amount')->formatJournal($journal);
+                $amount = app('amount')->formatJournal($journal);
 
                 $string = '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
 

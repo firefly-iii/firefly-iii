@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers\Auth;
 
-use App;
 use Auth;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Role;
@@ -109,7 +108,7 @@ class AuthController extends Controller
             return redirect($this->redirectPath());
         }
         // @codeCoverageIgnoreStart
-        App::abort(500, 'Not a user!');
+        abort(500, 'Not a user!');
 
         return redirect('/');
         // @codeCoverageIgnoreEnd

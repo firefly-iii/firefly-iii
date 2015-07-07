@@ -83,7 +83,8 @@ class GoogleBillChartGenerator implements BillChartGenerator
                 clone $result->date,
                 floatval($bill->amount_max),
                 floatval($bill->amount_min),
-                floatval($result->amount));
+                floatval($result->amount)
+            );
         }
 
         $chart->generate();

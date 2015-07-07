@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Helpers\Csv;
 
-use App;
 use Auth;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
@@ -125,7 +124,7 @@ class Importer
             $field = Config::get('csv.roles.' . $role . '.field');
 
             /** @var ConverterInterface $converter */
-            $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
+            $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
             $converter->setData($data); // the complete array so far.
             $converter->setField($field);
             $converter->setIndex($index);
@@ -186,7 +185,7 @@ class Importer
 
         foreach ($this->getSpecifix() as $className) {
             /** @var SpecifixInterface $specifix */
-            $specifix = App::make('FireflyIII\Helpers\Csv\Specifix\\' . $className);
+            $specifix = app('FireflyIII\Helpers\Csv\Specifix\\' . $className);
             $specifix->setData($this->importData);
             $specifix->setRow($this->importRow);
             $this->importData = $specifix->fix();
@@ -196,7 +195,7 @@ class Importer
         $set = Config::get('csv.post_processors');
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
-            $postProcessor = App::make('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
+            $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
             $postProcessor->setData($this->importData);
             $this->importData = $postProcessor->process();
         }

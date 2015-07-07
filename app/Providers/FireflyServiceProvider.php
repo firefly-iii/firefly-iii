@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Providers;
 
-use App;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
@@ -38,7 +37,7 @@ class FireflyServiceProvider extends ServiceProvider
          * Default Twig configuration:
          */
 
-        $config = App::make('config');
+        $config = app('config');
         Twig::addExtension(new Functions($config));
         Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);

@@ -35,8 +35,8 @@ interface ReportHelperInterface
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return BillCollection
      */

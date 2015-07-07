@@ -72,7 +72,6 @@ class HomeController extends Controller
         $count = $repository->countAccounts($types);
         bcscale(2);
 
-
         if ($count == 0) {
             return redirect(route('new-user.index'));
         }

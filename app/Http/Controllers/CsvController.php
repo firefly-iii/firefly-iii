@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Http\Controllers;
 
-use App;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
@@ -41,8 +40,8 @@ class CsvController extends Controller
             throw new FireflyException('CSV Import is not enabled.');
         }
 
-        $this->wizard = App::make('FireflyIII\Helpers\Csv\WizardInterface');
-        $this->data   = App::make('FireflyIII\Helpers\Csv\Data');
+        $this->wizard = app('FireflyIII\Helpers\Csv\WizardInterface');
+        $this->data   = app('FireflyIII\Helpers\Csv\Data');
 
     }
 
