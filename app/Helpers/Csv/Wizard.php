@@ -19,7 +19,6 @@ use Session;
 class Wizard implements WizardInterface
 {
 
-
     /**
      * @param Reader $reader
      * @param array  $map
@@ -33,11 +32,12 @@ class Wizard implements WizardInterface
         /*
          * Loop over the CSV and collect mappable data:
          */
+        $keys = array_keys($map);
         foreach ($reader as $index => $row) {
-            if (($hasHeaders && $index > 1) || !$hasHeaders) {
+            if ($this->useRow($hasHeaders, $index)) {
                 // collect all map values
-                foreach ($map as $column => $irrelevant) {
-                    // check if $irrelevant is mappable!
+
+                foreach ($keys as $column) {
                     $values[$column][] = $row[$column];
                 }
             }
@@ -51,7 +51,6 @@ class Wizard implements WizardInterface
 
         return $values;
     }
-
 
     /**
      * @param array $roles
@@ -120,7 +119,6 @@ class Wizard implements WizardInterface
         return true;
     }
 
-
     /**
      * @param array $map
      *
@@ -167,5 +165,16 @@ class Wizard implements WizardInterface
         return $fullPath;
 
 
+    }
+
+    /**
+     * @param bool $hasHeaders
+     * @param int  $index
+     *
+     * @return bool
+     */
+    protected function useRow($hasHeaders, $index)
+    {
+        return ($hasHeaders && $index > 1) || !$hasHeaders;
     }
 }
