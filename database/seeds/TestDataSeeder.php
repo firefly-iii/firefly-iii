@@ -7,6 +7,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
@@ -45,6 +46,7 @@ class TestDataSeeder extends Seeder
         $this->createExpenseAccounts();
         $this->createRevenueAccounts();
         $this->createBills();
+        $this->createPiggybanks();
 
         // dates:
         $start = Carbon::now()->subyear()->startOfMonth();
@@ -213,6 +215,144 @@ class TestDataSeeder extends Seeder
         );
     }
 
+    protected function createPiggybanks()
+    {
+        $account = $this->findAccount('Savings');
+
+        $camera                    = PiggyBank::create(
+            [
+                'account_id'    => $account->id,
+                'name'          => 'New camera',
+                'targetamount'  => 1000,
+                'startdate'     => '2015-04-01',
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 1,
+            ]
+        );
+        $repetition                = $camera->piggyBankRepetitions()->first();
+        $repetition->currentamount = 735;
+        $repetition->save();
+
+        // events:
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $camera->id,
+                'date'          => '2015-05-01',
+                'amount'        => '245'
+            ]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $camera->id,
+                'date'          => '2015-06-01',
+                'amount'        => '245'
+            ]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $camera->id,
+                'date'          => '2015-07-01',
+                'amount'        => '245'
+            ]
+        );
+
+
+        $phone                     = PiggyBank::create(
+            [
+                'account_id'    => $account->id,
+                'name'          => 'New phone',
+                'targetamount'  => 600,
+                'startdate'     => '2015-04-01',
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 1,
+            ]
+        );
+        $repetition                = $phone->piggyBankRepetitions()->first();
+        $repetition->currentamount = 333;
+        $repetition->save();
+
+        // events:
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $phone->id,
+                'date'          => '2015-05-01',
+                'amount'        => '111'
+            ]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $phone->id,
+                'date'          => '2015-06-01',
+                'amount'        => '111'
+            ]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $phone->id,
+                'date'          => '2015-07-01',
+                'amount'        => '111'
+            ]
+        );
+
+        $couch                     = PiggyBank::create(
+            [
+                'account_id'    => $account->id,
+                'name'          => 'New couch',
+                'targetamount'  => 500,
+                'startdate'     => '2015-04-01',
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 1,
+            ]
+        );
+        $repetition                = $couch->piggyBankRepetitions()->first();
+        $repetition->currentamount = 120;
+        $repetition->save();
+
+        // events:
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $couch->id,
+                'date'          => '2015-05-01',
+                'amount'        => '40'
+            ]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $couch->id,
+                'date'          => '2015-06-01',
+                'amount'        => '40'
+            ]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id' => $couch->id,
+                'date'          => '2015-07-01',
+                'amount'        => '40'
+            ]
+        );
+    }
+
+    /**
+     * @param $name
+     *
+     * @return Account|null
+     */
+    protected function findAccount($name)
+    {
+        /** @var Account $account */
+        foreach (Account::get() as $account) {
+            if ($account->name == $name && $this->user->id == $account->user_id) {
+                return $account;
+                break;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param        $description
      * @param Carbon $date
@@ -258,24 +398,6 @@ class TestDataSeeder extends Seeder
 
         return $journal;
 
-    }
-
-    /**
-     * @param $name
-     *
-     * @return Account|null
-     */
-    protected function findAccount($name)
-    {
-        /** @var Account $account */
-        foreach (Account::get() as $account) {
-            if ($account->name == $name && $this->user->id == $account->user_id) {
-                return $account;
-                break;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -593,7 +715,7 @@ class TestDataSeeder extends Seeder
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
-                'transaction_type_id'     => 2,
+                'transaction_type_id'     => 3,
                 'transaction_currency_id' => 1,
                 'description'             => 'Save money',
                 'completed'               => 1,
