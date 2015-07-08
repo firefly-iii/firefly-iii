@@ -44,9 +44,7 @@ class Wizard implements WizardInterface
         /*
          * Make each one unique.
          */
-        foreach ($values as $column => $found) {
-            $values[$column] = array_unique($found);
-        }
+        $values = $this->uniqueRecursive($values);
 
         return $values;
     }
@@ -175,5 +173,19 @@ class Wizard implements WizardInterface
     protected function useRow($hasHeaders, $index)
     {
         return ($hasHeaders && $index > 1) || !$hasHeaders;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    protected function uniqueRecursive(array $array)
+    {
+        foreach ($array as $column => $found) {
+            $array[$column] = array_unique($found);
+        }
+
+        return $array;
     }
 }
