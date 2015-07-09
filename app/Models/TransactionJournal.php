@@ -67,6 +67,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read bool $joinedTransactionTypes
  * @property-read int $account_id
  * @property-read string $name
+ * @property-read string $symbol
  */
 class TransactionJournal extends Model
 {
