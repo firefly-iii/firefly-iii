@@ -58,12 +58,12 @@ interface PiggyBankRepositoryInterface
      *
      * set id of piggy bank.
      *
-     * @param int $id
+     * @param int $piggyBankId
      * @param int $order
      *
      * @return void
      */
-    public function setOrder($id, $order);
+    public function setOrder($piggyBankId, $order);
 
 
     /**

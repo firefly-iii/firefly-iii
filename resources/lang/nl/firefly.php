@@ -36,7 +36,8 @@ return [
                                           ' je jouw tekstbestand bij "CSV-bestand". '
                                           . 'Als je hulp nodig hebt, klik dan op het <i class="fa fa-question-circle"></i>-icoontje rechtsboven.',
     'csv_index_beta_warning'           => 'Deze tool is nog erg experimenteel. Wees dus voorzichtig.',
-    'csv_header_help'                  => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen, en niet uit daadwerkelijke gegevens.',
+    'csv_header_help'                  => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen,'.
+                                          'en niet uit daadwerkelijke gegevens.',
     'csv_date_help'                    => 'Het gebruikte datumformaat in jouw bestand. Gebruik het formaat zoals <a href="https://secure.' .
                                           'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">deze' .
                                           ' pagina</a> het uitlegt (Engels). Het standaardformaat kan omgaan met data zoals deze: ' . date('Ymd'),
@@ -47,7 +48,8 @@ return [
     'csv_column_roles_title'           => 'Bepaal de inhoud van elke kolom',
     'csv_column_roles_text'            => 'Firefly kan niet automatisch ontdekken wat elke kolom betekent. Je moet het zelf aangeven. Gebruik de' .
                                           ' voorbeeldgegevens als je het ook niet zeker weet. Klik op het <i class="fa fa-question-circle"></i>-icoontje ' .
-                                          'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe relatie heeft met gegevens'
+                                          'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe'.
+                                          ' relatie heeft met gegevens'
                                           .
                                           ' die al in Firefly staan, gebruik dan het vinkje. Tijdens de volgende stap komt Firefly hier dan op terug.',
     'csv_column'                       => 'CSV-kolom',

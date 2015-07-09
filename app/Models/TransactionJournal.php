@@ -150,14 +150,9 @@ class TransactionJournal extends Model
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $amount = '0';
         bcscale(2);
-        /** @var Transaction $t */
-        foreach ($this->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
+        $set    = $this->transactions->sortByDesc('amount');
+        $amount = $set->first()->amount;
 
         if (intval($this->tag_count) === 1) {
             // get amount for single tag:
@@ -176,6 +171,49 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @param Tag $tag
+     * @param     $amount
+     *
+     * @return string
+     */
+    protected function amountByTagAdvancePayment(Tag $tag, $amount)
+    {
+        if ($this->transactionType->type == 'Withdrawal') {
+            $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+            foreach ($others as $other) {
+                $amount = bcsub($amount, $other->actual_amount);
+            }
+
+            return $amount;
+        }
+        if ($this->transactionType->type == 'Deposit') {
+            return '0';
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @param $tag
+     * @param $amount
+     *
+     * @return string
+     */
+    protected function amountByTagBalancingAct($tag, $amount)
+    {
+        if ($this->transactionType->type == 'Withdrawal') {
+            $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
+            if ($transfer) {
+                $amount = bcsub($amount, $transfer->actual_amount);
+
+                return $amount;
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
      * Assuming the journal has only one tag. Parameter amount is used as fallback.
      *
      * @param Tag    $tag
@@ -186,28 +224,12 @@ class TransactionJournal extends Model
     protected function amountByTag(Tag $tag, $amount)
     {
         if ($tag->tagMode == 'advancePayment') {
-            if ($this->transactionType->type == 'Withdrawal') {
-                $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
-                foreach ($others as $other) {
-                    $amount = bcsub($amount, $other->actual_amount);
-                }
-
-                return $amount;
-            }
-            if ($this->transactionType->type == 'Deposit') {
-                return '0';
-            }
+            return $this->amountByTagAdvancePayment($tag, $amount);
         }
 
         if ($tag->tagMode == 'balancingAct') {
-            if ($this->transactionType->type == 'Withdrawal') {
-                $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
-                if ($transfer) {
-                    $amount = bcsub($amount, $transfer->actual_amount);
+            return $this->amountByTagBalancingAct($tag, $amount);
 
-                    return $amount;
-                }
-            }
         }
 
         return $amount;
