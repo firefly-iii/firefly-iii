@@ -124,6 +124,8 @@ class Importer
             $class = Config::get('csv.roles.' . $role . '.converter');
             $field = Config::get('csv.roles.' . $role . '.field');
 
+            Log::debug('For column ' . $index . ' (role: ' . $role . ') : converter ' . $class . ' into field ' . $field);
+
             /** @var ConverterInterface $converter */
             $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
             $converter->setData($data); // the complete array so far.
