@@ -109,6 +109,7 @@ class Wizard implements WizardInterface
     {
         foreach ($fields as $field) {
             if (!Session::has($field)) {
+                Log::error('Session is missing field: ' . $field);
                 return false;
             }
         }
