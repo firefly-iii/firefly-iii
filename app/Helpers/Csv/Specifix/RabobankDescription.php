@@ -2,6 +2,8 @@
 
 namespace FireflyIII\Helpers\Csv\Specifix;
 
+use Log;
+
 /**
  * Class RabobankDescription
  *
@@ -32,10 +34,14 @@ class RabobankDescription
      */
     protected function rabobankFixEmptyOpposing()
     {
+        Log::debug('RaboSpecifix: Opposing account name is "' . $this->data['opposing-account-name'] . '".');
         if (strlen($this->data['opposing-account-name']) == 0) {
+            Log::debug('RaboSpecifix: opp-name is zero length, changed to: "' . $this->row[10] . '"');
             $this->data['opposing-account-name'] = $this->row[10];
         }
+        Log::debug('Description was: "' . $this->data['description'] . '".');
         $this->data['description'] = trim(str_replace($this->row[10], '', $this->data['description']));
+        Log::debug('Description is now: "' . $this->data['description'] . '".');
     }
 
     /**
