@@ -462,6 +462,7 @@ class AccountRepository implements AccountRepositoryInterface
                     'accountType'    => $type,
                     'name'           => $data['name'] . ' initial balance',
                     'active'         => false,
+                    'iban'           => '',
                     'virtualBalance' => 0,
                 ];
                 $opposing     = $this->storeAccount($opposingData);
