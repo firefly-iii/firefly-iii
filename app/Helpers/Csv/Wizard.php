@@ -9,7 +9,7 @@ use FireflyIII\Helpers\Csv\Mapper\MapperInterface;
 use League\Csv\Reader;
 use ReflectionException;
 use Session;
-
+use Log;
 /**
  * Class Wizard
  *
