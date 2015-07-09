@@ -13,67 +13,6 @@ use Watson\Validating\ValidatingTrait;
  * Class TransactionJournal
  *
  * @package FireflyIII\Models
- * @SuppressWarnings (PHPMD.TooManyMethods)
- * @property integer                                                                             $id
- * @property \Carbon\Carbon                                                                      $created_at
- * @property \Carbon\Carbon                                                                      $updated_at
- * @property \Carbon\Carbon                                                                      $deleted_at
- * @property integer                                                                             $user_id
- * @property integer                                                                             $transaction_type_id
- * @property integer                                                                             $bill_id
- * @property integer                                                                             $transaction_currency_id
- * @property string                                                                              $description
- * @property boolean                                                                             $completed
- * @property \Carbon\Carbon                                                                      $date
- * @property boolean                                                                             $encrypted
- * @property integer                                                                             $order
- * @property-read \FireflyIII\Models\Bill                                                        $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]           $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]         $categories
- * @property-read mixed                                                                          $actual_amount
- * @property-read mixed                                                                          $amount
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]              $tags
- * @property-read mixed                                                                          $asset_account
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]      $transactions
- * @property-read mixed                                                                          $corrected_actual_amount
- * @property-read mixed                                                                          $destination_account
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]   $piggyBankEvents
- * @property-read \FireflyIII\Models\TransactionCurrency                                         $transactionCurrency
- * @property-read \FireflyIII\Models\TransactionType                                             $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups
- * @property-read \FireflyIII\User                                                               $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBillId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCompleted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
- * @method static \FireflyIII\Models\TransactionJournal accountIs($account)
- * @method static \FireflyIII\Models\TransactionJournal after($date)
- * @method static \FireflyIII\Models\TransactionJournal before($date)
- * @method static \FireflyIII\Models\TransactionJournal onDate($date)
- * @method static \FireflyIII\Models\TransactionJournal transactionTypes($types)
- * @method static \FireflyIII\Models\TransactionJournal withRelevantData()
- * @property-read mixed                                                                          $expense_account
- * @property string                                                                              account_encrypted
- * @property bool                                                                                joinedTransactions
- * @property bool                                                                                joinedTransactionTypes
- * @property mixed                                                                               account_id
- * @property mixed                                                                               name
- * @property mixed                                                                               symbol
- * @property-read mixed                                                                          $correct_amount
- * @method static \FireflyIII\Models\TransactionJournal orderBy
- * @method static \FireflyIII\Models\TransactionJournal|null first
- * @property-read mixed                                                                          $source_account
- * @property integer                                                                             $tag_count
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
  */
 class TransactionJournal extends Model
 {
