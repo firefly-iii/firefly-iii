@@ -12,6 +12,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -44,6 +45,9 @@ class Importer
     /** @var array */
     protected $specifix = [];
 
+    /** @var  Collection */
+    protected $journals;
+
     /**
      * Used by CsvController.
      *
@@ -75,12 +79,22 @@ class Importer
     }
 
     /**
+     * @return Collection
+     */
+    public function getJournals()
+    {
+        return $this->journals;
+    }
+
+
+    /**
      * @throws FireflyException
      */
     public function run()
     {
         set_time_limit(0);
 
+        $this->journals = new Collection;
         $this->map      = $this->data->getMap();
         $this->roles    = $this->data->getRoles();
         $this->mapped   = $this->data->getMapped();
@@ -91,11 +105,12 @@ class Importer
                 Log::debug('--- Importing row ' . $index);
                 $this->rows++;
                 $result = $this->importRow($row);
-                if (!($result === true)) {
+                if (!($result instanceof TransactionJournal)) {
                     Log::error('Caught error at row #' . $index . ': ' . $result);
                     $this->errors[$index] = $result;
                 } else {
                     $this->imported++;
+                    $this->journals->push($result);
                 }
                 Log::debug('---');
             }
@@ -151,9 +166,6 @@ class Importer
             return $result; // return error.
         }
         $journal = $this->createTransactionJournal();
-        if ($journal instanceof TransactionJournal) {
-            return true;
-        }
 
         return $journal;
     }

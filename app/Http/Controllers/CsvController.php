@@ -57,7 +57,7 @@ class CsvController extends Controller
     public function columnRoles()
     {
 
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers','csv-import-account'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -302,12 +302,13 @@ class CsvController extends Controller
         $rows     = $importer->getRows();
         $errors   = $importer->getErrors();
         $imported = $importer->getImported();
+        $journals = $importer->getJournals();
 
         Preferences::mark();
 
         $subTitle = trans('firefly.csv_process_title');
 
-        return view('csv.process', compact('rows', 'errors', 'imported', 'subTitle'));
+        return view('csv.process', compact('rows', 'errors', 'imported', 'subTitle', 'journals'));
 
     }
 
