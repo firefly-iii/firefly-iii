@@ -151,7 +151,7 @@ class Importer
             return true;
         }
 
-        return false;
+        return $journal;
     }
 
     /**
