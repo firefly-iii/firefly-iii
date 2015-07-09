@@ -8,6 +8,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
 use FireflyIII\Helpers\Csv\Specifix\SpecifixInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -237,6 +238,11 @@ class Importer
         if (is_null($this->importData['date'])) {
             $date = $this->importData['date-rent'];
         }
+
+        if (!($this->importData['asset-account'] instanceof Account)) {
+            return 'No asset account to import into.';
+        }
+
         $transactionType = $this->getTransactionType(); // defaults to deposit
         $errors          = new MessageBag;
         $journal         = TransactionJournal::create(
