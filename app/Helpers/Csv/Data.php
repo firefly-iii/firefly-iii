@@ -247,7 +247,7 @@ class Data
      */
     public function getSpecifix()
     {
-        return $this->specifix;
+        return is_array($this->specifix) ? $this->specifix : [];
     }
 
     /**

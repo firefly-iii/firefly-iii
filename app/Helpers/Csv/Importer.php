@@ -41,7 +41,7 @@ class Importer
     /** @var  int */
     protected $rows = 0;
     /** @var array */
-    protected $specifix;
+    protected $specifix = [];
 
     /**
      * Used by CsvController.
@@ -207,7 +207,7 @@ class Importer
      */
     public function getSpecifix()
     {
-        return $this->specifix;
+        return is_array($this->specifix) ? $this->specifix : [];
     }
 
     /**
