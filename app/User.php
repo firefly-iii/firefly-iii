@@ -10,30 +10,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 /**
  * Class User
  *
- * @codeCoverageIgnore
  * @package FireflyIII
- * @property integer                                                                               $id
- * @property \Carbon\Carbon                                                                        $created_at
- * @property \Carbon\Carbon                                                                        $updated_at
- * @property string                                                                                $email
- * @property string                                                                                $password
- * @property string                                                                                $reset
- * @property string                                                                                $remember_token
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[]            $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]                $tags
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Bill[]               $bills
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]             $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]           $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[]         $preferences
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereEmail($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User wherePassword($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereReset($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereRememberToken($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Config::get('entrust.role')[] $roles
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {

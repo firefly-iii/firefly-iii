@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Response;
@@ -36,7 +35,7 @@ class BillController extends Controller
     /**
      * Shows all bills and whether or not theyve been paid this month (pie chart).
      *
-     * @param BillRepositoryInterface    $repository
+     * @param BillRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
