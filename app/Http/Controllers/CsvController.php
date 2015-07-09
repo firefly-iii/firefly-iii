@@ -102,7 +102,7 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
         $data = [
-            'date-format' => Session::get('date-format'),
+            'date-format' => Session::get('csv-date-format'),
             'has-headers' => Session::get('csv-has-headers')
         ];
         if (Session::has('csv-map')) {
