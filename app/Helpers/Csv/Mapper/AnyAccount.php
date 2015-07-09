@@ -29,8 +29,6 @@ class AnyAccount implements MapperInterface
 
         $list = [0 => trans('firefly.csv_do_not_map')] + $list;
 
-        //array_unshift($list, );
-
         return $list;
     }
 }

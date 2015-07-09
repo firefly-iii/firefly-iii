@@ -295,23 +295,16 @@ class Importer
         $this->saveTags($journal);
 
         // some debug info:
-        $id   = $journal->id;
-        $type = $journal->transactionType->type;
+        $journalId = $journal->id;
+        $type      = $journal->transactionType->type;
         /** @var Account $asset */
         $asset = $this->importData['asset-account-object'];
         /** @var Account $opposing */
         $opposing = $this->importData['opposing-account-object'];
 
-        Log::info('Created journal #' . $id . ' of type ' . $type . '!');
+        Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
         Log::info('Asset account ' . $asset->name . ' (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
         Log::info($opposing->accountType->type . ' ' . $opposing->name . ' (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
-
-        //.
-        //' [' . $asset->name . ' (#' .$asset->id . ')] <--> ' .
-        //' [' . $this->importData['opposing-account-object']->name . ' (' . $this->importData['opposing-account-object']->accountType->type . ') (#'
-        //. $this->importData['opposing-account-object']->id . ')]'
-        //        );
-        //
 
         return $journal;
     }

@@ -41,7 +41,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency 
  * @property-read \FireflyIII\Models\TransactionType $transactionType 
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups 
- * @property-read \FireflyIII\User $user 
+ * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
@@ -62,6 +62,11 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal onDate($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal withRelevantData()
+ * @property-read bool $account_encrypted
+ * @property-read bool $joinedTransactions
+ * @property-read bool $joinedTransactionTypes
+ * @property-read int $account_id
+ * @property-read string $name
  */
 class TransactionJournal extends Model
 {
