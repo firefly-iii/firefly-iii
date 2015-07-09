@@ -65,6 +65,9 @@ class FireflyValidator extends Validator
         if (!is_string($value)) {
             return false;
         }
+        if (is_null($value)) {
+            return false;
+        }
 
         if (strlen($value) === 0) {
             return false;
