@@ -9,10 +9,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Illuminate\Support\Collection;
 use Response;
 use Session;
-use Steam;
 
 /**
  * Class BillController
@@ -39,19 +37,14 @@ class BillController extends Controller
      * Shows all bills and whether or not theyve been paid this month (pie chart).
      *
      * @param BillRepositoryInterface    $repository
-     * @param AccountRepositoryInterface $accounts
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
+    public function frontpage(BillRepositoryInterface $repository)
     {
-
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-
-
-        // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache = new CacheProperties(); // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('bills');
@@ -60,46 +53,13 @@ class BillController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $bills  = $repository->getActiveBills();
-        $paid   = new Collection; // journals.
-        $unpaid = new Collection; // bills
+        $set = $repository->getBillsForChart($start, $end);
 
+        // optionally expand this set with credit card data
+        $set    = $repository->getCreditCardInfoForChart($set, $start, $end);
+        $paid   = $set->get('paid');
+        $unpaid = $set->get('unpaid');
 
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $ranges = $repository->getRanges($bill, $start, $end);
-
-            foreach ($ranges as $range) {
-                // paid a bill in this range?
-                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
-                if ($journals->count() == 0) {
-                    $unpaid->push([$bill, $range['start']]);
-                } else {
-                    $paid = $paid->merge($journals);
-                }
-
-            }
-        }
-
-        $creditCards = $accounts->getCreditCards();
-        foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, $end, true);
-            $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
-            if ($balance < 0) {
-                // unpaid! create a fake bill that matches the amount.
-                $description = $creditCard->name;
-                $amount      = $balance * -1;
-                $fakeBill    = $repository->createFakeBill($description, $date, $amount);
-                unset($description, $amount);
-                $unpaid->push([$fakeBill, $date]);
-            }
-            if ($balance == 0) {
-                // find transfer(s) TO the credit card which should account for
-                // anything paid. If not, the CC is not yet used.
-                $journals = $accounts->getTransfersInRange($creditCard, $start, $end);
-                $paid     = $paid->merge($journals);
-            }
-        }
 
         // build chart:
         $data = $this->generator->frontpage($paid, $unpaid);
