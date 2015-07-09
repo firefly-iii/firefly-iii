@@ -101,6 +101,7 @@ class TestDataSeeder extends Seeder
     protected function createAssetAccounts()
     {
         $assets    = ['MyBank Checking Account', 'Savings', 'Shared', 'Creditcard', 'Emergencies', 'STE'];
+        $ibans     = ['NL47JDYU6179706202', 'NL51WGBP5832453599', 'NL81RCQZ7160379858', 'NL19NRAP2367994221', 'NL40UKBK3619908726', 'NL38SRMN4325934708'];
         $assetMeta = [
             [
                 'accountRole' => 'defaultAsset',
@@ -134,7 +135,7 @@ class TestDataSeeder extends Seeder
                     'name'            => $name,
                     'active'          => 1,
                     'encrypted'       => 1,
-                    'iban'            => 'GB82WEST12345698765432'
+                    'iban'            => $ibans[$index],
                 ]
             );
             foreach ($assetMeta[$index] as $name => $value) {

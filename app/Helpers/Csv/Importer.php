@@ -88,6 +88,7 @@ class Importer
 
         foreach ($this->data->getReader() as $index => $row) {
             if ($this->parseRow($index)) {
+                Log::debug('--- Importing row ' . $index);
                 $this->rows++;
                 $result = $this->importRow($row);
                 if (!($result === true)) {
@@ -96,6 +97,7 @@ class Importer
                 } else {
                     $this->imported++;
                 }
+                Log::debug('---');
             }
         }
     }
@@ -118,13 +120,14 @@ class Importer
      */
     protected function importRow($row)
     {
+
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
             $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
             $class = Config::get('csv.roles.' . $role . '.converter');
             $field = Config::get('csv.roles.' . $role . '.field');
 
-            Log::debug('For column ' . $index . ' (role: ' . $role . ') : converter ' . $class . ' into field ' . $field);
+            Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
 
             /** @var ConverterInterface $converter */
             $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
@@ -135,7 +138,6 @@ class Importer
             $converter->setValue($value);
             $converter->setRole($role);
             $data[$field] = $converter->convert();
-
         }
         // move to class vars.
         $this->importData = $data;
@@ -192,6 +194,7 @@ class Importer
             $specifix = app('FireflyIII\Helpers\Csv\Specifix\\' . $className);
             $specifix->setData($this->importData);
             $specifix->setRow($this->importRow);
+            Log::debug('Now post-process specifix named ' . $className . ':');
             $this->importData = $specifix->fix();
         }
 
@@ -201,6 +204,7 @@ class Importer
             /** @var PostProcessorInterface $postProcessor */
             $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
             $postProcessor->setData($this->importData);
+            Log::debug('Now post-process processor named ' . $className . ':');
             $this->importData = $postProcessor->process();
         }
 
@@ -227,6 +231,10 @@ class Importer
             return 'Opposing account is null';
         }
 
+        if (!($this->importData['asset-account-object'] instanceof Account)) {
+            return 'No asset account to import into.';
+        }
+
         return true;
     }
 
@@ -242,9 +250,6 @@ class Importer
             $date = $this->importData['date-rent'];
         }
 
-        if (!($this->importData['asset-account-object'] instanceof Account)) {
-            return 'No asset account to import into.';
-        }
 
         $transactionType = $this->getTransactionType(); // defaults to deposit
         $errors          = new MessageBag;
@@ -276,6 +281,25 @@ class Importer
         $this->saveBudget($journal);
         $this->saveCategory($journal);
         $this->saveTags($journal);
+
+        // some debug info:
+        $id   = $journal->id;
+        $type = $journal->transactionType->type;
+        /** @var Account $asset */
+        $asset = $this->importData['asset-account-object'];
+        /** @var Account $opposing */
+        $opposing = $this->importData['opposing-account-object'];
+
+        Log::info('Created journal #' . $id . ' of type ' . $type . '!');
+        Log::info('Asset account ' . $asset->name . ' (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
+        Log::info($opposing->accountType->type . ' ' . $opposing->name . ' (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
+
+        //.
+        //' [' . $asset->name . ' (#' .$asset->id . ')] <--> ' .
+        //' [' . $this->importData['opposing-account-object']->name . ' (' . $this->importData['opposing-account-object']->accountType->type . ') (#'
+        //. $this->importData['opposing-account-object']->id . ')]'
+        //        );
+        //
 
         return $journal;
     }

@@ -10,6 +10,7 @@ return [
         'Currency',
         'Bill',
         'OpposingAccount', // must be after Amount!
+        'AssetAccount',
 
     ],
     'roles'           => [
