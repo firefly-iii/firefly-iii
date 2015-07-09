@@ -117,6 +117,10 @@ class CsvController extends Controller
             $data['mapped'] = Session::get('csv-mapped');
         }
 
+        if (Session::has('csv-specifix')) {
+            $data['specifix'] = Session::get('csv-specifix');
+        }
+
         $result = json_encode($data, JSON_PRETTY_PRINT);
         $name   = 'csv-configuration-' . date('Y-m-d') . '.json';
 
