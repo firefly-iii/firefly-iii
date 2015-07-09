@@ -171,6 +171,7 @@ class Importer
         // some extra's:
         $filler['bill-id']                 = null;
         $filler['opposing-account-object'] = null;
+        $filler['asset-account-object']    = null;
         $filler['amount-modifier']         = '1';
 
         return $filler;
@@ -241,7 +242,7 @@ class Importer
             $date = $this->importData['date-rent'];
         }
 
-        if (!($this->importData['asset-account'] instanceof Account)) {
+        if (!($this->importData['asset-account-object'] instanceof Account)) {
             return 'No asset account to import into.';
         }
 
@@ -252,10 +253,13 @@ class Importer
              'description' => $this->importData['description'], 'completed' => 0, 'date' => $date, 'bill_id' => $this->importData['bill-id'],]
         );
         if ($journal->getErrors()->count() == 0) {
-            $accountId   = $this->importData['asset-account']->id; // create first transaction:
+            // first transaction
+            $accountId   = $this->importData['asset-account-object']->id; // create first transaction:
             $amount      = $this->importData['amount'];
             $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
             $errors      = $transaction->getErrors();
+
+            // second transaction
             $accountId   = $this->importData['opposing-account-object']->id; // create second transaction:
             $amount      = bcmul($this->importData['amount'], -1);
             $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);

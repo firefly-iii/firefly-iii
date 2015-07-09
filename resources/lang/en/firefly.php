@@ -117,6 +117,9 @@ return [
     'csv_column_tags-space'            => 'Tags (space separated)',
     'csv_specifix_RabobankDescription' => 'Select this when you\'re importing Rabobank CSV export files.',
     'csv_specifix_Dummy'               => 'Checking this has no effect whatsoever.',
+    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which' .
+                                          ' account the transactions in the CSV belong to.',
+
 
     // create new stuff:
     'create_new_withdrawal'            => 'Create new withdrawal',
