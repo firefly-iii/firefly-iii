@@ -3,6 +3,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use FireflyIII\Models\Account;
+use Log;
 
 /**
  * Class AccountId
@@ -19,9 +20,17 @@ class AccountId extends BasicConverter implements ConverterInterface
     {
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
+
+            /** @var Account $account */
             $account = Auth::user()->accounts()->find($this->mapped[$this->index][$this->value]);
         } else {
+
+            /** @var Account $account */
             $account = Auth::user()->accounts()->find($this->value);
+
+            if (!is_null($account)) {
+                Log::debug('Found ' . $account->accountType->type . ' named "' . $account->name . '" with ID: ' . $this->value.' (not mapped) ');
+            }
         }
 
         return $account;
