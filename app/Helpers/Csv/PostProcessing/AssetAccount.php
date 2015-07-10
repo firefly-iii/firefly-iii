@@ -164,7 +164,7 @@ class AssetAccount implements PostProcessorInterface
         $accounts    = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
         foreach ($accounts as $entry) {
             if ($entry->name == $this->data['asset-account-name']) {
-                Log::debug('Found an asset account with this name (#' . $entry->id . ': ' . $entry->name . ')');
+                Log::debug('Found an asset account with this name (#' . $entry->id . ': ******)');
 
                 return $entry;
             }

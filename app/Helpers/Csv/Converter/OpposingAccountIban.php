@@ -46,7 +46,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
         /** @var Account $account */
         foreach ($set as $account) {
             if ($account->iban == $this->value) {
-                Log::debug('OpposingAccountIban::convert found an Account (#' . $account->id . ': ' . $account->name . ') with IBAN ' . $this->value);
+                Log::debug('OpposingAccountIban::convert found an Account (#' . $account->id . ': ******) with IBAN ******');
 
                 return $account;
             }

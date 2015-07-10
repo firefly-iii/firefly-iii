@@ -303,8 +303,8 @@ class Importer
         $opposing = $this->importData['opposing-account-object'];
 
         Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
-        Log::info('Asset account ' . $asset->name . ' (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
-        Log::info($opposing->accountType->type . ' ' . $opposing->name . ' (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
+        Log::info('Asset account ****** (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
+        Log::info($opposing->accountType->type . ' ****** (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
 
         return $journal;
     }

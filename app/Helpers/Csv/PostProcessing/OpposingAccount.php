@@ -86,7 +86,7 @@ class OpposingAccount implements PostProcessorInterface
         $validator = Validator::make($check, $rules);
         if (is_string($iban) && strlen($iban) > 0 && !$validator->fails()) {
 
-            Log::debug('OpposingAccountPostProcession: opposing-account-iban is a string (' . $this->data['opposing-account-iban'] . ').');
+            Log::debug('OpposingAccountPostProcession: opposing-account-iban is a string (******).');
             $this->data['opposing-account-object'] = $this->parseIbanString();
 
             return $this->data;
@@ -189,7 +189,7 @@ class OpposingAccount implements PostProcessorInterface
         $accounts    = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
         foreach ($accounts as $entry) {
             if ($entry->name == $this->data['opposing-account-name']) {
-                Log::debug('Found an account with this name (#' . $entry->id . ': ' . $entry->name . ')');
+                Log::debug('Found an account with this name (#' . $entry->id . ': ******)');
 
                 return $entry;
             }
