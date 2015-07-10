@@ -42,12 +42,12 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
  * @property-read bool $joinedAccountTypes
- * @property-read float $startBalance
- * @property-read float $endBalance
- * @property-read float $piggyBalance
- * @property-read float $percentage
- * @property-read float $difference
- * @property-read \Carbon\Carbon $lastActivityDate
+ * @property float $startBalance
+ * @property float $endBalance
+ * @property float $piggyBalance
+ * @property float $percentage
+ * @property float $difference
+ * @property \Carbon\Carbon $lastActivityDate
  */
 class Account extends Model
 {

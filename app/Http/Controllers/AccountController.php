@@ -153,12 +153,23 @@ class AccountController extends Controller
          * HERE WE ARE
          */
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end   = clone Session::get('end', Carbon::now()->endOfMonth());
         $start->subDay();
+
+        // start balances:
+        $ids = [];
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
+        $startBalances = Steam::balancesById($ids, $start);
+        $endBalances   = Steam::balancesById($ids, $end);
+
         $accounts->each(
-            function (Account $account) use ($start, $repository) {
-                $account->lastActivityDate = $repository->getLastActivity($account);
-                $account->startBalance     = Steam::balance($account, $start);
-                $account->endBalance       = Steam::balance($account, clone Session::get('end', Carbon::now()->endOfMonth()));
+            function (Account $account) use ($startBalances, $endBalances) {
+                $account->lastActivityDate = null;//$repository->getLastActivity($account);
+                $account->startBalance     = isset($startBalances[$account->id]) ? $startBalances[$account->id] : null;
+                $account->endBalance       = isset($endBalances[$account->id]) ? $endBalances[$account->id] : null;
             }
         );
 

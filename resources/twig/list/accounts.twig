@@ -33,7 +33,7 @@
                 </td>
             {% endif %}
             <td>{{ account.iban }}</td>
-            <td data-value="{{ account|balance }}">{{ account|balance|formatAmount }}</td>
+            <td data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>
             <td class="hidden-sm hidden-xs" data-value="{{ account.active }}">
                 {% if account.active %}
                     <i class="fa fa-fw fa-check"></i>

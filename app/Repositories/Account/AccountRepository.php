@@ -68,7 +68,7 @@ class AccountRepository implements AccountRepositoryInterface
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        )->accountTypeIn($types)->get(['accounts.*']);
 
         $result = $result->sortBy(
             function (Account $account) {
@@ -210,9 +210,9 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $lastTransaction = $account->transactions()->leftJoin(
             'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
+        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.account_id', 'transaction_journals.date']);
         if ($lastTransaction) {
-            return $lastTransaction->transactionjournal->date;
+            return $lastTransaction->date;
         }
 
         return null;
