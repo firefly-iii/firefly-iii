@@ -61,7 +61,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
 
         $data                          = [
             'count'    => 2,
-            'labels'   => [],
+            'labels'   => [trans('firefly.sum_of_year'), trans('firefly.average_of_year')],
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),

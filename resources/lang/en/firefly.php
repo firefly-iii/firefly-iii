@@ -324,6 +324,8 @@ return [
     'topX'                             => 'top :number',
     'showTheRest'                      => 'Show everything',
     'hideTheRest'                      => 'Show only the top :number',
+    'sum_of_year'                      => 'Sum of year',
+    'average_of_year'                  => 'Average of year',
 
     // charts:
     'dayOfMonth'                       => 'Day of the month',
