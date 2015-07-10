@@ -11,6 +11,7 @@ use Route;
 use Session;
 use Steam;
 
+use Log;
 /**
  * Class HomeController
  *
@@ -127,6 +128,7 @@ class HomeController extends Controller
 
             return redirect(route('index'));
         }
+        Log::debug('Make log.');
 
         // get all routes:
         $routeCollection = Route::getRoutes();
