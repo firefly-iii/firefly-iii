@@ -57,7 +57,7 @@ class TestDataSeeder extends Seeder
         while ($current < $end) {
             $month = $current->format('F Y');
             // create salaries:
-            $this->createIncome('Salary ' . $month, $current, rand(1800, 2000));
+            $this->createIncome('Salary ' . $month, $current, rand(2000, 2200));
 
             // pay bills:
             $this->createRent('Rent for ' . $month, $current, 800);

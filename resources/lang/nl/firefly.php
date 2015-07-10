@@ -125,8 +125,8 @@ return [
     'create_new_bill'                  => 'Nieuw contract',
 
     // currencies:
-    'create_currency'                  => 'Maak nieuwe munteenheid',
-    'edit_currency'                    => 'Wijzig munteenheid ":name"',
+    'create_currency'                  => 'Voeg nieuwe valuta toe',
+    'edit_currency'                    => 'Wijzig valuta ":name"',
 
     // new user:
     'submit'                           => 'Invoeren',
@@ -251,12 +251,12 @@ return [
 
     // menu and titles, should be recycled as often as possible:
     'toggleNavigation'                 => 'Navigatie aan of uit',
-    'currency'                         => 'Munteenheden',
+    'currency'                         => 'Valuta',
     'preferences'                      => 'Voorkeuren',
     'logout'                           => 'Uitloggen',
     'searchPlaceholder'                => 'Zoeken...',
     'dashboard'                        => 'Dashboard',
-    'currencies'                       => 'Munteenheden',
+    'currencies'                       => 'Valuta',
     'accounts'                         => 'Rekeningen',
     'Asset account'                    => 'Betaalrekening',
     'Default account'                  => 'Betaalrekening',

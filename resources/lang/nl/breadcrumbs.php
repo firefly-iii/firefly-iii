@@ -13,8 +13,8 @@ return [
     'newCategory'           => 'Maak een nieuw categorie',
 
     // currencies
-    'edit_currency'         => 'Wijzig munteenheid ":name"',
-    'delete_currency'       => 'Verwijder munteenheid ":name"',
+    'edit_currency'         => 'Wijzig valuta ":name"',
+    'delete_currency'       => 'Verwijder valuta ":name"',
 
     // piggy banks
     'piggyBanks'            => 'Spaarpotjes',

@@ -65,7 +65,7 @@ return [
     'delete_bill'                 => 'Verwijder contract ":name"',
     'delete_budget'               => 'Verwijder budget ":name"',
     'delete_category'             => 'Verwijder categorie ":name"',
-    'delete_currency'             => 'Verwijder munteenheid ":name"',
+    'delete_currency'             => 'Verwijder valuta ":name"',
     'delete_piggyBank'            => 'Verwijder spaarpotje ":name"',
     'delete_journal'              => 'Verwijder transactie met omschrijving ":description"',
 
@@ -73,7 +73,7 @@ return [
     'bill_areYouSure'             => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
     'budget_areYouSure'           => 'Weet je zeker dat je het budget met naam ":name" wilt verwijderen?',
     'category_areYouSure'         => 'Weet je zeker dat je het category met naam ":name" wilt verwijderen?',
-    'currency_areYouSure'         => 'Weet je zeker dat je de munteenheid met naam ":name" wilt verwijderen?',
+    'currency_areYouSure'         => 'Weet je zeker dat je de valuta met naam ":name" wilt verwijderen?',
     'piggyBank_areYouSure'        => 'Weet je zeker dat je het spaarpotje met naam ":name" wilt verwijderen?',
     'journal_areYouSure'          => 'Weet je zeker dat je de transactie met naam ":description" wilt verwijderen?',
 
