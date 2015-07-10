@@ -46,11 +46,17 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
+     * @param Account $moveTo
      *
      * @return boolean
      */
-    public function destroy(Account $account)
+    public function destroy(Account $account, Account $moveTo = null)
     {
+        if (!is_null($moveTo)) {
+            // update all transactions:
+            DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+        }
+
         $account->delete();
 
         return true;

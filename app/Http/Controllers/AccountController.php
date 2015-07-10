@@ -3,6 +3,7 @@
 use Auth;
 use Carbon\Carbon;
 use Config;
+use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -57,17 +58,19 @@ class AccountController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function delete(Account $account)
+    public function delete(AccountRepositoryInterface $repository, Account $account)
     {
-        $typeName = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $subTitle = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
+        $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
+        $accountList = Expandedform::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
+        unset($accountList[$account->id]);
 
         // put previous url in session
         Session::put('accounts.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'delete-' . $typeName);
 
-        return view('accounts.delete', compact('account', 'subTitle'));
+        return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
     }
 
     /**
@@ -78,12 +81,12 @@ class AccountController extends Controller
      */
     public function destroy(AccountRepositoryInterface $repository, Account $account)
     {
-
         $type     = $account->accountType->type;
         $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
+        $moveTo   = Auth::user()->accounts()->find(intval(Input::get('move_account_before_delete')));
 
-        $repository->destroy($account);
+        $repository->destroy($account, $moveTo);
 
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
         Preferences::mark();

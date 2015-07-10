@@ -26,10 +26,11 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
+     * @param Account $moveTo
      *
      * @return boolean
      */
-    public function destroy(Account $account);
+    public function destroy(Account $account, Account $moveTo = null);
 
     /**
      * @param array $types

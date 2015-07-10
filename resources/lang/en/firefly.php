@@ -204,6 +204,7 @@ return [
     'accountExtraHelp_expense'         => '',
     'accountExtraHelp_revenue'         => '',
     'account_type'                     => 'Account type',
+    'save_transactions_by_moving'      => 'Save these transaction(s) by moving them to another account:',
 
     // categories:
     'new_category'                     => 'New category',

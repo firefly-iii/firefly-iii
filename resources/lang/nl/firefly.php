@@ -206,6 +206,7 @@ return [
                                           ' Ze hebben een schuld (debet) aan jou. De term komt uit de wereld van de boekhouding.' .
                                           ' De inkomsten die je hier ziet zijn negatief, want je kijkt uit hun perspectief. Zodra een debiteur geld naar jou ' .
                                           'overmaakt gaat het er bij hen af (negatief).',
+    'save_transactions_by_moving'      => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
 
     // categories:
     'new_category'                     => 'Nieuwe categorie',
