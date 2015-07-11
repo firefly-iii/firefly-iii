@@ -19,6 +19,12 @@ return [
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
 
+    // tour:
+    'prev' => 'Prev',
+    'next' => 'Next',
+    'end-tour' => 'End tour',
+    'pause' => 'Pause',
+
     // transaction index
     'title_expenses'                   => 'Expenses',
     'title_withdrawal'                 => 'Expenses',

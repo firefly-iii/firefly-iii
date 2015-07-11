@@ -19,6 +19,12 @@ return [
     'never'                            => 'Nooit',
     'search_results_for'               => 'Zoekresultaten voor ":query"',
 
+    // tour:
+    'prev'                             => 'Vorige',
+    'next'                             => 'Volgende',
+    'end-tour'                         => 'Einde',
+    'pause'                            => 'Pauze',
+
     // transaction index
     'title_expenses'                   => 'Uitgaven',
     'title_withdrawal'                 => 'Uitgaven',

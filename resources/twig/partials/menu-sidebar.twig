@@ -5,7 +5,7 @@
             <span>{{ 'dashboard'|_ }}</span></a>
     </li>
     <!-- accounts -->
-    <li class="{{ activeRoutePartial('accounts') }} treeview">
+    <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
         <a href="#">
             <i class="fa fa-credit-card fa-fw"></i>
             <span>{{ 'accounts'|_ }}</span>
@@ -31,7 +31,7 @@
         </ul>
     </li>
     <!-- budgets-->
-    <li class="{{ activeRoutePartial('budgets') }}">
+    <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
         <a href="{{ route('budgets.index') }}">
             <i class="fa fa-tasks fa-fw"></i>
             <span>{{ 'budgets'|_ }}</span>
@@ -53,7 +53,7 @@
     </li>
 
     <!-- reports -->
-    <li class="{{ activeRoutePartial('reports') }}">
+    <li class="{{ activeRoutePartial('reports') }}" id="report-menu">
         <a href="{{ route('reports.index') }}">
             <i class="fa fa-line-chart fa-fw"></i>
             <span>{{ 'reports'|_ }}</span>
@@ -61,7 +61,7 @@
     </li>
 
     <!-- transactions -->
-    <li class="{{ activeRoutePartial('transactions') }} treeview">
+    <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
             <i class="fa fa-repeat fa-fw"></i>
             <span>
@@ -106,7 +106,7 @@
     </li>
 
     <!-- options and preferences -->
-    <li class="{{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
+    <li id="option-menu" class="{{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
         <a href="#">
             <i class="fa fa-gears fa-fw"></i>
             <span>{{ 'options'|_ }}</span>

@@ -296,6 +296,7 @@ Route::group(
     Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
     Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
     Route::get('/json/tags', ['uses' => 'JsonController@tags', 'as' => 'json.tags']);
+    Route::get('/json/tour', ['uses' => 'JsonController@tour', 'as' => 'json.tour']);
     Route::get('/json/box/in', ['uses' => 'JsonController@boxIn', 'as' => 'json.box.in']);
     Route::get('/json/box/out', ['uses' => 'JsonController@boxOut', 'as' => 'json.box.out']);
     Route::get('/json/box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'json.box.paid']);

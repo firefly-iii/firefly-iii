@@ -24,6 +24,61 @@ use Steam;
 class JsonController extends Controller
 {
 
+    /**
+     *
+     */
+    public function tour()
+    {
+        $headers = [
+            'main-content',
+            'sidebar-toggle',
+            'account-menu',
+            'budget-menu',
+            'report-menu',
+            'transaction-menu',
+            'option-menu',
+            'main-content-end'
+        ];
+        $steps   = [];
+        foreach ($headers as $header) {
+            $steps[] = [
+                'element' => "#" . $header,
+                'title'   => trans('help.' . $header . '-title'),
+                'content' => trans('help.' . $header . '-text'),
+            ];
+        }
+
+        // orphan and backdrop for first element.
+        $steps[0]['orphan']   = true;
+        $steps[0]['backdrop'] = true;
+
+        // sidebar position left:
+        $steps[1]['placement'] = 'left';
+
+        // final in the center again.
+        $steps[7]['orphan']   = true;
+        $steps[7]['backdrop'] = true;
+
+        $template ='<div class="popover" role="tooltip">
+          <div class="arrow"></div>
+          <h3 class="popover-title"></h3>
+          <div class="popover-content"></div>
+          <div class="popover-navigation">
+            <div class="btn-group">
+              <button class="btn btn-sm btn-default" data-role="prev">&laquo; '.trans('firefly.prev').'</button>
+              <button class="btn btn-sm btn-default" data-role="next">'.trans('firefly.next').' &raquo;</button>
+              <button class="btn btn-sm btn-default"
+                      data-role="pause-resume"
+                      data-pause-text="Pause"
+                      data-resume-text="Resume">'.trans('firefly.pause').'</button>
+            </div>
+            <button class="btn btn-sm btn-default" data-role="end">'.trans('firefly.end-tour').'</button>
+          </div>
+        </div>';
+
+
+        return Response::json(['steps' => $steps, 'template' => $template]);
+    }
 
     /**
      * @param BillRepositoryInterface    $repository
@@ -34,8 +89,8 @@ class JsonController extends Controller
      */
     public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $amount = 0;
         bcscale(2);
 

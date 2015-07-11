@@ -9,6 +9,16 @@ $(function () {
         // do chart JS stuff.
         drawChart();
     }
+
+    $.getJSON('json/tour').success(function (data) {
+        var tour = new Tour({steps: data.steps, template: data.template});
+        // Initialize the tour
+        tour.init();
+        // Start the tour
+        tour.start();
+    });
+
+
 });
 
 function drawChart() {
