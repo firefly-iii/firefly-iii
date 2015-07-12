@@ -25,11 +25,14 @@ use Steam;
 class JsonController extends Controller
 {
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function endTour()
     {
         Preferences::set('tour', false);
 
-        return Response::json(true);
+        return Response::json('true');
     }
 
     /**
@@ -50,36 +53,17 @@ class JsonController extends Controller
                 'content' => trans('help.' . $header . '-text'),
             ];
         }
-
-        // orphan and backdrop for first element.
-        $steps[0]['orphan']   = true;
-        $steps[0]['backdrop'] = true;
-
-        // sidebar position left:
-        $steps[1]['placement'] = 'left';
-
-        // final in the center again.
-        $steps[7]['orphan']   = true;
-        $steps[7]['backdrop'] = true;
-
-        $template
-            = '<div class="popover" role="tooltip">
-          <div class="arrow"></div>
-          <h3 class="popover-title"></h3>
-          <div class="popover-content"></div>
-          <div class="popover-navigation">
-            <div class="btn-group">
-              <button class="btn btn-sm btn-default" data-role="prev">&laquo; ' . trans('firefly.prev') . '</button>
-              <button class="btn btn-sm btn-default" data-role="next">' . trans('firefly.next') . ' &raquo;</button>
-              <button class="btn btn-sm btn-default"
-                      data-role="pause-resume"
-                      data-pause-text="Pause"
-                      data-resume-text="Resume">' . trans('firefly.pause') . '</button>
-            </div>
-            <button class="btn btn-sm btn-default" data-role="end">' . trans('firefly.end-tour') . '</button>
-          </div>
-        </div>';
-
+        $steps[0]['orphan']    = true;// orphan and backdrop for first element.
+        $steps[0]['backdrop']  = true;
+        $steps[1]['placement'] = 'left';// sidebar position left:
+        $steps[7]['orphan']    = true; // final in the center again.
+        $steps[7]['backdrop']  = true;
+        $template              = '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content">' .
+                                 '</div><div class="popover-navigation"><div class="btn-group"><button class="btn btn-sm btn-default" data-role="prev">' .
+                                 '&laquo; ' . trans('firefly.prev') . '</button><button class="btn btn-sm btn-default" data-role="next">' .
+                                 trans('firefly.next') . ' &raquo;</button><button class="btn btn-sm btn-default" data-role="pause-resume" ' .
+                                 'data-pause-text="Pause" data-resume-text="Resume">' . trans('firefly.pause') . '</button></div>' .
+                                 '<button class="btn btn-sm btn-default" data-role="end">' . trans('firefly.end-tour') . '</button></div></div>';
 
         return Response::json(['steps' => $steps, 'template' => $template]);
     }
