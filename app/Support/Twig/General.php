@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Support\Twig;
 
-use App;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Account;
@@ -74,7 +73,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'formatAmount', function ($string) {
-            return App::make('amount')->format($string);
+            return app('amount')->format($string);
         }, ['is_safe' => ['html']]
         );
     }
@@ -86,7 +85,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'formatTransaction', function (Transaction $transaction) {
-            return App::make('amount')->formatTransaction($transaction);
+            return app('amount')->formatTransaction($transaction);
         }, ['is_safe' => ['html']]
         );
     }
@@ -98,7 +97,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'formatAmountPlain', function ($string) {
-            return App::make('amount')->format($string, false);
+            return app('amount')->format($string, false);
         }, ['is_safe' => ['html']]
         );
     }
@@ -110,7 +109,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'formatJournal', function ($journal) {
-            return App::make('amount')->formatJournal($journal);
+            return app('amount')->formatJournal($journal);
         }, ['is_safe' => ['html']]
         );
     }
@@ -127,7 +126,7 @@ class General extends Twig_Extension
             }
             $date = Session::get('end', Carbon::now()->endOfMonth());
 
-            return App::make('steam')->balance($account, $date);
+            return app('steam')->balance($account, $date);
         }
         );
     }
@@ -151,7 +150,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'getCurrencyCode', function () {
-            return App::make('amount')->getCurrencyCode();
+            return app('amount')->getCurrencyCode();
         }
         );
     }
@@ -163,7 +162,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'getCurrencySymbol', function () {
-            return App::make('amount')->getCurrencySymbol();
+            return app('amount')->getCurrencySymbol();
         }
         );
     }

@@ -8,6 +8,7 @@ use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Response;
@@ -184,7 +185,16 @@ class TagController extends Controller
         // loop each types and get the tags, group them by year.
         $collection = [];
         foreach ($types as $type) {
+
+            /** @var Collection $tags */
             $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
+
+            $tags = $tags->sortBy(
+                function (Tag $tag) {
+                    return strtolower($tag->tag);
+                }
+            );
+
             /** @var Tag $tag */
             foreach ($tags as $tag) {
                 $year                               = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;

@@ -1,4 +1,4 @@
-/* globals $, columnChart, google, lineChart, pieChart, stackedColumnChart, areaChart */
+/* globals $, columnChart,showTour, Tour, google, lineChart, pieChart, stackedColumnChart, areaChart */
 
 $(function () {
     "use strict";
@@ -9,7 +9,31 @@ $(function () {
         // do chart JS stuff.
         drawChart();
     }
+    if (showTour) {
+        $.getJSON('json/tour').success(function (data) {
+            var tour = new Tour(
+                {
+                    steps: data.steps,
+                    template: data.template,
+                    onEnd: endTheTour
+                });
+            // Initialize the tour
+            tour.init();
+            // Start the tour
+            tour.start();
+        }).fail(function () {
+            console.log('Already had tour.');
+        });
+    }
+
+
 });
+
+function endTheTour() {
+    "use strict";
+    $.post('json/end-tour', {_token: token});
+
+}
 
 function drawChart() {
     "use strict";

@@ -7,17 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class PiggyBankRepetition
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer                           $id
- * @property \Carbon\Carbon                    $created_at
- * @property \Carbon\Carbon                    $updated_at
- * @property integer                           $piggy_bank_id
- * @property \Carbon\Carbon                    $startdate
- * @property \Carbon\Carbon                    $targetdate
- * @property float                             $currentamount
- * @property string                            $currentamount_encrypted
- * @property-read \FireflyIII\Models\PiggyBank $piggyBank
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property integer $piggy_bank_id 
+ * @property \Carbon\Carbon $startdate 
+ * @property \Carbon\Carbon $targetdate 
+ * @property float $currentamount 
+ * @property-read \FireflyIII\Models\PiggyBank $piggyBank 
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereUpdatedAt($value)
@@ -25,9 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereStartdate($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereTargetdate($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereCurrentamount($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereCurrentamountEncrypted($value)
- * @method static \FireflyIII\Models\PiggyBankRepetition onDates($start, $target)
- * @method static \FireflyIII\Models\PiggyBankRepetition relevantOnDate($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition onDates($start, $target)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition relevantOnDate($date)
  */
 class PiggyBankRepetition extends Model
 {

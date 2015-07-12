@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Helpers\Report;
 
-use App;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Collection\Balance;
@@ -115,8 +114,8 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBalanceReport(Carbon $start, Carbon $end, $shared)
     {
-        $repository    = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $repository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
         $balance       = new Balance;
 
         // build a balance header:
@@ -200,15 +199,15 @@ class ReportHelper implements ReportHelperInterface
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return BillCollection
      */
     public function getBillReport(Carbon $start, Carbon $end)
     {
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-        $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
         $bills      = $repository->getBills();
         $collection = new BillCollection;
 
@@ -253,7 +252,7 @@ class ReportHelper implements ReportHelperInterface
     {
         $object = new BudgetCollection;
         /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $set        = $repository->getBudgets();
 
         foreach ($set as $budget) {
@@ -323,7 +322,7 @@ class ReportHelper implements ReportHelperInterface
          * GET CATEGORIES:
          */
         /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = App::make('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $set        = $repository->getCategories();
         foreach ($set as $category) {
             $spent           = $repository->spentInPeriodCorrected($category, $start, $end, $shared);

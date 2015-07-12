@@ -19,6 +19,12 @@ return [
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
 
+    // tour:
+    'prev' => 'Prev',
+    'next' => 'Next',
+    'end-tour' => 'End tour',
+    'pause' => 'Pause',
+
     // transaction index
     'title_expenses'                   => 'Expenses',
     'title_withdrawal'                 => 'Expenses',
@@ -117,6 +123,9 @@ return [
     'csv_column_tags-space'            => 'Tags (space separated)',
     'csv_specifix_RabobankDescription' => 'Select this when you\'re importing Rabobank CSV export files.',
     'csv_specifix_Dummy'               => 'Checking this has no effect whatsoever.',
+    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which' .
+                                          ' account the transactions in the CSV belong to.',
+
 
     // create new stuff:
     'create_new_withdrawal'            => 'Create new withdrawal',
@@ -201,6 +210,7 @@ return [
     'accountExtraHelp_expense'         => '',
     'accountExtraHelp_revenue'         => '',
     'account_type'                     => 'Account type',
+    'save_transactions_by_moving'      => 'Save these transaction(s) by moving them to another account:',
 
     // categories:
     'new_category'                     => 'New category',
@@ -321,6 +331,8 @@ return [
     'topX'                             => 'top :number',
     'showTheRest'                      => 'Show everything',
     'hideTheRest'                      => 'Show only the top :number',
+    'sum_of_year'                      => 'Sum of year',
+    'average_of_year'                  => 'Average of year',
 
     // charts:
     'dayOfMonth'                       => 'Day of the month',

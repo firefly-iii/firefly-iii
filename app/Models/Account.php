@@ -11,22 +11,23 @@ use Watson\Validating\ValidatingTrait;
  * Class Account
  *
  * @package FireflyIII\Models
- * @property integer                                                                        $id
- * @property \Carbon\Carbon                                                                 $created_at
- * @property \Carbon\Carbon                                                                 $updated_at
- * @property \Carbon\Carbon                                                                 $deleted_at
- * @property integer                                                                        $user_id
- * @property integer                                                                        $account_type_id
- * @property string                                                                         $name
- * @property boolean                                                                        $active
- * @property boolean                                                                        $encrypted
- * @property float                                                                          $virtual_balance
- * @property string                                                                         $virtual_balance_encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read \FireflyIII\Models\AccountType                                            $accountType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read \FireflyIII\User                                                          $user
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property \Carbon\Carbon $deleted_at 
+ * @property integer $user_id 
+ * @property integer $account_type_id 
+ * @property string $name 
+ * @property boolean $active 
+ * @property boolean $encrypted 
+ * @property float $virtual_balance 
+ * @property string $iban 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta 
+ * @property-read \FireflyIII\Models\AccountType $accountType 
+ * @property-read mixed $name_for_editform 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions 
+ * @property-read \FireflyIII\User $user 
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereUpdatedAt($value)
@@ -37,19 +38,16 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereActive($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereVirtualBalance($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereVirtualBalanceEncrypted($value)
- * @method static \FireflyIII\Models\Account accountTypeIn($types)
- * @method static \FireflyIII\Models\Account hasMetaValue($name, $value)
- * @property boolean                                                                        joinedAccountTypes
- * @property mixed                                                                          startBalance
- * @property mixed                                                                          endBalance
- * @property mixed                                                                          lastActivityDate
- * @property mixed                                                                          piggyBalance
- * @property mixed                                                                          difference
- * @property mixed                                                                          percentage
- * @property string                                                                         $iban
- * @property-read mixed                                                                     $name_for_editform
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereIban($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
+ * @property-read bool $joinedAccountTypes
+ * @property float $startBalance
+ * @property float $endBalance
+ * @property float $piggyBalance
+ * @property float $percentage
+ * @property float $difference
+ * @property \Carbon\Carbon $lastActivityDate
  */
 class Account extends Model
 {

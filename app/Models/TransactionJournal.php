@@ -13,35 +13,35 @@ use Watson\Validating\ValidatingTrait;
  * Class TransactionJournal
  *
  * @package FireflyIII\Models
- * @SuppressWarnings (PHPMD.TooManyMethods)
- * @property integer                                                                             $id
- * @property \Carbon\Carbon                                                                      $created_at
- * @property \Carbon\Carbon                                                                      $updated_at
- * @property \Carbon\Carbon                                                                      $deleted_at
- * @property integer                                                                             $user_id
- * @property integer                                                                             $transaction_type_id
- * @property integer                                                                             $bill_id
- * @property integer                                                                             $transaction_currency_id
- * @property string                                                                              $description
- * @property boolean                                                                             $completed
- * @property \Carbon\Carbon                                                                      $date
- * @property boolean                                                                             $encrypted
- * @property integer                                                                             $order
- * @property-read \FireflyIII\Models\Bill                                                        $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]           $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]         $categories
- * @property-read mixed                                                                          $actual_amount
- * @property-read mixed                                                                          $amount
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]              $tags
- * @property-read mixed                                                                          $asset_account
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]      $transactions
- * @property-read mixed                                                                          $corrected_actual_amount
- * @property-read mixed                                                                          $destination_account
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]   $piggyBankEvents
- * @property-read \FireflyIII\Models\TransactionCurrency                                         $transactionCurrency
- * @property-read \FireflyIII\Models\TransactionType                                             $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups
- * @property-read \FireflyIII\User                                                               $user
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property \Carbon\Carbon $deleted_at 
+ * @property integer $user_id 
+ * @property integer $transaction_type_id 
+ * @property integer $bill_id 
+ * @property integer $transaction_currency_id 
+ * @property string $description 
+ * @property boolean $completed 
+ * @property \Carbon\Carbon $date 
+ * @property boolean $encrypted 
+ * @property integer $order 
+ * @property integer $tag_count 
+ * @property-read \FireflyIII\Models\Bill $bill 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories 
+ * @property-read mixed $actual_amount 
+ * @property-read mixed $amount 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags 
+ * @property-read mixed $correct_amount 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions 
+ * @property-read mixed $destination_account 
+ * @property-read mixed $source_account 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents 
+ * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency 
+ * @property-read \FireflyIII\Models\TransactionType $transactionType 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups 
+ * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
@@ -55,25 +55,19 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
- * @method static \FireflyIII\Models\TransactionJournal accountIs($account)
- * @method static \FireflyIII\Models\TransactionJournal after($date)
- * @method static \FireflyIII\Models\TransactionJournal before($date)
- * @method static \FireflyIII\Models\TransactionJournal onDate($date)
- * @method static \FireflyIII\Models\TransactionJournal transactionTypes($types)
- * @method static \FireflyIII\Models\TransactionJournal withRelevantData()
- * @property-read mixed                                                                          $expense_account
- * @property string                                                                              account_encrypted
- * @property bool                                                                                joinedTransactions
- * @property bool                                                                                joinedTransactionTypes
- * @property mixed                                                                               account_id
- * @property mixed                                                                               name
- * @property mixed                                                                               symbol
- * @property-read mixed                                                                          $correct_amount
- * @method static \FireflyIII\Models\TransactionJournal orderBy
- * @method static \FireflyIII\Models\TransactionJournal|null first
- * @property-read mixed                                                                          $source_account
- * @property integer                                                                             $tag_count
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal accountIs($account)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal onDate($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal withRelevantData()
+ * @property-read bool $account_encrypted
+ * @property-read bool $joinedTransactions
+ * @property-read bool $joinedTransactionTypes
+ * @property-read int $account_id
+ * @property-read string $name
+ * @property-read string $symbol
  */
 class TransactionJournal extends Model
 {
@@ -150,14 +144,9 @@ class TransactionJournal extends Model
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $amount = '0';
         bcscale(2);
-        /** @var Transaction $t */
-        foreach ($this->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
+        $set    = $this->transactions->sortByDesc('amount');
+        $amount = $set->first()->amount;
 
         if (intval($this->tag_count) === 1) {
             // get amount for single tag:
@@ -176,6 +165,49 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @param Tag $tag
+     * @param     $amount
+     *
+     * @return string
+     */
+    protected function amountByTagAdvancePayment(Tag $tag, $amount)
+    {
+        if ($this->transactionType->type == 'Withdrawal') {
+            $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+            foreach ($others as $other) {
+                $amount = bcsub($amount, $other->actual_amount);
+            }
+
+            return $amount;
+        }
+        if ($this->transactionType->type == 'Deposit') {
+            return '0';
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @param $tag
+     * @param $amount
+     *
+     * @return string
+     */
+    protected function amountByTagBalancingAct($tag, $amount)
+    {
+        if ($this->transactionType->type == 'Withdrawal') {
+            $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
+            if ($transfer) {
+                $amount = bcsub($amount, $transfer->actual_amount);
+
+                return $amount;
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
      * Assuming the journal has only one tag. Parameter amount is used as fallback.
      *
      * @param Tag    $tag
@@ -186,28 +218,12 @@ class TransactionJournal extends Model
     protected function amountByTag(Tag $tag, $amount)
     {
         if ($tag->tagMode == 'advancePayment') {
-            if ($this->transactionType->type == 'Withdrawal') {
-                $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
-                foreach ($others as $other) {
-                    $amount = bcsub($amount, $other->actual_amount);
-                }
-
-                return $amount;
-            }
-            if ($this->transactionType->type == 'Deposit') {
-                return '0';
-            }
+            return $this->amountByTagAdvancePayment($tag, $amount);
         }
 
         if ($tag->tagMode == 'balancingAct') {
-            if ($this->transactionType->type == 'Withdrawal') {
-                $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
-                if ($transfer) {
-                    $amount = bcsub($amount, $transfer->actual_amount);
+            return $this->amountByTagBalancingAct($tag, $amount);
 
-                    return $amount;
-                }
-            }
         }
 
         return $amount;

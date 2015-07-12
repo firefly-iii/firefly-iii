@@ -2,16 +2,17 @@
 
 namespace FireflyIII\Helpers\Csv;
 
-use App;
 use Auth;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
 use FireflyIII\Helpers\Csv\Specifix\SpecifixInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -42,7 +43,10 @@ class Importer
     /** @var  int */
     protected $rows = 0;
     /** @var array */
-    protected $specifix;
+    protected $specifix = [];
+
+    /** @var  Collection */
+    protected $journals;
 
     /**
      * Used by CsvController.
@@ -75,12 +79,22 @@ class Importer
     }
 
     /**
+     * @return Collection
+     */
+    public function getJournals()
+    {
+        return $this->journals;
+    }
+
+
+    /**
      * @throws FireflyException
      */
     public function run()
     {
         set_time_limit(0);
 
+        $this->journals = new Collection;
         $this->map      = $this->data->getMap();
         $this->roles    = $this->data->getRoles();
         $this->mapped   = $this->data->getMapped();
@@ -88,14 +102,17 @@ class Importer
 
         foreach ($this->data->getReader() as $index => $row) {
             if ($this->parseRow($index)) {
+                Log::debug('--- Importing row ' . $index);
                 $this->rows++;
                 $result = $this->importRow($row);
-                if (!($result === true)) {
+                if (!($result instanceof TransactionJournal)) {
                     Log::error('Caught error at row #' . $index . ': ' . $result);
                     $this->errors[$index] = $result;
                 } else {
                     $this->imported++;
+                    $this->journals->push($result);
                 }
+                Log::debug('---');
             }
         }
     }
@@ -118,14 +135,17 @@ class Importer
      */
     protected function importRow($row)
     {
+
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
             $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
             $class = Config::get('csv.roles.' . $role . '.converter');
             $field = Config::get('csv.roles.' . $role . '.field');
 
+            Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
+
             /** @var ConverterInterface $converter */
-            $converter = App::make('FireflyIII\Helpers\Csv\Converter\\' . $class);
+            $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
             $converter->setData($data); // the complete array so far.
             $converter->setField($field);
             $converter->setIndex($index);
@@ -133,7 +153,6 @@ class Importer
             $converter->setValue($value);
             $converter->setRole($role);
             $data[$field] = $converter->convert();
-
         }
         // move to class vars.
         $this->importData = $data;
@@ -147,11 +166,8 @@ class Importer
             return $result; // return error.
         }
         $journal = $this->createTransactionJournal();
-        if ($journal instanceof TransactionJournal) {
-            return true;
-        }
 
-        return false;
+        return $journal;
     }
 
     /**
@@ -169,6 +185,7 @@ class Importer
         // some extra's:
         $filler['bill-id']                 = null;
         $filler['opposing-account-object'] = null;
+        $filler['asset-account-object']    = null;
         $filler['amount-modifier']         = '1';
 
         return $filler;
@@ -186,9 +203,10 @@ class Importer
 
         foreach ($this->getSpecifix() as $className) {
             /** @var SpecifixInterface $specifix */
-            $specifix = App::make('FireflyIII\Helpers\Csv\Specifix\\' . $className);
+            $specifix = app('FireflyIII\Helpers\Csv\Specifix\\' . $className);
             $specifix->setData($this->importData);
             $specifix->setRow($this->importRow);
+            Log::debug('Now post-process specifix named ' . $className . ':');
             $this->importData = $specifix->fix();
         }
 
@@ -196,8 +214,9 @@ class Importer
         $set = Config::get('csv.post_processors');
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
-            $postProcessor = App::make('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
+            $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
             $postProcessor->setData($this->importData);
+            Log::debug('Now post-process processor named ' . $className . ':');
             $this->importData = $postProcessor->process();
         }
 
@@ -208,7 +227,7 @@ class Importer
      */
     public function getSpecifix()
     {
-        return $this->specifix;
+        return is_array($this->specifix) ? $this->specifix : [];
     }
 
     /**
@@ -222,6 +241,10 @@ class Importer
         }
         if (is_null($this->importData['opposing-account-object'])) {
             return 'Opposing account is null';
+        }
+
+        if (!($this->importData['asset-account-object'] instanceof Account)) {
+            return 'No asset account to import into.';
         }
 
         return true;
@@ -238,6 +261,8 @@ class Importer
         if (is_null($this->importData['date'])) {
             $date = $this->importData['date-rent'];
         }
+
+
         $transactionType = $this->getTransactionType(); // defaults to deposit
         $errors          = new MessageBag;
         $journal         = TransactionJournal::create(
@@ -245,10 +270,13 @@ class Importer
              'description' => $this->importData['description'], 'completed' => 0, 'date' => $date, 'bill_id' => $this->importData['bill-id'],]
         );
         if ($journal->getErrors()->count() == 0) {
-            $accountId   = $this->importData['asset-account']->id; // create first transaction:
+            // first transaction
+            $accountId   = $this->importData['asset-account-object']->id; // create first transaction:
             $amount      = $this->importData['amount'];
             $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
             $errors      = $transaction->getErrors();
+
+            // second transaction
             $accountId   = $this->importData['opposing-account-object']->id; // create second transaction:
             $amount      = bcmul($this->importData['amount'], -1);
             $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
@@ -265,6 +293,18 @@ class Importer
         $this->saveBudget($journal);
         $this->saveCategory($journal);
         $this->saveTags($journal);
+
+        // some debug info:
+        $journalId = $journal->id;
+        $type      = $journal->transactionType->type;
+        /** @var Account $asset */
+        $asset = $this->importData['asset-account-object'];
+        /** @var Account $opposing */
+        $opposing = $this->importData['opposing-account-object'];
+
+        Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
+        Log::info('Asset account ****** (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
+        Log::info($opposing->accountType->type . ' ****** (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
 
         return $journal;
     }

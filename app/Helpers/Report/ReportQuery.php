@@ -21,7 +21,11 @@ use Steam;
 class ReportQuery implements ReportQueryInterface
 {
     /**
-     * See ReportQueryInterface::incomeInPeriodCorrected
+     * See ReportQueryInterface::incomeInPeriodCorrected.
+     *
+     * This method's length is caused mainly by the query build stuff. Therefor:
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @param Carbon $start
      * @param Carbon $end

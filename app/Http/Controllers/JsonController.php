@@ -12,6 +12,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Preferences;
 use Response;
 use Session;
 use Steam;
@@ -24,6 +25,43 @@ use Steam;
 class JsonController extends Controller
 {
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function endTour()
+    {
+        Preferences::set('tour', false);
+
+        return Response::json('true');
+    }
+
+    /**
+     *
+     */
+    public function tour()
+    {
+        $pref = Preferences::get('tour', true);
+        if (!$pref) {
+            abort(404);
+        }
+        $headers = ['main-content', 'sidebar-toggle', 'account-menu', 'budget-menu', 'report-menu', 'transaction-menu', 'option-menu', 'main-content-end'];
+        $steps   = [];
+        foreach ($headers as $header) {
+            $steps[] = [
+                'element' => '#' . $header,
+                'title'   => trans('help.' . $header . '-title'),
+                'content' => trans('help.' . $header . '-text'),
+            ];
+        }
+        $steps[0]['orphan']    = true;// orphan and backdrop for first element.
+        $steps[0]['backdrop']  = true;
+        $steps[1]['placement'] = 'left';// sidebar position left:
+        $steps[7]['orphan']    = true; // final in the center again.
+        $steps[7]['backdrop']  = true;
+        $template              = view('json.tour')->render();
+
+        return Response::json(['steps' => $steps, 'template' => $template]);
+    }
 
     /**
      * @param BillRepositoryInterface    $repository
@@ -34,8 +72,9 @@ class JsonController extends Controller
      */
     public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
+        $amount = 0;
         bcscale(2);
 
         // works for json too!
@@ -46,12 +85,7 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-
-        $amount = 0;
-
-
-        // these two functions are the same as the chart
-        $bills = $repository->getActiveBills();
+        $bills = $repository->getActiveBills(); // these two functions are the same as the chart
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -59,14 +93,10 @@ class JsonController extends Controller
         }
         unset($bill, $bills);
 
-        /**
-         * Find credit card accounts and possibly unpaid credit card bills.
-         */
-        $creditCards = $accountRepository->getCreditCards();
-        // if the balance is not zero, the monthly payment is still underway.
+        $creditCards = $accountRepository->getCreditCards(); // Find credit card accounts and possibly unpaid credit card bills.
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, $end, true);
+            $balance = Steam::balance($creditCard, $end, true); // if the balance is not zero, the monthly payment is still underway.
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
@@ -75,7 +105,6 @@ class JsonController extends Controller
         }
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
-
 
         return Response::json($data);
     }
@@ -133,7 +162,7 @@ class JsonController extends Controller
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
             $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
-            $amount = bcadd($amount, $current);
+            $amount  = bcadd($amount, $current);
         }
 
         $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];

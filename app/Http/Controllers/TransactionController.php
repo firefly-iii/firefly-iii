@@ -179,7 +179,7 @@ class TransactionController extends Controller
         Session::forget('transactions.edit.fromUpdate');
 
 
-        return View::make('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
+        return view('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
     }
 
     /**

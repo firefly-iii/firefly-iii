@@ -51,6 +51,7 @@ return [
     'date_format'                 => 'Date format',
     'csv_config'                  => 'CSV import configuration',
     'specifix'                    => 'Bank- or file specific fixes',
+    'csv_import_account'               => 'Default import account',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',

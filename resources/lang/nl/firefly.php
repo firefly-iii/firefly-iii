@@ -19,6 +19,12 @@ return [
     'never'                            => 'Nooit',
     'search_results_for'               => 'Zoekresultaten voor ":query"',
 
+    // tour:
+    'prev'                             => 'Vorige',
+    'next'                             => 'Volgende',
+    'end-tour'                         => 'Einde',
+    'pause'                            => 'Pauze',
+
     // transaction index
     'title_expenses'                   => 'Uitgaven',
     'title_withdrawal'                 => 'Uitgaven',
@@ -36,7 +42,8 @@ return [
                                           ' je jouw tekstbestand bij "CSV-bestand". '
                                           . 'Als je hulp nodig hebt, klik dan op het <i class="fa fa-question-circle"></i>-icoontje rechtsboven.',
     'csv_index_beta_warning'           => 'Deze tool is nog erg experimenteel. Wees dus voorzichtig.',
-    'csv_header_help'                  => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen, en niet uit daadwerkelijke gegevens.',
+    'csv_header_help'                  => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen,' .
+                                          'en niet uit daadwerkelijke gegevens.',
     'csv_date_help'                    => 'Het gebruikte datumformaat in jouw bestand. Gebruik het formaat zoals <a href="https://secure.' .
                                           'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">deze' .
                                           ' pagina</a> het uitlegt (Engels). Het standaardformaat kan omgaan met data zoals deze: ' . date('Ymd'),
@@ -47,7 +54,8 @@ return [
     'csv_column_roles_title'           => 'Bepaal de inhoud van elke kolom',
     'csv_column_roles_text'            => 'Firefly kan niet automatisch ontdekken wat elke kolom betekent. Je moet het zelf aangeven. Gebruik de' .
                                           ' voorbeeldgegevens als je het ook niet zeker weet. Klik op het <i class="fa fa-question-circle"></i>-icoontje ' .
-                                          'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe relatie heeft met gegevens'
+                                          'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe' .
+                                          ' relatie heeft met gegevens'
                                           .
                                           ' die al in Firefly staan, gebruik dan het vinkje. Tijdens de volgende stap komt Firefly hier dan op terug.',
     'csv_column'                       => 'CSV-kolom',
@@ -123,8 +131,8 @@ return [
     'create_new_bill'                  => 'Nieuw contract',
 
     // currencies:
-    'create_currency'                  => 'Maak nieuwe munteenheid',
-    'edit_currency'                    => 'Wijzig munteenheid ":name"',
+    'create_currency'                  => 'Voeg nieuwe valuta toe',
+    'edit_currency'                    => 'Wijzig valuta ":name"',
 
     // new user:
     'submit'                           => 'Invoeren',
@@ -204,6 +212,7 @@ return [
                                           ' Ze hebben een schuld (debet) aan jou. De term komt uit de wereld van de boekhouding.' .
                                           ' De inkomsten die je hier ziet zijn negatief, want je kijkt uit hun perspectief. Zodra een debiteur geld naar jou ' .
                                           'overmaakt gaat het er bij hen af (negatief).',
+    'save_transactions_by_moving'      => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
 
     // categories:
     'new_category'                     => 'Nieuwe categorie',
@@ -249,12 +258,12 @@ return [
 
     // menu and titles, should be recycled as often as possible:
     'toggleNavigation'                 => 'Navigatie aan of uit',
-    'currency'                         => 'Munteenheden',
+    'currency'                         => 'Valuta',
     'preferences'                      => 'Voorkeuren',
     'logout'                           => 'Uitloggen',
     'searchPlaceholder'                => 'Zoeken...',
     'dashboard'                        => 'Dashboard',
-    'currencies'                       => 'Munteenheden',
+    'currencies'                       => 'Valuta',
     'accounts'                         => 'Rekeningen',
     'Asset account'                    => 'Betaalrekening',
     'Default account'                  => 'Betaalrekening',
@@ -292,6 +301,8 @@ return [
     'quarterly'                        => 'Elk kwartaal',
     'half-year'                        => 'Elk half jaar',
     'yearly'                           => 'Jaarlijks',
+    'sum_of_year'                      => 'Som van jaar',
+    'average_of_year'                  => 'Gemiddelde in jaar',
 
     // reports:
     'reportForYear'                    => 'Jaaroverzicht :year',

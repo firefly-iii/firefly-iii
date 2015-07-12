@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Repositories\Account;
 
-use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -47,11 +46,17 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
+     * @param Account $moveTo
      *
      * @return boolean
      */
-    public function destroy(Account $account)
+    public function destroy(Account $account, Account $moveTo = null)
     {
+        if (!is_null($moveTo)) {
+            // update all transactions:
+            DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+        }
+
         $account->delete();
 
         return true;
@@ -64,11 +69,18 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccounts(array $types)
     {
+        /** @var Collection $result */
         $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        )->accountTypeIn($types)->get(['accounts.*']);
+
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
+            }
+        );
 
         return $result;
     }
@@ -204,9 +216,9 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $lastTransaction = $account->transactions()->leftJoin(
             'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
+        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.account_id', 'transaction_journals.date']);
         if ($lastTransaction) {
-            return $lastTransaction->transactionjournal->date;
+            return $lastTransaction->date;
         }
 
         return null;
@@ -456,6 +468,7 @@ class AccountRepository implements AccountRepositoryInterface
                     'accountType'    => $type,
                     'name'           => $data['name'] . ' initial balance',
                     'active'         => false,
+                    'iban'           => '',
                     'virtualBalance' => 0,
                 ];
                 $opposing     = $this->storeAccount($opposingData);
@@ -505,7 +518,7 @@ class AccountRepository implements AccountRepositoryInterface
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                App::abort(500);
+                abort(500);
                 // @codeCoverageIgnoreStart
             }
             // @codeCoverageIgnoreEnd

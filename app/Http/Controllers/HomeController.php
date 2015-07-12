@@ -6,6 +6,7 @@ use Config;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
+use Log;
 use Preferences;
 use Route;
 use Session;
@@ -72,7 +73,6 @@ class HomeController extends Controller
         $count = $repository->countAccounts($types);
         bcscale(2);
 
-
         if ($count == 0) {
             return redirect(route('new-user.index'));
         }
@@ -84,6 +84,7 @@ class HomeController extends Controller
         $frontPage     = Preferences::get('frontPageAccounts', []);
         $start         = Session::get('start', Carbon::now()->startOfMonth());
         $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $showTour      = Preferences::get('tour', true)->data;
 
         $accounts = $repository->getFrontpageAccounts($frontPage);
         $savings  = $repository->getSavingsAccounts();
@@ -114,7 +115,9 @@ class HomeController extends Controller
             }
         }
 
-        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts'));
+        return view(
+            'index', compact('count', 'showTour', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts')
+        );
     }
 
     /**
@@ -128,6 +131,7 @@ class HomeController extends Controller
 
             return redirect(route('index'));
         }
+        Log::debug('Make log.');
 
         // get all routes:
         $routeCollection = Route::getRoutes();

@@ -10,6 +10,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use Navigation;
+use Steam;
 
 /**
  * Class BillRepository
@@ -38,6 +39,7 @@ class BillRepository implements BillRepositoryInterface
 
         return $amount;
     }
+
 
     /**
      * Create a fake bill to help the chart controller.
@@ -382,5 +384,85 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return false;
+    }
+
+    /**
+     * Gets a collection of paid bills and a collection of unpaid bills to be used
+     * in the pie chart on the front page.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBillsForChart(Carbon $start, Carbon $end)
+    {
+        $paid   = new Collection;
+        $unpaid = new Collection;
+
+        $bills = $this->getActiveBills();
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $ranges = $this->getRanges($bill, $start, $end);
+
+            foreach ($ranges as $range) {
+                // paid a bill in this range?
+                $journals = $this->getJournalsInRange($bill, $range['start'], $range['end']);
+                if ($journals->count() == 0) {
+                    $unpaid->push([$bill, $range['start']]);
+                } else {
+                    $paid = $paid->merge($journals);
+                }
+
+            }
+        }
+        $set = new Collection;
+        $set->put('paid', $paid);
+        $set->put('unpaid', $unpaid);
+
+        return $set;
+    }
+
+    /**
+     * Takes the paid/unpaid bills collection set up before and expands it using
+     * credit cards the user might have.
+     *
+     * @param Collection $set
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getCreditCardInfoForChart(Collection $set, Carbon $start, Carbon $end)
+    {
+
+        $accounts    = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $creditCards = $accounts->getCreditCards();
+        $paid        = $set->get('paid');
+        $unpaid      = $set->get('unpaid');
+
+        foreach ($creditCards as $creditCard) {
+            $balance = Steam::balance($creditCard, $end, true);
+            $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
+            if ($balance < 0) {
+                // unpaid! create a fake bill that matches the amount.
+                $description = $creditCard->name;
+                $amount      = $balance * -1;
+                $fakeBill    = $this->createFakeBill($description, $date, $amount);
+                unset($description, $amount);
+                $unpaid->push([$fakeBill, $date]);
+            }
+            if ($balance == 0) {
+                // find transfer(s) TO the credit card which should account for
+                // anything paid. If not, the CC is not yet used.
+                $journals = $accounts->getTransfersInRange($creditCard, $start, $end);
+                $paid     = $paid->merge($journals);
+            }
+        }
+        $set = new Collection;
+        $set->put('paid', $paid);
+        $set->put('unpaid', $unpaid);
+
+        return $set;
     }
 }

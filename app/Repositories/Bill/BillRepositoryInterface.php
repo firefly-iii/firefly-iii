@@ -16,6 +16,29 @@ interface BillRepositoryInterface
 {
 
     /**
+     * Takes the paid/unpaid bills collection set up before and expands it using
+     * credit cards the user might have.
+     *
+     * @param Collection $set
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getCreditCardInfoForChart(Collection $set, Carbon $start, Carbon $end);
+
+    /**
+     * Gets a collection of paid bills and a collection of unpaid bills to be used
+     * in the pie chart on the front page.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBillsForChart(Carbon $start, Carbon $end);
+
+    /**
      * Returns the sum of all payments connected to this bill between the dates.
      *
      * @param Bill   $bill

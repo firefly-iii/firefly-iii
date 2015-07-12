@@ -3,7 +3,6 @@
 
 namespace FireflyIII\Http\Middleware;
 
-use App;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
@@ -65,7 +64,7 @@ class Range
             }
             if (!Session::has('first')) {
                 /** @var \FireflyIII\Repositories\Journal\JournalRepositoryInterface $repository */
-                $repository = App::make('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+                $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
                 $journal    = $repository->first();
                 if ($journal) {
                     Session::put('first', $journal->date);

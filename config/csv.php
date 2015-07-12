@@ -10,6 +10,7 @@ return [
         'Currency',
         'Bill',
         'OpposingAccount', // must be after Amount!
+        'AssetAccount',
 
     ],
     'roles'           => [
@@ -131,21 +132,21 @@ return [
             'name'      => 'Asset account ID (matching Firefly)',
             'mappable'  => true,
             'mapper'    => 'AssetAccount',
-            'field'     => 'asset-account',
+            'field'     => 'asset-account-id',
             'converter' => 'AccountId'
         ],
         'account-name'      => [
             'name'      => 'Asset account name',
             'mappable'  => true,
             'mapper'    => 'AssetAccount',
-            'field'     => 'asset-account',
+            'field'     => 'asset-account-name',
             'converter' => 'AssetAccountName'
         ],
         'account-iban'      => [
             'name'      => 'Asset account IBAN',
             'mappable'  => true,
             'converter' => 'AssetAccountIban',
-            'field'     => 'asset-account',
+            'field'     => 'asset-account-iban',
             'mapper'    => 'AssetAccount'
         ],
         'opposing-id'       => [

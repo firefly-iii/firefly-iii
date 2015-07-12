@@ -35,10 +35,18 @@ class Amount
      */
     public function getCurrencySymbol()
     {
-        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
-        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        $cache = new CacheProperties;
+        $cache->addProperty('getCurrencySymbol');
+        if ($cache->has()) {
+            return $cache->get();
+        } else {
+            $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
 
-        return $currency->symbol;
+            $cache->store($currency->symbol);
+
+            return $currency->symbol;
+        }
     }
 
     /**
@@ -142,15 +150,24 @@ class Amount
     public function getCurrencyCode()
     {
 
-        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+        $cache = new CacheProperties;
+        $cache->addProperty('getCurrencyCode');
+        if ($cache->has()) {
+            return $cache->get();
+        } else {
+            $currencyPreference = Prefs::get('currencyPreference', 'EUR');
 
-        $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
-        if ($currency) {
+            $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
+            if ($currency) {
 
-            return $currency->code;
+                $cache->store($currency->code);
+
+                return $currency->code;
+            }
+            $cache->store('EUR');
+
+            return 'EUR'; // @codeCoverageIgnore
         }
-
-        return 'EUR'; // @codeCoverageIgnore
     }
 
     /**
@@ -158,8 +175,14 @@ class Amount
      */
     public function getDefaultCurrency()
     {
+        $cache = new CacheProperties;
+        $cache->addProperty('getDefaultCurrency');
+        if ($cache->has()) {
+            return $cache->get();
+        }
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        $cache->store($currency);
 
         return $currency;
     }

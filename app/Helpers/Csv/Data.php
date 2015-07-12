@@ -25,16 +25,19 @@ class Data
     protected $hasHeaders;
 
     /** @var  array */
-    protected $map;
+    protected $map = [];
     /** @var  array */
-    protected $mapped;
+    protected $mapped = [];
     /** @var  Reader */
     protected $reader;
     /** @var  array */
-    protected $roles;
+    protected $roles = [];
 
     /** @var  array */
-    protected $specifix;
+    protected $specifix = [];
+
+    /** @var int */
+    protected $importAccount = 0;
 
     /**
      *
@@ -48,12 +51,20 @@ class Data
         $this->sessionRoles();
         $this->sessionMapped();
         $this->sessionSpecifix();
+        $this->sessionImportAccount();
     }
 
     protected function sessionHasHeaders()
     {
         if (Session::has('csv-has-headers')) {
             $this->hasHeaders = (bool)Session::get('csv-has-headers');
+        }
+    }
+
+    protected function sessionImportAccount()
+    {
+        if (Session::has('csv-import-account')) {
+            $this->importAccount = intval(Session::get('csv-import-account'));
         }
     }
 
@@ -114,6 +125,15 @@ class Data
     {
         Session::put('csv-date-format', $dateFormat);
         $this->dateFormat = $dateFormat;
+    }
+
+    /**
+     * @param int $importAccount
+     */
+    public function setImportAccount($importAccount)
+    {
+        Session::put('csv-import-account', $importAccount);
+        $this->importAccount = $importAccount;
     }
 
     /**
@@ -247,7 +267,7 @@ class Data
      */
     public function getSpecifix()
     {
-        return $this->specifix;
+        return is_array($this->specifix) ? $this->specifix : [];
     }
 
     /**

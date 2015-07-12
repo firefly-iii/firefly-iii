@@ -1,7 +1,6 @@
 <?php
 namespace FireflyIII\Helpers\Csv;
 
-use App;
 use Auth;
 use Config;
 use Crypt;
@@ -10,7 +9,7 @@ use FireflyIII\Helpers\Csv\Mapper\MapperInterface;
 use League\Csv\Reader;
 use ReflectionException;
 use Session;
-
+use Log;
 /**
  * Class Wizard
  *
@@ -45,9 +44,7 @@ class Wizard implements WizardInterface
         /*
          * Make each one unique.
          */
-        foreach ($values as $column => $found) {
-            $values[$column] = array_unique($found);
-        }
+        $values = $this->uniqueRecursive($values);
 
         return $values;
     }
@@ -112,6 +109,7 @@ class Wizard implements WizardInterface
     {
         foreach ($fields as $field) {
             if (!Session::has($field)) {
+                Log::error('Session is missing field: ' . $field);
                 return false;
             }
         }
@@ -137,7 +135,7 @@ class Wizard implements WizardInterface
             $class = 'FireflyIII\Helpers\Csv\Mapper\\' . $mapper;
             try {
                 /** @var MapperInterface $mapObject */
-                $mapObject = App::make($class);
+                $mapObject = app($class);
             } catch (ReflectionException $e) {
                 throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because class ' . $mapper . ' does not exist.');
             }
@@ -176,5 +174,19 @@ class Wizard implements WizardInterface
     protected function useRow($hasHeaders, $index)
     {
         return ($hasHeaders && $index > 1) || !$hasHeaders;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    protected function uniqueRecursive(array $array)
+    {
+        foreach ($array as $column => $found) {
+            $array[$column] = array_unique($found);
+        }
+
+        return $array;
     }
 }

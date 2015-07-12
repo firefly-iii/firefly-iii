@@ -7,23 +7,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class PiggyBank
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer                                                                                $id
- * @property \Carbon\Carbon                                                                         $created_at
- * @property \Carbon\Carbon                                                                         $updated_at
- * @property \Carbon\Carbon                                                                         $deleted_at
- * @property integer                                                                                $account_id
- * @property string                                                                                 $name
- * @property float                                                                                  $targetamount
- * @property string                                                                                 $targetamount_encrypted
- * @property \Carbon\Carbon                                                                         $startdate
- * @property \Carbon\Carbon                                                                         $targetdate
- * @property integer                                                                                $order
- * @property boolean                                                                                $encrypted
- * @property-read \FireflyIII\Models\Account                                                        $account
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]      $piggyBankEvents
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property \Carbon\Carbon $deleted_at 
+ * @property integer $account_id 
+ * @property string $name 
+ * @property float $targetamount 
+ * @property \Carbon\Carbon $startdate 
+ * @property \Carbon\Carbon $targetdate 
+ * @property integer $order 
+ * @property boolean $encrypted 
+ * @property boolean $remind_me 
+ * @property integer $reminder_skip 
+ * @property-read \FireflyIII\Models\Account $account 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankRepetition[] $piggyBankRepetitions 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents 
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereUpdatedAt($value)
@@ -31,18 +31,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereAccountId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetamount($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetamountEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereStartdate($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetdate($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereOrder($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
- * @property PiggyBankRepetition                                                                    currentRep
- * @property string                                                                                 $reminder
- * @property integer                                                                                $reminder_skip
- * @property boolean                                                                                $remind_me
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminderSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereRemindMe($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminderSkip($value)
+ * @property-read \FireflyIII\Models\PiggyBankRepetition $currentRep
  */
 class PiggyBank extends Model
 {

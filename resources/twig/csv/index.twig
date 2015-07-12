@@ -61,7 +61,11 @@
 
                         {{ ExpandedForm.file('csv_config',{helpText: 'csv_csv_config_file_help'|_}) }}
 
+                        {{ ExpandedForm.select('csv_import_account', accounts, 0, {helpText: 'csv_import_account_help'|_} ) }}
+
                         {{ ExpandedForm.multiCheckbox('specifix', specifix) }}
+
+
 
                         {% if not uploadPossible %}
                             <div class="form-group" id="csv_holder">

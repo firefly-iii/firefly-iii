@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use App;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -29,7 +28,7 @@ class PiggyBankController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = App::make('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator');
     }
 
     /**

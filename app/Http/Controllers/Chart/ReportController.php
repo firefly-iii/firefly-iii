@@ -3,7 +3,6 @@
 namespace FireflyIII\Http\Controllers\Chart;
 
 
-use App;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -29,7 +28,7 @@ class ReportController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = App::make('FireflyIII\Generator\Chart\Report\ReportChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGenerator');
     }
 
 

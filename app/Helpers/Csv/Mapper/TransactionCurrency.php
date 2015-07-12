@@ -25,7 +25,7 @@ class TransactionCurrency implements MapperInterface
 
         asort($list);
 
-        array_unshift($list, trans('firefly.csv_do_not_map'));
+        $list = [0 => trans('firefly.csv_do_not_map')] + $list;
 
         return $list;
     }

@@ -62,9 +62,16 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getActiveBudgets()
     {
-        $budgets = Auth::user()->budgets()->where('active', 1)->get();
+        /** @var Collection $set */
+        $set = Auth::user()->budgets()->where('active', 1)->get();
 
-        return $budgets;
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        return $set;
     }
 
     /**
@@ -100,9 +107,16 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getBudgets()
     {
-        $budgets = Auth::user()->budgets()->get();
+        /** @var Collection $set */
+        $set = Auth::user()->budgets()->get();
 
-        return $budgets;
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        return $set;
     }
 
     /**
@@ -146,7 +160,16 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getInactiveBudgets()
     {
-        return Auth::user()->budgets()->where('active', 0)->get();
+        /** @var Collection $set */
+        $set = Auth::user()->budgets()->where('active', 0)->get();
+
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        return $set;
     }
 
     /**

@@ -112,7 +112,7 @@ class TagRepository implements TagRepositoryInterface
         $tags = Auth::user()->tags()->get();
         $tags = $tags->sortBy(
             function (Tag $tag) {
-                return $tag->tag;
+                return strtolower($tag->tag);
             }
         );
 

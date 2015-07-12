@@ -2,12 +2,13 @@
 
 namespace FireflyIII\Http\Controllers;
 
-use App;
 use Config;
+use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
 use FireflyIII\Helpers\Csv\Importer;
 use FireflyIII\Helpers\Csv\WizardInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use Input;
 use Log;
@@ -41,8 +42,8 @@ class CsvController extends Controller
             throw new FireflyException('CSV Import is not enabled.');
         }
 
-        $this->wizard = App::make('FireflyIII\Helpers\Csv\WizardInterface');
-        $this->data   = App::make('FireflyIII\Helpers\Csv\Data');
+        $this->wizard = app('FireflyIII\Helpers\Csv\WizardInterface');
+        $this->data   = app('FireflyIII\Helpers\Csv\Data');
 
     }
 
@@ -56,7 +57,7 @@ class CsvController extends Controller
     public function columnRoles()
     {
 
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -103,7 +104,7 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
         $data = [
-            'date-format' => Session::get('date-format'),
+            'date-format' => Session::get('csv-date-format'),
             'has-headers' => Session::get('csv-has-headers')
         ];
         if (Session::has('csv-map')) {
@@ -114,6 +115,10 @@ class CsvController extends Controller
         }
         if (Session::has('csv-mapped')) {
             $data['mapped'] = Session::get('csv-mapped');
+        }
+
+        if (Session::has('csv-specifix')) {
+            $data['specifix'] = Session::get('csv-specifix');
         }
 
         $result = json_encode($data, JSON_PRETTY_PRINT);
@@ -143,13 +148,14 @@ class CsvController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(AccountRepositoryInterface $repository)
     {
         $subTitle = trans('firefly.csv_import');
 
         Session::forget('csv-date-format');
         Session::forget('csv-has-headers');
         Session::forget('csv-file');
+        Session::forget('csv-import-account');
         Session::forget('csv-map');
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
@@ -161,11 +167,14 @@ class CsvController extends Controller
             $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
         }
 
+        // get a list of asset accounts:
+        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
+
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts'));
     }
 
     /**
@@ -297,12 +306,13 @@ class CsvController extends Controller
         $rows     = $importer->getRows();
         $errors   = $importer->getErrors();
         $imported = $importer->getImported();
+        $journals = $importer->getJournals();
 
         Preferences::mark();
 
         $subTitle = trans('firefly.csv_process_title');
 
-        return view('csv.process', compact('rows', 'errors', 'imported', 'subTitle'));
+        return view('csv.process', compact('rows', 'errors', 'imported', 'subTitle', 'journals'));
 
     }
 
@@ -367,19 +377,17 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
 
-        $fullPath                = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
-        $settings                = [];
-        $settings['date-format'] = Input::get('date_format');
-        $settings['has-headers'] = intval(Input::get('has_headers')) === 1;
-        $settings['specifix']    = Input::get('specifix');
-        $settings['map']         = [];
-        $settings['mapped']      = [];
-        $settings['roles']       = [];
+        $fullPath                   = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
+        $settings                   = [];
+        $settings['date-format']    = Input::get('date_format');
+        $settings['has-headers']    = intval(Input::get('has_headers')) === 1;
+        $settings['specifix']       = Input::get('specifix');
+        $settings['import-account'] = intval(Input::get('csv_import_account'));
+        $settings['map']            = [];
+        $settings['mapped']         = [];
+        $settings['roles']          = [];
 
-        /*
-         * Process config file if present.
-         */
-        if ($request->hasFile('csv_config')) {
+        if ($request->hasFile('csv_config')) { // Process config file if present.
             $data = file_get_contents($request->file('csv_config')->getRealPath());
             $json = json_decode($data, true);
             if (is_array($json)) {
@@ -394,6 +402,7 @@ class CsvController extends Controller
         $this->data->setMapped($settings['mapped']);
         $this->data->setRoles($settings['roles']);
         $this->data->setSpecifix($settings['specifix']);
+        $this->data->setImportAccount($settings['import-account']);
 
         return redirect(route('csv.column-roles'));
 
