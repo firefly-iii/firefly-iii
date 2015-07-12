@@ -241,6 +241,16 @@
 
 {% endblock %}
 {% block scripts %}
+    <!-- show tour? -->
+    <script type="text/javascript">
+        {% if showTour %}
+        var showTour = true;
+        {% else %}
+        var showTour = false;
+        {% endif %}
+    </script>
+
+
     <!-- load the libraries and scripts necessary for Google Charts: -->
     {% if Config.get('firefly.chart') == 'google' %}
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>

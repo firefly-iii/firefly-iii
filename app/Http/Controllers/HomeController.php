@@ -6,12 +6,12 @@ use Config;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
+use Log;
 use Preferences;
 use Route;
 use Session;
 use Steam;
 
-use Log;
 /**
  * Class HomeController
  *
@@ -84,6 +84,7 @@ class HomeController extends Controller
         $frontPage     = Preferences::get('frontPageAccounts', []);
         $start         = Session::get('start', Carbon::now()->startOfMonth());
         $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $showTour      = Preferences::get('tour', true)->data;
 
         $accounts = $repository->getFrontpageAccounts($frontPage);
         $savings  = $repository->getSavingsAccounts();
@@ -114,7 +115,9 @@ class HomeController extends Controller
             }
         }
 
-        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts'));
+        return view(
+            'index', compact('count', 'showTour', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts')
+        );
     }
 
     /**
