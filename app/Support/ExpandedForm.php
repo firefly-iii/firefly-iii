@@ -9,7 +9,6 @@ use Illuminate\Support\MessageBag;
 use Input;
 use RuntimeException;
 use Session;
-use View;
 
 /**
  * Class ExpandedForm
@@ -40,7 +39,7 @@ class ExpandedForm
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);
         unset($options['placeholder']);
-        $html = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        $html = view('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -144,7 +143,7 @@ class ExpandedForm
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);
         unset($options['placeholder']);
-        $html = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        $html = view('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -167,7 +166,7 @@ class ExpandedForm
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
-        $html = View::make('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html = view('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -186,7 +185,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
         unset($options['placeholder']);
-        $html = View::make('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html = view('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -205,7 +204,7 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = '1';
-        $html            = View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html            = view('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -224,7 +223,7 @@ class ExpandedForm
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
-        $html    = View::make('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html    = view('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -278,7 +277,7 @@ class ExpandedForm
         $selected = $this->fillFieldValue($name, $selected);
 
         unset($options['class']);
-        $html = View::make('form.multiCheckbox', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        $html = view('form.multiCheckbox', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
     }
@@ -299,7 +298,7 @@ class ExpandedForm
         $selected = $this->fillFieldValue($name, $selected);
 
         unset($options['class']);
-        $html = View::make('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        $html = view('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
     }
@@ -323,7 +322,7 @@ class ExpandedForm
         // @codeCoverageIgnoreEnd
 
         $previousValue = is_null($previousValue) ? 'store' : $previousValue;
-        $html          = View::make('form.options', compact('type', 'name', 'previousValue'))->render();
+        $html          = view('form.options', compact('type', 'name', 'previousValue'))->render();
 
         return $html;
     }
@@ -344,7 +343,7 @@ class ExpandedForm
         $selected = $this->fillFieldValue($name, $selected);
         unset($options['autocomplete']);
         unset($options['placeholder']);
-        $html = View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
     }
@@ -363,7 +362,7 @@ class ExpandedForm
         $classes              = $this->getHolderClasses($name);
         $value                = $this->fillFieldValue($name, $value);
         $options['data-role'] = 'tagsinput';
-        $html                 = View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html                 = view('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -379,7 +378,7 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $html    = View::make('form.file', compact('classes', 'name', 'label', 'options'))->render();
+        $html    = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
 
         return $html;
 
@@ -398,7 +397,7 @@ class ExpandedForm
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
-        $html    = View::make('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html    = view('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -418,7 +417,7 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
-        $html            = View::make('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html            = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 

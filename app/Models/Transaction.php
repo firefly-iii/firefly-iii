@@ -30,8 +30,8 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmount($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction after($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction before($date)
- * @property-read float $before
- * @property-read float $after
+ * @property float $before
+ * @property float $after
  */
 class Transaction extends Model
 {
