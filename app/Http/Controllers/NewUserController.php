@@ -53,6 +53,7 @@ class NewUserController extends Controller
         // create normal asset account:
         $assetAccount = [
             'name'                   => $request->get('bank_name'),
+			'iban'					 => null,
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
             'active'                 => true,
@@ -69,6 +70,7 @@ class NewUserController extends Controller
         if (strlen($request->get('savings_balance') > 0)) {
             $savingsAccount = [
                 'name'                   => $request->get('bank_name') . ' savings account',
+				'iban'					 => null,
                 'accountType'            => 'asset',
                 'virtualBalance'         => 0,
                 'active'                 => true,
@@ -86,6 +88,7 @@ class NewUserController extends Controller
         if (strlen($request->get('credit_card_limit') > 0)) {
             $creditAccount = [
                 'name'                   => 'Credit card',
+				'iban'					 => null,
                 'accountType'            => 'asset',
                 'virtualBalance'         => floatval($request->get('credit_card_limit')),
                 'active'                 => true,
