@@ -4,22 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Session Driver
-    |--------------------------------------------------------------------------
-    |
-    | This option controls the default session "driver" that will be used on
-    | requests. By default, we will use the lightweight native driver but
-    | you may specify any of the other wonderful drivers provided here.
-    |
-    | Supported: "file", "cookie", "database", "apc",
-    |            "memcached", "redis", "array"
-    |
-    */
-
-    'driver'          => env('SESSION_DRIVER', 'file'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Session Lifetime
     |--------------------------------------------------------------------------
     |
@@ -33,18 +17,6 @@ return [
 
     'expire_on_close' => false,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Session Encryption
-    |--------------------------------------------------------------------------
-    |
-    | This option allows you to easily specify that all of your session data
-    | should be encrypted before it is stored. All encryption will be run
-    | automatically by Laravel and you can use the Session like normal.
-    |
-    */
-
-    'encrypt'         => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -59,18 +31,6 @@ return [
 
     'files'           => storage_path() . '/framework/sessions',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Session Database Connection
-    |--------------------------------------------------------------------------
-    |
-    | When using the "database" or "redis" session drivers, you may specify a
-    | connection that should be used to manage these sessions. This should
-    | correspond to a connection in your database configuration options.
-    |
-    */
-
-    'connection'      => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -98,18 +58,13 @@ return [
 
     'lottery'         => [2, 100],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Session Cookie Name
-    |--------------------------------------------------------------------------
-    |
-    | Here you may change the name of the cookie used to identify a session
-    | instance by ID. The name specified here will get used every time a
-    | new session cookie is created by the framework for every driver.
-    |
-    */
+    'driver'          => env('SESSION_DRIVER', 'database'),
+    'cookie'          => 'firefly_session',
 
-    'cookie'          => 'laravel_session',
+    'connection'      => env('DB_CONNECTION', 'mysql'),
+
+
+    'encrypt'         => true,
 
     /*
     |--------------------------------------------------------------------------
