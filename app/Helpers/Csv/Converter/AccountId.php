@@ -29,7 +29,7 @@ class AccountId extends BasicConverter implements ConverterInterface
             $account = Auth::user()->accounts()->find($this->value);
 
             if (!is_null($account)) {
-                Log::debug('Found ' . $account->accountType->type . ' named "******" with ID: ' . $this->value.' (not mapped) ');
+                Log::debug('Found ' . $account->accountType->type . ' named "******" with ID: ' . $this->value . ' (not mapped) ');
             }
         }
 

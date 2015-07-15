@@ -7,23 +7,23 @@ use Illuminate\Database\Eloquent\Model;
  * Class Bill
  *
  * @package FireflyIII\Models
- * @property integer $id 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property integer $user_id 
- * @property string $name 
- * @property string $match 
- * @property float $amount_min 
- * @property float $amount_max 
- * @property \Carbon\Carbon $date 
- * @property boolean $active 
- * @property boolean $automatch 
- * @property string $repeat_freq 
- * @property integer $skip 
- * @property boolean $name_encrypted 
- * @property boolean $match_encrypted 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals 
- * @property-read \FireflyIII\User $user 
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property integer                                                                               $user_id
+ * @property string                                                                                $name
+ * @property string                                                                                $match
+ * @property float                                                                                 $amount_min
+ * @property float                                                                                 $amount_max
+ * @property \Carbon\Carbon                                                                        $date
+ * @property boolean                                                                               $active
+ * @property boolean                                                                               $automatch
+ * @property string                                                                                $repeat_freq
+ * @property integer                                                                               $skip
+ * @property boolean                                                                               $name_encrypted
+ * @property boolean                                                                               $match_encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                                                 $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
@@ -39,8 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
- * @property-read \Carbon\Carbon $nextExpectedMatch
- * @property-read \Carbon\Carbon $lastFoundMatch
+ * @property-read \Carbon\Carbon                                                                   $nextExpectedMatch
+ * @property-read \Carbon\Carbon                                                                   $lastFoundMatch
  */
 class Bill extends Model
 {
