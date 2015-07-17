@@ -260,6 +260,12 @@ class TransactionController extends Controller
     {
 
         $journalData = $request->getJournalData();
+
+        // if not withdrawal, unset budgetid.
+        if($journalData['what'] != 'withdrawal') {
+            $journalData['budget_id'] = 0;
+        }
+
         $journal     = $repository->store($journalData);
 
         // rescan journal, UpdateJournalConnection
