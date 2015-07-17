@@ -51,6 +51,7 @@ return [
     'date_format'                 => 'Datumformaat',
     'csv_config'                  => 'Configuratiebestand',
     'specifix'                    => 'Bank- or of bestandsspecifieke opties',
+    'attachments'                 => 'Bijlagen',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

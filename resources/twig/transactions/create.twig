@@ -71,6 +71,10 @@
 
                     <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                     {{ ExpandedForm.select('piggy_bank_id',piggies) }}
+
+                    <!-- ATTACHMENTS -->
+                    {{ ExpandedForm.file('attachments', {'multiple': 'multiple'}) }}
+
                 </div>
 
             </div>
