@@ -64,7 +64,7 @@ class Tag extends Model
         // everything but the tag:
         unset($fields['tagMode']);
         $search = $fields;
-        unset($search['name']);
+        unset($search['tag']);
 
         $query = Tag::orderBy('id');
         foreach ($search as $name => $value) {
