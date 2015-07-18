@@ -20,7 +20,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     // move to config:
     protected $maxUploadSize = 1048576; // 1MB per file
-    protected $allowedMimes  = ['image/png'];
+    protected $allowedMimes  = ['image/png','image/jpeg','application/pdf'];
 
     public $errors;
     public $messages;
