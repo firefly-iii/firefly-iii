@@ -18,12 +18,14 @@ return [
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
+    'nr_of_attachments'                => 'One attachment|:count attachments',
+    'attachments'                      => 'Attachments',
 
     // tour:
-    'prev' => 'Prev',
-    'next' => 'Next',
-    'end-tour' => 'End tour',
-    'pause' => 'Pause',
+    'prev'                             => 'Prev',
+    'next'                             => 'Next',
+    'end-tour'                         => 'End tour',
+    'pause'                            => 'Pause',
 
     // transaction index
     'title_expenses'                   => 'Expenses',

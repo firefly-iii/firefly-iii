@@ -18,6 +18,8 @@ return [
     'showEverything'                   => 'Laat alles zien',
     'never'                            => 'Nooit',
     'search_results_for'               => 'Zoekresultaten voor ":query"',
+    'nr_of_attachments'                => 'Eén bijlage|:count bijlagen',
+    'attachments'                      => 'Bijlagen',
 
     // tour:
     'prev'                             => 'Vorige',
