@@ -6,6 +6,8 @@ return [
     'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'csv_import_enabled'       => true,
+    'maxUploadSize'            => 5242880,
+    'allowedMimes'             => ['image/png', 'image/jpeg', 'application/pdf'],
     'piggy_bank_periods'       => [
         'week'    => 'Week',
         'month'   => 'Month',

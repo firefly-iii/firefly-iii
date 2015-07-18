@@ -3,6 +3,7 @@
 namespace FireflyIII\Helpers\Attachments;
 
 use Auth;
+use Config;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
@@ -18,11 +19,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class AttachmentHelper implements AttachmentHelperInterface
 {
 
-    // move to config:
-    protected $maxUploadSize = 1048576; // 1MB per file
-    protected $allowedMimes  = ['image/png', 'image/jpeg', 'application/pdf'];
-
+    /** @var int */
+    protected $maxUploadSize;
+    /** @var array */
+    protected $allowedMimes;
+    /** @var MessageBag */
     public $errors;
+    /** @var MessageBag */
     public $messages;
 
     /**
@@ -30,14 +33,16 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function __construct()
     {
-        $this->errors   = new MessageBag;
-        $this->messages = new MessageBag;
+        $this->maxUploadSize = Config::get('firefly.maxUploadSize');
+        $this->allowedMimes  = Config::get('firefly.allowedMimes');
+        $this->errors        = new MessageBag;
+        $this->messages      = new MessageBag;
     }
 
     /**
      * @param Attachment $attachment
      *
-     * @return mixed
+     * @return string
      */
     public function getAttachmentLocation(Attachment $attachment)
     {
@@ -78,8 +83,8 @@ class AttachmentHelper implements AttachmentHelperInterface
         $count = Auth::user()->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
 
         if ($count > 0) {
-            $err = 'File ' . e($name) . ' already attached to this object.';
-            $this->errors->add('attachments', $err);
+            $msg = trans('validation.file_already_attached', ['name' => $name]);
+            $this->errors->add('attachments', $msg);
 
             return true;
         }
@@ -89,8 +94,11 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * @param UploadedFile $file
+     * @param Model        $model
+     *
+     * @return bool
      */
-    protected function processFile(UploadedFile $file, Model $model)
+    protected function validateUpload(UploadedFile $file, Model $model)
     {
         if (!$this->validMime($file)) {
             return false;
@@ -102,8 +110,23 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
         }
 
-        // create Attachment object.
-        $attachment = new Attachment;
+        return true;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param Model        $model
+     *
+     * @return bool|Attachment
+     */
+    protected function processFile(UploadedFile $file, Model $model)
+    {
+        $validation = $this->validateUpload($file, $model);
+        if ($validation === false) {
+            return false;
+        }
+
+        $attachment = new Attachment; // create Attachment object.
         $attachment->user()->associate(Auth::user());
         $attachment->attachable()->associate($model);
         $attachment->md5      = md5_file($file->getRealPath());
@@ -113,23 +136,22 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->uploaded = 0;
         $attachment->save();
 
-        // encrypt and move file to storage.
-        $path      = $file->getRealPath();
+        $path      = $file->getRealPath(); // encrypt and move file to storage.
         $content   = file_get_contents($path);
         $encrypted = Crypt::encrypt($content);
 
         // store it:
-        $upload = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
+        $upload = $this->getAttachmentLocation($attachment);
         if (is_writable(dirname($upload))) {
             file_put_contents($upload, $encrypted);
         }
 
-        // update Attacment.
-        $attachment->uploaded = 1;
+        $attachment->uploaded = 1; // update attachment
         $attachment->save();
 
-        // add message:
-        $this->messages->add('attachments', 'File ' . e($file->getClientOriginalName()) . ' was uploaded successfully.');
+        $name = e($file->getClientOriginalName()); // add message:
+        $msg  = trans('validation.file_attached', ['name' => $name]);
+        $this->messages->add('attachments', $msg);
 
         // return it.
         return $attachment;
@@ -144,12 +166,12 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validMime(UploadedFile $file)
     {
-        $mime = $file->getMimeType();
-        $name = $file->getClientOriginalName();
+        $mime = e($file->getMimeType());
+        $name = e($file->getClientOriginalName());
 
         if (!in_array($mime, $this->allowedMimes)) {
-            $err = 'File ' . e($name) . ' is of type ' . e($mime) . '.';
-            $this->errors->add('attachments', $err);
+            $msg = trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
+            $this->errors->add('attachments', $msg);
 
             return false;
         }
@@ -165,11 +187,10 @@ class AttachmentHelper implements AttachmentHelperInterface
     protected function validSize(UploadedFile $file)
     {
         $size = $file->getSize();
-        $name = $file->getClientOriginalName();
+        $name = e($file->getClientOriginalName());
         if ($size > $this->maxUploadSize) {
-
-            $err = 'File ' . e($name) . ' is too large.';
-            $this->errors->add('attachments', $err);
+            $msg = trans('validation.file_too_large', ['name' => $name]);
+            $this->errors->add('attachments', $msg);
 
             return false;
         }
