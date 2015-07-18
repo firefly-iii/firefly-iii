@@ -468,6 +468,14 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function attachments()
+    {
+        return $this->morphMany('App\Models\Attachment', 'attachable');
+    }
+
+    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
