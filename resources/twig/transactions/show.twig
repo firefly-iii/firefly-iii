@@ -89,7 +89,7 @@
                                 </td>
                                 <td>
                                     <i class="fa fa-file-pdf-o"></i>
-                                    <a href="#">{{ att.filename }}</a>
+                                    <a href="{{ route('attachment.download', att.id) }}">{{ att.filename }}</a>
                                     ({{ att.size|filesize }})
                                 </td>
                             </tr>

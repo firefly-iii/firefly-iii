@@ -1,5 +1,6 @@
 <?php
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -33,6 +34,19 @@ Route::bind(
     'tj', function ($value) {
     if (Auth::check()) {
         $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
+    }
+
+    throw new NotFoundHttpException;
+}
+);
+
+Route::bind(
+    'attachment', function ($value) {
+    if (Auth::check()) {
+        $object = Attachment::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
             return $object;
         }
@@ -176,6 +190,12 @@ Route::group(
     Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
     Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
     Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+
+    /**
+     * Attachment Controller
+     */
+    Route::get('/attachment/{attachment}/download', ['uses' => 'AttachmentController@download', 'as' => 'attachment.download']);
+
 
     /**
      * Bills Controller

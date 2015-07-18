@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Helpers\Attachments;
 
+use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
 
@@ -29,5 +30,12 @@ interface AttachmentHelperInterface
      * @return MessageBag
      */
     public function getMessages();
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return mixed
+     */
+    public function getAttachmentLocation(Attachment $attachment);
 
 }

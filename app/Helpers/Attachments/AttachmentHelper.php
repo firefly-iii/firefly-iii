@@ -20,7 +20,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     // move to config:
     protected $maxUploadSize = 1048576; // 1MB per file
-    protected $allowedMimes  = ['image/png','image/jpeg','application/pdf'];
+    protected $allowedMimes  = ['image/png', 'image/jpeg', 'application/pdf'];
 
     public $errors;
     public $messages;
@@ -32,6 +32,18 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $this->errors   = new MessageBag;
         $this->messages = new MessageBag;
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return mixed
+     */
+    public function getAttachmentLocation(Attachment $attachment)
+    {
+        $path = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
+
+        return $path;
     }
 
     /**
