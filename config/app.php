@@ -147,8 +147,8 @@ return [
          * Application Service Providers...
          */
         'FireflyIII\Providers\AppServiceProvider',
-        //'FireflyIII\Providers\BusServiceProvider',
-        //'FireflyIII\Providers\ConfigServiceProvider',
+        'FireflyIII\Providers\BusServiceProvider',
+        'FireflyIII\Providers\ConfigServiceProvider',
         'FireflyIII\Providers\EventServiceProvider',
         'FireflyIII\Providers\RouteServiceProvider',
         'FireflyIII\Providers\FireflyServiceProvider',
