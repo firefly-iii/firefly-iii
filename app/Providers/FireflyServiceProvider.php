@@ -93,6 +93,9 @@ class FireflyServiceProvider extends ServiceProvider
         // CSV import
         $this->app->bind('FireflyIII\Helpers\Csv\WizardInterface', 'FireflyIII\Helpers\Csv\Wizard');
 
+        // attachments
+        $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
+
         // make charts:
         // alternative is Google instead of ChartJs
         $this->app->bind('FireflyIII\Generator\Chart\Account\AccountChartGenerator', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator');

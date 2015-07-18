@@ -6,6 +6,7 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -256,21 +257,37 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
+    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
     {
 
         $journalData = $request->getJournalData();
 
         // if not withdrawal, unset budgetid.
-        if($journalData['what'] != 'withdrawal') {
+        if ($journalData['what'] != 'withdrawal') {
             $journalData['budget_id'] = 0;
         }
 
-        $journal     = $repository->store($journalData);
+        $journal = $repository->store($journalData);
+
+        // save attachments:
+        $att->saveAttachmentsForModel($journal);
+
+        if ($att->getErrors()->count() > 0) {
+            // todo moet beter
+            Session::flash('error', '<ul>' . join('', $att->getErrors()->get('attachments', '<li>:message</li>')) . '</ul>');
+        }
+        if ($att->getMessages()->count() > 0) {
+            // todo moet beter
+            Session::flash('info', '<ul>' . join('', $att->getMessages()->get('attachments', '<li>:message</li>')) . '</ul>');
+        }
+
+
+        // do something with the messages?
+
 
         // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
-        // ConnectJournalToPiggyBank
+
         if ($journal->transactionType->type == 'Transfer' && intval($request->get('piggy_bank_id')) > 0) {
             event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
         }
