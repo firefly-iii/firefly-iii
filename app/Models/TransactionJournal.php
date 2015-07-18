@@ -472,7 +472,7 @@ class TransactionJournal extends Model
      */
     public function attachments()
     {
-        return $this->morphMany('App\Models\Attachment', 'attachable');
+        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
     }
 
     /**

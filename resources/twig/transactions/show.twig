@@ -74,6 +74,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- attachments -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        {% for att in journal.attachments %}
+                            <tr>
+                                <td>
+                                    <a href="#" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                                </td>
+                                <td>
+                                    <i class="fa fa-file-pdf-o"></i>
+                                    <a href="#">{{ att.filename }}</a>
+                                    ({{ att.size|filesize }})
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
             <!-- events, if present -->
             {% if journal.piggyBankEvents|length > 0 %}
                 <div class="box">

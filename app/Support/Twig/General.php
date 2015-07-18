@@ -35,7 +35,8 @@ class General extends Twig_Extension
             $this->formatAmountPlain(),
             $this->formatJournal(),
             $this->balance(),
-            $this->getAccountRole()
+            $this->getAccountRole(),
+            $this->formatFilesize()
         ];
 
     }
@@ -64,6 +65,27 @@ class General extends Twig_Extension
     public function getName()
     {
         return 'FireflyIII\Support\Twig\General';
+    }
+
+    protected function formatFilesize()
+    {
+        return new Twig_SimpleFilter(
+            'filesize', function ($size) {
+            $size = intval($size);
+
+            // less than one GB, more than one MB
+            if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+                return round($size / (1024 * 1024), 2) . ' MB';
+            }
+
+            // less than one MB
+            if ($size < (1024 * 1024)) {
+                return round($size / 1024, 2) . ' KB';
+            }
+
+            return $size . ' bytes';
+        }
+        );
     }
 
     /**
