@@ -52,7 +52,7 @@ return [
     'csv_config'                  => 'CSV import configuration',
     'specifix'                    => 'Bank- or file specific fixes',
     'csv_import_account'          => 'Default import account',
-    'attachments'                 => 'Attachments',
+    'attachments[]'               => 'Attachments',
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',
     'store_new_transfer'          => 'Store new transfer',
