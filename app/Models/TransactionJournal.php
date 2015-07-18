@@ -68,6 +68,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read int                                                                            $account_id
  * @property-read string                                                                         $name
  * @property-read string                                                                         $symbol
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments 
  */
 class TransactionJournal extends Model
 {
