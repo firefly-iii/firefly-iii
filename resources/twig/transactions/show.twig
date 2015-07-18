@@ -76,6 +76,7 @@
             </div>
 
             <!-- attachments -->
+            {% if journal.attachments|length > 0 %}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'attachments'|_ }}</h3>
@@ -97,6 +98,7 @@
                     </table>
                 </div>
             </div>
+            {% endif %}
 
             <!-- events, if present -->
             {% if journal.piggyBankEvents|length > 0 %}

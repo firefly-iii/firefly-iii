@@ -311,15 +311,28 @@ class TransactionController extends Controller
     /**
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
+     * @param AttachmentHelperInterface  $att
      * @param TransactionJournal         $journal
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
 
         $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);
+
+        // save attachments:
+        $att->saveAttachmentsForModel($journal);
+
+        if ($att->getErrors()->count() > 0) {
+            // todo moet beter
+            Session::flash('error', '<ul>' . join('', $att->getErrors()->get('attachments', '<li>:message</li>')) . '</ul>');
+        }
+        if ($att->getMessages()->count() > 0) {
+            // todo moet beter
+            Session::flash('info', '<ul>' . join('', $att->getMessages()->get('attachments', '<li>:message</li>')) . '</ul>');
+        }
 
         event(new JournalSaved($journal));
         // update, get events by date and sort DESC

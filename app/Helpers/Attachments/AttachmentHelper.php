@@ -54,6 +54,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentsForModel(Model $model)
     {
         $files = Input::file('attachments');
+
         foreach ($files as $entry) {
             if (!is_null($entry)) {
                 $this->processFile($entry, $model);
@@ -71,11 +72,19 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function hasFile(UploadedFile $file, Model $model)
     {
-        $md5   = md5_file($file->getPath());
+        $md5   = md5_file($file->getRealPath());
+        $name  = $file->getClientOriginalName();
         $class = get_class($model);
         $count = Auth::user()->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
 
-        return ($count > 0);
+        if ($count > 0) {
+            $err = 'File ' . e($name) . ' already attached to this object.';
+            $this->errors->add('attachments', $err);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -97,7 +106,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment = new Attachment;
         $attachment->user()->associate(Auth::user());
         $attachment->attachable()->associate($model);
-        $attachment->md5      = md5_file($file->getPath());
+        $attachment->md5      = md5_file($file->getRealPath());
         $attachment->filename = $file->getClientOriginalName();
         $attachment->mime     = $file->getMimeType();
         $attachment->size     = $file->getSize();
@@ -128,6 +137,11 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     }
 
+    /**
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
     protected function validMime(UploadedFile $file)
     {
         $mime = $file->getMimeType();
@@ -143,6 +157,11 @@ class AttachmentHelper implements AttachmentHelperInterface
         return true;
     }
 
+    /**
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
     protected function validSize(UploadedFile $file)
     {
         $size = $file->getSize();
