@@ -27,6 +27,25 @@ class ExpandedForm
      *
      * @return string
      */
+    public function staticText($name, $value, array $options = [])
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
+        $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
     public function amount($name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);

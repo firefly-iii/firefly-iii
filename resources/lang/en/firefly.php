@@ -18,8 +18,12 @@ return [
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
+
+    // attachments
     'nr_of_attachments'                => 'One attachment|:count attachments',
     'attachments'                      => 'Attachments',
+    'edit_attachment'                  => 'Edit attachment ":name"',
+    'update_attachment'                => 'Update attachment',
 
     // tour:
     'prev'                             => 'Prev',

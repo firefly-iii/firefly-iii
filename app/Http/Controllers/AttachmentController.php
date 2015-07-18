@@ -3,9 +3,11 @@
 namespace FireflyIII\Http\Controllers;
 
 
+use Crypt;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
-use Crypt;
+use View;
+
 /**
  * Class AttachmentController
  *
@@ -13,6 +15,30 @@ use Crypt;
  */
 class AttachmentController extends Controller
 {
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        View::share('mainTitleIcon', 'fa-paperclip');
+        View::share('title', trans('firefly.attachments'));
+    }
+
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(Attachment $attachment)
+    {
+        $subTitleIcon = 'fa-pencil';
+        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
+
+        return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
+    }
 
     /**
      * @param Attachment $attachment

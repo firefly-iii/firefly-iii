@@ -61,6 +61,11 @@ return [
     'add_new_transfer'            => 'Add a new transfer',
     'noPiggybank'                 => '(no piggy bank)',
     'noBudget'                    => '(no budget)',
+    'title'                       => 'Title',
+    'notes'                       => 'Notes',
+    'filename'                    => 'File name',
+    'mime'                        => 'Mime type',
+    'size'                        => 'Size',
 
     'delete_account'              => 'Delete account ":name"',
     'delete_bill'                 => 'Delete bill ":name"',
