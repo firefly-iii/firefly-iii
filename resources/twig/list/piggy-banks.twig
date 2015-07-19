@@ -30,11 +30,13 @@
                     <div
                             {% if piggyBank.percentage == 100 %}
                                 class="progress-bar progress-bar-success"
+                            {% elseif piggyBank.percentage == 0 %}
+                                class="progress-bar progress-bar-warning"
                             {% else %}
                                 class="progress-bar progress-bar-info"
                             {% endif %}
                             role="progressbar" aria-valuenow="{{ piggyBank.percentage }}" aria-valuemin="0" aria-valuemax="100"
-                            style="min-width: 40px;width: {{ piggyBank.percentage }}%;">
+                            style="min-width: 30px;width: {{ piggyBank.percentage }}%;">
                         {{ piggyBank.percentage }}%
                     </div>
                 </div>
