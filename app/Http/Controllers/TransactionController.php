@@ -272,18 +272,14 @@ class TransactionController extends Controller
         // save attachments:
         $att->saveAttachmentsForModel($journal);
 
-        if ($att->getErrors()->count() > 0) {
-            // todo moet beter
-            Session::flash('error', '<ul>' . join('', $att->getErrors()->get('attachments', '<li>:message</li>')) . '</ul>');
+        // flash errors
+        if (count($att->getErrors()->get('attachments')) > 0) {
+            Session::flash('error', $att->getErrors()->get('attachments'));
         }
-        if ($att->getMessages()->count() > 0) {
-            // todo moet beter
-            Session::flash('info', '<ul>' . join('', $att->getMessages()->get('attachments', '<li>:message</li>')) . '</ul>');
+        // flash messages
+        if (count($att->getMessages()->get('attachments')) > 0) {
+            Session::flash('info', $att->getMessages()->get('attachments'));
         }
-
-
-        // do something with the messages?
-
 
         // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
@@ -325,13 +321,20 @@ class TransactionController extends Controller
         // save attachments:
         $att->saveAttachmentsForModel($journal);
 
-        if ($att->getErrors()->count() > 0) {
-            // todo moet beter
-            Session::flash('error', '<ul>' . join('', $att->getErrors()->get('attachments', '<li>:message</li>')) . '</ul>');
+        // one error
+        if ($att->getErrors()->count() == 1) {
+            Session::flash('error', join('', $att->getErrors()->get('attachments')));
         }
+
+        if ($att->getErrors()->count() > 1) {
+            // todo moet beter
+            Session::flash('error', '<ul class="list-unstyled">' . join('', $att->getErrors()->get('attachments', '<li>:message</li>')) . '</ul>');
+        }
+
+
         if ($att->getMessages()->count() > 0) {
             // todo moet beter
-            Session::flash('info', '<ul>' . join('', $att->getMessages()->get('attachments', '<li>:message</li>')) . '</ul>');
+            Session::flash('info', '<ul class="list-unstyled">' . join('', $att->getMessages()->get('attachments', '<li>:message</li>')) . '</ul>');
         }
 
         event(new JournalSaved($journal));
