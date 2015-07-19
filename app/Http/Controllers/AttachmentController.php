@@ -11,6 +11,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Input;
 use Preferences;
 use Session;
+use URL;
 use View;
 
 /**
@@ -43,6 +44,41 @@ class AttachmentController extends Controller
         $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return \Illuminate\View\View
+     */
+    public function delete(Attachment $attachment)
+    {
+        $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
+
+        // put previous url in session
+        Session::put('attachment.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'attachments');
+        Session::flash('gaEventAction', 'delete-attachment');
+
+        return view('attachments.delete', compact('attachment', 'subTitle'));
+    }
+
+    /**
+     * @param AttachmentRepositoryInterface $repository
+     * @param Attachment                    $attachment
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(AttachmentRepositoryInterface $repository, Attachment $attachment)
+    {
+        $name = $attachment->filename;
+
+        $repository->destroy($attachment);
+
+        Session::flash('success', trans('firefly.attachment_deleted', ['name' => $name]));
+        Preferences::mark();
+
+        return redirect(Session::get('attachment.delete.url'));
     }
 
     /**
@@ -97,13 +133,13 @@ class AttachmentController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('accounts.edit.fromUpdate', true);
+            Session::put('attachment.edit.fromUpdate', true);
 
             return redirect(route('attachment.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('accounts.edit.url'));
+        return redirect(Session::get('attachment.edit.url'));
 
     }
 

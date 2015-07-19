@@ -24,6 +24,8 @@ return [
     'attachments'                      => 'Attachments',
     'edit_attachment'                  => 'Edit attachment ":name"',
     'update_attachment'                => 'Update attachment',
+    'delete_attachment'                => 'Delete attachment ":name"',
+    'attachment_deleted'               => 'Deleted attachment ":name"',
 
     // tour:
     'prev'                             => 'Prev',

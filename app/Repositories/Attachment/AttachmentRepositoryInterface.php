@@ -19,4 +19,12 @@ interface AttachmentRepositoryInterface
      * @return Attachment
      */
     public function update(Attachment $attachment, array $attachmentData);
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function destroy(Attachment $attachment);
 }
+

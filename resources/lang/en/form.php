@@ -67,6 +67,7 @@ return [
     'mime'                        => 'Mime type',
     'size'                        => 'Size',
 
+
     'delete_account'              => 'Delete account ":name"',
     'delete_bill'                 => 'Delete bill ":name"',
     'delete_budget'               => 'Delete budget ":name"',
@@ -74,7 +75,9 @@ return [
     'delete_currency'             => 'Delete currency ":name"',
     'delete_piggyBank'            => 'Delete piggy bank ":name"',
     'delete_journal'              => 'Delete transaction with description ":description"',
+    'delete_attachment'           => 'Delete attachment ":name"',
 
+    'attachment_areYouSure'       => 'Are you sure you want to delete the attachment named ":name"?',
     'account_areYouSure'          => 'Are you sure you want to delete the account named ":name"?',
     'bill_areYouSure'             => 'Are you sure you want to delete the bill named ":name"?',
     'budget_areYouSure'           => 'Are you sure you want to delete the budget named ":name"?',
