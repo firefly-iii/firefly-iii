@@ -197,13 +197,13 @@ Route::group(
      * Attachment Controller
      */
 
-    Route::post('/attachment/update/{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'attachment.update']);
-    Route::post('/attachment/destroy/{attachment}', ['uses' => 'AttachmentController@destroy', 'as' => 'attachment.destroy']);
+    Route::post('/attachment/update/{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'attachments.update']);
+    Route::post('/attachment/destroy/{attachment}', ['uses' => 'AttachmentController@destroy', 'as' => 'attachments.destroy']);
 
-    Route::get('/attachment/edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'attachment.edit']);
-    Route::get('/attachment/delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'attachment.delete']);
-    Route::get('/attachment/show/{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'attachment.show']);
-    Route::get('/attachment/download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'attachment.download']);
+    Route::get('/attachment/edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'attachments.edit']);
+    Route::get('/attachment/delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'attachments.delete']);
+    Route::get('/attachment/show/{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'attachments.show']);
+    Route::get('/attachment/download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'attachments.download']);
 
 
     /**

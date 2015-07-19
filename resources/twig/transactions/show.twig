@@ -87,13 +87,13 @@
                                 <tr>
                                     <td>
                                         <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('attachment.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ route('attachment.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                         </div>
                                     </td>
                                     <td>
                                         <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                        <a href="{{ route('attachment.download', att.id) }}" title="{{ att.filename }}">
+                                        <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
                                             {% if att.title %}
                                                 {{ att.title }}
                                             {% else %}
