@@ -287,7 +287,7 @@ class TestDataSeeder extends Seeder
                 'startdate'     => '2015-04-01',
                 'reminder_skip' => 0,
                 'remind_me'     => 0,
-                'order'         => 1,
+                'order'         => 2,
             ]
         );
         $repetition                = $phone->piggyBankRepetitions()->first();
@@ -325,7 +325,7 @@ class TestDataSeeder extends Seeder
                 'startdate'     => '2015-04-01',
                 'reminder_skip' => 0,
                 'remind_me'     => 0,
-                'order'         => 1,
+                'order'         => 3,
             ]
         );
         $repetition                = $couch->piggyBankRepetitions()->first();
@@ -354,6 +354,20 @@ class TestDataSeeder extends Seeder
                 'amount'        => '40'
             ]
         );
+
+        // empty one.
+        PiggyBank::create(
+            [
+                'account_id'    => $account->id,
+                'name'          => 'New head set',
+                'targetamount'  => 500,
+                'startdate'     => '2015-04-01',
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 4,
+            ]
+        );
+
     }
 
     /**
