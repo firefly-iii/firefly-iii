@@ -33,8 +33,8 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User wherePassword($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereReset($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereRememberToken($value)
- * @property boolean $blocked 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments 
+ * @property boolean $blocked
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
