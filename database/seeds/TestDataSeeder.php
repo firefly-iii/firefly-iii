@@ -68,6 +68,9 @@ class TestDataSeeder extends Seeder
             // pay daily groceries:
             $this->createGroceries($current);
 
+            // create tag (each type of tag, for date):
+            $this->createTags($current);
+
             // go out for drinks:
             $this->createDrinksAndOthers($current);
 
@@ -82,6 +85,23 @@ class TestDataSeeder extends Seeder
             $current->addMonth();
         }
 
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    protected function createTags(Carbon $date)
+    {
+        Tag::create(
+            [
+                'user_id' => $this->user->id,
+                'tag'     => 'SomeTag' . $date->month . '.' . $date->year . '.nothing',
+                'tagMode' => 'nothing',
+                'date'    => $date->format('Y-m-d'),
+
+
+            ]
+        );
     }
 
     /**
