@@ -596,6 +596,7 @@ class TestDataSeeder extends Seeder
     {
         $start = clone $date;
         $end   = clone $date;
+        $today = new Carbon;
         $start->startOfMonth();
         $end->endOfMonth();
 
@@ -605,7 +606,7 @@ class TestDataSeeder extends Seeder
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $this->user->id]);
 
         $current = clone $start;
-        while ($current < $end) {
+        while ($current < $end && $current < $today) {
             // daily groceries:
             $amount    = rand(1000, 2500) / 100;
             $toAccount = $this->findAccount($stores[rand(0, count($stores) - 1)]);
@@ -651,10 +652,11 @@ class TestDataSeeder extends Seeder
     {
         $start = clone $date;
         $end   = clone $date;
+        $today = new Carbon;
         $start->startOfMonth();
         $end->endOfMonth();
         $current = clone $start;
-        while ($current < $end) {
+        while ($current < $end && $current < $today) {
 
             // weekly drink:
             $thisDate = clone $current;
