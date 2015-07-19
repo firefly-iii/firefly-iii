@@ -363,7 +363,11 @@ class TestDataSeeder extends Seeder
      */
     protected function createIncome($description, Carbon $date, $amount)
     {
-        $date        = new Carbon($date->format('Y-m') . '-23'); // paid on 23rd.
+        $date  = new Carbon($date->format('Y-m') . '-23'); // paid on 23rd.
+        $today = new Carbon;
+        if ($date >= $today) {
+            return null;
+        }
         $toAccount   = $this->findAccount('MyBank Checking Account');
         $fromAccount = $this->findAccount('Job');
         $category    = Category::firstOrCreateEncrypted(['name' => 'Salary', 'user_id' => $this->user->id]);
