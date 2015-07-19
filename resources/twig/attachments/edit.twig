@@ -31,9 +31,9 @@
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('title') }}
-                        {{ ExpandedForm.textarea('description') }}
-                        {{ ExpandedForm.textarea('notes') }}
+                        {{ ExpandedForm.text('title', attachment.title) }}
+                        {{ ExpandedForm.textarea('description', attachment.description) }}
+                        {{ ExpandedForm.textarea('notes', attachment.notes) }}
                     </div>
                 </div>
 

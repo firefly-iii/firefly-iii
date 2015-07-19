@@ -5,7 +5,12 @@ namespace FireflyIII\Http\Controllers;
 
 use Crypt;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
+use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Input;
+use Preferences;
+use Session;
 use View;
 
 /**
@@ -66,7 +71,39 @@ class AttachmentController extends Controller
         } else {
             abort(404);
         }
+    }
 
+
+    /**
+     * @param AttachmentFormRequest         $request
+     * @param AttachmentRepositoryInterface $repository
+     * @param Attachment                    $attachment
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(AttachmentFormRequest $request, AttachmentRepositoryInterface $repository, Attachment $attachment)
+    {
+
+        $attachmentData = [
+            'title'       => $request->input('title'),
+            'description' => $request->input('description'),
+            'notes'       => $request->input('notes'),
+        ];
+
+        $repository->update($attachment, $attachmentData);
+
+        Session::flash('success', 'Attachment "' . $attachment->filename . '" updated.');
+        Preferences::mark();
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('accounts.edit.fromUpdate', true);
+
+            return redirect(route('attachment.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return redirect(Session::get('accounts.edit.url'));
 
     }
 

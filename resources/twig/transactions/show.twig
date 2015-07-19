@@ -93,8 +93,18 @@
                                     </td>
                                     <td>
                                         <i class="fa fa-file-pdf-o"></i>
-                                        <a href="{{ route('attachment.download', att.id) }}">{{ att.filename }}</a>
+                                        <a href="{{ route('attachment.download', att.id) }}" title="{{ att.filename }}">
+                                            {% if att.title %}
+                                                {{ att.title }}
+                                            {% else %}
+                                                {{ att.filename }}
+                                            {% endif %}
+                                        </a>
                                         ({{ att.size|filesize }})
+                                        {% if att.description %}
+                                            <br/>
+                                            <em>{{ att.description }}</em>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

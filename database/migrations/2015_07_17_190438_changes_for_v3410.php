@@ -24,18 +24,19 @@ class ChangesForV3410 extends Migration
             $table->string('attachable_type');
             $table->integer('user_id')->unsigned();
             $table->string('md5', 32);
-            $table->string('filename');
-            $table->string('title')->nullable();
+            $table->text('filename');
+            $table->text('title')->nullable();
             $table->text('description')->nullable();
             $table->text('notes')->nullable();
-
-            $table->string('mime');
+            $table->text('mime');
             $table->integer('size')->unsigned();
             $table->tinyInteger('uploaded', false, true)->default(0);
 
         }
         );
     }
+
+
 
     /**
      * Reverse the migrations.
