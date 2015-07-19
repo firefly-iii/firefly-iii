@@ -92,7 +92,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <i class="fa fa-file-pdf-o"></i>
+                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
                                         <a href="{{ route('attachment.download', att.id) }}" title="{{ att.filename }}">
                                             {% if att.title %}
                                                 {{ att.title }}

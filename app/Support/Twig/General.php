@@ -36,7 +36,8 @@ class General extends Twig_Extension
             $this->formatJournal(),
             $this->balance(),
             $this->getAccountRole(),
-            $this->formatFilesize()
+            $this->formatFilesize(),
+            $this->mimeIcon(),
         ];
 
     }
@@ -85,6 +86,26 @@ class General extends Twig_Extension
 
             return $size . ' bytes';
         }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function mimeIcon()
+    {
+        return new Twig_SimpleFilter(
+            'mimeIcon', function ($string) {
+            switch ($string) {
+                default:
+                    return 'fa-file-o';
+                case 'application/pdf':
+                    return 'fa-file-pdf-o';
+                case 'image/png':
+                case 'image/jpeg':
+                    return 'fa-file-image-o';
+            }
+        }, ['is_safe' => ['html']]
         );
     }
 
