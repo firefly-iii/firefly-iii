@@ -26,6 +26,7 @@ return [
     'update_attachment'                => 'Update attachment',
     'delete_attachment'                => 'Delete attachment ":name"',
     'attachment_deleted'               => 'Deleted attachment ":name"',
+    'upload_max_file_size' => 'Maximum file size: :size',
 
     // tour:
     'prev'                             => 'Prev',

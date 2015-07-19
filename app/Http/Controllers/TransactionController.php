@@ -16,6 +16,7 @@ use Input;
 use Preferences;
 use Response;
 use Session;
+use Steam;
 use URL;
 use View;
 
@@ -44,14 +45,17 @@ class TransactionController extends Controller
      */
     public function create(AccountRepositoryInterface $repository, $what = 'deposit')
     {
-        $accounts   = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0] = trans('form.noBudget');
-        $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0] = trans('form.noPiggybank');
-        $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
-        $respondTo  = ['account_id', 'account_from_id'];
-        $subTitle   = trans('form.add_new_' . $what);
+        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
+        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
+        $budgets[0]  = trans('form.noBudget');
+        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
+        $piggies[0]  = trans('form.noPiggybank');
+        $preFilled   = Session::has('preFilled') ? Session::get('preFilled') : [];
+        $respondTo   = ['account_id', 'account_from_id'];
+        $subTitle    = trans('form.add_new_' . $what);
 
         foreach ($respondTo as $r) {
             $preFilled[$r] = Input::get($r);
@@ -69,7 +73,7 @@ class TransactionController extends Controller
         asort($piggies);
 
 
-        return view('transactions.create', compact('accounts', 'budgets', 'what', 'piggies', 'subTitle'));
+        return view('transactions.create', compact('accounts', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
     }
 
     /**
@@ -122,14 +126,17 @@ class TransactionController extends Controller
      */
     public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
-        $what       = strtolower($journal->transactionType->type);
-        $accounts   = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0] = trans('form.noBudget');
-        $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0] = trans('form.noPiggybank');
-        $subTitle   = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $preFilled  = [
+        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
+        $what        = strtolower($journal->transactionType->type);
+        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
+        $budgets[0]  = trans('form.noBudget');
+        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
+        $piggies[0]  = trans('form.noPiggybank');
+        $subTitle    = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $preFilled   = [
             'date'          => $journal->date->format('Y-m-d'),
             'category'      => '',
             'budget_id'     => 0,
@@ -180,7 +187,7 @@ class TransactionController extends Controller
         Session::forget('transactions.edit.fromUpdate');
 
 
-        return view('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
+        return view('transactions.edit', compact('journal', 'uploadSize', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
     }
 
     /**
@@ -321,20 +328,13 @@ class TransactionController extends Controller
         // save attachments:
         $att->saveAttachmentsForModel($journal);
 
-        // one error
-        if ($att->getErrors()->count() == 1) {
-            Session::flash('error', join('', $att->getErrors()->get('attachments')));
+        // flash errors
+        if (count($att->getErrors()->get('attachments')) > 0) {
+            Session::flash('error', $att->getErrors()->get('attachments'));
         }
-
-        if ($att->getErrors()->count() > 1) {
-            // todo moet beter
-            Session::flash('error', '<ul class="list-unstyled">' . join('', $att->getErrors()->get('attachments', '<li>:message</li>')) . '</ul>');
-        }
-
-
-        if ($att->getMessages()->count() > 0) {
-            // todo moet beter
-            Session::flash('info', '<ul class="list-unstyled">' . join('', $att->getMessages()->get('attachments', '<li>:message</li>')) . '</ul>');
+        // flash messages
+        if (count($att->getMessages()->get('attachments')) > 0) {
+            Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
         event(new JournalSaved($journal));

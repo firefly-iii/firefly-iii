@@ -19,8 +19,7 @@
             </ul>
         {% endif %}
         {% if Session.get('info') is iterable and Session.get('info')|length == 1 %}
-            <strong>Message:</strong>
-            {{ Session.get('info')[0]|raw }}
+            <strong>Message:</strong> {{ Session.get('info')[0]|raw }}
         {% endif %}
 
         {% if Session.get('info') is not iterable %}

@@ -76,7 +76,7 @@
                         {% endif %}
 
                         <!-- ATTACHMENTS -->
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple'}) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
 
                     </div>
                 </div>

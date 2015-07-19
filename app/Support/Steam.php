@@ -90,4 +90,33 @@ class Steam
         return $result;
     }
 
+    // parse PHP size:
+    /**
+     * @param $string
+     *
+     * @return int
+     */
+        public function phpBytes($string)
+    {
+        $string = strtolower($string);
+
+        if (!(strpos($string, 'k') === false)) {
+            // has a K in it, remove the K and multiply by 1024.
+            $bytes = bcmul(rtrim($string, 'k'), 1024);
+
+            return intval($bytes);
+        }
+
+        if (!(strpos($string, 'm') === false)) {
+            // has a M in it, remove the M and multiply by 1048576.
+            $bytes = bcmul(rtrim($string, 'm'), 1048576);
+
+            return intval($bytes);
+        }
+
+        return $string;
+
+
+    }
+
 }
