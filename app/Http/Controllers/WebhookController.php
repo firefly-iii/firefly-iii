@@ -11,6 +11,12 @@ use Log;
  */
 class WebhookController extends Controller
 {
+
+    protected $middleware = [];
+
+    /**
+     * 
+     */
     public function sendgrid()
     {
         var_dump($_POST);
