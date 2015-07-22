@@ -11,7 +11,7 @@ use Preferences;
 use Route;
 use Session;
 use Steam;
-
+use Artisan;
 /**
  * Class HomeController
  *
@@ -58,6 +58,7 @@ class HomeController extends Controller
 
 
         Session::clear();
+        Artisan::call('cache:clear');
 
         return redirect(route('index'));
     }
