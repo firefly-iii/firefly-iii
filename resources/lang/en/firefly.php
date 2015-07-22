@@ -18,6 +18,7 @@ return [
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
+    'bounce_error'                     => 'The message sent to :email bounced.',
 
     // attachments
     'nr_of_attachments'                => 'One attachment|:count attachments',
@@ -26,7 +27,7 @@ return [
     'update_attachment'                => 'Update attachment',
     'delete_attachment'                => 'Delete attachment ":name"',
     'attachment_deleted'               => 'Deleted attachment ":name"',
-    'upload_max_file_size' => 'Maximum file size: :size',
+    'upload_max_file_size'             => 'Maximum file size: :size',
 
     // tour:
     'prev'                             => 'Prev',

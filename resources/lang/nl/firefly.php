@@ -18,8 +18,11 @@ return [
     'showEverything'                   => 'Laat alles zien',
     'never'                            => 'Nooit',
     'search_results_for'               => 'Zoekresultaten voor ":query"',
+    'bounce_error'                     => 'The message sent to :email bounced.',
+
     'nr_of_attachments'                => 'Eén bijlage|:count bijlagen',
     'attachments'                      => 'Bijlagen',
+
 
     // tour:
     'prev'                             => 'Vorige',

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Preferences;
+use Session;
 use View;
 
 /**
@@ -44,6 +45,13 @@ abstract class Controller extends BaseController
             View::share('language', $lang);
 
             // the user is bouncing email.
+            $bounce = Preferences::get('bounce', 'notBounced')->data;
+            if ($bounce != 'notBounced') {
+                $email   = Auth::user()->email;
+                $message = trans('firefly.bounce_error', ['email' => $email, 'message' => $bounce]);
+                Session::flash('error', $message);
+            }
+
         }
     }
 }
