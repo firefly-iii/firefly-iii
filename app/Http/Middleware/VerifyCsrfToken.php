@@ -13,13 +13,11 @@ class VerifyCsrfToken extends BaseVerifier
 {
 
     /**
-     * Routes we want to exclude.
+     * Routes we want to exclude from CSRF.
      *
      * @var array
      */
-    protected $routes = [
-        'hook/sendgrid',
-    ];
+    protected $routes = [];
 
     /**
      * Handle an incoming request.
@@ -31,23 +29,27 @@ class VerifyCsrfToken extends BaseVerifier
      */
     public function handle($request, Closure $next)
     {
-        if($this->excludedRoutes($request)) {
+        if ($this->excludedRoutes($request)) {
             return $next($request);
         }
+
         return parent::handle($request, $next);
     }
 
     /**
      * This will return a bool value based on route checking.
-
+     *
      * @param  Request $request
+     *
      * @return boolean
      */
     protected function excludedRoutes($request)
     {
-        foreach($this->routes as $route)
-            if ($request->is($route))
+        foreach ($this->routes as $route) {
+            if ($request->is($route)) {
                 return true;
+            }
+        }
 
         return false;
     }
