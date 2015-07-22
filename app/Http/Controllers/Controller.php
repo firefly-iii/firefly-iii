@@ -42,6 +42,8 @@ abstract class Controller extends BaseController
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
             View::share('language', $lang);
+
+            // the user is bouncing email.
         }
     }
 }

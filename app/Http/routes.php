@@ -158,6 +158,7 @@ Route::bind(
  * Auth\AuthController
  */
 Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
+Route::post ('/hook/sendgrid', ['uses' => 'WebhookController@sendgrid']);
 
 Route::controllers(
     [
