@@ -51,7 +51,14 @@ return [
     'date_format'                 => 'Datumformaat',
     'csv_config'                  => 'Configuratiebestand',
     'specifix'                    => 'Bank- or of bestandsspecifieke opties',
+    'csv_import_account'          => 'Standaard rekening voor importeren',
     'attachments[]'               => 'Bijlagen',
+
+    'title'                       => 'Titel',
+    'notes'                       => 'Notities',
+    'filename'                    => 'Bestandsnaam',
+    'mime'                        => 'Bestandstype',
+    'size'                        => 'Grootte',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',
@@ -69,7 +76,9 @@ return [
     'delete_currency'             => 'Verwijder valuta ":name"',
     'delete_piggyBank'            => 'Verwijder spaarpotje ":name"',
     'delete_journal'              => 'Verwijder transactie met omschrijving ":description"',
+    'delete_attachment'           => 'Verwijder bijlage ":name"',
 
+    'attachment_areYouSure'       => 'Weet je zeker dat je de bijlage met naam ":name" wilt verwijderen?',
     'account_areYouSure'          => 'Weet je zeker dat je de rekening met naam ":name" wilt verwijderen?',
     'bill_areYouSure'             => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
     'budget_areYouSure'           => 'Weet je zeker dat je het budget met naam ":name" wilt verwijderen?',

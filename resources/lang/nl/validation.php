@@ -13,6 +13,10 @@ return [
     |
     */
 
+    'file_already_attached'   => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
+    'file_attached'           => 'Bestand met naam ":name" is met succes geuploaded.',
+    'file_invalid_mime'       => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',
+    'file_too_large'          => 'Bestand ":name" is te groot.',
     "accepted"                => "The :attribute must be accepted.",
     "active_url"              => "The :attribute is not a valid URL.",
     "after"                   => "The :attribute must be a date after :date.",

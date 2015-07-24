@@ -18,11 +18,18 @@ return [
     'showEverything'                   => 'Laat alles zien',
     'never'                            => 'Nooit',
     'search_results_for'               => 'Zoekresultaten voor ":query"',
-    'bounce_error'                     => 'The message sent to :email bounced.',
+    'bounce_error'                     => 'Het emailtje naar :email kwam nooit aan.',
+    'removed_amount'                   => ':amount weggehaald',
+    'added_amount'                     => ':amount toegevoegd',
 
+    // attach
     'nr_of_attachments'                => 'Eén bijlage|:count bijlagen',
     'attachments'                      => 'Bijlagen',
-
+    'edit_attachment'                  => 'Wijzig bijlage ":name"',
+    'update_attachment'                => 'Update bijlage',
+    'delete_attachment'                => 'Verwijder bijlage ":name"',
+    'attachment_deleted'               => 'Bijlage ":name" verwijderd',
+    'upload_max_file_size'             => 'Maximale grootte: :size',
 
     // tour:
     'prev'                             => 'Vorige',
@@ -42,32 +49,65 @@ return [
     'csv_import'                       => 'Importeer CSV-bestand',
     'csv'                              => 'CSV',
     'csv_index_title'                  => 'Upload en importeer een kommagescheiden tekstbestand',
+    'csv_define_column_roles'          => 'Bepaal kolominhoud',
+    'csv_map_values'                   => 'Leg relaties met kolomwaardes',
+    'csv_download_config'              => 'Download CSV configuratiebestand.',
     'csv_index_text'                   => 'Met deze (en de komende) pagina\'s kan je kommagescheiden tekstbestanden importeren. Deze tool is gebaseerd '
-                                          . 'op de prachtige tool van <a href="https://www.atlassian.com/">Atlassian</a>. Om te beginnen selecteer' .
-                                          ' je jouw tekstbestand bij "CSV-bestand". '
+                                          . 'op de prachtige tool van <a href="https://www.atlassian.com/">Atlassian</a>. Om te beginnen selecteer'
+                                          . ' je jouw tekstbestand bij "CSV-bestand". '
                                           . 'Als je hulp nodig hebt, klik dan op het <i class="fa fa-question-circle"></i>-icoontje rechtsboven.',
     'csv_index_beta_warning'           => 'Deze tool is nog erg experimenteel. Wees dus voorzichtig.',
-    'csv_header_help'                  => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen,' .
-                                          'en niet uit daadwerkelijke gegevens.',
-    'csv_date_help'                    => 'Het gebruikte datumformaat in jouw bestand. Gebruik het formaat zoals <a href="https://secure.' .
-                                          'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">deze' .
-                                          ' pagina</a> het uitlegt (Engels). Het standaardformaat kan omgaan met data zoals deze: ' . date('Ymd'),
+    'csv_header_help'                  => 'Zet hier een vinkje als de eerste rij van je tekstbestand bestaat uit kolomnamen,'
+                                          . 'en niet uit daadwerkelijke gegevens.',
+    'csv_date_help'                    => 'Het gebruikte datumformaat in jouw bestand. Gebruik het formaat zoals <a href="https://secure.'
+                                          . 'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">deze'
+                                          . ' pagina</a> het uitlegt (Engels). Het standaardformaat kan omgaan met data zoals deze: ' . date('Ymd'),
     'csv_csv_file_help'                => 'Voer hier je kommagescheiden tekstbestand in. Je kan er maar één tegelijkertijd invoeren.',
     'csv_csv_config_file_help'         => 'Voer hier je configuratiebestand in. Als je deze niet hebt, geen zorgen. Latere stappen leggen dit uit.',
     'csv_upload_button'                => 'Begin de import',
-    'csv_define_column_roles'          => 'Bepaal kolominhoud',
     'csv_column_roles_title'           => 'Bepaal de inhoud van elke kolom',
-    'csv_column_roles_text'            => 'Firefly kan niet automatisch ontdekken wat elke kolom betekent. Je moet het zelf aangeven. Gebruik de' .
-                                          ' voorbeeldgegevens als je het ook niet zeker weet. Klik op het <i class="fa fa-question-circle"></i>-icoontje ' .
-                                          'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe' .
-                                          ' relatie heeft met gegevens'
-                                          .
-                                          ' die al in Firefly staan, gebruik dan het vinkje. Tijdens de volgende stap komt Firefly hier dan op terug.',
+    'csv_column_roles_text'            => 'Firefly kan niet automatisch ontdekken wat elke kolom betekent. Je moet het zelf aangeven. Gebruik de'
+                                          . ' voorbeeldgegevens als je het ook niet zeker weet. Klik op het <i class="fa fa-question-circle"></i>-icoontje '
+                                          . 'rechtsboven om te ontdekken wat elke kolomsoort precies is. Als de kolominhoud een directe'
+                                          . ' relatie heeft met gegevens'
+                                          . ' die al in Firefly staan, gebruik dan het vinkje. Tijdens de volgende stap komt Firefly hier dan op terug.',
+    'csv_column_roles_table'           => 'Kolominhoud',
     'csv_column'                       => 'CSV-kolom',
     'cvs_column_name'                  => 'CSV-kolomnaam',
     'cvs_column_example'               => 'Voorbeeldgegevens',
     'cvs_column_role'                  => 'Kolom bevat?',
     'csv_do_map_value'                 => 'Directe relatie?',
+    'csv_continue'                     => 'Naar de volgende stap',
+    'csv_go_back'                      => 'Terug naar de vorige stap',
+    'csv_map_title'                    => 'Leg relaties met kolomwaardes',
+    'csv_map_text'                     => 'Sommige kolommen bevatten waardes die misschien al in Firefly bestaan. Selecteer hier de juiste combinaties'
+                                          . 'zodat het importeren netjes aansluit bij je huidige gegevens.',
+    'cvs_field_value'                  => 'Veldwaarde',
+    'csv_field_mapped_to'              => 'Is gelijk aan',
+    'csv_do_not_map'                   => 'Geen relatie',
+    'csv_download_config_title'        => 'Download importconfiguratie',
+    'csv_download_config_text'         => 'Firefly is klaar om je bestand te importeren. De instellingen en selecties die je zojuist hebt gemaakt kan je downloaden'
+                                          . ' en opslaan. Bij de volgende keer kan je dit bestand ook uploaden. Als je kommagescheiden bestand dezelfde indeling'
+                                          . ' heeft, zullen alle selecties goed staan. Dat scheelt weer!',
+    'csv_more_information_text'        => 'Ook als het importeren fout gaat is dit bestand handig. Na het importeren krijg je nogmaals de gelegenheid dit bestand'
+                                          . 'te downloaden.',
+    'csv_do_download_config'           => 'Download het configuratiebestand',
+    'csv_empty_description'            => '(geen beschrijving)',
+    'csv_upload_form'                  => 'CSV upload formulier',
+    'csv_index_unsupported_warning'    => 'Het volgende wordt nog niet ondersteund:',
+    'csv_unsupported_map'              => 'The importer cannot map the column ":columnRole" to existing values in the database.',
+    'csv_unsupported_value'            => 'The importer does not know how to handle values in columns marked as ":columnRole".',
+    'csv_cannot_store_value'           => 'The importer has not reserved space for columns marked ":columnRole" and will be incapable of processing them.',
+    'csv_process_title'                => 'Het importeren is klaar',
+    'csv_process_text'                 => ':rows rijen zijn verwerkt.',
+    'csv_row'                          => 'Rij',
+    'csv_import_with_errors'           => 'Er was één fout. Deze foutmelding is mogelijk in het Engels.|Er zijn :errors fouten opgetreden. De foutmeldingen'
+                                          . ' zijn mogelijk in het Engels.',
+    'csv_error_see_logs'               => 'De logboeken bevatten mogelijk meer details.',
+    'csv_process_new_entries'          => 'Firefly heeft :imported nieuwe transactie(s) gemaakt.',
+    'csv_start_over'                   => 'Begin opnieuw',
+    'csv_to_index'                     => 'Naar de index',
+    'csv_upload_not_writeable'         => 'Kan niet naar onderstaand pad schrijven. Kan dus niet uploaden.',
     'csv_column__ignore'               => '(negeer deze kolom)',
     'csv_column_account-iban'          => 'Betaalrekening (IBAN)',
     'csv_column_account-id'            => 'Betaalrekening (ID gelijk aan Firefly)',
@@ -95,36 +135,11 @@ return [
     'csv_column_sepa-db'               => 'SEPA "direct debet"-nummer',
     'csv_column_tags-comma'            => 'Tags (kommagescheiden)',
     'csv_column_tags-space'            => 'Tags (spatiegescheiden)',
-    'csv_column_roles_table'           => 'Kolominhoud',
-    'csv_continue'                     => 'Naar de volgende stap',
-    'csv_go_back'                      => 'Terug naar de vorige stap',
-    'csv_map_values'                   => 'Leg relaties met kolomwaardes',
-    'csv_map_title'                    => 'Leg relaties met kolomwaardes',
-    'csv_map_text'                     => 'Sommige kolommen bevatten waardes die misschien al in Firefly bestaan. Selecteer hier de juiste combinaties' .
-                                          'zodat het importeren netjes aansluit bij je huidige gegevens.',
-    'cvs_field_value'                  => 'Veldwaarde',
-    'csv_field_mapped_to'              => 'Is gelijk aan',
-    'csv_do_not_map'                   => 'Geen relatie',
-    'csv_download_config_title'        => 'Download importconfiguratie',
-    'csv_download_config_text'         =>
-        'Firefly is klaar om je bestand te importeren. De instellingen en selecties die je zojuist hebt gemaakt kan je downloaden'
-        . ' en opslaan. Bij de volgende keer kan je dit bestand ook uploaden. Als je kommagescheiden bestand dezelfde indeling'
-        . ' heeft, zullen alle selecties goed staan. Dat scheelt weer!',
-    'csv_more_information_text'        =>
-        'Ook als het importeren fout gaat is dit bestand handig. Na het importeren krijg je nogmaals de gelegenheid dit bestand'
-        . 'te downloaden.',
-    'csv_do_download_config'           => 'Download het configuratiebestand',
-    'csv_process_title'                => 'Het importeren is klaar',
-    'csv_row'                          => 'Rij',
-    'csv_error_see_logs'               => 'De logboeken bevatten mogelijk meer details.',
-    'csv_process_new_entries'          => 'Firefly heeft :imported nieuwe transactie(s) gemaakt.',
-    'csv_start_over'                   => 'Begin opnieuw',
-    'csv_to_index'                     => 'Naar de index',
-    'csv_process_text'                 => ':rows rijen zijn verwerkt.',
-    'csv_import_with_errors'           => 'Er was één fout. Deze foutmelding is mogelijk in het Engels.|Er zijn :errors fouten opgetreden. De foutmeldingen'
-                                          . ' zijn mogelijk in het Engels.',
     'csv_specifix_RabobankDescription' => 'Vink dit aan als je Rabobank bestanden importeert.',
     'csv_specifix_Dummy'               => 'Dit vinkje doet niks (dummy).',
+    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which'
+                                          . ' account the transactions in the CSV belong to.',
+
     // create new stuff:
     'create_new_withdrawal'            => 'Nieuwe uitgave',
     'create_new_deposit'               => 'Nieuwe inkomsten',
@@ -400,7 +415,7 @@ return [
     'new_tag'                          => 'Maak nieuwe tag',
     'edit_tag'                         => 'Wijzig tag ":tag"',
     'no_year'                          => 'Zonder jaar',
-    'no_maand'                         => 'Zonder jaar',
+    'no_month'                         => 'Zonder maand',
     'tag_title_nothing'                => 'Standaard tags',
     'tag_title_balancingAct'           => 'Balancing act tags',
     'tag_title_advancePayment'         => 'Advance payment tags',
