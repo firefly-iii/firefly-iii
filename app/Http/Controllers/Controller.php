@@ -43,15 +43,6 @@ abstract class Controller extends BaseController
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
             View::share('language', $lang);
-
-            // the user is bouncing email.
-            $bounce = Preferences::get('bounce', 'notBounced')->data;
-            if ($bounce != 'notBounced') {
-                $email   = Auth::user()->email;
-                $message = trans('firefly.bounce_error', ['email' => $email, 'message' => $bounce]);
-                Session::flash('error', $message);
-            }
-
         }
     }
 }
