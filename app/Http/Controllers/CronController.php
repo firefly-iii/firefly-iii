@@ -39,17 +39,25 @@ class CronController extends Controller
              * Loop the result, if any.
              */
             if (is_array($data)) {
+                echo 'Found ' . count($data) . ' entries in the SendGrid bounce list.' . "\n";
                 foreach ($data as $entry) {
                     $address = $entry->email;
                     $user    = User::where('email', $address)->where('blocked', 0)->first();
                     if (!is_null($user)) {
+                        echo 'Found a user: ' . $address . ', who is now blocked.' . "\n";
                         $user->blocked  = 1;
                         $user->password = 'bounced';
                         $user->save();
+                    } else {
+                        echo 'Found no user: ' . $address . ', did nothing.' . "\n";
                     }
                 }
             }
+            echo 'Done!' . "\n";
+        } else {
+            echo 'Please fill in SendGrid details.';
         }
+
     }
 
 }
