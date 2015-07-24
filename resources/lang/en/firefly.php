@@ -19,6 +19,8 @@ return [
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
     'bounce_error'                     => 'The message sent to :email bounced.',
+    'removed_amount' => 'Removed :amount',
+    'added_amount' => 'Added :amount',
 
     // attachments
     'nr_of_attachments'                => 'One attachment|:count attachments',
