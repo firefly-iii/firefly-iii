@@ -17,6 +17,8 @@ class CronController extends Controller
      *
      * If you use SendGrid like I do, you can detect bounces and thereby check if users gave an invalid address. If they did,
      * it's easy to block them and change their password. Optionally, you could notify yourself about it and send them a message.
+     *
+     * But thats something not supported right now.
      */
     public function sendgrid()
     {
@@ -31,14 +33,13 @@ class CronController extends Controller
         $fullURL    = $URL . '?' . http_build_query($parameters);
         $data       = json_decode(file_get_contents($fullURL));
 
-        var_dump($data);
         /*
          * Loop the result, if any.
          */
         if (is_array($data)) {
             foreach ($data as $entry) {
                 $address = $entry->email;
-                $user    = User::where('email', $address)->first();
+                $user    = User::where('email', $address)->where('blocked', 0)->first();
                 if (!is_null($user)) {
                     $user->blocked  = 1;
                     $user->password = 'bounced';
