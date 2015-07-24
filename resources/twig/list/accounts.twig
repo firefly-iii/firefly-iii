@@ -47,7 +47,7 @@
                 </td>
             {% else %}
                 <td class="hidden-sm hidden-xs" data-value="0">
-                    <em>Never</em>
+                    <em>{{ 'never'|_ }}</em>
                 </td>
             {% endif %}
             <td class="hidden-sm hidden-xs" data-value="{{ account.endBalance - account.startBalance }}">
