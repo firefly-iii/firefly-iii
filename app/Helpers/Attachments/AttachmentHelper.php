@@ -60,10 +60,14 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $files = Input::file('attachments');
 
-        foreach ($files as $entry) {
-            if (!is_null($entry)) {
-                $this->processFile($entry, $model);
+        if (is_array($files)) {
+            foreach ($files as $entry) {
+                if (!is_null($entry)) {
+                    $this->processFile($entry, $model);
+                }
             }
+        } else {
+            $this->processFile($files, $model);
         }
 
         return true;

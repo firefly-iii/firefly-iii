@@ -119,6 +119,8 @@ class AttachmentController extends Controller
 
     /**
      * @param Attachment $attachment
+     *
+     * @return \Illuminate\Http\Response
      */
     public function preview(Attachment $attachment)
     {
