@@ -36,6 +36,8 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property boolean $blocked
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
+ * @property string $blocked_code 
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlockedCode($value)
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {

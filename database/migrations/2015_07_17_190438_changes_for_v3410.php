@@ -34,8 +34,14 @@ class ChangesForV3410 extends Migration
 
         }
         );
-    }
 
+        // add "blocked_code" to users:
+        Schema::table(
+            'users', function (Blueprint $table) {
+            $table->string('blocked_code', 25)->nullable();
+        }
+        );
+    }
 
 
     /**
