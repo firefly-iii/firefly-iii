@@ -45,8 +45,9 @@ class CronController extends Controller
                     $user    = User::where('email', $address)->where('blocked', 0)->first();
                     if (!is_null($user)) {
                         echo 'Found a user: ' . $address . ', who is now blocked.' . "\n";
-                        $user->blocked  = 1;
-                        $user->password = 'bounced';
+                        $user->blocked      = 1;
+                        $user->blocked_code = 'bounced';
+                        $user->password     = 'bounced';
                         $user->save();
                     } else {
                         echo 'Found no user: ' . $address . ', did nothing.' . "\n";
