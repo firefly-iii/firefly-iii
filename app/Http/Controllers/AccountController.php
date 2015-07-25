@@ -167,10 +167,11 @@ class AccountController extends Controller
 
         $startBalances = Steam::balancesById($ids, $start);
         $endBalances   = Steam::balancesById($ids, $end);
+        $activities    = $repository->getLastActivities($ids);
 
         $accounts->each(
-            function (Account $account) use ($startBalances, $endBalances) {
-                $account->lastActivityDate = null;//$repository->getLastActivity($account);
+            function (Account $account) use ($activities, $startBalances, $endBalances) {
+                $account->lastActivityDate = isset($activities[$account->id]) ? $activities[$account->id] : null;
                 $account->startBalance     = isset($startBalances[$account->id]) ? $startBalances[$account->id] : null;
                 $account->endBalance       = isset($endBalances[$account->id]) ? $endBalances[$account->id] : null;
             }

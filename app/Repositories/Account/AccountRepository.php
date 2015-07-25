@@ -208,6 +208,27 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function getLastActivities(array $accounts)
+    {
+        $list = [];
+
+        $set = Auth::user()->transactions()
+                   ->whereIn('account_id', $accounts)
+                   ->groupBy('account_id')
+                   ->get(['transactions.account_id', DB::Raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
+
+        foreach ($set as $entry) {
+            $list[intval($entry->account_id)] = new Carbon($entry->max_date);
+        }
+
+        return $list;
+    }
+
+    /**
      * @param Account $account
      *
      * @return Carbon|null
