@@ -12,6 +12,7 @@ use Mail;
 use Session;
 use Twig;
 use Validator;
+use Request as Rq;
 
 /**
  * Class AuthController
@@ -22,18 +23,17 @@ class AuthController extends Controller
 {
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getRegister()
+    {
+        $host = Rq::getHttpHost();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
-
+        return view('auth.register', compact('host'));
+    }
 
     /**
      * Handle a login request to the application.
