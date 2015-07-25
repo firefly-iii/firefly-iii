@@ -60,10 +60,19 @@ class AuthController extends Controller
         }
 
         $credentials            = $this->getCredentials($request);
-        $credentials['blocked'] = 0;
+        $credentials['blocked'] = 0; // most not be blocked.
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             return $this->handleUserWasAuthenticated($request, $throttles);
+        }
+
+        // default error message:
+        $message = $this->getFailedLoginMessage();
+
+        // try to find a user with this address and blocked_code "bounced".
+        $count = User::where('email', $credentials['email'])->where('blocked', 1)->where('blocked_code', 'bounced')->count();
+        if ($count == 1) {
+            $message = trans('firefly.bounce_error', ['email' => $credentials['email']]);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -77,7 +86,7 @@ class AuthController extends Controller
             ->withInput($request->only($this->loginUsername(), 'remember'))
             ->withErrors(
                 [
-                    $this->loginUsername() => $this->getFailedLoginMessage(),
+                    $this->loginUsername() => $message,
                 ]
             );
     }
