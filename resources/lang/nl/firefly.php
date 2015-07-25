@@ -307,6 +307,7 @@ return [
     'Withdrawal'                       => 'Uitgave',
     'Deposit'                          => 'Inkomsten',
     'Transfer'                         => 'Overschrijving',
+    'profile'                          => 'Profiel',
     'bill'                             => 'Contract',
     'yes'                              => 'Ja',
     'no'                               => 'Nee',

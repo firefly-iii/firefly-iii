@@ -18,7 +18,7 @@ return [
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
-    'bounce_error'                     => 'The message sent to :email bounced.',
+    'bounce_error'                     => 'The message sent to :email bounced, so no access for you.',
     'removed_amount'                   => 'Removed :amount',
     'added_amount'                     => 'Added :amount',
 
@@ -52,15 +52,22 @@ return [
     'csv_define_column_roles'          => 'Define column roles',
     'csv_map_values'                   => 'Map found values to existing values',
     'csv_download_config'              => 'Download CSV configuration file.',
-    'csv_index_text'                   => 'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by' . ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.' . ' If you would like to learn more, please click on the <i class="fa fa-question-circle"></i> button at the top of this page.',
+    'csv_index_text'                   => 'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by'
+                                          . ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.'
+                                          . ' If you would like to learn more, please click on the <i class="fa fa-question-circle"></i> button at the top of this page.',
     'csv_index_beta_warning'           => 'This tool is very much in beta. Please proceed with caution',
     'csv_header_help'                  => 'Check this box when your CSV file\'s first row consists of column names, not actual data',
-    'csv_date_help'                    => 'Date time format in your CSV. Follow the format like <a href="https://secure.' . 'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this' . ' page</a> indicates. The default value will parse dates that look like this: ' . date('Ymd'),
+    'csv_date_help'                    => 'Date time format in your CSV. Follow the format like <a href="https://secure.'
+                                          . 'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this'
+                                          . ' page</a> indicates. The default value will parse dates that look like this: ' . date('Ymd'),
     'csv_csv_file_help'                => 'Select the CSV file here. You can only upload one file at a time',
     'csv_csv_config_file_help'         => 'Select your CSV import configuration here. If you do not know what this is, ignore it. It will be explained later.',
     'csv_upload_button'                => 'Start importing CSV',
     'csv_column_roles_title'           => 'Define column roles',
-    'csv_column_roles_text'            => 'Firefly does not know what each column means. You need to indicate what every column is. Please check out the example ' . 'data if you\'re not sure yourself. Click on the question mark (top right of the page) to learn what' . ' each column means. If you want to map imported data onto existing data in Firefly, use the checkbox. ' . 'The next step will show you what this button does.',
+    'csv_column_roles_text'            => 'Firefly does not know what each column means. You need to indicate what every column is. Please check out the example '
+                                          . 'data if you\'re not sure yourself. Click on the question mark (top right of the page) to learn what'
+                                          . ' each column means. If you want to map imported data onto existing data in Firefly, use the checkbox. '
+                                          . 'The next step will show you what this button does.',
     'csv_column_roles_table'           => 'Column roles',
     'csv_column'                       => 'CSV column',
     'cvs_column_name'                  => 'CSV column name',
@@ -70,13 +77,15 @@ return [
     'csv_continue'                     => 'Continue to the next step',
     'csv_go_back'                      => 'Go back to the previous step',
     'csv_map_title'                    => 'Map found values to existing values',
-    'csv_map_text'                     => 'This page allows you to map the values from the CSV file to existing entries in your database. This ensures that accounts and other' . ' things won\'t be created twice.',
+    'csv_map_text'                     => 'This page allows you to map the values from the CSV file to existing entries in your database. This ensures that accounts and other'
+                                          . ' things won\'t be created twice.',
     'cvs_field_value'                  => 'Field value from CSV',
     'csv_field_mapped_to'              => 'Must be mapped to...',
     'csv_do_not_map'                   => 'Do not map this value',
     'csv_download_config_title'        => 'Download CSV configuration',
     'csv_download_config_text'         => 'Everything you\'ve just set up can be downloaded as a configuration file. Click the button to do so.',
-    'csv_more_information_text'        => 'If the import fails, you can use this configuration file so you don\'t have to start all over again.' . ' But, if the import succeeds, it will be easier to upload similar CSV files.',
+    'csv_more_information_text'        => 'If the import fails, you can use this configuration file so you don\'t have to start all over again.'
+                                          . ' But, if the import succeeds, it will be easier to upload similar CSV files.',
     'csv_do_download_config'           => 'Download configuration file.',
     'csv_empty_description'            => '(empty description)',
     'csv_upload_form'                  => 'CSV upload form',
@@ -297,6 +306,7 @@ return [
     'quarterly'                        => 'Quarterly',
     'half-year'                        => 'Every six months',
     'yearly'                           => 'Yearly',
+    'profile'                          => 'Profile',
 
     // reports:
     'reportForYear'                    => 'Yearly report for :year',

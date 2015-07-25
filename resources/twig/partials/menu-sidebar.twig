@@ -115,7 +115,7 @@
 
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('profile') }}">
-                <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> Profile</a>
+                <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}</a>
             </li>
             <li class="{{ activeRoutePartial('preferences') }}">
                 <a class="{{ activeRouteStrict('preferences') }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
