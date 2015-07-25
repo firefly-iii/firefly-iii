@@ -4,13 +4,14 @@ namespace FireflyIII\Http\Controllers;
 
 
 use Crypt;
+use File;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use Input;
 use Preferences;
+use Response;
 use Session;
 use URL;
 use View;
@@ -119,54 +120,13 @@ class AttachmentController extends Controller
     /**
      * @param Attachment $attachment
      */
-    public function preview(AttachmentHelperInterface $helper, Attachment $attachment)
+    public function preview(Attachment $attachment)
     {
-        if (!function_exists('imagecreatetruecolor')) {
-            abort(500);
-        }
+        $file     = public_path('images/image.png');
+        $response = Response::make(File::get($file));
+        $response->header('Content-Type', 'image/png');
 
-
-        $mime  = $attachment->mime;
-        $cache = new CacheProperties;
-        $cache->addProperty('preview-attachment');
-        $cache->addProperty($attachment->id);
-        if ($cache->has()) {
-            header('Content-Type: image/png');
-
-            return $cache->get();
-        }
-
-        switch ($mime) {
-            default:
-                $img = imagecreatetruecolor(100, 10);
-                imagesavealpha($img, true);
-
-                $trans_colour = imagecolorallocatealpha($img, 0, 0, 0, 127);
-                imagefill($img, 0, 0, $trans_colour);
-                header('Content-Type: image/png');
-                imagepng($img);
-                imagedestroy($img);
-                $cache->store($img);
-                exit;
-                break;
-            case 'image/jpeg':
-            case 'image/png':
-                $img      = imagecreatetruecolor(100, 100);
-                $source   = $helper->getAttachmentLocation($attachment);
-                $decrypt  = Crypt::decrypt(file_get_contents($source));
-                $original = imagecreatefromstring($decrypt);
-                $width    = imagesx($original);
-                $height   = imagesy($original);
-
-                imagecopyresampled($img, $original, 0, 0, 0, 0, 100, 100, $width, $height);
-
-                header('Content-Type: image/png');
-                imagepng($img);
-                imagedestroy($img);
-                exit;
-
-                break;
-        }
+        return $response;
     }
 
 

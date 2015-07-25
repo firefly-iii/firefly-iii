@@ -420,5 +420,11 @@ return [
     'tag_title_nothing'                => 'Standaard tags',
     'tag_title_balancingAct'           => 'Balancing act tags',
     'tag_title_advancePayment'         => 'Advance payment tags',
+    'tags_introduction'                => 'Normaal gesproken zijn tags enkele woorden, gebruikt om gerelateerde zaken snel aan elkaar te plakken. ' .
+                                          '<span class="label label-info">dure-aanschaf</span>, <span class="label label-info">rekening</span>, ' .
+                                          '<span class="label label-info">feestje</span>. In Firefly III hebben tags meer betekenis en kan je er een datum' .
+                                          ', beschrijving en locatie aan geven. Daarmee kan je je transacties op een wat zinvollere manier aan elkaar ' .
+                                          'koppelen. Je kan bijvoorbeeld een tag <span class="label label-success">Kerstdiner</span> maken en informatie over' .
+                                          ' het restaurant meenemen. Zulke tags zijn enkelvoudig; je gebruikt ze maar bij één gelegenheid.',
 
 ];
