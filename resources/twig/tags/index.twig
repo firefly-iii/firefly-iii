@@ -22,19 +22,14 @@
 
                     <p>
                         {{'tags_group'|_  }}
-                        Tags group transactions together, which makes it possible to store reimbursements
-                        (in case you front money for others) and other "balancing acts" where expenses
-                        are summed up (the payments on your new TV) or where expenses and deposits
-                        are cancelling each other out (buying something with saved money). It's all up to you.
-                        Using tags the old-fashioned way is of course always possible.
                     </p>
 
                     <p>
-                        Create a tag to get started or enter tags when creating new transactions.
+                        {{ 'tags_start'|_ }}
                     </p>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('tags.create') }}" title="New tag" class="btn btn-info pull-right">Create new tag</a>
+                    <a href="{{ route('tags.create') }}" title="New tag" class="btn btn-info pull-right">{{ 'new_tag'|_ }}</a>
                 </div>
             </div>
         </div>
