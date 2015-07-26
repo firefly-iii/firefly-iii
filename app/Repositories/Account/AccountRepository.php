@@ -131,7 +131,7 @@ class AccountRepository implements AccountRepositoryInterface
         $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
 
         if (count($preference->data) > 0) {
-            $query->whereIn('id', $preference->data);
+            $query->whereIn('accounts.id', $preference->data);
         }
 
         $result = $query->get(['accounts.*']);
