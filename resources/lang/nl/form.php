@@ -78,6 +78,7 @@ return [
     'delete_journal'              => 'Verwijder transactie met omschrijving ":description"',
     'delete_attachment'           => 'Verwijder bijlage ":name"',
 
+    'tag_areYouSure'              => 'Weet je zeker dat je de tag met naam ":tag" wilt verwijderen?',
     'attachment_areYouSure'       => 'Weet je zeker dat je de bijlage met naam ":name" wilt verwijderen?',
     'account_areYouSure'          => 'Weet je zeker dat je de rekening met naam ":name" wilt verwijderen?',
     'bill_areYouSure'             => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
@@ -98,4 +99,6 @@ return [
                                      '|De :count transacties verbonden aan dit budget blijven bewaard.',
     'category_keep_transactions'  => 'De transactie verbonden aan deze categorie blijft bewaard.' .
                                      '|De :count transacties verbonden aan deze categorie blijven bewaard.',
+    'tag_keep_transactions'       => 'De transactie verbonden aan deze tag blijft bewaard.' .
+                                     '|De :count transacties verbonden aan deze tag blijven bewaard.',
 ];

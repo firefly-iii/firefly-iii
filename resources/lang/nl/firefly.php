@@ -24,6 +24,13 @@ return [
     'added_amount'                     => ':amount toegevoegd',
     'asset_account_role_help'          => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
 
+    // tags
+    'store_new_tag'                    => 'Sla tag op',
+    'update_tag'                       => 'Sla wijzigingen op',
+    'no_location_set'                  => 'Zonder plaats',
+    'location'                         => 'Plaats',
+    'meta_data'                        => 'Metagegevens',
+
     // preferences
     'pref_home_screen_accounts'        => 'Voorpaginarekeningen',
     'pref_home_screen_accounts_help'   => 'Welke betaalrekeningen wil je op de voorpagina zien?',

@@ -24,6 +24,15 @@ return [
     'added_amount'                     => 'Added :amount',
     'asset_account_role_help'          => 'Any extra options resulting from your choice can be set later.',
 
+    // tags
+    'store_new_tag'                    => 'Store new tag',
+    'update_tag'                       => 'Update tag',
+    'no_location_set'                  => 'No location set.',
+    'meta_data'                        => 'Meta data',
+    'edit_tag'                         => 'Edit tag',
+    'delete_tag'                       => 'Delete tag',
+    'location'                         => 'Location',
+
     // preferences
     'pref_home_screen_accounts'        => 'Home screen accounts',
     'pref_home_screen_accounts_help'   => 'Which accounts should be displayed on the home page?',

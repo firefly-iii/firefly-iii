@@ -13,19 +13,22 @@
                     <h3 class="box-title">Delete tag "{{ tag.tag }}"</h3>
                 </div>
                 <div class="box-body">
-                    <p>
-                        Are you sure that you want to delete tag "{{ tag.tag }}"?
+                    <p class="text-danger">
+                        {{ trans('form.permDeleteWarning') }}
                     </p>
-                    {% if tag.transactionjournals|length > 0 %}
-                        <p class="text-info">
-                            Tag "{{ tag.tag }}" still has {{ tag.transactionjournals|length }} transaction(s) connected
-                            to it. These will <strong>not</strong> be removed but will lose their connection to this tag.
-                        </p>
-                    {% endif %}
+                    <p>
+                        {{ trans('form.tag_areYouSure', {'tag': tag.tag}) }}
+                    </p>
+
+                    <p>
+                        {% if tag.transactionjournals|length == 0 %}
+                            {{ Lang.choice('form.tag_keep_transactions', tag.transactionjournals|length, {count: tag.transactionjournals|length}) }}
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-danger pull-right">Delete permanently</button>
-                    <a href="{{ URL.previous() }}" class="btn-default btn">Cancel</a>
+                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn pull-right btn-danger"/>
+                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
                 </div>
             </div>
         </div>
