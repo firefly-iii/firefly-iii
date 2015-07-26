@@ -280,9 +280,16 @@ Breadcrumbs::register(
 }
 );
 Breadcrumbs::register(
-    'change-password', function (Generator $breadcrumbs) {
+    'profile.change-password', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('profile');
-    $breadcrumbs->push(trans('breadcrumbs.changePassword'), route('change-password'));
+    $breadcrumbs->push(trans('breadcrumbs.changePassword'), route('profile.change-password'));
+
+}
+);
+Breadcrumbs::register(
+    'profile.delete-account', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('profile');
+    $breadcrumbs->push(trans('firefly.delete_account'), route('profile.delete-account'));
 
 }
 );
