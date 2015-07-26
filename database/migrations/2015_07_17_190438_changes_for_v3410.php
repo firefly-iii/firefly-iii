@@ -9,6 +9,17 @@ use Illuminate\Database\Schema\Blueprint;
 class ChangesForV3410 extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('attachments');
+
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -41,17 +52,5 @@ class ChangesForV3410 extends Migration
             $table->string('blocked_code', 25)->nullable();
         }
         );
-    }
-
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('attachments');
-
     }
 }

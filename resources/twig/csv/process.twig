@@ -44,9 +44,9 @@
 
                     {% if journals|length > 0 %}
                         <ul>
-                        {% for journal in journals %}
-                            <li>#{{ journal.id }}: <a href="{{ route('transactions.show', [journal.id]) }}">{{ journal.description }}</a></li>
-                        {% endfor %}
+                            {% for journal in journals %}
+                                <li>#{{ journal.id }}: <a href="{{ route('transactions.show', [journal.id]) }}">{{ journal.description }}</a></li>
+                            {% endfor %}
                         </ul>
                     {% endif %}
 

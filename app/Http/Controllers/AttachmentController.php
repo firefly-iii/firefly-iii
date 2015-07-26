@@ -124,7 +124,7 @@ class AttachmentController extends Controller
      */
     public function preview(Attachment $attachment)
     {
-        if($attachment->mime == 'application/pdf') {
+        if ($attachment->mime == 'application/pdf') {
             $file = public_path('images/page_white_acrobat.png');
         } else {
             $file = public_path('images/page_green.png');

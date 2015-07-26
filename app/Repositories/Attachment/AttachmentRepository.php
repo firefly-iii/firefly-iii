@@ -14,6 +14,21 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
     /**
      * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function destroy(Attachment $attachment)
+    {
+        /** @var \FireflyIII\Helpers\Attachments\AttachmentHelperInterface $helper */
+        $helper = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
+
+        $file = $helper->getAttachmentLocation($attachment);
+        unlink($file);
+        $attachment->delete();
+    }
+
+    /**
+     * @param Attachment $attachment
      * @param array      $data
      *
      * @return Attachment
@@ -28,20 +43,5 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
         return $attachment;
 
-    }
-
-    /**
-     * @param Attachment $attachment
-     *
-     * @return bool
-     */
-    public function destroy(Attachment $attachment)
-    {
-        /** @var \FireflyIII\Helpers\Attachments\AttachmentHelperInterface $helper */
-        $helper = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
-
-        $file = $helper->getAttachmentLocation($attachment);
-        unlink($file);
-        $attachment->delete();
     }
 }

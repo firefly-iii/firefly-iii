@@ -193,7 +193,6 @@ Route::group(
     Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
 
-
     /**
      * Attachment Controller
      */

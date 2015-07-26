@@ -53,7 +53,8 @@
                 <td>
                     <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
                     {% if journal.attachments|length > 0 %}
-                        <i class="fa fa-paperclip pull-right" title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
+                        <i class="fa fa-paperclip pull-right"
+                           title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
                     {% endif %}
 
                 </td>

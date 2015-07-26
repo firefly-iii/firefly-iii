@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Artisan;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -11,7 +12,7 @@ use Preferences;
 use Route;
 use Session;
 use Steam;
-use Artisan;
+
 /**
  * Class HomeController
  *

@@ -96,7 +96,7 @@ class Steam
      *
      * @return int
      */
-        public function phpBytes($string)
+    public function phpBytes($string)
     {
         $string = strtolower($string);
 

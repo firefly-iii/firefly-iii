@@ -14,17 +14,17 @@ interface AttachmentRepositoryInterface
 
     /**
      * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function destroy(Attachment $attachment);
+
+    /**
+     * @param Attachment $attachment
      * @param array      $attachmentData
      *
      * @return Attachment
      */
     public function update(Attachment $attachment, array $attachmentData);
-
-    /**
-     * @param Attachment $attachment
-     *
-     * @return bool
-     */
-    public function destroy(Attachment $attachment);
 }
 
