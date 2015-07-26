@@ -229,23 +229,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Account $account
-     *
-     * @return Carbon|null
-     */
-    public function getLastActivity(Account $account)
-    {
-        $lastTransaction = $account->transactions()->leftJoin(
-            'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.account_id', 'transaction_journals.date']);
-        if ($lastTransaction) {
-            return $lastTransaction->date;
-        }
-
-        return null;
-    }
-
-    /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
@@ -583,10 +566,8 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeInitialBalance(Account $account, Account $opposing, array $data)
     {
-        $type            = $data['openingBalance'] < 0 ? 'Withdrawal' : 'Deposit';
-        $transactionType = TransactionType::whereType($type)->first();
-
-        $journal = new TransactionJournal(
+        $transactionType = TransactionType::whereType('Opening balance')->first();
+        $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $transactionType->id,
@@ -598,7 +579,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'encrypted'               => true
             ]
         );
-        $journal->save();
 
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
@@ -611,6 +591,7 @@ class AccountRepository implements AccountRepositoryInterface
             $firstAmount   = $data['openingBalance'];
             $secondAmount  = $data['openingBalance'] * -1;
         }
+
         $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
         $one->save();// first transaction: from
 
