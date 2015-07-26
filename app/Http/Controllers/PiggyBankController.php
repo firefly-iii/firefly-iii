@@ -171,7 +171,7 @@ class PiggyBankController extends Controller
         $accounts = [];
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
-            $piggyBank->savedSoFar = floatval($piggyBank->currentRelevantRep()->currentamount);
+            $piggyBank->savedSoFar = round($piggyBank->currentRelevantRep()->currentamount, 2);
             $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = $piggyBank->targetamount - $piggyBank->savedSoFar;
 
@@ -185,7 +185,7 @@ class PiggyBankController extends Controller
                     'balance'           => Steam::balance($account, $end, true),
                     'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
                     'sumOfSaved'        => $piggyBank->savedSoFar,
-                    'sumOfTargets'      => floatval($piggyBank->targetamount),
+                    'sumOfTargets'      => round($piggyBank->targetamount, 2),
                     'leftToSave'        => $piggyBank->leftToSave
                 ];
             } else {
@@ -225,7 +225,7 @@ class PiggyBankController extends Controller
      */
     public function postAdd(PiggyBankRepositoryInterface $repository, AccountRepositoryInterface $accounts, PiggyBank $piggyBank)
     {
-        $amount        = round(floatval(Input::get('amount')), 2);
+        $amount        = round(Input::get('amount'), 2);
         $date          = Session::get('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
@@ -258,7 +258,7 @@ class PiggyBankController extends Controller
      */
     public function postRemove(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = floatval(Input::get('amount'));
+        $amount = round(Input::get('amount'), 2);
         bcscale(2);
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
@@ -319,7 +319,7 @@ class PiggyBankController extends Controller
             'name'          => $request->get('name'),
             'startdate'     => new Carbon,
             'account_id'    => intval($request->get('account_id')),
-            'targetamount'  => floatval($request->get('targetamount')),
+            'targetamount'  => round($request->get('targetamount'), 2),
             'remind_me'     => false,
             'reminder_skip' => 0,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
@@ -354,7 +354,7 @@ class PiggyBankController extends Controller
             'name'          => $request->get('name'),
             'startdate'     => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
             'account_id'    => intval($request->get('account_id')),
-            'targetamount'  => floatval($request->get('targetamount')),
+            'targetamount'  => round($request->get('targetamount'), 2),
             'remind_me'     => false,
             'reminder_skip' => 0,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,

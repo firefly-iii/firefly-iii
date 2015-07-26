@@ -68,6 +68,9 @@ class General extends Twig_Extension
         return 'FireflyIII\Support\Twig\General';
     }
 
+    /**
+     * @return Twig_SimpleFilter
+     */
     protected function formatFilesize()
     {
         return new Twig_SimpleFilter(

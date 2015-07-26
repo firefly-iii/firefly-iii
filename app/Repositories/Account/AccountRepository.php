@@ -128,17 +128,17 @@ class AccountRepository implements AccountRepositoryInterface
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
+        $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
 
-
-        if ($preference->data == []) {
-            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
-        } else {
-            $accounts = Auth::user()->accounts()->whereIn('id', $preference->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        if (count($preference->data) > 0) {
+            $query->whereIn('id', $preference->data);
         }
 
-        $cache->store($accounts);
+        $result = $query->get(['accounts.*']);
 
-        return $accounts;
+        $cache->store($result);
+
+        return $result;
     }
 
     /**
@@ -205,27 +205,6 @@ class AccountRepository implements AccountRepositoryInterface
         return $paginator;
 
 
-    }
-
-    /**
-     * @param array $accounts
-     *
-     * @return array
-     */
-    public function getLastActivities(array $accounts)
-    {
-        $list = [];
-
-        $set = Auth::user()->transactions()
-                   ->whereIn('account_id', $accounts)
-                   ->groupBy('account_id')
-                   ->get(['transactions.account_id', DB::Raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
-
-        foreach ($set as $entry) {
-            $list[intval($entry->account_id)] = new Carbon($entry->max_date);
-        }
-
-        return $list;
     }
 
     /**
@@ -433,11 +412,11 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function sumOfEverything()
     {
-        return floatval(Auth::user()->transactions()->sum('amount'));
+        return Auth::user()->transactions()->sum('amount');
     }
 
     /**

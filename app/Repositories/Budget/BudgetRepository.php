@@ -52,9 +52,10 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function expensesOnDayCorrected(Budget $budget, Carbon $date)
     {
-        $sum = floatval($budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
+        bcscale(2);
+        $sum = $budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
 
-        return $sum * -1;
+        return bcmul($sum, -1);
     }
 
     /**
@@ -247,7 +248,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                                      ->first(['limit_repetitions.*']);
 
         if ($repetition) {
-            return floatval($repetition->amount);
+            return $repetition->amount;
         }
 
         return null;
@@ -299,7 +300,9 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                            ->transactionTypes(['Withdrawal'])
                            ->get(['transaction_journals.*'])->sum('amount');
 
-        return floatval($noBudgetSet) * -1;
+        bcscale(2);
+
+        return bcmul($noBudgetSet, -1);
     }
 
     /**

@@ -31,9 +31,9 @@ class BillFormRequest extends Request
         return [
             'name'               => $this->get('name'),
             'match'              => $this->get('match'),
-            'amount_min'         => floatval($this->get('amount_min')),
-            'amount_currency_id' => floatval($this->get('amount_currency_id')),
-            'amount_max'         => floatval($this->get('amount_max')),
+            'amount_min'         => round($this->get('amount_min'), 2),
+            'amount_currency_id' => round($this->get('amount_currency_id'), 2),
+            'amount_max'         => round($this->get('amount_max'), 2),
             'date'               => new Carbon($this->get('date')),
             'user'               => Auth::user()->id,
             'repeat_freq'        => $this->get('repeat_freq'),

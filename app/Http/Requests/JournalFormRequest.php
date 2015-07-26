@@ -37,7 +37,7 @@ class JournalFormRequest extends Request
             'account_to_id'      => intval($this->get('account_to_id')),
             'expense_account'    => $this->get('expense_account'),
             'revenue_account'    => $this->get('revenue_account'),
-            'amount'             => floatval($this->get('amount')),
+            'amount'             => round($this->get('amount'), 2),
             'user'               => Auth::user()->id,
             'amount_currency_id' => intval($this->get('amount_currency_id')),
             'date'               => new Carbon($this->get('date')),

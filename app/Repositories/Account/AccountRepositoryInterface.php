@@ -25,13 +25,6 @@ interface AccountRepositoryInterface
     public function countAccounts(array $types);
 
     /**
-     * @param array $accounts
-     *
-     * @return array
-     */
-    public function getLastActivities(array $accounts);
-
-    /**
      * @param Account $account
      * @param Account $moveTo
      *
@@ -103,7 +96,7 @@ interface AccountRepositoryInterface
     public function getJournals(Account $account, $page);
 
     /**
-     * @return float
+     * @return string
      */
     public function sumOfEverything();
 
