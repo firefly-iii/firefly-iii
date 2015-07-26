@@ -81,9 +81,9 @@ class GoogleBillChartGenerator implements BillChartGenerator
         foreach ($entries as $result) {
             $chart->addRow(
                 clone $result->date,
-                round($bill->amount_max,2),
-                round($bill->amount_min,2),
-                round($result->amount,2)
+                round($bill->amount_max, 2),
+                round($bill->amount_min, 2),
+                round($result->amount, 2)
             );
         }
 
