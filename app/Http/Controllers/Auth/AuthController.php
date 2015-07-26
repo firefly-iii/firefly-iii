@@ -9,10 +9,10 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Mail;
+use Request as Rq;
 use Session;
 use Twig;
 use Validator;
-use Request as Rq;
 
 /**
  * Class AuthController
@@ -69,11 +69,16 @@ class AuthController extends Controller
         // default error message:
         $message = $this->getFailedLoginMessage();
 
-        // try to find a user with this address and blocked_code "bounced".
-        $count = User::where('email', $credentials['email'])->where('blocked', 1)->where('blocked_code', 'bounced')->count();
-        if ($count == 1) {
-            $message = trans('firefly.bounce_error', ['email' => $credentials['email']]);
+        // try to find a blocked user with this email address.
+        /** @var User $foundUser */
+        $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
+        if (!is_null($foundUser)) {
+            // if it exists, show message:
+            $code    = $foundUser->blocked_code;
+            $message = trans('firefly.' . $code . '_error', ['email' => $credentials['email']]);
         }
+
+        // try
 
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
