@@ -82,10 +82,11 @@ class PiggyBankPart
      */
     public function percentage()
     {
+        bcscale(2);
         if ($this->getCurrentamount() < $this->getCumulativeAmount()) {
             $pct = 0;
             // calculate halfway point?
-            if ($this->getCumulativeAmount() - $this->getCurrentamount() < $this->getAmountPerBar()) {
+            if (bcsub($this->getCumulativeAmount(), $this->getCurrentamount()) < $this->getAmountPerBar()) {
                 $left = $this->getCurrentamount() % $this->getAmountPerBar();
                 $pct  = round($left / $this->getAmountPerBar() * 100);
             }

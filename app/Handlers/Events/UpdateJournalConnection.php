@@ -49,10 +49,12 @@ class UpdateJournalConnection
         if (is_null($repetition)) {
             return;
         }
-        $amount = $journal->amount;
-        $diff   = $amount - $event->amount; // update current repetition
+        bcscale(2);
 
-        $repetition->currentamount += $diff;
+        $amount = $journal->amount;
+        $diff   = bcsub($amount, $event->amount); // update current repetition
+
+        $repetition->currentamount = bcadd($repetition->currentamount, $diff);
         $repetition->save();
 
 

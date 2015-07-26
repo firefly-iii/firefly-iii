@@ -246,10 +246,11 @@ class TransactionController extends Controller
      */
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+        bcscale(2);
         $journal->transactions->each(
             function (Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
-                $t->after  = $t->before + $t->amount;
+                $t->after  = bcadd($t->before, $t->amount);
             }
         );
         $what     = strtolower($journal->transactionType->type);

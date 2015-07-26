@@ -47,10 +47,11 @@ class PiggyBankController extends Controller
      */
     public function add(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
+        bcscale(2);
         $date          = Session::get('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
-        $leftToSave    = $piggyBank->targetamount - $savedSoFar;
+        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
 
         return view('piggy-banks.add', compact('piggyBank', 'maxAmount'));
@@ -173,7 +174,7 @@ class PiggyBankController extends Controller
         foreach ($piggyBanks as $piggyBank) {
             $piggyBank->savedSoFar = round($piggyBank->currentRelevantRep()->currentamount, 2);
             $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
-            $piggyBank->leftToSave = $piggyBank->targetamount - $piggyBank->savedSoFar;
+            $piggyBank->leftToSave = bcsub($piggyBank->targetamount, $piggyBank->savedSoFar);
 
             /*
              * Fill account information:
@@ -211,7 +212,7 @@ class PiggyBankController extends Controller
 
         if (is_array($data)) {
             foreach ($data as $order => $id) {
-                $repository->setOrder(intval($id), (intval($order) + 1));
+                $repository->setOrder(intval($id), ($order + 1));
             }
         }
     }
@@ -225,13 +226,13 @@ class PiggyBankController extends Controller
      */
     public function postAdd(PiggyBankRepositoryInterface $repository, AccountRepositoryInterface $accounts, PiggyBank $piggyBank)
     {
+        bcscale(2);
         $amount        = round(Input::get('amount'), 2);
         $date          = Session::get('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
-        $leftToSave    = $piggyBank->targetamount - $savedSoFar;
+        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
-        bcscale(2);
 
         if ($amount <= $maxAmount) {
             $repetition                = $piggyBank->currentRelevantRep();

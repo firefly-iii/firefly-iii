@@ -236,6 +236,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($ids) > 0) {
             $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
         }
+        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -249,7 +250,7 @@ class AccountRepository implements AccountRepositoryInterface
                 // sum of piggy bank amounts on this account:
                 // diff between endBalance and piggyBalance.
                 // then, percentage.
-                $difference          = $account->endBalance - $account->piggyBalance;
+                $difference          = bcsub($account->endBalance, $account->piggyBalance);
                 $account->difference = $difference;
                 $account->percentage = $difference != 0 && $account->endBalance != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
 
@@ -277,13 +278,15 @@ class AccountRepository implements AccountRepositoryInterface
         $start    = clone Session::get('start', new Carbon);
         $end      = clone Session::get('end', new Carbon);
 
+        bcscale(2);
+
         $accounts->each(
             function (Account $account) use ($start, $end) {
                 $account->startBalance = Steam::balance($account, $start);
                 $account->endBalance   = Steam::balance($account, $end);
 
                 // diff (negative when lost, positive when gained)
-                $diff = $account->endBalance - $account->startBalance;
+                $diff = bcsub($account->endBalance, $account->startBalance);
 
                 if ($diff < 0 && $account->startBalance > 0) {
                     // percentage lost compared to start.

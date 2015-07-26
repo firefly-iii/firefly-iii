@@ -79,7 +79,7 @@ class ReportHelper implements ReportHelperInterface
         foreach ($accounts as $account) {
             $start = bcadd($start, $account->startBalance);
             $end   = bcadd($end, $account->endBalance);
-            $diff  = bcadd($diff, ($account->endBalance - $account->startBalance));
+            $diff  = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
         }
 
         $object = new AccountCollection;
@@ -255,6 +255,8 @@ class ReportHelper implements ReportHelperInterface
         $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $set        = $repository->getBudgets();
 
+        bcscale(2);
+
         foreach ($set as $budget) {
 
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
@@ -277,9 +279,9 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
                 $expenses  = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, $shared);
-                $left      = $expenses < $repetition->amount ? $repetition->amount - $expenses : 0;
+                $left      = $expenses < $repetition->amount ? bcsub($repetition->amount, $expenses) : 0;
                 $spent     = $expenses > $repetition->amount ? 0 : $expenses;
-                $overspent = $expenses > $repetition->amount ? $expenses - $repetition->amount : 0;
+                $overspent = $expenses > $repetition->amount ? bcsub($expenses, $repetition->amount) : 0;
 
                 $budgetLine->setLeft($left);
                 $budgetLine->setSpent($spent);
