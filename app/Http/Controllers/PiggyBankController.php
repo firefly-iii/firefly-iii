@@ -66,7 +66,7 @@ class PiggyBankController extends Controller
 
         $periods      = Config::get('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $subTitle     = trans('firefly.create_new_piggybank');
+        $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
         // put previous url in session if not redirect from store (not "create another").

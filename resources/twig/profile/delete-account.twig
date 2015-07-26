@@ -11,17 +11,17 @@
         <div class="col-lg-6 col-md-12 col-sm-12">
             <div class="box box-danger">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Delete your account</h3>
+                    <h3 class="box-title">{{ 'delete_your_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
 
                     <p class="text-danger">
-                        Deleting your account will also delete any accounts, transactions, <em>anything</em>
-                        you might have saved into Firefly III. It'll be GONE.
+                        {{ 'delete_your_account_help'|_ }}
                     </p>
 
                     <p class="text-danger">
-                        Enter your password to continue.
+                        {{ 'delete_your_account_password'|_ }}
+
                     </p>
 
                     {% if errors|length > 0 %}
@@ -36,15 +36,16 @@
                     {% endif %}
 
                     <div class="form-group">
-                        <label for="password" class="col-sm-4 control-label">Password</label>
+                        <label for="password" class="col-sm-4 control-label">{{ 'password'|_ }}</label>
 
                         <div class="col-sm-8">
-                            <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                            <input type="password" class="form-control" id="password" placeholder="{{ 'password'|_ }}" name="password">
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" onclick="confirm('Are you sure? You cannot undo this.')" class="btn btn-danger pull-right">DELETE your account
+                    <button type="submit" onclick="confirm('{{ 'are_you_sure'|_ }}')" class="btn btn-danger pull-right">
+                        {{ 'delete_account_button'|_ }}
                     </button>
                 </div>
             </div>
