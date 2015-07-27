@@ -52,6 +52,11 @@ class Authenticate
                 return redirect()->guest('auth/login');
             }
         }
+
+        if (intval($this->auth->user()->blocked) == 1) {
+            return redirect()->route('logout');
+        }
+
         // if logged in, set user language:
         $pref = Preferences::get('language', 'en');
         App::setLocale($pref->data);

@@ -96,14 +96,7 @@ interface AccountRepositoryInterface
     public function getJournals(Account $account, $page);
 
     /**
-     * @param Account $account
-     *
-     * @return Carbon|null
-     */
-    public function getLastActivity(Account $account);
-
-    /**
-     * @return float
+     * @return string
      */
     public function sumOfEverything();
 

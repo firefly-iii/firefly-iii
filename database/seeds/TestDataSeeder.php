@@ -68,6 +68,9 @@ class TestDataSeeder extends Seeder
             // pay daily groceries:
             $this->createGroceries($current);
 
+            // create tag (each type of tag, for date):
+            $this->createTags($current);
+
             // go out for drinks:
             $this->createDrinksAndOthers($current);
 
@@ -82,6 +85,23 @@ class TestDataSeeder extends Seeder
             $current->addMonth();
         }
 
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    protected function createTags(Carbon $date)
+    {
+        Tag::create(
+            [
+                'user_id' => $this->user->id,
+                'tag'     => 'SomeTag' . $date->month . '.' . $date->year . '.nothing',
+                'tagMode' => 'nothing',
+                'date'    => $date->format('Y-m-d'),
+
+
+            ]
+        );
     }
 
     /**
@@ -267,7 +287,7 @@ class TestDataSeeder extends Seeder
                 'startdate'     => '2015-04-01',
                 'reminder_skip' => 0,
                 'remind_me'     => 0,
-                'order'         => 1,
+                'order'         => 2,
             ]
         );
         $repetition                = $phone->piggyBankRepetitions()->first();
@@ -305,7 +325,7 @@ class TestDataSeeder extends Seeder
                 'startdate'     => '2015-04-01',
                 'reminder_skip' => 0,
                 'remind_me'     => 0,
-                'order'         => 1,
+                'order'         => 3,
             ]
         );
         $repetition                = $couch->piggyBankRepetitions()->first();
@@ -334,6 +354,20 @@ class TestDataSeeder extends Seeder
                 'amount'        => '40'
             ]
         );
+
+        // empty one.
+        PiggyBank::create(
+            [
+                'account_id'    => $account->id,
+                'name'          => 'New head set',
+                'targetamount'  => 500,
+                'startdate'     => '2015-04-01',
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 4,
+            ]
+        );
+
     }
 
     /**
@@ -363,7 +397,11 @@ class TestDataSeeder extends Seeder
      */
     protected function createIncome($description, Carbon $date, $amount)
     {
-        $date        = new Carbon($date->format('Y-m') . '-23'); // paid on 23rd.
+        $date  = new Carbon($date->format('Y-m') . '-23'); // paid on 23rd.
+        $today = new Carbon;
+        if ($date >= $today) {
+            return null;
+        }
         $toAccount   = $this->findAccount('MyBank Checking Account');
         $fromAccount = $this->findAccount('Job');
         $category    = Category::firstOrCreateEncrypted(['name' => 'Salary', 'user_id' => $this->user->id]);
@@ -596,6 +634,7 @@ class TestDataSeeder extends Seeder
     {
         $start = clone $date;
         $end   = clone $date;
+        $today = new Carbon;
         $start->startOfMonth();
         $end->endOfMonth();
 
@@ -605,7 +644,7 @@ class TestDataSeeder extends Seeder
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $this->user->id]);
 
         $current = clone $start;
-        while ($current < $end) {
+        while ($current < $end && $current < $today) {
             // daily groceries:
             $amount    = rand(1000, 2500) / 100;
             $toAccount = $this->findAccount($stores[rand(0, count($stores) - 1)]);
@@ -651,10 +690,11 @@ class TestDataSeeder extends Seeder
     {
         $start = clone $date;
         $end   = clone $date;
+        $today = new Carbon;
         $start->startOfMonth();
         $end->endOfMonth();
         $current = clone $start;
-        while ($current < $end) {
+        while ($current < $end && $current < $today) {
 
             // weekly drink:
             $thisDate = clone $current;

@@ -188,21 +188,23 @@ class TagController extends Controller
 
             /** @var Collection $tags */
             $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
-
             $tags = $tags->sortBy(
                 function (Tag $tag) {
-                    return strtolower($tag->tag);
+                    $date = $tag->date->format('Ymd');
+
+                    return strtolower($date . $tag->tag);
                 }
             );
 
             /** @var Tag $tag */
             foreach ($tags as $tag) {
-                $year                               = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
-                $month                              = is_null($tag->date) ? trans('firefly.no_month') : $tag->date->formatLocalized($this->monthFormat);
-                $collection[$type][$year][$month][] = $tag;
+
+                $year           = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
+                $monthFormatted = is_null($tag->date) ? trans('firefly.no_month') : $tag->date->formatLocalized($this->monthFormat);
+
+                $collection[$type][$year][$monthFormatted][] = $tag;
             }
         }
-
 
         return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'helpHidden', 'collection'));
     }

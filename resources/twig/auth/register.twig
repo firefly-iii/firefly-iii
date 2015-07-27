@@ -17,6 +17,10 @@
 
     <div class="register-box-body">
         <p class="login-box-msg">Register a new account</p>
+        {% if host == 'geld.nder.be' %}
+            <p class="text-info login-box-msg">Please note that an account on this site will only
+                work for one (1) week.</p>
+        {% endif %}
 
         <form role="form" id="register" method="POST" action="{{ URL.to('/auth/register') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">

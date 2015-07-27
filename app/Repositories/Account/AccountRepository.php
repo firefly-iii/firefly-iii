@@ -128,17 +128,17 @@ class AccountRepository implements AccountRepositoryInterface
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
+        $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
 
-
-        if ($preference->data == []) {
-            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
-        } else {
-            $accounts = Auth::user()->accounts()->whereIn('id', $preference->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        if (count($preference->data) > 0) {
+            $query->whereIn('accounts.id', $preference->data);
         }
 
-        $cache->store($accounts);
+        $result = $query->get(['accounts.*']);
 
-        return $accounts;
+        $cache->store($result);
+
+        return $result;
     }
 
     /**
@@ -208,23 +208,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Account $account
-     *
-     * @return Carbon|null
-     */
-    public function getLastActivity(Account $account)
-    {
-        $lastTransaction = $account->transactions()->leftJoin(
-            'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.account_id', 'transaction_journals.date']);
-        if ($lastTransaction) {
-            return $lastTransaction->date;
-        }
-
-        return null;
-    }
-
-    /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
@@ -253,6 +236,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($ids) > 0) {
             $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
         }
+        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -266,7 +250,7 @@ class AccountRepository implements AccountRepositoryInterface
                 // sum of piggy bank amounts on this account:
                 // diff between endBalance and piggyBalance.
                 // then, percentage.
-                $difference          = $account->endBalance - $account->piggyBalance;
+                $difference          = bcsub($account->endBalance, $account->piggyBalance);
                 $account->difference = $difference;
                 $account->percentage = $difference != 0 && $account->endBalance != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
 
@@ -294,13 +278,15 @@ class AccountRepository implements AccountRepositoryInterface
         $start    = clone Session::get('start', new Carbon);
         $end      = clone Session::get('end', new Carbon);
 
+        bcscale(2);
+
         $accounts->each(
             function (Account $account) use ($start, $end) {
                 $account->startBalance = Steam::balance($account, $start);
                 $account->endBalance   = Steam::balance($account, $end);
 
                 // diff (negative when lost, positive when gained)
-                $diff = $account->endBalance - $account->startBalance;
+                $diff = bcsub($account->endBalance, $account->startBalance);
 
                 if ($diff < 0 && $account->startBalance > 0) {
                     // percentage lost compared to start.
@@ -429,11 +415,11 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function sumOfEverything()
     {
-        return floatval(Auth::user()->transactions()->sum('amount'));
+        return Auth::user()->transactions()->sum('amount');
     }
 
     /**
@@ -562,10 +548,8 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeInitialBalance(Account $account, Account $opposing, array $data)
     {
-        $type            = $data['openingBalance'] < 0 ? 'Withdrawal' : 'Deposit';
-        $transactionType = TransactionType::whereType($type)->first();
-
-        $journal = new TransactionJournal(
+        $transactionType = TransactionType::whereType('Opening balance')->first();
+        $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $transactionType->id,
@@ -577,7 +561,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'encrypted'               => true
             ]
         );
-        $journal->save();
 
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
@@ -590,6 +573,7 @@ class AccountRepository implements AccountRepositoryInterface
             $firstAmount   = $data['openingBalance'];
             $secondAmount  = $data['openingBalance'] * -1;
         }
+
         $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
         $one->save();// first transaction: from
 

@@ -145,12 +145,12 @@ return [
             'ExpandedForm' => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location',
-                    'multiRadio','file','multiCheckbox'
+                    'multiRadio', 'file', 'multiCheckbox', 'staticText'
                 ]
             ],
             'Form'         => [
                 'is_safe' => [
-                    'input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea','file'
+                    'input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file'
                 ]
             ],
         ],

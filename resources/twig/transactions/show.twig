@@ -74,6 +74,48 @@
                     </div>
                 </div>
             </div>
+
+            <!-- attachments -->
+            {% if journal.attachments|length > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            {% for att in journal.attachments %}
+                                <tr>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
+                                        <a href="{{ route('attachments.download', att.id) }}" tle="{{ att.filename }}">
+                                            {% if att.title %}
+                                                {{ att.title }}
+                                            {% else %}
+                                                {{ att.filename }}
+                                            {% endif %}
+                                        </a>
+                                        ({{ att.size|filesize }})
+                                        {% if att.description %}
+                                            <br/>
+                                            <em>{{ att.description }}</em>
+                                        {% endif %}
+                                    </td>
+                                    <td style="width:100px;">
+                                        <img src="{{ route('attachments.preview', att.id) }}"></img>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
             <!-- events, if present -->
             {% if journal.piggyBankEvents|length > 0 %}
                 <div class="box">

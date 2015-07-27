@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Mail;
+use Request as Rq;
 use Session;
 use Twig;
 use Validator;
@@ -22,18 +23,17 @@ class AuthController extends Controller
 {
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getRegister()
+    {
+        $host = Rq::getHttpHost();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
-
+        return view('auth.register', compact('host'));
+    }
 
     /**
      * Handle a login request to the application.
@@ -60,11 +60,25 @@ class AuthController extends Controller
         }
 
         $credentials            = $this->getCredentials($request);
-        $credentials['blocked'] = 0;
+        $credentials['blocked'] = 0; // most not be blocked.
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
+
+        // default error message:
+        $message = $this->getFailedLoginMessage();
+
+        // try to find a blocked user with this email address.
+        /** @var User $foundUser */
+        $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
+        if (!is_null($foundUser)) {
+            // if it exists, show message:
+            $code    = $foundUser->blocked_code;
+            $message = trans('firefly.' . $code . '_error', ['email' => $credentials['email']]);
+        }
+
+        // try
 
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
@@ -77,7 +91,7 @@ class AuthController extends Controller
             ->withInput($request->only($this->loginUsername(), 'remember'))
             ->withErrors(
                 [
-                    $this->loginUsername() => $this->getFailedLoginMessage(),
+                    $this->loginUsername() => $message,
                 ]
             );
     }

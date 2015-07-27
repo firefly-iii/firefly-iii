@@ -9,6 +9,16 @@ use Illuminate\Database\Schema\Blueprint;
 class ChangesForV349 extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -21,15 +31,5 @@ class ChangesForV349 extends Migration
             $table->boolean('blocked')->default(0);
         }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }

@@ -130,7 +130,7 @@ class AccountController extends Controller
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
             'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
             'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => floatval($account->virtual_balance)
+            'virtualBalance'       => round($account->virtual_balance, 2)
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'accounts');
@@ -167,10 +167,11 @@ class AccountController extends Controller
 
         $startBalances = Steam::balancesById($ids, $start);
         $endBalances   = Steam::balancesById($ids, $end);
+        $activities    = Steam::getLastActivities($ids);
 
         $accounts->each(
-            function (Account $account) use ($startBalances, $endBalances) {
-                $account->lastActivityDate = null;//$repository->getLastActivity($account);
+            function (Account $account) use ($activities, $startBalances, $endBalances) {
+                $account->lastActivityDate = isset($activities[$account->id]) ? $activities[$account->id] : null;
                 $account->startBalance     = isset($startBalances[$account->id]) ? $startBalances[$account->id] : null;
                 $account->endBalance       = isset($endBalances[$account->id]) ? $endBalances[$account->id] : null;
             }
@@ -209,12 +210,12 @@ class AccountController extends Controller
         $accountData = [
             'name'                   => $request->input('name'),
             'accountType'            => $request->input('what'),
-            'virtualBalance'         => floatval($request->input('virtualBalance')),
+            'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
             'accountRole'            => $request->input('accountRole'),
-            'openingBalance'         => floatval($request->input('openingBalance')),
+            'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
 
@@ -252,8 +253,8 @@ class AccountController extends Controller
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
             'accountRole'            => $request->input('accountRole'),
-            'virtualBalance'         => floatval($request->input('virtualBalance')),
-            'openingBalance'         => floatval($request->input('openingBalance')),
+            'virtualBalance'         => round($request->input('virtualBalance'), 2),
+            'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
             'ccType'                 => $request->input('ccType'),

@@ -115,7 +115,7 @@
 
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('profile') }}">
-                <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> Profile</a>
+                <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}</a>
             </li>
             <li class="{{ activeRoutePartial('preferences') }}">
                 <a class="{{ activeRouteStrict('preferences') }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
@@ -124,9 +124,9 @@
                 <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
             </li>
             {% if Config.get('firefly.csv_import_enabled') %}
-            <li class="{{ activeRoutePartial('csv') }}">
-                <a href="{{ route('csv.index') }}"><i class="fa fa-file-text-o fa-fw"></i> {{ 'csv_import'|_ }}</a>
-            </li>
+                <li class="{{ activeRoutePartial('csv') }}">
+                    <a href="{{ route('csv.index') }}"><i class="fa fa-file-text-o fa-fw"></i> {{ 'csv_import'|_ }}</a>
+                </li>
             {% endif %}
         </ul>
 

@@ -44,7 +44,7 @@ class GoogleBillChartGenerator implements BillChartGenerator
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
             $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-            $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $amount               = bcdiv(bcadd($entry[0]->amount_max, $entry[0]->amount_min), 2);
             $unpaidDescriptions[] = $description;
             $unpaidAmount         = bcadd($unpaidAmount, $amount);
             unset($amount, $description);
@@ -81,9 +81,9 @@ class GoogleBillChartGenerator implements BillChartGenerator
         foreach ($entries as $result) {
             $chart->addRow(
                 clone $result->date,
-                floatval($bill->amount_max),
-                floatval($bill->amount_min),
-                floatval($result->amount)
+                round($bill->amount_max, 2),
+                round($bill->amount_min, 2),
+                round($result->amount, 2)
             );
         }
 

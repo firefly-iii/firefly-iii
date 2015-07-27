@@ -64,16 +64,16 @@ class Amount
 
         if ($coloured === true) {
             if ($amount === 0.0) {
-                return '<span style="color:#999">' . $symbol . ' ' . $string . '</span>';
+                return '<span style="color:#999">' . $symbol . '&nbsp;' . $string . '</span>';
             }
             if ($amount > 0) {
-                return '<span class="text-success">' . $symbol . ' ' . $string . '</span>';
+                return '<span class="text-success">' . $symbol . '&nbsp;' . $string . '</span>';
             }
 
-            return '<span class="text-danger">' . $symbol . ' ' . $string . '</span>';
+            return '<span class="text-danger">' . $symbol . '&nbsp;' . $string . '</span>';
         }
 
-        return $symbol . ' ' . $string;
+        return $symbol . '&nbsp;' . $string;
     }
 
     /**

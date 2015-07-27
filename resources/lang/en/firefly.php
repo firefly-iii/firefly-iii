@@ -18,12 +18,70 @@ return [
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
+    'bounced_error'                    => 'The message sent to :email bounced, so no access for you.',
+    'deleted_error'                    => 'These credentials do not match our records.',
+    'removed_amount'                   => 'Removed :amount',
+    'added_amount'                     => 'Added :amount',
+    'asset_account_role_help'          => 'Any extra options resulting from your choice can be set later.',
+
+    // tags
+    'store_new_tag'                    => 'Store new tag',
+    'update_tag'                       => 'Update tag',
+    'no_location_set'                  => 'No location set.',
+    'meta_data'                        => 'Meta data',
+    'edit_tag'                         => 'Edit tag',
+    'delete_tag'                       => 'Delete tag',
+    'location'                         => 'Location',
+
+    // preferences
+    'pref_home_screen_accounts'        => 'Home screen accounts',
+    'pref_home_screen_accounts_help'   => 'Which accounts should be displayed on the home page?',
+    'pref_budget_settings'             => 'Budget settings',
+    'pref_budget_settings_help'        => 'What\'s the maximum amount of money a budget envelope may contain?',
+    'pref_view_range'                  => 'View range',
+    'pref_view_range_help'             => 'Some charts are automatically grouped in periods. What period would you prefer?',
+    'pref_1D'                          => 'One day',
+    'pref_1W'                          => 'One week',
+    'pref_1M'                          => 'One month',
+    'pref_3M'                          => 'Three months (quarter)',
+    'pref_6M'                          => 'Six months',
+    'pref_languages'                   => 'Languages',
+    'pref_languages_help'              => 'Firefly III supports several languages. Which one do you prefer?',
+    'pref_save_settings'               => 'Save settings',
+
+    // profile:
+    'change_your_password'             => 'Change your password',
+    'delete_account'                   => 'Delete account',
+    'current_password'                 => 'Current password',
+    'new_password'                     => 'New password',
+    'new_password_again'               => 'New password (again)',
+    'delete_your_account'              => 'Delete your account',
+    'delete_your_account_help'         => 'Deleting your account will also delete any accounts, transactions, <em>anything</em> you might have saved' .
+                                          ' into Firefly III. It\'ll be GONE.',
+    'delete_your_account_password'     => 'Enter your password to continue.',
+    'password'                         => 'Password',
+    'are_you_sure'                     => 'Are you sure? You cannot undo this.',
+    'delete_account_button'            => 'DELETE your account',
+    'invalid_current_password'         => 'Invalid current password!',
+    'password_changed'                 => 'Password changed!',
+    'should_change'                    => 'The idea is to change your password.',
+    'invalid_password'                 => 'Invalid password!',
+
+
+    // attachments
+    'nr_of_attachments'                => 'One attachment|:count attachments',
+    'attachments'                      => 'Attachments',
+    'edit_attachment'                  => 'Edit attachment ":name"',
+    'update_attachment'                => 'Update attachment',
+    'delete_attachment'                => 'Delete attachment ":name"',
+    'attachment_deleted'               => 'Deleted attachment ":name"',
+    'upload_max_file_size'             => 'Maximum file size: :size',
 
     // tour:
-    'prev' => 'Prev',
-    'next' => 'Next',
-    'end-tour' => 'End tour',
-    'pause' => 'Pause',
+    'prev'                             => 'Prev',
+    'next'                             => 'Next',
+    'end-tour'                         => 'End tour',
+    'pause'                            => 'Pause',
 
     // transaction index
     'title_expenses'                   => 'Expenses',
@@ -40,24 +98,23 @@ return [
     'csv_define_column_roles'          => 'Define column roles',
     'csv_map_values'                   => 'Map found values to existing values',
     'csv_download_config'              => 'Download CSV configuration file.',
-    'csv_index_text'                   =>
-        'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by' .
-        ' the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions.' .
-        ' If you would like to learn more, please click on the <i class="fa fa-question-circle"></i> button at the top of this page.',
+    'csv_index_text'                   => 'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV' .
+                                          ' importer made by the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV' .
+                                          ' file and follow the instructions. If you would like to learn more, please click on the <i ' .
+                                          'class="fa fa-question-circle"></i> button at the top of this page.',
     'csv_index_beta_warning'           => 'This tool is very much in beta. Please proceed with caution',
     'csv_header_help'                  => 'Check this box when your CSV file\'s first row consists of column names, not actual data',
-    'csv_date_help'                    => 'Date time format in your CSV. Follow the format like <a href="https://secure.' .
-                                          'php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this' .
-                                          ' page</a> indicates. The default value will parse dates that look like this: ' . date('Ymd'),
+    'csv_date_help'                    => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/' .
+                                          'datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> ' .
+                                          'indicates. The default value will parse dates that look like this: ' . date('Ymd'),
     'csv_csv_file_help'                => 'Select the CSV file here. You can only upload one file at a time',
     'csv_csv_config_file_help'         => 'Select your CSV import configuration here. If you do not know what this is, ignore it. It will be explained later.',
     'csv_upload_button'                => 'Start importing CSV',
     'csv_column_roles_title'           => 'Define column roles',
-    'csv_column_roles_text'            =>
-        'Firefly does not know what each column means. You need to indicate what every column is. Please check out the example '
-        . 'data if you\'re not sure yourself. Click on the question mark (top right of the page) to learn what'
-        . ' each column means. If you want to map imported data onto existing data in Firefly, use the checkbox. '
-        . 'The next step will show you what this button does.',
+    'csv_column_roles_text'            => 'Firefly does not know what each column means. You need to indicate what every column is. ' .
+                                          'Please check out the example data if you\'re not sure yourself. Click on the question mark ' .
+                                          '(top right of the page) to learn what each column means. If you want to map imported data ' .
+                                          'onto existing data in Firefly, use the checkbox. The next step will show you what this button does.',
     'csv_column_roles_table'           => 'Column roles',
     'csv_column'                       => 'CSV column',
     'cvs_column_name'                  => 'CSV column name',
@@ -67,15 +124,15 @@ return [
     'csv_continue'                     => 'Continue to the next step',
     'csv_go_back'                      => 'Go back to the previous step',
     'csv_map_title'                    => 'Map found values to existing values',
-    'csv_map_text'                     =>
-        'This page allows you to map the values from the CSV file to existing entries in your database. This ensures that accounts and other'
-        . ' things won\'t be created twice.',
+    'csv_map_text'                     => 'This page allows you to map the values from the CSV file to existing entries in your ' .
+                                          'database. This ensures that accounts and other things won\'t be created twice.',
     'cvs_field_value'                  => 'Field value from CSV',
     'csv_field_mapped_to'              => 'Must be mapped to...',
+    'csv_do_not_map'                   => 'Do not map this value',
     'csv_download_config_title'        => 'Download CSV configuration',
     'csv_download_config_text'         => 'Everything you\'ve just set up can be downloaded as a configuration file. Click the button to do so.',
-    'csv_more_information_text'        => 'If the import fails, you can use this configuration file so you don\'t have to start all over again.'
-                                          . ' But, if the import succeeds, it will be easier to upload similar CSV files.',
+    'csv_more_information_text'        => 'If the import fails, you can use this configuration file so you don\'t have to start all ' .
+                                          'over again. But, if the import succeeds, it will be easier to upload similar CSV files.',
     'csv_do_download_config'           => 'Download configuration file.',
     'csv_empty_description'            => '(empty description)',
     'csv_upload_form'                  => 'CSV upload form',
@@ -91,9 +148,7 @@ return [
     'csv_process_new_entries'          => 'Firefly has created :imported new transaction(s).',
     'csv_start_over'                   => 'Import again',
     'csv_to_index'                     => 'Back home',
-    'csv_do_not_map'                   => 'Do not map this value',
     'csv_upload_not_writeable'         => 'Cannot write to the path mentioned here. Cannot upload',
-
     'csv_column__ignore'               => '(ignore this column)',
     'csv_column_account-iban'          => 'Asset account (IBAN)',
     'csv_column_account-id'            => 'Asset account  ID (matching Firefly)',
@@ -123,8 +178,8 @@ return [
     'csv_column_tags-space'            => 'Tags (space separated)',
     'csv_specifix_RabobankDescription' => 'Select this when you\'re importing Rabobank CSV export files.',
     'csv_specifix_Dummy'               => 'Checking this has no effect whatsoever.',
-    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which' .
-                                          ' account the transactions in the CSV belong to.',
+    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which'
+                                          . ' account the transactions in the CSV belong to.',
 
 
     // create new stuff:
@@ -137,9 +192,12 @@ return [
     'create_new_piggy_bank'            => 'Create new piggy bank',
     'create_new_bill'                  => 'Create new bill',
 
+
     // currencies:
     'create_currency'                  => 'Create a new currency',
     'edit_currency'                    => 'Edit currency ":name"',
+    'store_currency'                   => 'Store new currency',
+    'update_currency'                  => 'Update currency',
 
     // new user:
     'submit'                           => 'Submit',
@@ -167,10 +225,13 @@ return [
     'delete_budget'                    => 'Delete budget ":name"',
     'edit_budget'                      => 'Edit budget ":name"',
     'update_amount'                    => 'Update amount',
+    'update_budget'                    => 'Update budget',
 
     // bills:
     'delete_bill'                      => 'Delete bill ":name"',
     'edit_bill'                        => 'Edit bill ":name"',
+    'update_bill'                      => 'Update bill',
+    'store_new_bill'                   => 'Store new bill',
 
     // accounts:
     'details_for_asset'                => 'Details for asset account ":name"',
@@ -222,6 +283,7 @@ return [
     'no_category'                      => '(no category)',
     'category'                         => 'Category',
     'delete_category'                  => 'Delete category ":name"',
+    'store_category'                   => 'Store new category',
 
     // transactions:
     'update_withdrawal'                => 'Update withdrawal',
@@ -299,6 +361,7 @@ return [
     'quarterly'                        => 'Quarterly',
     'half-year'                        => 'Every six months',
     'yearly'                           => 'Yearly',
+    'profile'                          => 'Profile',
 
     // reports:
     'reportForYear'                    => 'Yearly report for :year',
@@ -361,7 +424,7 @@ return [
     // piggy banks:
     'piggy_bank'                       => 'Piggy bank',
     'new_piggy_bank'                   => 'Create new piggy bank',
-    'create_new_piggybank'             => 'Create new piggy bank',
+    'store_piggy_bank'                 => 'Store new piggy bank',
     'account_status'                   => 'Account status',
     'left_for_piggy_banks'             => 'Left for piggy banks',
     'sum_of_piggy_banks'               => 'Sum of piggy banks',
@@ -397,6 +460,17 @@ return [
     'tag_title_nothing'                => 'Default tags',
     'tag_title_balancingAct'           => 'Balancing act tags',
     'tag_title_advancePayment'         => 'Advance payment tags',
-
+    'tags_introduction'                => 'Usually tags are singular words, designed to quickly band items together using things like' .
+                                          ' <span class="label label-info">expensive</span>, <span class="label label-info">bill</span>' .
+                                          ' or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties' .
+                                          ' such as a date, description and location. This allows you to join transactions together in a more' .
+                                          ' meaningful way. For example, you could make a tag called <span class="label label-success">' .
+                                          'Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular",' .
+                                          ' you would only use them for a single occasion, perhaps with multiple transactions.',
+    'tags_group'                       => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money' .
+                                          ' for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where ' .
+                                          'expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you.' .
+                                          ' Using tags the old-fashioned way is of course always possible. ',
+    'tags_start'                       => 'Create a tag to get started or enter tags when creating new transactions.',
 
 ];

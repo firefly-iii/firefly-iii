@@ -252,13 +252,13 @@ class JournalRepository implements JournalRepositoryInterface
         // update the from and to transaction.
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            if (floatval($transaction->amount) < 0) {
+            if ($transaction->amount < 0) {
                 // this is the from transaction, negative amount:
                 $transaction->amount     = $data['amount'] * -1;
                 $transaction->account_id = $fromAccount->id;
                 $transaction->save();
             }
-            if (floatval($transaction->amount) > 0) {
+            if ($transaction->amount > 0) {
                 $transaction->amount     = $data['amount'];
                 $transaction->account_id = $toAccount->id;
                 $transaction->save();

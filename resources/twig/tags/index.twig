@@ -17,30 +17,19 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        Usually tags are singular words, designed to quickly band items together
-                        using things like <span class="label label-info">expensive</span>,
-                        <span class="label label-info">bill</span> or
-                        <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties
-                        such as a date, description and location. This allows you to join transactions together in a more meaningful
-                        way. For example, you could make a tag called <span class="label label-success">Christmas dinner with friends</span>
-                        and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion,
-                        perhaps with multiple transactions.
+                        {{ 'tags_introduction'|_ }}
                     </p>
 
                     <p>
-                        Tags group transactions together, which makes it possible to store reimbursements
-                        (in case you front money for others) and other "balancing acts" where expenses
-                        are summed up (the payments on your new TV) or where expenses and deposits
-                        are cancelling each other out (buying something with saved money). It's all up to you.
-                        Using tags the old-fashioned way is of course always possible.
+                        {{ 'tags_group'|_ }}
                     </p>
 
                     <p>
-                        Create a tag to get started or enter tags when creating new transactions.
+                        {{ 'tags_start'|_ }}
                     </p>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('tags.create') }}" title="New tag" class="btn btn-info pull-right">Create new tag</a>
+                    <a href="{{ route('tags.create') }}" title="New tag" class="btn btn-info pull-right">{{ 'new_tag'|_ }}</a>
                 </div>
             </div>
         </div>

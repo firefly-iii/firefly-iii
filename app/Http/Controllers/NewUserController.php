@@ -53,13 +53,13 @@ class NewUserController extends Controller
         // create normal asset account:
         $assetAccount = [
             'name'                   => $request->get('bank_name'),
-			'iban'                   => null,
+            'iban'                   => null,
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'accountRole'            => 'defaultAsset',
-            'openingBalance'         => floatval($request->input('bank_balance')),
+            'openingBalance'         => round($request->input('bank_balance'), 2),
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
         ];
@@ -70,13 +70,13 @@ class NewUserController extends Controller
         if (strlen($request->get('savings_balance') > 0)) {
             $savingsAccount = [
                 'name'                   => $request->get('bank_name') . ' savings account',
-				'iban'                   => null,
+                'iban'                   => null,
                 'accountType'            => 'asset',
                 'virtualBalance'         => 0,
                 'active'                 => true,
                 'user'                   => Auth::user()->id,
                 'accountRole'            => 'savingAsset',
-                'openingBalance'         => floatval($request->input('savings_balance')),
+                'openingBalance'         => round($request->input('savings_balance'), 2),
                 'openingBalanceDate'     => new Carbon,
                 'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
             ];
@@ -88,9 +88,9 @@ class NewUserController extends Controller
         if (strlen($request->get('credit_card_limit') > 0)) {
             $creditAccount = [
                 'name'                   => 'Credit card',
-				'iban'                   => null,
+                'iban'                   => null,
                 'accountType'            => 'asset',
-                'virtualBalance'         => floatval($request->get('credit_card_limit')),
+                'virtualBalance'         => round($request->get('credit_card_limit'), 2),
                 'active'                 => true,
                 'user'                   => Auth::user()->id,
                 'accountRole'            => 'ccAsset',

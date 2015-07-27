@@ -89,7 +89,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
                 $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
                 $result[$categoryId] = [
                     'name' => $name,
-                    'sum'  => floatval($entry->amount),
+                    'sum'  => $entry->amount,
                 ];
 
             }
@@ -194,11 +194,11 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      * @param Category $category
      * @param Carbon   $date
      *
-     * @return float
+     * @return string
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return floatval($category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
+        return $category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 
     /**

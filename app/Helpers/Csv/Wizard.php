@@ -7,9 +7,10 @@ use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Mapper\MapperInterface;
 use League\Csv\Reader;
+use Log;
 use ReflectionException;
 use Session;
-use Log;
+
 /**
  * Class Wizard
  *
@@ -110,6 +111,7 @@ class Wizard implements WizardInterface
         foreach ($fields as $field) {
             if (!Session::has($field)) {
                 Log::error('Session is missing field: ' . $field);
+
                 return false;
             }
         }

@@ -11,7 +11,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Meta data</h3>
+                    <h3 class="box-title">{{ 'meta_data'|_ }}</h3>
 
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
@@ -19,8 +19,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> Edit tag</a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> Delete tag</a></li>
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit_tag'|_ }}</a></li>
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete_tag'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                     {% endif %}
 
                     {% if tag.date %}
-                        <p>Date: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
+                        <p>{{ 'date'|_ }}: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -42,7 +42,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Location</h3>
+                    <h3 class="box-title">{{ 'location'|_ }}</h3>
 
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
@@ -50,8 +50,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> Edit tag</a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> Delete tag</a></li>
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit_tag'|_ }}</a></li>
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete_tag'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                             <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ tag.latitude }},{{ tag.longitude }}&zoom={{ tag.zoomLevel }}&size=600x300">
                         </p>
                     {% else %}
-                        <p>No location set.</p>
+                        <p>{{ 'no_location_set'|_ }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -80,8 +80,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> Edit tag</a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> Delete tag</a></li>
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit_tag'|_ }}</a></li>
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete_tag'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>

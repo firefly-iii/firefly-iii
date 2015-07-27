@@ -90,6 +90,7 @@ Firefly III uses the following libraries and tools:
 
 * The AdminLTE template by [Almsaseed Studio](https://almsaeedstudio.com/)
 * The [Google charts](https://developers.google.com/chart/) library.
+* [Chart.js](http://www.chartjs.org/)
 * [Bootstrap](http://getbootstrap.com/)
 * [Laravel](http://laravel.com/)
 * [Twig](http://twig.sensiolabs.org/)

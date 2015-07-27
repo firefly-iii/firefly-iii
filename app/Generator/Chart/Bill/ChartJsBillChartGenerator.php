@@ -38,7 +38,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
         /** @var Bill $entry */
         foreach ($unpaid as $entry) { // loop unpaid:
             $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-            $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $amount               = bcdiv(bcadd($entry[0]->amount_max, $entry[0]->amount_min), 2);
             $unpaidDescriptions[] = $description;
             $unpaidAmount         = bcadd($unpaidAmount, $amount);
             unset($amount, $description);

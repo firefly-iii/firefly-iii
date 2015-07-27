@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Support;
 
+use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
@@ -14,6 +15,28 @@ use FireflyIII\Models\Transaction;
  */
 class Steam
 {
+
+    /**
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function getLastActivities(array $accounts)
+    {
+        $list = [];
+
+        $set = Auth::user()->transactions()
+                   ->whereIn('account_id', $accounts)
+                   ->groupBy('account_id')
+                   ->get(['transactions.account_id', DB::Raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
+
+        foreach ($set as $entry) {
+            $list[intval($entry->account_id)] = new Carbon($entry->max_date);
+        }
+
+        return $list;
+    }
+
     /**
      *
      * @param \FireflyIII\Models\Account $account
@@ -88,6 +111,35 @@ class Steam
         $cache->store($result);
 
         return $result;
+    }
+
+    // parse PHP size:
+    /**
+     * @param $string
+     *
+     * @return int
+     */
+    public function phpBytes($string)
+    {
+        $string = strtolower($string);
+
+        if (!(strpos($string, 'k') === false)) {
+            // has a K in it, remove the K and multiply by 1024.
+            $bytes = bcmul(rtrim($string, 'k'), 1024);
+
+            return intval($bytes);
+        }
+
+        if (!(strpos($string, 'm') === false)) {
+            // has a M in it, remove the M and multiply by 1048576.
+            $bytes = bcmul(rtrim($string, 'm'), 1048576);
+
+            return intval($bytes);
+        }
+
+        return $string;
+
+
     }
 
 }

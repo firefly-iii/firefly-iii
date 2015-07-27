@@ -30,9 +30,11 @@
                             {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length, {count: account.piggyBanks|length}) }}
                         {% endif %}
                     </p>
+
                     <p class="text-success">
                         {{ 'save_transactions_by_moving'|_ }}
                     </p>
+
                     <p>
                         {{ Form.select('move_account_before_delete', accountList, null, {class: 'form-control'}) }}
                     </p>

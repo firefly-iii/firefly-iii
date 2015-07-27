@@ -6,10 +6,28 @@
 {% endif %}
 
 {% if Session.has('info') %}
+
     <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-        <strong>Info:</strong> {{ Session.get('info') }}
+
+        {% if Session.get('info') is iterable and Session.get('info')|length > 1 %}
+            <strong>{{ Session.get('info')|length }} messages:</strong>
+            <ul class="list-unstyled">
+                {% for err in Session.get('info') %}
+                    <li>{{ err }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if Session.get('info') is iterable and Session.get('info')|length == 1 %}
+            <strong>Message:</strong> {{ Session.get('info')[0]|raw }}
+        {% endif %}
+
+        {% if Session.get('info') is not iterable %}
+            <strong>Message:</strong> {{ Session.get('info')|raw }}
+        {% endif %}
+
     </div>
+
 {% endif %}
 
 {% if Session.has('warning') %}
@@ -22,6 +40,23 @@
 {% if Session.has('error') %}
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-        <strong>Error!</strong> {{ Session.get('error') }}
+
+        {% if Session.get('error') is iterable and Session.get('error')|length > 1 %}
+            <strong>{{ Session.get('error')|length }} errors:</strong>
+            <ul class="list-unstyled">
+                {% for err in Session.get('error') %}
+                    <li>{{ err }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if Session.get('error') is iterable and Session.get('error')|length == 1 %}
+            <strong>Error!</strong>
+            {{ Session.get('error')[0]|raw }}
+        {% endif %}
+
+        {% if Session.get('error') is not iterable %}
+            <strong>Error!</strong> {{ Session.get('error')|raw }}
+        {% endif %}
+
     </div>
 {% endif %}

@@ -161,7 +161,7 @@ class JsonController extends Controller
         }
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
-            $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $current = bcdiv(bcadd($entry[0]->amount_max, $entry[0]->amount_min), 2);
             $amount  = bcadd($amount, $current);
         }
 

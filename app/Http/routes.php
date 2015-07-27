@@ -1,5 +1,6 @@
 <?php
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -33,6 +34,19 @@ Route::bind(
     'tj', function ($value) {
     if (Auth::check()) {
         $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
+    }
+
+    throw new NotFoundHttpException;
+}
+);
+
+Route::bind(
+    'attachment', function ($value) {
+    if (Auth::check()) {
+        $object = Attachment::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
             return $object;
         }
@@ -144,6 +158,7 @@ Route::bind(
  * Auth\AuthController
  */
 Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
+Route::get('/cron/sendgrid', ['uses' => 'CronController@sendgrid']);
 
 Route::controllers(
     [
@@ -176,6 +191,21 @@ Route::group(
     Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
     Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
     Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+
+
+    /**
+     * Attachment Controller
+     */
+
+    Route::post('/attachment/update/{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'attachments.update']);
+    Route::post('/attachment/destroy/{attachment}', ['uses' => 'AttachmentController@destroy', 'as' => 'attachments.destroy']);
+
+    Route::get('/attachment/edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'attachments.edit']);
+    Route::get('/attachment/delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'attachments.delete']);
+    Route::get('/attachment/show/{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'attachments.show']);
+    Route::get('/attachment/preview/{attachment}', ['uses' => 'AttachmentController@preview', 'as' => 'attachments.preview']);
+    Route::get('/attachment/download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'attachments.download']);
+
 
     /**
      * Bills Controller

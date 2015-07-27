@@ -212,17 +212,19 @@ class ReportQuery implements ReportQueryInterface
     public function spentInBudgetCorrected(Account $account, Budget $budget, Carbon $start, Carbon $end)
     {
 
-        return floatval(
-                   Auth::user()->transactionjournals()
-                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->transactionTypes(['Withdrawal'])
-                       ->where('transactions.account_id', $account->id)
-                       ->before($end)
-                       ->after($start)
-                       ->where('budget_transaction_journal.budget_id', $budget->id)
-                       ->get(['transaction_journals.*'])->sum('amount')
-               ) * -1;
+        bcscale(2);
+
+        return bcmul(
+            Auth::user()->transactionjournals()
+                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                ->transactionTypes(['Withdrawal'])
+                ->where('transactions.account_id', $account->id)
+                ->before($end)
+                ->after($start)
+                ->where('budget_transaction_journal.budget_id', $budget->id)
+                ->get(['transaction_journals.*'])->sum('amount'), -1
+        );
     }
 
     /**

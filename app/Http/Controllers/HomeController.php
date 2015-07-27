@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Artisan;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -58,6 +59,7 @@ class HomeController extends Controller
 
 
         Session::clear();
+        Artisan::call('cache:clear');
 
         return redirect(route('index'));
     }
