@@ -199,10 +199,11 @@ class BudgetController extends Controller
      */
     public function year(BudgetRepositoryInterface $repository, $year, $shared = false)
     {
-        $start   = new Carbon($year . '-01-01');
-        $end     = new Carbon($year . '-12-31');
-        $shared  = $shared == 'shared' ? true : false;
-        $budgets = $repository->getBudgets();
+        $start      = new Carbon($year . '-01-01');
+        $end        = new Carbon($year . '-12-31');
+        $shared     = $shared == 'shared' ? true : false;
+        $allBudgets = $repository->getBudgets();
+        $budgets    = new Collection;
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -212,6 +213,15 @@ class BudgetController extends Controller
         $cache->addProperty('year');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        // filter empty budgets:
+
+        foreach ($allBudgets as $budget) {
+            $spent = $repository->spentInPeriodCorrected($budget, $start, $end, $shared);
+            if ($spent != 0) {
+                $budgets->push($budget);
+            }
         }
 
         $entries = new Collection;
@@ -225,13 +235,13 @@ class BudgetController extends Controller
             // each budget, fill the row:
             foreach ($budgets as $budget) {
                 $spent = $repository->spentInPeriodCorrected($budget, $start, $month, $shared);
-                $row[] = $spent*-1;
+                $row[] = $spent * -1;
             }
             $entries->push($row);
             $start->endOfMonth()->addDay();
         }
 
-        $data = $this->generator->year($budgets, $entries);
+        $data = $this->generator->year($allBudgets, $entries);
         $cache->store($data);
 
         return Response::json($data);
