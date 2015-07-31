@@ -225,7 +225,7 @@ class BudgetController extends Controller
             // each budget, fill the row:
             foreach ($budgets as $budget) {
                 $spent = $repository->spentInPeriodCorrected($budget, $start, $month, $shared);
-                $row[] = $spent;
+                $row[] = $spent*-1;
             }
             $entries->push($row);
             $start->endOfMonth()->addDay();
