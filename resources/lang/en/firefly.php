@@ -396,6 +396,8 @@ return [
     'hideTheRest'                      => 'Show only the top :number',
     'sum_of_year'                      => 'Sum of year',
     'average_of_year'                  => 'Average of year',
+    'categories_earned_in_year'        => 'Categories (by earnings)',
+    'categories_spent_in_year'         => 'Categories (by spendings)',
 
     // charts:
     'dayOfMonth'                       => 'Day of the month',

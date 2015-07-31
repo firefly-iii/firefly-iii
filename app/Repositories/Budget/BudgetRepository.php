@@ -315,7 +315,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {
-        return $this->spentInPeriod($budget, $start, $end, $shared);
+        return $this->balanceInPeriod($budget, $start, $end, $shared);
     }
 
     /**

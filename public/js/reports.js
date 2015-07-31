@@ -18,7 +18,8 @@ function drawChart() {
     }
     if (typeof stackedColumnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
         stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
-        stackedColumnChart('chart/category/year/' + year + shared, 'categories');
+        stackedColumnChart('chart/category/spent-in-year/' + year + shared, 'categories-spent-in-year');
+        stackedColumnChart('chart/category/earned-in-year/' + year + shared, 'categories-earned-in-year');
     }
     if (typeof lineChart !== 'undefined' && typeof month !== 'undefined') {
         lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');

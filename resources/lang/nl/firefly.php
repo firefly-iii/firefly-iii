@@ -404,6 +404,8 @@ return [
     'topX'                             => 'top :number',
     'showTheRest'                      => 'Laat alles zien',
     'hideTheRest'                      => 'Laat alleen de top :number zien',
+    'categories_earned_in_year'        => 'Categorieën (inkomsten)',
+    'categories_spent_in_year'         => 'Categorieën (uitgaven)',
 
     // charts:
     'dayOfMonth'                       => 'Dag vd maand',
