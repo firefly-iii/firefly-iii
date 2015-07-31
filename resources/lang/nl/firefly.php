@@ -412,6 +412,7 @@ return [
     'month'                            => 'Maand',
     'budget'                           => 'Budget',
     'spent'                            => 'Uitgegeven',
+    'earned'                           => 'Verdiend',
     'overspent'                        => 'Teveel uitgegeven',
     'left'                             => 'Over',
     'noBudget'                         => '(geen budget)',

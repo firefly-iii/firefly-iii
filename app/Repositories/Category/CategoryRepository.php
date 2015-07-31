@@ -198,7 +198,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+        return $category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
     }
 
     /**

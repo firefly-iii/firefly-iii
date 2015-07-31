@@ -404,6 +404,7 @@ return [
     'month'                            => 'Month',
     'budget'                           => 'Budget',
     'spent'                            => 'Spent',
+    'earned'                           => 'Earned',
     'overspent'                        => 'Overspent',
     'left'                             => 'Left',
     'noBudget'                         => '(no budget)',

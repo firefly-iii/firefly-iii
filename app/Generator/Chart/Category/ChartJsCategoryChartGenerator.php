@@ -29,19 +29,30 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
-            'count'    => 1,
+            'count'    => 2,
             'labels'   => [],
             'datasets' => [
                 [
                     'label' => trans('firefly.spent'),
+                    'data'  => []
+                ],
+                [
+                    'label' => trans('firefly.earned'),
                     'data'  => []
                 ]
             ],
         ];
 
         foreach ($entries as $entry) {
-            $data['labels'][]              = $entry[0]->formatLocalized($format);
-            $data['datasets'][0]['data'][] = round($entry[1], 2);
+            $data['labels'][] = $entry[0]->formatLocalized($format);
+            $amount           = round($entry[1], 2);
+            if ($amount > 0) {
+                $data['datasets'][0]['data'][] = null;
+                $data['datasets'][1]['data'][] = $amount;
+            } else {
+                $data['datasets'][0]['data'][] = $amount * -1;
+                $data['datasets'][1]['data'][] = null;
+            }
         }
 
         return $data;
