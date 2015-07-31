@@ -47,6 +47,7 @@ class ComponentRepository
             $sum = $object->transactionjournals()->before($end)->after($start)
                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                          ->transactionTypes(['Withdrawal', 'Deposit', 'Opening balance'])
                           ->leftJoin(
                               'account_meta', function (JoinClause $join) {
                               $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
