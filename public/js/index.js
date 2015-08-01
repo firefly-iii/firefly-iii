@@ -41,6 +41,7 @@ function drawChart() {
     pieChart('chart/bill/frontpage', 'bills-chart');
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
+    columnChart('chart/account/expense', 'expense-accounts-chart');
 
 
     getBoxAmounts();

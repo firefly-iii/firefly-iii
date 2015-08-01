@@ -68,6 +68,25 @@
                 </div>
             </div>
 
+            <!-- EXPENSE ACCOUNTS -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_accounts'|_ }}</h3>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="expense-accounts-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="expense-accounts-chart" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+
             <!-- SAVINGS -->
             <div class="box">
                 <div class="box-header with-border">

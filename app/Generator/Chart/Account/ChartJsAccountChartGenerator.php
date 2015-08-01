@@ -39,6 +39,51 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
      *
      * @return array
      */
+    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // language:
+
+        $data = [
+            'count'    => 1,
+            'labels'   => [],
+            'datasets' => [
+                [
+                    'label' => trans('firefly.spent'),
+                    'data'  => []
+                ]
+            ],
+        ];
+        $ids  = [];
+
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
+        $startBalances = Steam::balancesById($ids, $start);
+        $endBalances   = Steam::balancesById($ids, $end);
+
+        foreach ($accounts as $account) {
+            $id    = $account->id;
+            $start = isset($startBalances[$id]) ? $startBalances[$id] : 0;
+            $end   = isset($endBalances[$id]) ? $endBalances[$id] : 0;
+            $diff  = $end - $start;
+            if ($diff > 0) {
+                $data['labels'][]              = $account->name;
+                $data['datasets'][0]['data'][] = $diff;
+            }
+        }
+
+        return $data;
+    }
+
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
     {
         // language:

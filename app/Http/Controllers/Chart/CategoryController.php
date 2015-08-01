@@ -186,15 +186,16 @@ class CategoryController extends Controller
         $shared        = $shared == 'shared' ? true : false;
         $allCategories = $repository->getCategories();
         $entries       = new Collection;
-        $categories    = new Collection;
+        $categories    = $allCategories->filter(
+            function (Category $category) use ($repository, $start, $end, $shared) {
+                $spent = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
+                if ($spent < 0) {
+                    return $category;
+                }
 
-        // filter by checking the entire year first:
-        foreach ($allCategories as $category) {
-            $spent = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
-            if ($spent < 0) {
-                $categories->push($category);
+                return null;
             }
-        }
+        );
 
         while ($start < $end) {
             $month = clone $start; // month is the current end of the period
@@ -204,18 +205,14 @@ class CategoryController extends Controller
             foreach ($categories as $category) { // each budget, fill the row
                 $spent = $repository->spentInPeriodCorrected($category, $start, $month, $shared);
                 if ($spent < 0) {
-                    $spent = $spent * -1;
-                    $row[] = $spent;
+                    $row[] = $spent * -1;
                 } else {
                     $row[] = 0;
                 }
-
             }
             $entries->push($row);
-
             $start->addMonth();
         }
-
         $data = $this->generator->spentInYear($categories, $entries);
         $cache->store($data);
 
@@ -248,16 +245,16 @@ class CategoryController extends Controller
         $shared        = $shared == 'shared' ? true : false;
         $allCategories = $repository->getCategories();
         $allEntries    = new Collection;
-        $categories    = new Collection;
+        $categories    = $allCategories->filter(
+            function (Category $category) use ($repository, $start, $end, $shared) {
+                $spent = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
+                if ($spent > 0) {
+                    return $category;
+                }
 
-        // filter by checking the entire year first:
-        foreach ($allCategories as $category) {
-            $spent = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
-            if ($spent > 0) {
-                $categories->push($category);
+                return null;
             }
-        }
-
+        );
 
         while ($start < $end) {
             $month = clone $start; // month is the current end of the period
@@ -271,14 +268,10 @@ class CategoryController extends Controller
                 } else {
                     $row[] = 0;
                 }
-
             }
             $allEntries->push($row);
-
             $start->addMonth();
         }
-
-
         $data = $this->generator->earnedInYear($categories, $allEntries);
         $cache->store($data);
 
