@@ -2,13 +2,8 @@
 
 $(function () {
     "use strict";
-    if (typeof google !== 'undefined') {
-        // do google charts:
-        google.setOnLoadCallback(drawChart);
-    } else {
-        // do chart JS stuff.
-        drawChart();
-    }
+    // do chart JS stuff.
+    drawChart();
     if (showTour) {
         $.getJSON('json/tour').success(function (data) {
             var tour = new Tour(

@@ -98,7 +98,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
 
         // make charts:
-        // alternative is Google instead of ChartJs
         $this->app->bind('FireflyIII\Generator\Chart\Account\AccountChartGenerator', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator');
         $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGenerator', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
         $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');

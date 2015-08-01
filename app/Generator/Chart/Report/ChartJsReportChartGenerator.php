@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Preferences;
 
 /**
- * Class GoogleReportChartGenerator
+ * Class ChartJsReportChartGenerator
  *
  * @package FireflyIII\Generator\Chart\Report
  */

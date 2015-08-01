@@ -147,7 +147,7 @@ function lineChart(URL, container, options) {
         new Chart(ctx).Line(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
     console.log('URL for line chart : ' + URL);
 }
@@ -182,7 +182,7 @@ function areaChart(URL, container, options) {
         new Chart(ctx).Line(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
 
     console.log('URL for area chart: ' + URL);
@@ -218,7 +218,7 @@ function columnChart(URL, container, options) {
         new Chart(ctx).Bar(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
     console.log('URL for column chart : ' + URL);
 }
@@ -253,7 +253,7 @@ function stackedColumnChart(URL, container, options) {
         new Chart(ctx).StackedBar(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
     console.log('URL for stacked column chart : ' + URL);
 }
@@ -286,7 +286,7 @@ function pieChart(URL, container, options) {
         new Chart(ctx).Pie(data, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
 
 

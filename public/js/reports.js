@@ -2,11 +2,7 @@
 
 $(function () {
     "use strict";
-    if (typeof(google) !== 'undefined') {
-        google.setOnLoadCallback(drawChart);
-    } else {
-        drawChart();
-    }
+    drawChart();
 });
 
 
