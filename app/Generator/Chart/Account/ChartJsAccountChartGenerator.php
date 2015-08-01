@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences;
 use Steam;
 
@@ -69,7 +68,6 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             $startBalance = isset($startBalances[$id]) ? $startBalances[$id] : 0;
             $endBalance   = isset($endBalances[$id]) ? $endBalances[$id] : 0;
             $diff         = $endBalance - $startBalance;
-            Log::debug($account->name . ' spent ' . $diff);
             if ($diff > 0) {
                 $data['labels'][]              = $account->name;
                 $data['datasets'][0]['data'][] = $diff;
