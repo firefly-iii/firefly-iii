@@ -68,7 +68,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             $start = isset($startBalances[$id]) ? $startBalances[$id] : 0;
             $end   = isset($endBalances[$id]) ? $endBalances[$id] : 0;
             $diff  = $end - $start;
-            Log::debug($account->name ' spent ' . $diff);
+            Log::debug($account->name . ' spent ' . $diff);
             if ($diff > 0) {
                 $data['labels'][]              = $account->name;
                 $data['datasets'][0]['data'][] = $diff;
