@@ -63,16 +63,29 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
         $startBalances = Steam::balancesById($ids, $start);
         $endBalances   = Steam::balancesById($ids, $end);
 
+        $accounts->each(
+            function (Account $account) use ($startBalances, $endBalances) {
+                $id                  = $account->id;
+                $startBalance        = isset($startBalances[$id]) ? $startBalances[$id] : 0;
+                $endBalance          = isset($endBalances[$id]) ? $endBalances[$id] : 0;
+                $diff                = $endBalance - $startBalance;
+                $account->difference = round($diff, 2);
+            }
+        );
+
+        $accounts = $accounts->sortByDesc(
+            function (Account $account) {
+                return $account->difference;
+            }
+        );
+
         foreach ($accounts as $account) {
-            $id           = $account->id;
-            $startBalance = isset($startBalances[$id]) ? $startBalances[$id] : 0;
-            $endBalance   = isset($endBalances[$id]) ? $endBalances[$id] : 0;
-            $diff         = $endBalance - $startBalance;
-            if ($diff > 0) {
+            if ($account->difference > 0) {
                 $data['labels'][]              = $account->name;
-                $data['datasets'][0]['data'][] = $diff;
+                $data['datasets'][0]['data'][] = $account->difference;
             }
         }
+
 
         return $data;
     }

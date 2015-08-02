@@ -79,18 +79,16 @@ class HomeController extends Controller
             return redirect(route('new-user.index'));
         }
 
-        $title         = 'Firefly';
-        $subTitle      = trans('firefly.welcomeBack');
-        $mainTitleIcon = 'fa-fire';
-        $transactions  = [];
-        $frontPage     = Preferences::get('frontPageAccounts', []);
-        $start         = Session::get('start', Carbon::now()->startOfMonth());
-        $end           = Session::get('end', Carbon::now()->endOfMonth());
-        $showTour      = Preferences::get('tour', true)->data;
-
-        $accounts = $repository->getFrontpageAccounts($frontPage);
-        $savings  = $repository->getSavingsAccounts();
-
+        $title             = 'Firefly';
+        $subTitle          = trans('firefly.welcomeBack');
+        $mainTitleIcon     = 'fa-fire';
+        $transactions      = [];
+        $frontPage         = Preferences::get('frontPageAccounts', []);
+        $start             = Session::get('start', Carbon::now()->startOfMonth());
+        $end               = Session::get('end', Carbon::now()->endOfMonth());
+        $showTour          = Preferences::get('tour', true)->data;
+        $accounts          = $repository->getFrontpageAccounts($frontPage);
+        $savings           = $repository->getSavingsAccounts();
         $piggyBankAccounts = $repository->getPiggyBankAccounts();
 
 
