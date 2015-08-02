@@ -116,24 +116,24 @@ return [
                                           . ' die al in Firefly staan, gebruik dan het vinkje. Tijdens de volgende stap komt Firefly hier dan op terug.',
     'csv_column_roles_table'           => 'Kolominhoud',
     'csv_column'                       => 'CSV-kolom',
-    'cvs_column_name'                  => 'CSV-kolomnaam',
-    'cvs_column_example'               => 'Voorbeeldgegevens',
-    'cvs_column_role'                  => 'Kolom bevat?',
+    'csv_column_name'                  => 'CSV-kolomnaam',
+    'csv_column_example'               => 'Voorbeeldgegevens',
+    'csv_column_role'                  => 'Kolom bevat?',
     'csv_do_map_value'                 => 'Directe relatie?',
     'csv_continue'                     => 'Naar de volgende stap',
     'csv_go_back'                      => 'Terug naar de vorige stap',
     'csv_map_title'                    => 'Leg relaties met kolomwaardes',
     'csv_map_text'                     => 'Sommige kolommen bevatten waardes die misschien al in Firefly bestaan. Selecteer hier de juiste combinaties'
                                           . 'zodat het importeren netjes aansluit bij je huidige gegevens.',
-    'cvs_field_value'                  => 'Veldwaarde',
+    'csv_field_value'                  => 'Veldwaarde',
     'csv_field_mapped_to'              => 'Is gelijk aan',
     'csv_do_not_map'                   => 'Geen relatie',
     'csv_download_config_title'        => 'Download importconfiguratie',
-    'csv_download_config_text'         => 'Firefly is klaar om je bestand te importeren. De instellingen en selecties die je zojuist hebt gemaakt kan je downloaden'
-                                          . ' en opslaan. Bij de volgende keer kan je dit bestand ook uploaden. Als je kommagescheiden bestand dezelfde indeling'
-                                          . ' heeft, zullen alle selecties goed staan. Dat scheelt weer!',
-    'csv_more_information_text'        => 'Ook als het importeren fout gaat is dit bestand handig. Na het importeren krijg je nogmaals de gelegenheid dit bestand'
-                                          . 'te downloaden.',
+    'csv_download_config_text'         => 'Firefly is klaar om je bestand te importeren. De instellingen en selecties die je zojuist hebt gemaakt' .
+                                          ' kan je downloaden en opslaan. Bij de volgende keer kan je dit bestand ook uploaden. Als je' .
+                                          ' kommagescheiden bestand dezelfde indeling heeft, zullen alle selecties goed staan. Dat scheelt weer!',
+    'csv_more_information_text'        => 'Ook als het importeren fout gaat is dit bestand handig. Na het importeren krijg je nogmaals' .
+                                          ' de gelegenheid dit bestand te downloaden.',
     'csv_do_download_config'           => 'Download het configuratiebestand',
     'csv_empty_description'            => '(geen beschrijving)',
     'csv_upload_form'                  => 'CSV upload formulier',
@@ -181,6 +181,8 @@ return [
     'csv_specifix_RabobankDescription' => 'Vink dit aan als je Rabobank bestanden importeert.',
     'csv_specifix_Dummy'               => 'Dit vinkje doet niks (dummy).',
     'csv_import_account_help'          => 'Als jouw CSV bestand geen referenties bevat naar jouw rekening(en), geef dan hier aan om welke rekening het gaat.',
+    'csv_date_parse_error'             => 'Kan geen chocola maken van ":value" (met hulp van configuratie ":format").' .
+                                          ' Weet je zeker dat je CSV bestand geen fouten bevat?',
 
     // create new stuff:
     'create_new_withdrawal'            => 'Nieuwe uitgave',

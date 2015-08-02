@@ -117,16 +117,16 @@ return [
                                           'onto existing data in Firefly, use the checkbox. The next step will show you what this button does.',
     'csv_column_roles_table'           => 'Column roles',
     'csv_column'                       => 'CSV column',
-    'cvs_column_name'                  => 'CSV column name',
-    'cvs_column_example'               => 'Column example data',
-    'cvs_column_role'                  => 'Column contains?',
+    'csv_column_name'                  => 'CSV column name',
+    'csv_column_example'               => 'Column example data',
+    'csv_column_role'                  => 'Column contains?',
     'csv_do_map_value'                 => 'Map value?',
     'csv_continue'                     => 'Continue to the next step',
     'csv_go_back'                      => 'Go back to the previous step',
     'csv_map_title'                    => 'Map found values to existing values',
     'csv_map_text'                     => 'This page allows you to map the values from the CSV file to existing entries in your ' .
                                           'database. This ensures that accounts and other things won\'t be created twice.',
-    'cvs_field_value'                  => 'Field value from CSV',
+    'csv_field_value'                  => 'Field value from CSV',
     'csv_field_mapped_to'              => 'Must be mapped to...',
     'csv_do_not_map'                   => 'Do not map this value',
     'csv_download_config_title'        => 'Download CSV configuration',
@@ -140,8 +140,8 @@ return [
     'csv_unsupported_map'              => 'The importer cannot map the column ":columnRole" to existing values in the database.',
     'csv_unsupported_value'            => 'The importer does not know how to handle values in columns marked as ":columnRole".',
     'csv_cannot_store_value'           => 'The importer has not reserved space for columns marked ":columnRole" and will be incapable of processing them.',
-    'csv_process_title'                => 'CVS import finished!',
-    'csv_process_text'                 => 'The CVS importer has finished and has processed :rows rows',
+    'csv_process_title'                => 'CSV import finished!',
+    'csv_process_text'                 => 'The CSV importer has finished and has processed :rows rows',
     'csv_row'                          => 'Row',
     'csv_import_with_errors'           => 'There was one error.|There were :errors errors.',
     'csv_error_see_logs'               => 'Check the log files to see details.',
@@ -180,6 +180,7 @@ return [
     'csv_specifix_Dummy'               => 'Checking this has no effect whatsoever.',
     'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which'
                                           . ' account the transactions in the CSV belong to.',
+    'csv_date_parse_error'             => 'Could not parse a valid date from ":value", using the format ":format". Are you sure your CSV is correct?',
 
 
     // create new stuff:
