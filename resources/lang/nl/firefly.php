@@ -378,8 +378,8 @@ return [
     // reports:
     'reportForYear'                    => 'Jaaroverzicht :year',
     'reportForYearShared'              => 'Jaaroverzicht :year (inclusief gedeelde rekeningen)',
-    'reportForMonth'                   => 'Maandoverzicht van :date',
-    'reportForMonthShared'             => 'Maandoverzicht van :date (inclusief gedeelde rekeningen)',
+    'reportForMonth'                   => 'Maandoverzicht voor :month',
+    'reportForMonthShared'             => 'Maandoverzicht voor :month (inclusief gedeelde rekeningen)',
     'incomeVsExpenses'                 => 'Inkomsten tegenover uitgaven',
     'accountBalances'                  => 'Rekeningsaldi',
     'balanceStartOfYear'               => 'Saldo aan het begin van het jaar',
