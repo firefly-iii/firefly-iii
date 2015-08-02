@@ -183,9 +183,9 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      *
      * @return string
      */
-    public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false)
+    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)
     {
-        return $this->balanceInPeriod($category, $start, $end, $shared);
+        return $this->commonBalanceInPeriod($category, $start, $end, $shared);
     }
 
     /**

@@ -24,7 +24,7 @@ class ComponentRepository
      *
      * @return string
      */
-    protected function balanceInPeriod($object, Carbon $start, Carbon $end, $shared = false)
+    protected function commonBalanceInPeriod($object, Carbon $start, Carbon $end, $shared = false)
     {
         $cache = new CacheProperties; // we must cache this.
         $cache->addProperty($object->id);
@@ -32,7 +32,7 @@ class ComponentRepository
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($shared);
-        $cache->addProperty('spentInPeriod');
+        $cache->addProperty('balanceInPeriod');
 
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore

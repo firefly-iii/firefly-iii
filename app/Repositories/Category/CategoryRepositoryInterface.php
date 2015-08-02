@@ -83,7 +83,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false);
+    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
      *

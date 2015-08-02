@@ -65,7 +65,7 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriodCorrected($category, $start, $currentEnd);
+            $spent      = $repository->balanceInPeriod($category, $start, $currentEnd);
             $entries->push([clone $start, $spent]);
             $start = Navigation::addPeriod($start, $range, 0);
 
@@ -188,7 +188,7 @@ class CategoryController extends Controller
         $entries       = new Collection;
         $categories    = $allCategories->filter(
             function (Category $category) use ($repository, $start, $end, $shared) {
-                $spent = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
+                $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
                 if ($spent < 0) {
                     return $category;
                 }
@@ -203,7 +203,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->spentInPeriodCorrected($category, $start, $month, $shared);
+                $spent = $repository->balanceInPeriod($category, $start, $month, $shared);
                 if ($spent < 0) {
                     $row[] = $spent * -1;
                 } else {
@@ -247,7 +247,7 @@ class CategoryController extends Controller
         $allEntries    = new Collection;
         $categories    = $allCategories->filter(
             function (Category $category) use ($repository, $start, $end, $shared) {
-                $spent = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
+                $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
                 if ($spent > 0) {
                     return $category;
                 }
@@ -262,7 +262,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->spentInPeriodCorrected($category, $start, $month, $shared);
+                $spent = $repository->balanceInPeriod($category, $start, $month, $shared);
                 if ($spent > 0) {
                     $row[] = $spent;
                 } else {

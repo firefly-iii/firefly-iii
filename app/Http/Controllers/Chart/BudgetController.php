@@ -68,7 +68,7 @@ class BudgetController extends Controller
             $end->subDay();
             $chartDate = clone $end;
             $chartDate->startOfMonth();
-            $spent = $repository->spentInPeriodCorrected($budget, $first, $end);
+            $spent = $repository->balanceInPeriod($budget, $first, $end);
             $entries->push([$chartDate, $spent]);
             $first = Navigation::addPeriod($first, $range, 0);
         }
@@ -156,13 +156,13 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
-                $expenses = $repository->spentInPeriodCorrected($budget, $start, $end, true);
+                $expenses = $repository->balanceInPeriod($budget, $start, $end, true);
                 $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, true);
+                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, true);
                 // $left can be less than zero.
                 // $overspent can be more than zero ( = overspending)
 
@@ -218,7 +218,7 @@ class BudgetController extends Controller
         // filter empty budgets:
 
         foreach ($allBudgets as $budget) {
-            $spent = $repository->spentInPeriodCorrected($budget, $start, $end, $shared);
+            $spent = $repository->balanceInPeriod($budget, $start, $end, $shared);
             if ($spent != 0) {
                 $budgets->push($budget);
             }
@@ -234,7 +234,7 @@ class BudgetController extends Controller
 
             // each budget, fill the row:
             foreach ($budgets as $budget) {
-                $spent = $repository->spentInPeriodCorrected($budget, $start, $month, $shared);
+                $spent = $repository->balanceInPeriod($budget, $start, $month, $shared);
                 $row[] = $spent * -1;
             }
             $entries->push($row);
