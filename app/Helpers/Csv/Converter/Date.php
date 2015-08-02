@@ -3,6 +3,9 @@
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
+use InvalidArgumentException;
+use Log;
 use Session;
 
 /**
@@ -19,8 +22,16 @@ class Date extends BasicConverter implements ConverterInterface
     public function convert()
     {
         $format = Session::get('csv-date-format');
+        try {
+            $date = Carbon::createFromFormat($format, $this->value);
+        } catch (InvalidArgumentException $e) {
+            Log::error('Date conversion error: ' . $e->getMessage() . '. Value was "' . $this->value . '", format was "' . $format . '".');
 
-        $date = Carbon::createFromFormat($format, $this->value);
+            $message = trans('firefly.csv_date_parse_error', ['format' => $format, 'value' => $this->value]);
+
+            throw new FireflyException($message);
+        }
+
 
         return $date;
     }
