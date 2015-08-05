@@ -1,19 +1,12 @@
 /* globals $, Chart, currencySymbol */
 
+Chart.defaults.global = {
+    // Boolean - Whether to animate the chart
+    animation: false
+}
+
 /*
  Make some colours:
- */
-/*
- #555299
- #4285f4
- #
- #
- #
- #
- #
- #
- #
- #", "#", "#", "#"],
  */
 var colourSet = [
     [53, 124, 165],
