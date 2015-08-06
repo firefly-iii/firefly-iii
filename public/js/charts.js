@@ -56,6 +56,7 @@ var defaultPieOptions = {
     datasetStrokeWidth: 1,
     pointHitDetectionRadius: 5,
     datasetFill: false,
+    animation: false, 
     scaleFontSize: 10,
     responsive: false,
     tooltipFillColor: "rgba(0,0,0,0.5)",
