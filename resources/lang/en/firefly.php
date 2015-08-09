@@ -15,6 +15,7 @@ return [
     'cancel'                           => 'Cancel',
     'from'                             => 'From',
     'to'                               => 'To',
+    'total_sum'                        => 'Total sum',
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',

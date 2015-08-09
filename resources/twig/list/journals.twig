@@ -1,6 +1,7 @@
 {{ journals.render|raw }}
 
-<table class="table table-hover sortable sortable-table">
+<table class="table table-hover">
+    <thead>
     <tr class="ignore">
         <th class="hidden-xs" colspan="2">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
@@ -23,6 +24,9 @@
             <th class="hidden-xs"><i class="fa fa-fw fa-rotate-right" title="{{ trans('list.bill') }}"></i></th>
         {% endif %}
     </tr>
+    </thead>
+    <tbody>
+    {% set _sum = 0 %}
     {% for journal in journals %}
         {% if invalidJournal(journal) %}
             <tr class="ignore">
@@ -36,6 +40,7 @@
                 <td colspan="7"><em>Invalid journal: Found {{ journal.transactions|length }} transaction(s)</em></td>
             </tr>
         {% else %}
+            {% set _sum = _sum + journal.correct_amount %}
             <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
                 <td class="hidden-xs">
                     <div class="btn-group btn-group-xs">
@@ -111,8 +116,23 @@
                 {% endif %}
             </tr>
         {% endif %}
-
     {% endfor %}
+    </tbody>
+    <tfoot>
+        {% if showPageSum %}
+            <tr>
+                <td colspan="3" style="text-align: right;"><em>{{ 'sum'|_ }}</em></td>
+                <td colspan="2">{{ _sum|formatAmount }}</td>
+            </tr>
+        {% endif %}
+        {% if showTotalSum %}
+            <tr>
+                <td colspan="3" style="text-align: right;"><em>{{ 'total_sum'|_ }}</em></td>
+                <td colspan="2">{{ totalSum|formatAmount }}</td>
+            </tr>
+        {% endif %}
+
+    </tfoot>
 </table>
 
 {{ journals.render|raw }}

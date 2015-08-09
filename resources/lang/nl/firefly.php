@@ -15,6 +15,7 @@ return [
     'cancel'                           => 'Annuleren',
     'from'                             => 'Van',
     'to'                               => 'Tot',
+    'total_sum'                        => 'Totale som',
     'showEverything'                   => 'Laat alles zien',
     'never'                            => 'Nooit',
     'search_results_for'               => 'Zoekresultaten voor ":query"',

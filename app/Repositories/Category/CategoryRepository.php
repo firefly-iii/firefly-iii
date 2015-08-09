@@ -57,6 +57,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         return $set;
     }
 
+
     /**
      *
      * @param Carbon $start
@@ -64,7 +65,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      *
      * @return array
      */
-    public function getCategoriesAndExpensesCorrected($start, $end)
+    public function getCategoriesAndExpensesCorrected(Carbon $start, Carbon $end)
     {
         $set = Auth::user()->transactionjournals()
                    ->leftJoin(
@@ -232,5 +233,33 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         $category->save();
 
         return $category;
+    }
+
+    /**
+     * This method returns the sum of the journals in the category, optionally
+     * limited by a start or end date.
+     *
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return string
+     */
+    public function journalsSum(Category $category, Carbon $start = null, Carbon $end = null)
+    {
+        $query = $category->transactionJournals()
+                          ->orderBy('transaction_journals.date', 'DESC')
+                          ->orderBy('transaction_journals.order', 'ASC')
+                          ->orderBy('transaction_journals.id', 'DESC');
+        if (!is_null($start)) {
+            $query->after($start);
+        }
+
+        if (!is_null($end)) {
+            $query->before($end);
+        }
+
+        return $query->get(['transaction_journals.*'])->sum('correct_amount');
+
     }
 }
