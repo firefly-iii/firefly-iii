@@ -16,6 +16,7 @@ return [
     'from'                             => 'From',
     'to'                               => 'To',
     'total_sum'                        => 'Total sum',
+    'period_sum'                       => 'Sum for period',
     'showEverything'                   => 'Show everything',
     'never'                            => 'Never',
     'search_results_for'               => 'Search results for ":query"',
