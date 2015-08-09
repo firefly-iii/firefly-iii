@@ -190,7 +190,8 @@ class TagController extends Controller
             $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
             $tags = $tags->sortBy(
                 function (Tag $tag) {
-                    $date = $tag->date->format('Ymd');
+                    $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
+
 
                     return strtolower($date . $tag->tag);
                 }
