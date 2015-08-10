@@ -40,7 +40,7 @@ interface CategoryRepositoryInterface
      *
      * @return array
      */
-    public function getCategoriesAndExpensesCorrected($start, $end);
+    public function getCategoriesAndExpensesCorrected(Carbon $start, Carbon $end);
 
     /**
      * @param Category $category
@@ -56,6 +56,18 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function getJournals(Category $category, $page);
+
+    /**
+     * This method returns the sum of the journals in the category, optionally
+     * limited by a start or end date.
+     *
+     * @param Category $category
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function journalsSum(Category $category, Carbon $start = null, Carbon $end = null);
 
     /**
      * @param Category $category
@@ -83,7 +95,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false);
+    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
      *

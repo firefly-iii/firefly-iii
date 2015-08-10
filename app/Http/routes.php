@@ -162,7 +162,7 @@ Route::get('/cron/sendgrid', ['uses' => 'CronController@sendgrid']);
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
+        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -282,6 +282,7 @@ Route::group(
      */
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
+    Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
     Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(
         ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
     );
@@ -300,7 +301,12 @@ Route::group(
 
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
-    Route::get('/chart/category/year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/chart/category/spent-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@spentInYear'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
+    Route::get('/chart/category/earned-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@earnedInYear'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
     Route::get('/chart/category/{category}/month', ['uses' => 'Chart\CategoryController@month']); // should be period.
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
 

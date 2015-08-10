@@ -9,7 +9,7 @@ use Preferences;
 
 
 /**
- * Class GooglePiggyBankChartGenerator
+ * Class ChartJsPiggyBankChartGenerator
  *
  * @package FireflyIII\Generator\Chart\PiggyBank
  */

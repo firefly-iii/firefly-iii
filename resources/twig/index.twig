@@ -67,7 +67,87 @@
                     {% endif %}
                 </div>
             </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
 
+            <!-- BILLS -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'bills'|_ }}</h3>
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="bills-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="bills-chart" style="width:100%;height:250px;"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS -->
+            {% for data in transactions %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ data[1].name }}</h3>
+
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <div class="btn-group">
+                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('transactions.create','withdrawal') }}?account_id={{ data[1].id }}"><i
+                                                    class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create','deposit') }}?account_id={{ data[1].id }}"><i
+                                                    class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create','transfer') }}?account_from_id={{ data[1].id }}"><i
+                                                    class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="box-body no-padding">
+                        {% include 'list/journals-tiny.twig' with {'transactions': data[0],'account': data[1]} %}
+                    </div>
+                    <div class="box-footer clearfix">
+                        <a class="btn btn-sm btn-default btn-flat pull-right"
+                           href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <!-- EXPENSE ACCOUNTS -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_accounts'|_ }}</h3>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="expense-accounts-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="expense-accounts-chart" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-12 col-md-12">
             <!-- SAVINGS -->
             <div class="box">
                 <div class="box-header with-border">
@@ -133,7 +213,8 @@
                     <span class="pull-right">{{ 'sum'|_ }}: {{ savingsTotal|formatAmount }}</span>
                 </div>
             </div>
-
+        </div>
+        <div class="col-lg-6 col-sm-12 col-md-12">
             <!-- PIGGY BANKS -->
             <div class="box">
                 <div class="box-header with-border">
@@ -178,63 +259,6 @@
                     {% endif %}
                 </div>
             </div>
-
-
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-
-            <!-- BILLS -->
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'bills'|_ }}</h3>
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="bills-chart"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="bills-chart" style="width:100%;height:250px;"></canvas>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- TRANSACTIONS -->
-            {% for data in transactions %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ data[1].name }}</h3>
-
-                        <!-- ACTIONS MENU -->
-                        <div class="box-tools pull-right">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            <div class="btn-group">
-                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('transactions.create','withdrawal') }}?account_id={{ data[1].id }}"><i
-                                                    class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create','deposit') }}?account_id={{ data[1].id }}"><i
-                                                    class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create','transfer') }}?account_from_id={{ data[1].id }}"><i
-                                                    class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="box-body no-padding">
-                        {% include 'list/journals-tiny.twig' with {'transactions': data[0],'account': data[1]} %}
-                    </div>
-                    <div class="box-footer clearfix">
-                        <a class="btn btn-sm btn-default btn-flat pull-right"
-                           href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
-                    </div>
-                </div>
-            {% endfor %}
         </div>
     </div>
 

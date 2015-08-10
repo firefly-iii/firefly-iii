@@ -39,6 +39,65 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
      *
      * @return array
      */
+    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // language:
+
+        $data = [
+            'count'    => 1,
+            'labels'   => [],
+            'datasets' => [
+                [
+                    'label' => trans('firefly.spent'),
+                    'data'  => []
+                ]
+            ],
+        ];
+        $ids  = [];
+
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+        $start->subDay();
+
+        $startBalances = Steam::balancesById($ids, $start);
+        $endBalances   = Steam::balancesById($ids, $end);
+
+        $accounts->each(
+            function (Account $account) use ($startBalances, $endBalances) {
+                $id                  = $account->id;
+                $startBalance        = isset($startBalances[$id]) ? $startBalances[$id] : 0;
+                $endBalance          = isset($endBalances[$id]) ? $endBalances[$id] : 0;
+                $diff                = $endBalance - $startBalance;
+                $account->difference = round($diff, 2);
+            }
+        );
+
+        $accounts = $accounts->sortByDesc(
+            function (Account $account) {
+                return $account->difference;
+            }
+        );
+
+        foreach ($accounts as $account) {
+            if ($account->difference > 0) {
+                $data['labels'][]              = $account->name;
+                $data['datasets'][0]['data'][] = $account->difference;
+            }
+        }
+
+
+        return $data;
+    }
+
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
     {
         // language:

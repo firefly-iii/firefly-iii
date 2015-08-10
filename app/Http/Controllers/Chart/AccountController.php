@@ -80,6 +80,36 @@ class AccountController extends Controller
     }
 
     /**
+     * Shows the balances for all the user's expense accounts.
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function expenseAccounts(AccountRepositoryInterface $repository)
+    {
+        $start    = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end      = clone Session::get('end', Carbon::now()->endOfMonth());
+        $accounts = $repository->getAccounts(['Expense account', 'Beneficiary account']);
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('expenseAccounts');
+        $cache->addProperty('accounts');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        $data = $this->generator->expenseAccounts($accounts, $start, $end);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
      * Shows the balances for all the user's frontpage accounts.
      *
      * @param AccountRepositoryInterface $repository

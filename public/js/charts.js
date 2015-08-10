@@ -3,18 +3,6 @@
 /*
  Make some colours:
  */
-/*
- #555299
- #4285f4
- #
- #
- #
- #
- #
- #
- #
- #", "#", "#", "#"],
- */
 var colourSet = [
     [53, 124, 165],
     [0, 141, 76],
@@ -54,6 +42,7 @@ var defaultAreaOptions = {
     datasetStrokeWidth: 1,
     pointHitDetectionRadius: 5,
     datasetFill: true,
+    animation: false,
     scaleFontSize: 10,
     responsive: false,
     scaleLabel: " <%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
@@ -68,6 +57,7 @@ var defaultPieOptions = {
     datasetStrokeWidth: 1,
     pointHitDetectionRadius: 5,
     datasetFill: false,
+    animation: false,
     scaleFontSize: 10,
     responsive: false,
     tooltipFillColor: "rgba(0,0,0,0.5)",
@@ -81,6 +71,7 @@ var defaultLineOptions = {
     pointDotRadius: 2,
     datasetStrokeWidth: 1,
     pointHitDetectionRadius: 5,
+    animation: false,
     datasetFill: false,
     scaleFontSize: 10,
     responsive: false,
@@ -98,6 +89,7 @@ var defaultColumnOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: false,
+    animation: false,
     scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate:      "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
@@ -110,6 +102,7 @@ var defaultStackedColumnOptions = {
     barStrokeWidth: 1,
     pointHitDetectionRadius: 5,
     datasetFill: false,
+    animation: false,
     scaleFontSize: 10,
     responsive: false,
     scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
@@ -147,7 +140,7 @@ function lineChart(URL, container, options) {
         new Chart(ctx).Line(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
     console.log('URL for line chart : ' + URL);
 }
@@ -182,7 +175,7 @@ function areaChart(URL, container, options) {
         new Chart(ctx).Line(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
 
     console.log('URL for area chart: ' + URL);
@@ -218,7 +211,7 @@ function columnChart(URL, container, options) {
         new Chart(ctx).Bar(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
     console.log('URL for column chart : ' + URL);
 }
@@ -253,7 +246,7 @@ function stackedColumnChart(URL, container, options) {
         new Chart(ctx).StackedBar(newData, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
     console.log('URL for stacked column chart : ' + URL);
 }
@@ -286,7 +279,7 @@ function pieChart(URL, container, options) {
         new Chart(ctx).Pie(data, options);
 
     }).fail(function () {
-        $('#' + container).addClass('google-chart-error');
+        $('#' + container).addClass('general-chart-error');
     });
 
 

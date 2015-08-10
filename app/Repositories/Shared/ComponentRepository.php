@@ -24,7 +24,7 @@ class ComponentRepository
      *
      * @return string
      */
-    protected function spentInPeriod($object, Carbon $start, Carbon $end, $shared = false)
+    protected function commonBalanceInPeriod($object, Carbon $start, Carbon $end, $shared = false)
     {
         $cache = new CacheProperties; // we must cache this.
         $cache->addProperty($object->id);
@@ -32,7 +32,7 @@ class ComponentRepository
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($shared);
-        $cache->addProperty('spentInPeriod');
+        $cache->addProperty('balanceInPeriod');
 
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
@@ -45,14 +45,14 @@ class ComponentRepository
             // do something else, SEE budgets.
             // get all journals in this month where the asset account is NOT shared.
             $sum = $object->transactionjournals()->before($end)->after($start)
-                          ->transactionTypes(['Withdrawal'])
                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                          ->transactionTypes(['Withdrawal', 'Deposit', 'Opening balance'])
                           ->leftJoin(
                               'account_meta', function (JoinClause $join) {
                               $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
                           }
-                          )->where('account_meta.data', '!=', '"sharedAsset"')->get(['transaction_journals.*'])->sum('amount');
+                          )->where('account_meta.data', '!=', '"sharedAsset"')->get(['transaction_journals.*'])->sum('correct_amount');
         }
 
         $cache->store($sum);

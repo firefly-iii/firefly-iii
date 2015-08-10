@@ -29,19 +29,30 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
-            'count'    => 1,
+            'count'    => 2,
             'labels'   => [],
             'datasets' => [
                 [
                     'label' => trans('firefly.spent'),
+                    'data'  => []
+                ],
+                [
+                    'label' => trans('firefly.earned'),
                     'data'  => []
                 ]
             ],
         ];
 
         foreach ($entries as $entry) {
-            $data['labels'][]              = $entry[0]->formatLocalized($format);
-            $data['datasets'][0]['data'][] = round($entry[1], 2);
+            $data['labels'][] = $entry[0]->formatLocalized($format);
+            $amount           = round($entry[1], 2);
+            if ($amount > 0) {
+                $data['datasets'][0]['data'][] = null;
+                $data['datasets'][1]['data'][] = $amount;
+            } else {
+                $data['datasets'][0]['data'][] = $amount * -1;
+                $data['datasets'][1]['data'][] = null;
+            }
         }
 
         return $data;
@@ -93,7 +104,41 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
      *
      * @return array
      */
-    public function year(Collection $categories, Collection $entries)
+    public function spentInYear(Collection $categories, Collection $entries)
+    {
+
+        // language:
+        $language = Preferences::get('language', 'en')->data;
+        $format   = Config::get('firefly.month.' . $language);
+
+        $data = [
+            'count'    => 0,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+
+        foreach ($categories as $category) {
+            $data['labels'][] = $category->name;
+        }
+
+        foreach ($entries as $entry) {
+            $date = $entry[0]->formatLocalized($format);
+            array_shift($entry);
+            $data['count']++;
+            $data['datasets'][] = ['label' => $date, 'data' => $entry];
+        }
+
+        return $data;
+
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function earnedInYear(Collection $categories, Collection $entries)
     {
 
         // language:

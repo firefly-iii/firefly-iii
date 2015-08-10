@@ -136,7 +136,7 @@ interface BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true);
+    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true);
 
     /**
      * @param array $data

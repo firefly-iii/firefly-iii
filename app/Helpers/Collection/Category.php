@@ -34,7 +34,8 @@ class Category
      */
     public function addCategory(CategoryModel $category)
     {
-        if ($category->spent > 0) {
+        // spent is minus zero for an expense report:
+        if ($category->spent < 0) {
             $this->categories->push($category);
         }
     }

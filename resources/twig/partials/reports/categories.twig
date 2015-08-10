@@ -16,14 +16,14 @@
                     <td>
                         <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
                     </td>
-                    <td><span class="text-danger">{{ (cat.spent)|formatAmountPlain }}</span></td>
+                    <td><span class="text-danger">{{ (cat.spent * -1)|formatAmountPlain }}</span></td>
                 </tr>
             {% endfor %}
             </tbody>
             <tfoot>
             <tr>
                 <td><em>{{ 'sum'|_ }}</em></td>
-                <td class="text-danger">{{ categories.getTotal|formatAmountPlain }}</td>
+                <td class="text-danger">{{ (categories.getTotal * -1)|formatAmountPlain }}</td>
             </tr>
             </tfoot>
         </table>

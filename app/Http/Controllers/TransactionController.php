@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -8,6 +9,7 @@ use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -51,11 +53,19 @@ class TransactionController extends Controller
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
-        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0]  = trans('form.noPiggybank');
-        $preFilled   = Session::has('preFilled') ? Session::get('preFilled') : [];
-        $respondTo   = ['account_id', 'account_from_id'];
-        $subTitle    = trans('form.add_new_' . $what);
+
+        // piggy bank list:
+        $piggyBanks = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+        /** @var PiggyBank $piggy */
+        foreach ($piggyBanks as $piggy) {
+            $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
+        }
+
+        $piggies    = ExpandedForm::makeSelectList($piggyBanks);
+        $piggies[0] = trans('form.noPiggybank');
+        $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
+        $respondTo  = ['account_id', 'account_from_id'];
+        $subTitle   = trans('form.add_new_' . $what);
 
         foreach ($respondTo as $r) {
             $preFilled[$r] = Input::get($r);

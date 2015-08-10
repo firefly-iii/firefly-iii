@@ -2,13 +2,8 @@
 
 $(function () {
     "use strict";
-    if (typeof google !== 'undefined') {
-        // do google charts:
-        google.setOnLoadCallback(drawChart);
-    } else {
-        // do chart JS stuff.
-        drawChart();
-    }
+    // do chart JS stuff.
+    drawChart();
     if (showTour) {
         $.getJSON('json/tour').success(function (data) {
             var tour = new Tour(
@@ -41,6 +36,7 @@ function drawChart() {
     pieChart('chart/bill/frontpage', 'bills-chart');
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
+    columnChart('chart/account/expense', 'expense-accounts-chart');
 
 
     getBoxAmounts();

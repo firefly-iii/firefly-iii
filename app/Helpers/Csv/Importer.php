@@ -124,7 +124,7 @@ class Importer
      */
     protected function parseRow($index)
     {
-        return (($this->data->hasHeaders() && $index > 1) || !$this->data->hasHeaders());
+        return (($this->data->hasHeaders() && $index >= 1) || !$this->data->hasHeaders());
     }
 
     /**

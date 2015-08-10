@@ -152,7 +152,7 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $date               = Session::get('start', Carbon::now()->startOfMonth());
             $end                = Session::get('end', Carbon::now()->endOfMonth());
-            $budget->spent      = $repository->spentInPeriodCorrected($budget, $date, $end);
+            $budget->spent      = $repository->balanceInPeriod($budget, $date, $end);
             $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
             if ($budget->currentRep) {
                 $budgeted = bcadd($budgeted, $budget->currentRep->amount);
