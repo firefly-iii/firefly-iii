@@ -85,7 +85,9 @@ return [
         [
             'asset'   => 'Asset account',
             'expense' => 'Expense account',
-            'revenue' => 'Revenue account'
+            'revenue' => 'Revenue account',
+            'opening' => 'Initial balance account',
+            'initial' => 'Initial balance account',
         ],
     'shortNamesByFullName'     =>
         [

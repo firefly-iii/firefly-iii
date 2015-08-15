@@ -25,6 +25,7 @@ return [
     'removed_amount'                   => ':amount weggehaald',
     'added_amount'                     => ':amount toegevoegd',
     'asset_account_role_help'          => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
+    'Opening balance'                  => 'Startsaldo',
 
     // tags
     'store_new_tag'                    => 'Sla tag op',

@@ -25,6 +25,7 @@ return [
     'removed_amount'                   => 'Removed :amount',
     'added_amount'                     => 'Added :amount',
     'asset_account_role_help'          => 'Any extra options resulting from your choice can be set later.',
+    'Opening balance'                  => 'Opening balance',
 
     // tags
     'store_new_tag'                    => 'Store new tag',
