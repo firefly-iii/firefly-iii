@@ -22,22 +22,27 @@
                         {{ trans('form.account_areYouSure', {'name': account.name}) }}
                     </p>
 
-                    <p>
-                        {% if account.transactions|length > 0 %}
-                            {{ Lang.choice('form.also_delete_transactions', account.transactions|length, {count: account.transactions|length}) }}
-                        {% endif %}<br/>
-                        {% if account.piggyBanks|length > 0 %}
-                            {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length, {count: account.piggyBanks|length}) }}
-                        {% endif %}
-                    </p>
+                    {% if account.transactions|length > 0 or account.piggyBanks|length > 0 %}
+                        <p>
+                            {% if account.transactions|length > 0 %}
+                                {{ Lang.choice('form.also_delete_transactions', account.transactions|length, {count: account.transactions|length}) }}
+                            {% endif %}<br/>
+                            {% if account.piggyBanks|length > 0 %}
+                                {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length, {count: account.piggyBanks|length}) }}
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                    {% if account.transactions|length > 0 %}
+                        <p class="text-success">
+                            {{ 'save_transactions_by_moving'|_ }}
+                        </p>
 
-                    <p class="text-success">
-                        {{ 'save_transactions_by_moving'|_ }}
-                    </p>
-
-                    <p>
-                        {{ Form.select('move_account_before_delete', accountList, null, {class: 'form-control'}) }}
-                    </p>
+                        <p>
+                            {{ Form.select('move_account_before_delete', accountList, null, {class: 'form-control'}) }}
+                        </p>
+                    {% else %}
+                        <input type="hidden" name="move_account_before_delete" value="0"/>
+                    {% endif %}
 
                 </div>
                 <div class="box-footer">
