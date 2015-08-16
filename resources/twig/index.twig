@@ -163,7 +163,7 @@
                     {% else %}
                         {% for account in savings %}
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{ route('accounts.show') }}">{{ account.name }}</a></h5>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a></h5>
                                 </div>
                             </div>
                             <div class="row">
@@ -230,7 +230,7 @@
                     {% else %}
                         {% for account in piggyBankAccounts %}
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{ route('accounts.show') }}">{{ account.name }}</a></h5>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a></h5>
                                 </div>
                             </div>
                             <div class="row">
