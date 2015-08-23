@@ -26,14 +26,21 @@ return [
     'added_amount'                     => 'Added :amount',
     'asset_account_role_help'          => 'Any extra options resulting from your choice can be set later.',
     'Opening balance'                  => 'Opening balance',
+    'create_new_stuff'                 => 'Create new stuff',
+    'new_withdrawal'                   => 'New withdrawal',
+    'new_deposit'                      => 'New deposit',
+    'new_transfer'                     => 'New transfer',
+    'new_asset_account'                => 'New asset account',
+    'new_expense_account'              => 'New expense account',
+    'new_revenue_account'              => 'New revenue account',
+    'new_budget'                       => 'New budget',
+    'new_bill'                         => 'New bill',
 
     // tags
     'store_new_tag'                    => 'Store new tag',
     'update_tag'                       => 'Update tag',
     'no_location_set'                  => 'No location set.',
     'meta_data'                        => 'Meta data',
-    'edit_tag'                         => 'Edit tag',
-    'delete_tag'                       => 'Delete tag',
     'location'                         => 'Location',
 
     // preferences
@@ -459,7 +466,11 @@ return [
     'delete_piggy_bank'                => 'Delete piggy bank ":name"',
 
     // tags
-    'delete_tag'                       => 'Delete tag ":name"',
+    'regular_tag'                      => 'Just a regular tag.',
+    'balancing_act'                    => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
+    'advance_payment'                  => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
+
+    'delete_tag'                       => 'Delete tag ":tag"',
     'new_tag'                          => 'Make new tag',
     'edit_tag'                         => 'Edit tag ":tag"',
     'no_year'                          => 'No year set',

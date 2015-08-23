@@ -26,6 +26,15 @@ return [
     'added_amount'                     => ':amount toegevoegd',
     'asset_account_role_help'          => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
     'Opening balance'                  => 'Startsaldo',
+    'create_new_stuff'                 => 'Nieuw',
+    'new_withdrawal'                   => 'Nieuwe uitgave',
+    'new_deposit'                      => 'Nieuwe inkomsten',
+    'new_transfer'                     => 'Nieuwe overschrijving',
+    'new_asset_account'                => 'Nieuwe betaalrekening',
+    'new_expense_account'              => 'Nieuwe crediteur',
+    'new_revenue_account'              => 'Nieuwe debiteur',
+    'new_budget'                       => 'Nieuw budget',
+    'new_bill'                         => 'Nieuwe rekening',
 
     // tags
     'store_new_tag'                    => 'Sla tag op',
@@ -468,7 +477,10 @@ return [
     'delete_piggy_bank'                => 'Verwijder spaarpotje ":name"',
 
     // tags
-    'delete_tag'                       => 'Verwijder tag ":name"',
+    'regular_tag'                      => 'Een gewone tag.',
+    'balancing_act'                    => 'Er kunnen maar twee transacties worden getagged; een uitgaven en inkomsten. Ze balanceren elkaar.',
+    'advance_payment'                  => 'Je kan een uitgave taggen en zoveel inkomsten om de uitgave (helemaal) te compenseren.',
+    'delete_tag'                       => 'Verwijder tag ":tag"',
     'new_tag'                          => 'Maak nieuwe tag',
     'edit_tag'                         => 'Wijzig tag ":tag"',
     'no_year'                          => 'Zonder jaar',
