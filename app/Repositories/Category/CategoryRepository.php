@@ -78,15 +78,15 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
                    ->transactionTypes(['Withdrawal'])
                    ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
 
+        bcscale(2);
         $result = [];
         foreach ($set as $entry) {
             $categoryId = intval($entry->category_id);
             if (isset($result[$categoryId])) {
-                bcscale(2);
                 $result[$categoryId]['sum'] = bcadd($result[$categoryId]['sum'], $entry->amount);
             } else {
-                $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
-                $name                = strlen($entry->name) == 0 ? trans('firefly.no_category') : $entry->name;
+                $isEncrypted         = intval($entry->category_encrypted) === 1 ? true : false;
+                $name                = strlen($entry->name) === 0 ? trans('firefly.no_category') : $entry->name;
                 $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
                 $result[$categoryId] = [
                     'name' => $name,

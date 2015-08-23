@@ -73,7 +73,6 @@ return [
     'delete_budget'               => 'Delete budget ":name"',
     'delete_category'             => 'Delete category ":name"',
     'delete_currency'             => 'Delete currency ":name"',
-    'delete_piggyBank'            => 'Delete piggy bank ":name"',
     'delete_journal'              => 'Delete transaction with description ":description"',
     'delete_attachment'           => 'Delete attachment ":name"',
 

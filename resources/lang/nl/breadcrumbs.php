@@ -4,23 +4,15 @@ return [
 
     // accounts
     'cash_accounts'         => 'Contant geldrekeningen',
-    'new_asset_account'     => 'Nieuwe betaalrekening',
-    'new_expense_account'   => 'Nieuwe crediteur',
-    'new_revenue_account'   => 'Nieuwe debiteur',
     'edit_account'          => 'Wijzig rekening ":name"',
-
-    // categories
-    'newCategory'           => 'Maak een nieuw categorie',
 
     // currencies
     'edit_currency'         => 'Wijzig valuta ":name"',
     'delete_currency'       => 'Verwijder valuta ":name"',
 
     // piggy banks
-    'piggyBanks'            => 'Spaarpotjes',
     'newPiggyBank'          => 'Nieuw spaarpotje',
     'edit_piggyBank'        => 'Wijzig spaarpotje ":name"',
-    'delete_piggyBank'      => 'Verwijder spaarportje ":name"',
 
     // top menu
     'preferences'           => 'Voorkeuren',

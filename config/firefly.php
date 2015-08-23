@@ -2,7 +2,7 @@
 
 return [
     'chart'                    => 'chartjs',
-    'version'                  => '3.5.0',
+    'version'                  => '3.5.1',
     'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'csv_import_enabled'       => true,
@@ -85,7 +85,9 @@ return [
         [
             'asset'   => 'Asset account',
             'expense' => 'Expense account',
-            'revenue' => 'Revenue account'
+            'revenue' => 'Revenue account',
+            'opening' => 'Initial balance account',
+            'initial' => 'Initial balance account',
         ],
     'shortNamesByFullName'     =>
         [

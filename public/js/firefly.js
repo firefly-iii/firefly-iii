@@ -8,7 +8,6 @@ $(function () {
     ranges[previousMonthName] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
     ranges[nextMonthName] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
     ranges[everything] = [firstDate, moment()];
-
     $('#daterange').daterangepicker(
         {
             ranges: ranges,
@@ -37,8 +36,10 @@ $(function () {
                 label: label,
                 _token: token
             }).success(function () {
+                console.log('Succesfully sent new date range.');
                 window.location.reload(true);
             }).fail(function () {
+                console.log('Could not send new date range.');
                 alert('Could not change date range');
 
             });

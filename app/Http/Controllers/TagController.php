@@ -44,9 +44,9 @@ class TagController extends Controller
         View::share('mainTitleIcon', 'fa-tags');
         View::share('hideTags', true);
         $this->tagOptions = [
-            'nothing'        => 'Just a regular tag.',
-            'balancingAct'   => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-            'advancePayment' => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
+            'nothing'        => trans('firefly.regular_tag'),
+            'balancingAct'   => trans('firefly.balancing_act'),
+            'advancePayment' => trans('firefly.advance_payment'),
         ];
         View::share('tagOptions', $this->tagOptions);
     }

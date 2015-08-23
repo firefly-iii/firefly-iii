@@ -74,7 +74,6 @@ return [
     'delete_budget'               => 'Verwijder budget ":name"',
     'delete_category'             => 'Verwijder categorie ":name"',
     'delete_currency'             => 'Verwijder valuta ":name"',
-    'delete_piggyBank'            => 'Verwijder spaarpotje ":name"',
     'delete_journal'              => 'Verwijder transactie met omschrijving ":description"',
     'delete_attachment'           => 'Verwijder bijlage ":name"',
 

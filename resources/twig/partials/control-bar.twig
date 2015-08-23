@@ -4,14 +4,14 @@
     <div class="tab-content">
         <!-- Home tab content -->
         <div class="tab-panel active" id="control-sidebar-home-tab">
-            <h3 class="control-sidebar-heading">Create new stuff</h3>
+            <h3 class="control-sidebar-heading">{{ 'create_new_stuff'|_ }}</h3>
             <ul class='control-sidebar-menu'>
                 <li>
                     <a href="{{ route('transactions.create', 'withdrawal') }}">
                         <i class="menu-icon fa fa-long-arrow-left bg-red"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New withdrawal</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_withdrawal'|_ }}</h4>
                         </div>
                     </a>
                 </li>
@@ -20,7 +20,7 @@
                         <i class="menu-icon fa fa-long-arrow-right bg-green"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New deposit</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_deposit'|_ }}</h4>
                         </div>
                     </a>
                 </li>
@@ -29,7 +29,7 @@
                         <i class="menu-icon fa fa-exchange bg-blue"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New transfer</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_transfer'|_ }}</h4>
                         </div>
                     </a>
                 </li>
@@ -38,7 +38,7 @@
                         <i class="menu-icon fa fa-money bg-maroon"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New asset account</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_asset_account'|_ }}</h4>
                         </div>
                     </a>
                 </li>
@@ -47,7 +47,7 @@
                         <i class="menu-icon fa fa-shopping-cart bg-maroon"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New expense account</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_expense_account'|_ }}</h4>
                         </div>
                     </a>
                 </li>
@@ -56,16 +56,47 @@
                         <i class="menu-icon fa fa-download bg-maroon"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New revenue</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_revenue_account'|_ }}</h4>
                         </div>
                     </a>
                 </li>
+
+                <li>
+                    <a href="{{ route('budgets.create') }}">
+                        <i class="menu-icon fa fa-download bg-red"></i>
+
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">{{ 'new_budget'|_ }}</h4>
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('categories.create') }}">
+                        <i class="menu-icon fa fa-download bg-red"></i>
+
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">{{ 'new_category'|_ }}</h4>
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('accounts.create', 'revenue') }}">
+                        <i class="menu-icon fa fa-download bg-maroon"></i>
+
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">{{ 'new_revenue_account'|_ }}</h4>
+                        </div>
+                    </a>
+                </li>
+
                 <li>
                     <a href="{{ route('piggy-banks.create') }}">
                         <i class="menu-icon fa fa-sort-amount-asc bg-teal"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New piggy bank</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_piggy_bank'|_ }}</h4>
                         </div>
                     </a>
                 </li>
@@ -74,7 +105,7 @@
                         <i class="menu-icon fa fa-download bg-purple"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">New bill</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_bill'|_ }}</h4>
                         </div>
                     </a>
                 </li>

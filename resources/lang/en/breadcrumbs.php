@@ -4,23 +4,15 @@ return [
 
     // accounts
     'cash_accounts'         => 'Cash accounts',
-    'new_asset_account'     => 'New asset accounts',
-    'new_expense_account'   => 'New expense account',
-    'new_revenue_account'   => 'New revenue account',
     'edit_account'          => 'Edit account ":name"',
-
-    // categories
-    'newCategory'           => 'Create a new category',
 
     // currencies
     'edit_currency'         => 'Edit currencies ":name"',
     'delete_currency'       => 'Delete currencies ":name"',
 
     // piggy banks
-    'piggyBanks'            => 'Piggy banks',
     'newPiggyBank'          => 'Create a new piggy bank',
     'edit_piggyBank'        => 'Edit piggy bank ":name"',
-    'delete_piggyBank'      => 'Delete piggy bank ":name"',
 
     // top menu
     'preferences'           => 'Preferences',

@@ -136,6 +136,12 @@ class TransactionController extends Controller
      */
     public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
+        // cannot edit opening balance
+        if ($journal->transactionType->type == 'Opening balance') {
+            return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
+        }
+
+
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
@@ -332,6 +338,11 @@ class TransactionController extends Controller
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
+
+        // cannot edit opening balance
+        if ($journal->transactionType->type == 'Opening balance') {
+            return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
+        }
 
         $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);

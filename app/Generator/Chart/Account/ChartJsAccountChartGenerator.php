@@ -41,34 +41,24 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
      */
     public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end)
     {
-        // language:
-
         $data = [
             'count'    => 1,
-            'labels'   => [],
-            'datasets' => [
-                [
-                    'label' => trans('firefly.spent'),
-                    'data'  => []
-                ]
-            ],
-        ];
-        $ids  = [];
+            'labels'   => [], 'datasets' => [[
+                               'label' => trans('firefly.spent'),
+                               'data'  => []]]];
 
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
+        bcscale(2);
         $start->subDay();
-
+        $ids           = $this->getIdsFromCollection($accounts);
         $startBalances = Steam::balancesById($ids, $start);
         $endBalances   = Steam::balancesById($ids, $end);
 
         $accounts->each(
             function (Account $account) use ($startBalances, $endBalances) {
                 $id                  = $account->id;
-                $startBalance        = isset($startBalances[$id]) ? $startBalances[$id] : 0;
-                $endBalance          = isset($endBalances[$id]) ? $endBalances[$id] : 0;
-                $diff                = $endBalance - $startBalance;
+                $startBalance        = $this->isInArray($startBalances, $id);
+                $endBalance          = $this->isInArray($endBalances, $id);
+                $diff                = bcsub($endBalance, $startBalance);
                 $account->difference = round($diff, 2);
             }
         );
@@ -86,8 +76,22 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             }
         }
 
-
         return $data;
+    }
+
+    /**
+     * @param $array
+     * @param $entryId
+     *
+     * @return string
+     */
+    protected function isInArray($array, $entryId)
+    {
+        if (isset($array[$entryId])) {
+            return $array[$entryId];
+        }
+
+        return '0';
     }
 
 
@@ -170,5 +174,21 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
         }
 
         return $data;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    protected function getIdsFromCollection(Collection $collection)
+    {
+        $ids = [];
+        foreach ($collection as $entry) {
+            $ids[] = $entry->id;
+        }
+
+        return array_unique($ids);
+
     }
 }

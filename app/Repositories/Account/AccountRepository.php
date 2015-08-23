@@ -375,6 +375,7 @@ class AccountRepository implements AccountRepositoryInterface
         return TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
             ->accountIs($account)
+            ->transactionTypes(['Opening balance'])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
     }
@@ -394,10 +395,9 @@ class AccountRepository implements AccountRepositoryInterface
 
         // continue with the opposing account:
         if ($data['openingBalance'] != 0) {
-            $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
             $opposingData = [
                 'user'           => $data['user'],
-                'accountType'    => $type,
+                'accountType'    => 'initial',
                 'virtualBalance' => 0,
                 'name'           => $data['name'] . ' initial balance',
                 'active'         => false,

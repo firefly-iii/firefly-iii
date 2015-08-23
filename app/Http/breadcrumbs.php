@@ -42,7 +42,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.create', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('accounts.index', $what);
-    $breadcrumbs->push(trans('breadcrumbs.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
+    $breadcrumbs->push(trans('firefly.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
 }
 );
 
@@ -129,7 +129,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'categories.create', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push(trans('breadcrumbs.newCategory'), route('categories.create'));
+    $breadcrumbs->push(trans('firefly.new_category'), route('categories.create'));
 }
 );
 
@@ -231,7 +231,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'piggy-banks.index', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.piggyBanks'), route('piggy-banks.index'));
+    $breadcrumbs->push(trans('firefly.piggyBanks'), route('piggy-banks.index'));
 }
 );
 Breadcrumbs::register(
@@ -250,7 +250,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'piggy-banks.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggy-banks.show', $piggyBank);
-    $breadcrumbs->push(trans('breadcrumbs.delete_piggyBank', ['name' => e($piggyBank->name)]), route('piggy-banks.delete', [$piggyBank->id]));
+    $breadcrumbs->push(trans('firefly.delete_piggy_bank', ['name' => e($piggyBank->name)]), route('piggy-banks.delete', [$piggyBank->id]));
 }
 );
 
