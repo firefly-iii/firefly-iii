@@ -164,6 +164,7 @@ class ReportQuery implements ReportQueryInterface
                         function (Builder $q) {
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_from.data', '=', '"sharedAsset"');
+                            $q->where('acm_to.data','!=','"sharedAsset"');
                         }
                     );
                 }
