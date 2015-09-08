@@ -100,7 +100,7 @@ class BillRepository implements BillRepositoryInterface
 
                 $int = $bill->active == 1 ? 0 : 1;
 
-                return $int.strtolower($bill->name);
+                return $int . strtolower($bill->name);
             }
         );
 

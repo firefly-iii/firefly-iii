@@ -34,7 +34,7 @@ return [
     'new_expense_account'              => 'Nieuwe crediteur',
     'new_revenue_account'              => 'Nieuwe debiteur',
     'new_budget'                       => 'Nieuw budget',
-    'new_bill'                         => 'Nieuwe rekening',
+    'new_bill'                         => 'Nieuw contract',
 
     // tags
     'store_new_tag'                    => 'Sla tag op',
