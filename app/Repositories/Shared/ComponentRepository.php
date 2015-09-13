@@ -40,7 +40,7 @@ class ComponentRepository
 
         if ($shared === true) { // shared is true: always ignore transfers between accounts!
             $sum = $object->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($start)
-                          ->get(['transaction_journals.*'])->sum('actual_amount');
+                          ->get(['transaction_journals.*'])->sum('correct_amount');
         } else {
             // do something else, SEE budgets.
             // get all journals in this month where the asset account is NOT shared.
