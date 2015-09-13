@@ -8,6 +8,7 @@ use Crypt;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Shared\ComponentRepository;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -261,5 +262,65 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
 
         return $query->get(['transaction_journals.*'])->sum('correct_amount');
 
+    }
+
+    /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function spentInPeriod(Category $category, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties; // we must cache this.
+        $cache->addProperty($category->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('spentInPeriod');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $sum = $category->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
+            'correct_amount'
+        );
+
+        $cache->store($sum);
+
+        return $sum;
+    }
+
+    /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Category $category, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties; // we must cache this.
+        $cache->addProperty($category->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('spentInPeriod');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $sum = $category->transactionjournals()->transactionTypes(['Deposit'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
+            'correct_amount'
+        );
+
+        $cache->store($sum);
+
+        return $sum;
     }
 }

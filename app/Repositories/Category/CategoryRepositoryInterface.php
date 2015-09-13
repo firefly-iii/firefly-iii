@@ -98,6 +98,28 @@ interface CategoryRepositoryInterface
     public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function spentInPeriod(Category $category, Carbon $start, Carbon $end);
+
+    /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Category $category, Carbon $start, Carbon $end);
+
+    /**
      *
      * Corrected for tags.
      *
