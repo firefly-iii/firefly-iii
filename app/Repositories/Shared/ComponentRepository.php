@@ -39,7 +39,7 @@ class ComponentRepository
         }
 
         if ($shared === true) { // shared is true: always ignore transfers between accounts!
-            $sum = $object->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($start)
+            $sum = $object->transactionjournals()->transactionTypes(['Withdrawal', 'Deposit', 'Opening balance'])->before($end)->after($start)
                           ->get(['transaction_journals.*'])->sum('correct_amount');
         } else {
             // do something else, SEE budgets.
