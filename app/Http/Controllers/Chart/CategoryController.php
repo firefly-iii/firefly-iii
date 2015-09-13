@@ -65,7 +65,7 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->balanceInPeriod($category, $start, $currentEnd);
+            $spent      = $repository->balanceInPeriod($category, $start, $currentEnd, true);
             $entries->push([clone $start, $spent]);
             $start = Navigation::addPeriod($start, $range, 0);
 
