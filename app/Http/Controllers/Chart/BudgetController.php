@@ -162,7 +162,7 @@ class BudgetController extends Controller
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, true);
+                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, true) * -1;
                 // $left can be less than zero.
                 // $overspent can be more than zero ( = overspending)
 
