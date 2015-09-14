@@ -156,7 +156,7 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
-                $expenses = $repository->balanceInPeriod($budget, $start, $end, true);
+                $expenses = $repository->balanceInPeriod($budget, $start, $end, true) * -1;
                 $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
                 continue;
             }
