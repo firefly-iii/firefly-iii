@@ -71,6 +71,10 @@ class CategoryController extends Controller
             $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
         }
+        // limit the set to the last 40:
+        $entries = $entries->reverse();
+        $entries = $entries->slice(0, 40);
+        $entries = $entries->reverse();
 
         $data = $this->generator->all($entries);
         $cache->store($data);
