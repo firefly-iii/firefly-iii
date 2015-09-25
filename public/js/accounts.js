@@ -13,6 +13,7 @@ var fixHelper = function (e, ui) {
 $(function () {
     "use strict";
     if (typeof(lineChart) === "function" && typeof accountID !== 'undefined') {
+
         lineChart('chart/account/' + accountID, 'overview-chart');
     }
 
@@ -26,6 +27,8 @@ $(function () {
                 handle: '.handle'
             }
         ).disableSelection();
+    } else {
+        console.log('its null');
     }
 
 });
@@ -34,6 +37,7 @@ $(function () {
 function sortStop(event, ui) {
     "use strict";
     var current = $(ui.item);
+    console.log('sort stop');
     var thisDate = current.data('date');
     var originalBG = current.css('backgroundColor');
 
