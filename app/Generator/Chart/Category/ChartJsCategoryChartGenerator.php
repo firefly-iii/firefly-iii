@@ -48,7 +48,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             $spent            = round($entry[1], 2);
             $earned           = round($entry[2], 2);
 
-            $data['datasets'][0]['data'][] = $spent == 0 ? null : $spent;
+            $data['datasets'][0]['data'][] = $spent == 0 ? null : $spent * -1;
             $data['datasets'][1]['data'][] = $earned == 0 ? null : $earned;
         }
 
