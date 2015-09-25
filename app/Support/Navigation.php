@@ -106,13 +106,14 @@ class Navigation
      *
      * @return Carbon
      */
-    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate)
+    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate = null)
     {
         $functionMap = [
             'daily'     => 'endOfDay',
             'week'      => 'endOfWeek',
             'weekly'    => 'endOfWeek',
             'month'     => 'endOfMonth',
+            '1M'        => 'endOfMonth',
             'monthly'   => 'endOfMonth',
             'quarter'   => 'lastOfQuarter',
             'quarterly' => 'lastOfQuarter',
@@ -128,7 +129,7 @@ class Navigation
 
         }
 
-        if ($currentEnd > $maxDate) {
+        if (!is_null($maxDate) && $currentEnd > $maxDate) {
             return clone $maxDate;
         }
 
@@ -149,6 +150,7 @@ class Navigation
             'week'    => 'Week %W, %Y',
             'weekly'  => 'Week %W, %Y',
             'quarter' => '%B %Y',
+            '1M'      => '%B %Y',
             'month'   => '%B %Y',
             'monthly' => '%B %Y',
             'year'    => '%Y',
@@ -224,6 +226,7 @@ class Navigation
             'week'    => 'subWeeks',
             'weekly'  => 'subWeeks',
             'month'   => 'subMonths',
+            '1M'      => 'subMonths',
             'monthly' => 'subMonths',
             'year'    => 'subYears',
             'yearly'  => 'subYears',

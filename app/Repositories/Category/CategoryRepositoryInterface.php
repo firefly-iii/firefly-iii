@@ -23,6 +23,13 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      *
+     * @return int
+     */
+    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end);
+
+    /**
+     * @param Category $category
+     *
      * @return boolean
      */
     public function destroy(Category $category);
@@ -56,6 +63,14 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function getJournals(Category $category, $page);
+
+    /**
+     * @param Category $category
+     * @param int      $page
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end);
 
     /**
      * This method returns the sum of the journals in the category, optionally

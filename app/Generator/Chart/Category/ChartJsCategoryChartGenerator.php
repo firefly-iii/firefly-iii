@@ -45,14 +45,11 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
 
         foreach ($entries as $entry) {
             $data['labels'][] = $entry[0]->formatLocalized($format);
-            $amount           = round($entry[1], 2);
-            if ($amount > 0) {
-                $data['datasets'][0]['data'][] = null;
-                $data['datasets'][1]['data'][] = $amount;
-            } else {
-                $data['datasets'][0]['data'][] = $amount * -1;
-                $data['datasets'][1]['data'][] = null;
-            }
+            $spent            = round($entry[1], 2);
+            $earned           = round($entry[2], 2);
+
+            $data['datasets'][0]['data'][] = $spent == 0 ? null : $spent;
+            $data['datasets'][1]['data'][] = $earned == 0 ? null : $earned;
         }
 
         return $data;

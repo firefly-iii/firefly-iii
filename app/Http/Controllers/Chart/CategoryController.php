@@ -69,7 +69,6 @@ class CategoryController extends Controller
             $earned     = $repository->earnedInPeriod($category, $start, $currentEnd);
             $entries->push([clone $start, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
-
         }
 
         $data = $this->generator->all($entries);

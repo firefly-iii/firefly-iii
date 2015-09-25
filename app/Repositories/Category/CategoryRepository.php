@@ -309,7 +309,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         $cache->addProperty($category->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('spentInPeriod');
+        $cache->addProperty('earnedInPeriod');
 
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
@@ -322,5 +322,37 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         $cache->store($sum);
 
         return $sum;
+    }
+
+    /**
+     * @param Category $category
+     * @param int      $page
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end)
+    {
+        $offset = $page > 0 ? $page * 50 : 0;
+
+        return $category->transactionJournals()
+                        ->after($start)
+                        ->before($end)
+                        ->withRelevantData()->take(50)->offset($offset)
+                        ->orderBy('transaction_journals.date', 'DESC')
+                        ->orderBy('transaction_journals.order', 'ASC')
+                        ->orderBy('transaction_journals.id', 'DESC')
+                        ->get(
+                            ['transaction_journals.*']
+                        );
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return int
+     */
+    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end)
+    {
+        return $category->transactionJournals()->before($end)->after($start)->count();
     }
 }
