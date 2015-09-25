@@ -146,9 +146,14 @@ class CategoryController extends Controller
 
 
         while ($start <= $end) {
-            $spent = $repository->spentOnDaySumCorrected($category, $start);
+            $spent  = $repository->spentOnDaySumCorrected($category, $start);
+            $earned = 0;
+            if ($spent < 0) {
+                $earned = $spent * -1;
+                $spent  = 0;
+            }
 
-            $entries->push([clone $start, $spent, 0]);
+            $entries->push([clone $start, $spent, $earned]);
             $start->addDay();
         }
 
