@@ -50,31 +50,33 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-        {% for entry in entries %}
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title"><a href="{{ route('categories.show.date',[category.id,entry[0]]) }}">{{ entry[1] }}</a>
-                </h3>
-            </div>
-            <div class="box-body no-padding">
-                <table class="table table-hover">
-                    {% if entry[2] != 0 %}
-                    <tr>
-                        <td colspan="33%">{{ 'spent'|_ }}</td>
-                        <td colspan="67%">{{ entry[2]|formatAmount }}</td>
-                    </tr>
-                    {% endif %}
-                    {% if entry[3] != 0 %}
-                    <tr>
-                        <td colspan="33%">{{ 'earned'|_ }}</td>
-                        <td colspan="67%">{{ entry[3]|formatAmount }}</td>
-                    </tr>
-                    {% endif %}
-                </table>
-                </div>
-            </div>
+            {% for entry in entries %}
+                {% if entry[2] != 0 or entry[3] != 0 %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a href="{{ route('categories.show.date',[category.id,entry[0]]) }}">{{ entry[1] }}</a>
+                            </h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                {% if entry[2] != 0 %}
+                                    <tr>
+                                        <td colspan="33%">{{ 'spent'|_ }}</td>
+                                        <td colspan="67%">{{ entry[2]|formatAmount }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if entry[3] != 0 %}
+                                    <tr>
+                                        <td colspan="33%">{{ 'earned'|_ }}</td>
+                                        <td colspan="67%">{{ entry[3]|formatAmount }}</td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
 
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 
