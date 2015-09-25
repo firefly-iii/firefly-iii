@@ -40,7 +40,7 @@ class ComponentRepository
 
         if ($shared === true) { // shared is true: always ignore transfers between accounts!
             $sum = $object->transactionjournals()->transactionTypes(['Withdrawal', 'Deposit', 'Opening balance'])->before($end)->after($start)
-                          ->get(['transaction_journals.*'])->sum('correct_amount');
+                          ->get(['transaction_journals.*'])->sum('amount');
         } else {
             // do something else, SEE budgets.
             // get all journals in this month where the asset account is NOT shared.
@@ -52,7 +52,7 @@ class ComponentRepository
                               'account_meta', function (JoinClause $join) {
                               $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
                           }
-                          )->where('account_meta.data', '!=', '"sharedAsset"')->get(['transaction_journals.*'])->sum('correct_amount');
+                          )->where('account_meta.data', '!=', '"sharedAsset"')->get(['transaction_journals.*'])->sum('amount');
         }
 
         $cache->store($sum);

@@ -200,7 +200,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
+        return $category->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 
     /**
@@ -260,7 +260,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             $query->before($end);
         }
 
-        return $query->get(['transaction_journals.*'])->sum('correct_amount');
+        return $query->get(['transaction_journals.*'])->sum('amount');
 
     }
 
@@ -286,7 +286,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         }
 
         $sum = $category->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
-            'correct_amount'
+            'amount'
         );
 
         $cache->store($sum);
@@ -316,7 +316,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         }
 
         $sum = $category->transactionjournals()->transactionTypes(['Deposit'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
-            'correct_amount'
+            'amount'
         );
 
         $cache->store($sum);
@@ -367,6 +367,6 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function earnedOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->transactionTypes(['Deposit'])->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
+        return $category->transactionjournals()->transactionTypes(['Deposit'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 }

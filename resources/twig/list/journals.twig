@@ -40,7 +40,7 @@
                 <td colspan="7"><em>Invalid journal: Found {{ journal.transactions|length }} transaction(s)</em></td>
             </tr>
         {% else %}
-            {% set _sum = _sum + journal.correct_amount %}
+            {% set _sum = _sum + journal.amount %}
             <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
                 <td class="hidden-xs">
                     <div class="btn-group btn-group-xs">
@@ -64,11 +64,7 @@
 
                 </td>
                 <td>
-                    {% if not hideTags %}
-                        {{ relevantTags(journal)|raw }}
-                    {% else %}
-                        {{ journal.correct_amount|formatAmount }}
-                    {% endif %}
+                    {{ journal.amount|formatAmount }}
                 </td>
                 <td class="hidden-sm hidden-xs">
                     {{ journal.date.formatLocalized(monthAndDayFormat) }}

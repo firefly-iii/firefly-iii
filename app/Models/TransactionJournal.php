@@ -69,6 +69,7 @@ use Watson\Validating\ValidatingTrait;
  * @property string                                                                              $name
  * @property-read string                                                                         $symbol
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]       $attachments
+ * @property-read mixed                                                                          $amount_positive
  */
 class TransactionJournal extends Model
 {
@@ -120,7 +121,7 @@ class TransactionJournal extends Model
     /**
      * @return string
      */
-    public function getActualAmountAttribute()
+    public function getAmountPositiveAttribute()
     {
         $amount = '0';
         /** @var Transaction $t */
@@ -146,18 +147,11 @@ class TransactionJournal extends Model
         }
 
         bcscale(2);
-        $set    = $this->transactions->sortByDesc('amount');
-        $amount = $set->first()->amount;
-
-        if (intval($this->tag_count) === 1) {
-            // get amount for single tag:
-            $amount = $this->amountByTag($this->tags()->first(), $amount);
-        }
-
-        if (intval($this->tag_count) > 1) {
-            // get amount for either tag.
-            $amount = $this->amountByTags($amount);
-
+        $type        = $this->transactionType->type;
+        $transaction = $this->transactions->sortByDesc('amount')->first();
+        $amount      = $transaction->amount;
+        if ($type == 'Withdrawal') {
+            $amount = $amount * -1;
         }
         $cache->store($amount);
 
@@ -176,7 +170,7 @@ class TransactionJournal extends Model
         if ($this->transactionType->type == 'Withdrawal') {
             $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
             foreach ($others as $other) {
-                $amount = bcsub($amount, $other->actual_amount);
+                $amount = bcsub($amount, $other->amount_positive);
             }
 
             return $amount;
@@ -199,7 +193,7 @@ class TransactionJournal extends Model
         if ($this->transactionType->type == 'Withdrawal') {
             $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
             if ($transfer) {
-                $amount = bcsub($amount, $transfer->actual_amount);
+                $amount = bcsub($amount, $transfer->amount_positive);
 
                 return $amount;
             }
@@ -258,22 +252,6 @@ class TransactionJournal extends Model
         }
 
         return $amount;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCorrectAmountAttribute()
-    {
-
-        switch ($this->transactionType->type) {
-            case 'Deposit':
-                return $this->transactions()->where('amount', '>', 0)->first()->amount;
-            case 'Withdrawal':
-                return $this->transactions()->where('amount', '<', 0)->first()->amount;
-        }
-
-        return $this->transactions()->where('amount', '>', 0)->first()->amount;
     }
 
     /**

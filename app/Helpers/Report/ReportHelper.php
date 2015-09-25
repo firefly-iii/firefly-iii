@@ -350,7 +350,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Expense;
         $set    = $this->query->expenseInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->actual_amount);
+            $object->addToTotal($entry->amount_positive);
             $object->addOrCreateExpense($entry);
         }
 
@@ -371,7 +371,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Income;
         $set    = $this->query->incomeInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->actual_amount);
+            $object->addToTotal($entry->amount_positive);
             $object->addOrCreateIncome($entry);
         }
 
