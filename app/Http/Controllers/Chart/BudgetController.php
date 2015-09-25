@@ -68,7 +68,7 @@ class BudgetController extends Controller
             $end->subDay();
             $chartDate = clone $end;
             $chartDate->startOfMonth();
-            $spent = $repository->balanceInPeriod($budget, $first, $end);
+            $spent = $repository->balanceInPeriod($budget, $first, $end) * -1;
             $entries->push([$chartDate, $spent]);
             $first = Navigation::addPeriod($first, $range, 0);
         }
