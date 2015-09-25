@@ -146,6 +146,17 @@ interface CategoryRepositoryInterface
     public function spentOnDaySumCorrected(Category $category, Carbon $date);
 
     /**
+     *
+     * Corrected for tags.
+     *
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function earnedOnDaySumCorrected(Category $category, Carbon $date);
+
+    /**
      * @param array $data
      *
      * @return Category

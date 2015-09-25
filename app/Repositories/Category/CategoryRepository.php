@@ -200,7 +200,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
+        return $category->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
     }
 
     /**
@@ -354,5 +354,19 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     public function countJournalsInRange(Category $category, Carbon $start, Carbon $end)
     {
         return $category->transactionJournals()->before($end)->after($start)->count();
+    }
+
+    /**
+     *
+     * Corrected for tags.
+     *
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function earnedOnDaySumCorrected(Category $category, Carbon $date)
+    {
+        return $category->transactionjournals()->transactionTypes(['Deposit'])->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
     }
 }
