@@ -1,10 +1,11 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category, carbon) }}
 {% endblock %}
 
 {% block content %}
+
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="box">

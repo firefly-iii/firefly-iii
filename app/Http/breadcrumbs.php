@@ -155,6 +155,19 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'categories.show.date', function (Generator $breadcrumbs, Category $category, Carbon $date) {
+
+    // get current period preference.
+    $range = Preferences::get('viewRange', '1M')->data;
+
+    $breadcrumbs->parent('categories.index');
+    $breadcrumbs->push(e($category->name), route('categories.show', [$category->id]));
+    $breadcrumbs->push(Navigation::periodShow($date, $range), route('categories.show.date', [$category->id, $date->format('Y-m-d')]));
+
+}
+);
+
+Breadcrumbs::register(
     'categories.noCategory', function (Generator $breadcrumbs, $subTitle) {
     $breadcrumbs->parent('categories.index');
     $breadcrumbs->push($subTitle, route('categories.noCategory'));

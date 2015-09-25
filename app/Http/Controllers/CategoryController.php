@@ -164,7 +164,7 @@ class CategoryController extends Controller
         $journals = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
-        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle'));
+        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle','carbon'));
     }
 
     /**
