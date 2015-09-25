@@ -73,7 +73,7 @@ class CategoryController extends Controller
         }
         // limit the set to the last 40:
         $entries = $entries->reverse();
-        $entries = $entries->slice(0, 40);
+        $entries = $entries->slice(0, 48);
         $entries = $entries->reverse();
 
         $data = $this->generator->all($entries);
