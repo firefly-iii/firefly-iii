@@ -303,12 +303,13 @@ Route::group(
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
     Route::get('/chart/category/spent-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@spentInYear'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
+['year' => '[0-9]{4}', 'shared' => 'shared']
     );
     Route::get('/chart/category/earned-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@earnedInYear'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
-    Route::get('/chart/category/{category}/month', ['uses' => 'Chart\CategoryController@month']); // should be period.
+    Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
+    Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
 
     // piggy banks:

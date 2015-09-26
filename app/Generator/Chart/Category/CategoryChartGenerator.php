@@ -31,7 +31,7 @@ interface CategoryChartGenerator
      *
      * @return array
      */
-    public function month(Collection $entries);
+    public function period(Collection $entries);
 
 
     /**

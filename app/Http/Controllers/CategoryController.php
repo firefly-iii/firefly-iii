@@ -164,7 +164,7 @@ class CategoryController extends Controller
         $journals = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
-        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle','carbon'));
+        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
     }
 
     /**
@@ -179,8 +179,6 @@ class CategoryController extends Controller
         $page         = intval(Input::get('page'));
         $set          = $repository->getJournals($category, $page);
         $count        = $repository->countJournals($category);
-        $totalSum     = $repository->journalsSum($category);
-        $periodSum    = $repository->journalsSum($category, Session::get('start'), Session::get('end'));
         $subTitle     = $category->name;
         $journals     = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('categories/show/' . $category->id);
@@ -221,7 +219,7 @@ class CategoryController extends Controller
             $cache->store($entries);
         }
 
-        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'totalSum', 'periodSum', 'subTitle'));
+        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
     }
 
     /**

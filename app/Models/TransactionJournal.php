@@ -254,6 +254,7 @@ class TransactionJournal extends Model
         return $amount;
     }
 
+
     /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

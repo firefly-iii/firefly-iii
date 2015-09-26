@@ -7,32 +7,17 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }} (month)</h3>
+                    <h3 class="box-title">{{ 'overview'|_ }} (period)</h3>
                 </div>
                 <div class="box-body">
                     {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="month"></div>
+                        <div id="period-specific-period"></div>
                     {% endif %}
                     {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="month" style="width:100%;height:350px;"></canvas>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }} (all)</h3>
-                </div>
-                <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="all"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="all" style="width:100%;height:350px;"></canvas>
+                        <canvas id="period-specific-period" style="width:100%;height:350px;"></canvas>
                     {% endif %}
                 </div>
             </div>
@@ -61,6 +46,7 @@
 {% block scripts %}
     <script type="text/javascript">
         var categoryID = {{ category.id }};
+        var categoryDate = "{{ carbon.format('Y-m-d') }}";
     </script>
     <!-- load the libraries and scripts necessary for Google Charts: -->
     {% if Config.get('firefly.chart') == 'google' %}
