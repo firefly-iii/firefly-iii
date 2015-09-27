@@ -71,7 +71,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         foreach ($entries as $entry) {
             if ($entry['sum'] != 0) {
                 $data['labels'][]              = $entry['name'];
-                $data['datasets'][0]['data'][] = round($entry['sum'], 2);
+                $data['datasets'][0]['data'][] = round(($entry['sum'] * -1), 2);
             }
         }
 
