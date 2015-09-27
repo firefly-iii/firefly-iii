@@ -122,20 +122,26 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
     /**
      * @param Budget $budget
-     * @param Carbon $date
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return LimitRepetition|null
      */
-    public function getCurrentRepetition(Budget $budget, Carbon $date)
+    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($date);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+
         $cache->addProperty('getCurrentRepetition');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $data = $budget->limitrepetitions()->where('limit_repetitions.startdate', $date)->first(['limit_repetitions.*']);
+        $data = $budget->limitrepetitions()
+                       ->where('limit_repetitions.startdate', $start)
+                       ->where('limit_repetitions.enddate', $end)
+                       ->first(['limit_repetitions.*']);
         $cache->store($data);
 
         return $data;

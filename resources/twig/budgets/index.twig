@@ -23,7 +23,7 @@
                             <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount" class="text-success">{{ budgeted|formatAmountPlain }}</span></small>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
-                            <small>{{ trans('firefly.availableIn',{date : Session.get('start').formatLocalized(monthFormat) }) }}:
+                            <small>{{ trans('firefly.availableIn',{date : period }) }}:
                                 <a href="#" class="updateIncome"><span id="budgetIncomeTotal"
                                                                        data-value="{{ budgetIncomeTotal }}">{{ budgetIncomeTotal|formatAmount }}</span></a>
                             </small>
@@ -82,6 +82,21 @@
                     </p>
                 </div>
             </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -137,21 +152,7 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="col-lg-3 col-sm-4 col-md-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
 
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
-                </div>
-            </div>
-        </div>
         {% if inactive|length > 0 %}
             <div class="col-lg-3 col-sm-4 col-md-6">
                 <div class="box">
