@@ -1,36 +1,46 @@
-/* globals token, start, end, dateRangeURL, everything, firstDate, moment, currentMonthName, $, previousMonthName, nextMonthName, applyLabel, cancelLabel, toLabel, customRangeLabel, fromLabel, */
+/* globals token, dateRangeConfig, $, */
 $(function () {
     "use strict";
     $('.currencySelect').click(currencySelect);
 
     var ranges = {};
-    ranges[currentMonthName] = [moment().startOf('month'), moment().endOf('month')];
-    ranges[previousMonthName] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
-    ranges[nextMonthName] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
-    ranges[everything] = [firstDate, moment()];
-    $('#daterange').daterangepicker(
+    // range for the current month:
+    ranges[dateRangeConfig.currentMonth] = [moment().startOf('month'), moment().endOf('month')];
+
+    // range for the previous month:
+    ranges[dateRangeConfig.previousMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+
+    // range for the next month:
+    ranges[dateRangeConfig.nextMonth] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
+
+    // range for everything:
+    ranges[dateRangeConfig.everything] = [dateRangeConfig.firstDate, moment()];
+
+
+    // build the data range:
+    $('#daterange').text(dateRangeConfig.linkTitle).daterangepicker(
         {
             ranges: ranges,
             opens: 'left',
             locale: {
-                applyLabel: applyLabel,
-                cancelLabel: cancelLabel,
-                fromLabel: fromLabel,
-                toLabel: toLabel,
+                applyLabel: dateRangeConfig.applyLabel,
+                cancelLabel: dateRangeConfig.cancelLabel,
+                fromLabel: dateRangeConfig.fromLabel,
+                toLabel: dateRangeConfig.toLabel,
                 weekLabel: 'W',
-                customRangeLabel: customRangeLabel,
+                customRangeLabel: dateRangeConfig.customRangeLabel,
                 daysOfWeek: moment.weekdaysMin(),
                 monthNames: moment.monthsShort(),
                 firstDay: moment.localeData()._week.dow
             },
-            format: 'DD-MM-YYYY',
-            startDate: start,
-            endDate: end
+            format: 'YYYY-MM-DD',
+            startDate: dateRangeConfig.startDate,
+            endDate: dateRangeConfig.endDate
         },
         function (start, end, label) {
 
             // send post.
-            $.post(dateRangeURL, {
+            $.post(dateRangeConfig.URL, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
                 label: label,
