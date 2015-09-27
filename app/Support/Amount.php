@@ -99,10 +99,7 @@ class Amount
         } else {
             $symbol = $journal->symbol;
         }
-        $amount = $journal->amount;
-        if ($journal->transactionType->type == 'Withdrawal') {
-            $amount = $amount * -1;
-        }
+        $amount = $journal->amount_positive;
         if ($journal->transactionType->type == 'Transfer' && $coloured) {
             $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
             $cache->store($txt);
