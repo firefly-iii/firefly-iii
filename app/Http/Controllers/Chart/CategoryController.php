@@ -116,7 +116,7 @@ class CategoryController extends Controller
                     return 0;
                 }
 
-                return ($left['sum'] < $right['sum']) ? 1 : -1;
+                return ($left['sum'] < $right['sum']) ? -1 : 1;
             }
         );
         $set  = new Collection($array);
