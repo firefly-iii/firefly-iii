@@ -219,6 +219,7 @@ class JsonController extends Controller
         }
 
         $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
+        $amount = $amount * -1;
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
