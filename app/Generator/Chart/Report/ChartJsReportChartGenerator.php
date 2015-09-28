@@ -43,7 +43,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
         foreach ($entries as $entry) {
             $data['labels'][]              = $entry[0]->formatLocalized($format);
             $data['datasets'][0]['data'][] = round($entry[1], 2);
-            $data['datasets'][1]['data'][] = round($entry[2], 2);
+            $data['datasets'][1]['data'][] = round(($entry[2] * -1), 2);
         }
 
         return $data;
@@ -74,9 +74,9 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             ],
         ];
         $data['datasets'][0]['data'][] = round($income, 2);
-        $data['datasets'][1]['data'][] = round($expense, 2);
+        $data['datasets'][1]['data'][] = round( ($expense * -1), 2);
         $data['datasets'][0]['data'][] = round(($income / $count), 2);
-        $data['datasets'][1]['data'][] = round(($expense / $count), 2);
+        $data['datasets'][1]['data'][] = round(( ($expense*-1) / $count), 2);
 
         return $data;
     }
