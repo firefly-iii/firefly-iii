@@ -133,7 +133,7 @@ class ReportHelper implements ReportHelperInterface
             $line->setBudget($budget);
 
             // get budget amount for current period:
-            $rep = $repository->getCurrentRepetition($budget, $start);
+            $rep = $repository->getCurrentRepetition($budget, $start, $end);
             $line->setRepetition($rep);
 
             // loop accounts:
