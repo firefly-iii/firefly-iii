@@ -9,6 +9,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
+use Log;
 
 /**
  * Class ReportController
@@ -110,8 +111,18 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $income  = bcadd($income, $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount'));
-            $expense = bcadd($expense, $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount'));
+            $currentIncome = $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount');
+            $currentExpense = $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount');
+            
+            Log::debug('Date ['.$month->format('M Y').']: income = ['.$income.' + '.$currentIncome.'], out = ['.$expense.' + '.$currentExpense.']');
+            
+            $income  = bcadd($income, $currentIncome);
+            $expense = bcadd($expense, $currentExpense);
+            
+            
+            
+            
+            
             $count++;
             $start->addMonth();
         }
