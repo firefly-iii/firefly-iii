@@ -43,7 +43,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
         foreach ($entries as $entry) {
             $data['labels'][]              = $entry[0]->formatLocalized($format);
             $data['datasets'][0]['data'][] = round($entry[1], 2);
-            $data['datasets'][1]['data'][] = round(($entry[2] * -1), 2);
+            $data['datasets'][1]['data'][] = round($entry[2], 2);
         }
 
         return $data;

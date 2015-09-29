@@ -63,8 +63,8 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $incomeSum  = $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount');
-            $expenseSum = $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount');
+            $incomeSum  = $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount_positive');
+            $expenseSum = $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount_positive');
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addMonth();
