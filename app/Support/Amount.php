@@ -99,21 +99,21 @@ class Amount
         } else {
             $symbol = $journal->symbol;
         }
-        $amount = $journal->amount_positive;
+
         if ($journal->transactionType->type == 'Transfer' && $coloured) {
-            $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
+            $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $journal->amount_positive, false) . '</span>';
             $cache->store($txt);
 
             return $txt;
         }
         if ($journal->transactionType->type == 'Transfer' && !$coloured) {
-            $txt = $this->formatWithSymbol($symbol, $amount, false);
+            $txt = $this->formatWithSymbol($symbol, $journal->amount_positive, false);
             $cache->store($txt);
 
             return $txt;
         }
 
-        $txt = $this->formatWithSymbol($symbol, $amount, $coloured);
+        $txt = $this->formatWithSymbol($symbol, $journal->amount, $coloured);
         $cache->store($txt);
 
         return $txt;
