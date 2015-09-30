@@ -33,7 +33,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
         /** @var TransactionJournal $entry */
         foreach ($paid as $entry) { // loop paid and create single entry:
             $paidDescriptions[] = $entry->description;
-            $paidAmount         = bcadd($paidAmount, $entry->amount);
+            $paidAmount         = bcadd($paidAmount, $entry->amount_positive);
         }
         /** @var Bill $entry */
         foreach ($unpaid as $entry) { // loop unpaid:
