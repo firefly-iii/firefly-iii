@@ -91,7 +91,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
             $data['labels'][] = $entry->date->formatLocalized($format);
             $minAmount[]      = round($bill->amount_min, 2);
             $maxAmount[]      = round($bill->amount_max, 2);
-            $actualAmount[]   = round($entry->amount, 2);
+            $actualAmount[]   = round(($entry->amount * -1), 2);
         }
 
         $data['datasets'][] = [
