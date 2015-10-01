@@ -276,7 +276,7 @@ class BillRepository implements BillRepositoryInterface
         $matches     = explode(',', $bill->match);
         $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($journal->amount, $bill->amount_min, $bill->amount_max);
+        $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
 
         /*
          * If both, update!
