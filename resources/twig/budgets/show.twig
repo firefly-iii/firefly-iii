@@ -79,7 +79,7 @@
                                         </div>
                                     {% else %}
                                         {% set amount = rep.amount %}
-                                        {% set pct = (amount != 0 ? spentInRep / amount)*100 : 0) %}
+                                        {% set pct = (amount != 0 ? ((spentInRep / amount)*100) : 0) %}
                                         <div class="progress progress-striped">
                                             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
                                                  aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
