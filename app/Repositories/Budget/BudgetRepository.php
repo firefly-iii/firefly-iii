@@ -55,7 +55,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         bcscale(2);
         $sum = $budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
 
-        return bcmul($sum, -1);
+        return $sum;
     }
 
     /**
