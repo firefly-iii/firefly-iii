@@ -9,6 +9,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Steam;
 
@@ -277,6 +278,7 @@ class BillRepository implements BillRepositoryInterface
         $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
+        Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
 
         /*
          * If both, update!
@@ -286,6 +288,8 @@ class BillRepository implements BillRepositoryInterface
             $journal->save();
 
             return true;
+        } else {
+            Log::debug('Wordmatch: ' . (($wordMatch) ? 'true' : 'false') . ' AmountMatch: ' . (($amountMatch) ? 'true' : 'false'));
         }
         if ($bill->id == $journal->bill_id) {
             // if no match, but bill used to match, remove it:
