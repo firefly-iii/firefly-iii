@@ -272,7 +272,9 @@ class FireflyValidator extends Validator
         $exclude = isset($parameters[2]) ? intval($parameters[2]) : 0;
 
         // get entries from table
-        $set = DB::table($table)->where('user_id', Auth::user()->id)->where('id', '!=', $exclude)->get([$field]);
+        $set = DB::table($table)->where('user_id', Auth::user()->id)
+            ->whereNull('deleted_at')
+            ->where('id', '!=', $exclude)->get([$field]);
 
         foreach ($set as $entry) {
             $fieldValue = $this->tryDecrypt($entry->$field);
