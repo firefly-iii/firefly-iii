@@ -84,7 +84,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
                 $data['labels'][] = $entry[0];
                 $left[]           = round($entry[1], 2);
                 $spent[]          = round($entry[2], 2);
-                $overspent[]      = round(($entry[3] * -1), 2);
+                $overspent[]      = round($entry[3], 2);
             }
         }
 
