@@ -8,6 +8,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Input;
+use Navigation;
 use Preferences;
 use Response;
 use Session;
@@ -136,24 +137,27 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository)
     {
-        $budgets  = $repository->getActiveBudgets();
-        $inactive = $repository->getInactiveBudgets();
-        $spent    = '0';
-        $budgeted = '0';
+        $budgets           = $repository->getActiveBudgets();
+        $inactive          = $repository->getInactiveBudgets();
+        $spent             = '0';
+        $budgeted          = '0';
+        $range             = Preferences::get('viewRange', '1M')->data;
+        $start             = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $end               = Navigation::endOfPeriod($start, $range);
+        $key               = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
+        $budgetIncomeTotal = Preferences::get($key, 1000)->data;
+        $period            = Navigation::periodShow($start, $range);
         bcscale(2);
         /**
          * Do some cleanup:
          */
         $repository->cleanupBudgets();
 
-
         // loop the budgets:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $date               = Session::get('start', Carbon::now()->startOfMonth());
-            $end                = Session::get('end', Carbon::now()->endOfMonth());
-            $budget->spent      = $repository->balanceInPeriod($budget, $date, $end);
-            $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
+            $budget->spent      = $repository->balanceInPeriod($budget, $start, $end);
+            $budget->currentRep = $repository->getCurrentRepetition($budget, $start, $end);
             if ($budget->currentRep) {
                 $budgeted = bcadd($budgeted, $budget->currentRep->amount);
             }
@@ -161,13 +165,12 @@ class BudgetController extends Controller
 
         }
 
-        $dateAsString      = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
-        $budgetIncomeTotal = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
-        $budgetMaximum     = Preferences::get('budgetMaximum', 1000)->data;
-        $defaultCurrency   = Amount::getDefaultCurrency();
+
+        $budgetMaximum   = Preferences::get('budgetMaximum', 1000)->data;
+        $defaultCurrency = Amount::getDefaultCurrency();
 
         return view(
-            'budgets.index', compact('budgetMaximum', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
+            'budgets.index', compact('budgetMaximum','period', 'range', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
         );
     }
 
@@ -178,8 +181,9 @@ class BudgetController extends Controller
      */
     public function noBudget(BudgetRepositoryInterface $repository)
     {
-        $start    = Session::get('start', Carbon::now()->startOfMonth());
-        $end      = Session::get('end', Carbon::now()->startOfMonth());
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $end      = Navigation::endOfPeriod($start, $range);
         $list     = $repository->getWithoutBudget($start, $end);
         $subTitle = trans(
             'firefly.without_budget_between',
@@ -194,9 +198,12 @@ class BudgetController extends Controller
      */
     public function postUpdateIncome()
     {
+        $range = Preferences::get('viewRange', '1M')->data;
+        $start = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $end   = Navigation::endOfPeriod($start, $range);
+        $key   = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
 
-        $date = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
-        Preferences::set('budgetIncomeTotal' . $date, intval(Input::get('amount')));
+        Preferences::set($key, intval(Input::get('amount')));
         Preferences::mark();
 
         return redirect(route('budgets.index'));
@@ -297,8 +304,11 @@ class BudgetController extends Controller
      */
     public function updateIncome()
     {
-        $date   = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
-        $amount = Preferences::get('budgetIncomeTotal' . $date, 1000);
+        $range  = Preferences::get('viewRange', '1M')->data;
+        $start  = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $end    = Navigation::endOfPeriod($start, $range);
+        $key    = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
+        $amount = Preferences::get($key, 1000);
 
         return view('budgets.income', compact('amount'));
     }

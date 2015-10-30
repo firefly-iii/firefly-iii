@@ -5,8 +5,11 @@ use Carbon\Carbon;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Input;
+use Navigation;
 use Preferences;
 use Session;
 use URL;
@@ -145,18 +148,78 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    public function showWithDate(CategoryRepositoryInterface $repository, Category $category, $date)
+    {
+        $carbon   = new Carbon($date);
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = Navigation::startOfPeriod($carbon, $range);
+        $end      = Navigation::endOfPeriod($carbon, $range);
+        $subTitle = $category->name;
+
+        $hideCategory = true; // used in list.
+        $page         = intval(Input::get('page'));
+
+        $set      = $repository->getJournalsInRange($category, $page, $start, $end);
+        $count    = $repository->countJournalsInRange($category, $start, $end);
+        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+        $journals->setPath('categories/show/' . $category->id . '/' . $date);
+
+        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
+    }
+
+    /**
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     *
+     * @return \Illuminate\View\View
+     */
     public function show(CategoryRepositoryInterface $repository, Category $category)
     {
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
         $set          = $repository->getJournals($category, $page);
         $count        = $repository->countJournals($category);
-        $totalSum     = $repository->journalsSum($category);
-        $periodSum    = $repository->journalsSum($category, Session::get('start'), Session::get('end'));
+        $subTitle     = $category->name;
         $journals     = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('categories/show/' . $category->id);
 
-        return view('categories.show', compact('category', 'journals', 'hideCategory', 'totalSum', 'periodSum'));
+        // list of ranges for list of periods:
+
+        // oldest transaction in category:
+        $start   = $repository->getFirstActivityDate($category);
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $start   = Navigation::startOfPeriod($start, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-show');
+        $cache->addProperty($category->id);
+        if ($cache->has()) {
+            $entries = $cache->get();
+        } else {
+
+            while ($end >= $start) {
+                $end        = Navigation::startOfPeriod($end, $range);
+                $currentEnd = Navigation::endOfPeriod($end, $range);
+
+                // here do something.
+                $spent    = $repository->spentInPeriod($category, $end, $currentEnd);
+                $earned   = $repository->earnedInPeriod($category, $end, $currentEnd);
+                $dateStr  = $end->format('Y-m-d');
+                $dateName = Navigation::periodShow($end, $range);
+                $entries->push([$dateStr, $dateName, $spent, $earned]);
+
+                $end = Navigation::subtractPeriod($end, $range, 1);
+
+            }
+            $cache->store($entries);
+        }
+
+        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
     }
 
     /**

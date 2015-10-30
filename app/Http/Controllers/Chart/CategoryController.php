@@ -65,11 +65,16 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->balanceInPeriod($category, $start, $currentEnd);
-            $entries->push([clone $start, $spent]);
+            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
+            $earned     = $repository->earnedInPeriod($category, $start, $currentEnd);
+            $date       = Navigation::periodShow($start, $range);
+            $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
-
         }
+        // limit the set to the last 40:
+        $entries = $entries->reverse();
+        $entries = $entries->slice(0, 48);
+        $entries = $entries->reverse();
 
         $data = $this->generator->all($entries);
         $cache->store($data);
@@ -111,7 +116,7 @@ class CategoryController extends Controller
                     return 0;
                 }
 
-                return ($left['sum'] < $right['sum']) ? 1 : -1;
+                return ($left['sum'] < $right['sum']) ? -1 : 1;
             }
         );
         $set  = new Collection($array);
@@ -127,7 +132,7 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function month(CategoryRepositoryInterface $repository, Category $category)
+    public function currentPeriod(CategoryRepositoryInterface $repository, Category $category)
     {
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -138,7 +143,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($category->id);
         $cache->addProperty('category');
-        $cache->addProperty('month');
+        $cache->addProperty('currentPeriod');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
@@ -146,13 +151,57 @@ class CategoryController extends Controller
 
 
         while ($start <= $end) {
-            $spent = $repository->spentOnDaySumCorrected($category, $start);
-
-            $entries->push([clone $start, $spent]);
+            $spent  = $repository->spentOnDaySumCorrected($category, $start);
+            $earned = $repository->earnedOnDaySumCorrected($category, $start);
+            $date   = Navigation::periodShow($start, '1D');
+            $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
         }
 
-        $data = $this->generator->month($entries);
+        $data = $this->generator->period($entries);
+        $cache->store($data);
+
+        return Response::json($data);
+
+
+    }
+
+    /**
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, $date)
+    {
+        $carbon = new Carbon($date);
+        $range  = Preferences::get('viewRange', '1M')->data;
+        $start  = Navigation::startOfPeriod($carbon, $range);
+        $end    = Navigation::endOfPeriod($carbon, $range);
+
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($category->id);
+        $cache->addProperty('category');
+        $cache->addProperty('specificPeriod');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+        $entries = new Collection;
+
+
+        while ($start <= $end) {
+            $spent   = $repository->spentOnDaySumCorrected($category, $start);
+            $earned  = $repository->earnedOnDaySumCorrected($category, $start);
+            $theDate = Navigation::periodShow($start, '1D');
+            $entries->push([clone $start, $theDate, $spent, $earned]);
+            $start->addDay();
+        }
+
+        $data = $this->generator->period($entries);
         $cache->store($data);
 
         return Response::json($data);

@@ -93,6 +93,8 @@ class JsonController extends Controller
         }
         unset($bill, $bills);
 
+        $amount = $amount * -1; // make the amount positive again.
+
         $creditCards = $accountRepository->getCreditCards(); // Find credit card accounts and possibly unpaid credit card bills.
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
@@ -219,6 +221,7 @@ class JsonController extends Controller
         }
 
         $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
+        $amount = $amount * -1;
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);

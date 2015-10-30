@@ -68,7 +68,7 @@ class BudgetController extends Controller
             $end->subDay();
             $chartDate = clone $end;
             $chartDate->startOfMonth();
-            $spent = $repository->balanceInPeriod($budget, $first, $end);
+            $spent = $repository->balanceInPeriod($budget, $first, $end) * -1;
             $entries->push([$chartDate, $spent]);
             $first = Navigation::addPeriod($first, $range, 0);
         }
@@ -156,13 +156,13 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
-                $expenses = $repository->balanceInPeriod($budget, $start, $end, true);
+                $expenses = $repository->balanceInPeriod($budget, $start, $end, true) * -1;
                 $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, true);
+                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, true) * -1;
                 // $left can be less than zero.
                 // $overspent can be more than zero ( = overspending)
 

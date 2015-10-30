@@ -65,11 +65,12 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
-     * @param Carbon $date
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return LimitRepetition|null
      */
-    public function getCurrentRepetition(Budget $budget, Carbon $date);
+    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end);
 
     /**
      * @param Budget $budget

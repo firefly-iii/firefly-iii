@@ -9,6 +9,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Steam;
 
@@ -97,7 +98,10 @@ class BillRepository implements BillRepositoryInterface
 
         $set = $set->sortBy(
             function (Bill $bill) {
-                return strtolower($bill->name);
+
+                $int = $bill->active == 1 ? 0 : 1;
+
+                return $int . strtolower($bill->name);
             }
         );
 
@@ -150,7 +154,9 @@ class BillRepository implements BillRepositoryInterface
         }
         $journals = new Collection;
         if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->whereIn('id', $ids)->get();
+            $journals = Auth::user()->transactionjournals()->transactionTypes(['Withdrawal'])->whereIn('transaction_journals.id', $ids)->get(
+                ['transaction_journals.*']
+            );
         }
 
         return $journals;
@@ -273,7 +279,8 @@ class BillRepository implements BillRepositoryInterface
         $matches     = explode(',', $bill->match);
         $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($journal->amount, $bill->amount_min, $bill->amount_max);
+        $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
+        Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
 
         /*
          * If both, update!
@@ -283,6 +290,8 @@ class BillRepository implements BillRepositoryInterface
             $journal->save();
 
             return true;
+        } else {
+            Log::debug('Wordmatch: ' . (($wordMatch) ? 'true' : 'false') . ' AmountMatch: ' . (($amountMatch) ? 'true' : 'false'));
         }
         if ($bill->id == $journal->bill_id) {
             // if no match, but bill used to match, remove it:

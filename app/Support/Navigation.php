@@ -106,16 +106,21 @@ class Navigation
      *
      * @return Carbon
      */
-    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate)
+    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate = null)
     {
         $functionMap = [
+            '1D'        => 'endOfDay',
             'daily'     => 'endOfDay',
+            '1W'        => 'endOfWeek',
             'week'      => 'endOfWeek',
             'weekly'    => 'endOfWeek',
             'month'     => 'endOfMonth',
+            '1M'        => 'endOfMonth',
             'monthly'   => 'endOfMonth',
+            '3M'        => 'lastOfQuarter',
             'quarter'   => 'lastOfQuarter',
             'quarterly' => 'lastOfQuarter',
+            '1Y'        => 'endOfYear',
             'year'      => 'endOfYear',
             'yearly'    => 'endOfYear',
         ];
@@ -128,7 +133,7 @@ class Navigation
 
         }
 
-        if ($currentEnd > $maxDate) {
+        if (!is_null($maxDate) && $currentEnd > $maxDate) {
             return clone $maxDate;
         }
 
@@ -145,12 +150,17 @@ class Navigation
     public function periodShow(Carbon $date, $repeatFrequency)
     {
         $formatMap = [
+            '1D'      => '%e %B %Y',
             'daily'   => '%e %B %Y',
+            '1W'      => 'Week %W, %Y',
             'week'    => 'Week %W, %Y',
             'weekly'  => 'Week %W, %Y',
+            '3M'      => '%B %Y',
             'quarter' => '%B %Y',
+            '1M'      => '%B %Y',
             'month'   => '%B %Y',
             'monthly' => '%B %Y',
+            '1Y'      => '%Y',
             'year'    => '%Y',
             'yearly'  => '%Y',
 
@@ -218,12 +228,15 @@ class Navigation
     public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
     {
         $date = clone $theDate;
-
+        // 1D 1W 1M 3M 6M 1Y
         $functionMap = [
+            '1D'      => 'subDays',
             'daily'   => 'subDays',
             'week'    => 'subWeeks',
+            '1W'      => 'subWeeks',
             'weekly'  => 'subWeeks',
             'month'   => 'subMonths',
+            '1M'      => 'subMonths',
             'monthly' => 'subMonths',
             'year'    => 'subYears',
             'yearly'  => 'subYears',

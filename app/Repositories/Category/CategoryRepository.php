@@ -8,6 +8,7 @@ use Crypt;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Shared\ComponentRepository;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -199,7 +200,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('correct_amount');
+        return $category->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 
     /**
@@ -259,7 +260,113 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             $query->before($end);
         }
 
-        return $query->get(['transaction_journals.*'])->sum('correct_amount');
+        return $query->get(['transaction_journals.*'])->sum('amount');
 
+    }
+
+    /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function spentInPeriod(Category $category, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties; // we must cache this.
+        $cache->addProperty($category->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('spentInPeriod');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $sum = $category->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
+            'amount'
+        );
+
+        $cache->store($sum);
+
+        return $sum;
+    }
+
+    /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Category $category, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties; // we must cache this.
+        $cache->addProperty($category->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('earnedInPeriod');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $sum = $category->transactionjournals()->transactionTypes(['Deposit'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
+            'amount'
+        );
+
+        $cache->store($sum);
+
+        return $sum;
+    }
+
+    /**
+     * @param Category $category
+     * @param int      $page
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end)
+    {
+        $offset = $page > 0 ? $page * 50 : 0;
+
+        return $category->transactionJournals()
+                        ->after($start)
+                        ->before($end)
+                        ->withRelevantData()->take(50)->offset($offset)
+                        ->orderBy('transaction_journals.date', 'DESC')
+                        ->orderBy('transaction_journals.order', 'ASC')
+                        ->orderBy('transaction_journals.id', 'DESC')
+                        ->get(
+                            ['transaction_journals.*']
+                        );
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return int
+     */
+    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end)
+    {
+        return $category->transactionJournals()->before($end)->after($start)->count();
+    }
+
+    /**
+     *
+     * Corrected for tags.
+     *
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function earnedOnDaySumCorrected(Category $category, Carbon $date)
+    {
+        return $category->transactionjournals()->transactionTypes(['Deposit'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 }

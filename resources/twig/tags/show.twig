@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    {% include 'list/journals.twig' with {'journals': tag.transactionjournals} %}
+                    {% include 'list/journals.twig' with {'journals': tag.transactionjournals, 'showPageSum' : true} %}
                 </div>
             </div>
         </div>

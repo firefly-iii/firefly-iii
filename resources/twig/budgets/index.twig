@@ -23,9 +23,8 @@
                             <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount" class="text-success">{{ budgeted|formatAmountPlain }}</span></small>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
-                            <small>{{ trans('firefly.availableIn',{date : Session.get('start').formatLocalized(monthFormat) }) }}:
-                                <a href="#" class="updateIncome"><span id="budgetIncomeTotal"
-                                                                       data-value="{{ budgetIncomeTotal }}">{{ budgetIncomeTotal|formatAmount }}</span></a>
+                            <small>{{ trans('firefly.availableIn',{date : period }) }}:
+                                <a href="#" class="updateIncome"><span id="budgetIncomeTotal" data-value="{{ budgetIncomeTotal }}">{{ budgetIncomeTotal|formatAmount }}</span></a>
                             </small>
                         </div>
                     </div>
@@ -44,7 +43,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-4 col-sm-3">
-                            <small>{{ 'spent'|_ }}: {{ spent|formatAmount }}</small>
+                            <small>{{ 'spent'|_ }}: <span class="text-danger">{{ (spent*-1)|formatAmountPlain }}</span></small>
                         </div>
                     </div>
                     <div class="row">
@@ -77,11 +76,26 @@
                 <div class="box-body">
                     <p>
                         <a href="{{ route('budgets.noBudget') }}">
-                            {{ trans('firefly.transactionsWithoutBudgetDate', {date: Session.get('start').formatLocalized(monthFormat)}) }}
+                            {{ trans('firefly.transactionsWithoutBudgetDate', {date: period|lower }) }}
                         </a>
                     </p>
                 </div>
             </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -130,28 +144,14 @@
                             </tr>
                             <tr>
                                 <td style="width:50%;">{{ 'spent'|_ }}</td>
-                                <td>{{ budget.spent|formatAmount }}</td>
+                                <td><span class="text-danger">{{ (budget.spent*-1)|formatAmountPlain }}</a></td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
         {% endfor %}
-        <div class="col-lg-3 col-sm-4 col-md-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
 
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
-                </div>
-            </div>
-        </div>
         {% if inactive|length > 0 %}
             <div class="col-lg-3 col-sm-4 col-md-6">
                 <div class="box">
@@ -179,7 +179,7 @@
 {% block scripts %}
     <script type="text/javascript">
         // actually spent bar data:
-        var spent = {{ spent }};
+        var spent = {{ spent * -1 }};
         var currencySymbol = "{{ getCurrencySymbol()|raw }}";
 
         // budgeted data:

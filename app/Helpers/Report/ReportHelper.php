@@ -133,7 +133,7 @@ class ReportHelper implements ReportHelperInterface
             $line->setBudget($budget);
 
             // get budget amount for current period:
-            $rep = $repository->getCurrentRepetition($budget, $start);
+            $rep = $repository->getCurrentRepetition($budget, $start, $end);
             $line->setRepetition($rep);
 
             // loop accounts:
@@ -279,6 +279,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
                 $expenses  = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
+                $expenses = $expenses * -1;
                 $left      = $expenses < $repetition->amount ? bcsub($repetition->amount, $expenses) : 0;
                 $spent     = $expenses > $repetition->amount ? 0 : $expenses;
                 $overspent = $expenses > $repetition->amount ? bcsub($expenses, $repetition->amount) : 0;
@@ -350,7 +351,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Expense;
         $set    = $this->query->expenseInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount);
+            $object->addToTotal($entry->amount_positive);
             $object->addOrCreateExpense($entry);
         }
 
@@ -371,7 +372,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Income;
         $set    = $this->query->incomeInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount);
+            $object->addToTotal($entry->amount_positive);
             $object->addOrCreateIncome($entry);
         }
 

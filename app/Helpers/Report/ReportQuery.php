@@ -50,6 +50,7 @@ class ReportQuery implements ReportQueryInterface
                         function (Builder $q) { // and transfers from a shared account.
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_to.data', '=', '"sharedAsset"');
+                            $q->where('acm_from.data', '!=', '"sharedAsset"');
                         }
                     );
                 }
@@ -67,15 +68,6 @@ class ReportQuery implements ReportQueryInterface
                 if (intval($journal->account_encrypted) == 1) {
                     $journal->name = Crypt::decrypt($journal->name);
                 }
-            }
-        );
-        $data = $data->filter(
-            function (TransactionJournal $journal) {
-                if ($journal->amount != 0) {
-                    return $journal;
-                }
-
-                return null;
             }
         );
 
@@ -164,6 +156,7 @@ class ReportQuery implements ReportQueryInterface
                         function (Builder $q) {
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_from.data', '=', '"sharedAsset"');
+                            $q->where('acm_to.data','!=','"sharedAsset"');
                         }
                     );
                 }

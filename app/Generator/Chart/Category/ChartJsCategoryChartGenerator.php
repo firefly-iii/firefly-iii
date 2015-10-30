@@ -17,16 +17,12 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
 
     /**
      * @param Collection $entries
-     * @param string     $dateFormat
      *
      * @return array
      */
-    public function all(Collection $entries, $dateFormat = 'month')
+    public function all(Collection $entries)
     {
 
-        // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
             'count'    => 2,
@@ -44,15 +40,12 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         ];
 
         foreach ($entries as $entry) {
-            $data['labels'][] = $entry[0]->formatLocalized($format);
-            $amount           = round($entry[1], 2);
-            if ($amount > 0) {
-                $data['datasets'][0]['data'][] = null;
-                $data['datasets'][1]['data'][] = $amount;
-            } else {
-                $data['datasets'][0]['data'][] = $amount * -1;
-                $data['datasets'][1]['data'][] = null;
-            }
+            $data['labels'][] = $entry[1];
+            $spent            = round($entry[2], 2);
+            $earned           = round($entry[3], 2);
+
+            $data['datasets'][0]['data'][] = $spent == 0 ? null : $spent * -1;
+            $data['datasets'][1]['data'][] = $earned == 0 ? null : $earned;
         }
 
         return $data;
@@ -78,7 +71,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         foreach ($entries as $entry) {
             if ($entry['sum'] != 0) {
                 $data['labels'][]              = $entry['name'];
-                $data['datasets'][0]['data'][] = round($entry['sum'], 2);
+                $data['datasets'][0]['data'][] = round(($entry['sum'] * -1), 2);
             }
         }
 
@@ -92,9 +85,9 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
      *
      * @return array
      */
-    public function month(Collection $entries)
+    public function period(Collection $entries)
     {
-        return $this->all($entries, 'monthAndDay');
+        return $this->all($entries);
 
     }
 

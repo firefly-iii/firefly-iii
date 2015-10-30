@@ -23,6 +23,13 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      *
+     * @return int
+     */
+    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end);
+
+    /**
+     * @param Category $category
+     *
      * @return boolean
      */
     public function destroy(Category $category);
@@ -56,6 +63,14 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function getJournals(Category $category, $page);
+
+    /**
+     * @param Category $category
+     * @param int      $page
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end);
 
     /**
      * This method returns the sum of the journals in the category, optionally
@@ -98,6 +113,28 @@ interface CategoryRepositoryInterface
     public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function spentInPeriod(Category $category, Carbon $start, Carbon $end);
+
+    /**
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Category $category, Carbon $start, Carbon $end);
+
+    /**
      *
      * Corrected for tags.
      *
@@ -107,6 +144,17 @@ interface CategoryRepositoryInterface
      * @return float
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date);
+
+    /**
+     *
+     * Corrected for tags.
+     *
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function earnedOnDaySumCorrected(Category $category, Carbon $date);
 
     /**
      * @param array $data

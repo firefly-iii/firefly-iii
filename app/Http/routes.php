@@ -244,6 +244,7 @@ Route::group(
     Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
     Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
     Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
+    Route::get('/categories/show/{category}/{date}', ['uses' => 'CategoryController@showWithDate', 'as' => 'categories.show.date']);
     Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noCategory']);
     Route::post('/categories/store', ['uses' => 'CategoryController@store', 'as' => 'categories.store']);
     Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
@@ -302,12 +303,13 @@ Route::group(
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
     Route::get('/chart/category/spent-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@spentInYear'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
+['year' => '[0-9]{4}', 'shared' => 'shared']
     );
     Route::get('/chart/category/earned-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@earnedInYear'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
-    Route::get('/chart/category/{category}/month', ['uses' => 'Chart\CategoryController@month']); // should be period.
+    Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
+    Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
 
     // piggy banks:

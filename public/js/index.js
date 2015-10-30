@@ -47,7 +47,7 @@ function getBoxAmounts() {
     var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];
     for (var x in boxes) {
         var box = boxes[x];
-        $.getJSON('/json/box/' + box).success(putData).fail(failData);
+        $.getJSON('json/box/' + box).success(putData).fail(failData);
     }
 }
 

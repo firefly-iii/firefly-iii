@@ -179,7 +179,7 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount'] = $journal->actual_amount;
+        $preFilled['amount'] = $journal->amount_positive;
 
         if ($journal->transactionType->type == 'Withdrawal') {
             $preFilled['account_id']      = $journal->source_account->id;
