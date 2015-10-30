@@ -26,7 +26,7 @@
         "watson/validating": "~1.0",
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
-        "league/commonmark": "0.7.*",
+        "league/commonmark": "~0.7",
         "rcrowe/twigbridge": "0.7.x@dev",
         "zizaco/entrust": "dev-laravel-5",
         "league/csv": "^7.1"
