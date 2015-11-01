@@ -13,6 +13,7 @@ use Request as Rq;
 use Session;
 use Twig;
 use Validator;
+use Log;
 
 /**
  * Class AuthController
@@ -22,6 +23,19 @@ use Validator;
 class AuthController extends Controller
 {
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getLogout()
+    {
+        Auth::logout();
+        Log::debug('Logout and redirect to root.');
+
+        return redirect('/login');
+    }
 
     /**
      * Show the application registration form.
