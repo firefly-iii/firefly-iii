@@ -7,7 +7,7 @@ use Config;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
-
+use Auth;
 /**
  * Class Authenticate
  *
@@ -54,7 +54,8 @@ class Authenticate
         }
 
         if (intval($this->auth->user()->blocked) == 1) {
-            return redirect()->route('logout');
+            Auth::logout();
+            return redirect()->route('index');
         }
 
         // if logged in, set user language:

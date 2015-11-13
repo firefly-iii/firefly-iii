@@ -22,6 +22,7 @@ return [
     'search_results_for'               => 'Search results for ":query"',
     'bounced_error'                    => 'The message sent to :email bounced, so no access for you.',
     'deleted_error'                    => 'These credentials do not match our records.',
+    'general_blocked_error'            => 'Your account has been disabled, so you cannot login.',
     'removed_amount'                   => 'Removed :amount',
     'added_amount'                     => 'Added :amount',
     'asset_account_role_help'          => 'Any extra options resulting from your choice can be set later.',
