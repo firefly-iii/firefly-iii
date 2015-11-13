@@ -6,7 +6,8 @@ return [
     'bank_balance'                => 'Saldo',
     'savings_balance'             => 'Saldo van spaarrekening',
     'credit_card_limit'           => 'Credit card limiet',
-
+    'automatch'                   => 'Automatisch herkennen',
+    'skip'                        => 'Overslaan',
     'name'                        => 'Naam',
     'active'                      => 'Actief',
     'amount_min'                  => 'Minimumbedrag',
