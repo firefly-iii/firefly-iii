@@ -66,7 +66,7 @@ class ProfileController extends Controller
         }
 
         // update the user with the new password.
-        Auth::user()->password = $request->get('new_password');
+        Auth::user()->password = bcrypt($request->get('new_password'));
         Auth::user()->save();
 
         Session::flash('success', trans('firefly.password_changed'));
