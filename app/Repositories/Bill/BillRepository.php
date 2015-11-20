@@ -276,11 +276,20 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal)
     {
+
+        /*
+         * Can only support withdrawals.
+         */
+        if ($journal->transactionType->type !== 'Withdrawal') {
+            return false;
+        }
+
         $matches     = explode(',', $bill->match);
         $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
         Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
+
 
         /*
          * If both, update!
