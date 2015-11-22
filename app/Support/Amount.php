@@ -60,7 +60,7 @@ class Amount
     {
         $amount = floatval($amount);
         $amount = round($amount, 2);
-        $string = number_format($amount, 2, ',', '.');
+        $string = money_format('%!.2n', $amount);
 
         if ($coloured === true) {
             if ($amount === 0.0) {
