@@ -24,7 +24,7 @@ class Currency implements PostProcessorInterface
 
         // fix currency
         if (is_null($this->data['currency'])) {
-            $currencyPreference     = Preferences::get('currencyPreference', 'EUR');
+            $currencyPreference     = Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'));
             $this->data['currency'] = TransactionCurrency::whereCode($currencyPreference->data)->first();
         }
 

@@ -40,7 +40,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         } else {
-            $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY','EUR'));
             $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
 
             $cache->store($currency->symbol);
@@ -152,7 +152,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         } else {
-            $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY','EUR'));
 
             $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
             if ($currency) {
@@ -161,9 +161,9 @@ class Amount
 
                 return $currency->code;
             }
-            $cache->store('EUR');
+            $cache->store(env('DEFAULT_CURRENCY','EUR'));
 
-            return 'EUR'; // @codeCoverageIgnore
+            return env('DEFAULT_CURRENCY','EUR'); // @codeCoverageIgnore
         }
     }
 
