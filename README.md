@@ -82,7 +82,7 @@ If you're still interested please read [the installation guide](https://github.c
 and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**.
  
 If you want to try out Firefly III, you can do so on [this dedicated website](https://geld.nder.be/). 
-This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site. Accounts on the demo sites will stop working after one week.
+This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site. Accounts on the demo sites will stop working after one month. It's a trial.
 
 ## Credits
 
