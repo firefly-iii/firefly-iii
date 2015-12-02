@@ -234,7 +234,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $ids = array_unique($ids);
         if (count($ids) > 0) {
-            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
+            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
         }
         bcscale(2);
 
