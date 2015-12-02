@@ -61,7 +61,14 @@
             <tr>
                 <td colspan="2"><em>{{ 'sum'|_ }}</em></td>
                 <td>{{ budgets.getBudgeted|formatAmount }}</td>
-                <td>{{ budgets.getSpent|formatAmount }}</td>
+                <td>
+                    {% if budgets.getSpent != 0 %}
+                        <span class="text-danger">{{ budgets.getSpent|formatAmountPlain }}</span>
+                    {% endif %}
+                    {% if budgets.getSpent === 0 %}
+                        {{ budgets.getSpent|formatAmount }}
+                    {% endif %}
+                </td>
                 <td>{{ budgets.getLeft|formatAmount }}</td>
                 <td><span class="text-danger">{{ budgets.getOverspent|formatAmountPlain }}</span></td>
             </tr>
