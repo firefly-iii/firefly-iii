@@ -35,7 +35,7 @@
                     {% for balanceEntry in balanceLine.getBalanceEntries %}
                         <td>
                             {% if balanceEntry.getSpent != 0 %}
-                                <span class="text-danger">{{ (balanceEntry.getSpent*-1)|formatAmountPlain }}</span>
+                                <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
                             {% endif %}
                             {% if balanceEntry.getLeft != 0 %}
                                 <span class="text-success">{{ (balanceEntry.getLeft)|formatAmountPlain }}</span>
