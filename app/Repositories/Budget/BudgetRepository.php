@@ -140,10 +140,11 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             return $cache->get(); // @codeCoverageIgnore
         }
         $data = $budget->limitrepetitions()
-            ->where('limit_repetitions.startdate', $start)
-            ->where('limit_repetitions.enddate', $end)
+            ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
+            ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
             ->first(['limit_repetitions.*']);
-        Log::debug('Looking for limit reps for budget #' . $budget->id . ' start [' . $start . '] and end [' . $end . '].');
+        //Log::debug('Looking for limit reps for budget #' . $budget->id . ' start [' . $start . '] and end [' . $end . '].');
+        //Log::debug(DB::getQueryLog())
         $cache->store($data);
 
         return $data;
