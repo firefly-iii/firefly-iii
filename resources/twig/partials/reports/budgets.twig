@@ -65,7 +65,7 @@
                     {% if budgets.getSpent != 0 %}
                         <span class="text-danger">{{ budgets.getSpent|formatAmountPlain }}</span>
                     {% endif %}
-                    {% if budgets.getSpent === 0 %}
+                    {% if budgets.getSpent == 0 %}
                         {{ budgets.getSpent|formatAmount }}
                     {% endif %}
                 </td>
