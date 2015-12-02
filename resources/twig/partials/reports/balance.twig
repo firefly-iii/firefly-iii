@@ -14,7 +14,6 @@
                 <th>
                     {{ 'leftInBudget'|_ }}
                 </th>
-                <th>{{ 'sum'|_ }}</th>
             </tr>
             </thead>
             <tbody>
@@ -44,9 +43,6 @@
                     {% endfor %}
                     <td>
                         {{ balanceLine.leftOfRepetition|formatAmount }}
-                    </td>
-                    <td>
-                        {{ balanceLine.sumOfLeft|formatAmount }}
                     </td>
                 </tr>
             {% endfor %}
