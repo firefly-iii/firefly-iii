@@ -303,6 +303,7 @@ class ReportHelper implements ReportHelperInterface
         $noBudget   = $repository->getWithoutBudgetSum($start, $end);
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
+        $budgetLine->setSpent($noBudget);
         $object->addOverspent($noBudget);
         $object->addBudgetLine($budgetLine);
 
