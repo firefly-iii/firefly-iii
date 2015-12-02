@@ -154,6 +154,7 @@ class ReportHelper implements ReportHelperInterface
 
         // then a new line for without budget.
         // and one for the tags:
+        // and one for "left unbalanced".
         $empty    = new BalanceLine;
         $tags     = new BalanceLine;
         $diffLine = new BalanceLine;
@@ -162,7 +163,7 @@ class ReportHelper implements ReportHelperInterface
         $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
 
         foreach ($accounts as $account) {
-            $spent = $this->query->spentNoBudget($account, $start, $end);
+            $spent = $this->query->spentNoBudget($account, $start, $end) * -1;
             $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
             bcscale(2);
             $diff = bcsub($spent, $left);
