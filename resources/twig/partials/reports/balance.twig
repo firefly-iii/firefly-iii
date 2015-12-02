@@ -43,14 +43,10 @@
                         </td>
                     {% endfor %}
                     <td>
-                        {% if balanceLine.leftOfRepetition != 0 %}
-                            {{ balanceLine.leftOfRepetition|formatAmount }}
-                        {% endif %}
+                        {{ balanceLine.leftOfRepetition|formatAmount }}
                     </td>
                     <td>
-                        {% if balanceLine.sumOfLeft != 0 %}
-                            {{ balanceLine.sumOfLeft|formatAmount }}
-                        {% endif %}
+                        {{ balanceLine.sumOfLeft|formatAmount }}
                     </td>
                 </tr>
             {% endfor %}
