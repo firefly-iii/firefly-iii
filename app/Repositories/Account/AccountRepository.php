@@ -273,6 +273,7 @@ class AccountRepository implements AccountRepositoryInterface
         $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
                         ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                         ->where('account_meta.name', 'accountRole')
+                        ->where('accounts.active', 1)
                         ->where('account_meta.data', '"savingAsset"')
                         ->get(['accounts.*']);
         $start    = clone Session::get('start', new Carbon);
