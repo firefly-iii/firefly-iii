@@ -15,7 +15,8 @@ return [
     |
     */
 
-    'driver'     => env('EMAIL_DRIVER', 'smtp'),
+    'blocked_domains' => ['trbvm.com', 'example.com'],
+    'driver'          => env('EMAIL_DRIVER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -28,7 +29,7 @@ return [
     |
     */
 
-    'host'       => env('EMAIL_SMTP', 'smtp.mailgun.org'),
+    'host' => env('EMAIL_SMTP', 'smtp.mailgun.org'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +42,7 @@ return [
     |
     */
 
-    'port'       => 587,
+    'port' => 587,
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +55,7 @@ return [
     |
     */
 
-    'from'       => ['address' => env('EMAIL_USERNAME', null), 'name' => 'Firefly III Mailer'],
+    'from' => ['address' => env('EMAIL_USERNAME', null), 'name' => 'Firefly III Mailer'],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +81,7 @@ return [
     |
     */
 
-    'username'   => env('EMAIL_USERNAME', null),
+    'username' => env('EMAIL_USERNAME', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +94,7 @@ return [
     |
     */
 
-    'password'   => env('EMAIL_PASSWORD', null),
+    'password' => env('EMAIL_PASSWORD', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +107,7 @@ return [
     |
     */
 
-    'sendmail'   => '/usr/sbin/sendmail -bs',
+    'sendmail' => '/usr/sbin/sendmail -bs',
 
     /*
     |--------------------------------------------------------------------------
@@ -119,6 +120,6 @@ return [
     |
     */
 
-    'pretend'    => env('EMAIL_PRETEND', false),
+    'pretend' => env('EMAIL_PRETEND', false),
 
 ];

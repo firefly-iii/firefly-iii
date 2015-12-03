@@ -14,6 +14,7 @@ use Session;
 use Twig;
 use Validator;
 use Log;
+use Config;
 
 /**
  * Class AuthController
@@ -88,8 +89,8 @@ class AuthController extends Controller
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
             // if it exists, show message:
-            $code    = $foundUser->blocked_code;
-            if(strlen($code) == 0) {
+            $code = $foundUser->blocked_code;
+            if (strlen($code) == 0) {
                 $code = 'general_blocked';
             }
             $message = trans('firefly.' . $code . '_error', ['email' => $credentials['email']]);
@@ -160,8 +161,19 @@ class AuthController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
+
         $data             = $request->all();
         $data['password'] = bcrypt($data['password']);
+
+        // is user email domain blocked?
+        $parts = explode('@', $data['email']);
+        if (isset($parts[1]) && in_array($parts[1], Config::get('mail.blocked_domains'))) {
+
+            $validator->getMessageBag()->add('email', trans('validation.invalid_domain'));
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
 
         Auth::login($this->create($data));
 

@@ -13,6 +13,7 @@ return [
     |
     */
 
+    'invalid_domain'          => 'Cannot register from this domain.',
     'file_already_attached'   => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'           => 'Succesfully uploaded file ":name".',
     'file_invalid_mime'       => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
@@ -92,7 +93,7 @@ return [
     |
     */
 
-    'custom'                  => [
+    'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -109,6 +110,6 @@ return [
     |
     */
 
-    'attributes'              => [],
+    'attributes' => [],
 
 ];
