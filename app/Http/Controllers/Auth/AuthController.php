@@ -182,11 +182,15 @@ class AuthController extends Controller
             $email   = Auth::user()->email;
             $address = route('index');
             // send email.
-            Mail::send(
-                ['emails.registered-html', 'emails.registered'], ['address' => $address], function (Message $message) use ($email) {
-                $message->to($email, $email)->subject('Welcome to Firefly III! ');
+            try {
+                Mail::send(
+                    ['emails.registered-html', 'emails.registered'], ['address' => $address], function (Message $message) use ($email) {
+                    $message->to($email, $email)->subject('Welcome to Firefly III! ');
+                }
+                );
+            } catch(\Swift_TransportException $e) {
+                Log::error($e->getMessage());
             }
-            );
 
             // set flash message
             Session::flash('success', 'You have registered successfully!');
