@@ -56,7 +56,7 @@ class ReportController extends Controller
         }
 
 
-        return view('reports.index', compact('months', 'hasShared'));
+        return view('reports.index', compact('months','accounts', 'hasShared','start'));
     }
 
     /**

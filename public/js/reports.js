@@ -3,6 +3,21 @@
 $(function () {
     "use strict";
     drawChart();
+
+    $('#inputDateRange').daterangepicker(
+        {
+            minDate: minDate,
+            drops: 'up',
+        }
+    );
+
+    $('.openModal').on('click', openModal);
+
+
+    // click open the top X income list:
+    $('#showIncomes').click(showIncomes);
+    // click open the top X expense list:
+    $('#showExpenses').click(showExpenses);
 });
 
 
@@ -80,14 +95,3 @@ function showExpenses() {
 
     return false;
 }
-
-$(function () {
-    "use strict";
-    $('.openModal').on('click', openModal);
-
-
-    // click open the top X income list:
-    $('#showIncomes').click(showIncomes);
-    // click open the top X expense list:
-    $('#showExpenses').click(showExpenses);
-});

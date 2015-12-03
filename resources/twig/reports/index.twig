@@ -17,7 +17,9 @@
                         <h4><a href="{{ route('reports.year',year) }}">{{ year }}</a></h4>
                         <ul class="list-inline">
                             {% for month in entries %}
-                                <li><a href="{{ route('reports.month',[month.year, month.month]) }}">{{ month.formatted }}</a></li>
+                                <li>
+                                    <a href="{{ route('reports.month',[month.year, month.month]) }}">{{ month.formatted }}</a>
+                                </li>
                             {% endfor %}
                         </ul>
                     {% endfor %}
@@ -35,7 +37,9 @@
                         <h4><a href="{{ route('reports.year',[year, 'shared']) }}">{{ year }}</a></h4>
                         <ul class="list-inline">
                             {% for month in entries %}
-                                <li><a href="{{ route('reports.month',[month.year, month.month,'shared']) }}">{{ month.formatted }}</a></li>
+                                <li>
+                                    <a href="{{ route('reports.month',[month.year, month.month,'shared']) }}">{{ month.formatted }}</a>
+                                </li>
                             {% endfor %}
                         </ul>
                     {% endfor %}
@@ -43,8 +47,75 @@
             </div>
         </div>
     </div>
+
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Some new reports.</h3>
+                </div>
+                <div class="box-body">
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputReportType" class="col-sm-3 control-label">Report type</label>
+
+                            <div class="col-sm-9">
+                                <select name="report_type" class="form-control" id="inputReportType">
+                                    <option label="Default financial report" value="default">Default financial report</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAccounts" class="col-sm-3 control-label">Included accounts</label>
+
+                            <div class="col-sm-9">
+                                {% for account in accounts %}
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="accounts[]" value="{{ account.id }}">
+                                            {{ account.name }}
+                                            {% if account.getMeta('accountRole') == 'sharedAsset' %}
+                                                (shared)
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+
+                                <p class="help-block">
+                                    In all cases, transfers to shared accounts count as expenses, and transfers
+                                    from shared accounts count as income.
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="inputDateRange" class="col-sm-3 control-label">Report date range</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputDateRange" name="daterange"
+                                       value="{{ Session.get('start').format('m/d/Y') }} - {{ Session.get('end').format('m/d/Y') }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript">
+        var minDate = "{{ start.format('m/d/Y') }}";
+    </script>
+
     <script type="text/javascript" src="js/reports.js"></script>
 {% endblock %}
