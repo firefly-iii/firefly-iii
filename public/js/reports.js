@@ -1,17 +1,24 @@
-/* globals google, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
+/* globals google, picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
+
 
 $(function () {
     "use strict";
     drawChart();
 
-    $('#inputDateRange').daterangepicker(
+    picker = $('#inputDateRange').daterangepicker(
         {
+            locale: {
+                format: 'YYYY-MM-DD',
+                firstDay: 1,
+            },
             minDate: minDate,
             drops: 'up',
         }
     );
 
     $('.openModal').on('click', openModal);
+
+    $('.date-select').on('click',preSelectDate);
 
 
     // click open the top X income list:
@@ -20,6 +27,15 @@ $(function () {
     $('#showExpenses').click(showExpenses);
 });
 
+function preSelectDate(e) {
+    "use strict";
+    var link = $(e.target);
+    var picker = $('#inputDateRange').data('daterangepicker');
+    picker.setStartDate(link.data('start'));
+    picker.setEndDate(link.data('end'));
+    return false;
+
+}
 
 function drawChart() {
     "use strict";
