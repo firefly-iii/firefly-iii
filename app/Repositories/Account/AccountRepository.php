@@ -643,4 +643,14 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $journal;
     }
+
+    /**
+     * @param $accountId
+     *
+     * @return Account
+     */
+    public function find($accountId)
+    {
+        return Auth::user()->accounts()->findOrNew($accountId);
+    }
 }
