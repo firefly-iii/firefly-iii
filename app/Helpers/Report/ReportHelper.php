@@ -281,7 +281,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
                 $expenses  = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
-                $expenses = $expenses * -1;
+                $expenses  = $expenses * -1;
                 $left      = $expenses < $repetition->amount ? bcsub($repetition->amount, $expenses) : 0;
                 $spent     = $expenses > $repetition->amount ? 0 : $expenses;
                 $overspent = $expenses > $repetition->amount ? bcsub($expenses, $repetition->amount) : 0;
@@ -331,7 +331,7 @@ class ReportHelper implements ReportHelperInterface
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $set        = $repository->getCategories();
         foreach ($set as $category) {
-            $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
+            $spent           = $repository->balanceInPeriod($category, $start, $end, $shared);
             $category->spent = $spent;
             $object->addCategory($category);
             $object->addTotal($spent);
@@ -394,9 +394,22 @@ class ReportHelper implements ReportHelperInterface
         $end    = Carbon::now();
         $months = [];
         while ($start <= $end) {
-            $year            = $start->year;
-            $months[$year][] = [
+            $year = $start->year;
+
+            if (!isset($months[$year])) {
+                $months[$year] = [
+                    'start'  => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
+                    'end'    => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
+                    'months' => [],
+                ];
+            }
+
+            $currentEnd = clone $start;
+            $currentEnd->endOfMonth();
+            $months[$year]['months'][] = [
                 'formatted' => $start->formatLocalized('%B %Y'),
+                'start'     => $start->format('Y-m-d'),
+                'end'       => $currentEnd->format('Y-m-d'),
                 'month'     => $start->month,
                 'year'      => $year,
             ];
