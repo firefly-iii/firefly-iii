@@ -4,6 +4,8 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Input;
+use Redirect;
 use Session;
 use View;
 
@@ -56,7 +58,59 @@ class ReportController extends Controller
         }
 
 
-        return view('reports.index', compact('months','accounts', 'hasShared','start'));
+        return view('reports.index', compact('months', 'accounts', 'hasShared', 'start'));
+    }
+
+    /**
+     * TODO needs a custom validator for ease of use.
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function select(AccountRepositoryInterface $repository)
+    {
+        // process post data, give error, otherwise send redirect.
+        $report = Input::get('report_type');
+        $parts  = [$report];
+
+        // date
+        $ranges = explode(' - ', Input::get('daterange'));
+        $start  = clone Session::get('start');
+        $end    = clone Session::get('end');
+
+        // kind of primitive but OK for now.
+        if (count($ranges) == 2 && strlen($ranges[0]) == 10 && strlen($ranges[1]) == 10) {
+            $start = new Carbon($ranges[0]);
+            $end   = new Carbon($ranges[1]);
+        }
+        if ($end <= $start) {
+            Session::flash('error', 'Messed up the date!');
+
+            return Redirect::route('reports.index');
+        }
+        $parts[] = $start->format('Ymd');
+        $parts[] = $end->format('Ymd');
+
+        if (is_array(Input::get('accounts'))) {
+            foreach (Input::get('accounts') as $accountId) {
+                $account = $repository->find($accountId);
+                if ($account) {
+                    $parts[] = $account->id;
+                }
+            }
+        }
+        if (count($parts) == 3) {
+            Session::flash('error', 'Select some accounts!');
+
+            return Redirect::route('reports.index');
+        }
+
+
+        $url = join(';', $parts);
+
+        return Redirect::route('reports.report', [$url]);
+
     }
 
     /**
