@@ -12,11 +12,10 @@
                     <h3 class="box-title">{{ 'reportsOwnAccounts'|_ }}</h3>
                 </div>
                 <div class="box-body">
-
-                    {% for year, entries in months %}
+                    {% for year, data in months %}
                         <h4><a href="{{ route('reports.year',year) }}">{{ year }}</a></h4>
                         <ul class="list-inline">
-                            {% for month in entries %}
+                            {% for month in data.months %}
                                 <li>
                                     <a href="{{ route('reports.month',[month.year, month.month]) }}">{{ month.formatted }}</a>
                                 </li>
@@ -32,11 +31,10 @@
                     <h3 class="box-title">{{ 'reportsOwnAccountsAndShared'|_ }}</h3>
                 </div>
                 <div class="box-body">
-
-                    {% for year, entries in months %}
+                    {% for year, data in months %}
                         <h4><a href="{{ route('reports.year',[year, 'shared']) }}">{{ year }}</a></h4>
                         <ul class="list-inline">
-                            {% for month in entries %}
+                            {% for month in data.months %}
                                 <li>
                                     <a href="{{ route('reports.month',[month.year, month.month,'shared']) }}">{{ month.formatted }}</a>
                                 </li>
@@ -57,7 +55,8 @@
                 </div>
                 <div class="box-body">
 
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" action="{{ route('reports.select') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="form-group">
                             <label for="inputReportType" class="col-sm-3 control-label">Report type</label>
 
@@ -93,11 +92,29 @@
 
                         <div class="form-group">
                             <label for="inputDateRange" class="col-sm-3 control-label">Report date range</label>
+
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="inputDateRange" name="daterange"
-                                       value="{{ Session.get('start').format('m/d/Y') }} - {{ Session.get('end').format('m/d/Y') }}">
+                                       value="{{ Session.get('start').format('Y-m-d') }} - {{ Session.get('end').format('Y-m-d') }}">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="__none__" class="col-sm-3 control-label">Pre-set ranges</label>
+
+                            <div class="col-sm-9">
+                                {% for year, data in months %}
+                                    <a href="#" class="date-select" data-start="{{ data.start }}" data-end="{{ data.end }}">{{ year }}</a>
+                                    <ul class="list-inline">
+                                        {% for month in data.months %}
+                                            <li>
+                                                <a data-start="{{ month.start }}" data-end="{{ month.end }}" class="date-select" href="#">{{ month.formatted }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endfor %}
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <button type="submit" class="btn btn-default">Submit</button>
@@ -115,6 +132,7 @@
 {% block scripts %}
     <script type="text/javascript">
         var minDate = "{{ start.format('m/d/Y') }}";
+        var picker;
     </script>
 
     <script type="text/javascript" src="js/reports.js"></script>
