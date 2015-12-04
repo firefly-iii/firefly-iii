@@ -385,6 +385,8 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
+    Route::post('/reports/select', ['uses' => 'ReportController@select', 'as' => 'reports.select']);
+    Route::get('/reports/report/{url}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
     Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
     Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(
         ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
