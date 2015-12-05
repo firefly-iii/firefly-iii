@@ -33,9 +33,8 @@ class AuthController extends Controller
     public function getLogout()
     {
         Auth::logout();
-        Log::debug('Logout and redirect to root.');
 
-        return redirect('/login');
+        return redirect('/auth/login');
     }
 
     /**
