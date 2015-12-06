@@ -20,6 +20,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class ReportHelper
@@ -70,6 +71,7 @@ class ReportHelper implements ReportHelperInterface
                 return null;
             }
         );
+
         return $this->getAccountReportForList($date, $end, $accounts);
     }
 
@@ -405,29 +407,46 @@ class ReportHelper implements ReportHelperInterface
      * This method generates a full report for the given period on all
      * given accounts
      *
-     * @param Carbon     $date
+     * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return AccountCollection
      */
-    public function getAccountReportForList(Carbon $date, Carbon $end, Collection $accounts)
+    public function getAccountReportForList(Carbon $start, Carbon $end, Collection $accounts)
     {
-        $start    = '0';
-        $end      = '0';
-        $diff     = '0';
+        $startAmount = '0';
+        $endAmount   = '0';
+        $diff        = '0';
         bcscale(2);
+
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                /**
+                 * The balance for today always incorporates transactions
+                 * made on today. So to get todays "start" balance, we sub one
+                 * day.
+                 */
+                $yesterday = clone $start;
+                $yesterday->subDay();
+
+                /** @noinspection PhpParamsInspection */
+                $account->startBalance = Steam::balance($account, $yesterday);
+                $account->endBalance   = Steam::balance($account, $end);
+            }
+        );
+
 
         // summarize:
         foreach ($accounts as $account) {
-            $start = bcadd($start, $account->startBalance);
-            $end   = bcadd($end, $account->endBalance);
-            $diff  = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
+            $startAmount = bcadd($startAmount, $account->startBalance);
+            $endAmount   = bcadd($endAmount, $account->endBalance);
+            $diff        = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
         }
 
         $object = new AccountCollection;
-        $object->setStart($start);
-        $object->setEnd($end);
+        $object->setStart($startAmount);
+        $object->setEnd($endAmount);
         $object->setDifference($diff);
         $object->setAccounts($accounts);
 

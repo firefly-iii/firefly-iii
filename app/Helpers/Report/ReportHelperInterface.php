@@ -36,13 +36,13 @@ interface ReportHelperInterface
      * This method generates a full report for the given period on all
      * given accounts
      *
-     * @param Carbon  $date
+     * @param Carbon  $start
      * @param Carbon  $end
      * @param Collection $accounts
      *
      * @return AccountCollection
      */
-    public function getAccountReportForList(Carbon $date, Carbon $end, Collection $accounts);
+    public function getAccountReportForList(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * This method generates a full report for the given period on all
