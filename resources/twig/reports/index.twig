@@ -55,7 +55,7 @@
                 </div>
                 <div class="box-body">
 
-                    <form class="form-horizontal" action="{{ route('reports.select') }}" method="post">
+                    <form class="form-horizontal" id="report-form" action="{{ route('reports.select') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="form-group">
                             <label for="inputReportType" class="col-sm-3 control-label">Report type</label>
@@ -73,7 +73,7 @@
                                 {% for account in accounts %}
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="accounts[]" value="{{ account.id }}">
+                                            <input type="checkbox" class="account-checkbox" name="accounts[]" value="{{ account.id }}">
                                             {{ account.name }}
                                             {% if account.getMeta('accountRole') == 'sharedAsset' %}
                                                 (shared)
@@ -131,6 +131,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
+        var reportURL = "{{ route('reports.report', ['']) }}";
         var minDate = "{{ start.format('m/d/Y') }}";
         var picker;
     </script>
