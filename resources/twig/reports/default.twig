@@ -1,0 +1,100 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, shared) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'accountBalances'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="account-balances-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="account-balances-chart" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            {% include 'partials/reports/accounts.twig' %}
+            {% include 'partials/reports/income-vs-expenses.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <!-- income -->
+            {% include 'partials/reports/income.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <!-- expenses -->
+            {% include 'partials/reports/expenses.twig' %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12">
+            <!-- budgets -->
+            {% include 'partials/reports/budgets.twig' %}
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <!-- categories -->
+            {% include 'partials/reports/categories.twig' %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            {% include 'partials/reports/balance.twig' %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            {% include 'partials/reports/bills.twig' %}
+
+        </div>
+    </div>
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+{% endblock %}
+{% block scripts %}
+
+    <script type="text/javascript" src="js/bootstrap-sortable.js"></script>
+
+    <!-- load the libraries and scripts necessary for Google Charts: -->
+    {% if Config.get('firefly.chart') == 'google' %}
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="js/gcharts.js"></script>
+    {% endif %}
+    {% if Config.get('firefly.chart') == 'chartjs' %}
+        <script type="text/javascript" src="js/Chart.min.js"></script>
+        <script type="text/javascript" src="js/charts.js"></script>
+    {% endif %}
+
+    <script type="text/javascript">
+        var year = {{ start.year }};
+        var month = {{ start.month }};
+        var shared = {% if shared %}'/shared'
+        {% else %}''{% endif %};
+        var incomeTopLength = {{ incomeTopLength }};
+        var expenseTopLength = {{ expenseTopLength }};
+        var incomeRestShow = false; // starts hidden.
+        var expenseRestShow = false; // starts hidden.
+        var showTheRest = '{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}';
+        var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
+        var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
+        var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
+    </script>
+    <script type="text/javascript" src="js/reports.js"></script>
+{% endblock %}

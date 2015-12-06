@@ -10,6 +10,7 @@ use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
+use Illuminate\Support\Collection;
 
 /**
  * Interface ReportHelperInterface
@@ -30,6 +31,18 @@ interface ReportHelperInterface
      * @return AccountCollection
      */
     public function getAccountReport(Carbon $date, Carbon $end, $shared);
+
+    /**
+     * This method generates a full report for the given period on all
+     * given accounts
+     *
+     * @param Carbon  $date
+     * @param Carbon  $end
+     * @param Collection $accounts
+     *
+     * @return AccountCollection
+     */
+    public function getAccountReportForList(Carbon $date, Carbon $end, Collection $accounts);
 
     /**
      * This method generates a full report for the given period on all
