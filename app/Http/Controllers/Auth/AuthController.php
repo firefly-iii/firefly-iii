@@ -180,10 +180,11 @@ class AuthController extends Controller
         if (Auth::user() instanceof User) {
             $email   = Auth::user()->email;
             $address = route('index');
+            $ipAddress = $request->ip();
             // send email.
             try {
                 Mail::send(
-                    ['emails.registered-html', 'emails.registered'], ['address' => $address], function (Message $message) use ($email) {
+                    ['emails.registered-html', 'emails.registered'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
                     $message->to($email, $email)->subject('Welcome to Firefly III! ');
                 }
                 );
