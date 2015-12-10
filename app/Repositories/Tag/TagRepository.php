@@ -77,7 +77,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes(['Transfer'])->get(['transaction_journals.*']);
+            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes([TransactionType::TRANSFER])->get(['transaction_journals.*']);
 
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
@@ -158,7 +158,7 @@ class TagRepository implements TagRepositoryInterface
 
         if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
             foreach ($tag->transactionjournals as $journal) {
-                if ($journal->transactionType->type == 'Transfer') {
+                if ($journal->isTransfer()) {
                     return false;
                 }
             }
@@ -169,7 +169,7 @@ class TagRepository implements TagRepositoryInterface
          */
         $count = 0;
         foreach ($tag->transactionjournals as $journal) {
-            if ($journal->transactionType->type == 'Withdrawal') {
+            if ($journal->isWithdrawal()) {
                 $count++;
             }
         }
@@ -201,7 +201,7 @@ class TagRepository implements TagRepositoryInterface
          * If any transaction is a deposit, cannot become a balancing act.
          */
         foreach ($tag->transactionjournals as $journal) {
-            if ($journal->transactionType->type == 'Deposit') {
+            if ($journal->isDeposit()) {
                 return false;
             }
         }
@@ -239,10 +239,10 @@ class TagRepository implements TagRepositoryInterface
     protected function connectBalancingAct(TransactionJournal $journal, Tag $tag)
     {
         /** @var TransactionType $withdrawal */
-        $withdrawal  = TransactionType::whereType('Withdrawal')->first();
+        $withdrawal  = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
         $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
         /** @var TransactionType $transfer */
-        $transfer  = TransactionType::whereType('Transfer')->first();
+        $transfer  = TransactionType::whereType(TransactionType::TRANSFER)->first();
         $transfers = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
 
 
@@ -275,11 +275,11 @@ class TagRepository implements TagRepositoryInterface
     protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag)
     {
         /** @var TransactionType $transfer */
-        $transfer = TransactionType::whereType('Transfer')->first();
+        $transfer = TransactionType::whereType(TransactionType::TRANSFER)->first();
         /** @var TransactionType $withdrawal */
-        $withdrawal = TransactionType::whereType('Withdrawal')->first();
+        $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
         /** @var TransactionType $deposit */
-        $deposit = TransactionType::whereType('Deposit')->first();
+        $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
         $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
         $deposits    = $tag->transactionjournals()->where('transaction_type_id', $deposit->id)->count();
@@ -326,10 +326,10 @@ class TagRepository implements TagRepositoryInterface
         foreach ($tag->transactionjournals as $check) {
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            if ($check->transactionType->type == 'Withdrawal' && $check->source_account->id != $journal->destination_account->id) {
+            if ($check->isWithdrawal() && $check->source_account->id != $journal->destination_account->id) {
                 $match = false;
             }
-            if ($check->transactionType->type == 'Deposit' && $check->destination_account->id != $journal->destination_account->id) {
+            if ($check->isDeposit() && $check->destination_account->id != $journal->destination_account->id) {
                 $match = false;
             }
 

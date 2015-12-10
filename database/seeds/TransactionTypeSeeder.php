@@ -12,10 +12,10 @@ class TransactionTypeSeeder extends Seeder
 
         DB::table('transaction_types')->delete();
 
-        TransactionType::create(['type' => 'Withdrawal']);
-        TransactionType::create(['type' => 'Deposit']);
-        TransactionType::create(['type' => 'Transfer']);
-        TransactionType::create(['type' => 'Opening balance']);
+        TransactionType::create(['type' => TransactionType::WITHDRAWAL]);
+        TransactionType::create(['type' => TransactionType::DEPOSIT]);
+        TransactionType::create(['type' => TransactionType::TRANSFER]);
+        TransactionType::create(['type' => TransactionType::OPENING_BALANCE]);
     }
 
 } 

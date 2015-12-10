@@ -154,7 +154,7 @@ class BillRepository implements BillRepositoryInterface
         }
         $journals = new Collection;
         if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->transactionTypes(['Withdrawal'])->whereIn('transaction_journals.id', $ids)->get(
+            $journals = Auth::user()->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
                 ['transaction_journals.*']
             );
         }
@@ -280,7 +280,7 @@ class BillRepository implements BillRepositoryInterface
         /*
          * Can only support withdrawals.
          */
-        if ($journal->transactionType->type !== 'Withdrawal') {
+        if (false === $journal->isWithdrawal()) {
             return false;
         }
 

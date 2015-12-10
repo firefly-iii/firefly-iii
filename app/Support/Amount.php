@@ -100,13 +100,13 @@ class Amount
             $symbol = $journal->symbol;
         }
 
-        if ($journal->transactionType->type == 'Transfer' && $coloured) {
+        if ($journal->isTransfer() && $coloured) {
             $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $journal->amount_positive, false) . '</span>';
             $cache->store($txt);
 
             return $txt;
         }
-        if ($journal->transactionType->type == 'Transfer' && !$coloured) {
+        if ($journal->isTransfer() && !$coloured) {
             $txt = $this->formatWithSymbol($symbol, $journal->amount_positive, false);
             $cache->store($txt);
 

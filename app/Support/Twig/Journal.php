@@ -68,19 +68,17 @@ class Journal extends Twig_Extension
                 return $cache->get(); // @codeCoverageIgnore
             }
 
-            $type = $journal->transactionType->type;
-
-            switch ($type) {
-                case 'Withdrawal':
+            switch (true) {
+                case $journal->isWithdrawal():
                     $txt = '<i class="fa fa-long-arrow-left fa-fw" title="' . trans('firefly.withdrawal') . '"></i>';
                     break;
-                case 'Deposit':
+                case $journal->isDeposit():
                     $txt = '<i class="fa fa-long-arrow-right fa-fw" title="' . trans('firefly.deposit') . '"></i>';
                     break;
-                case 'Transfer':
+                case $journal->isTransfer():
                     $txt = '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
                     break;
-                case 'Opening balance':
+                case $journal->isOpeningBalance():
                     $txt = '<i class="fa-fw fa fa-ban" title="' . trans('firefly.openingBalance') . '"></i>';
                     break;
                 default:
@@ -189,7 +187,7 @@ class Journal extends Twig_Extension
         }
 
         if ($tag->tagMode == 'advancePayment') {
-            if ($journal->transactionType->type == 'Deposit') {
+            if ($journal->isDeposit()) {
                 $amount = app('amount')->formatJournal($journal, false);
                 $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
                           . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
@@ -201,7 +199,7 @@ class Journal extends Twig_Extension
             * AdvancePayment with a withdrawal will show the amount with a link to
             * the tag. The TransactionJournal should properly calculate the amount.
            */
-            if ($journal->transactionType->type == 'Withdrawal') {
+            if ($journal->isWithdrawal()) {
                 $amount = app('amount')->formatJournal($journal);
 
                 $string = '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
