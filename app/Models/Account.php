@@ -210,7 +210,7 @@ class Account extends Model
     public function getNameForEditformAttribute()
     {
         $name = $this->name;
-        if ($this->accountType->type == 'Cash account') {
+        if ($this->isCash()) {
             $name = '';
         }
 
@@ -308,4 +308,20 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @return string
+     */
+    public function getAccountType()
+    {
+        return $this->accountType->type;
+    }
+
+    public function isCash()
+    {
+        return $this->accountType->isCash();
+    }
+    public function isDefault()
+    {
+        return $this->accountType->isDefault();
+    }
 }

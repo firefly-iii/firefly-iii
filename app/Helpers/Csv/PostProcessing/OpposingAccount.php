@@ -149,11 +149,11 @@ class OpposingAccount implements PostProcessorInterface
         if ($this->data['amount'] < 0) {
             // create expense account:
 
-            return AccountType::where('type', 'Expense account')->first();
+            return AccountType::where('type', AccountType::EXPENSE)->first();
         } else {
             // create revenue account:
 
-            return AccountType::where('type', 'Revenue account')->first();
+            return AccountType::where('type', AccountType::REVENUE)->first();
 
 
         }

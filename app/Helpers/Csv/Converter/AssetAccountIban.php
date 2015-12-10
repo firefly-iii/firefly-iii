@@ -28,7 +28,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         if (strlen($this->value) > 0) {
             // find or create new account:
             $account     = $this->findAccount();
-            $accountType = AccountType::where('type', 'Asset account')->first();
+            $accountType = AccountType::where('type', AccountType::ASSET)->first();
 
             if (is_null($account)) {
                 // create it if doesn't exist.
@@ -54,7 +54,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
      */
     protected function findAccount()
     {
-        $set = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
+        $set = Auth::user()->accounts()->accountTypeIn(AccountType::getAssetAccounts())->get(['accounts.*']);
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->iban == $this->value) {

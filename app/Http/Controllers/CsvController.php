@@ -8,6 +8,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
 use FireflyIII\Helpers\Csv\Importer;
 use FireflyIII\Helpers\Csv\WizardInterface;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use Input;
@@ -168,7 +169,7 @@ class CsvController extends Controller
         }
 
         // get a list of asset accounts:
-        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
+        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(AccountType::getAssetAccounts()));
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));

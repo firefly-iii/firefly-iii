@@ -6,6 +6,7 @@ use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -87,7 +88,7 @@ class ReportQuery implements ReportQueryInterface
     public function getAllAccounts(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')
-                     ->accountTypeIn(['Default account', 'Asset account', 'Cash account']);
+                     ->accountTypeIn(AccountType::getAllAccounts());
         if ($includeShared === false) {
             $query->leftJoin(
                 'account_meta', function (JoinClause $join) {

@@ -133,7 +133,7 @@ class AssetAccount implements PostProcessorInterface
      */
     protected function getAccountType()
     {
-        return AccountType::where('type', 'Asset account')->first();
+        return AccountType::where('type', AccountType::ASSET)->first();
     }
 
     /**

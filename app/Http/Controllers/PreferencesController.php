@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Config;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
@@ -32,7 +33,7 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts          = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts          = $repository->getAccounts(AccountType::getAssetAccounts());
         $viewRangePref     = Preferences::get('viewRange', '1M');
         $viewRange         = $viewRangePref->data;
         $frontPageAccounts = Preferences::get('frontPageAccounts', []);

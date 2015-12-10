@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -66,7 +67,7 @@ class PiggyBankController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(AccountType::getAssetAccounts()));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
@@ -125,7 +126,7 @@ class PiggyBankController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(AccountType::getAssetAccounts()));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
 

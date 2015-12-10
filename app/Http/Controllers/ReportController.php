@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -51,7 +52,7 @@ class ReportController extends Controller
         $months = $this->helper->listOfMonths($start);
 
         // does the user have shared accounts?
-        $accounts  = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts  = $repository->getAccounts(AccountType::getAssetAccounts());
         $hasShared = false;
 
         /** @var Account $account */
