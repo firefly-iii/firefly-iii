@@ -5,16 +5,19 @@ $(function () {
     "use strict";
     drawChart();
 
-    picker = $('#inputDateRange').daterangepicker(
-        {
-            locale: {
-                format: 'YYYY-MM-DD',
-                firstDay: 1,
-            },
-            minDate: minDate,
-            drops: 'up',
-        }
-    );
+    if ($('#inputDateRange').length > 0) {
+
+        picker = $('#inputDateRange').daterangepicker(
+            {
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    firstDay: 1,
+                },
+                minDate: minDate,
+                drops: 'up',
+            }
+        );
+    }
 
     // set values from cookies, if any:
     if (readCookie('report-type') !== null) {
