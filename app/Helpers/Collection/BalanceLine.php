@@ -113,7 +113,7 @@ class BalanceLine
         $start = $this->getRepetition() ? $this->getRepetition()->amount : 0;
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
-            $start -= $balanceEntry->getSpent();
+            $start += $balanceEntry->getSpent();
         }
 
         return $start;
