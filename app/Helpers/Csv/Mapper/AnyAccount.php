@@ -23,7 +23,7 @@ class AnyAccount implements MapperInterface
         $list = [];
         /** @var Account $account */
         foreach ($result as $account) {
-            $list[$account->id] = $account->name . ' (' . $account->accountType->type . ')';
+            $list[$account->id] = $account->name . ' (' . $account->getAccountType() . ')';
         }
         asort($list);
 

@@ -26,8 +26,8 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             return $account;
         }
         // find or create new account:
-        $accountType = AccountType::where('type', 'Asset account')->first();
-        $set         = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->get();
+        $accountType = AccountType::where('type', AccountType::ASSET)->first();
+        $set         = Auth::user()->accounts()->accountTypeIn(AccountType::getAssetAccounts())->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $this->value) {

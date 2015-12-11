@@ -128,7 +128,7 @@ class AccountRepository implements AccountRepositoryInterface
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
+        $query = Auth::user()->accounts()->accountTypeIn(AccountType::getAssetAccounts());
 
         if (count($preference->data) > 0) {
             $query->whereIn('accounts.id', $preference->data);
@@ -270,7 +270,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getSavingsAccounts()
     {
-        $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
+        $accounts = Auth::user()->accounts()->accountTypeIn(AccountType::getAssetAccounts())->orderBy('accounts.name', 'ASC')
                         ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                         ->where('account_meta.name', 'accountRole')
                         ->where('accounts.active', 1)

@@ -4,6 +4,7 @@ use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -257,7 +258,7 @@ class JsonController extends Controller
      */
     public function expenseAccounts(AccountRepositoryInterface $accountRepository)
     {
-        $list   = $accountRepository->getAccounts(['Expense account', 'Beneficiary account']);
+        $list   = $accountRepository->getAccounts(AccountType::getExpenseAccounts());
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -274,7 +275,7 @@ class JsonController extends Controller
      */
     public function revenueAccounts(AccountRepositoryInterface $accountRepository)
     {
-        $list   = $accountRepository->getAccounts(['Revenue account']);
+        $list   = $accountRepository->getAccounts([AccountType::REVENUE]);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;

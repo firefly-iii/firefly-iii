@@ -64,7 +64,7 @@ class ReportHelper implements ReportHelperInterface
         // remove cash account, if any:
         $accounts = $accounts->filter(
             function (Account $account) {
-                if ($account->accountType->type != 'Cash account') {
+                if (false === $account->isCash()) {
                     return $account;
                 }
 

@@ -9,6 +9,7 @@ use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
 use FireflyIII\Helpers\Csv\Specifix\SpecifixInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -304,7 +305,7 @@ class Importer
 
         Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
         Log::info('Asset account ****** (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
-        Log::info($opposing->accountType->type . ' ****** (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
+        Log::info($opposing->getAccountType() . ' ****** (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
 
         return $journal;
     }
@@ -314,14 +315,18 @@ class Importer
      */
     protected function getTransactionType()
     {
-        $transactionType = TransactionType::where('type', TransactionType::DEPOSIT)->first();
+        $type = TransactionType::DEPOSIT;
         if ($this->importData['amount'] < 0) {
-            $transactionType = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
+            $type = TransactionType::WITHDRAWAL;
         }
 
-        if (in_array($this->importData['opposing-account-object']->accountType->type, ['Asset account', 'Default account'])) {
-            $transactionType = TransactionType::where('type', TransactionType::TRANSFER)->first();
+        /** @var Account $opposing */
+        $opposing = $this->importData['opposing-account-object'];
+        if (AccountType::allowTransfer($opposing)) {
+            $type = TransactionType::TRANSFER;
         }
+
+        $transactionType = TransactionType::where('type', $type)->first();
 
         return $transactionType;
     }

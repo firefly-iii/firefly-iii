@@ -60,9 +60,9 @@ class AccountController extends Controller
      */
     public function delete(AccountRepositoryInterface $repository, Account $account)
     {
-        $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->getAccountType());
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = Expandedform::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
+        $accountList = Expandedform::makeSelectList($repository->getAccounts([$account->getAccountType()]), true);
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -81,8 +81,7 @@ class AccountController extends Controller
      */
     public function destroy(AccountRepositoryInterface $repository, Account $account)
     {
-        $type     = $account->accountType->type;
-        $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
+        $typeName = Config::get('firefly.shortNamesByFullName.' . $account->getAccountType());
         $name     = $account->name;
         $moveTo   = Auth::user()->accounts()->find(intval(Input::get('move_account_before_delete')));
 
@@ -189,8 +188,8 @@ class AccountController extends Controller
     public function show(AccountRepositoryInterface $repository, Account $account)
     {
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
-        $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->getAccountType());
+        $what         = Config::get('firefly.shortNamesByFullName.' . $account->getAccountType());
         $journals     = $repository->getJournals($account, $page);
         $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
         $journals->setPath('accounts/show/' . $account->id);

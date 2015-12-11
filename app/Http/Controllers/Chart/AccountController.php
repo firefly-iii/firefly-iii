@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -62,7 +63,7 @@ class AccountController extends Controller
         }
 
         /** @var Collection $accounts */
-        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts = $repository->getAccounts(AccountType::getAssetAccounts());
         if ($shared === false) {
             /** @var Account $account */
             foreach ($accounts as $index => $account) {
@@ -90,7 +91,7 @@ class AccountController extends Controller
     {
         $start    = clone Session::get('start', Carbon::now()->startOfMonth());
         $end      = clone Session::get('end', Carbon::now()->endOfMonth());
-        $accounts = $repository->getAccounts(['Expense account', 'Beneficiary account']);
+        $accounts = $repository->getAccounts(AccountType::getExpenseAccounts());
 
         // chart properties for cache:
         $cache = new CacheProperties();

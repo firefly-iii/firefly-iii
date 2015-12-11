@@ -370,14 +370,14 @@ class JournalRepository implements JournalRepositoryInterface
         $fromAccount = Account::find($data['account_id']);
 
         if (strlen($data['expense_account']) > 0) {
-            $toType    = AccountType::where('type', 'Expense account')->first();
+            $toType    = AccountType::where('type', AccountType::EXPENSE)->first();
             $toAccount = Account::firstOrCreateEncrypted(
                 ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
             );
         } else {
-            $toType    = AccountType::where('type', 'Cash account')->first();
+            $toType    = AccountType::where('type', AccountType::CASH)->first();
             $toAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => AccountType::CASH, 'active' => 1]
             );
         }
 
@@ -394,14 +394,14 @@ class JournalRepository implements JournalRepositoryInterface
         $toAccount = Account::find($data['account_id']);
 
         if (strlen($data['revenue_account']) > 0) {
-            $fromType    = AccountType::where('type', 'Revenue account')->first();
+            $fromType    = AccountType::where('type', AccountType::REVENUE)->first();
             $fromAccount = Account::firstOrCreateEncrypted(
                 ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
             );
         } else {
-            $toType      = AccountType::where('type', 'Cash account')->first();
+            $toType      = AccountType::where('type', AccountType::CASH)->first();
             $fromAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => AccountType::CASH, 'active' => 1]
             );
         }
 

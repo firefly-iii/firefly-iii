@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Csv\Mapper;
 
 use Auth;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -23,7 +24,7 @@ class AssetAccount implements MapperInterface
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        )->accountTypeIn(AccountType::getAssetAccounts())->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 
         $list = [];
 

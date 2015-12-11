@@ -9,6 +9,7 @@ use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -52,7 +53,7 @@ class TransactionController extends Controller
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(AccountType::getAssetAccounts()));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
 
@@ -148,7 +149,7 @@ class TransactionController extends Controller
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         $what        = strtolower($journal->getTransactionType());
-        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(AccountType::getAssetAccounts()));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
         $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
