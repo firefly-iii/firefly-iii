@@ -360,16 +360,18 @@ class ReportQuery implements ReportQueryInterface
         }
 
         $query = $this->queryJournalsWithTransactions($start, $end);
+
+
         $query->where(
             function (Builder $query) {
                 $query->where(
-                    function (Builder $q) { // only get withdrawals not from a shared account
+                    function (Builder $q) { // only get withdrawals from any account:
                         $q->where('transaction_types.type', TransactionType::WITHDRAWAL);
-                        $q->where('acm_from.data', '!=', '"sharedAsset"');
+                        //$q->where('acm_from.data', '!=', '"sharedAsset"');
                     }
                 );
                 $query->orWhere(
-                    function (Builder $q) { // and transfers from a shared account.
+                    function (Builder $q) { // and transfers from a shared account to a not-shared account.
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
                         $q->where('acm_to.data', '=', '"sharedAsset"');
                         $q->where('acm_from.data', '!=', '"sharedAsset"');
