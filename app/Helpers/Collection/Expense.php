@@ -65,7 +65,7 @@ class Expense
      */
     public function getExpenses()
     {
-        $set = $this->expenses->sortByDesc(
+        $set = $this->expenses->sortBy(
             function (stdClass $object) {
                 return $object->amount;
             }
