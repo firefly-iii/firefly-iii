@@ -36,7 +36,7 @@ class Expense
         $accountId = $entry->account_id;
         if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
-            $newObject->amount = strval(round($entry->amount_positive, 2));
+            $newObject->amount = strval(round($entry->amount, 2));
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
             $newObject->id     = $accountId;
@@ -44,7 +44,7 @@ class Expense
         } else {
             bcscale(2);
             $existing         = $this->expenses->get($accountId);
-            $existing->amount = bcadd($existing->amount, $entry->amount_positive);
+            $existing->amount = bcadd($existing->amount, $entry->amount);
             $existing->count++;
             $this->expenses->put($accountId, $existing);
         }
