@@ -301,7 +301,7 @@ class ReportQuery implements ReportQueryInterface
                 $query->orWhere(
                     function (Builder $q) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
-                        $q->where('acm_from.data', '=', '"sharedAsset"');
+                            $q->where('acm_from.data', '=', '"sharedAsset"');
                         $q->where('acm_to.data', '!=', '"sharedAsset"');
                     }
                 );
@@ -309,8 +309,7 @@ class ReportQuery implements ReportQueryInterface
         );
 
         // only include selected accounts.
-        $query->whereIn('acm_to.id', $ids);
-
+        $query->whereIn('ac_to.id', $ids);
         $query->orderBy('transaction_journals.date');
 
         // get everything
