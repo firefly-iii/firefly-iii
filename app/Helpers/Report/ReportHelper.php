@@ -533,7 +533,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses  = $repository->balanceInPeriodForList($budget, $repetition->startdate, $repetition->enddate, $accounts);
+                $expenses  = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
                 $expenses  = $expenses * -1;
                 $left      = $expenses < $repetition->amount ? bcsub($repetition->amount, $expenses) : 0;
                 $spent     = $expenses > $repetition->amount ? 0 : $expenses;
