@@ -55,7 +55,7 @@ class Category
      */
     public function getCategories()
     {
-        $set = $this->categories->sortByDesc(
+        $set = $this->categories->sortBy(
             function (CategoryModel $category) {
                 return $category->spent;
             }
