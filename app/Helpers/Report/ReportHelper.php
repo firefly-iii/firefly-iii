@@ -590,4 +590,94 @@ class ReportHelper implements ReportHelperInterface
 
         return $object;
     }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Balance
+     */
+    public function getBalanceReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $repository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $balance       = new Balance;
+
+        // build a balance header:
+        $header = new BalanceHeader;
+        $budgets  = $repository->getBudgets();
+        foreach ($accounts as $account) {
+            $header->addAccount($account);
+        }
+
+        /** @var BudgetModel $budget */
+        foreach ($budgets as $budget) {
+            $line = new BalanceLine;
+            $line->setBudget($budget);
+
+            // get budget amount for current period:
+            $rep = $repository->getCurrentRepetition($budget, $start, $end);
+            // could be null?
+            $line->setRepetition($rep);
+
+            // loop accounts:
+            foreach ($accounts as $account) {
+                $balanceEntry = new BalanceEntry;
+                $balanceEntry->setAccount($account);
+
+                // get spent:
+                $spent = $this->query->spentInBudgetCorrected($account, $budget, $start, $end); // I think shared is irrelevant.
+
+                $balanceEntry->setSpent($spent);
+                $line->addBalanceEntry($balanceEntry);
+            }
+            // add line to balance:
+            $balance->addBalanceLine($line);
+        }
+
+        // then a new line for without budget.
+        // and one for the tags:
+        // and one for "left unbalanced".
+        $empty    = new BalanceLine;
+        $tags     = new BalanceLine;
+        $diffLine = new BalanceLine;
+
+        $tags->setRole(BalanceLine::ROLE_TAGROLE);
+        $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
+
+        foreach ($accounts as $account) {
+            $spent = $this->query->spentNoBudget($account, $start, $end) * -1;
+            $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
+            bcscale(2);
+            $diff = bcsub($spent, $left);
+
+            // budget
+            $budgetEntry = new BalanceEntry;
+            $budgetEntry->setAccount($account);
+            $budgetEntry->setSpent($spent);
+            $empty->addBalanceEntry($budgetEntry);
+
+            // balanced by tags
+            $tagEntry = new BalanceEntry;
+            $tagEntry->setAccount($account);
+            $tagEntry->setLeft($left);
+            $tags->addBalanceEntry($tagEntry);
+
+            // difference:
+            $diffEntry = new BalanceEntry;
+            $diffEntry->setAccount($account);
+            $diffEntry->setSpent($diff);
+            $diffLine->addBalanceEntry($diffEntry);
+
+        }
+
+        $balance->addBalanceLine($empty);
+        $balance->addBalanceLine($tags);
+        $balance->addBalanceLine($diffLine);
+
+        $balance->setBalanceHeader($header);
+
+        return $balance;
+    }
 }

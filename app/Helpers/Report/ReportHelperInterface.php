@@ -67,6 +67,15 @@ interface ReportHelperInterface
     /**
      * @param Carbon  $start
      * @param Carbon  $end
+     * @param Collection $accounts
+     *
+     * @return Balance
+     */
+    public function getBalanceReportForList(Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
      * @param boolean $shared
      *
      * @return BudgetCollection
