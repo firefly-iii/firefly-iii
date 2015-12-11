@@ -32,6 +32,22 @@ interface ReportQueryInterface
     public function expenseInPeriodCorrected(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
+     * See ReportQueryInterface::incomeInPeriodCorrected
+     *
+     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
+     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
+     * not group and returns different fields.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     *
+     */
+    public function expenseInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
      * Get a users accounts combined with various meta-data related to the start and end date.
      *
      * @param Carbon $start

@@ -473,4 +473,25 @@ class ReportHelper implements ReportHelperInterface
 
         return $object;
     }
+
+    /**
+     * Get a full report on the users expenses during the period for a list of accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Expense
+     */
+    public function getExpenseReportForList($start, $end, Collection $accounts)
+    {
+        $object = new Expense;
+        $set    = $this->query->expenseInPeriodCorrectedForList($start, $end, $accounts);
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->amount_positive);
+            $object->addOrCreateExpense($entry);
+        }
+
+        return $object;
+    }
 }

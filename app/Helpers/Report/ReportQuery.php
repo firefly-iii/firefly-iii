@@ -12,7 +12,6 @@ use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class ReportQuery
@@ -301,7 +300,7 @@ class ReportQuery implements ReportQueryInterface
                 $query->orWhere(
                     function (Builder $q) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
-                            $q->where('acm_from.data', '=', '"sharedAsset"');
+                        $q->where('acm_from.data', '=', '"sharedAsset"');
                         $q->where('acm_to.data', '!=', '"sharedAsset"');
                     }
                 );
@@ -331,6 +330,67 @@ class ReportQuery implements ReportQueryInterface
                 }
 
                 return null;
+            }
+        );
+
+        return $data;
+    }
+
+    /**
+     * See ReportQueryInterface::incomeInPeriodCorrected
+     *
+     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
+     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
+     * not group and returns different fields.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     *
+     */
+    public function expenseInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $ids = [];
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
+        $query = $this->queryJournalsWithTransactions($start, $end);
+        $query->where(
+            function (Builder $query) {
+                $query->where(
+                    function (Builder $q) { // only get withdrawals not from a shared account
+                        $q->where('transaction_types.type', TransactionType::WITHDRAWAL);
+                        $q->where('acm_from.data', '!=', '"sharedAsset"');
+                    }
+                );
+                $query->orWhere(
+                    function (Builder $q) { // and transfers from a shared account.
+                        $q->where('transaction_types.type', TransactionType::TRANSFER);
+                        $q->where('acm_to.data', '=', '"sharedAsset"');
+                        $q->where('acm_from.data', '!=', '"sharedAsset"');
+                    }
+                );
+            }
+        );
+
+        // expense goes from the selected accounts:
+        $query->whereIn('ac_from.id', $ids);
+
+        $query->orderBy('transaction_journals.date');
+        $data = $query->get( // get everything
+            ['transaction_journals.*', 'transaction_types.type', 'ac_to.name as name', 'ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']
+        );
+
+        $data->each(
+            function (TransactionJournal $journal) {
+                if (intval($journal->account_encrypted) == 1) {
+                    $journal->name = Crypt::decrypt($journal->name);
+                }
             }
         );
 
