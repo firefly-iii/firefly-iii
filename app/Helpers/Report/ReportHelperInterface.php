@@ -36,8 +36,8 @@ interface ReportHelperInterface
      * This method generates a full report for the given period on all
      * given accounts
      *
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return AccountCollection
@@ -103,6 +103,17 @@ interface ReportHelperInterface
      * @return Income
      */
     public function getIncomeReport($start, $end, $shared);
+
+    /**
+     * Get a full report on the users incomes during the period for the given accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Income
+     */
+    public function getIncomeReportForList($start, $end, Collection $accounts);
 
     /**
      * @param Carbon $date

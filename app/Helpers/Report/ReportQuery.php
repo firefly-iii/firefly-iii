@@ -104,6 +104,7 @@ class ReportQuery implements ReportQueryInterface
                   );
         }
         $set = $query->get(['accounts.*']);
+
         return $set;
     }
 
@@ -141,7 +142,7 @@ class ReportQuery implements ReportQueryInterface
                         function (Builder $q) {
                             $q->where('transaction_types.type', TransactionType::TRANSFER);
                             $q->where('acm_from.data', '=', '"sharedAsset"');
-                            $q->where('acm_to.data','!=','"sharedAsset"');
+                            $q->where('acm_to.data', '!=', '"sharedAsset"');
                         }
                     );
                 }
@@ -260,5 +261,80 @@ class ReportQuery implements ReportQueryInterface
         $query->before($end)->after($start)->where('transaction_journals.user_id', Auth::user()->id);
 
         return $query;
+    }
+
+    /**
+     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
+     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
+     * regards to tags. It will only get the incomes to the specified accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function incomeInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $query = $this->queryJournalsWithTransactions($start, $end);
+
+        $ids = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
+        // only get deposits not to a shared account
+        // and transfers to a shared account.
+
+        // OR is a deposit
+        // OR is a transfer FROM a shared account to NOT a shared account.
+        //
+
+        $query->where(
+            function (Builder $query) {
+                $query->where(
+                    function (Builder $q) {
+                        $q->where('transaction_types.type', TransactionType::DEPOSIT);
+                    }
+                );
+                $query->orWhere(
+                    function (Builder $q) {
+                        $q->where('transaction_types.type', TransactionType::TRANSFER);
+                        $q->where('acm_from.data', '=', '"sharedAsset"');
+                        $q->where('acm_to.data', '!=', '"sharedAsset"');
+                    }
+                );
+            }
+        );
+
+        // only include selected accounts.
+        $query->whereIn('acm_to.id', $ids);
+
+        $query->orderBy('transaction_journals.date');
+
+        // get everything
+        $data = $query->get(
+            ['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name', 'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
+        );
+
+        $data->each(
+            function (TransactionJournal $journal) {
+                if (intval($journal->account_encrypted) == 1) {
+                    $journal->name = Crypt::decrypt($journal->name);
+                }
+            }
+        );
+        $data = $data->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->amount != 0) {
+                    return $journal;
+                }
+
+                return null;
+            }
+        );
+
+        return $data;
     }
 }

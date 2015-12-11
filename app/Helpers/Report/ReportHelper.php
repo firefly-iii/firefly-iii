@@ -452,4 +452,25 @@ class ReportHelper implements ReportHelperInterface
 
         return $object;
     }
+
+    /**
+     * Get a full report on the users incomes during the period for the given accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Income
+     */
+    public function getIncomeReportForList($start, $end, Collection $accounts)
+    {
+        $object = new Income;
+        $set    = $this->query->incomeInPeriodCorrectedForList($start, $end, $accounts);
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->amount_positive);
+            $object->addOrCreateIncome($entry);
+        }
+
+        return $object;
+    }
 }
