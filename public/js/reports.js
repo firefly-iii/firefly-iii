@@ -17,36 +17,38 @@ $(function () {
                 drops: 'up',
             }
         );
-    }
 
-    // set values from cookies, if any:
-    if (readCookie('report-type') !== null) {
-        $('select[name="report_type"]').val(readCookie('report-type'));
-    }
 
-    if ((readCookie('report-accounts') !== null)) {
-        var arr = readCookie('report-accounts').split(',');
-        arr.forEach(function (val) {
-            $('input[type="checkbox"][value="' + val + '"]').prop('checked', true);
-        });
-    }
+        // set values from cookies, if any:
+        if (readCookie('report-type') !== null) {
+            $('select[name="report_type"]').val(readCookie('report-type'));
+        }
 
-    // set date:
-    var startStr = readCookie('report-start');
-    var endStr = readCookie('report-end');
-    if (startStr !== null && endStr !== null && startStr.length == 8 && endStr.length == 8) {
-        var startDate = moment(startStr, "YYYYMMDD");
-        var endDate = moment(endStr, "YYYYMMDD");
-        var datePicker = $('#inputDateRange').data('daterangepicker');
-        datePicker.setStartDate(startDate);
-        datePicker.setEndDate(endDate);
-    }
+        if ((readCookie('report-accounts') !== null)) {
+            var arr = readCookie('report-accounts').split(',');
+            arr.forEach(function (val) {
+                $('input[type="checkbox"][value="' + val + '"]').prop('checked', true);
+            });
+        }
 
+        // set date:
+        var startStr = readCookie('report-start');
+        var endStr = readCookie('report-end');
+        if (startStr !== null && endStr !== null && startStr.length == 8 && endStr.length == 8) {
+            var startDate = moment(startStr, "YYYYMMDD");
+            var endDate = moment(endStr, "YYYYMMDD");
+            var datePicker = $('#inputDateRange').data('daterangepicker');
+            datePicker.setStartDate(startDate);
+            datePicker.setEndDate(endDate);
+        }
+    }
+    
     $('.openModal').on('click', openModal);
 
     $('.date-select').on('click', preSelectDate);
 
     $('#report-form').on('submit', catchSubmit);
+
 
 
     // click open the top X income list:
