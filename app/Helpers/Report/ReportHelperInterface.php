@@ -74,6 +74,15 @@ interface ReportHelperInterface
     public function getBudgetReport(Carbon $start, Carbon $end, $shared);
 
     /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return BudgetCollection
+     */
+    public function getBudgetReportForList(Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
      * @param Carbon  $start
      * @param Carbon  $end
      * @param boolean $shared
@@ -83,21 +92,21 @@ interface ReportHelperInterface
     public function getCategoryReport(Carbon $start, Carbon $end, $shared);
 
     /**
- * Get a full report on the users expenses during the period.
- *
- * @param Carbon  $start
- * @param Carbon  $end
- * @param boolean $shared
- *
- * @return Expense
- */
+     * Get a full report on the users expenses during the period.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Expense
+     */
     public function getExpenseReport($start, $end, $shared);
 
     /**
      * Get a full report on the users expenses during the period for a list of accounts.
      *
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return Expense

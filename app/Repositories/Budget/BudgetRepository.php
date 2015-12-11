@@ -319,6 +319,19 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
+     * @param Collection $accounts
+     *
+     * @return string
+     */
+    public function balanceInPeriodForList(Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        return $this->commonBalanceInPeriodForList($budget, $start, $end, $accounts);
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      * @param bool $shared
      *
      * @return string
