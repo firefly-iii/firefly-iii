@@ -3,6 +3,7 @@
 namespace FireflyIII\Repositories\Shared;
 
 use Carbon\Carbon;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\JoinClause;
 
@@ -39,7 +40,10 @@ class ComponentRepository
         }
 
         if ($shared === true) { // shared is true: always ignore transfers between accounts!
-            $sum = $object->transactionjournals()->transactionTypes(['Withdrawal', 'Deposit', 'Opening balance'])->before($end)->after($start)
+            $sum = $object->transactionjournals()
+                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
+                          ->before($end)
+                          ->after($start)
                           ->get(['transaction_journals.*'])->sum('amount');
         } else {
             // do something else, SEE budgets.
@@ -47,7 +51,7 @@ class ComponentRepository
             $sum = $object->transactionjournals()->before($end)->after($start)
                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                          ->transactionTypes(['Withdrawal', 'Deposit', 'Opening balance'])
+                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
                           ->leftJoin(
                               'account_meta', function (JoinClause $join) {
                               $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');

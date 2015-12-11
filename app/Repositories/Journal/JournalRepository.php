@@ -327,15 +327,15 @@ class JournalRepository implements JournalRepositoryInterface
         $fromAccount = null;
         $toAccount   = null;
         switch ($type->type) {
-            case 'Withdrawal':
+            case TransactionType::WITHDRAWAL:
                 list($fromAccount, $toAccount) = $this->storeWithdrawalAccounts($data);
                 break;
 
-            case 'Deposit':
+            case TransactionType::DEPOSIT:
                 list($fromAccount, $toAccount) = $this->storeDepositAccounts($data);
 
                 break;
-            case 'Transfer':
+            case TransactionType::TRANSFER:
                 $fromAccount = Account::find($data['account_from_id']);
                 $toAccount   = Account::find($data['account_to_id']);
                 break;

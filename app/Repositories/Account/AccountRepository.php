@@ -330,7 +330,7 @@ class AccountRepository implements AccountRepositoryInterface
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-              ->where('transaction_types.type', 'Transfer');
+              ->where('transaction_types.type', TransactionType::TRANSFER);
 
         }
         )->get();
@@ -376,7 +376,7 @@ class AccountRepository implements AccountRepositoryInterface
         return TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
             ->accountIs($account)
-            ->transactionTypes(['Opening balance'])
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
     }
@@ -549,7 +549,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeInitialBalance(Account $account, Account $opposing, array $data)
     {
-        $transactionType = TransactionType::whereType('Opening balance')->first();
+        $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -54,7 +55,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function expensesOnDayCorrected(Budget $budget, Carbon $date)
     {
         bcscale(2);
-        $sum = $budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+        $sum = $budget->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
 
         return $sum;
     }
@@ -306,7 +307,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             )
             ->after($start)
             ->before($end)
-            ->transactionTypes(['Withdrawal'])
+            ->transactionTypes([TransactionType::WITHDRAWAL])
             ->get(['transaction_journals.*'])->sum('amount');
 
         bcscale(2);

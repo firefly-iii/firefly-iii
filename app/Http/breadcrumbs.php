@@ -416,7 +416,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.show', function (Generator $breadcrumbs, TransactionJournal $journal) {
 
-    $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
+    $breadcrumbs->parent('transactions.index', strtolower($journal->getTransactionType()));
     $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
 
 }

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -76,7 +77,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
                    ->before($end)
                    ->where('categories.user_id', Auth::user()->id)
                    ->after($start)
-                   ->transactionTypes(['Withdrawal'])
+                   ->transactionTypes([TransactionType::WITHDRAWAL])
                    ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
 
         bcscale(2);
@@ -200,7 +201,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+        return $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 
     /**
@@ -285,7 +286,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $sum = $category->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
+        $sum = $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
             'amount'
         );
 
@@ -315,7 +316,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $sum = $category->transactionjournals()->transactionTypes(['Deposit'])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
+        $sum = $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
             'amount'
         );
 
@@ -367,6 +368,6 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function earnedOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return $category->transactionjournals()->transactionTypes(['Deposit'])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+        return $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
 }

@@ -1,9 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-use FireflyIII\Models\TransactionCurrency;
-use League\FactoryMuffin\Facade as FactoryMuffin;
-
 /**
  * Class TestCase
  */
@@ -52,20 +48,4 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         parent::tearDown();
     }
-
-    /**
-     * @param string $class
-     *
-     * @return Mockery\MockInterface
-     */
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
-
-        $this->app->instance($class, $mock);
-
-        return $mock;
-    }
-
-
 }

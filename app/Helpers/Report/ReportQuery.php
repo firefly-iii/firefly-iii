@@ -8,6 +8,7 @@ use Crypt;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -42,13 +43,13 @@ class ReportQuery implements ReportQueryInterface
                 function (Builder $query) {
                     $query->where(
                         function (Builder $q) { // only get withdrawals not from a shared account
-                            $q->where('transaction_types.type', 'Withdrawal');
+                            $q->where('transaction_types.type', TransactionType::WITHDRAWAL);
                             $q->where('acm_from.data', '!=', '"sharedAsset"');
                         }
                     );
                     $query->orWhere(
                         function (Builder $q) { // and transfers from a shared account.
-                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('transaction_types.type', TransactionType::TRANSFER);
                             $q->where('acm_to.data', '=', '"sharedAsset"');
                             $q->where('acm_from.data', '!=', '"sharedAsset"');
                         }
@@ -56,7 +57,7 @@ class ReportQuery implements ReportQueryInterface
                 }
             );
         } else {
-            $query->where('transaction_types.type', 'Withdrawal'); // any withdrawal is fine.
+            $query->where('transaction_types.type', TransactionType::WITHDRAWAL); // any withdrawal is fine.
         }
         $query->orderBy('transaction_journals.date');
         $data = $query->get( // get everything
@@ -132,13 +133,13 @@ class ReportQuery implements ReportQueryInterface
                 function (Builder $query) {
                     $query->where(
                         function (Builder $q) {
-                            $q->where('transaction_types.type', 'Deposit');
+                            $q->where('transaction_types.type', TransactionType::DEPOSIT);
                             $q->where('acm_to.data', '!=', '"sharedAsset"');
                         }
                     );
                     $query->orWhere(
                         function (Builder $q) {
-                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('transaction_types.type', TransactionType::TRANSFER);
                             $q->where('acm_from.data', '=', '"sharedAsset"');
                             $q->where('acm_to.data','!=','"sharedAsset"');
                         }
@@ -147,7 +148,7 @@ class ReportQuery implements ReportQueryInterface
             );
         } else {
             // any deposit is fine.
-            $query->where('transaction_types.type', 'Deposit');
+            $query->where('transaction_types.type', TransactionType::DEPOSIT);
         }
         $query->orderBy('transaction_journals.date');
 
@@ -195,7 +196,7 @@ class ReportQuery implements ReportQueryInterface
             Auth::user()->transactionjournals()
                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->transactionTypes(['Withdrawal'])
+                ->transactionTypes([TransactionType::WITHDRAWAL])
                 ->where('transactions.account_id', $account->id)
                 ->before($end)
                 ->after($start)
@@ -217,7 +218,7 @@ class ReportQuery implements ReportQueryInterface
             Auth::user()->transactionjournals()
                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->transactionTypes(['Withdrawal'])
+                ->transactionTypes([TransactionType::WITHDRAWAL])
                 ->where('transactions.account_id', $account->id)
                 ->before($end)
                 ->after($start)

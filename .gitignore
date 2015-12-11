@@ -5,7 +5,7 @@ Thumbs.db
 .idea/
 tests/_output/*
 _ide_helper.php
-/build/logs/clover.xml
+/build/logs
 index.html*
 app/storage/firefly-export*
 .vagrant

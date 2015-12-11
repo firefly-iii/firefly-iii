@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Requests;
 use Auth;
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Models\TransactionType;
 use Input;
 
 /**
@@ -65,7 +66,7 @@ class JournalFormRequest extends Request
         ];
 
         switch ($what) {
-            case 'withdrawal':
+            case strtolower(TransactionType::WITHDRAWAL):
                 $rules['account_id']      = 'required|exists:accounts,id|belongsToUser:accounts';
                 $rules['expense_account'] = 'between:1,255';
                 $rules['category']        = 'between:1,255';
@@ -73,12 +74,12 @@ class JournalFormRequest extends Request
                     $rules['budget_id'] = 'exists:budgets,id|belongsToUser:budgets';
                 }
                 break;
-            case 'deposit':
+            case strtolower(TransactionType::DEPOSIT):
                 $rules['category']        = 'between:1,255';
                 $rules['account_id']      = 'required|exists:accounts,id|belongsToUser:accounts';
                 $rules['revenue_account'] = 'between:1,255';
                 break;
-            case 'transfer':
+            case strtolower(TransactionType::TRANSFER):
                 $rules['account_from_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:account_to_id';
                 $rules['account_to_id']   = 'required|exists:accounts,id|belongsToUser:accounts|different:account_from_id';
                 $rules['category']        = 'between:1,255';

@@ -10,6 +10,9 @@ install:
   - composer update
   - php artisan env
   - mv -v .env.testing .env
+  - touch storage/database/testing.db
+  - php artisan migrate --env=testing
+  - php artisan migrate --seed --env=testing
 
 script:
   - phpunit
