@@ -326,6 +326,33 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return CategoryCollection
+     */
+    public function getCategoryReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $object = new CategoryCollection;
+
+        /**
+         * GET CATEGORIES:
+         */
+        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $set        = $repository->getCategories();
+        foreach ($set as $category) {
+            $spent           = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+            $category->spent = $spent;
+            $object->addCategory($category);
+            $object->addTotal($spent);
+        }
+
+        return $object;
+    }
+
+    /**
      * Get a full report on the users expenses during the period.
      *
      * @param Carbon  $start

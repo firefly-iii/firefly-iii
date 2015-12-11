@@ -77,8 +77,8 @@ interface CategoryRepositoryInterface
      * limited by a start or end date.
      *
      * @param Category $category
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return string
      */
@@ -111,6 +111,19 @@ interface CategoryRepositoryInterface
      * @return string
      */
     public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
+
+
+    /**
+     * Corrected for tags.
+     *
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @param Collection     $accounts
+     *
+     * @return string
+     */
+    public function balanceInPeriodForList(Category $category, Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Category       $category

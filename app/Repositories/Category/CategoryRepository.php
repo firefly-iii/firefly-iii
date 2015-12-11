@@ -192,6 +192,19 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     }
 
     /**
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     */
+    public function balanceInPeriodForList(Category $category, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        return $this->commonBalanceInPeriodForList($category, $start, $end, $accounts);
+    }
+
+    /**
      * Corrected for tags
      *
      * @param Category $category
@@ -286,9 +299,10 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $sum = $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
-            'amount'
-        );
+        $sum = $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->before($end)->after($start)->get(['transaction_journals.*'])
+                        ->sum(
+                            'amount'
+                        );
 
         $cache->store($sum);
 
@@ -316,9 +330,10 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $sum = $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->before($end)->after($start)->get(['transaction_journals.*'])->sum(
-            'amount'
-        );
+        $sum = $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->before($end)->after($start)->get(['transaction_journals.*'])
+                        ->sum(
+                            'amount'
+                        );
 
         $cache->store($sum);
 

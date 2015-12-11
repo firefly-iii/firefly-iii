@@ -92,6 +92,15 @@ interface ReportHelperInterface
     public function getCategoryReport(Carbon $start, Carbon $end, $shared);
 
     /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return CategoryCollection
+     */
+    public function getCategoryReportForList(Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
      * Get a full report on the users expenses during the period.
      *
      * @param Carbon  $start
