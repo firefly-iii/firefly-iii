@@ -42,7 +42,7 @@ $(function () {
             datePicker.setEndDate(endDate);
         }
     }
-    
+
     $('.openModal').on('click', openModal);
 
     $('.date-select').on('click', preSelectDate);

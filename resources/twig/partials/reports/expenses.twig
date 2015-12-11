@@ -32,7 +32,7 @@
             {% endif %}
             <tr>
                 <td><em>{{ 'sum'|_ }}</em></td>
-                <td><span class="text-danger">{{ (expenses.getTotal)|formatAmountPlain }}</span></td>
+                <td>{{ (expenses.getTotal)|formatAmountPlain }}</td>
             </tr>
             </tfoot>
         </table>
