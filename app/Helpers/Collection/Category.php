@@ -37,6 +37,7 @@ class Category
         // spent is minus zero for an expense report:
         if ($category->spent < 0) {
             $this->categories->push($category);
+            $this->addTotal($category->spent);
         }
     }
 
