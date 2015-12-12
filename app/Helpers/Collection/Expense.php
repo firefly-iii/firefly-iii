@@ -33,18 +33,24 @@ class Expense
      */
     public function addOrCreateExpense(TransactionJournal $entry)
     {
+        bcscale(2);
+
         $accountId = $entry->account_id;
+        $amount    = strval(round($entry->amount, 2));
+        if (bccomp('0', $amount) === 1) {
+            $amount = bcmul($amount, '-1');
+        }
+
         if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
-            $newObject->amount = strval(round($entry->amount, 2));
+            $newObject->amount = $amount;
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
             $newObject->id     = $accountId;
             $this->expenses->put($accountId, $newObject);
         } else {
-            bcscale(2);
             $existing         = $this->expenses->get($accountId);
-            $existing->amount = bcadd($existing->amount, $entry->amount);
+            $existing->amount = bcadd($existing->amount, $amount);
             $existing->count++;
             $this->expenses->put($accountId, $existing);
         }
@@ -57,7 +63,7 @@ class Expense
     {
         bcscale(2);
 
-        
+
         $add = strval(round($add, 2));
         if (bccomp('0', $add) === 1) {
             $add = bcmul($add, '-1');
