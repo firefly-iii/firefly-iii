@@ -49,6 +49,7 @@ class ReportController extends Controller
         $cache = new CacheProperties;
         $cache->addProperty('yearInOut');
         $cache->addProperty($start);
+        $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
@@ -61,6 +62,7 @@ class ReportController extends Controller
             // total income and total expenses:
             $incomeSum  = $query->incomeInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
             $expenseSum = $query->expenseInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
+            
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addMonth();
