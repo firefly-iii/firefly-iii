@@ -279,12 +279,15 @@ class ReportQuery implements ReportQueryInterface
             $ids[] = $account->id;
         }
 
-        // only get deposits not to a shared account
-        // and transfers to a shared account.
-
         // OR is a deposit
         // OR is a transfer FROM a shared account to NOT a shared account.
         //
+        // New idea: from the perspective of a shared account,
+        // a transfer from a not-shared account is income!
+        // so:
+        // OR is a transfer from NOT a shared account to a shared account.
+
+
 
         $query->where(
             function (Builder $query) {
@@ -298,6 +301,13 @@ class ReportQuery implements ReportQueryInterface
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
                         $q->where('acm_from.data', '=', '"sharedAsset"');
                         $q->where('acm_to.data', '!=', '"sharedAsset"');
+                    }
+                );
+                $query->orWhere(
+                    function (Builder $q) {
+                        $q->where('transaction_types.type', TransactionType::TRANSFER);
+                        $q->where('acm_from.data', '!=', '"sharedAsset"');
+                        $q->where('acm_to.data', '=', '"sharedAsset"');
                     }
                 );
             }
