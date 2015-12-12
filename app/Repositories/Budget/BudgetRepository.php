@@ -310,9 +310,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             ->transactionTypes([TransactionType::WITHDRAWAL])
             ->get(['transaction_journals.*'])->sum('amount');
 
-        bcscale(2);
-
-        return bcmul($noBudgetSet, -1);
+        return $noBudgetSet;
     }
 
     /**
