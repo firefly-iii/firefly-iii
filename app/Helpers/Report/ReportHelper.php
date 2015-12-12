@@ -515,7 +515,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Expense;
         $set    = $this->query->expenseInPeriodCorrectedForList($start, $end, $accounts);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount);
+            $object->addToTotal($entry->amount); // can be positive, if it's a transfer
             $object->addOrCreateExpense($entry);
         }
 

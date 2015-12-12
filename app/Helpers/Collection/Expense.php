@@ -55,8 +55,18 @@ class Expense
      */
     public function addToTotal($add)
     {
-        $add = strval(round($add, 2));
         bcscale(2);
+
+        
+        $add = strval(round($add, 2));
+        if (bccomp('0', $add) === 1) {
+            $add = bcmul($add, '-1');
+        }
+
+        // if amount is positive, the original transaction
+        // was a transfer. But since this is an expense report,
+        // that amount must be negative.
+
         $this->total = bcadd($this->total, $add);
     }
 
