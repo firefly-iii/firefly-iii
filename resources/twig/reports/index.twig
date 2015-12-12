@@ -6,68 +6,26 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'reportsOwnAccounts'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {% for year, data in months %}
-                        <h4><a href="{{ route('reports.year',year) }}">{{ year }}</a></h4>
-                        <ul class="list-inline">
-                            {% for month in data.months %}
-                                <li>
-                                    <a href="{{ route('reports.month',[month.year, month.month]) }}">{{ month.formatted }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'reportsOwnAccountsAndShared'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {% for year, data in months %}
-                        <h4><a href="{{ route('reports.year',[year, 'shared']) }}">{{ year }}</a></h4>
-                        <ul class="list-inline">
-                            {% for month in data.months %}
-                                <li>
-                                    <a href="{{ route('reports.month',[month.year, month.month,'shared']) }}">{{ month.formatted }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Some new reports.</h3>
+                    <h3 class="box-title">{{ 'reports'|_ }}</h3>
                 </div>
                 <div class="box-body">
 
                     <form class="form-horizontal" id="report-form" action="{{ route('reports.select') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="form-group">
-                            <label for="inputReportType" class="col-sm-3 control-label">Report type</label>
+                            <label for="inputReportType" class="col-sm-3 control-label">{{ 'report_type'|_ }}</label>
 
                             <div class="col-sm-9">
                                 <select name="report_type" class="form-control" id="inputReportType">
-                                    <option label="Default financial report" value="default">Default financial report</option>
+                                    <option label="{{ 'report_type_default'|_ }}" value="default">{{ 'report_type_default'|_ }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputAccounts" class="col-sm-3 control-label">Included accounts</label>
+                            <label for="inputAccounts" class="col-sm-3 control-label">{{ 'report_included_accounts'|_ }}</label>
 
                             <div class="col-sm-9">
                                 {% for account in accounts %}
@@ -76,22 +34,21 @@
                                             <input type="checkbox" class="account-checkbox" name="accounts[]" value="{{ account.id }}">
                                             {{ account.name }}
                                             {% if account.getMeta('accountRole') == 'sharedAsset' %}
-                                                (shared)
+                                                ({{ 'shared'|_|lower }})
                                             {% endif %}
                                         </label>
                                     </div>
                                 {% endfor %}
 
                                 <p class="help-block">
-                                    In all cases, transfers to shared accounts count as expenses, and transfers
-                                    from shared accounts count as income.
+                                    {{ 'report_include_help'|_ }}
                                 </p>
                             </div>
                         </div>
 
 
                         <div class="form-group">
-                            <label for="inputDateRange" class="col-sm-3 control-label">Report date range</label>
+                            <label for="inputDateRange" class="col-sm-3 control-label">{{ 'report_date_range'|_ }}</label>
 
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="inputDateRange" name="daterange"
@@ -99,7 +56,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="__none__" class="col-sm-3 control-label">Pre-set ranges</label>
+                            <label for="__none__" class="col-sm-3 control-label">{{ 'report_preset_ranges'|_ }}</label>
 
                             <div class="col-sm-9">
                                 {% for year, data in months %}
@@ -117,7 +74,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="submit" class="btn btn-default">{{ 'submit'|_ }}</button>
                             </div>
                         </div>
                     </form>

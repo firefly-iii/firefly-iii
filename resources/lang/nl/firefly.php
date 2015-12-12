@@ -422,6 +422,14 @@ return [
     'hideTheRest'                   => 'Laat alleen de top :number zien',
     'categories_earned_in_year'     => 'Categorieën (inkomsten)',
     'categories_spent_in_year'      => 'Categorieën (uitgaven)',
+    'report_type'                   => 'Rapporttype',
+    'report_type_default'           => 'Standard financieel rapport',
+    'report_included_accounts'      => 'Accounts in rapport',
+    'report_date_range'             => 'Datumbereik',
+    'report_include_help'           => 'Overboekingen naar gedeelde rekeningen tellen als uitgave. Overboekingen van gedeelde rekeningen tellen als inkomsten.',
+    'report_preset_ranges'          => 'Standaardbereik',
+    'shared'                        => 'Gedeeld',
+
 
     // charts:
     'dayOfMonth'                    => 'Dag vd maand',
