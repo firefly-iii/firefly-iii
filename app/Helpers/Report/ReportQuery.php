@@ -383,6 +383,14 @@ class ReportQuery implements ReportQueryInterface
                         $q->where('acm_from.data', '!=', '"sharedAsset"');
                     }
                 );
+                // OR transfers from a NOT shared account to a shared account.
+                $query->orWhere(
+                    function (Builder $q) { // and transfers from a shared account to a not-shared account.
+                        $q->where('transaction_types.type', TransactionType::TRANSFER);
+                        $q->where('acm_to.data', '!=', '"sharedAsset"');
+                        $q->where('acm_from.data', '=', '"sharedAsset"');
+                    }
+                );
             }
         );
 
