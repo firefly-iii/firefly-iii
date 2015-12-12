@@ -39,7 +39,7 @@
                     </td>
                     <td>
                         {% if budgetLine.getSpent != 0 %}
-                            <span class="text-danger">{{ budgetLine.getSpent|formatAmountPlain }}</span>
+                            {{ budgetLine.getSpent|formatAmount }}
                         {% endif %}
 
                         {% if budgetLine.getSpent == 0 %}

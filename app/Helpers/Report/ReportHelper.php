@@ -343,7 +343,7 @@ class ReportHelper implements ReportHelperInterface
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $set        = $repository->getCategories();
         foreach ($set as $category) {
-            $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+            $spent           = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
             $category->spent = $spent;
             $object->addCategory($category);
         }
@@ -560,10 +560,9 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
                 $expenses  = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
-                $expenses  = $expenses * -1;
-                $left      = $expenses < $repetition->amount ? bcsub($repetition->amount, $expenses) : 0;
-                $spent     = $expenses > $repetition->amount ? 0 : $expenses;
-                $overspent = $expenses > $repetition->amount ? bcsub($expenses, $repetition->amount) : 0;
+                $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : 0;
+                $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? 0 : $expenses;
+                $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($expenses, $repetition->amount) : 0;
 
                 $budgetLine->setLeft($left);
                 $budgetLine->setSpent($spent);
@@ -605,8 +604,8 @@ class ReportHelper implements ReportHelperInterface
         $balance       = new Balance;
 
         // build a balance header:
-        $header = new BalanceHeader;
-        $budgets  = $repository->getBudgets();
+        $header  = new BalanceHeader;
+        $budgets = $repository->getBudgets();
         foreach ($accounts as $account) {
             $header->addAccount($account);
         }
