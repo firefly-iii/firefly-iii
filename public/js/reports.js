@@ -1,4 +1,4 @@
-/* globals google,reportURL, picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
+/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds , picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
 
 
 $(function () {
@@ -50,7 +50,6 @@ $(function () {
     $('#report-form').on('submit', catchSubmit);
 
 
-
     // click open the top X income list:
     $('#showIncomes').click(showIncomes);
     // click open the top X expense list:
@@ -61,12 +60,12 @@ function catchSubmit() {
     "use strict";
     // default;20141201;20141231;4;5
     // report name:
-    var url = '' + $('select[name="report_type"]').val() + ';';
+    var url = '' + $('select[name="report_type"]').val() + '/';
 
     // date, processed:
     var picker = $('#inputDateRange').data('daterangepicker');
-    url += moment(picker.startDate).format("YYYYMMDD") + ';';
-    url += moment(picker.endDate).format("YYYYMMDD");
+    url += moment(picker.startDate).format("YYYYMMDD") + '/';
+    url += moment(picker.endDate).format("YYYYMMDD") + '/';
 
     // all account ids:
     var count = 0;
@@ -74,7 +73,7 @@ function catchSubmit() {
     $.each($('.account-checkbox'), function (i, v) {
         var c = $(v);
         if (c.prop('checked')) {
-            url += ';' + c.val();
+            url += c.val() + ';';
             accounts.push(c.val());
             count++;
         }
@@ -105,21 +104,23 @@ function preSelectDate(e) {
 
 function drawChart() {
     "use strict";
-    if (typeof columnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
-        columnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
-        columnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
-    }
-    if (typeof stackedColumnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
-        stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
-        stackedColumnChart('chart/category/spent-in-year/' + year + shared, 'categories-spent-in-year');
-        stackedColumnChart('chart/category/earned-in-year/' + year + shared, 'categories-earned-in-year');
-    }
-    if (typeof lineChart !== 'undefined' && typeof month !== 'undefined' && typeof reportURL === 'undefined') {
-        lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
-    }
-    if (typeof lineChart !== 'undefined' && typeof reportURL !== 'undefined') {
+    //if (typeof columnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
+    //    columnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
+    //    columnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
+    //}
+    //if (typeof stackedColumnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
+    //    stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
+    //    stackedColumnChart('chart/category/spent-in-year/' + year + shared, 'categories-spent-in-year');
+    //    stackedColumnChart('chart/category/earned-in-year/' + year + shared, 'categories-earned-in-year');
+    //}
+
+    //if (typeof lineChart !== 'undefined' && typeof month !== 'undefined' && typeof reportURL === 'undefined') {
+    //    lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
+    //}
+
+    if (typeof lineChart !== 'undefined' && typeof accountIds !== 'undefined') {
         //http://firefly.app/chart/account/report/default;20151101;20151130;2
-        lineChart('/chart/account/report/' + reportURL, 'account-balances-chart');
+        lineChart('/chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
     }
 }
 

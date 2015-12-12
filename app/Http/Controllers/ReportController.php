@@ -1,14 +1,11 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
 use Redirect;
 use Session;
 use View;
@@ -206,61 +203,51 @@ class ReportController extends Controller
     }
 
     /**
-     * @param $url
+     * @param            $report_type
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return View
      */
-    public function report($url, AccountRepositoryInterface $repository)
+    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $parts = explode(';', $url);
-
-        // try to make a date out of parts 1 and 2:
-        try {
-            $start = new Carbon($parts[1]);
-            $end   = new Carbon($parts[2]);
-        } catch (Exception $e) {
-            Log::error('Could not parse date "' . $parts[1] . '" or "' . $parts[2] . '" for user #' . Auth::user()->id);
-            abort(404);
-        }
-        if ($end < $start) {
-            abort(404);
-        }
-
-        // accounts:
-        $c    = count($parts);
-        $list = new Collection();
-        for ($i = 3; $i < $c; $i++) {
-            $account = $repository->find($parts[$i]);
-            if ($account) {
-                $list->push($account);
-            }
-        }
-
-        // some fields:
+        // some fields for translation:
         $subTitle         = trans('firefly.reportForMonth', ['month' => $start->formatLocalized($this->monthFormat)]);
         $subTitleIcon     = 'fa-calendar';
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accounts   = $this->helper->getAccountReportForList($start, $end, $list);
-        $incomes    = $this->helper->getIncomeReportForList($start, $end, $list);
-        $expenses   = $this->helper->getExpenseReportForList($start, $end, $list);
-        $budgets    = $this->helper->getBudgetReportForList($start, $end, $list);
-        $categories = $this->helper->getCategoryReportForList($start, $end, $list);
-        $balance    = $this->helper->getBalanceReportForList($start, $end, $list);
-        $bills      = $this->helper->getBillReportForList($start, $end, $list);
+        $accountReport = $this->helper->getAccountReportForList($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReportForList($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReportForList($start, $end, $accounts);
+        $budgets       = $this->helper->getBudgetReportForList($start, $end, $accounts);
+        $categories    = $this->helper->getCategoryReportForList($start, $end, $accounts);
+        $balance       = $this->helper->getBalanceReportForList($start, $end, $accounts);
+        $bills         = $this->helper->getBillReportForList($start, $end, $accounts);
+
+        // and some id's, joined:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        $accountIds = join(';', $accountIds);
 
         // continue!
         return view(
             'reports.default',
             compact(
-                'start',
+                'start', 'end', 'report_type',
                 'subTitle', 'subTitleIcon',
-                'accounts',
+                'accountReport',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
-                'budgets', 'balance','url',
+                'budgets', 'balance',
                 'categories',
-                'bills'
+                'bills',
+                'accountIds', 'report_type'
             )
         );
 

@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -25,6 +26,63 @@ Route::bind(
             if ($object) {
                 return $object;
             }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+// account list! Yay!
+Route::bind(
+    'accountList',
+    function ($value) {
+        if (Auth::check()) {
+            $ids = explode(';', $value);
+            /** @var \Illuminate\Support\Collection $object */
+            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                             ->where('account_types.editable', 1)
+                             ->whereIn('accounts.id', $ids)
+                             ->where('user_id', Auth::user()->id)
+                             ->get(['accounts.*']);
+            if ($object->count() > 0) {
+                return $object;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+
+// Date
+Route::bind(
+    'start_date',
+    function ($value) {
+        if (Auth::check()) {
+
+            try {
+                $date = new Carbon($value);
+            } catch (Exception $e) {
+                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
+                throw new NotFoundHttpException;
+            }
+
+            return $date;
+        }
+        throw new NotFoundHttpException;
+    }
+);
+
+// Date
+Route::bind(
+    'end_date',
+    function ($value) {
+        if (Auth::check()) {
+
+            try {
+                $date = new Carbon($value);
+            } catch (Exception $e) {
+                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
+                throw new NotFoundHttpException;
+            }
+
+            return $date;
         }
         throw new NotFoundHttpException;
     }
@@ -162,7 +220,7 @@ Route::get('/cron/sendgrid', ['uses' => 'CronController@sendgrid']);
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -284,8 +342,10 @@ Route::group(
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
     Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
-    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']);
-    Route::get('/chart/account/report/{url}', ['uses' => 'Chart\AccountController@report']);
+    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(
+        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
+    );
+    Route::get('/chart/account/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
 
@@ -302,7 +362,7 @@ Route::group(
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
     Route::get('/chart/category/spent-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@spentInYear'])->where(
-['year' => '[0-9]{4}', 'shared' => 'shared']
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
     Route::get('/chart/category/earned-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@earnedInYear'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
@@ -385,7 +445,7 @@ Route::group(
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
     Route::post('/reports/select', ['uses' => 'ReportController@select', 'as' => 'reports.select']);
-    Route::get('/reports/report/{url}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
+    Route::get('/reports/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
     Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
     Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(
         ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']

@@ -84,10 +84,14 @@
 
     <script type="text/javascript">
         var year = {{ start.year }};
-        var reportURL = "{{ url }}";
         var month = {{ start.month }};
-        var shared = {% if shared %}'/shared'
-        {% else %}''{% endif %};
+
+        // to report another URL:
+        var startDate = '{{ start.format('Ymd') }}';
+        var endDate = '{{ end.format('Ymd') }}';
+        var reportType = '{{ report_type }}';
+        var accountIds = '{{ accountIds }}';
+
         var incomeTopLength = {{ incomeTopLength }};
         var expenseTopLength = {{ expenseTopLength }};
         var incomeRestShow = false; // starts hidden.

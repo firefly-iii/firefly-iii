@@ -90,32 +90,8 @@ class AccountController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function report(AccountRepositoryInterface $repository, $url)
+    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $parts = explode(';', $url);
-
-        // try to make a date out of parts 1 and 2:
-        try {
-            $start = new Carbon($parts[1]);
-            $end   = new Carbon($parts[2]);
-        } catch (Exception $e) {
-            Log::error('Could not parse date "' . $parts[1] . '" or "' . $parts[2] . '" for user #' . Auth::user()->id);
-            abort(404);
-        }
-        if ($end < $start) {
-            abort(404);
-        }
-
-        // accounts:
-        $c    = count($parts);
-        $list = new Collection();
-        for ($i = 3; $i < $c; $i++) {
-            $account = $repository->find($parts[$i]);
-            if ($account) {
-                $list->push($account);
-            }
-        }
-
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -123,13 +99,13 @@ class AccountController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('accounts');
         $cache->addProperty('default');
-        $cache->addProperty($list);
+        $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // make chart:
-        $data = $this->generator->all($list, $start, $end);
+        $data = $this->generator->all($accounts, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
