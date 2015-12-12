@@ -85,7 +85,7 @@ function catchSubmit() {
         createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
         createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
 
-        window.location.replace(reportURL + "/" + url);
+        window.location.href = reportURL + "/" + url;
     }
     //console.log(url);
 
