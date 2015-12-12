@@ -104,10 +104,11 @@ function preSelectDate(e) {
 
 function drawChart() {
     "use strict";
-    //if (typeof columnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
-    //    columnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
-    //    columnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
-    //}
+    if (typeof columnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
+
+        columnChart('chart/report/in-out/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-chart');
+        columnChart('chart/report/in-out-sum/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-sum-chart');
+    }
     //if (typeof stackedColumnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
     //    stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
     //    stackedColumnChart('chart/category/spent-in-year/' + year + shared, 'categories-spent-in-year');

@@ -375,8 +375,8 @@ Route::group(
     Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
     // reports:
-    Route::get('/chart/report/in-out/{year}/{shared?}', ['uses' => 'Chart\ReportController@yearInOut'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
-    Route::get('/chart/report/in-out-sum/{year}/{shared?}', ['uses' => 'Chart\ReportController@yearInOutSummarized'])->where(
+    Route::get('/chart/report/in-out/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/chart/report/in-out-sum/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
 

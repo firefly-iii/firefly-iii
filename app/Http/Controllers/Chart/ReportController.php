@@ -9,7 +9,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
-use Log;
 
 /**
  * Class ReportController
@@ -37,23 +36,20 @@ class ReportController extends Controller
      * Summarizes all income and expenses, per month, for a given year.
      *
      * @param ReportQueryInterface $query
-     * @param                      $year
-     * @param bool                 $shared
+     * @param                      $report_type
+     * @param Carbon               $start
+     * @param Carbon               $end
+     * @param Collection           $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOut(ReportQueryInterface $query, $year, $shared = false)
+    public function yearInOut(ReportQueryInterface $query, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        // get start and end of year
-        $start  = new Carbon($year . '-01-01');
-        $end    = new Carbon($year . '-12-31');
-        $shared = $shared == 'shared' ? true : false;
-
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('yearInOut');
-        $cache->addProperty($year);
-        $cache->addProperty($shared);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
@@ -63,8 +59,8 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $incomeSum  = $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount_positive');
-            $expenseSum = $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount_positive');
+            $incomeSum  = $query->incomeInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
+            $expenseSum = $query->expenseInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addMonth();
@@ -81,26 +77,26 @@ class ReportController extends Controller
      * Summarizes all income and expenses for a given year. Gives a total and an average.
      *
      * @param ReportQueryInterface $query
-     * @param                      $year
-     * @param bool                 $shared
+     * @param                      $report_type
+     * @param Carbon               $start
+     * @param Carbon               $end
+     * @param Collection           $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOutSummarized(ReportQueryInterface $query, $year, $shared = false)
+    public function yearInOutSummarized(ReportQueryInterface $query, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('yearInOutSummarized');
-        $cache->addProperty($year);
-        $cache->addProperty($shared);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $start   = new Carbon($year . '-01-01');
-        $end     = new Carbon($year . '-12-31');
-        $shared  = $shared == 'shared' ? true : false;
         $income  = '0';
         $expense = '0';
         $count   = 0;
@@ -111,18 +107,11 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $currentIncome = $query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount_positive');
-            $currentExpense = $query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount_positive');
-            
-            Log::debug('Date ['.$month->format('M Y').']: income = ['.$income.' + '.$currentIncome.'], out = ['.$expense.' + '.$currentExpense.']');
-            
-            $income  = bcadd($income, $currentIncome);
-            $expense = bcadd($expense, $currentExpense);
-            
-            
-            
-            
-            
+            $currentIncome  = $query->incomeInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
+            $currentExpense = $query->expenseInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
+            $income         = bcadd($income, $currentIncome);
+            $expense        = bcadd($expense, $currentExpense);
+
             $count++;
             $start->addMonth();
         }
