@@ -50,7 +50,7 @@
 
             {% for limit in limits %}
                 {% for rep in limit.limitRepetitions %}
-                {% set spentInRep = (spentInRepetitionCorrected(rep)*-1) %}
+                {% set spentInRep = spentInRepetitionCorrected(rep) %}
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title"><a href="{{ route('budgets.show',[budget.id,rep.id]) }}">{{ rep.startdate.formatLocalized(monthFormat) }}</a>
@@ -62,15 +62,15 @@
                                     {{ 'amount'|_ }}: {{ rep.amount|formatAmount }}
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    {{ 'spent'|_ }}: <span class="text-danger">{{ spentInRep|formatAmountPlain }}</span>
+                                    {{ 'spent'|_ }}: {{ spentInRep|formatAmount }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                    {% set overspent = spentInRep > rep.amount %}
+                                    {% set overspent = rep.amount + spentInRep > 0 %}
 
                                     {% if overspent %}
-                                        {% set pct = (spentInRep != 0 ? (rep.amount / spentInRep)*100 : 0) %}
+                                        {% set pct = (spentInRep != 0 ? (rep.amount / (spentInRep*-1))*100 : 0) %}
                                         <div class="progress progress-striped">
                                             <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
                                                  aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
@@ -79,7 +79,7 @@
                                         </div>
                                     {% else %}
                                         {% set amount = rep.amount %}
-                                        {% set pct = (amount != 0 ? ((spentInRep / amount)*100) : 0) %}
+                                        {% set pct = (amount != 0 ? (((spentInRep*-1) / amount)*100) : 0) %}
                                         <div class="progress progress-striped">
                                             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
                                                  aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
