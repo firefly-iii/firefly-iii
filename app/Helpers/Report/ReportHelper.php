@@ -647,7 +647,7 @@ class ReportHelper implements ReportHelperInterface
         $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
 
         foreach ($accounts as $account) {
-            $spent = $this->query->spentNoBudget($account, $start, $end) * -1;
+            $spent = $this->query->spentNoBudget($account, $start, $end);
             $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
             bcscale(2);
             $diff = bcsub($spent, $left);
