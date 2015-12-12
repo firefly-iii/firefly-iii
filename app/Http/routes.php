@@ -355,18 +355,22 @@ Route::group(
 
     // budgets:
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
-    Route::get('/chart/budget/year/{year}/{shared?}', ['uses' => 'Chart\BudgetController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+
+    // this chart is used in reports:
+    Route::get('/chart/budget/year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+
+
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
     Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
 
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
-    Route::get('/chart/category/spent-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@spentInYear'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
-    );
-    Route::get('/chart/category/earned-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@earnedInYear'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
-    );
+
+    // both charts are for reports:
+    Route::get('/chart/category/spent-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInYear']);
+    Route::get('/chart/category/earned-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInYear']);
+
+
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
     Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);

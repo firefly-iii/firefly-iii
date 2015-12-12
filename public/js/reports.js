@@ -109,18 +109,17 @@ function drawChart() {
         columnChart('chart/report/in-out/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-chart');
         columnChart('chart/report/in-out-sum/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-sum-chart');
     }
-    //if (typeof stackedColumnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
-    //    stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
-    //    stackedColumnChart('chart/category/spent-in-year/' + year + shared, 'categories-spent-in-year');
-    //    stackedColumnChart('chart/category/earned-in-year/' + year + shared, 'categories-earned-in-year');
-    //}
+    if (typeof stackedColumnChart !== 'undefined' && typeof year !== 'undefined' && typeof month === 'undefined') {
+        stackedColumnChart('chart/budget/year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budgets');
+        stackedColumnChart('chart/category/spent-in-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-spent-in-year');
+        stackedColumnChart('chart/category/earned-in-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-earned-in-year');
+    }
 
     //if (typeof lineChart !== 'undefined' && typeof month !== 'undefined' && typeof reportURL === 'undefined') {
     //    lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
     //}
 
     if (typeof lineChart !== 'undefined' && typeof accountIds !== 'undefined') {
-        //http://firefly.app/chart/account/report/default;20151101;20151130;2
         lineChart('/chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
     }
 }

@@ -213,15 +213,15 @@ class CategoryController extends Controller
      * This chart will only show expenses.
      *
      * @param CategoryRepositoryInterface $repository
-     * @param                             $year
-     * @param bool                        $shared
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function spentInYear(CategoryRepositoryInterface $repository, $year, $shared = false)
+    public function spentInYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $start = new Carbon($year . '-01-01');
-        $end   = new Carbon($year . '-12-31');
 
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
@@ -232,12 +232,11 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $shared        = $shared == 'shared' ? true : false;
         $allCategories = $repository->getCategories();
         $entries       = new Collection;
         $categories    = $allCategories->filter(
-            function (Category $category) use ($repository, $start, $end, $shared) {
-                $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
+            function (Category $category) use ($repository, $start, $end, $accounts) {
+                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
                 if ($spent < 0) {
                     return $category;
                 }
@@ -252,7 +251,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriod($category, $start, $month, $shared);
+                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
                 if ($spent < 0) {
                     $row[] = $spent * -1;
                 } else {
@@ -272,16 +271,15 @@ class CategoryController extends Controller
      * This chart will only show income.
      *
      * @param CategoryRepositoryInterface $repository
-     * @param                             $year
-     * @param bool                        $shared
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInYear(CategoryRepositoryInterface $repository, $year, $shared = false)
+    public function earnedInYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $start = new Carbon($year . '-01-01');
-        $end   = new Carbon($year . '-12-31');
-
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -291,12 +289,11 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $shared        = $shared == 'shared' ? true : false;
         $allCategories = $repository->getCategories();
         $allEntries    = new Collection;
         $categories    = $allCategories->filter(
-            function (Category $category) use ($repository, $start, $end, $shared) {
-                $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
+            function (Category $category) use ($repository, $start, $end, $accounts) {
+                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
                 if ($spent > 0) {
                     return $category;
                 }
@@ -311,7 +308,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriod($category, $start, $month, $shared);
+                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
                 if ($spent > 0) {
                     $row[] = $spent;
                 } else {

@@ -197,11 +197,8 @@ class BudgetController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function year(BudgetRepositoryInterface $repository, $year, $shared = false)
+    public function year(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $start      = new Carbon($year . '-01-01');
-        $end        = new Carbon($year . '-12-31');
-        $shared     = $shared == 'shared' ? true : false;
         $allBudgets = $repository->getBudgets();
         $budgets    = new Collection;
 
@@ -218,7 +215,7 @@ class BudgetController extends Controller
         // filter empty budgets:
 
         foreach ($allBudgets as $budget) {
-            $spent = $repository->balanceInPeriod($budget, $start, $end, $shared);
+            $spent = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
             if ($spent != 0) {
                 $budgets->push($budget);
             }
@@ -234,7 +231,7 @@ class BudgetController extends Controller
 
             // each budget, fill the row:
             foreach ($budgets as $budget) {
-                $spent = $repository->balanceInPeriod($budget, $start, $month, $shared);
+                $spent = $repository->balanceInPeriodForList($budget, $start, $month, $accounts);
                 $row[] = $spent * -1;
             }
             $entries->push($row);
