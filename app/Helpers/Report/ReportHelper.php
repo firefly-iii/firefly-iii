@@ -684,4 +684,52 @@ class ReportHelper implements ReportHelperInterface
 
         return $balance;
     }
+
+    /**
+     * This method generates a full report for the given period on all
+     * the users bills and their payments.
+     *
+     * Excludes bills which have not had a payment on the mentioned accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return BillCollection
+     */
+    public function getBillReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $bills      = $repository->getBillsForAccounts($accounts);
+        $collection = new BillCollection;
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $billLine = new BillLine;
+            $billLine->setBill($bill);
+            $billLine->setActive(intval($bill->active) == 1);
+            $billLine->setMin($bill->amount_min);
+            $billLine->setMax($bill->amount_max);
+
+            // is hit in period?
+            bcscale(2);
+            $set = $repository->getJournalsInRange($bill, $start, $end);
+            if ($set->count() == 0) {
+                $billLine->setHit(false);
+            } else {
+                $billLine->setHit(true);
+                $amount = '0';
+                foreach ($set as $entry) {
+                    $amount = bcadd($amount, $entry->amount);
+                }
+                $billLine->setAmount($amount);
+            }
+
+            $collection->addBill($billLine);
+
+        }
+
+        return $collection;
+    }
 }

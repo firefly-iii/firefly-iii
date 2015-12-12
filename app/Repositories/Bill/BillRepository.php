@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Bill;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -95,6 +96,46 @@ class BillRepository implements BillRepositoryInterface
     {
         /** @var Collection $set */
         $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
+
+        $set = $set->sortBy(
+            function (Bill $bill) {
+
+                $int = $bill->active == 1 ? 0 : 1;
+
+                return $int . strtolower($bill->name);
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBillsForAccounts(Collection $accounts)
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
+
+        $ids = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
+        $set = $set->filter(
+            function (Bill $bill) use ($ids) {
+                // get transaction journals from or to any of the mentioned accounts.
+                // if zero, return null.
+                $journals = $bill->transactionjournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->whereIn('transactions.account_id', $ids)->count();
+
+                return ($journals > 0);
+
+            }
+        );
 
         $set = $set->sortBy(
             function (Bill $bill) {

@@ -56,6 +56,20 @@ interface ReportHelperInterface
     public function getBillReport(Carbon $start, Carbon $end);
 
     /**
+     * This method generates a full report for the given period on all
+     * the users bills and their payments.
+     *
+     * Excludes bills which have not had a payment on the mentioned accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return BillCollection
+     */
+    public function getBillReportForList(Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
      * @param Carbon  $start
      * @param Carbon  $end
      * @param boolean $shared
@@ -65,8 +79,8 @@ interface ReportHelperInterface
     public function getBalanceReport(Carbon $start, Carbon $end, $shared);
 
     /**
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return Balance

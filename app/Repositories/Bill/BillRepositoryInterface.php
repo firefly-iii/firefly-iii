@@ -78,6 +78,15 @@ interface BillRepositoryInterface
     public function getBills();
 
     /**
+     * Gets the bills which have some kind of relevance to the accounts mentioned.
+     *
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBillsForAccounts(Collection $accounts);
+
+    /**
      * @param Bill $bill
      *
      * @return Collection

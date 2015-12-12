@@ -247,7 +247,7 @@ class ReportController extends Controller
         $budgets    = $this->helper->getBudgetReportForList($start, $end, $list);
         $categories = $this->helper->getCategoryReportForList($start, $end, $list);
         $balance    = $this->helper->getBalanceReportForList($start, $end, $list);
-        //        $bills      = $this->helper->getBillReportForList($start, $end);
+        $bills      = $this->helper->getBillReportForList($start, $end, $list);
 
         // continue!
         return view(
