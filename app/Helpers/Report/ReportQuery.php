@@ -367,7 +367,7 @@ class ReportQuery implements ReportQueryInterface
         $query = $this->queryJournalsWithTransactions($start, $end);
 
         // withdrawals from any account are an expense.
-        // transfers away, to an account not in the list, are an expense.
+        // transfers away, to an account not in the list, but shared, are an expense.
 
         $query->where(
             function (Builder $query) use ($ids) {
@@ -380,6 +380,7 @@ class ReportQuery implements ReportQueryInterface
                     function (Builder $q) use ($ids) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
                         $q->whereNotIn('ac_to.id', $ids);
+                        $q->where('acm_to.data', '=', '"sharedAsset"');
                     }
                 );
             }
