@@ -560,8 +560,13 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
                 $expenses  = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+
+                // 200 en -100 is 100, vergeleken met 0 === 1
+                // 200 en -200 is 0, vergeleken met 0 === 0
+                // 200 en -300 is -100, vergeleken met 0 === -1
+
                 $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : 0;
-                $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? 0 : $expenses;
+                $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
                 $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($expenses, $repetition->amount) : 0;
 
                 $budgetLine->setLeft($left);
