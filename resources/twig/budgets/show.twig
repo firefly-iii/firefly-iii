@@ -67,7 +67,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                    {% set overspent = rep.amount + spentInRep > 0 %}
+                                    {% set overspent = rep.amount + spentInRep < 0 %}
 
                                     {% if overspent %}
                                         {% set pct = (spentInRep != 0 ? (rep.amount / (spentInRep*-1))*100 : 0) %}
