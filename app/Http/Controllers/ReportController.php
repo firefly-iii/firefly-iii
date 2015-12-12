@@ -258,7 +258,7 @@ class ReportController extends Controller
                 'accounts',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
-                'budgets', 'balance',
+                'budgets', 'balance','url',
                 'categories',
                 'bills'
             )

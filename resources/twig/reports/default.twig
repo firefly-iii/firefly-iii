@@ -84,6 +84,7 @@
 
     <script type="text/javascript">
         var year = {{ start.year }};
+        var reportURL = "{{ url }}";
         var month = {{ start.month }};
         var shared = {% if shared %}'/shared'
         {% else %}''{% endif %};

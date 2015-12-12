@@ -1,4 +1,4 @@
-/* globals google, picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
+/* globals google,reportURL, picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
 
 
 $(function () {
@@ -114,8 +114,12 @@ function drawChart() {
         stackedColumnChart('chart/category/spent-in-year/' + year + shared, 'categories-spent-in-year');
         stackedColumnChart('chart/category/earned-in-year/' + year + shared, 'categories-earned-in-year');
     }
-    if (typeof lineChart !== 'undefined' && typeof month !== 'undefined') {
+    if (typeof lineChart !== 'undefined' && typeof month !== 'undefined' && typeof reportURL === 'undefined') {
         lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
+    }
+    if (typeof lineChart !== 'undefined' && typeof reportURL !== 'undefined') {
+        //http://firefly.app/chart/account/report/default;20151101;20151130;2
+        lineChart('/chart/account/report/' + reportURL, 'account-balances-chart');
     }
 }
 
