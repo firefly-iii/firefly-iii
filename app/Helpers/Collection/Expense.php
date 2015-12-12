@@ -37,7 +37,7 @@ class Expense
 
         $accountId = $entry->account_id;
         $amount    = strval(round($entry->amount, 2));
-        if (bccomp('0', $amount) === 1) {
+        if (bccomp('0', $amount) === -1) {
             $amount = bcmul($amount, '-1');
         }
 
@@ -65,7 +65,7 @@ class Expense
 
 
         $add = strval(round($add, 2));
-        if (bccomp('0', $add) === 1) {
+        if (bccomp('0', $add) === -1) {
             $add = bcmul($add, '-1');
         }
 
