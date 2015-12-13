@@ -35,7 +35,7 @@ interface BudgetRepositoryInterface
      *
      * @return float
      */
-    public function expensesOnDayCorrected(Budget $budget, Carbon $date);
+    public function expensesOnDay(Budget $budget, Carbon $date);
 
     /**
      * @return Collection

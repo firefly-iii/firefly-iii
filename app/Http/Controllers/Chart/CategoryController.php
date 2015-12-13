@@ -107,7 +107,7 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $array = $repository->getCategoriesAndExpensesCorrected($start, $end);
+        $array = $repository->getCategoriesAndExpenses($start, $end);
         // sort by callback:
         uasort(
             $array,
@@ -151,8 +151,8 @@ class CategoryController extends Controller
 
 
         while ($start <= $end) {
-            $spent  = $repository->spentOnDaySumCorrected($category, $start);
-            $earned = $repository->earnedOnDaySumCorrected($category, $start);
+            $spent  = $repository->spentOnDaySum($category, $start);
+            $earned = $repository->earnedOnDaySum($category, $start);
             $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
@@ -194,8 +194,8 @@ class CategoryController extends Controller
 
 
         while ($start <= $end) {
-            $spent   = $repository->spentOnDaySumCorrected($category, $start);
-            $earned  = $repository->earnedOnDaySumCorrected($category, $start);
+            $spent   = $repository->spentOnDaySum($category, $start);
+            $earned  = $repository->earnedOnDaySum($category, $start);
             $theDate = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $theDate, $spent, $earned]);
             $start->addDay();

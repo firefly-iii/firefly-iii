@@ -67,7 +67,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      *
      * @return array
      */
-    public function getCategoriesAndExpensesCorrected(Carbon $start, Carbon $end)
+    public function getCategoriesAndExpenses(Carbon $start, Carbon $end)
     {
         $set = Auth::user()->transactionjournals()
                    ->leftJoin(
@@ -212,7 +212,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      *
      * @return string
      */
-    public function spentOnDaySumCorrected(Category $category, Carbon $date)
+    public function spentOnDaySum(Category $category, Carbon $date)
     {
         return $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }
@@ -381,7 +381,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      *
      * @return float
      */
-    public function earnedOnDaySumCorrected(Category $category, Carbon $date)
+    public function earnedOnDaySum(Category $category, Carbon $date)
     {
         return $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
     }

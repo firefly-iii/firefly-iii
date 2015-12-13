@@ -52,7 +52,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return float
      */
-    public function expensesOnDayCorrected(Budget $budget, Carbon $date)
+    public function expensesOnDay(Budget $budget, Carbon $date)
     {
         bcscale(2);
         $sum = $budget->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->onDate($date)->get(['transaction_journals.*'])->sum('amount');

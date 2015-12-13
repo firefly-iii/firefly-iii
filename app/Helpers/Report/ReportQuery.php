@@ -185,7 +185,7 @@ class ReportQuery implements ReportQueryInterface
     }
 
     /**
-     * See ReportQueryInterface::incomeInPeriodCorrected
+     * See ReportQueryInterface::incomeInPeriod
      *
      * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
      * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does

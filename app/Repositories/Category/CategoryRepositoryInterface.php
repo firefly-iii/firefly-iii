@@ -47,7 +47,7 @@ interface CategoryRepositoryInterface
      *
      * @return array
      */
-    public function getCategoriesAndExpensesCorrected(Carbon $start, Carbon $end);
+    public function getCategoriesAndExpenses(Carbon $start, Carbon $end);
 
     /**
      * @param Category $category
@@ -156,7 +156,7 @@ interface CategoryRepositoryInterface
      *
      * @return float
      */
-    public function spentOnDaySumCorrected(Category $category, Carbon $date);
+    public function spentOnDaySum(Category $category, Carbon $date);
 
     /**
      *
@@ -167,7 +167,7 @@ interface CategoryRepositoryInterface
      *
      * @return float
      */
-    public function earnedOnDaySumCorrected(Category $category, Carbon $date);
+    public function earnedOnDaySum(Category $category, Carbon $date);
 
     /**
      * @param array $data

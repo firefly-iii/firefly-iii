@@ -113,7 +113,7 @@ class BudgetController extends Controller
             /*
              * Sum of expenses on this day:
              */
-            $sum    = $repository->expensesOnDayCorrected($budget, $start);
+            $sum    = $repository->expensesOnDay($budget, $start);
             $amount = bcadd($amount, $sum);
             $entries->push([clone $start, $amount]);
             $start->addDay();
