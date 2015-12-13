@@ -52,7 +52,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $object = new CategoryCollection;
 
@@ -118,7 +118,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return AccountCollection
      */
-    public function getAccountReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $startAmount = '0';
         $endAmount   = '0';
@@ -167,10 +167,10 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReportForList($start, $end, Collection $accounts)
+    public function getIncomeReport($start, $end, Collection $accounts)
     {
         $object = new Income;
-        $set    = $this->query->incomeInPeriodCorrectedForList($start, $end, $accounts);
+        $set    = $this->query->incomeInPeriod($start, $end, $accounts);
         foreach ($set as $entry) {
             $object->addToTotal($entry->amount_positive);
             $object->addOrCreateIncome($entry);
@@ -188,10 +188,10 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReportForList($start, $end, Collection $accounts)
+    public function getExpenseReport($start, $end, Collection $accounts)
     {
         $object = new Expense;
-        $set    = $this->query->expenseInPeriodCorrectedForList($start, $end, $accounts);
+        $set    = $this->query->expenseInPeriod($start, $end, $accounts);
         foreach ($set as $entry) {
             $object->addToTotal($entry->amount); // can be positive, if it's a transfer
             $object->addOrCreateExpense($entry);
@@ -207,7 +207,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return BudgetCollection
      */
-    public function getBudgetReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $object = new BudgetCollection;
         /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
@@ -280,7 +280,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Balance
      */
-    public function getBalanceReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $repository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
@@ -309,7 +309,7 @@ class ReportHelper implements ReportHelperInterface
                 $balanceEntry->setAccount($account);
 
                 // get spent:
-                $spent = $this->query->spentInBudgetCorrected($account, $budget, $start, $end); // I think shared is irrelevant.
+                $spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
 
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
@@ -375,7 +375,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return BillCollection
      */
-    public function getBillReportForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');

@@ -30,7 +30,7 @@ interface ReportHelperInterface
      *
      * @return AccountCollection
      */
-    public function getAccountReportForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * This method generates a full report for the given period on all
@@ -44,7 +44,7 @@ interface ReportHelperInterface
      *
      * @return BillCollection
      */
-    public function getBillReportForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Carbon     $start
@@ -53,7 +53,7 @@ interface ReportHelperInterface
      *
      * @return Balance
      */
-    public function getBalanceReportForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Carbon     $start
@@ -62,7 +62,7 @@ interface ReportHelperInterface
      *
      * @return BudgetCollection
      */
-    public function getBudgetReportForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Carbon     $start
@@ -71,7 +71,7 @@ interface ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReportForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * Get a full report on the users expenses during the period for a list of accounts.
@@ -82,7 +82,7 @@ interface ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReportForList($start, $end, Collection $accounts);
+    public function getExpenseReport($start, $end, Collection $accounts);
 
     /**
      * Get a full report on the users incomes during the period for the given accounts.
@@ -93,7 +93,7 @@ interface ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReportForList($start, $end, Collection $accounts);
+    public function getIncomeReport($start, $end, Collection $accounts);
 
     /**
      * @param Carbon $date

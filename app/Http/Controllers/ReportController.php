@@ -75,9 +75,9 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
-        $accountReport = $this->helper->getAccountReportForList($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReportForList($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReportForList($start, $end, $accounts);
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
@@ -118,13 +118,13 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->helper->getAccountReportForList($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReportForList($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReportForList($start, $end, $accounts);
-        $budgets       = $this->helper->getBudgetReportForList($start, $end, $accounts);
-        $categories    = $this->helper->getCategoryReportForList($start, $end, $accounts);
-        $balance       = $this->helper->getBalanceReportForList($start, $end, $accounts);
-        $bills         = $this->helper->getBillReportForList($start, $end, $accounts);
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $budgets       = $this->helper->getBudgetReport($start, $end, $accounts);
+        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
+        $balance       = $this->helper->getBalanceReport($start, $end, $accounts);
+        $bills         = $this->helper->getBillReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = [];

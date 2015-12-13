@@ -60,8 +60,8 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $incomeSum  = $query->incomeInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
-            $expenseSum = $query->expenseInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
+            $incomeSum  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
+            $expenseSum = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
             
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
@@ -109,8 +109,8 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $currentIncome  = $query->incomeInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
-            $currentExpense = $query->expenseInPeriodCorrectedForList($start, $month, $accounts)->sum('amount_positive');
+            $currentIncome  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
+            $currentExpense = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
             $income         = bcadd($income, $currentIncome);
             $expense        = bcadd($expense, $currentExpense);
 

@@ -30,7 +30,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return float
      */
-    public function spentInBudgetCorrected(Account $account, Budget $budget, Carbon $start, Carbon $end)
+    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end)
     {
 
         return Auth::user()->transactionjournals()
@@ -112,7 +112,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return Collection
      */
-    public function incomeInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts)
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
 
@@ -198,7 +198,7 @@ class ReportQuery implements ReportQueryInterface
      * @return Collection
      *
      */
-    public function expenseInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts)
+    public function expenseInPeriod(Carbon $start, Carbon $end, Collection $accounts)
     {
         $ids = [];
 

@@ -29,7 +29,7 @@ interface ReportQueryInterface
      * @return Collection
      *
      */
-    public function expenseInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function expenseInPeriod(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
@@ -42,7 +42,7 @@ interface ReportQueryInterface
      *
      * @return Collection
      */
-    public function incomeInPeriodCorrectedForList(Carbon $start, Carbon $end, Collection $accounts);
+    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * Covers tags as well.
@@ -54,7 +54,7 @@ interface ReportQueryInterface
      *
      * @return float
      */
-    public function spentInBudgetCorrected(Account $account, Budget $budget, Carbon $start, Carbon $end);
+    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end);
 
     /**
      * @param Account $account
