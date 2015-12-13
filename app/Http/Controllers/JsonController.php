@@ -178,7 +178,7 @@ class JsonController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxIn(ReportQueryInterface $reportQuery)
+    public function boxIn(ReportQueryInterface $reportQuery, AccountRepositoryInterface $accountRepository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -191,8 +191,8 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-
-        $amount = $reportQuery->incomeInPeriodCorrected($start, $end, true)->sum('amount');
+        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $amount = $reportQuery->incomeInPeriodCorrectedForList($start, $end, $accounts)->sum('amount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -205,11 +205,12 @@ class JsonController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxOut(ReportQueryInterface $reportQuery)
+    public function boxOut(ReportQueryInterface $reportQuery, AccountRepositoryInterface $accountRepository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
+        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
         // works for json too!
         $cache = new CacheProperties;
@@ -220,7 +221,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
+        $amount = $reportQuery->expenseInPeriodCorrectedForList($start, $end, $accounts)->sum('amount');
         $amount = $amount * -1;
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
