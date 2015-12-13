@@ -151,6 +151,24 @@ class ReportController extends Controller
         );
     }
 
+    public function defaultMultiYear($report_type, $start, $end, $accounts)
+    {
+
+        // list of users stuff:
+        $budgets    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
+        $categories = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->getCategories();
+
+        // and some id's, joined:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        $accountIds = join(';', $accountIds);
+
+        return view('reports.default.multi-year', compact('budgets', 'accounts', 'categories','start','end','accountIds','report_type'));
+    }
+
     /**
      * @param            $report_type
      * @param Carbon     $start
@@ -172,7 +190,7 @@ class ReportController extends Controller
                 // more than one year date difference means year report.
                 if ($start->diffInMonths($end) > 12) {
                     return view('error')->with('message', 'No report yet for this time period.');
-//                    return $this->defaultMultiYear($report_type, $start, $end, $accounts);
+                    return $this->defaultMultiYear($report_type, $start, $end, $accounts);
                 }
                 // more than two months date difference means year report.
                 if ($start->diffInMonths($end) > 1) {
