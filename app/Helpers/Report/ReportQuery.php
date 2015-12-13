@@ -123,33 +123,19 @@ class ReportQuery implements ReportQueryInterface
         }
 
         // OR is a deposit
-        // OR is a transfer FROM a shared account to NOT a shared account.
-        //
-        // New idea: from the perspective of a shared account,
-        // a transfer from a not-shared account is income!
-        // so:
-        // OR is a transfer from NOT a shared account to a shared account.
-
-
+        // OR any transfer TO the accounts in $accounts, not FROM any of the accounts in $accounts.
         $query->where(
-            function (Builder $query) {
+            function (Builder $query) use ($ids) {
                 $query->where(
                     function (Builder $q) {
                         $q->where('transaction_types.type', TransactionType::DEPOSIT);
                     }
                 );
                 $query->orWhere(
-                    function (Builder $q) {
+                    function (Builder $q) use ($ids) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
-                        $q->where('acm_from.data', '=', '"sharedAsset"');
-                        $q->where('acm_to.data', '!=', '"sharedAsset"');
-                    }
-                );
-                $query->orWhere(
-                    function (Builder $q) {
-                        $q->where('transaction_types.type', TransactionType::TRANSFER);
-                        $q->where('acm_from.data', '!=', '"sharedAsset"');
-                        $q->where('acm_to.data', '=', '"sharedAsset"');
+                        $q->whereIn('ac_from.id',$ids);
+                        $q->whereNotIn('ac_to.id', $ids);
                     }
                 );
             }
@@ -210,7 +196,7 @@ class ReportQuery implements ReportQueryInterface
         $query = $this->queryJournalsWithTransactions($start, $end);
 
         // withdrawals from any account are an expense.
-        // transfers away, to an account not in the list, but shared, are an expense.
+        // transfers away, from an account in the list, to an account not in the list, are an expense.
 
         $query->where(
             function (Builder $query) use ($ids) {
@@ -222,8 +208,8 @@ class ReportQuery implements ReportQueryInterface
                 $query->orWhere(
                     function (Builder $q) use ($ids) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
+                        $q->whereIn('ac_from.id', $ids);
                         $q->whereNotIn('ac_to.id', $ids);
-                        $q->where('acm_to.data', '=', '"sharedAsset"');
                     }
                 );
             }
