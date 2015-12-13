@@ -68,7 +68,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    public function year($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultYear($report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
         $subTitle         = trans('firefly.reportForYear', ['year' => $start->year]);
         $subTitleIcon     = 'fa-bar-chart';
@@ -92,7 +92,7 @@ class ReportController extends Controller
         $accountIds = join(';', $accountIds);
 
         return view(
-            'reports.year',
+            'reports.default.year',
             compact(
                 'start', 'accountReport', 'incomes', 'report_type', 'accountIds', 'end',
                 'expenses', 'subTitle', 'subTitleIcon', 'incomeTopLength', 'expenseTopLength'
@@ -109,7 +109,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    public function month($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultMonth($report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
         // some fields for translation:
         $subTitle         = trans('firefly.reportForMonth', ['month' => $start->formatLocalized($this->monthFormat)]);
@@ -136,7 +136,7 @@ class ReportController extends Controller
 
         // continue!
         return view(
-            'reports.default',
+            'reports.default.month',
             compact(
                 'start', 'end', 'report_type',
                 'subTitle', 'subTitleIcon',
@@ -168,10 +168,10 @@ class ReportController extends Controller
 
         // more than two months date difference means year report.
         if ($start->diffInMonths($end) > 1) {
-            return $this->year($report_type, $start, $end, $accounts);
+            return $this->defaultYear($report_type, $start, $end, $accounts);
         }
 
-        return $this->month($report_type, $start, $end, $accounts);
+        return $this->defaultMonth($report_type, $start, $end, $accounts);
 
 
     }
