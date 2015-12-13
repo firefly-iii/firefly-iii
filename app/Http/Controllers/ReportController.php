@@ -166,12 +166,22 @@ class ReportController extends Controller
             return view('error')->with('message', 'End date cannot be before start date, silly!');
         }
 
-        // more than two months date difference means year report.
-        if ($start->diffInMonths($end) > 1) {
-            return $this->defaultYear($report_type, $start, $end, $accounts);
-        }
+        switch ($report_type) {
+            default:
+            case 'default':
+                // more than one year date difference means year report.
+                if ($start->diffInMonths($end) > 12) {
+                    return view('error')->with('message', 'No report yet for this time period.');
+//                    return $this->defaultMultiYear($report_type, $start, $end, $accounts);
+                }
+                // more than two months date difference means year report.
+                if ($start->diffInMonths($end) > 1) {
+                    return $this->defaultYear($report_type, $start, $end, $accounts);
+                }
 
-        return $this->defaultMonth($report_type, $start, $end, $accounts);
+                return $this->defaultMonth($report_type, $start, $end, $accounts);
+                break;
+        }
 
 
     }
