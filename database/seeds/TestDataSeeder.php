@@ -49,7 +49,7 @@ class TestDataSeeder extends Seeder
         $this->createPiggybanks();
 
         // dates:
-        $start = Carbon::now()->subyear()->startOfMonth();
+        $start = Carbon::now()->subYears(5)->startOfMonth();
         $end   = Carbon::now()->endOfDay();
 
 
