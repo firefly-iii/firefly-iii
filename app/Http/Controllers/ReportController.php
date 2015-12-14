@@ -70,14 +70,6 @@ class ReportController extends Controller
      */
     public function defaultYear($report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $subTitle         = trans(
-            'firefly.report_default_year',
-            [
-                'start' => $start->formatLocalized($this->monthFormat),
-                'end'   => $end->formatLocalized($this->monthFormat)
-            ]
-        );
-        $subTitleIcon     = 'fa-bar-chart';
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
@@ -101,7 +93,7 @@ class ReportController extends Controller
             'reports.default.year',
             compact(
                 'start', 'accountReport', 'incomes', 'report_type', 'accountIds', 'end',
-                'expenses', 'subTitle', 'subTitleIcon', 'incomeTopLength', 'expenseTopLength'
+                'expenses', 'incomeTopLength', 'expenseTopLength'
             )
         );
     }
@@ -117,15 +109,6 @@ class ReportController extends Controller
      */
     public function defaultMonth($report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        // some fields for translation:
-        $subTitle         = trans(
-            'firefly.report_default_month',
-            [
-                'start' => $start->formatLocalized($this->monthAndDayFormat),
-                'end'   => $end->formatLocalized($this->monthAndDayFormat)
-            ]
-        );
-        $subTitleIcon     = 'fa-calendar';
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
@@ -151,7 +134,6 @@ class ReportController extends Controller
             'reports.default.month',
             compact(
                 'start', 'end', 'report_type',
-                'subTitle', 'subTitleIcon',
                 'accountReport',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
@@ -165,14 +147,7 @@ class ReportController extends Controller
 
     public function defaultMultiYear($report_type, $start, $end, $accounts)
     {
-        $subTitle     = trans(
-            'firefly.report_default_multi-year',
-            [
-                'start' => $start->formatLocalized($this->monthFormat),
-                'end'   => $end->formatLocalized($this->monthFormat)
-            ]
-        );
-        $subTitleIcon = 'fa-calendar';
+
 
         // list of users stuff:
         $budgets    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
@@ -187,7 +162,7 @@ class ReportController extends Controller
         $accountIds = join(';', $accountIds);
 
         return view(
-            'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'report_type', 'subTitle', 'subTitleIcon')
+            'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'report_type')
         );
     }
 
@@ -209,6 +184,18 @@ class ReportController extends Controller
         switch ($report_type) {
             default:
             case 'default':
+
+                View::share(
+                    'subTitle', trans(
+                    'firefly.report_default',
+                    [
+                        'start' => $start->formatLocalized($this->monthFormat),
+                        'end'   => $end->formatLocalized($this->monthFormat)
+                    ]
+                )
+                );
+                View::share('subTitleIcon', 'fa-calendar');
+
                 // more than one year date difference means year report.
                 if ($start->diffInMonths($end) > 12) {
                     //                    return view('error')->with('message', 'No report yet for this time period.');

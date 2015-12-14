@@ -351,30 +351,14 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'reports.year', function (Generator $breadcrumbs, Carbon $date, $shared) {
+    'reports.report', function (Generator $breadcrumbs, Carbon $start, Carbon $end, $reportType, $accountIds) {
     $breadcrumbs->parent('reports.index');
-    if ($shared) {
-        $title = trans('breadcrumbs.yearly_report_shared', ['date' => $date->year]);
-    } else {
-        $title = trans('breadcrumbs.yearly_report', ['date' => $date->year]);
-    }
-    $breadcrumbs->push($title, route('reports.year', [$date->year]));
-}
-);
 
-Breadcrumbs::register(
-    'reports.month', function (Generator $breadcrumbs, Carbon $date, $shared) {
-    $breadcrumbs->parent('reports.year', $date, $shared);
-    $language = Preferences::get('language', 'en')->data;
-    $format   = Config::get('firefly.month.' . $language);
+    $pref        = Preferences::get('language', 'en')->data;
+    $monthFormat = Config::get('firefly.monthAndDay.' . $pref);
+    $title       = trans('firefly.report_default', ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]);
 
-    if ($shared) {
-        $title = trans('breadcrumbs.monthly_report_shared', ['date' => $date->formatLocalized($format)]);
-    } else {
-        $title = trans('breadcrumbs.monthly_report', ['date' => $date->formatLocalized($format)]);
-    }
-
-    $breadcrumbs->push($title, route('reports.month', [$date->year, $date->month]));
+    $breadcrumbs->push($title, route('reports.report', ['url' => 'abcde']));
 }
 );
 

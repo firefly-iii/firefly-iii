@@ -374,9 +374,7 @@ return [
     //    'reportForMonth'                   => 'Montly report for :month',
     //    'reportForMonthShared'             => 'Montly report for :month (including shared accounts)',
 
-    'report_default_month'      => 'Default financial report for :start until :end',
-    'report_default_year'       => 'Default financial report for :start until :end',
-    'report_default_multi-year' => 'Default financial report for :start until :end',
+    'report_default'      => 'Default financial report for :start until :end',
 
     'incomeVsExpenses'              => 'Income vs. expenses',
     'accountBalances'               => 'Account balances',

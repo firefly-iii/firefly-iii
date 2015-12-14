@@ -1,7 +1,7 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, report_type, accountIds) }}
 {% endblock %}
 
 {% block content %}

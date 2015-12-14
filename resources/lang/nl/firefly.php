@@ -395,9 +395,7 @@ return [
     //    'reportForMonth'                => 'Maandoverzicht voor :month',
     //    'reportForMonthShared'          => 'Maandoverzicht voor :month (inclusief gedeelde rekeningen)',
 
-    'report_default_month'      => 'Standard financieel rapport (:start tot :end)',
-    'report_default_year'       => 'Standard financieel rapport (:start tot :end)',
-    'report_default_multi-year' => 'Standard financieel rapport (:start tot :end)',
+    'report_default'      => 'Standard financieel rapport (:start tot :end)',
 
     'incomeVsExpenses'              => 'Inkomsten tegenover uitgaven',
     'accountBalances'               => 'Rekeningsaldi',
