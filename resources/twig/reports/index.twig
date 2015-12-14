@@ -13,7 +13,7 @@
                 </div>
                 <div class="box-body">
 
-                    <form class="form-horizontal" id="report-form" action="{{ route('reports.select') }}" method="post">
+                    <form class="form-horizontal" id="report-form" action="{{ route('reports.index') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="form-group">
                             <label for="inputReportType" class="col-sm-3 control-label">{{ 'report_type'|_ }}</label>
