@@ -55,21 +55,47 @@ class ReportController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $entries = new Collection;
-        while ($start < $end) {
-            $month = clone $start;
-            $month->endOfMonth();
-            // total income and total expenses:
-            $incomeSum  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
-            $expenseSum = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
-            
 
-            $entries->push([clone $start, $incomeSum, $expenseSum]);
-            $start->addMonth();
+        // per year?
+        if ($start->diffInMonths($end) > 12) {
+
+            $entries = new Collection;
+            while ($start < $end) {
+                $startOfYear = clone $start;
+                $startOfYear->startOfYear();
+                $endOfYear = clone $startOfYear;
+                $endOfYear->endOfYear();
+
+                // total income and total expenses:
+                $incomeSum  = $query->incomeInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
+                $expenseSum = $query->expenseInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
+
+                $entries->push([clone $start, $incomeSum, $expenseSum]);
+                $start->addYear();
+            }
+
+            $data = $this->generator->multiYearInOut($entries);
+            $cache->store($data);
+        } else {
+            // per month:
+
+            $entries = new Collection;
+            while ($start < $end) {
+                $month = clone $start;
+                $month->endOfMonth();
+                // total income and total expenses:
+                $incomeSum  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
+                $expenseSum = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
+
+
+                $entries->push([clone $start, $incomeSum, $expenseSum]);
+                $start->addMonth();
+            }
+
+            $data = $this->generator->yearInOut($entries);
+            $cache->store($data);
         }
 
-        $data = $this->generator->yearInOut($entries);
-        $cache->store($data);
 
         return Response::json($data);
 
@@ -105,21 +131,45 @@ class ReportController extends Controller
 
         bcscale(2);
 
-        while ($start < $end) {
-            $month = clone $start;
-            $month->endOfMonth();
-            // total income and total expenses:
-            $currentIncome  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
-            $currentExpense = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
-            $income         = bcadd($income, $currentIncome);
-            $expense        = bcadd($expense, $currentExpense);
+        if ($start->diffInMonths($end) > 12) {
+            // per year
+            while ($start < $end) {
+                $startOfYear = clone $start;
+                $startOfYear->startOfYear();
+                $endOfYear = clone $startOfYear;
+                $endOfYear->endOfYear();
 
-            $count++;
-            $start->addMonth();
+                // total income and total expenses:
+                $currentIncome  = $query->incomeInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
+                $currentExpense = $query->expenseInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
+                $income         = bcadd($income, $currentIncome);
+                $expense        = bcadd($expense, $currentExpense);
+
+                $count++;
+                $start->addYear();
+            }
+
+            $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
+            $cache->store($data);
+        } else {
+            // per month!
+            while ($start < $end) {
+                $month = clone $start;
+                $month->endOfMonth();
+                // total income and total expenses:
+                $currentIncome  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
+                $currentExpense = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
+                $income         = bcadd($income, $currentIncome);
+                $expense        = bcadd($expense, $currentExpense);
+
+                $count++;
+                $start->addMonth();
+            }
+
+            $data = $this->generator->yearInOutSummarized($income, $expense, $count);
+            $cache->store($data);
         }
 
-        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
-        $cache->store($data);
 
         return Response::json($data);
 
