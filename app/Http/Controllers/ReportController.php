@@ -181,6 +181,11 @@ class ReportController extends Controller
             return view('error')->with('message', 'End date cannot be before start date, silly!');
         }
 
+        // lower threshold
+        if($start < Session::get('first')) {
+            $start = Session::get('first');
+        }
+
         switch ($report_type) {
             default:
             case 'default':
