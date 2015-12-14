@@ -332,7 +332,7 @@ class ReportHelper implements ReportHelperInterface
             $spent = $this->query->spentNoBudget($account, $start, $end);
             $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
             bcscale(2);
-            $diff = bcsub($spent, $left);
+            $diff = bcadd($spent, $left);
 
             // budget
             $budgetEntry = new BalanceEntry;
