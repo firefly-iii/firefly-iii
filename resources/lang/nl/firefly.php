@@ -388,6 +388,8 @@ return [
     'yearly'                      => 'Jaarlijks',
     'sum_of_year'                 => 'Som van jaar',
     'average_of_year'             => 'Gemiddelde in jaar',
+    'sum_of_years'                => 'Som van jaren',
+    'average_of_years'            => 'Gemiddelde in jaren',
 
     // reports:
     //    'reportForYear'                 => 'Jaaroverzicht :year',
@@ -395,7 +397,7 @@ return [
     //    'reportForMonth'                => 'Maandoverzicht voor :month',
     //    'reportForMonthShared'          => 'Maandoverzicht voor :month (inclusief gedeelde rekeningen)',
 
-    'report_default'      => 'Standard financieel rapport (:start tot :end)',
+    'report_default' => 'Standard financieel rapport (:start tot :end)',
 
     'incomeVsExpenses'              => 'Inkomsten tegenover uitgaven',
     'accountBalances'               => 'Rekeningsaldi',

@@ -374,7 +374,7 @@ return [
     //    'reportForMonth'                   => 'Montly report for :month',
     //    'reportForMonthShared'             => 'Montly report for :month (including shared accounts)',
 
-    'report_default'      => 'Default financial report for :start until :end',
+    'report_default' => 'Default financial report for :start until :end',
 
     'incomeVsExpenses'              => 'Income vs. expenses',
     'accountBalances'               => 'Account balances',
@@ -403,7 +403,9 @@ return [
     'showTheRest'                   => 'Show everything',
     'hideTheRest'                   => 'Show only the top :number',
     'sum_of_year'                   => 'Sum of year',
+    'sum_of_years'                  => 'Sum of years',
     'average_of_year'               => 'Average of year',
+    'average_of_years'              => 'Average of years',
     'categories_earned_in_year'     => 'Categories (by earnings)',
     'categories_spent_in_year'      => 'Categories (by spendings)',
     'report_type'                   => 'Report type',
