@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'blocked_domains' => ['trbvm.com', 'example.com'],
+    'blocked_domains' => ['trbvm.com', 'example.com','mailinator.com'],
     'driver'          => env('EMAIL_DRIVER', 'smtp'),
 
     /*
