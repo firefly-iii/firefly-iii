@@ -87,7 +87,7 @@ class ReportController extends Controller
         foreach ($accounts as $account) {
             $accountIds[] = $account->id;
         }
-        $accountIds = join(';', $accountIds);
+        $accountIds = join(',', $accountIds);
 
         return view(
             'reports.default.year',
@@ -127,7 +127,7 @@ class ReportController extends Controller
         foreach ($accounts as $account) {
             $accountIds[] = $account->id;
         }
-        $accountIds = join(';', $accountIds);
+        $accountIds = join(',', $accountIds);
 
         // continue!
         return view(
@@ -159,7 +159,7 @@ class ReportController extends Controller
         foreach ($accounts as $account) {
             $accountIds[] = $account->id;
         }
-        $accountIds = join(';', $accountIds);
+        $accountIds = join(',', $accountIds);
 
         return view(
             'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'report_type')

@@ -35,13 +35,31 @@ Route::bind(
     'accountList',
     function ($value) {
         if (Auth::check()) {
-            $ids = explode(';', $value);
+            $ids = explode(',', $value);
             /** @var \Illuminate\Support\Collection $object */
             $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                              ->where('account_types.editable', 1)
                              ->whereIn('accounts.id', $ids)
                              ->where('user_id', Auth::user()->id)
                              ->get(['accounts.*']);
+            if ($object->count() > 0) {
+                return $object;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+// budget list
+Route::bind(
+    'budgetList',
+    function ($value) {
+        if (Auth::check()) {
+            $ids = explode(',', $value);
+            /** @var \Illuminate\Support\Collection $object */
+            $object = Budget::where('budgets.active', 1)
+                             ->whereIn('budgets.id', $ids)
+                             ->where('budgets.user_id', Auth::user()->id)
+                             ->get(['budgets.*']);
             if ($object->count() > 0) {
                 return $object;
             }
@@ -357,8 +375,8 @@ Route::group(
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
 
     // this chart is used in reports:
-    Route::get('/chart/budget/year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
-
+    Route::get('/chart/budget/year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year']);
+    Route::get('/chart/budget/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
 
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
     Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);

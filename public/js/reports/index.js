@@ -64,7 +64,7 @@ function catchSubmit() {
     $.each($('.account-checkbox'), function (i, v) {
         var c = $(v);
         if (c.prop('checked')) {
-            url += c.val() + ';';
+            url += c.val() + ',';
             accounts.push(c.val());
             count++;
         }
