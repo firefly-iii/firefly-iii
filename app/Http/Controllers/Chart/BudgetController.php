@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -47,7 +48,7 @@ class BudgetController extends Controller
     {
         $currentStart = clone $start;
 
-        while($currentStart < $end) {
+        while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd->endOfYear();
 
@@ -70,7 +71,7 @@ class BudgetController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budget(BudgetRepositoryInterface $repository, Budget $budget)
+    public function budget(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
     {
 
         // dates and times
@@ -79,7 +80,9 @@ class BudgetController extends Controller
         $last  = Session::get('end', new Carbon);
         $final = clone $last;
         $final->addYears(2);
-        $last = Navigation::endOfX($last, $range, $final);
+        $last     = Navigation::endOfX($last, $range, $final);
+        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -97,7 +100,7 @@ class BudgetController extends Controller
             $end->subDay();
             $chartDate = clone $end;
             $chartDate->startOfMonth();
-            $spent = $repository->balanceInPeriod($budget, $first, $end) * -1;
+            $spent = $repository->balanceInPeriodForList($budget, $first, $end, $accounts) * -1;
             $entries->push([$chartDate, $spent]);
             $first = Navigation::addPeriod($first, $range, 0);
         }
@@ -162,12 +165,13 @@ class BudgetController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(BudgetRepositoryInterface $repository)
+    public function frontpage(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
         $budgets    = $repository->getBudgets();
         $start      = Session::get('start', Carbon::now()->startOfMonth());
         $end        = Session::get('end', Carbon::now()->endOfMonth());
         $allEntries = new Collection;
+        $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -185,13 +189,13 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
-                $expenses = $repository->balanceInPeriod($budget, $start, $end, true) * -1;
+                $expenses = $repository->balanceInPeriodForList($budget, $start, $end, $accounts) * -1;
                 $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, true) * -1;
+                $expenses = $repository->balanceInPeriodForList($budget, $repetition->startdate, $repetition->enddate, $accounts) * -1;
                 // $left can be less than zero.
                 // $overspent can be more than zero ( = overspending)
 
