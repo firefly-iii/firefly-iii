@@ -37,6 +37,35 @@ class BudgetController extends Controller
 
     /**
      * @param BudgetRepositoryInterface $repository
+     * @param                           $report_type
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     * @param Collection                $accounts
+     * @param Collection                $budgets
+     */
+    public function multiYear(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
+    {
+        $currentStart = clone $start;
+
+        while($currentStart < $end) {
+            $currentEnd = clone $currentStart;
+            $currentEnd->endOfYear();
+
+            //echo 'now for '.$currentStart->format('Ymd').' to '.$currentEnd->format('Ymd').'<br>';
+            //epository->balanceInPeriod()
+
+            // do something for all budgets.
+
+            // jump to next year.
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay();
+
+        }
+
+    }
+
+    /**
+     * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
