@@ -60,6 +60,12 @@ Route::bind(
                              ->whereIn('budgets.id', $ids)
                              ->where('budgets.user_id', Auth::user()->id)
                              ->get(['budgets.*']);
+
+            // add empty budget if applicable.
+            if(in_array('0', $ids)) {
+                $object->push(new Budget);
+            }
+
             if ($object->count() > 0) {
                 return $object;
             }

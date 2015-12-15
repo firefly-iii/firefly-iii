@@ -47,14 +47,25 @@ class BudgetController extends Controller
     public function multiYear(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
     {
         $currentStart = clone $start;
+        $collection   = new Collection;
 
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd->endOfYear();
 
-            //echo 'now for '.$currentStart->format('Ymd').' to '.$currentEnd->format('Ymd').'<br>';
-            //epository->balanceInPeriod()
+            echo 'now for ' . $currentStart->format('Ymd') . ' to ' . $currentEnd->format('Ymd') . '<br>';
 
+            /** @var Budget $budget */
+            foreach ($budgets as $budget) {
+                if (is_null($budget->id)) {
+                    $name = trans('firefly.noBudget');
+                    $sum  = $repository->getWithoutBudgetSum($currentStart, $currentEnd);
+                } else {
+                    $name = $budget->name;
+                    $sum  = $repository->balanceInPeriodForList($budget, $currentStart, $currentEnd, $accounts);
+                }
+                echo $name.': '.$sum.'<br>';
+            }
             // do something for all budgets.
 
             // jump to next year.
