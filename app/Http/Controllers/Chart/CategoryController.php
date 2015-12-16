@@ -121,6 +121,84 @@ class CategoryController extends Controller
         );
         $set  = new Collection($array);
         $data = $this->generator->frontpage($set);
+        $cache->store($data);
+
+
+        return Response::json($data);
+
+    }
+
+    /**
+     * @param CategoryRepositoryInterface $repository
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
+     * @param Collection                  $categories
+     */
+    public function multiYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($report_type);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($categories);
+        $cache->addProperty('multiYearCategory');
+
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /**
+         *  category
+         *   year:
+         *    spent: x
+         *    earned: x
+         *   year
+         *    spent: x
+         *    earned: x
+         */
+        $entries = new Collection;
+        // go by budget, not by year.
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $entry = ['name' => '', 'spent' => [], 'earned' => []];
+
+            $currentStart = clone $start;
+            while ($currentStart < $end) {
+                // fix the date:
+                $currentEnd = clone $currentStart;
+                $currentEnd->endOfYear();
+
+                // get data:
+                if (is_null($category->id)) {
+                    $name   = trans('firefly.noCategory');
+                    $spent  = $repository->spentNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
+                    $earned = $repository->earnedNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
+                } else {
+                    $name   = $category->name;
+                    $spent  = $repository->spentInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                    $earned = $repository->earnedInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                }
+
+                // save to array:
+                $year                   = $currentStart->year;
+                $entry['name']          = $name;
+                $entry['spent'][$year]  = ($spent * -1);
+                $entry['earned'][$year] = $earned;
+
+                // jump to next year.
+                $currentStart = clone $currentEnd;
+                $currentStart->addDay();
+            }
+            $entries->push($entry);
+        }
+        // generate chart with data:
+        $data = $this->generator->multiYear($entries);
+        $cache->store($data);
+
 
         return Response::json($data);
 

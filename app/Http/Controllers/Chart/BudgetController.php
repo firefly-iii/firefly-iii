@@ -56,7 +56,7 @@ class BudgetController extends Controller
         $cache->addProperty('multiYearBudget');
 
         if ($cache->has()) {
-            //            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         /**

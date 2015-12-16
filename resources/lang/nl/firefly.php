@@ -417,6 +417,7 @@ return [
     'outsideOfBudgets'              => 'Buiten budgetten',
     'leftInBudget'                  => 'Over van budget',
     'sumOfSums'                     => 'Alles bij elkaar',
+    'noCategory'                     => '(zonder categorie)',
     'notCharged'                    => '(Nog) niet betaald',
     'inactive'                      => 'Niet actief',
     'difference'                    => 'Verschil',

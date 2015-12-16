@@ -24,6 +24,13 @@ interface CategoryChartGenerator
      *
      * @return array
      */
+    public function multiYear(Collection $entries);
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
     public function frontpage(Collection $entries);
 
     /**

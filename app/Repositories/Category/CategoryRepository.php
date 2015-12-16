@@ -59,6 +59,71 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         return $set;
     }
 
+    /**
+     * Returns the amount earned without category by accounts in period.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+
+        // is deposit AND account_from is in the list of $accounts
+        // not from any of the accounts in the list?
+
+        return Auth::user()
+                   ->transactionjournals()
+                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereNull('category_transaction_journal.id')
+                   ->before($end)
+                   ->after($start)
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereIn('transactions.account_id', $accountIds)
+                   ->transactionTypes([TransactionType::DEPOSIT])
+                   ->get(['transaction_journals.*'])->sum('amount');
+    }
+
+
+    /**
+     * Returns the amount spent without category by accounts in period.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+
+        // is withdrawal or transfer AND account_from is in the list of $accounts
+
+
+        return Auth::user()
+                   ->transactionjournals()
+                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereNull('category_transaction_journal.id')
+                   ->before($end)
+                   ->after($start)
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereIn('transactions.account_id', $accountIds)
+                   ->transactionTypes([TransactionType::WITHDRAWAL])
+                   ->get(['transaction_journals.*'])->sum('amount');
+    }
+
 
     /**
      *
@@ -384,5 +449,66 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     public function earnedOnDaySum(Category $category, Carbon $date)
     {
         return $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+    }
+
+    /**
+     * Calculates how much is spent in this period.
+     *
+     * @param Category   $category
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+
+        $sum
+            = $category
+            ->transactionjournals()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->after($start)
+            ->before($end)
+            ->whereIn('transactions.account_id', $accountIds)
+            ->transactionTypes([TransactionType::WITHDRAWAL])
+            ->get(['transaction_journals.*'])
+            ->sum('amount');
+        return $sum;
+
+    }
+
+    /**
+     * Calculate how much is earned in this period.
+     *
+     * @param Category   $category
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        $sum
+            = $category
+            ->transactionjournals()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->before($end)
+            ->whereIn('transactions.account_id', $accountIds)
+            ->transactionTypes([TransactionType::DEPOSIT])
+            ->after($start)
+            ->get(['transaction_journals.*'])
+            ->sum('amount');
+        return $sum;
+
     }
 }

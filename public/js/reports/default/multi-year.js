@@ -25,10 +25,13 @@ function drawChart() {
     $('.budget-checkbox').on('change', updateBudgetChart);
     updateBudgetChart();
 
-
+    // draw category chart based on selected budgets:
+    $('.category-checkbox').on('change', updateCategoryChart);
+    updateCategoryChart();
 }
 
-function updateBudgetChart(e) {
+function updateBudgetChart() {
+    "use strict";
     console.log('will update budget chart.');
     // get all budget ids:
     var budgets = [];
@@ -58,4 +61,36 @@ function updateBudgetChart(e) {
 
     }
 
+}
+
+function updateCategoryChart() {
+    "use strict";
+    console.log('will update category chart.');
+    // get all category ids:
+    var categories = [];
+    $.each($('.category-checkbox'), function (i, v) {
+        var current = $(v);
+        if (current.prop('checked')) {
+            categories.push(current.val());
+        }
+    });
+
+    if(categories.length > 0) {
+
+        var categoryIds = categories.join(',');
+
+        // remove old chart:
+        $('#categories-chart').replaceWith('<canvas id="categories-chart" class="budgets-chart" style="width:100%;height:400px;"></canvas>');
+
+        // hide message:
+        $('#categories-chart-message').hide();
+
+        // draw chart. Redraw when exists? Not sure if we support that.
+        columnChart('chart/category/multi-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds + '/' + categoryIds, 'categories-chart');
+    } else {
+        // hide canvas, show message:
+        $('#categories-chart-message').show();
+        $('#categories-chart').hide();
+
+    }
 }

@@ -39,6 +39,53 @@ interface CategoryRepositoryInterface
      */
     public function getCategories();
 
+
+    /**
+     * Calculates how much is spent in this period.
+     *
+     * @param Category   $category
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Calculate how much is earned in this period.
+     *
+     * @param Category   $category
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns the amount spent without category by accounts in period.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns the amount earned without category by accounts in period.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
     /**
      * Corrected for tags.
      *

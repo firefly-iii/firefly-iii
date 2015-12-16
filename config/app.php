@@ -139,8 +139,8 @@ return [
         'TwigBridge\ServiceProvider',
 
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
-        //'Barryvdh\Debugbar\ServiceProvider',
-        //'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        'Barryvdh\Debugbar\ServiceProvider',
+        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'Zizaco\Entrust\EntrustServiceProvider',
 
         /*
