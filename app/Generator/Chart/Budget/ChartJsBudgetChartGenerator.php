@@ -149,35 +149,29 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
      */
     public function multiYear(Collection $entries)
     {
-        //var_dump($entries);
+        // dataset:
         $data = [
             'count'    => 0,
             'labels'   => [],
             'datasets' => [],
         ];
-        // labels: for each budget.
-        // dataset: for each year?
-        foreach($entries as $entry) {
-            $year = $entry['date']->year;
-            if(!in_array($year, $data['labels'])) {
-                $data['labels'][] = $entry['date']->year;
-            }
+        // get labels from one of the budgets (assuming there's at least one):
+        $first = $entries->first();
+        foreach ($first['budgeted'] as $year => $noInterest) {
+            $data['labels'][] = strval($year);
         }
-        // can be joined?
-        $set = [];
-        foreach($entries as $entry) {
-            $name = $entry['budget'];
-            $set[$name] = isset($set[$name]) ? $set[$name] : [];
-            $set[$name][] = ($entry['sum'] * -1);
-        }
-        foreach($set as $name => $values) {
-            $data['datasets'][] = ['label' => $name, 'data' => $values];
+
+        // then, loop all entries and create datasets:
+        foreach ($entries as $entry) {
+            $name               = $entry['name'];
+            $spent              = $entry['spent'];
+            $budgeted           = $entry['budgeted'];
+            $data['datasets'][] = ['label' => 'Spent on ' . $name, 'data' => $spent];
+            $data['datasets'][] = ['label' => 'Budgeted for ' . $name, 'data' => $budgeted];
         }
         $data['count'] = count($data['datasets']);
 
-return $data;
-        //var_dump($data);
-        //exit;
+        return $data;
 
     }
 }

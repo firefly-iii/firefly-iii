@@ -56,41 +56,54 @@ class BudgetController extends Controller
         $cache->addProperty('multiYearBudget');
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $currentStart = clone $start;
-        $collection   = new Collection;
+        /**
+         *  budget
+         *   year:
+         *    spent: x
+         *    budgeted: x
+         *   year
+         *    spent: x
+         *    budgeted: x
+         */
+        $entries = new Collection;
+        // go by budget, not by year.
+        foreach ($budgets as $budget) {
+            $entry = ['name' => '', 'spent' => [], 'budgeted' => []];
 
-        while ($currentStart < $end) {
-            $currentEnd = clone $currentStart;
-            $currentEnd->endOfYear();
+            $currentStart = clone $start;
+            while ($currentStart < $end) {
+                // fix the date:
+                $currentEnd = clone $currentStart;
+                $currentEnd->endOfYear();
 
-            //echo 'now for ' . $currentStart->format('Ymd') . ' to ' . $currentEnd->format('Ymd') . '<br>';
-
-            /** @var Budget $budget */
-            foreach ($budgets as $budget) {
+                // get data:
                 if (is_null($budget->id)) {
-                    $name = trans('firefly.noBudget');
-                    $sum  = $repository->getWithoutBudgetSum($currentStart, $currentEnd);
+                    $name     = trans('firefly.noBudget');
+                    $sum      = $repository->getWithoutBudgetSum($currentStart, $currentEnd);
+                    $budgeted = 0;
                 } else {
-                    $name = $budget->name;
-                    $sum  = $repository->balanceInPeriodForList($budget, $currentStart, $currentEnd, $accounts);
+                    $name     = $budget->name;
+                    $sum      = $repository->balanceInPeriodForList($budget, $currentStart, $currentEnd, $accounts);
+                    $budgeted = $repository->getBudgetLimitRepetitions($budget, $currentStart, $currentEnd)->sum('amount');
                 }
-                $collection->push(['budget' => $name, 'sum' => $sum,'date' => $currentStart]);
-                //echo $name . ': ' . $sum . '<br>';
+
+                // save to array:
+                $year                     = $currentStart->year;
+                $entry['name']            = $name;
+                $entry['spent'][$year]    = ($sum * -1);
+                $entry['budgeted'][$year] = $budgeted;
+
+                // jump to next year.
+                $currentStart = clone $currentEnd;
+                $currentStart->addDay();
             }
-            // do something for all budgets.
-
-            // jump to next year.
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay();
-
+            $entries->push($entry);
         }
-
-        $data = $this->generator->multiYear($collection);
-
-        //$cache->store($data);
+        // generate chart with data:
+        $data = $this->generator->multiYear($entries);
 
         return Response::json($data);
 

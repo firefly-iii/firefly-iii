@@ -23,6 +23,7 @@ function drawChart() {
 
     // draw budget chart based on selected budgets:
     $('.budget-checkbox').on('change', updateBudgetChart);
+    updateBudgetChart();
 
 
 }
@@ -37,12 +38,24 @@ function updateBudgetChart(e) {
             budgets.push(current.val());
         }
     });
-    var budgetIds = budgets.join(',');
 
-    // remove old chart:
-    $('#budgets-chart').replaceWith('<canvas id="budgets-chart" class="budgets-chart" style="width:100%;height:400px;"></canvas>');
+    if(budgets.length > 0) {
 
-    // draw chart. Redraw when exists? Not sure if we support that.
-    columnChart('chart/budget/multi-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds + '/' + budgetIds, 'budgets-chart');
+        var budgetIds = budgets.join(',');
+
+        // remove old chart:
+        $('#budgets-chart').replaceWith('<canvas id="budgets-chart" class="budgets-chart" style="width:100%;height:400px;"></canvas>');
+
+        // hide message:
+        $('#budgets-chart-message').hide();
+
+        // draw chart. Redraw when exists? Not sure if we support that.
+        columnChart('chart/budget/multi-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds + '/' + budgetIds, 'budgets-chart');
+    } else {
+        // hide canvas, show message:
+        $('#budgets-chart-message').show();
+        $('#budgets-chart').hide();
+
+    }
 
 }
