@@ -23,11 +23,37 @@ function drawChart() {
 
     // draw budget chart based on selected budgets:
     $('.budget-checkbox').on('change', updateBudgetChart);
+    selectBudgetsByCookie();
     updateBudgetChart();
 
     // draw category chart based on selected budgets:
     $('.category-checkbox').on('change', updateCategoryChart);
+    selectCategoriesByCookie();
     updateCategoryChart();
+}
+
+function selectBudgetsByCookie() {
+    "use strict";
+    var cookie = readCookie('multi-year-budgets');
+    if (cookie !== null) {
+        var cookieArray = cookie.split(',');
+        for (var x in cookieArray) {
+            var budgetId = cookieArray[x];
+            $('.budget-checkbox[value="' + budgetId + '"').prop('checked', true);
+        }
+    }
+}
+
+function selectCategoriesByCookie() {
+    "use strict";
+    var cookie = readCookie('multi-year-categories');
+    if (cookie !== null) {
+        var cookieArray = cookie.split(',');
+        for (var x in cookieArray) {
+            var categoryId = cookieArray[x];
+            $('.category-checkbox[value="' + categoryId + '"').prop('checked', true);
+        }
+    }
 }
 
 function updateBudgetChart() {
@@ -42,7 +68,7 @@ function updateBudgetChart() {
         }
     });
 
-    if(budgets.length > 0) {
+    if (budgets.length > 0) {
 
         var budgetIds = budgets.join(',');
 
@@ -54,6 +80,7 @@ function updateBudgetChart() {
 
         // draw chart. Redraw when exists? Not sure if we support that.
         columnChart('chart/budget/multi-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds + '/' + budgetIds, 'budgets-chart');
+        createCookie('multi-year-budgets', budgets, 365);
     } else {
         // hide canvas, show message:
         $('#budgets-chart-message').show();
@@ -75,7 +102,7 @@ function updateCategoryChart() {
         }
     });
 
-    if(categories.length > 0) {
+    if (categories.length > 0) {
 
         var categoryIds = categories.join(',');
 
@@ -87,10 +114,42 @@ function updateCategoryChart() {
 
         // draw chart. Redraw when exists? Not sure if we support that.
         columnChart('chart/category/multi-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds + '/' + categoryIds, 'categories-chart');
+        createCookie('multi-year-categories', categories, 365);
     } else {
         // hide canvas, show message:
         $('#categories-chart-message').show();
         $('#categories-chart').hide();
 
     }
+}
+
+
+function createCookie(name, value, days) {
+    "use strict";
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
+function readCookie(name) {
+    "use strict";
+    var nameEQ = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name, "", -1);
 }
