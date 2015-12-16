@@ -166,8 +166,8 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
             $name               = $entry['name'];
             $spent              = $entry['spent'];
             $budgeted           = $entry['budgeted'];
-            $data['datasets'][] = ['label' => 'Spent on ' . $name, 'data' => $spent];
-            $data['datasets'][] = ['label' => 'Budgeted for ' . $name, 'data' => $budgeted];
+            $data['datasets'][] = ['label' => 'Spent on ' . $name, 'data' => array_values($spent)];
+            $data['datasets'][] = ['label' => 'Budgeted for ' . $name, 'data' => array_values($budgeted)];
         }
         $data['count'] = count($data['datasets']);
 
