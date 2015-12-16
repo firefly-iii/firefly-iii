@@ -39,6 +39,9 @@ function updateBudgetChart(e) {
     });
     var budgetIds = budgets.join(',');
 
+    // remove old chart:
+    $('#budgets-chart').replaceWith('<canvas id="budgets-chart" class="budgets-chart" style="width:100%;height:400px;"></canvas>');
+
     // draw chart. Redraw when exists? Not sure if we support that.
     columnChart('chart/budget/multi-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds + '/' + budgetIds, 'budgets-chart');
 

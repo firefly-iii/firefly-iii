@@ -46,6 +46,19 @@ class BudgetController extends Controller
      */
     public function multiYear(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
     {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($report_type);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($budgets);
+        $cache->addProperty('multiYearBudget');
+
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
         $currentStart = clone $start;
         $collection   = new Collection;
 
@@ -53,7 +66,7 @@ class BudgetController extends Controller
             $currentEnd = clone $currentStart;
             $currentEnd->endOfYear();
 
-            echo 'now for ' . $currentStart->format('Ymd') . ' to ' . $currentEnd->format('Ymd') . '<br>';
+            //echo 'now for ' . $currentStart->format('Ymd') . ' to ' . $currentEnd->format('Ymd') . '<br>';
 
             /** @var Budget $budget */
             foreach ($budgets as $budget) {
@@ -64,7 +77,8 @@ class BudgetController extends Controller
                     $name = $budget->name;
                     $sum  = $repository->balanceInPeriodForList($budget, $currentStart, $currentEnd, $accounts);
                 }
-                echo $name.': '.$sum.'<br>';
+                $collection->push(['budget' => $name, 'sum' => $sum,'date' => $currentStart]);
+                //echo $name . ': ' . $sum . '<br>';
             }
             // do something for all budgets.
 
@@ -73,6 +87,12 @@ class BudgetController extends Controller
             $currentStart->addDay();
 
         }
+
+        $data = $this->generator->multiYear($collection);
+
+        //$cache->store($data);
+
+        return Response::json($data);
 
     }
 

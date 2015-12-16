@@ -141,4 +141,43 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
 
         return $data;
     }
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function multiYear(Collection $entries)
+    {
+        //var_dump($entries);
+        $data = [
+            'count'    => 0,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+        // labels: for each budget.
+        // dataset: for each year?
+        foreach($entries as $entry) {
+            $year = $entry['date']->year;
+            if(!in_array($year, $data['labels'])) {
+                $data['labels'][] = $entry['date']->year;
+            }
+        }
+        // can be joined?
+        $set = [];
+        foreach($entries as $entry) {
+            $name = $entry['budget'];
+            $set[$name] = isset($set[$name]) ? $set[$name] : [];
+            $set[$name][] = ($entry['sum'] * -1);
+        }
+        foreach($set as $name => $values) {
+            $data['datasets'][] = ['label' => $name, 'data' => $values];
+        }
+        $data['count'] = count($data['datasets']);
+
+return $data;
+        //var_dump($data);
+        //exit;
+
+    }
 }
