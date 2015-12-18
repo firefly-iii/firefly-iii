@@ -369,20 +369,12 @@ return [
     'profile'                          => 'Profile',
 
     // reports:
-    //    'reportForYear'                    => 'Yearly report for :year',
-    //    'reportForYearShared'              => 'Yearly report for :year (including shared accounts)',
-    //    'reportForMonth'                   => 'Montly report for :month',
-    //    'reportForMonthShared'             => 'Montly report for :month (including shared accounts)',
-
     'report_default'                => 'Default financial report for :start until :end',
     'quick_link_reports'            => 'Quick links',
     'quick_link_default_report'     => 'Default financial report',
-    'report_this_month_shared'      => 'Current month, all shared accounts',
-    'report_this_month_non_shared'  => 'Current month, all not-shared accounts',
-    'report_this_year_shared'       => 'Current year, all shared accounts',
-    'report_this_year_non_shared'   => 'Current year, all not-shared accounts',
-    'report_all_time_shared'        => 'All-time, all shared accounts',
-    'report_all_time_non_shared'    => 'All-time, all not-shared accounts',
+    'report_this_month_quick'       => 'Current month, all accounts',
+    'report_this_year_quick'        => 'Current year, all accounts',
+    'report_all_time_quick'         => 'All-time, all accounts',
     'reports_can_bookmark'          => 'Remember that reports can be bookmarked.',
     'incomeVsExpenses'              => 'Income vs. expenses',
     'accountBalances'               => 'Account balances',
