@@ -24,6 +24,23 @@ var colourSet = [
 
 ];
 
+// Settings object that controls default parameters for library methods:
+accounting.settings = {
+    currency: {
+        symbol : currencySymbol,   // default currency symbol is '$'
+        format: "%s %v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+        decimal : ",",  // decimal point separator
+        thousand: ".",  // thousands separator
+        precision : 2   // decimal places
+    },
+    number: {
+        precision : 0,  // default precision on numbers is 0
+        thousand: ",",
+        decimal : "."
+    }
+}
+
+
 var fillColors = [];
 var strokePointHighColors = [];
 
@@ -45,9 +62,9 @@ var defaultAreaOptions = {
     animation: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel: " <%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
+    scaleLabel: " <%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 };
 
 
@@ -61,7 +78,7 @@ var defaultPieOptions = {
     scaleFontSize: 10,
     responsive: false,
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
 
 };
 
@@ -90,10 +107,10 @@ var defaultColumnOptions = {
     scaleFontSize: 10,
     responsive: false,
     animation: false,
-    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
+    scaleLabel:           "<%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate:      "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
-    multiTooltipTemplate: "<%=datasetLabel%>: " + currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
+    tooltipTemplate:      "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 };
 
 var defaultStackedColumnOptions = {
@@ -105,9 +122,9 @@ var defaultStackedColumnOptions = {
     animation: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
+    scaleLabel:           "<%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: " + currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 
 };
 
