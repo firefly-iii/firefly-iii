@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
+use Config;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -8,13 +9,12 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
+use Log;
 use Mail;
 use Request as Rq;
 use Session;
 use Twig;
 use Validator;
-use Log;
-use Config;
 
 /**
  * Class AuthController
@@ -165,9 +165,7 @@ class AuthController extends Controller
         $data['password'] = bcrypt($data['password']);
 
         // is user email domain blocked?
-        $parts = explode('@', $data['email']);
-        if (isset($parts[1]) && in_array($parts[1], Config::get('mail.blocked_domains'))) {
-
+        if ($this->isBlockedDomain($data['email'])) {
             $validator->getMessageBag()->add('email', trans('validation.invalid_domain'));
             $this->throwValidationException(
                 $request, $validator
@@ -178,8 +176,8 @@ class AuthController extends Controller
 
         // get the email address
         if (Auth::user() instanceof User) {
-            $email   = Auth::user()->email;
-            $address = route('index');
+            $email     = Auth::user()->email;
+            $address   = route('index');
             $ipAddress = $request->ip();
             // send email.
             try {
@@ -188,7 +186,7 @@ class AuthController extends Controller
                     $message->to($email, $email)->subject('Welcome to Firefly III! ');
                 }
                 );
-            } catch(\Swift_TransportException $e) {
+            } catch (\Swift_TransportException $e) {
                 Log::error($e->getMessage());
             }
 
@@ -211,6 +209,32 @@ class AuthController extends Controller
 
         return redirect('/');
         // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @return array
+     */
+    protected function getBlockedDomains() {
+        $set = Config::get('mail.blocked_domains');
+        $domains = [];
+        foreach($set as $entry) {
+            $domain = trim($entry);
+            if(strlen($domain) > 0) {
+                $domains[] = $domain;
+            }
+        }
+        return $domains;
+    }
+
+    protected function isBlockedDomain($email)
+    {
+        $parts   = explode('@', $email);
+        $blocked = $this->getBlockedDomains();
+
+        if (isset($parts[1]) && in_array($parts[1], $blocked)) {
+            return true;
+        }
+        return false;
     }
 
     /**
