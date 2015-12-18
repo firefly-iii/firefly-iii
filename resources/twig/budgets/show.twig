@@ -27,12 +27,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="budgetOverview"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="budgetOverview" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="budgetOverview" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
 
@@ -112,15 +107,8 @@
 
     </script>
 
-    <!-- load the libraries and scripts necessary for Google Charts: -->
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript" src="js/budgets.js"></script>
 
 {% endblock %}

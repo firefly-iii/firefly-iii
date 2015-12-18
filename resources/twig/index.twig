@@ -22,12 +22,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="accounts-chart"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="accounts-chart" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="accounts-chart" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
 
@@ -41,12 +36,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="budgets-chart"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="budgets-chart" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="budgets-chart" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
             <!-- CATEGORIES -->
@@ -59,12 +49,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="categories-chart"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="categories-chart" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="categories-chart" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
         </div>
@@ -80,12 +65,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="bills-chart"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="bills-chart" style="width:100%;height:250px;"></canvas>
-                    {% endif %}
+                    <canvas id="bills-chart" style="width:100%;height:250px;"></canvas>
                 </div>
             </div>
 
@@ -136,12 +116,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="expense-accounts-chart"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="expense-accounts-chart" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="expense-accounts-chart" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
         </div>
@@ -163,7 +138,8 @@
                     {% else %}
                         {% for account in savings %}
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a></h5>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a
+                                                href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a></h5>
                                 </div>
                             </div>
                             <div class="row">
@@ -230,7 +206,8 @@
                     {% else %}
                         {% for account in piggyBankAccounts %}
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a></h5>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a
+                                                href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a></h5>
                                 </div>
                             </div>
                             <div class="row">
@@ -275,16 +252,9 @@
     </script>
 
 
-    <!-- load the libraries and scripts necessary for Google Charts: -->
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/Chart.StackedBar.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/Chart.StackedBar.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
 {% endblock %}
 {% block styles %}

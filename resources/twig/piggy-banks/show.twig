@@ -97,14 +97,7 @@
         var piggyBankID = {{ piggyBank.id }};
     </script>
 
-    <!-- load the libraries and scripts necessary for Google Charts: -->
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript" src="js/piggy-banks.js"></script>
 {% endblock %}

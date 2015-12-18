@@ -85,13 +85,7 @@
                     <h3 class="box-title">Chart</h3>
                 </div>
                 <div class="box-body">
-
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="bill-overview"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="bill-overview" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="bill-overview" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
         </div>
@@ -116,14 +110,7 @@
     <script type="text/javascript">
         var billID = {{ bill.id }};
     </script>
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
-
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript" src="js/bills.js"></script>
 {% endblock %}

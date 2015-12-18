@@ -116,17 +116,8 @@
 {% block scripts %}
 
     <script type="text/javascript" src="js/bootstrap-sortable.js"></script>
-
-    <!-- load the libraries and scripts necessary for Google Charts: -->
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
-
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript">
         var year = {{ start.year }};
         var month = {{ start.month }};
