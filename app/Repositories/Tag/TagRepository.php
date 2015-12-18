@@ -77,7 +77,9 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes([TransactionType::TRANSFER])->get(['transaction_journals.*']);
+            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes([TransactionType::TRANSFER])->get(
+                ['transaction_journals.*']
+            );
 
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {

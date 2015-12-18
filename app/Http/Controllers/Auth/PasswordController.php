@@ -1,13 +1,12 @@
 <?php namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 use FireflyIII\User;
+use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Class PasswordController
  *
@@ -50,6 +49,7 @@ class PasswordController extends Controller
      * Send a reset link to the given user.
      *
      * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function postEmail(Request $request)
@@ -61,9 +61,11 @@ class PasswordController extends Controller
         if (!is_null($user) && intval($user->blocked) === 1) {
             $response = 'passwords.blocked';
         } else {
-            $response = Password::sendResetLink($request->only('email'), function (Message $message) {
+            $response = Password::sendResetLink(
+                $request->only('email'), function (Message $message) {
                 $message->subject($this->getEmailSubject());
-            });
+            }
+            );
         }
 
         switch ($response) {

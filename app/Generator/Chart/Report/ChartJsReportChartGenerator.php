@@ -107,9 +107,9 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             ],
         ];
         $data['datasets'][0]['data'][] = round($income, 2);
-        $data['datasets'][1]['data'][] = round( $expense, 2);
+        $data['datasets'][1]['data'][] = round($expense, 2);
         $data['datasets'][0]['data'][] = round(($income / $count), 2);
-        $data['datasets'][1]['data'][] = round(( $expense / $count), 2);
+        $data['datasets'][1]['data'][] = round(($expense / $count), 2);
 
         return $data;
     }
@@ -138,9 +138,9 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             ],
         ];
         $data['datasets'][0]['data'][] = round($income, 2);
-        $data['datasets'][1]['data'][] = round( $expense, 2);
+        $data['datasets'][1]['data'][] = round($expense, 2);
         $data['datasets'][0]['data'][] = round(($income / $count), 2);
-        $data['datasets'][1]['data'][] = round(( $expense / $count), 2);
+        $data['datasets'][1]['data'][] = round(($expense / $count), 2);
 
         return $data;
     }

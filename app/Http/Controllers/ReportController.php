@@ -46,17 +46,17 @@ class ReportController extends Controller
         $months = $this->helper->listOfMonths($start);
 
         // does the user have shared accounts?
-        $accounts            = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
         // get id's for quick links:
         $accountIds = [];
         /** @var Account $account */
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             $accountIds [] = $account->id;
         }
-        $accountList = join(',',$accountIds);
+        $accountList = join(',', $accountIds);
 
 
-        return view('reports.index', compact('months', 'accounts', 'start','accountList'));
+        return view('reports.index', compact('months', 'accounts', 'start', 'accountList'));
     }
 
     /**

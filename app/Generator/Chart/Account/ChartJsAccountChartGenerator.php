@@ -42,10 +42,10 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end)
     {
         $data = [
-            'count'    => 1,
-            'labels'   => [], 'datasets' => [[
-                               'label' => trans('firefly.spent'),
-                               'data'  => []]]];
+            'count'  => 1,
+            'labels' => [], 'datasets' => [[
+                                               'label' => trans('firefly.spent'),
+                                               'data'  => []]]];
 
         bcscale(2);
         $start->subDay();

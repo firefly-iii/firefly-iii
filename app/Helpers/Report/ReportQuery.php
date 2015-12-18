@@ -134,7 +134,7 @@ class ReportQuery implements ReportQueryInterface
                 $query->orWhere(
                     function (Builder $q) use ($ids) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
-                        $q->whereNotIn('ac_from.id',$ids);
+                        $q->whereNotIn('ac_from.id', $ids);
                         $q->whereIn('ac_to.id', $ids);
                     }
                 );

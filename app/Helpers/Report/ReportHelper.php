@@ -237,7 +237,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses  = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+                $expenses = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
 
                 // 200 en -100 is 100, vergeleken met 0 === 1
                 // 200 en -200 is 0, vergeleken met 0 === 0

@@ -478,6 +478,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             ->transactionTypes([TransactionType::WITHDRAWAL])
             ->get(['transaction_journals.*'])
             ->sum('amount');
+
         return $sum;
 
     }
@@ -508,6 +509,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             ->after($start)
             ->get(['transaction_journals.*'])
             ->sum('amount');
+
         return $sum;
 
     }

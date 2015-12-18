@@ -48,7 +48,7 @@ class TransactionController extends Controller
      */
     public function create(AccountRepositoryInterface $repository, $what = TransactionType::DEPOSIT)
     {
-        $what = strtolower($what);
+        $what        = strtolower($what);
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);

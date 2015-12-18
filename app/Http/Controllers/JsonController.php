@@ -192,7 +192,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-        $amount = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('amount');
+        $amount   = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('amount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);

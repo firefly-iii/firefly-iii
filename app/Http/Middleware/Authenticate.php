@@ -1,13 +1,14 @@
 <?php namespace FireflyIII\Http\Middleware;
 
 use App;
+use Auth;
 use Carbon\Carbon;
 use Closure;
 use Config;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
-use Auth;
+
 /**
  * Class Authenticate
  *
@@ -55,6 +56,7 @@ class Authenticate
 
         if (intval($this->auth->user()->blocked) == 1) {
             Auth::logout();
+
             return redirect()->route('index');
         }
 
