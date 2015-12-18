@@ -670,16 +670,16 @@
         },
         {
             "name": "grumpydictator/gchart",
-            "version": "1.0.9",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/gchart.git",
-                "reference": "920a0494a0697472bf81c0111b6825c516099e59"
+                "reference": "0b1de3e045aaf19bb17658d3e81db706d6945e5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/gchart/zipball/920a0494a0697472bf81c0111b6825c516099e59",
-                "reference": "920a0494a0697472bf81c0111b6825c516099e59",
+                "url": "https://api.github.com/repos/JC5/gchart/zipball/0b1de3e045aaf19bb17658d3e81db706d6945e5d",
+                "reference": "0b1de3e045aaf19bb17658d3e81db706d6945e5d",
                 "shasum": ""
             },
             "require": {
@@ -702,7 +702,7 @@
                 }
             ],
             "description": "GChart is a small package that allows you to easily generate data for the Google Charts API.",
-            "time": "2015-04-05 19:17:17"
+            "time": "2015-12-15 21:07:33"
         },
         {
             "name": "illuminate/html",
@@ -897,16 +897,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.1.26",
+            "version": "v5.1.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "be7fbb60376bd61f07e9c637473e5b2cf7eebe5c"
+                "reference": "b16f80878fd3603022d3c84593397cedd9af0bcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/be7fbb60376bd61f07e9c637473e5b2cf7eebe5c",
-                "reference": "be7fbb60376bd61f07e9c637473e5b2cf7eebe5c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/b16f80878fd3603022d3c84593397cedd9af0bcf",
+                "reference": "b16f80878fd3603022d3c84593397cedd9af0bcf",
                 "shasum": ""
             },
             "require": {
@@ -952,7 +952,6 @@
                 "illuminate/events": "self.version",
                 "illuminate/exception": "self.version",
                 "illuminate/filesystem": "self.version",
-                "illuminate/foundation": "self.version",
                 "illuminate/hashing": "self.version",
                 "illuminate/http": "self.version",
                 "illuminate/log": "self.version",
@@ -1022,7 +1021,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-12-02 21:59:57"
+            "time": "2015-12-17 20:35:38"
         },
         {
             "name": "league/commonmark",
@@ -2656,16 +2655,16 @@
         },
         {
             "name": "watson/validating",
-            "version": "1.0.7",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dwightwatson/validating.git",
-                "reference": "24b3b0b933180ef997d99e3c342f95955abbbdf2"
+                "reference": "0b225ddc3187745ff9efcbcd0d9b4b712df190ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/24b3b0b933180ef997d99e3c342f95955abbbdf2",
-                "reference": "24b3b0b933180ef997d99e3c342f95955abbbdf2",
+                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/0b225ddc3187745ff9efcbcd0d9b4b712df190ba",
+                "reference": "0b225ddc3187745ff9efcbcd0d9b4b712df190ba",
                 "shasum": ""
             },
             "require": {
@@ -2707,7 +2706,7 @@
                 "laravel",
                 "validation"
             ],
-            "time": "2015-11-21 02:31:18"
+            "time": "2015-12-16 23:15:51"
         },
         {
             "name": "zizaco/entrust",
