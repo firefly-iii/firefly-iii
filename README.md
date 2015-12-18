@@ -84,6 +84,12 @@ and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
 If you want to try out Firefly III, you can do so on [this dedicated website](https://geld.nder.be/). 
 This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site. Accounts on the demo sites will stop working after one month. It's a trial.
 
+## Security
+
+You should always run Firefly III on a site with TLS enabled (https://). Please note that although some parts of the
+database are encrypted (transaction descriptions, names, etc.) some parts are _not_ (amounts, dates, etc). If you need
+more security, you must enable transparent database encryption or a comparable technology.
+
 ## Credits
 
 Firefly III uses the following libraries and tools:
