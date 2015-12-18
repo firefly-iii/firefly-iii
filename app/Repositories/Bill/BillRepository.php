@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Bill;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -109,6 +110,46 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBillsForAccounts(Collection $accounts)
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
+
+        $ids = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
+        $set = $set->filter(
+            function (Bill $bill) use ($ids) {
+                // get transaction journals from or to any of the mentioned accounts.
+                // if zero, return null.
+                $journals = $bill->transactionjournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->whereIn('transactions.account_id', $ids)->count();
+
+                return ($journals > 0);
+
+            }
+        );
+
+        $set = $set->sortBy(
+            function (Bill $bill) {
+
+                $int = $bill->active == 1 ? 0 : 1;
+
+                return $int . strtolower($bill->name);
+            }
+        );
+
+        return $set;
+    }
+
+    /**
      * @param Bill $bill
      *
      * @return Collection
@@ -154,7 +195,7 @@ class BillRepository implements BillRepositoryInterface
         }
         $journals = new Collection;
         if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->transactionTypes(['Withdrawal'])->whereIn('transaction_journals.id', $ids)->get(
+            $journals = Auth::user()->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
                 ['transaction_journals.*']
             );
         }
@@ -276,11 +317,20 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal)
     {
+
+        /*
+         * Can only support withdrawals.
+         */
+        if (false === $journal->isWithdrawal()) {
+            return false;
+        }
+
         $matches     = explode(',', $bill->match);
         $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
         Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
+
 
         /*
          * If both, update!

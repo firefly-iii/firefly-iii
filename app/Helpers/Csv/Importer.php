@@ -296,7 +296,7 @@ class Importer
 
         // some debug info:
         $journalId = $journal->id;
-        $type      = $journal->transactionType->type;
+        $type      = $journal->getTransactionType();
         /** @var Account $asset */
         $asset = $this->importData['asset-account-object'];
         /** @var Account $opposing */
@@ -314,13 +314,13 @@ class Importer
      */
     protected function getTransactionType()
     {
-        $transactionType = TransactionType::where('type', 'Deposit')->first();
+        $transactionType = TransactionType::where('type', TransactionType::DEPOSIT)->first();
         if ($this->importData['amount'] < 0) {
-            $transactionType = TransactionType::where('type', 'Withdrawal')->first();
+            $transactionType = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         }
 
         if (in_array($this->importData['opposing-account-object']->accountType->type, ['Asset account', 'Default account'])) {
-            $transactionType = TransactionType::where('type', 'Transfer')->first();
+            $transactionType = TransactionType::where('type', TransactionType::TRANSFER)->first();
         }
 
         return $transactionType;

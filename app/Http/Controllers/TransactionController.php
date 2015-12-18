@@ -12,6 +12,7 @@ use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Input;
@@ -45,8 +46,9 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create(AccountRepositoryInterface $repository, $what = 'deposit')
+    public function create(AccountRepositoryInterface $repository, $what = TransactionType::DEPOSIT)
     {
+        $what = strtolower($what);
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
@@ -95,7 +97,7 @@ class TransactionController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
-        $what     = strtolower($journal->transactionType->type);
+        $what     = strtolower($journal->getTransactionType());
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
@@ -137,7 +139,7 @@ class TransactionController extends Controller
     public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
         // cannot edit opening balance
-        if ($journal->transactionType->type == 'Opening balance') {
+        if ($journal->isOpeningBalance()) {
             return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
         }
 
@@ -145,7 +147,7 @@ class TransactionController extends Controller
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        $what        = strtolower($journal->transactionType->type);
+        $what        = strtolower($journal->getTransactionType());
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
@@ -181,7 +183,7 @@ class TransactionController extends Controller
 
         $preFilled['amount'] = $journal->amount_positive;
 
-        if ($journal->transactionType->type == 'Withdrawal') {
+        if ($journal->isWithdrawal()) {
             $preFilled['account_id']      = $journal->source_account->id;
             $preFilled['expense_account'] = $journal->destination_account->name_for_editform;
         } else {
@@ -269,8 +271,8 @@ class TransactionController extends Controller
                 $t->after  = bcadd($t->before, $t->amount);
             }
         );
-        $what     = strtolower($journal->transactionType->type);
-        $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
+        $what     = strtolower($journal->getTransactionType());
+        $subTitle = trans('firefly.' . $journal->getTransactionType()) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'subTitle', 'what'));
     }
@@ -287,7 +289,7 @@ class TransactionController extends Controller
         $journalData = $request->getJournalData();
 
         // if not withdrawal, unset budgetid.
-        if ($journalData['what'] != 'withdrawal') {
+        if ($journalData['what'] != strtolower(TransactionType::WITHDRAWAL)) {
             $journalData['budget_id'] = 0;
         }
 
@@ -308,7 +310,7 @@ class TransactionController extends Controller
         // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
 
-        if ($journal->transactionType->type == 'Transfer' && intval($request->get('piggy_bank_id')) > 0) {
+        if ($journal->isTransfer() && intval($request->get('piggy_bank_id')) > 0) {
             event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
         }
 
@@ -340,7 +342,7 @@ class TransactionController extends Controller
     {
 
         // cannot edit opening balance
-        if ($journal->transactionType->type == 'Opening balance') {
+        if ($journal->isOpeningBalance()) {
             return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
         }
 

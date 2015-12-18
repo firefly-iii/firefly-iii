@@ -18,7 +18,7 @@
                         <small>{{ expense.count }} {{ 'transactions'|_|lower }}</small>
                     {% endif %}
                 </td>
-                <td><span class="text-danger">{{ (expense.amount)|formatAmountPlain }}</span></td>
+                <td>{{ (expense.amount)|formatAmount }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -32,7 +32,7 @@
             {% endif %}
             <tr>
                 <td><em>{{ 'sum'|_ }}</em></td>
-                <td><span class="text-danger">{{ (expenses.getTotal)|formatAmountPlain }}</span></td>
+                <td>{{ (expenses.getTotal)|formatAmount }}</td>
             </tr>
             </tfoot>
         </table>

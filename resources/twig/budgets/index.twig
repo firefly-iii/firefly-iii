@@ -43,7 +43,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-4 col-sm-3">
-                            <small>{{ 'spent'|_ }}: <span class="text-danger">{{ (spent*-1)|formatAmountPlain }}</span></small>
+                            <small>{{ 'spent'|_ }}: {{ spent|formatAmount }}</small>
                         </div>
                     </div>
                     <div class="row">
@@ -144,7 +144,7 @@
                             </tr>
                             <tr>
                                 <td style="width:50%;">{{ 'spent'|_ }}</td>
-                                <td><span class="text-danger">{{ (budget.spent*-1)|formatAmountPlain }}</a></td>
+                                <td>{{ budget.spent|formatAmount }}</a></td>
                             </tr>
                         </table>
                     </div>
@@ -179,7 +179,7 @@
 {% block scripts %}
     <script type="text/javascript">
         // actually spent bar data:
-        var spent = {{ spent * -1 }};
+        var spent = {{ spent * -1 }}; // must be positive for the calculation to work.
         var currencySymbol = "{{ getCurrencySymbol()|raw }}";
 
         // budgeted data:

@@ -64,6 +64,7 @@ class Authenticate
         Carbon::setLocale($pref->data);
 
         setlocale(LC_TIME, Config::get('firefly.locales.' . $pref->data));
+        setlocale(LC_MONETARY, Config::get('firefly.locales.' . $pref->data));
 
         return $next($request);
     }

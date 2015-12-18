@@ -37,6 +37,7 @@ class Category
         // spent is minus zero for an expense report:
         if ($category->spent < 0) {
             $this->categories->push($category);
+            $this->addTotal($category->spent);
         }
     }
 
@@ -55,7 +56,7 @@ class Category
      */
     public function getCategories()
     {
-        $set = $this->categories->sortByDesc(
+        $set = $this->categories->sortBy(
             function (CategoryModel $category) {
                 return $category->spent;
             }

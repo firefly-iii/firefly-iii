@@ -147,10 +147,9 @@ class TransactionJournal extends Model
         }
 
         bcscale(2);
-        $type        = $this->transactionType->type;
         $transaction = $this->transactions->sortByDesc('amount')->first();
         $amount      = $transaction->amount;
-        if ($type == 'Withdrawal') {
+        if ($this->isWithdrawal()) {
             $amount = $amount * -1;
         }
         $cache->store($amount);
@@ -167,15 +166,15 @@ class TransactionJournal extends Model
      */
     protected function amountByTagAdvancePayment(Tag $tag, $amount)
     {
-        if ($this->transactionType->type == 'Withdrawal') {
-            $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+        if ($this->isWithdrawal()) {
+            $others = $tag->transactionJournals()->transactionTypes([TransactionType::DEPOSIT])->get();
             foreach ($others as $other) {
                 $amount = bcsub($amount, $other->amount_positive);
             }
 
             return $amount;
         }
-        if ($this->transactionType->type == 'Deposit') {
+        if ($this->isDeposit()) {
             return '0';
         }
 
@@ -190,8 +189,8 @@ class TransactionJournal extends Model
      */
     protected function amountByTagBalancingAct($tag, $amount)
     {
-        if ($this->transactionType->type == 'Withdrawal') {
-            $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
+        if ($this->isWithdrawal()) {
+            $transfer = $tag->transactionJournals()->transactionTypes([TransactionType::TRANSFER])->first();
             if ($transfer) {
                 $amount = bcsub($amount, $transfer->amount_positive);
 
@@ -491,4 +490,43 @@ class TransactionJournal extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @return string
+     */
+    public function getTransactionType()
+    {
+        return $this->transactionType->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithdrawal()
+    {
+        return $this->transactionType->isWithdrawal();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeposit()
+    {
+        return $this->transactionType->isDeposit();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTransfer()
+    {
+        return $this->transactionType->isTransfer();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOpeningBalance()
+    {
+        return $this->transactionType->isOpeningBalance();
+    }
 }

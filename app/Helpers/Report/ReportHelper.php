@@ -19,6 +19,8 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
+use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class ReportHelper
@@ -43,48 +45,113 @@ class ReportHelper implements ReportHelperInterface
 
     }
 
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return CategoryCollection
+     */
+    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $object = new CategoryCollection;
+
+        /**
+         * GET CATEGORIES:
+         */
+        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $set        = $repository->getCategories();
+        foreach ($set as $category) {
+            $spent           = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+            $category->spent = $spent;
+            $object->addCategory($category);
+        }
+
+        return $object;
+    }
+
+    /**
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    public function listOfMonths(Carbon $date)
+    {
+
+        $start  = clone $date;
+        $end    = Carbon::now();
+        $months = [];
+        while ($start <= $end) {
+            $year = $start->year;
+
+            if (!isset($months[$year])) {
+                $months[$year] = [
+                    'start'  => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
+                    'end'    => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
+                    'months' => [],
+                ];
+            }
+
+            $currentEnd = clone $start;
+            $currentEnd->endOfMonth();
+            $months[$year]['months'][] = [
+                'formatted' => $start->formatLocalized('%B %Y'),
+                'start'     => $start->format('Y-m-d'),
+                'end'       => $currentEnd->format('Y-m-d'),
+                'month'     => $start->month,
+                'year'      => $year,
+            ];
+            $start->addMonth();
+        }
+
+        return $months;
+    }
 
     /**
      * This method generates a full report for the given period on all
-     * the users asset and cash accounts.
+     * given accounts
      *
-     * @param Carbon $date
-     * @param Carbon $end
-     * @param        $shared
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return AccountCollection
      */
-    public function getAccountReport(Carbon $date, Carbon $end, $shared)
+    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-
-
-        $accounts = $this->query->getAllAccounts($date, $end, $shared);
-        $start    = '0';
-        $end      = '0';
-        $diff     = '0';
+        $startAmount = '0';
+        $endAmount   = '0';
+        $diff        = '0';
         bcscale(2);
 
-        // remove cash account, if any:
-        $accounts = $accounts->filter(
-            function (Account $account) {
-                if ($account->accountType->type != 'Cash account') {
-                    return $account;
-                }
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                /**
+                 * The balance for today always incorporates transactions
+                 * made on today. So to get todays "start" balance, we sub one
+                 * day.
+                 */
+                $yesterday = clone $start;
+                $yesterday->subDay();
 
-                return null;
+                /** @noinspection PhpParamsInspection */
+                $account->startBalance = Steam::balance($account, $yesterday);
+                $account->endBalance   = Steam::balance($account, $end);
             }
         );
 
+
         // summarize:
         foreach ($accounts as $account) {
-            $start = bcadd($start, $account->startBalance);
-            $end   = bcadd($end, $account->endBalance);
-            $diff  = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
+            $startAmount = bcadd($startAmount, $account->startBalance);
+            $endAmount   = bcadd($endAmount, $account->endBalance);
+            $diff        = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
         }
 
         $object = new AccountCollection;
-        $object->setStart($start);
-        $object->setEnd($end);
+        $object->setStart($startAmount);
+        $object->setEnd($endAmount);
         $object->setDifference($diff);
         $object->setAccounts($accounts);
 
@@ -92,37 +159,136 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
+     * Get a full report on the users incomes during the period for the given accounts.
      *
-     * The balance report contains a Balance object which in turn contains:
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
-     * A BalanceHeader object which contains all relevant user asset accounts for the report.
+     * @return Income
+     */
+    public function getIncomeReport($start, $end, Collection $accounts)
+    {
+        $object = new Income;
+        $set    = $this->query->incomeInPeriod($start, $end, $accounts);
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->amount_positive);
+            $object->addOrCreateIncome($entry);
+        }
+
+        return $object;
+    }
+
+    /**
+     * Get a full report on the users expenses during the period for a list of accounts.
      *
-     * A number of BalanceLine objects, which hold:
-     * - A budget
-     * - A number of BalanceEntry objects.
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
-     * The BalanceEntry object holds:
-     *   - The same budget (again)
-     *   - A user asset account as mentioned in the BalanceHeader
-     *   - The amount of money spent on the budget by the user asset account
+     * @return Expense
+     */
+    public function getExpenseReport($start, $end, Collection $accounts)
+    {
+        $object = new Expense;
+        $set    = $this->query->expenseInPeriod($start, $end, $accounts);
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->amount); // can be positive, if it's a transfer
+            $object->addOrCreateExpense($entry);
+        }
+
+        return $object;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param boolean $shared
+     * @return BudgetCollection
+     */
+    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $object = new BudgetCollection;
+        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $set        = $repository->getBudgets();
+
+        bcscale(2);
+
+        foreach ($set as $budget) {
+
+            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
+
+            // no repetition(s) for this budget:
+            if ($repetitions->count() == 0) {
+                $spent      = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+                $budgetLine = new BudgetLine;
+                $budgetLine->setBudget($budget);
+                $budgetLine->setOverspent($spent);
+                $object->addOverspent($spent);
+                $object->addBudgetLine($budgetLine);
+                continue;
+            }
+
+            // one or more repetitions for budget:
+            /** @var LimitRepetition $repetition */
+            foreach ($repetitions as $repetition) {
+                $budgetLine = new BudgetLine;
+                $budgetLine->setBudget($budget);
+                $budgetLine->setRepetition($repetition);
+                $expenses  = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+
+                // 200 en -100 is 100, vergeleken met 0 === 1
+                // 200 en -200 is 0, vergeleken met 0 === 0
+                // 200 en -300 is -100, vergeleken met 0 === -1
+
+                $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : 0;
+                $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
+                $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
+
+                $budgetLine->setLeft($left);
+                $budgetLine->setSpent($spent);
+                $budgetLine->setOverspent($overspent);
+                $budgetLine->setBudgeted($repetition->amount);
+
+                $object->addBudgeted($repetition->amount);
+                $object->addSpent($spent);
+                $object->addLeft($left);
+                $object->addOverspent($overspent);
+                $object->addBudgetLine($budgetLine);
+
+            }
+
+        }
+
+        // stuff outside of budgets:
+        $noBudget   = $repository->getWithoutBudgetSum($start, $end);
+        $budgetLine = new BudgetLine;
+        $budgetLine->setOverspent($noBudget);
+        $budgetLine->setSpent($noBudget);
+        $object->addOverspent($noBudget);
+        $object->addBudgetLine($budgetLine);
+
+        return $object;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return Balance
      */
-    public function getBalanceReport(Carbon $start, Carbon $end, $shared)
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $repository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
         $balance       = new Balance;
 
         // build a balance header:
-        $header = new BalanceHeader;
-
-        $accounts = $this->query->getAllAccounts($start, $end, $shared);
-        $budgets  = $repository->getBudgets();
+        $header  = new BalanceHeader;
+        $budgets = $repository->getBudgets();
         foreach ($accounts as $account) {
             $header->addAccount($account);
         }
@@ -134,6 +300,7 @@ class ReportHelper implements ReportHelperInterface
 
             // get budget amount for current period:
             $rep = $repository->getCurrentRepetition($budget, $start, $end);
+            // could be null?
             $line->setRepetition($rep);
 
             // loop accounts:
@@ -142,7 +309,7 @@ class ReportHelper implements ReportHelperInterface
                 $balanceEntry->setAccount($account);
 
                 // get spent:
-                $spent = $this->query->spentInBudgetCorrected($account, $budget, $start, $end); // I think shared is irrelevant.
+                $spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
 
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
@@ -153,6 +320,7 @@ class ReportHelper implements ReportHelperInterface
 
         // then a new line for without budget.
         // and one for the tags:
+        // and one for "left unbalanced".
         $empty    = new BalanceLine;
         $tags     = new BalanceLine;
         $diffLine = new BalanceLine;
@@ -164,7 +332,7 @@ class ReportHelper implements ReportHelperInterface
             $spent = $this->query->spentNoBudget($account, $start, $end);
             $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
             bcscale(2);
-            $diff = bcsub($spent, $left);
+            $diff = bcadd($spent, $left);
 
             // budget
             $budgetEntry = new BalanceEntry;
@@ -199,16 +367,19 @@ class ReportHelper implements ReportHelperInterface
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * Excludes bills which have not had a payment on the mentioned accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return BillCollection
      */
-    public function getBillReport(Carbon $start, Carbon $end)
+    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
-        $bills      = $repository->getBills();
+        $bills      = $repository->getBillsForAccounts($accounts);
         $collection = new BillCollection;
 
         /** @var Bill $bill */
@@ -238,168 +409,5 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $collection;
-
-    }
-
-    /**
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param boolean $shared
-     *
-     * @return BudgetCollection
-     */
-    public function getBudgetReport(Carbon $start, Carbon $end, $shared)
-    {
-        $object = new BudgetCollection;
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $set        = $repository->getBudgets();
-
-        bcscale(2);
-
-        foreach ($set as $budget) {
-
-            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
-
-            // no repetition(s) for this budget:
-            if ($repetitions->count() == 0) {
-                $spent      = $repository->balanceInPeriod($budget, $start, $end, $shared);
-                $budgetLine = new BudgetLine;
-                $budgetLine->setBudget($budget);
-                $budgetLine->setOverspent($spent);
-                $object->addOverspent($spent);
-                $object->addBudgetLine($budgetLine);
-                continue;
-            }
-
-            // one or more repetitions for budget:
-            /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) {
-                $budgetLine = new BudgetLine;
-                $budgetLine->setBudget($budget);
-                $budgetLine->setRepetition($repetition);
-                $expenses  = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
-                $expenses = $expenses * -1;
-                $left      = $expenses < $repetition->amount ? bcsub($repetition->amount, $expenses) : 0;
-                $spent     = $expenses > $repetition->amount ? 0 : $expenses;
-                $overspent = $expenses > $repetition->amount ? bcsub($expenses, $repetition->amount) : 0;
-
-                $budgetLine->setLeft($left);
-                $budgetLine->setSpent($spent);
-                $budgetLine->setOverspent($overspent);
-                $budgetLine->setBudgeted($repetition->amount);
-
-                $object->addBudgeted($repetition->amount);
-                $object->addSpent($spent);
-                $object->addLeft($left);
-                $object->addOverspent($overspent);
-                $object->addBudgetLine($budgetLine);
-
-            }
-
-        }
-
-        // stuff outside of budgets:
-        $noBudget   = $repository->getWithoutBudgetSum($start, $end);
-        $budgetLine = new BudgetLine;
-        $budgetLine->setOverspent($noBudget);
-        $object->addOverspent($noBudget);
-        $object->addBudgetLine($budgetLine);
-
-        return $object;
-    }
-
-    /**
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param boolean $shared
-     *
-     * @return CategoryCollection
-     */
-    public function getCategoryReport(Carbon $start, Carbon $end, $shared)
-    {
-        $object = new CategoryCollection;
-
-
-        /**
-         * GET CATEGORIES:
-         */
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-        $set        = $repository->getCategories();
-        foreach ($set as $category) {
-            $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
-            $category->spent = $spent;
-            $object->addCategory($category);
-            $object->addTotal($spent);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Get a full report on the users expenses during the period.
-     *
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param boolean $shared
-     *
-     * @return Expense
-     */
-    public function getExpenseReport($start, $end, $shared)
-    {
-        $object = new Expense;
-        $set    = $this->query->expenseInPeriodCorrected($start, $end, $shared);
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->amount_positive);
-            $object->addOrCreateExpense($entry);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Get a full report on the users incomes during the period.
-     *
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param boolean $shared
-     *
-     * @return Income
-     */
-    public function getIncomeReport($start, $end, $shared)
-    {
-        $object = new Income;
-        $set    = $this->query->incomeInPeriodCorrected($start, $end, $shared);
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->amount_positive);
-            $object->addOrCreateIncome($entry);
-        }
-
-        return $object;
-    }
-
-    /**
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    public function listOfMonths(Carbon $date)
-    {
-
-        $start  = clone $date;
-        $end    = Carbon::now();
-        $months = [];
-        while ($start <= $end) {
-            $year            = $start->year;
-            $months[$year][] = [
-                'formatted' => $start->formatLocalized('%B %Y'),
-                'month'     => $start->month,
-                'year'      => $year,
-            ];
-            $start->addMonth();
-        }
-
-        return $months;
     }
 }

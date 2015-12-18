@@ -24,10 +24,8 @@
 
             <td>
                 {% if event.amount < 0 %}
-
-                    <span class="text-danger">{{ trans('firefly.removed_amount', {amount: (event.amount*-1)|formatAmountPlain})|raw }}</span>
+                    <span class="text-danger">{{ trans('firefly.removed_amount', {amount: (event.amount)|formatAmountPlain})|raw }}</span>
                 {% else %}
-
                     <span class="text-success">{{ trans('firefly.added_amount', {amount: (event.amount)|formatAmountPlain})|raw }}</span>
                 {% endif %}
             </td>

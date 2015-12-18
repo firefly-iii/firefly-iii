@@ -23,10 +23,10 @@ class Budget extends Twig_Extension
     {
         $functions   = [];
         $functions[] = new Twig_SimpleFunction(
-            'spentInRepetitionCorrected', function (LimitRepetition $repetition) {
+            'spentInRepetition', function (LimitRepetition $repetition) {
             $cache = new CacheProperties;
             $cache->addProperty($repetition->id);
-            $cache->addProperty('spentInRepetitionCorrected');
+            $cache->addProperty('spentInRepetition');
             if ($cache->has()) {
                 return $cache->get(); // @codeCoverageIgnore
             }

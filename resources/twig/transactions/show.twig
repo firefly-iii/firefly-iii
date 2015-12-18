@@ -43,6 +43,12 @@
                                 <td><a href="{{ route('categories.show',category.id) }}">{{ category.name }}</a></td>
                             </tr>
                         {% endfor %}
+                        {% if journal.bill %}
+                            <tr>
+                                <td>{{ 'bill'|_ }}</td>
+                                <td><a href="{{ route('bills.show', journal.bill_id) }}">{{ journal.bill.name }}</a></td>
+                            </tr>
+                        {% endif %}
                         {% if journal.tags|length > 0 %}
                             <tr>
                                 <td>{{ 'tags'|_ }}</td>

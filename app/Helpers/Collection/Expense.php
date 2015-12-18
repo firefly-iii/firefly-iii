@@ -33,18 +33,24 @@ class Expense
      */
     public function addOrCreateExpense(TransactionJournal $entry)
     {
+        bcscale(2);
+
         $accountId = $entry->account_id;
+        $amount    = strval(round($entry->amount, 2));
+        if (bccomp('0', $amount) === -1) {
+            $amount = bcmul($amount, '-1');
+        }
+
         if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
-            $newObject->amount = strval(round($entry->amount_positive, 2));
+            $newObject->amount = $amount;
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
             $newObject->id     = $accountId;
             $this->expenses->put($accountId, $newObject);
         } else {
-            bcscale(2);
             $existing         = $this->expenses->get($accountId);
-            $existing->amount = bcadd($existing->amount, $entry->amount_positive);
+            $existing->amount = bcadd($existing->amount, $amount);
             $existing->count++;
             $this->expenses->put($accountId, $existing);
         }
@@ -55,8 +61,18 @@ class Expense
      */
     public function addToTotal($add)
     {
-        $add = strval(round($add, 2));
         bcscale(2);
+
+
+        $add = strval(round($add, 2));
+        if (bccomp('0', $add) === -1) {
+            $add = bcmul($add, '-1');
+        }
+
+        // if amount is positive, the original transaction
+        // was a transfer. But since this is an expense report,
+        // that amount must be negative.
+
         $this->total = bcadd($this->total, $add);
     }
 
@@ -65,7 +81,7 @@ class Expense
      */
     public function getExpenses()
     {
-        $set = $this->expenses->sortByDesc(
+        $set = $this->expenses->sortBy(
             function (stdClass $object) {
                 return $object->amount;
             }

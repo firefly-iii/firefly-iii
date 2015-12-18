@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -25,6 +26,111 @@ Route::bind(
             if ($object) {
                 return $object;
             }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+// account list! Yay!
+Route::bind(
+    'accountList',
+    function ($value) {
+        if (Auth::check()) {
+            $ids = explode(',', $value);
+            /** @var \Illuminate\Support\Collection $object */
+            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                             ->where('account_types.editable', 1)
+                             ->whereIn('accounts.id', $ids)
+                             ->where('user_id', Auth::user()->id)
+                             ->get(['accounts.*']);
+            if ($object->count() > 0) {
+                return $object;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+// budget list
+Route::bind(
+    'budgetList',
+    function ($value) {
+        if (Auth::check()) {
+            $ids = explode(',', $value);
+            /** @var \Illuminate\Support\Collection $object */
+            $object = Budget::where('active', 1)
+                            ->whereIn('id', $ids)
+                            ->where('user_id', Auth::user()->id)
+                            ->get();
+
+            // add empty budget if applicable.
+            if (in_array('0', $ids)) {
+                $object->push(new Budget);
+            }
+
+            if ($object->count() > 0) {
+                return $object;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+
+// category list
+Route::bind(
+    'categoryList',
+    function ($value) {
+        if (Auth::check()) {
+            $ids = explode(',', $value);
+            /** @var \Illuminate\Support\Collection $object */
+            $object = Category::whereIn('id', $ids)
+                              ->where('user_id', Auth::user()->id)
+                              ->get();
+
+            // add empty budget if applicable.
+            if (in_array('0', $ids)) {
+                $object->push(new Category);
+            }
+
+            if ($object->count() > 0) {
+                return $object;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+);
+
+// Date
+Route::bind(
+    'start_date',
+    function ($value) {
+        if (Auth::check()) {
+
+            try {
+                $date = new Carbon($value);
+            } catch (Exception $e) {
+                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
+                throw new NotFoundHttpException;
+            }
+
+            return $date;
+        }
+        throw new NotFoundHttpException;
+    }
+);
+
+// Date
+Route::bind(
+    'end_date',
+    function ($value) {
+        if (Auth::check()) {
+
+            try {
+                $date = new Carbon($value);
+            } catch (Exception $e) {
+                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
+                throw new NotFoundHttpException;
+            }
+
+            return $date;
         }
         throw new NotFoundHttpException;
     }
@@ -287,6 +393,7 @@ Route::group(
     Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(
         ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
     );
+    Route::get('/chart/account/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
 
@@ -296,18 +403,24 @@ Route::group(
 
     // budgets:
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
-    Route::get('/chart/budget/year/{year}/{shared?}', ['uses' => 'Chart\BudgetController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+
+    // this chart is used in reports:
+    Route::get('/chart/budget/year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year']);
+    Route::get('/chart/budget/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
+
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
     Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
 
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
-    Route::get('/chart/category/spent-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@spentInYear'])->where(
-['year' => '[0-9]{4}', 'shared' => 'shared']
+
+    // these three charts are for reports:
+    Route::get('/chart/category/spent-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInYear']);
+    Route::get('/chart/category/earned-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInYear']);
+    Route::get(
+        '/chart/category/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
     );
-    Route::get('/chart/category/earned-in-year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@earnedInYear'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
-    );
+
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
     Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
@@ -316,8 +429,10 @@ Route::group(
     Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
     // reports:
-    Route::get('/chart/report/in-out/{year}/{shared?}', ['uses' => 'Chart\ReportController@yearInOut'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
-    Route::get('/chart/report/in-out-sum/{year}/{shared?}', ['uses' => 'Chart\ReportController@yearInOutSummarized'])->where(
+    Route::get('/chart/report/in-out/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
+    Route::get('/chart/report/in-out-sum/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
 
@@ -385,10 +500,10 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
-    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(
-        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
-    );
+    //    Route::post('/reports/select', ['uses' => 'ReportController@select', 'as' => 'reports.select']);
+    Route::get('/reports/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
+    //    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    //    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']);
 
     // pop ups for budget report:
 

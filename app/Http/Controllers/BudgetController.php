@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Input;
 use Navigation;
@@ -135,7 +136,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(BudgetRepositoryInterface $repository)
+    public function index(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
         $budgets           = $repository->getActiveBudgets();
         $inactive          = $repository->getInactiveBudgets();
@@ -147,6 +148,8 @@ class BudgetController extends Controller
         $key               = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $budgetIncomeTotal = Preferences::get($key, 1000)->data;
         $period            = Navigation::periodShow($start, $range);
+        $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+
         bcscale(2);
         /**
          * Do some cleanup:
@@ -156,7 +159,7 @@ class BudgetController extends Controller
         // loop the budgets:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budget->spent      = $repository->balanceInPeriod($budget, $start, $end);
+            $budget->spent      = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
             $budget->currentRep = $repository->getCurrentRepetition($budget, $start, $end);
             if ($budget->currentRep) {
                 $budgeted = bcadd($budgeted, $budget->currentRep->amount);
@@ -170,7 +173,7 @@ class BudgetController extends Controller
         $defaultCurrency = Amount::getDefaultCurrency();
 
         return view(
-            'budgets.index', compact('budgetMaximum','period', 'range', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
+            'budgets.index', compact('budgetMaximum', 'period', 'range', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
         );
     }
 
@@ -279,7 +282,7 @@ class BudgetController extends Controller
     {
         $budgetData = [
             'name'   => $request->input('name'),
-            'active' => intval($request->input('active')) == 1
+            'active' => intval($request->input('active')) == 1,
         ];
 
         $repository->update($budget, $budgetData);

@@ -39,7 +39,7 @@
                 {% endif %}
                 <td data-value="{{ (line.getMax - line.getAmount) }}">
                     {% if line.isActive %}
-                        {{ (line.getMax - line.getAmount)|formatAmount }}
+                        {{ (line.getMax + line.getAmount)|formatAmount }}
                     {% endif %}
                 </td>
 

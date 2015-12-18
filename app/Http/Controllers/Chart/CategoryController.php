@@ -107,7 +107,7 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $array = $repository->getCategoriesAndExpensesCorrected($start, $end);
+        $array = $repository->getCategoriesAndExpenses($start, $end);
         // sort by callback:
         uasort(
             $array,
@@ -121,6 +121,84 @@ class CategoryController extends Controller
         );
         $set  = new Collection($array);
         $data = $this->generator->frontpage($set);
+        $cache->store($data);
+
+
+        return Response::json($data);
+
+    }
+
+    /**
+     * @param CategoryRepositoryInterface $repository
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
+     * @param Collection                  $categories
+     */
+    public function multiYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($report_type);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($categories);
+        $cache->addProperty('multiYearCategory');
+
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /**
+         *  category
+         *   year:
+         *    spent: x
+         *    earned: x
+         *   year
+         *    spent: x
+         *    earned: x
+         */
+        $entries = new Collection;
+        // go by budget, not by year.
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $entry = ['name' => '', 'spent' => [], 'earned' => []];
+
+            $currentStart = clone $start;
+            while ($currentStart < $end) {
+                // fix the date:
+                $currentEnd = clone $currentStart;
+                $currentEnd->endOfYear();
+
+                // get data:
+                if (is_null($category->id)) {
+                    $name   = trans('firefly.noCategory');
+                    $spent  = $repository->spentNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
+                    $earned = $repository->earnedNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
+                } else {
+                    $name   = $category->name;
+                    $spent  = $repository->spentInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                    $earned = $repository->earnedInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                }
+
+                // save to array:
+                $year                   = $currentStart->year;
+                $entry['name']          = $name;
+                $entry['spent'][$year]  = ($spent * -1);
+                $entry['earned'][$year] = $earned;
+
+                // jump to next year.
+                $currentStart = clone $currentEnd;
+                $currentStart->addDay();
+            }
+            $entries->push($entry);
+        }
+        // generate chart with data:
+        $data = $this->generator->multiYear($entries);
+        $cache->store($data);
+
 
         return Response::json($data);
 
@@ -151,8 +229,8 @@ class CategoryController extends Controller
 
 
         while ($start <= $end) {
-            $spent  = $repository->spentOnDaySumCorrected($category, $start);
-            $earned = $repository->earnedOnDaySumCorrected($category, $start);
+            $spent  = $repository->spentOnDaySum($category, $start);
+            $earned = $repository->earnedOnDaySum($category, $start);
             $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
@@ -194,8 +272,8 @@ class CategoryController extends Controller
 
 
         while ($start <= $end) {
-            $spent   = $repository->spentOnDaySumCorrected($category, $start);
-            $earned  = $repository->earnedOnDaySumCorrected($category, $start);
+            $spent   = $repository->spentOnDaySum($category, $start);
+            $earned  = $repository->earnedOnDaySum($category, $start);
             $theDate = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $theDate, $spent, $earned]);
             $start->addDay();
@@ -213,15 +291,15 @@ class CategoryController extends Controller
      * This chart will only show expenses.
      *
      * @param CategoryRepositoryInterface $repository
-     * @param                             $year
-     * @param bool                        $shared
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function spentInYear(CategoryRepositoryInterface $repository, $year, $shared = false)
+    public function spentInYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $start = new Carbon($year . '-01-01');
-        $end   = new Carbon($year . '-12-31');
 
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
@@ -232,12 +310,11 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $shared        = $shared == 'shared' ? true : false;
         $allCategories = $repository->getCategories();
         $entries       = new Collection;
         $categories    = $allCategories->filter(
-            function (Category $category) use ($repository, $start, $end, $shared) {
-                $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
+            function (Category $category) use ($repository, $start, $end, $accounts) {
+                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
                 if ($spent < 0) {
                     return $category;
                 }
@@ -252,7 +329,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriod($category, $start, $month, $shared);
+                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
                 if ($spent < 0) {
                     $row[] = $spent * -1;
                 } else {
@@ -272,16 +349,15 @@ class CategoryController extends Controller
      * This chart will only show income.
      *
      * @param CategoryRepositoryInterface $repository
-     * @param                             $year
-     * @param bool                        $shared
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInYear(CategoryRepositoryInterface $repository, $year, $shared = false)
+    public function earnedInYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $start = new Carbon($year . '-01-01');
-        $end   = new Carbon($year . '-12-31');
-
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -291,12 +367,11 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $shared        = $shared == 'shared' ? true : false;
         $allCategories = $repository->getCategories();
         $allEntries    = new Collection;
         $categories    = $allCategories->filter(
-            function (Category $category) use ($repository, $start, $end, $shared) {
-                $spent = $repository->balanceInPeriod($category, $start, $end, $shared);
+            function (Category $category) use ($repository, $start, $end, $accounts) {
+                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
                 if ($spent > 0) {
                     return $category;
                 }
@@ -311,7 +386,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriod($category, $start, $month, $shared);
+                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
                 if ($spent > 0) {
                     $row[] = $spent;
                 } else {

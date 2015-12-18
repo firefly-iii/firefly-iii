@@ -80,6 +80,38 @@ class AccountController extends Controller
     }
 
     /**
+     * Shows the balances for a given set of dates and accounts.
+     *
+     * TODO fix parameters.
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @param                            $url
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('all');
+        $cache->addProperty('accounts');
+        $cache->addProperty('default');
+        $cache->addProperty($accounts);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        // make chart:
+        $data = $this->generator->all($accounts, $start, $end);
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+    /**
      * Shows the balances for all the user's expense accounts.
      *
      * @param AccountRepositoryInterface $repository

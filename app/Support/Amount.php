@@ -40,7 +40,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         } else {
-            $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY','EUR'));
             $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
 
             $cache->store($currency->symbol);
@@ -60,7 +60,7 @@ class Amount
     {
         $amount = floatval($amount);
         $amount = round($amount, 2);
-        $string = number_format($amount, 2, ',', '.');
+        $string = money_format('%!.2n', $amount);
 
         if ($coloured === true) {
             if ($amount === 0.0) {
@@ -100,13 +100,13 @@ class Amount
             $symbol = $journal->symbol;
         }
 
-        if ($journal->transactionType->type == 'Transfer' && $coloured) {
+        if ($journal->isTransfer() && $coloured) {
             $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $journal->amount_positive, false) . '</span>';
             $cache->store($txt);
 
             return $txt;
         }
-        if ($journal->transactionType->type == 'Transfer' && !$coloured) {
+        if ($journal->isTransfer() && !$coloured) {
             $txt = $this->formatWithSymbol($symbol, $journal->amount_positive, false);
             $cache->store($txt);
 
@@ -152,7 +152,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         } else {
-            $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY','EUR'));
 
             $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
             if ($currency) {
@@ -161,9 +161,9 @@ class Amount
 
                 return $currency->code;
             }
-            $cache->store('EUR');
+            $cache->store(env('DEFAULT_CURRENCY','EUR'));
 
-            return 'EUR'; // @codeCoverageIgnore
+            return env('DEFAULT_CURRENCY','EUR'); // @codeCoverageIgnore
         }
     }
 

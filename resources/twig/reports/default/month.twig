@@ -1,7 +1,7 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, shared) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, report_type, accountIds) }}
 {% endblock %}
 
 {% block content %}
@@ -26,26 +26,26 @@
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6">
-            {% include 'partials/reports/accounts.twig' %}
-            {% include 'partials/reports/income-vs-expenses.twig' %}
+            {% include 'reports/partials/accounts.twig' %}
+            {% include 'reports/partials/income-vs-expenses.twig' %}
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <!-- income -->
-            {% include 'partials/reports/income.twig' %}
+            {% include 'reports/partials/income.twig' %}
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <!-- expenses -->
-            {% include 'partials/reports/expenses.twig' %}
+            {% include 'reports/partials/expenses.twig' %}
         </div>
     </div>
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-12">
             <!-- budgets -->
-            {% include 'partials/reports/budgets.twig' %}
+            {% include 'reports/partials/budgets.twig' %}
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
             <!-- categories -->
-            {% include 'partials/reports/categories.twig' %}
+            {% include 'reports/partials/categories.twig' %}
         </div>
     </div>
     <div class="row">
@@ -55,12 +55,12 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {% include 'partials/reports/balance.twig' %}
+            {% include 'reports/partials/balance.twig' %}
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {% include 'partials/reports/bills.twig' %}
+            {% include 'reports/partials/bills.twig' %}
 
         </div>
     </div>
@@ -85,8 +85,13 @@
     <script type="text/javascript">
         var year = {{ start.year }};
         var month = {{ start.month }};
-        var shared = {% if shared %}'/shared'
-        {% else %}''{% endif %};
+
+        // to report another URL:
+        var startDate = '{{ start.format('Ymd') }}';
+        var endDate = '{{ end.format('Ymd') }}';
+        var reportType = '{{ report_type }}';
+        var accountIds = '{{ accountIds }}';
+
         var incomeTopLength = {{ incomeTopLength }};
         var expenseTopLength = {{ expenseTopLength }};
         var incomeRestShow = false; // starts hidden.
@@ -96,5 +101,5 @@
         var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
         var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
     </script>
-    <script type="text/javascript" src="js/reports.js"></script>
+    <script type="text/javascript" src="js/reports/default/month.js"></script>
 {% endblock %}

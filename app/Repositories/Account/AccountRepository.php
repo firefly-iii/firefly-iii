@@ -234,7 +234,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $ids = array_unique($ids);
         if (count($ids) > 0) {
-            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
+            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
         }
         bcscale(2);
 
@@ -273,6 +273,7 @@ class AccountRepository implements AccountRepositoryInterface
         $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
                         ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                         ->where('account_meta.name', 'accountRole')
+                        ->where('accounts.active', 1)
                         ->where('account_meta.data', '"savingAsset"')
                         ->get(['accounts.*']);
         $start    = clone Session::get('start', new Carbon);
@@ -329,7 +330,7 @@ class AccountRepository implements AccountRepositoryInterface
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-              ->where('transaction_types.type', 'Transfer');
+              ->where('transaction_types.type', TransactionType::TRANSFER);
 
         }
         )->get();
@@ -375,7 +376,7 @@ class AccountRepository implements AccountRepositoryInterface
         return TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
             ->accountIs($account)
-            ->transactionTypes(['Opening balance'])
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
     }
@@ -548,7 +549,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeInitialBalance(Account $account, Account $opposing, array $data)
     {
-        $transactionType = TransactionType::whereType('Opening balance')->first();
+        $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
@@ -641,5 +642,15 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * @param $accountId
+     *
+     * @return Account
+     */
+    public function find($accountId)
+    {
+        return Auth::user()->accounts()->findOrNew($accountId);
     }
 }

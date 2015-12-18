@@ -17,5 +17,6 @@ return [
     "token"    => "This password reset token is invalid.",
     "sent"     => "We have e-mailed your password reset link!",
     "reset"    => "Your password has been reset!",
+    'blocked'  => 'Nice try though.'
 
 ];

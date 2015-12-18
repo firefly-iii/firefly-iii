@@ -23,6 +23,11 @@ class TransactionType extends Model
 {
     use SoftDeletes;
 
+    const WITHDRAWAL = 'Withdrawal';
+    const DEPOSIT = 'Deposit';
+    const TRANSFER = 'Transfer';
+    const OPENING_BALANCE = 'Opening balance';
+
     /**
      * @return array
      */
@@ -37,5 +42,37 @@ class TransactionType extends Model
     public function transactionJournals()
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithdrawal()
+    {
+        return $this->type === TransactionType::WITHDRAWAL;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeposit()
+    {
+        return $this->type === TransactionType::DEPOSIT;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTransfer()
+    {
+        return $this->type === TransactionType::TRANSFER;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOpeningBalance()
+    {
+        return $this->type === TransactionType::OPENING_BALANCE;
     }
 }

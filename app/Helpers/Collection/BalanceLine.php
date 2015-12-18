@@ -150,24 +150,4 @@ class BalanceLine
     {
         $this->balanceEntries = $balanceEntries;
     }
-
-    /**
-     * If the BalanceEntries for a BalanceLine have a "left" value, the amount
-     * of money left in the entire BalanceLine is returned here:
-     *
-     * @return float
-     */
-    public function sumOfLeft()
-    {
-        $sum = '0';
-        bcscale(2);
-        /** @var BalanceEntry $balanceEntry */
-        foreach ($this->getBalanceEntries() as $balanceEntry) {
-            $sum = bcadd($sum, $balanceEntry->getLeft());
-        }
-
-        return $sum;
-    }
-
-
 }
