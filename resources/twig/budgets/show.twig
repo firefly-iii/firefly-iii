@@ -45,7 +45,7 @@
 
             {% for limit in limits %}
                 {% for rep in limit.limitRepetitions %}
-                {% set spentInRep = spentInRepetition(rep) %}
+                    {% set spentInRep = spentInRepetition(rep) %}
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title"><a href="{{ route('budgets.show',[budget.id,rep.id]) }}">{{ rep.startdate.formatLocalized(monthFormat) }}</a>
@@ -97,12 +97,12 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var budgetID = {{budget.id}};
+        var budgetID = {{ budget.id }};
         {% if repetition.id %}
-        var repetitionID = {{repetition.id}};
-        var year = {{repetition.startdate.format('Y')}};
+        var repetitionID = {{ repetition.id }};
+        var year = {{ repetition.startdate.format('Y') }};
         {% else %}
-        var year = {{Session.get('start').format('Y')}};
+        var year = {{ Session.get('start').format('Y') }};
         {% endif %}
 
     </script>

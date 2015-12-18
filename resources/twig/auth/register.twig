@@ -26,10 +26,10 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group has-feedback">
-                <input type="email" name="email" class="form-control" placeholder="Email" />
+                <input type="email" name="email" class="form-control" placeholder="Email"/>
                 {% if host == 'geld.nder.be' or host == 'firefly.app' %}
                     <p class="help-block">You will receive an email from Firefly III. If your email address
-                    is incorrect, your account may not work.</p>
+                        is incorrect, your account may not work.</p>
                 {% endif %}
             </div>
             <div class="form-group has-feedback">
