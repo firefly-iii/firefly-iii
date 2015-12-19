@@ -1,18 +1,6 @@
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Validation Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines contain the default error messages used by
-    | the validator class. Some of these rules have multiple versions such
-    | as the size rules. Feel free to tweak each of these messages here.
-    |
-    */
-
     'invalid_domain'          => 'Due to security constraints, you cannot register from this domain.',
     'file_already_attached'   => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'           => 'Succesfully uploaded file ":name".',
@@ -73,6 +61,4 @@ return [
     "unique"                  => "The :attribute has already been taken.",
     "url"                     => "The :attribute format is invalid.",
     "timezone"                => "The :attribute must be a valid zone.",
-    'attributes'              => [],
-
 ];
