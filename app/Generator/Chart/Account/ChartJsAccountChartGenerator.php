@@ -105,7 +105,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
     {
         // language:
-        $language = Preferences::get('language', 'en')->data;
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
         $format   = Config::get('firefly.monthAndDay.' . $language);
         $data     = [
             'count'    => 0,
@@ -151,7 +151,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     public function single(Account $account, Carbon $start, Carbon $end)
     {
         // language:
-        $language = Preferences::get('language', 'en')->data;
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
         $format   = Config::get('firefly.monthAndDay.' . $language);
 
         $data = [

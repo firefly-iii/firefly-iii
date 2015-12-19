@@ -354,7 +354,7 @@ Breadcrumbs::register(
     'reports.report', function (Generator $breadcrumbs, Carbon $start, Carbon $end, $reportType, $accountIds) {
     $breadcrumbs->parent('reports.index');
 
-    $pref        = Preferences::get('language', 'en')->data;
+    $pref        = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
     $monthFormat = Config::get('firefly.monthAndDay.' . $pref);
     $title       = trans('firefly.report_default', ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]);
 

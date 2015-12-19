@@ -101,7 +101,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $language = Preferences::get('language', 'en')->data;
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
         $format   = Config::get('firefly.month.' . $language);
 
         $data = [
@@ -135,7 +135,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $language = Preferences::get('language', 'en')->data;
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
         $format   = Config::get('firefly.month.' . $language);
 
         $data = [

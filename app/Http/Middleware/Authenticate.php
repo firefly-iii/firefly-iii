@@ -61,7 +61,7 @@ class Authenticate
         }
 
         // if logged in, set user language:
-        $pref = Preferences::get('language', 'en');
+        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'));
         App::setLocale($pref->data);
         Carbon::setLocale($pref->data);
 

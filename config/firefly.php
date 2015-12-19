@@ -99,12 +99,12 @@ return [
             'Cash account'        => 'cash',
         ],
     'lang'                     => [
-        'en' => 'English',
-        'nl' => 'Nederlands'
+        'en_US' => 'English',
+        'nl_NL' => 'Nederlands'
     ],
     'locales'                  => [
-        'en' => ['en', 'English', 'en_US', 'en_US.utf8'],
-        'nl' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
+        'en_US' => ['en', 'English', 'en_US', 'en_US.utf8'],
+        'nl_NL' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
     ],
     'transactionTypesByWhat'   => [
         'expenses'   => ['Withdrawal'],
@@ -125,12 +125,12 @@ return [
     ],
 
     'month'                    => [
-        'en' => '%B %Y',
-        'nl' => '%B %Y',
+        'en_US' => '%B %Y',
+        'nl_NL' => '%B %Y',
     ],
     'monthAndDay'              => [
-        'en' => '%B %e, %Y',
-        'nl' => '%e %B %Y',
+        'en_US' => '%B %e, %Y',
+        'nl_NL' => '%e %B %Y',
     ],
 
 ];

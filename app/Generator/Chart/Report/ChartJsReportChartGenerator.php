@@ -22,7 +22,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
     public function yearInOut(Collection $entries)
     {
         // language:
-        $language = Preferences::get('language', 'en')->data;
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
         $format   = Config::get('firefly.month.' . $language);
 
         $data = [
