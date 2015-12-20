@@ -100,7 +100,8 @@ return [
         ],
     'lang'                     => [
         'en_US' => 'English',
-        'nl_NL' => 'Nederlands'
+        'nl_NL' => 'Nederlands',
+        'pt_BR' => 'Português do Brasil',
     ],
     'locales'                  => [
         'en_US' => ['en', 'English', 'en_US', 'en_US.utf8'],
