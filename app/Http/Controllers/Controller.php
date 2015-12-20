@@ -34,7 +34,7 @@ abstract class Controller extends BaseController
         View::share('hideTags', false);
 
         if (Auth::check()) {
-            $pref                    = Preferences::get('language',env('DEFAULT_LANGUAGE','en_US'));
+            $pref                    = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
             $lang                    = $pref->data;
             $this->monthFormat       = Config::get('firefly.month.' . $lang);
             $this->monthAndDayFormat = Config::get('firefly.monthAndDay.' . $lang);
@@ -42,6 +42,7 @@ abstract class Controller extends BaseController
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
             View::share('language', $lang);
+            View::share('localeconv', localeconv());
         }
     }
 }

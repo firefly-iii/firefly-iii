@@ -184,6 +184,10 @@
     var language = "{{ language }}";
     var currencyCode = '{{ getCurrencyCode() }}';
     var currencySymbol = '{{ getCurrencySymbol()|raw }}';
+    var mon_decimal_point = "{{ localeconv.mon_decimal_point  }}";
+    var mon_thousands_sep = "{{ localeconv.mon_thousands_sep }}";
+    var frac_digits = {{ localeconv.frac_digits }};
+
 
 </script>
 
