@@ -172,6 +172,7 @@ class AccountRepository implements AccountRepositoryInterface
                    ->before($end)
                    ->after($start)
                    ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.order', 'ASC')
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
