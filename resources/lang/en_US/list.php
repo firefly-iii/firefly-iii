@@ -2,7 +2,7 @@
 
 // all table headers.
 
-return [
+return array(
     'name'           => 'Name',
     'role'           => 'Role',
     'currentBalance' => 'Current balance',
@@ -30,4 +30,4 @@ return [
     'type'           => 'Type',
     'completed'      => 'Completed',
     'iban'           => 'IBAN',
-];
+);

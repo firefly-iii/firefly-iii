@@ -1,6 +1,6 @@
 <?php
 
-return [
+return array(
 
     /*
     |--------------------------------------------------------------------------
@@ -19,4 +19,4 @@ return [
     "reset"    => "Your password has been reset!",
     'blocked'  => 'Nice try though.'
 
-];
+);

@@ -1,7 +1,7 @@
 <?php
-return [
+return array(
 
-    // tour!
+    // tour
     'main-content-title'     => 'Welcome to Firefly III',
     'main-content-text'      => 'Do yourself a favor and follow this short guide to make sure you know your way around.',
     'sidebar-toggle-title'   => 'Sidebar to create stuff',
@@ -90,4 +90,4 @@ return [
     'transactions-delete'     => 'transactions.delete',
     'transactions-show'       => 'transactions.show',
     'logout'                  => 'logout',
-];
+);
