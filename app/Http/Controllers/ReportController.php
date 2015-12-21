@@ -42,8 +42,16 @@ class ReportController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $start  = Session::get('first');
-        $months = $this->helper->listOfMonths($start);
+        $start        = Session::get('first');
+        $months       = $this->helper->listOfMonths($start);
+        $startOfMonth = clone Session::get('start');
+        $endOfMonth   = clone Session::get('start');
+        $startOfYear  = clone Session::get('start');
+        $endOfYear    = clone Session::get('start');
+        $startOfMonth->startOfMonth();
+        $endOfMonth->endOfMonth();
+        $startOfYear->startOfYear();
+        $endOfYear->endOfYear();
 
         // does the user have shared accounts?
         $accounts = $repository->getAccounts(['Default account', 'Asset account']);
@@ -56,7 +64,9 @@ class ReportController extends Controller
         $accountList = join(',', $accountIds);
 
 
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList'));
+        return view('reports.index', compact('months', 'accounts', 'start', 'accountList',
+                                             'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
+        ));
     }
 
     /**
@@ -194,7 +204,7 @@ class ReportController extends Controller
                                   'firefly.report_default',
                                   [
                                       'start' => $start->formatLocalized($this->monthFormat),
-                                      'end'   => $end->formatLocalized($this->monthFormat)
+                                      'end'   => $end->formatLocalized($this->monthFormat),
                                   ]
                               )
                 );
