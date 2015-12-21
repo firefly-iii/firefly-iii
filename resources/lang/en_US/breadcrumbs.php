@@ -1,5 +1,5 @@
 <?php
-return [
+return array(
     'home'                  => 'Home',
 
     // accounts
@@ -57,4 +57,4 @@ return [
     'edit_tag'              => 'Edit tag ":tag"',
     'delete_tag'            => 'Delete tag ":tag"',
 
-];
+);
