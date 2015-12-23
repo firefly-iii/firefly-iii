@@ -67,8 +67,7 @@ return [
     'new_password'                     => 'New password',
     'new_password_again'               => 'New password (again)',
     'delete_your_account'              => 'Delete your account',
-    'delete_your_account_help'         => 'Deleting your account will also delete any accounts, transactions, <em>anything</em> you might have saved' .
-                                          ' into Firefly III. It\'ll be GONE.',
+    'delete_your_account_help'         => 'Deleting your account will also delete any accounts, transactions, <em>anything</em> you might have saved into Firefly III. It\'ll be GONE.',
     'delete_your_account_password'     => 'Enter your password to continue.',
     'password'                         => 'Password',
     'are_you_sure'                     => 'Are you sure? You cannot undo this.',
@@ -109,23 +108,15 @@ return [
     'csv_define_column_roles'          => 'Define column roles',
     'csv_map_values'                   => 'Map found values to existing values',
     'csv_download_config'              => 'Download CSV configuration file.',
-    'csv_index_text'                   => 'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV' .
-                                          ' importer made by the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV' .
-                                          ' file and follow the instructions. If you would like to learn more, please click on the <i ' .
-                                          'class="fa fa-question-circle"></i> button at the top of this page.',
+    'csv_index_text'                   => 'This form allows you to import a CSV file with transactions into Firefly. It is based on the excellent CSV importer made by the folks at <a href="https://www.atlassian.com/">Atlassian</a>. Simply upload your CSV file and follow the instructions. If you would like to learn more, please click on the <i class="fa fa-question-circle"></i> button at the top of this page.',
     'csv_index_beta_warning'           => 'This tool is very much in beta. Please proceed with caution',
     'csv_header_help'                  => 'Check this box when your CSV file\'s first row consists of column names, not actual data',
-    'csv_date_help'                    => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/' .
-                                          'datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> ' .
-                                          'indicates. The default value will parse dates that look like this: ' . date('Ymd'),
+    'csv_date_help'                    => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: ' . date('Ymd'),
     'csv_csv_file_help'                => 'Select the CSV file here. You can only upload one file at a time',
     'csv_csv_config_file_help'         => 'Select your CSV import configuration here. If you do not know what this is, ignore it. It will be explained later.',
     'csv_upload_button'                => 'Start importing CSV',
     'csv_column_roles_title'           => 'Define column roles',
-    'csv_column_roles_text'            => 'Firefly does not know what each column means. You need to indicate what every column is. ' .
-                                          'Please check out the example data if you\'re not sure yourself. Click on the question mark ' .
-                                          '(top right of the page) to learn what each column means. If you want to map imported data ' .
-                                          'onto existing data in Firefly, use the checkbox. The next step will show you what this button does.',
+    'csv_column_roles_text'            => 'Firefly does not know what each column means. You need to indicate what every column is. Please check out the example data if you\'re not sure yourself. Click on the question mark (top right of the page) to learn what each column means. If you want to map imported data onto existing data in Firefly, use the checkbox. The next step will show you what this button does.',
     'csv_column_roles_table'           => 'Column roles',
     'csv_column'                       => 'CSV column',
     'csv_column_name'                  => 'CSV column name',
@@ -135,15 +126,13 @@ return [
     'csv_continue'                     => 'Continue to the next step',
     'csv_go_back'                      => 'Go back to the previous step',
     'csv_map_title'                    => 'Map found values to existing values',
-    'csv_map_text'                     => 'This page allows you to map the values from the CSV file to existing entries in your ' .
-                                          'database. This ensures that accounts and other things won\'t be created twice.',
+    'csv_map_text'                     => 'This page allows you to map the values from the CSV file to existing entries in your database. This ensures that accounts and other things won\'t be created twice.',
     'csv_field_value'                  => 'Field value from CSV',
     'csv_field_mapped_to'              => 'Must be mapped to...',
     'csv_do_not_map'                   => 'Do not map this value',
     'csv_download_config_title'        => 'Download CSV configuration',
     'csv_download_config_text'         => 'Everything you\'ve just set up can be downloaded as a configuration file. Click the button to do so.',
-    'csv_more_information_text'        => 'If the import fails, you can use this configuration file so you don\'t have to start all ' .
-                                          'over again. But, if the import succeeds, it will be easier to upload similar CSV files.',
+    'csv_more_information_text'        => 'If the import fails, you can use this configuration file so you don\'t have to start all over again. But, if the import succeeds, it will be easier to upload similar CSV files.',
     'csv_do_download_config'           => 'Download configuration file.',
     'csv_empty_description'            => '(empty description)',
     'csv_upload_form'                  => 'CSV upload form',
@@ -189,10 +178,8 @@ return [
     'csv_column_tags-space'            => 'Tags (space separated)',
     'csv_specifix_RabobankDescription' => 'Select this when you\'re importing Rabobank CSV export files.',
     'csv_specifix_Dummy'               => 'Checking this has no effect whatsoever.',
-    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which'
-                                          . ' account the transactions in the CSV belong to.',
+    'csv_import_account_help'          => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
     'csv_date_parse_error'             => 'Could not parse a valid date from ":value", using the format ":format". Are you sure your CSV is correct?',
-
 
     // create new stuff:
     'create_new_withdrawal'            => 'Create new withdrawal',
@@ -203,7 +190,6 @@ return [
     'create_new_revenue'               => 'Create new revenue account',
     'create_new_piggy_bank'            => 'Create new piggy bank',
     'create_new_bill'                  => 'Create new bill',
-
 
     // currencies:
     'create_currency'                  => 'Create a new currency',
@@ -476,26 +462,16 @@ return [
     'regular_tag'                      => 'Just a regular tag.',
     'balancing_act'                    => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
     'advance_payment'                  => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
-
-    'delete_tag'               => 'Delete tag ":tag"',
-    'new_tag'                  => 'Make new tag',
-    'edit_tag'                 => 'Edit tag ":tag"',
-    'no_year'                  => 'No year set',
-    'no_month'                 => 'No month set',
-    'tag_title_nothing'        => 'Default tags',
-    'tag_title_balancingAct'   => 'Balancing act tags',
-    'tag_title_advancePayment' => 'Advance payment tags',
-    'tags_introduction'        => 'Usually tags are singular words, designed to quickly band items together using things like' .
-                                  ' <span class="label label-info">expensive</span>, <span class="label label-info">bill</span>' .
-                                  ' or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties' .
-                                  ' such as a date, description and location. This allows you to join transactions together in a more' .
-                                  ' meaningful way. For example, you could make a tag called <span class="label label-success">' .
-                                  'Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular",' .
-                                  ' you would only use them for a single occasion, perhaps with multiple transactions.',
-    'tags_group'               => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money' .
-                                  ' for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where ' .
-                                  'expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you.' .
-                                  ' Using tags the old-fashioned way is of course always possible. ',
-    'tags_start'               => 'Create a tag to get started or enter tags when creating new transactions.',
+    'delete_tag'                       => 'Delete tag ":tag"',
+    'new_tag'                          => 'Make new tag',
+    'edit_tag'                         => 'Edit tag ":tag"',
+    'no_year'                          => 'No year set',
+    'no_month'                         => 'No month set',
+    'tag_title_nothing'                => 'Default tags',
+    'tag_title_balancingAct'           => 'Balancing act tags',
+    'tag_title_advancePayment'         => 'Advance payment tags',
+    'tags_introduction'                => 'Usually tags are singular words, designed to quickly band items together using things like <span class="label label-info">expensive</span>, <span class="label label-info">bill</span> or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties such as a date, description and location. This allows you to join transactions together in a more meaningful way. For example, you could make a tag called <span class="label label-success"> Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion, perhaps with multiple transactions.',
+    'tags_group'                       => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you. Using tags the old-fashioned way is of course always possible. ',
+    'tags_start'                       => 'Create a tag to get started or enter tags when creating new transactions.',
 
 ];

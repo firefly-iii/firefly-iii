@@ -27,8 +27,8 @@ return [
 
     // reports
     'reports'               => 'Reports',
-    'monthly_report'        => 'Montly report for :date',
-    'monthly_report_shared' => 'Montly report for :date (including shared accounts)',
+    'monthly_report'        => 'Monthly report for :date',
+    'monthly_report_shared' => 'Monthly report for :date (including shared accounts)',
     'yearly_report'         => 'Yearly report for :date',
     'yearly_report_shared'  => 'Yearly report for :date (including shared accounts)',
     'budget_report'         => 'Budget report for :date',
