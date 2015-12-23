@@ -19,7 +19,6 @@ their current cashflow. There are tons of ways to save and earn money.
 
 Firefly works on the principle that if you know where you're money is going, you can stop it from going there.
 
- 
 To get to know Firefly, and to see if it fits you, check out these resources:
 
 - The screenshots below on this very page.
@@ -89,6 +88,11 @@ This site always runs the latest version of Firefly III. If you want to use it, 
 You should always run Firefly III on a site with TLS enabled (https://). Please note that although some parts of the
 database are encrypted (transaction descriptions, names, etc.) some parts are _not_ (amounts, dates, etc). If you need
 more security, you must enable transparent database encryption or a comparable technology.
+
+## Translations
+
+Firefly III is currently available in Dutch and English. Support for other languages is being worked on. I can use
+your help. Checkout [Crowdin](https://crowdin.com/project/firefly-iii) for more information.
 
 ## Credits
 
