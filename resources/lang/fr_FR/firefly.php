@@ -2,12 +2,12 @@
 
 return [
     // general stuff:
-    'test'                             => 'You have selected English.',
-    'close'                            => 'Close',
-    'pleaseHold'                       => 'Please hold...',
+    'test'                             => 'Vous avez choisi Anglais',
+    'close'                            => 'Fermer',
+    'pleaseHold'                       => 'Veuillew patienter...',
     'actions'                          => 'Actions',
-    'edit'                             => 'Edit',
-    'delete'                           => 'Delete',
+    'edit'                             => 'Editer',
+    'delete'                           => 'Supprimer',
     'welcomeBack'                      => 'What\'s playing?',
     'everything'                       => 'Everything',
     'customRange'                      => 'Custom range',
@@ -98,8 +98,8 @@ return [
     'title_withdrawal'                 => 'Expenses',
     'title_revenue'                    => 'Revenue / income',
     'title_deposit'                    => 'Revenue / income',
-    'title_transfer'                   => 'Transfers',
-    'title_transfers'                  => 'Transfers',
+    'title_transfer'                   => 'Transferts',
+    'title_transfers'                  => 'Transferts',
 
     // csv import:
     'csv_import'                       => 'Import CSV file',
@@ -182,9 +182,9 @@ return [
     'csv_date_parse_error'             => 'Could not parse a valid date from ":value", using the format ":format". Are you sure your CSV is correct?',
 
     // create new stuff:
-    'create_new_withdrawal'            => 'Create new withdrawal',
+    'create_new_withdrawal'            => 'Creer un nouveau retrait',
     'create_new_deposit'               => 'Create new deposit',
-    'create_new_transfer'              => 'Create new transfer',
+    'create_new_transfer'              => 'Creer un nouveau transfert',
     'create_new_asset'                 => 'Create new asset account',
     'create_new_expense'               => 'Create new expense account',
     'create_new_revenue'               => 'Create new revenue account',
@@ -326,7 +326,7 @@ return [
     'transactions'                     => 'Transactions',
     'expenses'                         => 'Expenses',
     'income'                           => 'Revenue / income',
-    'transfers'                        => 'Transfers',
+    'transfers'                        => 'Transferts',
     'moneyManagement'                  => 'Money management',
     'piggyBanks'                       => 'Piggy banks',
     'bills'                            => 'Bills',
@@ -462,16 +462,16 @@ return [
     'regular_tag'                      => 'Just a regular tag.',
     'balancing_act'                    => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
     'advance_payment'                  => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
-    'delete_tag'                       => 'Delete tag ":tag"',
+    'delete_tag'                       => 'Supprimer le tag ":tag"',
     'new_tag'                          => 'Make new tag',
-    'edit_tag'                         => 'Edit tag ":tag"',
+    'edit_tag'                         => 'Editer le tag ":tag"',
     'no_year'                          => 'No year set',
     'no_month'                         => 'No month set',
     'tag_title_nothing'                => 'Default tags',
     'tag_title_balancingAct'           => 'Balancing act tags',
     'tag_title_advancePayment'         => 'Advance payment tags',
     'tags_introduction'                => 'Usually tags are singular words, designed to quickly band items together using things like <span class="label label-info">expensive</span>, <span class="label label-info">bill</span> or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties such as a date, description and location. This allows you to join transactions together in a more meaningful way. For example, you could make a tag called <span class="label label-success"> Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion, perhaps with multiple transactions.',
-    'tags_group'                       => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you. Using tags the old-fashioned way is of course always possible.',
+    'tags_group'                       => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you. Using tags the old-fashioned way is of course always possible. ',
     'tags_start'                       => 'Create a tag to get started or enter tags when creating new transactions.',
 
 ];

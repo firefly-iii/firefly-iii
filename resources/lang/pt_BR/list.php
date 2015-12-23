@@ -14,7 +14,7 @@ return [
     'matchingAmount' => 'Total',
     'lastMatch'      => 'Último equivalente',
     'expectedMatch'  => 'Equivalente esperado',
-    'automatch'      => 'Auto equivale?',
+    'automatch'      => 'Auto match?',
     'repeat_freq'    => 'Repetições',
     'description'    => 'Descrição',
     'amount'         => 'Total',
