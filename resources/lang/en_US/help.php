@@ -52,7 +52,6 @@ return [
     'csv-index'                => 'csv.index',
     'csv-column-roles'         => 'csv.column-roles',
     'csv-map'                  => 'csv.map',
-    'csv-download-config'      => 'csv.download-config',
     'csv-download-config-page' => 'csv.download-config-page',
     'csv-process'              => 'csv.process',
     'currency-index'           => 'currency.index',
