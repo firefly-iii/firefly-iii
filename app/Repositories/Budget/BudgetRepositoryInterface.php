@@ -128,19 +128,6 @@ interface BudgetRepositoryInterface
 
     /**
      *
-     * Same as ::spentInPeriod but corrects journals for their amount (tags).
-     *
-     * @param Budget  $budget
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param boolean $shared
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true);
-
-    /**
-     *
      * Same as ::spentInPeriod but corrects journals for a set of accounts
      *
      * @param Budget     $budget
@@ -150,7 +137,7 @@ interface BudgetRepositoryInterface
      *
      * @return string
      */
-    public function balanceInPeriodForList(Budget $budget, Carbon $start, Carbon $end, Collection $accounts);
+    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param array $data

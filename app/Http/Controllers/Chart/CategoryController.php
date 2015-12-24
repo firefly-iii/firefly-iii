@@ -316,7 +316,7 @@ class CategoryController extends Controller
         $entries       = new Collection;
         $categories    = $allCategories->filter(
             function (Category $category) use ($repository, $start, $end, $accounts) {
-                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+                $spent = $repository->balanceInPeriod($category, $start, $end, $accounts);
                 if ($spent < 0) {
                     return $category;
                 }
@@ -331,7 +331,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
+                $spent = $repository->balanceInPeriod($category, $start, $month, $accounts);
                 if ($spent < 0) {
                     $row[] = $spent * -1;
                 } else {
@@ -375,7 +375,7 @@ class CategoryController extends Controller
         $allEntries    = new Collection;
         $categories    = $allCategories->filter(
             function (Category $category) use ($repository, $start, $end, $accounts) {
-                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+                $spent = $repository->balanceInPeriod($category, $start, $end, $accounts);
                 if ($spent > 0) {
                     return $category;
                 }
@@ -390,7 +390,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
+                $spent = $repository->balanceInPeriod($category, $start, $month, $accounts);
                 if ($spent > 0) {
                     $row[] = $spent;
                 } else {
