@@ -243,20 +243,6 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     }
 
     /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @param bool     $shared
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)
-    {
-        return $this->commonBalanceInPeriod($category, $start, $end, $shared);
-    }
-
-    /**
      * @param Category   $category
      * @param Carbon     $start
      * @param Carbon     $end
@@ -264,9 +250,9 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      *
      * @return string
      */
-    public function balanceInPeriodForList(Category $category, Carbon $start, Carbon $end, Collection $accounts)
+    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, Collection $accounts)
     {
-        return $this->commonBalanceInPeriodForList($category, $start, $end, $accounts);
+        return $this->commonBalanceInPeriod($category, $start, $end, $accounts);
     }
 
     /**

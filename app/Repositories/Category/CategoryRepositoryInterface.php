@@ -147,21 +147,7 @@ interface CategoryRepositoryInterface
     public function getWithoutCategory(Carbon $start, Carbon $end);
 
     /**
-     * Corrected for tags.
-     *
-     * @param Category       $category
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     *
-     * @param bool           $shared
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
-
-
-    /**
-     * Corrected for tags.
+     * Corrected for tags and list of accounts.
      *
      * @param Category       $category
      * @param \Carbon\Carbon $start
@@ -170,7 +156,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function balanceInPeriodForList(Category $category, Carbon $start, Carbon $end, Collection $accounts);
+    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Category       $category

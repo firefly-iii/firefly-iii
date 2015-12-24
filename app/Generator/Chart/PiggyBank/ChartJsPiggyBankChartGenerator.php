@@ -25,8 +25,7 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
     {
 
         // language:
-        $language = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
-        $format   = Config::get('firefly.monthAndDay.' . $language);
+        $format   = trans('config.month_and_day');
 
         $data = [
             'count'    => 1,

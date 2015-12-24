@@ -36,8 +36,8 @@ abstract class Controller extends BaseController
         if (Auth::check()) {
             $pref                    = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
             $lang                    = $pref->data;
-            $this->monthFormat       = Config::get('firefly.month.' . $lang);
-            $this->monthAndDayFormat = Config::get('firefly.monthAndDay.' . $lang);
+            $this->monthFormat       = trans('config.month');
+            $this->monthAndDayFormat = trans('config.month_and_day');
 
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);

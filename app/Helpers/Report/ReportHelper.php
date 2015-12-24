@@ -63,7 +63,7 @@ class ReportHelper implements ReportHelperInterface
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $set        = $repository->getCategories();
         foreach ($set as $category) {
-            $spent           = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+            $spent           = $repository->balanceInPeriod($category, $start, $end, $accounts);
             $category->spent = $spent;
             $object->addCategory($category);
         }
@@ -222,7 +222,7 @@ class ReportHelper implements ReportHelperInterface
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
-                $spent      = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+                $spent      = $repository->balanceInPeriod($budget, $start, $end, $accounts);
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setOverspent($spent);
@@ -237,7 +237,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+                $expenses = $repository->balanceInPeriod($budget, $start, $end, $accounts);
 
                 // 200 en -100 is 100, vergeleken met 0 === 1
                 // 200 en -200 is 0, vergeleken met 0 === 0

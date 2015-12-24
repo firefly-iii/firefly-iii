@@ -37,10 +37,12 @@ class PreferencesController extends Controller
         $viewRange         = $viewRangePref->data;
         $frontPageAccounts = Preferences::get('frontPageAccounts', []);
         $budgetMax         = Preferences::get('budgetMaximum', 1000);
-        $language          = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'))->data;
+        $language          = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
         $budgetMaximum     = $budgetMax->data;
 
-        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange'));
+        $showIncomplete = env('SHOW_INCOMPLETE_TRANSLATIONS', 'false') == 'true';
+
+        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'showIncomplete'));
     }
 
     /**
@@ -70,7 +72,7 @@ class PreferencesController extends Controller
 
         // language:
         $lang = Input::get('language');
-        if (in_array($lang, array_keys(Config::get('firefly.lang')))) {
+        if (in_array($lang, array_keys(Config::get('firefly.languages')))) {
             Preferences::set('language', $lang);
         }
 

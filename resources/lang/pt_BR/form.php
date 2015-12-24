@@ -68,6 +68,7 @@ return [
     'mime'                        => 'Mime type',
     'size'                        => 'Tamanho',
 
+
     'delete_account'    => 'Apagar conta ":name"',
     'delete_bill'       => 'Apagar fatura ":name"',
     'delete_budget'     => 'Delete budget ":name"',
@@ -89,7 +90,7 @@ return [
     'permDeleteWarning'          => 'Deleting stuff from Firely is permanent and cannot be undone.',
     'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
     'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
-    'bill_keep_transactions'     => 'A única transação vinculada para esta fatura não será apagada.|Todas :count transações vinculadas a esta fatura não serão apagadas.',
+    'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
     'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',
     'category_keep_transactions' => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
     'tag_keep_transactions'      => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',

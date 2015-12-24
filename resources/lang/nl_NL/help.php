@@ -19,7 +19,7 @@ return [
     'main-content-end-title' => 'Einde!',
     'main-content-end-text'  => 'Elke pagina heeft een vraagtekentje rechtsboven. Gebruik deze voor meer hulp. Veel plezier!',
 
-    'csv-index'               => 'csv-index',
+
     'register'                => 'register',
     'index'                   => 'index',
     'home'                    => 'home',
@@ -48,6 +48,7 @@ return [
     'categories-delete'       => 'categories.delete',
     'categories-show'         => 'categories.show',
     'categories-noCategory'   => 'categories.noCategory',
+    'csv-index'               => 'csv-index',
     'currency-index'          => 'currency.index',
     'currency-create'         => 'currency.create',
     'currency-edit'           => 'currency.edit',

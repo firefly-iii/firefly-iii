@@ -14,7 +14,7 @@ return [
     'matchingAmount' => 'Amount',
     'lastMatch'      => 'Last match',
     'expectedMatch'  => 'Expected match',
-    'automatch'      => 'Automatch?',
+    'automatch'      => 'Auto match?',
     'repeat_freq'    => 'Repeats',
     'description'    => 'Description',
     'amount'         => 'Amount',
