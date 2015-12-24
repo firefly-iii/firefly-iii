@@ -87,7 +87,8 @@ This site always runs the latest version of Firefly III. If you want to use it, 
 
 You should always run Firefly III on a site with TLS enabled (https://). Please note that although some parts of the
 database are encrypted (transaction descriptions, names, etc.) some parts are _not_ (amounts, dates, etc). If you need
-more security, you must enable transparent database encryption or a comparable technology.
+more security, you must enable transparent database encryption or a comparable technology. Please remember that this
+is open source software under active development, and it is in no way guaranteed to be safe or secure.
 
 ## Translations
 
