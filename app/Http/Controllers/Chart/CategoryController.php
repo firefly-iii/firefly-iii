@@ -303,7 +303,9 @@ class CategoryController extends Controller
 
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
+        $cache->addProperty($report_type);
         $cache->addProperty($end);
+        $cache->addProperty($accounts);
         $cache->addProperty('category');
         $cache->addProperty('spent-in-year');
         if ($cache->has()) {
@@ -361,6 +363,8 @@ class CategoryController extends Controller
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($report_type);
+        $cache->addProperty($accounts);
         $cache->addProperty('category');
         $cache->addProperty('earned-in-year');
         if ($cache->has()) {
