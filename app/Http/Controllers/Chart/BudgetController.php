@@ -290,7 +290,6 @@ class BudgetController extends Controller
         }
 
         // filter empty budgets:
-
         foreach ($allBudgets as $budget) {
             $spent = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
             if ($spent != 0) {
@@ -315,7 +314,7 @@ class BudgetController extends Controller
             $start->endOfMonth()->addDay();
         }
 
-        $data = $this->generator->year($allBudgets, $entries);
+        $data = $this->generator->year($budgets, $entries);
         $cache->store($data);
 
         return Response::json($data);

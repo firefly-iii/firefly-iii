@@ -129,10 +129,8 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         foreach ($entries as $entry) {
             $array = [
                 'label' => $entry[0]->formatLocalized($format),
-                'data'  => [],
+                'data'  => array_shift($entry),
             ];
-            array_shift($entry);
-            $array['data']      = $entry;
             $data['datasets'][] = $array;
 
         }
