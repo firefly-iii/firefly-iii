@@ -290,12 +290,12 @@ class BudgetController extends Controller
         }
 
         // filter empty budgets:
-        foreach ($allBudgets as $budget) {
-            $spent = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
-            if ($spent != 0) {
-                $budgets->push($budget);
-            }
-        }
+//        foreach ($allBudgets as $budget) {
+//            $spent = $repository->balanceInPeriodForList($budget, $start, $end, $accounts);
+//            if ($spent != 0) {
+//                $budgets->push($budget);
+//            }
+//        }
 
         $entries = new Collection;
 
@@ -306,7 +306,7 @@ class BudgetController extends Controller
             $row = [clone $start];
 
             // each budget, fill the row:
-            foreach ($budgets as $budget) {
+            foreach ($allBudgets as $budget) {
                 $spent = $repository->balanceInPeriodForList($budget, $start, $month, $accounts);
                 $row[] = $spent * -1;
             }
@@ -314,7 +314,7 @@ class BudgetController extends Controller
             $start->endOfMonth()->addDay();
         }
 
-        $data = $this->generator->year($budgets, $entries);
+        $data = $this->generator->year($allBudgets, $entries);
         $cache->store($data);
 
         return Response::json($data);
