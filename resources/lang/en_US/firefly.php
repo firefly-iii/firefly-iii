@@ -2,6 +2,7 @@
 
 return [
     // general stuff:
+    'language_incomplete'              => 'This language is not yet fully translated',
     'test'                             => 'You have selected English.',
     'close'                            => 'Close',
     'pleaseHold'                       => 'Please hold...',
