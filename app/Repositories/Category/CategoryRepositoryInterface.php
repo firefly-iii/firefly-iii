@@ -35,6 +35,19 @@ interface CategoryRepositoryInterface
     public function destroy(Category $category);
 
     /**
+     * Returns a collection of Categories appended with the amount of money that has been earned
+     * in these categories, based on the $accounts involved, in period X.
+     * The amount earned in category X in period X is saved in field "earned".
+     *
+     * @param $accounts
+     * @param $start
+     * @param $end
+     *
+     * @return Collection
+     */
+    public function earnedForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
      * @return Collection
      */
     public function getCategories();

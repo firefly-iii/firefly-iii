@@ -5,11 +5,13 @@ namespace FireflyIII\Repositories\Category;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -497,6 +499,54 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
             ->sum('amount');
 
         return $sum;
+
+    }
+
+    /**
+     * Returns a collection of Categories appended with the amount of money that has been earned
+     * in these categories, based on the $accounts involved, in period X.
+     * The amount earned in category X in period X is saved in field "earned".
+     *
+     * @param $accounts
+     * @param $start
+     * @param $end
+     *
+     * @return Collection
+     */
+    public function earnedForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+
+
+        $collection = Auth::user()->categories()
+                          ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                          ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                          ->leftJoin(
+                              'transactions AS t_src', function (JoinClause $join) {
+                              $join->on('t_src.transaction_journal_id', '=', 'transaction_journals.id')->where('t_src.amount', '<', 0);
+                          }
+                          )
+                          ->leftJoin(
+                              'transactions AS t_dest', function (JoinClause $join) {
+                              $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
+                          }
+                          )
+                          ->whereIn('t_dest.account_id', $accountIds)// to these accounts (earned)
+                          ->whereNotIn('t_src.account_id', $accountIds)//-- but not from these accounts
+                          ->whereIn(
+                'transaction_types.type', [TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
+            )// earned from these things.
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            ->groupBy('categories.id')
+                          ->get(['categories.*', DB::Raw('SUM(`t_dest`.`amount`) AS `earned`')]);
+
+        return $collection;
+
 
     }
 }
