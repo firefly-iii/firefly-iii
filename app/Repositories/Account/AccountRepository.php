@@ -158,6 +158,7 @@ class AccountRepository implements AccountRepositoryInterface
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty('frontpage-transactions');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
