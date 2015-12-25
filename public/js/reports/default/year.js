@@ -19,7 +19,7 @@ function drawChart() {
     columnChart('chart/report/in-out-sum/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-sum-chart');
     stackedColumnChart('chart/budget/year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budgets');
     stackedColumnChart('chart/category/spent-in-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-spent-in-year');
-    stackedColumnChart('chart/category/earned-in-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-earned-in-year');
+    stackedColumnChart('chart/category/earned-in-period/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-earned-in-period');
 
 }
 
