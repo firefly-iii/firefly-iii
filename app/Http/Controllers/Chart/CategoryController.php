@@ -370,7 +370,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('earned-in-period');
         if ($cache->has()) {
-            //return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $categories = new Collection;
         $sets       = new Collection;
@@ -474,7 +474,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('spent-in-period');
         if ($cache->has()) {
-            //return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $categories = new Collection;
         $sets       = new Collection;
