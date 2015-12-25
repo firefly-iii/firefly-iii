@@ -49,12 +49,7 @@
                     <h3 class="box-title">{{ 'categories_spent_in_year'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="categories-spent-in-year"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="categories-spent-in-year" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="categories-spent-in-period" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
         </div>
@@ -67,12 +62,7 @@
                     <h3 class="box-title">{{ 'categories_earned_in_year'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="categories-earned-in-year"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="categories-earned-in-period" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="categories-earned-in-period" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
         </div>

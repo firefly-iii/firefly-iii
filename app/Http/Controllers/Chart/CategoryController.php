@@ -348,7 +348,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Returns a chart of what has been in this period in each category
+     * Returns a chart of what has been earned in this period in each category
      * grouped by month.
      *
      * @param CategoryRepositoryInterface $repository
@@ -397,6 +397,11 @@ class CategoryController extends Controller
         // $categories contains all the categories the user has earned money
         // in in this period.
         $categories = $categories->unique('id');
+        $categories = $categories->sortBy(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
 
         // start looping the time again, this time processing the
         // data for each month.
@@ -440,6 +445,93 @@ class CategoryController extends Controller
         }
 
         $data = $this->generator->earnedInPeriod($categories, $entries);
+        $cache->store($data);
+
+        return $data;
+
+    }
+
+    /**
+     * Returns a chart of what has been spent in this period in each category
+     * grouped by month.
+     *
+     * @param CategoryRepositoryInterface $repository
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function spentInPeriod(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $original = clone $start;
+        $cache    = new CacheProperties; // chart properties for cache:
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($report_type);
+        $cache->addProperty($accounts);
+        $cache->addProperty('category');
+        $cache->addProperty('spent-in-period');
+        if ($cache->has()) {
+            //return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+        $categories = new Collection;
+        $sets       = new Collection;
+        $entries    = new Collection;
+
+        // run a very special query each month:
+        $start = clone $original;
+        while ($start < $end) {
+            $currentEnd   = clone $start;
+            $currentStart = clone $start;
+            $currentStart->startOfMonth();
+            $currentEnd->endOfMonth();
+            $set        = $repository->spentForAccounts($accounts, $currentStart, $currentEnd);
+            $categories = $categories->merge($set);
+            $sets->push([$currentStart, $set]);
+            $start->addMonth();
+        }
+        $categories = $categories->unique('id');
+        $categories = $categories->sortBy(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
+
+        $start = clone $original;
+        while ($start < $end) {
+            $currentEnd   = clone $start;
+            $currentStart = clone $start;
+            $currentStart->startOfMonth();
+            $currentEnd->endOfMonth();
+            $currentSet = $sets->first(
+                function ($key, $value) use ($currentStart) {
+                    // set for this date.
+                    return ($value[0] == $currentStart);
+                }
+            );
+            $row        = [clone $currentStart];
+
+            /** @var Category $category */
+            foreach ($categories as $category) {
+                /** @var Category $entry */
+                $entry = $currentSet[1]->first(
+                    function ($key, $value) use ($category) {
+                        return $value->id == $category->id;
+                    }
+                );
+                if (!is_null($entry)) {
+                    $row[] = $entry->spent;
+                } else {
+                    $row[] = 0;
+                }
+            }
+            $entries->push($row);
+            $start->addMonth();
+        }
+
+        $data = $this->generator->spentInPeriod($categories, $entries);
         $cache->store($data);
 
         return $data;

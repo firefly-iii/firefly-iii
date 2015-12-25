@@ -48,6 +48,19 @@ interface CategoryRepositoryInterface
     public function earnedForAccounts(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
+     * Returns a collection of Categories appended with the amount of money that has been spent
+     * in these categories, based on the $accounts involved, in period X.
+     * The amount earned in category X in period X is saved in field "spent".
+     *
+     * @param $accounts
+     * @param $start
+     * @param $end
+     *
+     * @return Collection
+     */
+    public function spentForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
      * @return Collection
      */
     public function getCategories();
