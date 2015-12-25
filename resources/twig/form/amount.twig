@@ -4,12 +4,18 @@
     <div class="col-sm-8">
         <div class="input-group">
             <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle amountCurrencyDropdown" data-toggle="dropdown" aria-expanded="false">
+                <button type="button"
+                        class="btn btn-default dropdown-toggle currency-dropdown" data-toggle="dropdown" aria-expanded="false">
                     <span>{{ defaultCurrency.symbol|raw }}</span> <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu currency-dropdown-menu" role="menu">
                     {% for currency in currencies %}
-                        <li><a href="#" class="currencySelect" data-id="{{ currency.id }}" data-field="amount" data-currency="{{ currency.code }}"
+                        <li>
+                            <a href="#"
+                               class="currency-option"
+                               data-id="{{ currency.id }}"
+                               data-name="{{ name }}"
+                               data-currency="{{ currency.code }}"
                                data-symbol="{{ currency.symbol|raw }}">{{ currency.name }}</a></li>
                     {% endfor %}
                 </ul>
@@ -21,5 +27,6 @@
 
         {% include 'form/feedback.twig' %}
     </div>
-    <input type="hidden" name="amount_currency_id" value="{{ defaultCurrency.id }}"/>
+
+    <input type="hidden" name="amount_currency_id_{{ name }}" value="{{ defaultCurrency.id }}"/>
 </div>
