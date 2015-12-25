@@ -41,7 +41,16 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function countAccounts(array $types)
     {
-        return Auth::user()->accounts()->accountTypeIn($types)->count();
+        $cache = new CacheProperties;
+        $cache->addProperty('user-count-accounts');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $count = Auth::user()->accounts()->accountTypeIn($types)->count();
+        $cache->store($count);
+
+        return $count;
     }
 
     /**
@@ -123,8 +132,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getFrontpageAccounts(Preference $preference)
     {
         $cache = new CacheProperties();
-        $cache->addProperty($preference->data);
-        $cache->addProperty('frontPageaccounts');
+        $cache->addProperty('user-frontpage-accounts');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
@@ -229,7 +237,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $cache = new CacheProperties;
         $cache->addProperty($ids);
-        $cache->addProperty('piggyAccounts');
+        $cache->addProperty('user-piggy-bank-accounts');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
@@ -648,6 +656,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @deprecated
+     *
      * @param $accountId
      *
      * @return Account
