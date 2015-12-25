@@ -414,8 +414,8 @@ Route::group(
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
 
     // these three charts are for reports:
+    Route::get('/chart/category/earned-in-period/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInPeriod']);
     Route::get('/chart/category/spent-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInYear']);
-    Route::get('/chart/category/earned-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInYear']);
     Route::get(
         '/chart/category/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
     );

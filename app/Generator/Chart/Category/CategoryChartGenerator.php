@@ -28,6 +28,14 @@ interface CategoryChartGenerator
     public function earnedInYear(Collection $categories, Collection $entries);
 
     /**
+     * @param Collection $categories
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function earnedInPeriod(Collection $categories, Collection $entries);
+
+    /**
      * @param Collection $entries
      *
      * @return array
