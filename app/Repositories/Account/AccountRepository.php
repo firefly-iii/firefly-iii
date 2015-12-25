@@ -646,6 +646,7 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @deprecated
      * @param $accountId
      *
      * @return Account

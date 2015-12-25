@@ -96,6 +96,7 @@ interface BudgetRepositoryInterface
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50);
 
     /**
+     * @deprecated
      * @param Budget $budget
      *
      * @return Carbon
@@ -103,6 +104,7 @@ interface BudgetRepositoryInterface
     public function getLastBudgetLimitDate(Budget $budget);
 
     /**
+     * @deprecated
      * @param Budget $budget
      * @param Carbon $date
      *

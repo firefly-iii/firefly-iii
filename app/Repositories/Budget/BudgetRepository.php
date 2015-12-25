@@ -229,6 +229,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * @deprecated
+     *
      * @param Budget $budget
      *
      * @return Carbon
@@ -244,6 +246,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * @deprecated
      * @param Budget $budget
      * @param Carbon $date
      *

@@ -304,6 +304,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     }
 
     /**
+     * @deprecated
      * This method returns the sum of the journals in the category, optionally
      * limited by a start or end date.
      *

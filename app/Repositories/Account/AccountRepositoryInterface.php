@@ -26,6 +26,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param $accountId
+     * @deprecated
      *
      * @return Account
      */

@@ -146,6 +146,7 @@ interface CategoryRepositoryInterface
     public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end);
 
     /**
+     * @deprecated
      * This method returns the sum of the journals in the category, optionally
      * limited by a start or end date.
      *
