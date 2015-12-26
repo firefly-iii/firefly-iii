@@ -9,6 +9,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
@@ -84,7 +85,7 @@ class BillRepository implements BillRepositoryInterface
     public function getActiveBills()
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get()->sortBy('name');
+        $set = Auth::user()->bills()->where('active', 1)->get()->sortBy('name');
 
         return $set;
     }
@@ -522,6 +523,47 @@ class BillRepository implements BillRepositoryInterface
         $set->put('paid', $paid);
         $set->put('unpaid', $unpaid);
 
+        return $set;
+    }
+
+    /**
+     * This method returns all active bills which have been paid for in the given range,
+     * with the field "paid" indicating how much the bill was for.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function billsPaidInRange(Carbon $start, Carbon $end)
+    {
+        /*
+         * select bills.*, SUM(transactions.amount) as `paid` from bills
+
+left join transaction_journals ON transaction_journals.bill_id = bills.id
+left join transactions ON transactions.transaction_journal_id = transaction_journals.id
+where
+
+
+transaction_journals.date >= "2015-12-01"
+and transaction_journals.date <= "2015-12-31"
+and bills.active =1
+and transactions.amount > 0
+group by bills.id
+         */
+        $set = Auth::user()->bills()
+                   ->leftJoin('transaction_journals', 'transaction_journals.bill_id', '=', 'bills.id')
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+                   }
+                   )
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->where('bills.active', 1)
+                   ->groupBy('bills.id')->get(
+                ['bills.*', DB::Raw('SUM(`transactions`.`amount`) as `paid`')]
+            );
         return $set;
     }
 }

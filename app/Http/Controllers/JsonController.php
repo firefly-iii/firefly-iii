@@ -59,6 +59,7 @@ class JsonController extends Controller
         $steps[7]['orphan']    = true; // final in the center again.
         $steps[7]['backdrop']  = true;
         $template              = view('json.tour')->render();
+
         return Response::json(['steps' => $steps, 'template' => $template]);
     }
 
@@ -73,7 +74,6 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = 0;
         bcscale(2);
 
         // works for json too!
@@ -84,16 +84,10 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $bills = $repository->getActiveBills(); // these two functions are the same as the chart
+        // get amount from bills
+        $amount = $repository->billsPaidInRange($start, $end)->sum('paid');
 
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $amount = bcadd($amount, $repository->billPaymentsInRange($bill, $start, $end));
-        }
-        unset($bill, $bills);
-
-        $amount = $amount * -1; // make the amount positive again.
-
+        // add credit card bill.
         $creditCards = $accountRepository->getCreditCards(); // Find credit card accounts and possibly unpaid credit card bills.
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {

@@ -50,6 +50,17 @@ interface BillRepositoryInterface
     public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end);
 
     /**
+     * This method returns all active bills which have been paid for in the given range,
+     * with the field "paid" indicating how much the bill was for.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function billsPaidInRange(Carbon $start, Carbon $end);
+
+    /**
      * Create a fake bill to help the chart controller.
      *
      * @param string $description
