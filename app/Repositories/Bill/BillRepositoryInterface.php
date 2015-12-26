@@ -39,6 +39,7 @@ interface BillRepositoryInterface
     public function getBillsForChart(Carbon $start, Carbon $end);
 
     /**
+     * @deprecated
      * Returns the sum of all payments connected to this bill between the dates.
      *
      * @param Bill   $bill

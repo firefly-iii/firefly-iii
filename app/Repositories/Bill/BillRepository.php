@@ -23,6 +23,7 @@ use Steam;
 class BillRepository implements BillRepositoryInterface
 {
     /**
+     * @deprecated
      * Returns the sum of all payments connected to this bill between the dates.
      *
      * @param Bill   $bill
@@ -537,20 +538,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function billsPaidInRange(Carbon $start, Carbon $end)
     {
-        /*
-         * select bills.*, SUM(transactions.amount) as `paid` from bills
-
-left join transaction_journals ON transaction_journals.bill_id = bills.id
-left join transactions ON transactions.transaction_journal_id = transaction_journals.id
-where
-
-
-transaction_journals.date >= "2015-12-01"
-and transaction_journals.date <= "2015-12-31"
-and bills.active =1
-and transactions.amount > 0
-group by bills.id
-         */
         $set = Auth::user()->bills()
                    ->leftJoin('transaction_journals', 'transaction_journals.bill_id', '=', 'bills.id')
                    ->leftJoin(
@@ -564,6 +551,7 @@ group by bills.id
                    ->groupBy('bills.id')->get(
                 ['bills.*', DB::Raw('SUM(`transactions`.`amount`) as `paid`')]
             );
+
         return $set;
     }
 }
