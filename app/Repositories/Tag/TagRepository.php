@@ -9,6 +9,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -111,6 +112,13 @@ class TagRepository implements TagRepositoryInterface
      */
     public function get()
     {
+        $cache = new CacheProperties;
+        $cache->addProperty('tags-list');
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
         /** @var Collection $tags */
         $tags = Auth::user()->tags()->get();
         $tags = $tags->sortBy(
@@ -118,6 +126,8 @@ class TagRepository implements TagRepositoryInterface
                 return strtolower($tag->tag);
             }
         );
+
+        $cache->store($tags);
 
         return $tags;
     }

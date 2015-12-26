@@ -59,7 +59,6 @@ class JsonController extends Controller
         $steps[7]['orphan']    = true; // final in the center again.
         $steps[7]['backdrop']  = true;
         $template              = view('json.tour')->render();
-
         return Response::json(['steps' => $steps, 'template' => $template]);
     }
 
@@ -192,7 +191,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-        $amount   = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('amount');
+        $amount   = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('to_amount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -221,8 +220,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $amount = $reportQuery->expenseInPeriod($start, $end, $accounts)->sum('amount');
-        $amount = $amount * -1;
+        $amount = $reportQuery->expenseInPeriod($start, $end, $accounts)->sum('to_amount');
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
