@@ -244,7 +244,6 @@ class JsonController extends Controller
         foreach ($list as $entry) {
             $return[] = $entry->name;
         }
-        sort($return);
 
         return Response::json($return);
     }

@@ -78,6 +78,14 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccounts(array $types)
     {
+        $cache = new CacheProperties();
+        $cache->addProperty('get-accounts');
+        $cache->addProperty($types);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
         /** @var Collection $result */
         $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
@@ -90,6 +98,8 @@ class AccountRepository implements AccountRepositoryInterface
                 return strtolower($account->name);
             }
         );
+
+        $cache->store($result);
 
         return $result;
     }
@@ -120,8 +130,18 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFirstTransaction(TransactionJournal $journal, Account $account)
     {
+        $cache = new CacheProperties();
+        $cache->addProperty('first-transaction');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($account->id);
 
-        return $journal->transactions()->where('account_id', $account->id)->first();
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        $cache->store($transaction);
+
+        return $transaction;
     }
 
     /**
@@ -383,12 +403,23 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function openingBalanceTransaction(Account $account)
     {
-        return TransactionJournal
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('opening-balance-journal');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+
+        $journal = TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
             ->accountIs($account)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
+        $cache->store($journal);
+
+        return $journal;
     }
 
     /**

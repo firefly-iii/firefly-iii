@@ -50,6 +50,13 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function getCategories()
     {
+        $cache = new CacheProperties;
+        $cache->addProperty('category-list');
+
+        if($cache->has()) {
+            return $cache->get();
+        }
+
         /** @var Collection $set */
         $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
         $set = $set->sortBy(
@@ -57,6 +64,8 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
                 return strtolower($category->name);
             }
         );
+
+        $cache->store($set);
 
         return $set;
     }
