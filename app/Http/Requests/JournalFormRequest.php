@@ -40,7 +40,7 @@ class JournalFormRequest extends Request
             'revenue_account'           => $this->get('revenue_account'),
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => Auth::user()->id,
-            'amount_currency_id_amount' => intval($this->get('amount_currency_id')),
+            'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
             'date'                      => new Carbon($this->get('date')),
             'budget_id'                 => intval($this->get('budget_id')),
             'category'                  => $this->get('category'),
