@@ -174,7 +174,7 @@ class JournalRepository implements JournalRepositoryInterface
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['amount_currency_id'],
+                'transaction_currency_id' => $data['amount_currency_id_amount'],
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
