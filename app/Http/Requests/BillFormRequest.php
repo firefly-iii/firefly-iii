@@ -29,17 +29,18 @@ class BillFormRequest extends Request
     public function getBillData()
     {
         return [
-            'name'               => $this->get('name'),
-            'match'              => $this->get('match'),
-            'amount_min'         => round($this->get('amount_min'), 2),
-            'amount_currency_id' => round($this->get('amount_currency_id'), 2),
-            'amount_max'         => round($this->get('amount_max'), 2),
-            'date'               => new Carbon($this->get('date')),
-            'user'               => Auth::user()->id,
-            'repeat_freq'        => $this->get('repeat_freq'),
-            'skip'               => intval($this->get('skip')),
-            'automatch'          => intval($this->get('automatch')) === 1,
-            'active'             => intval($this->get('active')) === 1,
+            'name'                          => $this->get('name'),
+            'match'                         => $this->get('match'),
+            'amount_min'                    => round($this->get('amount_min'), 2),
+            'amount_currency_id_amount_min' => intval($this->get('amount_currency_id_amount_min')),
+            'amount_currency_id_amount_max' => intval($this->get('amount_currency_id_amount_max')),
+            'amount_max'                    => round($this->get('amount_max'), 2),
+            'date'                          => new Carbon($this->get('date')),
+            'user'                          => Auth::user()->id,
+            'repeat_freq'                   => $this->get('repeat_freq'),
+            'skip'                          => intval($this->get('skip')),
+            'automatch'                     => intval($this->get('automatch')) === 1,
+            'active'                        => intval($this->get('active')) === 1,
         ];
     }
 
@@ -56,16 +57,17 @@ class BillFormRequest extends Request
         }
 
         $rules = [
-            'name'               => $nameRule,
-            'match'              => $matchRule,
-            'amount_min'         => 'required|numeric|min:0.01',
-            'amount_max'         => 'required|numeric|min:0.01',
-            'amount_currency_id' => 'required|exists:transaction_currencies,id',
-            'date'               => 'required|date',
-            'repeat_freq'        => 'required|in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'               => 'required|between:0,31',
-            'automatch'          => 'in:1',
-            'active'             => 'in:1',
+            'name'                          => $nameRule,
+            'match'                         => $matchRule,
+            'amount_min'                    => 'required|numeric|min:0.01',
+            'amount_max'                    => 'required|numeric|min:0.01',
+            'amount_currency_id_amount_min' => 'required|exists:transaction_currencies,id',
+            'amount_currency_id_amount_max' => 'required|exists:transaction_currencies,id',
+            'date'                          => 'required|date',
+            'repeat_freq'                   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
+            'skip'                          => 'required|between:0,31',
+            'automatch'                     => 'in:1',
+            'active'                        => 'in:1',
         ];
 
         return $rules;
