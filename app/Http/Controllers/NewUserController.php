@@ -49,7 +49,6 @@ class NewUserController extends Controller
      */
     public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository)
     {
-
         // create normal asset account:
         $assetAccount = [
             'name'                   => $request->get('bank_name'),
@@ -61,7 +60,7 @@ class NewUserController extends Controller
             'accountRole'            => 'defaultAsset',
             'openingBalance'         => round($request->input('bank_balance'), 2),
             'openingBalanceDate'     => new Carbon,
-            'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+            'openingBalanceCurrency' => intval($request->input('amount_currency_id_bank_balance')),
         ];
 
         $repository->store($assetAccount);
@@ -78,7 +77,7 @@ class NewUserController extends Controller
                 'accountRole'            => 'savingAsset',
                 'openingBalance'         => round($request->input('savings_balance'), 2),
                 'openingBalanceDate'     => new Carbon,
-                'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+                'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
             ];
             $repository->store($savingsAccount);
         }
@@ -96,7 +95,7 @@ class NewUserController extends Controller
                 'accountRole'            => 'ccAsset',
                 'openingBalance'         => null,
                 'openingBalanceDate'     => null,
-                'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+                'openingBalanceCurrency' => intval($request->input('amount_currency_id_credit_card_limit')),
             ];
             $creditCard    = $repository->store($creditAccount);
 

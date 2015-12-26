@@ -27,11 +27,13 @@ class NewUserFormRequest extends Request
     public function rules()
     {
         return [
-            'bank_name'           => 'required|between:1,200',
-            'bank_balance'        => 'required|numeric',
-            'savings_balance'     => 'numeric',
-            'credit_card_limit'   => 'numeric',
-            'balance_currency_id' => 'exists:transaction_currencies,id',
+            'bank_name'                            => 'required|between:1,200',
+            'bank_balance'                         => 'required|numeric',
+            'savings_balance'                      => 'numeric',
+            'credit_card_limit'                    => 'numeric',
+            'amount_currency_id_bank_balance'      => 'exists:transaction_currencies,id',
+            'amount_currency_id_savings_balance'   => 'exists:transaction_currencies,id',
+            'amount_currency_id_credit_card_limit' => 'exists:transaction_currencies,id',
         ];
     }
 }
