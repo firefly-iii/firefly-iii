@@ -35,51 +35,6 @@ class AccountController extends Controller
 
 
     /**
-     * Shows the balances for all the user's accounts.
-     *
-     * @param AccountRepositoryInterface $repository
-     *
-     * @param                            $year
-     * @param                            $month
-     * @param bool                       $shared
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function all(AccountRepositoryInterface $repository, $year, $month, $shared = false)
-    {
-        $start = new Carbon($year . '-' . $month . '-01');
-        $end   = clone $start;
-        $end->endOfMonth();
-
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('all');
-        $cache->addProperty('accounts');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        /** @var Collection $accounts */
-        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
-        if ($shared === false) {
-            /** @var Account $account */
-            foreach ($accounts as $index => $account) {
-                if ($account->getMeta('accountRole') == 'sharedAsset') {
-                    $accounts->forget($index);
-                }
-            }
-        }
-
-        // make chart:
-        $data = $this->generator->all($accounts, $start, $end);
-        $cache->store($data);
-
-        return Response::json($data);
-    }
-
-    /**
      * Shows the balances for a given set of dates and accounts.
      *
      * TODO fix parameters.

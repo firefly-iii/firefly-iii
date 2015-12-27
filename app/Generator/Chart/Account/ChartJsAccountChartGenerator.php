@@ -17,21 +17,6 @@ use Steam;
 class ChartJsAccountChartGenerator implements AccountChartGenerator
 {
 
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function all(Collection $accounts, Carbon $start, Carbon $end)
-    {
-        return $this->frontpage($accounts, $start, $end);
-    }
-
     /**
      * @param Collection $accounts
      * @param Carbon     $start

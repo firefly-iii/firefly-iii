@@ -21,15 +21,6 @@ interface AccountChartGenerator
      *
      * @return array
      */
-    public function all(Collection $accounts, Carbon $start, Carbon $end);
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
