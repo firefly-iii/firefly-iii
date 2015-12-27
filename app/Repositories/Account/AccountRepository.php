@@ -106,18 +106,32 @@ class AccountRepository implements AccountRepositoryInterface
 
 
     /**
+     * This method returns the users credit cards, along with some basic information about the
+     * balance they have on their CC. To be used in the JSON boxes on the front page that say
+     * how many bills there are still left to pay. The balance will be saved in field "balance".
+     *
+     * To get the balance, the field "date" is necessary.
+     *
+     * @param Carbon $date
+     *
      * @return Collection
      */
-    public function getCreditCards()
+    public function getCreditCards(Carbon $date)
     {
         return Auth::user()->accounts()
                    ->hasMetaValue('accountRole', 'ccAsset')
                    ->hasMetaValue('ccType', 'monthlyFull')
+                   ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                   ->whereNull('transactions.deleted_at')
+                   ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                   ->groupBy('accounts.id')
                    ->get(
                        [
                            'accounts.*',
                            'ccType.data as ccType',
-                           'accountRole.data as accountRole'
+                           'accountRole.data as accountRole',
+                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
                        ]
                    );
     }
@@ -350,13 +364,14 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
     {
-        $set      = TransactionJournal::whereIn(
+        $set = TransactionJournal::whereIn(
             'id', function (Builder $q) use ($account, $start, $end) {
             $q->select('transaction_journals.id')
               ->from('transactions')
               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
               ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
               ->where('transactions.account_id', $account->id)
+              ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
@@ -364,17 +379,8 @@ class AccountRepository implements AccountRepositoryInterface
 
         }
         )->get();
-        $filtered = $set->filter(
-            function (TransactionJournal $journal) use ($account) {
-                if ($journal->destination_account->id == $account->id) {
-                    return $journal;
-                }
 
-                return null;
-            }
-        );
-
-        return $filtered;
+        return $set;
     }
 
     /**
