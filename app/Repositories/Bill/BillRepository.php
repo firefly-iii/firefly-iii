@@ -498,22 +498,21 @@ class BillRepository implements BillRepositoryInterface
     {
 
         $accounts    = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $creditCards = $accounts->getCreditCards();
+        $creditCards = $accounts->getCreditCards($end);
         $paid        = $set->get('paid');
         $unpaid      = $set->get('unpaid');
 
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, $end, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
-            if ($balance < 0) {
+            if ($creditCard->balance < 0) {
                 // unpaid! create a fake bill that matches the amount.
                 $description = $creditCard->name;
-                $amount      = $balance * -1;
+                $amount      = $creditCard->balance * -1;
                 $fakeBill    = $this->createFakeBill($description, $date, $amount);
                 unset($description, $amount);
                 $unpaid->push([$fakeBill, $date]);
             }
-            if ($balance == 0) {
+            if ($creditCard->balance == 0) {
                 // find transfer(s) TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
                 $journals = $accounts->getTransfersInRange($creditCard, $start, $end);
