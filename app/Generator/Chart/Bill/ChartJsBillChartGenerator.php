@@ -3,6 +3,7 @@
 namespace FireflyIII\Generator\Chart\Bill;
 
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 
 /**
@@ -64,11 +65,15 @@ class ChartJsBillChartGenerator implements BillChartGenerator
         $minAmount    = [];
         $maxAmount    = [];
         $actualAmount = [];
+        /** @var TransactionJournal $entry */
         foreach ($entries as $entry) {
             $data['labels'][] = $entry->date->formatLocalized($format);
             $minAmount[]      = round($bill->amount_min, 2);
             $maxAmount[]      = round($bill->amount_max, 2);
-            $actualAmount[]   = round(($entry->amount * -1), 2);
+            /*
+             * journalAmount has been collected in BillRepository::getJournals
+             */
+            $actualAmount[]   = round(($entry->journalAmount * -1), 2);
         }
 
         $data['datasets'][] = [

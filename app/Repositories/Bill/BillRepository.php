@@ -98,17 +98,36 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * This method also returns the amount of the journal in "journalAmount"
+     * for easy access.
+     *
      * @param Bill $bill
      *
      * @return Collection
      */
     public function getJournals(Bill $bill)
     {
-        return $bill->transactionjournals()->withRelevantData()
-                    ->orderBy('transaction_journals.date', 'DESC')
-                    ->orderBy('transaction_journals.order', 'ASC')
-                    ->orderBy('transaction_journals.id', 'DESC')
-                    ->get(['transaction_journals.*']);
+        $cache = new CacheProperties;
+        $cache->addProperty($bill->id);
+        $cache->addProperty('journals-for-bill');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $set = $bill->transactionjournals()
+            ->leftJoin(
+                'transactions', function (JoinClause $join) {
+                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('amount', '<', 0);
+            }
+            )
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
+        $cache->store($set);
+
+        return $set;
     }
 
     /**
