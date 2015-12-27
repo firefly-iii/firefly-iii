@@ -27,7 +27,7 @@
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
         "league/commonmark": "~0.7",
-        "rcrowe/twigbridge": "0.7.x@dev",
+        "rcrowe/twigbridge": "~0.9",
         "zizaco/entrust": "dev-laravel-5",
         "league/csv": "^7.1"
     },
