@@ -2,7 +2,7 @@
 
 return [
     'chart'              => 'chartjs',
-    'version'            => '3.5.4',
+    'version'            => '3.5.5',
     'index_periods'      => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'     => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'csv_import_enabled' => true,
