@@ -354,36 +354,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Get all transfers TO this account in this range.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return Collection
-     */
-    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
-    {
-        $set = TransactionJournal::whereIn(
-            'id', function (Builder $q) use ($account, $start, $end) {
-            $q->select('transaction_journals.id')
-              ->from('transactions')
-              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-              ->where('transactions.account_id', $account->id)
-              ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-              ->where('transaction_journals.user_id', Auth::user()->id)
-              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-              ->where('transaction_types.type', TransactionType::TRANSFER);
-
-        }
-        )->get();
-
-        return $set;
-    }
-
-    /**
      * @param Account $account
      * @param Carbon  $date
      *

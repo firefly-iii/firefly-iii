@@ -2,11 +2,8 @@
 
 namespace FireflyIII\Generator\Chart\Bill;
 
-use Config;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use Preferences;
 
 /**
  * Class ChartJsBillChartGenerator
@@ -17,42 +14,23 @@ class ChartJsBillChartGenerator implements BillChartGenerator
 {
 
     /**
-     * @param Collection $paid
-     * @param Collection $unpaid
+     * @param string $paid
+     * @param string $unpaid
      *
      * @return array
      */
-    public function frontpage(Collection $paid, Collection $unpaid)
+    public function frontpage($paid, $unpaid)
     {
-        $paidDescriptions   = [];
-        $paidAmount         = 0;
-        $unpaidDescriptions = [];
-        $unpaidAmount       = 0;
         bcscale(2);
-
-        /** @var TransactionJournal $entry */
-        foreach ($paid as $entry) { // loop paid and create single entry:
-            $paidDescriptions[] = $entry->description;
-            $paidAmount         = bcadd($paidAmount, $entry->amount_positive);
-        }
-        /** @var Bill $entry */
-        foreach ($unpaid as $entry) { // loop unpaid:
-            $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-            $amount               = bcdiv(bcadd($entry[0]->amount_max, $entry[0]->amount_min), 2);
-            $unpaidDescriptions[] = $description;
-            $unpaidAmount         = bcadd($unpaidAmount, $amount);
-            unset($amount, $description);
-        }
-
         $data = [
             [
-                'value'     => $unpaidAmount,
+                'value'     => $unpaid,
                 'color'     => 'rgba(53, 124, 165,0.7)',
                 'highlight' => 'rgba(53, 124, 165,0.9)',
                 'label'     => trans('firefly.unpaid'),
             ],
             [
-                'value'     => $paidAmount,
+                'value'     => $paid * -1, // paid is negative, must be positive.
                 'color'     => 'rgba(0, 141, 76, 0.7)',
                 'highlight' => 'rgba(0, 141, 76, 0.9)',
                 'label'     => trans('firefly.paid'),
@@ -71,7 +49,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
     public function single(Bill $bill, Collection $entries)
     {
         // language:
-        $format   = trans('config.month');
+        $format = trans('config.month');
 
         $data = [
             'count'    => 3,
