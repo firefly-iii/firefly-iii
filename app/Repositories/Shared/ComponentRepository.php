@@ -3,10 +3,10 @@
 namespace FireflyIII\Repositories\Shared;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -35,27 +35,30 @@ class ComponentRepository
         $cache->addProperty($accounts);
         $cache->addProperty('balanceInPeriodList');
 
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
         $ids = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
             $ids[] = $account->id;
         }
 
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
 
-        $sum = $object->transactionjournals()
-                      ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
-                      ->before($end)
-                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                      ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                      ->whereIn('accounts.id', $ids)
-                      ->after($start)
-                      ->get(['transaction_journals.*'])->sum('amount');
 
-        $cache->store($sum);
+        $entry  = $object->transactionjournals()
+                         ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
+                         ->before($end)
+                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                         ->whereIn('accounts.id', $ids)
+                         ->after($start)
+                         ->first([DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
+        $amount = $entry->journalAmount;
 
-        return $sum;
+        $cache->store($amount);
+
+        return $amount;
     }
 }

@@ -64,6 +64,17 @@ interface BudgetRepositoryInterface
     public function getBudgets();
 
     /**
+     * Returns a list of budgets, budget limits and limit repetitions
+     * (doubling any of them in a left join)
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end);
+
+    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end

@@ -211,11 +211,8 @@ class BudgetController extends Controller
      */
     public function frontpage(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $budgets    = $repository->getBudgets();
-        $start      = Session::get('start', Carbon::now()->startOfMonth());
-        $end        = Session::get('end', Carbon::now()->endOfMonth());
-        $allEntries = new Collection;
-        $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -227,42 +224,48 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        $budgets    = $repository->getBudgetsAndLimitsInRange($start, $end);
+        $allEntries = new Collection;
+        $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+
+
         bcscale(2);
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
-            if ($repetitions->count() == 0) {
-                $expenses = $repository->balanceInPeriod($budget, $start, $end, $accounts) * -1;
-                $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
-                continue;
+            // we already have amount, startdate and enddate.
+            // if this "is" a limit repetition (as opposed to a budget without one entirely)
+            // depends on whether startdate and enddate are null.
+            if (is_null($budget->startdate) && is_null($budget->enddate)) {
+                $name         = $budget->name . ' (' . $start->formatLocalized(trans('config.month')) . ')';
+                $currentStart = clone $start;
+                $currentEnd   = clone $end;
+                $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
+                $amount       = 0;
+                $left         = 0;
+                $spent        = $expenses;
+                $overspent    = 0;
+            } else {
+                $name         = $budget->name . ' (' . $budget->startdate->formatLocalized(trans('config.month')) . ')';
+                $currentStart = clone $budget->startdate;
+                $currentEnd   = clone $budget->enddate;
+                $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
+                $amount       = $budget->amount;
+                // smaller than 1 means spent MORE than budget allows.
+                $left      = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? 0 : bcadd($budget->amount, $expenses);
+                $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? $amount : $expenses;
+                $overspent = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcadd($budget->amount, $expenses) : 0;
             }
-            /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) {
-                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, $accounts) * -1;
-                // $left can be less than zero.
-                // $overspent can be more than zero ( = overspending)
 
-                $left      = max(bcsub($repetition->amount, $expenses), 0); // limited at zero.
-                $overspent = max(bcsub($expenses, $repetition->amount), 0); // limited at zero.
-                $name      = $budget->name;
-
-                // $spent is maxed to the repetition amount:
-                $spent = $expenses > $repetition->amount ? $repetition->amount : $expenses;
-
-
-                $allEntries->push([$name, $left, $spent, $overspent, $repetition->amount, $expenses]);
-            }
+            $allEntries->push([$name, $left, $spent, $overspent, $amount, $expenses]);
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end) * -1;
         $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses, 0, 0]);
-
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -291,7 +294,7 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-//         filter empty budgets:
+        //         filter empty budgets:
         foreach ($allBudgets as $budget) {
             $spent = $repository->balanceInPeriod($budget, $start, $end, $accounts);
             if ($spent != 0) {
