@@ -3,10 +3,8 @@
 namespace FireflyIII\Generator\Chart\Account;
 
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
-use Preferences;
 use Steam;
 
 /**
@@ -90,20 +88,21 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
     {
         // language:
-        $format   = trans('config.month_and_day');
-        $data     = [
+        $format  = trans('config.month_and_day');
+        $data    = [
             'count'    => 0,
             'labels'   => [],
             'datasets' => [],
         ];
-        $current  = clone $start;
+        $current = clone $start;
         while ($current <= $end) {
             $data['labels'][] = $current->formatLocalized($format);
             $current->addDay();
         }
 
+
         foreach ($accounts as $account) {
-            $set     = [
+            $set      = [
                 'label'                => $account->name,
                 'fillColor'            => 'rgba(220,220,220,0.2)',
                 'strokeColor'          => 'rgba(220,220,220,1)',
@@ -113,9 +112,15 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
                 'pointHighlightStroke' => 'rgba(220,220,220,1)',
                 'data'                 => [],
             ];
-            $current = clone $start;
+            $current  = clone $start;
+            $range    = Steam::balanceInRange($account, $start, $end);
+            $previous = array_values($range)[0];
             while ($current <= $end) {
-                $set['data'][] = Steam::balance($account, $current);
+                $format  = $current->format('Y-m-d');
+                $balance = isset($range[$format]) ? $range[$format] : $previous;
+
+                $set['data'][] = $balance;
+                $previous      = $balance;
                 $current->addDay();
             }
             $data['datasets'][] = $set;
@@ -135,7 +140,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     public function single(Account $account, Carbon $start, Carbon $end)
     {
         // language:
-        $format   = trans('config.month_and_day');
+        $format = trans('config.month_and_day');
 
         $data = [
             'count'    => 1,

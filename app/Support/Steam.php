@@ -73,6 +73,54 @@ class Steam
     }
 
     /**
+     * Gets the balance for the given account during the whole range, using this format:
+     *
+     * [yyyy-mm-dd] => 123,2
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     */
+    public function balanceInRange(Account $account, Carbon $start, Carbon $end)
+    {
+        // abuse chart properties:
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance-in-range');
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $balances = [];
+        $start->subDay();
+        $end->addDay();
+        $startBalance                      = $this->balance($account, $start);
+        $balances[$start->format('Y-m-d')] = $startBalance;
+        $start->addDay();
+
+        // query!
+        $set            = $account->transactions()
+                                  ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                  ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                  ->groupBy('transaction_journals.date')
+                                  ->get(['transaction_journals.date', DB::Raw('SUM(`transactions`.`amount`) as `modified`')]);
+        $currentBalance = $startBalance;
+        foreach ($set as $entry) {
+            $currentBalance         = bcadd($currentBalance, $entry->modified);
+            $balances[$entry->date] = $currentBalance;
+        }
+
+        $cache->store($balances);
+
+        return $balances;
+
+
+    }
+
+    /**
      *
      * @param array          $ids
      * @param \Carbon\Carbon $date
