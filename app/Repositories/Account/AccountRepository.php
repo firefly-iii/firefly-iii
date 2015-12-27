@@ -16,7 +16,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -118,7 +117,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getCreditCards(Carbon $date)
     {
-        return Auth::user()->accounts()
+        $cache = new CacheProperties();
+        $cache->addProperty('user-credit-cards');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $set = Auth::user()->accounts()
                    ->hasMetaValue('accountRole', 'ccAsset')
                    ->hasMetaValue('ccType', 'monthlyFull')
                    ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
@@ -134,6 +139,9 @@ class AccountRepository implements AccountRepositoryInterface
                            DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
                        ]
                    );
+        $cache->store($set);
+
+        return $set;
     }
 
     /**

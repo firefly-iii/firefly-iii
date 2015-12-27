@@ -411,7 +411,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty($end);
         $cache->addProperty('bills-paid-in-range');
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         $amount = '0';
         $bills  = $this->getActiveBills();
@@ -472,7 +472,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty($end);
         $cache->addProperty('bills-unpaid-in-range');
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         $amount = '0';
         $bills  = $this->getActiveBills();
@@ -519,7 +519,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty($end);
         $cache->addProperty('credit-card-bill');
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
