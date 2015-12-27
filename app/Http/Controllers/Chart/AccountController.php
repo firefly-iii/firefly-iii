@@ -60,7 +60,7 @@ class AccountController extends Controller
         }
 
         // make chart:
-        $data = $this->generator->all($accounts, $start, $end);
+        $data = $this->generator->frontpage($accounts, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
