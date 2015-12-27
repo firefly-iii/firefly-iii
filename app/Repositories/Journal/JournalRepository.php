@@ -13,6 +13,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -44,7 +45,16 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function first()
     {
-        return Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        $cache = new CacheProperties;
+        $cache->addProperty('user-first-journal');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $entry = Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        $cache->store($entry);
+
+        return $entry;
     }
 
     /**
@@ -164,7 +174,7 @@ class JournalRepository implements JournalRepositoryInterface
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['amount_currency_id'],
+                'transaction_currency_id' => $data['amount_currency_id_amount'],
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],

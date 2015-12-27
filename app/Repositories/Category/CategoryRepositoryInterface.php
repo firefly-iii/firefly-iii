@@ -35,6 +35,32 @@ interface CategoryRepositoryInterface
     public function destroy(Category $category);
 
     /**
+     * Returns a collection of Categories appended with the amount of money that has been earned
+     * in these categories, based on the $accounts involved, in period X.
+     * The amount earned in category X in period X is saved in field "earned".
+     *
+     * @param $accounts
+     * @param $start
+     * @param $end
+     *
+     * @return Collection
+     */
+    public function earnedForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns a collection of Categories appended with the amount of money that has been spent
+     * in these categories, based on the $accounts involved, in period X.
+     * The amount earned in category X in period X is saved in field "spent".
+     *
+     * @param $accounts
+     * @param $start
+     * @param $end
+     *
+     * @return Collection
+     */
+    public function spentForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
      * @return Collection
      */
     public function getCategories();
@@ -120,6 +146,7 @@ interface CategoryRepositoryInterface
     public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end);
 
     /**
+     * @deprecated
      * This method returns the sum of the journals in the category, optionally
      * limited by a start or end date.
      *
@@ -147,21 +174,7 @@ interface CategoryRepositoryInterface
     public function getWithoutCategory(Carbon $start, Carbon $end);
 
     /**
-     * Corrected for tags.
-     *
-     * @param Category       $category
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     *
-     * @param bool           $shared
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
-
-
-    /**
-     * Corrected for tags.
+     * Corrected for tags and list of accounts.
      *
      * @param Category       $category
      * @param \Carbon\Carbon $start
@@ -170,7 +183,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function balanceInPeriodForList(Category $category, Carbon $start, Carbon $end, Collection $accounts);
+    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Category       $category

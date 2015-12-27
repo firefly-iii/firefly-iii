@@ -9,6 +9,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -54,6 +55,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @deprecated
      * This method scans the transaction journals from or to the given asset account
      * and checks if these are part of a balancing act. If so, it will sum up the amounts
      * transferred into the balancing act (if any) and return this amount.
@@ -77,7 +79,9 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes([TransactionType::TRANSFER])->get(['transaction_journals.*']);
+            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes([TransactionType::TRANSFER])->get(
+                ['transaction_journals.*']
+            );
 
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
@@ -108,6 +112,13 @@ class TagRepository implements TagRepositoryInterface
      */
     public function get()
     {
+        $cache = new CacheProperties;
+        $cache->addProperty('tags-list');
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
         /** @var Collection $tags */
         $tags = Auth::user()->tags()->get();
         $tags = $tags->sortBy(
@@ -115,6 +126,8 @@ class TagRepository implements TagRepositoryInterface
                 return strtolower($tag->tag);
             }
         );
+
+        $cache->store($tags);
 
         return $tags;
     }

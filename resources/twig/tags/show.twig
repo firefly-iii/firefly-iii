@@ -19,8 +19,10 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}</a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                    </a></li>
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><i
+                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -50,8 +52,10 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}</a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                    </a></li>
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><i
+                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -80,8 +84,10 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}</a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                    </a></li>
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><i
+                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -96,6 +102,6 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var tagID = {{tag.id}};
+        var tagID = {{ tag.id }};
     </script>
 {% endblock %}

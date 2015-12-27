@@ -147,7 +147,7 @@ class CurrencyController extends Controller
     public function index(CurrencyRepositoryInterface $repository)
     {
         $currencies      = $repository->get();
-        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', env('DEFAULT_CURRENCY','EUR')));
+        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR')));
 
 
         if (!Auth::user()->hasRole('owner')) {

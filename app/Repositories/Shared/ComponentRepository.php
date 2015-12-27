@@ -17,55 +17,6 @@ use Illuminate\Support\Collection;
 class ComponentRepository
 {
 
-
-    /**
-     * @param        $object
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @param bool   $shared
-     *
-     * @return string
-     */
-    protected function commonBalanceInPeriod($object, Carbon $start, Carbon $end, $shared = false)
-    {
-        $cache = new CacheProperties; // we must cache this.
-        $cache->addProperty($object->id);
-        $cache->addProperty(get_class($object));
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($shared);
-        $cache->addProperty('balanceInPeriod');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        if ($shared === true) { // shared is true: always ignore transfers between accounts!
-            $sum = $object->transactionjournals()
-                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
-                          ->before($end)
-                          ->after($start)
-                          ->get(['transaction_journals.*'])->sum('amount');
-        } else {
-            // do something else, SEE budgets.
-            // get all journals in this month where the asset account is NOT shared.
-            $sum = $object->transactionjournals()->before($end)->after($start)
-                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
-                          ->leftJoin(
-                              'account_meta', function (JoinClause $join) {
-                              $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                          }
-                          )->where('account_meta.data', '!=', '"sharedAsset"')->get(['transaction_journals.*'])->sum('amount');
-        }
-
-        $cache->store($sum);
-
-        return $sum;
-    }
-
     /**
      * @param            $object
      * @param Carbon     $start
@@ -74,7 +25,7 @@ class ComponentRepository
      *
      * @return string
      */
-    protected function commonBalanceInPeriodForList($object, Carbon $start, Carbon $end, Collection $accounts)
+    protected function commonBalanceInPeriod($object, Carbon $start, Carbon $end, Collection $accounts)
     {
         $cache = new CacheProperties; // we must cache this.
         $cache->addProperty($object->id);

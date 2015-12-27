@@ -134,7 +134,7 @@ class ReportQuery implements ReportQueryInterface
                 $query->orWhere(
                     function (Builder $q) use ($ids) {
                         $q->where('transaction_types.type', TransactionType::TRANSFER);
-                        $q->whereNotIn('ac_from.id',$ids);
+                        $q->whereNotIn('ac_from.id', $ids);
                         $q->whereIn('ac_to.id', $ids);
                     }
                 );
@@ -147,7 +147,11 @@ class ReportQuery implements ReportQueryInterface
 
         // get everything
         $data = $query->get(
-            ['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name', 'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
+            ['transaction_journals.*',
+             'transaction_types.type', 'ac_from.name as name',
+             't_from.amount as from_amount',
+             't_to.amount as to_amount',
+             'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
         );
 
         $data->each(
@@ -157,15 +161,15 @@ class ReportQuery implements ReportQueryInterface
                 }
             }
         );
-        $data = $data->filter(
-            function (TransactionJournal $journal) {
-                if ($journal->amount != 0) {
-                    return $journal;
-                }
-
-                return null;
-            }
-        );
+//        $data = $data->filter(
+//            function (TransactionJournal $journal) {
+//                if ($journal->amount != 0) {
+//                    return $journal;
+//                }
+//
+//                return null;
+//            }
+//        );
 
         return $data;
     }
@@ -220,7 +224,10 @@ class ReportQuery implements ReportQueryInterface
 
         $query->orderBy('transaction_journals.date');
         $data = $query->get( // get everything
-            ['transaction_journals.*', 'transaction_types.type', 'ac_to.name as name', 'ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']
+            ['transaction_journals.*', 'transaction_types.type',
+             't_from.amount as from_amount',
+             't_to.amount as to_amount',
+             'ac_to.name as name', 'ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']
         );
 
         $data->each(

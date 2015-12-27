@@ -1,20 +1,20 @@
 <?php
 
 return [
-    'chart'                    => 'chartjs',
-    'version'                  => '3.5.4',
-    'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
-    'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'csv_import_enabled'       => true,
-    'maxUploadSize'            => 5242880,
-    'allowedMimes'             => ['image/png', 'image/jpeg', 'application/pdf'],
-    'piggy_bank_periods'       => [
+    'chart'              => 'chartjs',
+    'version'            => '3.5.5',
+    'index_periods'      => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
+    'budget_periods'     => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'csv_import_enabled' => true,
+    'maxUploadSize'      => 5242880,
+    'allowedMimes'       => ['image/png', 'image/jpeg', 'application/pdf'],
+    'piggy_bank_periods' => [
         'week'    => 'Week',
         'month'   => 'Month',
         'quarter' => 'Quarter',
         'year'    => 'Year'
     ],
-    'periods_to_text'          => [
+    'periods_to_text'    => [
         'weekly'    => 'A week',
         'monthly'   => 'A month',
         'quarterly' => 'A quarter',
@@ -22,7 +22,7 @@ return [
         'yearly'    => 'A year',
     ],
 
-    'accountRoles'             => [
+    'accountRoles' => [
         'defaultAsset' => 'Default asset account',
         'sharedAsset'  => 'Shared asset account',
         'savingAsset'  => 'Savings account',
@@ -98,13 +98,23 @@ return [
             'Revenue account'     => 'revenue',
             'Cash account'        => 'cash',
         ],
+    'languages' => [
+        'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portugese (Brazil)', 'complete' => false],
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
+    ],
     'lang'                     => [
-        'en' => 'English',
-        'nl' => 'Nederlands'
+        'en_US' => 'English',
+        'nl_NL' => 'Nederlands',
+        'fr_FR' => 'Français',
+        'pt_BR' => 'Português do Brasil',
     ],
     'locales'                  => [
-        'en' => ['en', 'English', 'en_US', 'en_US.utf8'],
-        'nl' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
+        'en_US' => ['en', 'English', 'en_US', 'en_US.utf8'],
+        'nl_NL' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
+        'pt_BR' => ['pt_BR', 'pt_BR.utf8'],
+        'fr_FR' => ['fr_FR', 'fr_FR.utf8'],
     ],
     'transactionTypesByWhat'   => [
         'expenses'   => ['Withdrawal'],
@@ -124,13 +134,17 @@ return [
 
     ],
 
-    'month'                    => [
-        'en' => '%B %Y',
-        'nl' => '%B %Y',
+    'month'       => [
+        'en_US' => '%B %Y',
+        'nl_NL' => '%B %Y',
+        'fr_FR' => '%B %Y',
+        'pt_BR' => '%B %Y',
     ],
-    'monthAndDay'              => [
-        'en' => '%B %e, %Y',
-        'nl' => '%e %B %Y',
+    'monthAndDay' => [
+        'en_US' => '%B %e, %Y',
+        'nl_NL' => '%e %B %Y',
+        'fr_FR' => '%B %e, %Y',
+        'pt_BR' => '%B %e, %Y',
     ],
 
 ];

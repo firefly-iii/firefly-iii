@@ -14,7 +14,6 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
 
 /**
  * Class BudgetRepository
@@ -89,10 +88,10 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         /** @var Collection $repetitions */
         return LimitRepetition::
         leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-            ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
-            ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-            ->where('budget_limits.budget_id', $budget->id)
-            ->get(['limit_repetitions.*']);
+                              ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                              ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                              ->where('budget_limits.budget_id', $budget->id)
+                              ->get(['limit_repetitions.*']);
     }
 
     /**
@@ -141,9 +140,9 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             return $cache->get(); // @codeCoverageIgnore
         }
         $data = $budget->limitrepetitions()
-            ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
-            ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
-            ->first(['limit_repetitions.*']);
+                       ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
+                       ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
+                       ->first(['limit_repetitions.*']);
         //Log::debug('Looking for limit reps for budget #' . $budget->id . ' start [' . $start . '] and end [' . $end . '].');
         //Log::debug(DB::getQueryLog())
         $cache->store($data);
@@ -186,9 +185,9 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * Returns all the transaction journals for a limit, possibly limited by a limit repetition.
      *
-     * @param Budget $budget
+     * @param Budget          $budget
      * @param LimitRepetition $repetition
-     * @param int $take
+     * @param int             $take
      *
      * @return LengthAwarePaginator
      */
@@ -205,11 +204,11 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $offset = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
-        $setQuery = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC');
+        $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
+        $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
+                             ->orderBy('transaction_journals.date', 'DESC')
+                             ->orderBy('transaction_journals.order', 'ASC')
+                             ->orderBy('transaction_journals.id', 'DESC');
         $countQuery = $budget->transactionJournals();
 
 
@@ -219,7 +218,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         }
 
 
-        $set = $setQuery->get(['transaction_journals.*']);
+        $set   = $setQuery->get(['transaction_journals.*']);
         $count = $countQuery->count();
 
 
@@ -230,6 +229,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * @deprecated
+     *
      * @param Budget $budget
      *
      * @return Carbon
@@ -245,6 +246,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * @deprecated
      * @param Budget $budget
      * @param Carbon $date
      *
@@ -253,9 +255,9 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getLimitAmountOnDate(Budget $budget, Carbon $date)
     {
         $repetition = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-            ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
-            ->where('budget_limits.budget_id', $budget->id)
-            ->first(['limit_repetitions.*']);
+                                     ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
+                                     ->where('budget_limits.budget_id', $budget->id)
+                                     ->first(['limit_repetitions.*']);
 
         if ($repetition) {
             return $repetition->amount;
@@ -273,15 +275,15 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getWithoutBudget(Carbon $start, Carbon $end)
     {
         return Auth::user()
-            ->transactionjournals()
-            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNull('budget_transaction_journal.id')
-            ->before($end)
-            ->after($start)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->get(['transaction_journals.*']);
+                   ->transactionjournals()
+                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereNull('budget_transaction_journal.id')
+                   ->before($end)
+                   ->after($start)
+                   ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.order', 'ASC')
+                   ->orderBy('transaction_journals.id', 'DESC')
+                   ->get(['transaction_journals.*']);
     }
 
     /**
@@ -293,50 +295,37 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getWithoutBudgetSum(Carbon $start, Carbon $end)
     {
         $noBudgetSet = Auth::user()
-            ->transactionjournals()
-            ->whereNotIn(
-                'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
-                $query
-                    ->select('transaction_journals.id')
-                    ->from('transaction_journals')
-                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
-                    ->whereNotNull('budget_transaction_journal.budget_id');
-            }
-            )
-            ->after($start)
-            ->before($end)
-            ->transactionTypes([TransactionType::WITHDRAWAL])
-            ->get(['transaction_journals.*'])->sum('amount');
+                           ->transactionjournals()
+                           ->whereNotIn(
+                               'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
+                               $query
+                                   ->select('transaction_journals.id')
+                                   ->from('transaction_journals')
+                                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
+                                   ->whereNotNull('budget_transaction_journal.budget_id');
+                           }
+                           )
+                           ->after($start)
+                           ->before($end)
+                           ->transactionTypes([TransactionType::WITHDRAWAL])
+                           ->get(['transaction_journals.*'])->sum('amount');
 
         return $noBudgetSet;
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return string
      */
-    public function balanceInPeriodForList(Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
+    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
     {
-        return $this->commonBalanceInPeriodForList($budget, $start, $end, $accounts);
-    }
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool $shared
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true)
-    {
-        return $this->commonBalanceInPeriod($budget, $start, $end, $shared);
+        return $this->commonBalanceInPeriod($budget, $start, $end, $accounts);
     }
 
     /**
@@ -349,7 +338,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         $newBudget = new Budget(
             [
                 'user_id' => $data['user'],
-                'name' => $data['name'],
+                'name'    => $data['name'],
             ]
         );
         $newBudget->save();
@@ -360,14 +349,14 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
     /**
      * @param Budget $budget
-     * @param array $data
+     * @param array  $data
      *
      * @return Budget
      */
     public function update(Budget $budget, array $data)
     {
         // update the account:
-        $budget->name = $data['name'];
+        $budget->name   = $data['name'];
         $budget->active = $data['active'];
         $budget->save();
 
@@ -391,10 +380,10 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             // if not, create one!
             $limit = new BudgetLimit;
             $limit->budget()->associate($budget);
-            $limit->startdate = $date;
-            $limit->amount = $amount;
+            $limit->startdate   = $date;
+            $limit->amount      = $amount;
             $limit->repeat_freq = 'monthly';
-            $limit->repeats = 0;
+            $limit->repeats     = 0;
             $limit->save();
 
             // likewise, there should be a limit repetition to match the end date

@@ -214,15 +214,17 @@ class AuthController extends Controller
     /**
      * @return array
      */
-    protected function getBlockedDomains() {
-        $set = Config::get('mail.blocked_domains');
+    protected function getBlockedDomains()
+    {
+        $set     = Config::get('mail.blocked_domains');
         $domains = [];
-        foreach($set as $entry) {
+        foreach ($set as $entry) {
             $domain = trim($entry);
-            if(strlen($domain) > 0) {
+            if (strlen($domain) > 0) {
                 $domains[] = $domain;
             }
         }
+
         return $domains;
     }
 
@@ -234,6 +236,7 @@ class AuthController extends Controller
         if (isset($parts[1]) && in_array($parts[1], $blocked)) {
             return true;
         }
+
         return false;
     }
 

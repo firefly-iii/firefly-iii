@@ -115,10 +115,6 @@ function drawChart() {
         stackedColumnChart('chart/category/earned-in-year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-earned-in-year');
     }
 
-    //if (typeof lineChart !== 'undefined' && typeof month !== 'undefined' && typeof reportURL === 'undefined') {
-    //    lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
-    //}
-
     if (typeof lineChart !== 'undefined' && typeof accountIds !== 'undefined') {
         lineChart('/chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
     }

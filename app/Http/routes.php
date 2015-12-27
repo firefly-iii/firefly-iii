@@ -268,7 +268,7 @@ Route::get('/cron/sendgrid', ['uses' => 'CronController@sendgrid']);
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -284,7 +284,6 @@ Route::group(
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
-    Route::get('/routes', ['uses' => 'HomeController@routes']);
     /**
      * Account Controller
      */
@@ -390,9 +389,6 @@ Route::group(
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
     Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
-    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(
-        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
-    );
     Route::get('/chart/account/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
@@ -415,8 +411,8 @@ Route::group(
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
 
     // these three charts are for reports:
-    Route::get('/chart/category/spent-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInYear']);
-    Route::get('/chart/category/earned-in-year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInYear']);
+    Route::get('/chart/category/earned-in-period/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInPeriod']);
+    Route::get('/chart/category/spent-in-period/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInPeriod']);
     Route::get(
         '/chart/category/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
     );
@@ -429,12 +425,8 @@ Route::group(
     Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
     // reports:
-    Route::get('/chart/report/in-out/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
-    );
-    Route::get('/chart/report/in-out-sum/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized'])->where(
-        ['year' => '[0-9]{4}', 'shared' => 'shared']
-    );
+    Route::get('/chart/report/in-out/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
+    Route::get('/chart/report/in-out-sum/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
 
 
     /**
@@ -500,12 +492,7 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    //    Route::post('/reports/select', ['uses' => 'ReportController@select', 'as' => 'reports.select']);
     Route::get('/reports/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
-    //    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
-    //    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']);
-
-    // pop ups for budget report:
 
     /**
      * Search Controller

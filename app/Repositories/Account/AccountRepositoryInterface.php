@@ -27,6 +27,8 @@ interface AccountRepositoryInterface
     /**
      * @param $accountId
      *
+     * @deprecated
+     *
      * @return Account
      */
     public function find($accountId);
@@ -55,9 +57,17 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account);
 
     /**
+     * This method returns the users credit cards, along with some basic information about the
+     * balance they have on their CC. To be used in the JSON boxes on the front page that say
+     * how many bills there are still left to pay. The balance will be saved in field "balance".
+     *
+     * To get the balance, the field "date" is necessary.
+     *
+     * @param Carbon $date
+     *
      * @return Collection
      */
-    public function getCreditCards();
+    public function getCreditCards(Carbon $date);
 
     /**
      * Get the accounts of a user that have piggy banks connected to them.

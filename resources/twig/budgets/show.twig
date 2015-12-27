@@ -27,12 +27,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="budgetOverview"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="budgetOverview" style="width:100%;height:400px;"></canvas>
-                    {% endif %}
+                    <canvas id="budgetOverview" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
 
@@ -50,7 +45,7 @@
 
             {% for limit in limits %}
                 {% for rep in limit.limitRepetitions %}
-                {% set spentInRep = spentInRepetition(rep) %}
+                    {% set spentInRep = spentInRepetition(rep) %}
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title"><a href="{{ route('budgets.show',[budget.id,rep.id]) }}">{{ rep.startdate.formatLocalized(monthFormat) }}</a>
@@ -102,25 +97,18 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var budgetID = {{budget.id}};
+        var budgetID = {{ budget.id }};
         {% if repetition.id %}
-        var repetitionID = {{repetition.id}};
-        var year = {{repetition.startdate.format('Y')}};
+        var repetitionID = {{ repetition.id }};
+        var year = {{ repetition.startdate.format('Y') }};
         {% else %}
-        var year = {{Session.get('start').format('Y')}};
+        var year = {{ Session.get('start').format('Y') }};
         {% endif %}
 
     </script>
 
-    <!-- load the libraries and scripts necessary for Google Charts: -->
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript" src="js/budgets.js"></script>
 
 {% endblock %}

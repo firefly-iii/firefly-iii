@@ -1,4 +1,4 @@
-/* globals $, Chart, currencySymbol */
+/* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits */
 
 /*
  Make some colours:
@@ -29,16 +29,16 @@ accounting.settings = {
     currency: {
         symbol : currencySymbol,   // default currency symbol is '$'
         format: "%s %v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-        decimal : ",",  // decimal point separator
-        thousand: ".",  // thousands separator
-        precision : 2   // decimal places
+        decimal : mon_decimal_point,  // decimal point separator
+        thousand: mon_thousands_sep,  // thousands separator
+        precision : frac_digits   // decimal places
     },
     number: {
         precision : 0,  // default precision on numbers is 0
         thousand: ",",
         decimal : "."
     }
-}
+};
 
 
 var fillColors = [];

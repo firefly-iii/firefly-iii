@@ -120,33 +120,4 @@ class HomeController extends Controller
         );
     }
 
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Http\RedirectResponse|string
-     */
-    public function routes()
-    {
-        if (!Auth::user()->hasRole('owner')) {
-            Session::flash('warning', 'This page is broken.');
-
-            return redirect(route('index'));
-        }
-        Log::debug('Make log.');
-
-        // get all routes:
-        $routeCollection = Route::getRoutes();
-        /** @var \Illuminate\Routing\Route $value */
-        foreach ($routeCollection as $value) {
-            $name    = $value->getName();
-            $methods = $value->getMethods();
-            $isPost  = in_array('POST', $methods);
-            $index   = str_replace('.', '-', $name);
-
-            if (strlen($name) > 0 && !$isPost) {
-                echo "'" . $index . "' => '" . $name . "',<br />";
-            }
-        }
-
-        return '&nbsp;';
-    }
 }

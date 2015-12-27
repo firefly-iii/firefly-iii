@@ -12,12 +12,7 @@
                     <h3 class="box-title">{{ 'overview'|_ }} (month)</h3>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="period"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="period" style="width:100%;height:350px;"></canvas>
-                    {% endif %}
+                    <canvas id="period" style="width:100%;height:350px;"></canvas>
                 </div>
             </div>
         </div>
@@ -27,12 +22,7 @@
                     <h3 class="box-title">{{ 'overview'|_ }} (all)</h3>
                 </div>
                 <div class="box-body">
-                    {% if Config.get('firefly.chart') == 'google' %}
-                        <div id="all"></div>
-                    {% endif %}
-                    {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="all" style="width:100%;height:350px;"></canvas>
-                    {% endif %}
+                    <canvas id="all" style="width:100%;height:350px;"></canvas>
                 </div>
             </div>
         </div>
@@ -85,15 +75,8 @@
     <script type="text/javascript">
         var categoryID = {{ category.id }};
     </script>
-    <!-- load the libraries and scripts necessary for Google Charts: -->
-    {% if Config.get('firefly.chart') == 'google' %}
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="js/gcharts.js"></script>
-    {% endif %}
-    {% if Config.get('firefly.chart') == 'chartjs' %}
-        <script type="text/javascript" src="js/Chart.min.js"></script>
-        <script type="text/javascript" src="js/charts.js"></script>
-    {% endif %}
+    <script type="text/javascript" src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/charts.js"></script>
     <script type="text/javascript" src="js/categories.js"></script>
 
 {% endblock %}

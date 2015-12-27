@@ -23,9 +23,9 @@ class TransactionType extends Model
 {
     use SoftDeletes;
 
-    const WITHDRAWAL = 'Withdrawal';
-    const DEPOSIT = 'Deposit';
-    const TRANSFER = 'Transfer';
+    const WITHDRAWAL      = 'Withdrawal';
+    const DEPOSIT         = 'Deposit';
+    const TRANSFER        = 'Transfer';
     const OPENING_BALANCE = 'Opening balance';
 
     /**
@@ -34,22 +34,6 @@ class TransactionType extends Model
     public function getDates()
     {
         return ['created_at', 'updated_at', 'deleted_at'];
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactionJournals()
-    {
-        return $this->hasMany('FireflyIII\Models\TransactionJournal');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWithdrawal()
-    {
-        return $this->type === TransactionType::WITHDRAWAL;
     }
 
     /**
@@ -63,6 +47,14 @@ class TransactionType extends Model
     /**
      * @return bool
      */
+    public function isOpeningBalance()
+    {
+        return $this->type === TransactionType::OPENING_BALANCE;
+    }
+
+    /**
+     * @return bool
+     */
     public function isTransfer()
     {
         return $this->type === TransactionType::TRANSFER;
@@ -71,8 +63,16 @@ class TransactionType extends Model
     /**
      * @return bool
      */
-    public function isOpeningBalance()
+    public function isWithdrawal()
     {
-        return $this->type === TransactionType::OPENING_BALANCE;
+        return $this->type === TransactionType::WITHDRAWAL;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactionJournals()
+    {
+        return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 }

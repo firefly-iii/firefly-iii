@@ -68,6 +68,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read int                                                                            $account_id
  * @property string                                                                              $name
  * @property-read string                                                                         $symbol
+ * @property-read string                                                                         $type
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]       $attachments
  * @property-read mixed                                                                          $amount_positive
  */
@@ -503,6 +504,10 @@ class TransactionJournal extends Model
      */
     public function isWithdrawal()
     {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::WITHDRAWAL;
+        }
+
         return $this->transactionType->isWithdrawal();
     }
 
@@ -511,6 +516,10 @@ class TransactionJournal extends Model
      */
     public function isDeposit()
     {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::DEPOSIT;
+        }
+
         return $this->transactionType->isDeposit();
     }
 
@@ -519,6 +528,10 @@ class TransactionJournal extends Model
      */
     public function isTransfer()
     {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::TRANSFER;
+        }
+
         return $this->transactionType->isTransfer();
     }
 
@@ -527,6 +540,10 @@ class TransactionJournal extends Model
      */
     public function isOpeningBalance()
     {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::OPENING_BALANCE;
+        }
+
         return $this->transactionType->isOpeningBalance();
     }
 }

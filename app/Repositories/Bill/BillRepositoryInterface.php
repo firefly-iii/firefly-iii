@@ -39,6 +39,7 @@ interface BillRepositoryInterface
     public function getBillsForChart(Carbon $start, Carbon $end);
 
     /**
+     * @deprecated
      * Returns the sum of all payments connected to this bill between the dates.
      *
      * @param Bill   $bill
@@ -48,6 +49,17 @@ interface BillRepositoryInterface
      * @return float
      */
     public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end);
+
+    /**
+     * This method returns all active bills which have been paid for in the given range,
+     * with the field "paid" indicating how much the bill was for.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function billsPaidInRange(Carbon $start, Carbon $end);
 
     /**
      * Create a fake bill to help the chart controller.

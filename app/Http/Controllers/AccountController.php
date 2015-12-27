@@ -38,6 +38,8 @@ class AccountController extends Controller
      */
     public function create($what = 'asset')
     {
+
+
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
 
@@ -211,13 +213,14 @@ class AccountController extends Controller
             'name'                   => $request->input('name'),
             'accountType'            => $request->input('what'),
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
+            'virtualBalanceCurrency' => intval($request->input('amount_currency_id_virtualBalance')),
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+            'openingBalanceCurrency' => intval($request->input('amount_currency_id_openingBalance')),
 
         ];
 

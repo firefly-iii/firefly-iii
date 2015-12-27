@@ -20,11 +20,12 @@ interface CategoryChartGenerator
     public function all(Collection $entries);
 
     /**
+     * @param Collection $categories
      * @param Collection $entries
      *
      * @return array
      */
-    public function multiYear(Collection $entries);
+    public function earnedInPeriod(Collection $categories, Collection $entries);
 
     /**
      * @param Collection $entries
@@ -38,8 +39,14 @@ interface CategoryChartGenerator
      *
      * @return array
      */
-    public function period(Collection $entries);
+    public function multiYear(Collection $entries);
 
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function period(Collection $entries);
 
     /**
      * @param Collection $categories
@@ -48,12 +55,4 @@ interface CategoryChartGenerator
      * @return array
      */
     public function spentInYear(Collection $categories, Collection $entries);
-
-    /**
-     * @param Collection $categories
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function earnedInYear(Collection $categories, Collection $entries);
 }

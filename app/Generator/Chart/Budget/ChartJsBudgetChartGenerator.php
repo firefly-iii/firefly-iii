@@ -24,7 +24,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
     public function budget(Collection $entries, $dateFormat = 'month')
     {
         // language:
-        $language = Preferences::get('language', 'en')->data;
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
         $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
@@ -33,7 +33,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
                 [
                     'label' => 'Amount',
                     'data'  => [],
-                ]
+                ],
             ],
         ];
 
@@ -115,8 +115,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
     public function year(Collection $budgets, Collection $entries)
     {
         // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.month.' . $language);
+        $format = trans('config.month');
 
         $data = [
             'labels'   => [],

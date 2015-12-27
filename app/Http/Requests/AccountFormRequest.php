@@ -41,18 +41,19 @@ class AccountFormRequest extends Request
         }
 
         return [
-            'id'                   => $idRule,
-            'name'                 => $nameRule,
-            'openingBalance'       => 'numeric',
-            'iban'                 => 'iban',
-            'virtualBalance'       => 'numeric',
-            'openingBalanceDate'   => 'date',
-            'accountRole'          => 'in:' . $accountRoles,
-            'active'               => 'boolean',
-            'ccType'               => 'in:' . $ccPaymentTypes,
-            'ccMonthlyPaymentDate' => 'date',
-            'balance_currency_id'  => 'exists:transaction_currencies,id',
-            'what'                 => 'in:' . $types
+            'id'                                => $idRule,
+            'name'                              => $nameRule,
+            'openingBalance'                    => 'numeric',
+            'iban'                              => 'iban',
+            'virtualBalance'                    => 'numeric',
+            'openingBalanceDate'                => 'date',
+            'accountRole'                       => 'in:' . $accountRoles,
+            'active'                            => 'boolean',
+            'ccType'                            => 'in:' . $ccPaymentTypes,
+            'ccMonthlyPaymentDate'              => 'date',
+            'amount_currency_id_openingBalance' => 'exists:transaction_currencies,id',
+            'amount_currency_id_virtualBalance' => 'exists:transaction_currencies,id',
+            'what'                              => 'in:' . $types
         ];
     }
 }

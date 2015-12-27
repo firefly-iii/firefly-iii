@@ -2,9 +2,7 @@
 
 namespace FireflyIII\Generator\Chart\Category;
 
-use Config;
 use Illuminate\Support\Collection;
-use Preferences;
 
 
 /**
@@ -101,8 +99,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.month.' . $language);
+        $format = trans('config.month');
 
         $data = [
             'count'    => 0,
@@ -131,12 +128,44 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
      *
      * @return array
      */
-    public function earnedInYear(Collection $categories, Collection $entries)
+    public function earnedInPeriod(Collection $categories, Collection $entries)
     {
 
         // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.month.' . $language);
+        $format = trans('config.month');
+
+        $data = [
+            'count'    => 0,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+
+        foreach ($categories as $category) {
+            $data['labels'][] = $category->name;
+        }
+
+        foreach ($entries as $entry) {
+            $date = $entry[0]->formatLocalized($format);
+            array_shift($entry);
+            $data['count']++;
+            $data['datasets'][] = ['label' => $date, 'data' => $entry];
+        }
+
+        return $data;
+
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function spentInPeriod(Collection $categories, Collection $entries)
+    {
+
+        // language:
+        $format = trans('config.month');
 
         $data = [
             'count'    => 0,

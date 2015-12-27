@@ -51,7 +51,7 @@
         m.parentNode.insertBefore(a, m)
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', '{{ env('ANALYTICS_ID', 'XXX-XX-X')  }}', 'auto');
+    ga('create', '{{ env('ANALYTICS_ID', 'XXX-XX-X') }}', 'auto');
     ga('send', 'pageview');
 
 </script>

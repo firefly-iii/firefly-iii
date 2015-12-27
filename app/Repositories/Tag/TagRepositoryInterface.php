@@ -27,6 +27,7 @@ interface TagRepositoryInterface
     public function connect(TransactionJournal $journal, Tag $tag);
 
     /**
+     * @deprecated
      * This method scans the transaction journals from or to the given asset account
      * and checks if these are part of a balancing act. If so, it will sum up the amounts
      * transferred into the balancing act (if any) and return this amount.

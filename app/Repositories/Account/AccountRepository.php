@@ -41,7 +41,16 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function countAccounts(array $types)
     {
-        return Auth::user()->accounts()->accountTypeIn($types)->count();
+        $cache = new CacheProperties;
+        $cache->addProperty('user-count-accounts');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $count = Auth::user()->accounts()->accountTypeIn($types)->count();
+        $cache->store($count);
+
+        return $count;
     }
 
     /**
@@ -69,6 +78,14 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccounts(array $types)
     {
+        $cache = new CacheProperties();
+        $cache->addProperty('get-accounts');
+        $cache->addProperty($types);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
         /** @var Collection $result */
         $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
@@ -82,23 +99,39 @@ class AccountRepository implements AccountRepositoryInterface
             }
         );
 
+        $cache->store($result);
+
         return $result;
     }
 
 
     /**
+     * This method returns the users credit cards, along with some basic information about the
+     * balance they have on their CC. To be used in the JSON boxes on the front page that say
+     * how many bills there are still left to pay. The balance will be saved in field "balance".
+     *
+     * To get the balance, the field "date" is necessary.
+     *
+     * @param Carbon $date
+     *
      * @return Collection
      */
-    public function getCreditCards()
+    public function getCreditCards(Carbon $date)
     {
         return Auth::user()->accounts()
                    ->hasMetaValue('accountRole', 'ccAsset')
                    ->hasMetaValue('ccType', 'monthlyFull')
+                   ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                   ->whereNull('transactions.deleted_at')
+                   ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                   ->groupBy('accounts.id')
                    ->get(
                        [
                            'accounts.*',
                            'ccType.data as ccType',
-                           'accountRole.data as accountRole'
+                           'accountRole.data as accountRole',
+                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
                        ]
                    );
     }
@@ -111,8 +144,18 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFirstTransaction(TransactionJournal $journal, Account $account)
     {
+        $cache = new CacheProperties();
+        $cache->addProperty('first-transaction');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($account->id);
 
-        return $journal->transactions()->where('account_id', $account->id)->first();
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        $cache->store($transaction);
+
+        return $transaction;
     }
 
     /**
@@ -123,8 +166,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getFrontpageAccounts(Preference $preference)
     {
         $cache = new CacheProperties();
-        $cache->addProperty($preference->data);
-        $cache->addProperty('frontPageaccounts');
+        $cache->addProperty('user-frontpage-accounts');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
@@ -158,6 +200,7 @@ class AccountRepository implements AccountRepositoryInterface
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty('frontpage-transactions');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
@@ -172,6 +215,7 @@ class AccountRepository implements AccountRepositoryInterface
                    ->before($end)
                    ->after($start)
                    ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.order', 'ASC')
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
@@ -227,7 +271,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $cache = new CacheProperties;
         $cache->addProperty($ids);
-        $cache->addProperty('piggyAccounts');
+        $cache->addProperty('user-piggy-bank-accounts');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
@@ -320,13 +364,14 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
     {
-        $set      = TransactionJournal::whereIn(
+        $set = TransactionJournal::whereIn(
             'id', function (Builder $q) use ($account, $start, $end) {
             $q->select('transaction_journals.id')
               ->from('transactions')
               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
               ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
               ->where('transactions.account_id', $account->id)
+              ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
@@ -334,17 +379,8 @@ class AccountRepository implements AccountRepositoryInterface
 
         }
         )->get();
-        $filtered = $set->filter(
-            function (TransactionJournal $journal) use ($account) {
-                if ($journal->destination_account->id == $account->id) {
-                    return $journal;
-                }
 
-                return null;
-            }
-        );
-
-        return $filtered;
+        return $set;
     }
 
     /**
@@ -373,12 +409,23 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function openingBalanceTransaction(Account $account)
     {
-        return TransactionJournal
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('opening-balance-journal');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+
+        $journal = TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
             ->accountIs($account)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
+        $cache->store($journal);
+
+        return $journal;
     }
 
     /**
@@ -645,6 +692,8 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @deprecated
+     *
      * @param $accountId
      *
      * @return Account

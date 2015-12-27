@@ -13,13 +13,6 @@ interface ReportChartGenerator
 {
 
     /**
- * @param Collection $entries
- *
- * @return array
- */
-    public function yearInOut(Collection $entries);
-
-    /**
      * @param Collection $entries
      *
      * @return array
@@ -33,7 +26,14 @@ interface ReportChartGenerator
      *
      * @return array
      */
-    public function yearInOutSummarized($income, $expense, $count);
+    public function multiYearInOutSummarized($income, $expense, $count);
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function yearInOut(Collection $entries);
 
     /**
      * @param string $income
@@ -42,6 +42,6 @@ interface ReportChartGenerator
      *
      * @return array
      */
-    public function multiYearInOutSummarized($income, $expense, $count);
+    public function yearInOutSummarized($income, $expense, $count);
 
 }

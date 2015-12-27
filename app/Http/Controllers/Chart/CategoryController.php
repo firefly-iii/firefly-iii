@@ -303,7 +303,9 @@ class CategoryController extends Controller
 
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
+        $cache->addProperty($report_type);
         $cache->addProperty($end);
+        $cache->addProperty($accounts);
         $cache->addProperty('category');
         $cache->addProperty('spent-in-year');
         if ($cache->has()) {
@@ -314,7 +316,7 @@ class CategoryController extends Controller
         $entries       = new Collection;
         $categories    = $allCategories->filter(
             function (Category $category) use ($repository, $start, $end, $accounts) {
-                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
+                $spent = $repository->balanceInPeriod($category, $start, $end, $accounts);
                 if ($spent < 0) {
                     return $category;
                 }
@@ -329,7 +331,7 @@ class CategoryController extends Controller
             $row = [clone $start]; // make a row:
 
             foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
+                $spent = $repository->balanceInPeriod($category, $start, $month, $accounts);
                 if ($spent < 0) {
                     $row[] = $spent * -1;
                 } else {
@@ -346,7 +348,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * This chart will only show income.
+     * Returns a chart of what has been earned in this period in each category
+     * grouped by month.
      *
      * @param CategoryRepositoryInterface $repository
      * @param                             $report_type
@@ -356,49 +359,183 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function earnedInPeriod(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $cache = new CacheProperties; // chart properties for cache:
+        $original = clone $start;
+        $cache    = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($report_type);
+        $cache->addProperty($accounts);
         $cache->addProperty('category');
-        $cache->addProperty('earned-in-year');
+        $cache->addProperty('earned-in-period');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
+        $categories = new Collection;
+        $sets       = new Collection;
+        $entries    = new Collection;
 
-        $allCategories = $repository->getCategories();
-        $allEntries    = new Collection;
-        $categories    = $allCategories->filter(
-            function (Category $category) use ($repository, $start, $end, $accounts) {
-                $spent = $repository->balanceInPeriodForList($category, $start, $end, $accounts);
-                if ($spent > 0) {
-                    return $category;
-                }
-
-                return null;
+        // run a very special query each month:
+        $start = clone $original;
+        while ($start < $end) {
+            $currentEnd   = clone $start;
+            $currentStart = clone $start;
+            $currentStart->startOfMonth();
+            $currentEnd->endOfMonth();
+            // get a list of categories, and what the user has earned for that category
+            // (if the user has earned anything)
+            $set        = $repository->earnedForAccounts($accounts, $currentStart, $currentEnd);
+            $categories = $categories->merge($set);
+            // save the set combined with the data that is in it:
+            // for example:
+            // [december 2015, salary:1000, bonus:200]
+            $sets->push([$currentStart, $set]);
+            $start->addMonth();
+        }
+        // filter categories into a single bunch. Useful later on.
+        // $categories contains all the categories the user has earned money
+        // in in this period.
+        $categories = $categories->unique('id');
+        $categories = $categories->sortBy(
+            function (Category $category) {
+                return $category->name;
             }
         );
 
+        // start looping the time again, this time processing the
+        // data for each month.
+        $start = clone $original;
         while ($start < $end) {
-            $month = clone $start; // month is the current end of the period
-            $month->endOfMonth();
-            $row = [clone $start]; // make a row:
+            $currentEnd   = clone $start;
+            $currentStart = clone $start;
+            $currentStart->startOfMonth();
+            $currentEnd->endOfMonth();
 
-            foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriodForList($category, $start, $month, $accounts);
-                if ($spent > 0) {
-                    $row[] = $spent;
+            // in $sets we have saved all the sets of data for each month
+            // so now we need to retrieve the corrent one.
+            // match is on date of course.
+            $currentSet = $sets->first(
+                function ($key, $value) use ($currentStart) {
+                    // set for this date.
+                    return ($value[0] == $currentStart);
+                }
+            );
+            // create a row used later on.
+            $row = [clone $currentStart];
+
+            // loop all categories:
+            /** @var Category $category */
+            foreach ($categories as $category) {
+                // if entry is not null, we've earned money in this period for this category.
+                $entry = $currentSet[1]->first(
+                    function ($key, $value) use ($category) {
+                        return $value->id == $category->id;
+                    }
+                );
+                // save amount
+                if (!is_null($entry)) {
+                    $row[] = $entry->earned;
                 } else {
                     $row[] = 0;
                 }
             }
-            $allEntries->push($row);
+            $entries->push($row);
             $start->addMonth();
         }
-        $data = $this->generator->earnedInYear($categories, $allEntries);
+
+        $data = $this->generator->earnedInPeriod($categories, $entries);
         $cache->store($data);
 
-        return Response::json($data);
+        return $data;
+
     }
+
+    /**
+     * Returns a chart of what has been spent in this period in each category
+     * grouped by month.
+     *
+     * @param CategoryRepositoryInterface $repository
+     * @param                             $report_type
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function spentInPeriod(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $original = clone $start;
+        $cache    = new CacheProperties; // chart properties for cache:
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($report_type);
+        $cache->addProperty($accounts);
+        $cache->addProperty('category');
+        $cache->addProperty('spent-in-period');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+        $categories = new Collection;
+        $sets       = new Collection;
+        $entries    = new Collection;
+
+        // run a very special query each month:
+        $start = clone $original;
+        while ($start < $end) {
+            $currentEnd   = clone $start;
+            $currentStart = clone $start;
+            $currentStart->startOfMonth();
+            $currentEnd->endOfMonth();
+            $set        = $repository->spentForAccounts($accounts, $currentStart, $currentEnd);
+            $categories = $categories->merge($set);
+            $sets->push([$currentStart, $set]);
+            $start->addMonth();
+        }
+        $categories = $categories->unique('id');
+        $categories = $categories->sortBy(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
+
+        $start = clone $original;
+        while ($start < $end) {
+            $currentEnd   = clone $start;
+            $currentStart = clone $start;
+            $currentStart->startOfMonth();
+            $currentEnd->endOfMonth();
+            $currentSet = $sets->first(
+                function ($key, $value) use ($currentStart) {
+                    // set for this date.
+                    return ($value[0] == $currentStart);
+                }
+            );
+            $row        = [clone $currentStart];
+
+            /** @var Category $category */
+            foreach ($categories as $category) {
+                /** @var Category $entry */
+                $entry = $currentSet[1]->first(
+                    function ($key, $value) use ($category) {
+                        return $value->id == $category->id;
+                    }
+                );
+                if (!is_null($entry)) {
+                    $row[] = $entry->spent;
+                } else {
+                    $row[] = 0;
+                }
+            }
+            $entries->push($row);
+            $start->addMonth();
+        }
+
+        $data = $this->generator->spentInPeriod($categories, $entries);
+        $cache->store($data);
+
+        return $data;
+
+    }
+
 }

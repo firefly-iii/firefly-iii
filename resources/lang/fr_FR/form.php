@@ -68,9 +68,8 @@ return [
     'mime'                        => 'Mime type',
     'size'                        => 'Size',
 
-
     'delete_account'    => 'Delete account ":name"',
-    'delete_bill'       => 'Delete bill ":name"',
+    'delete_bill'       => 'Supprimer la facture ":name"',
     'delete_budget'     => 'Delete budget ":name"',
     'delete_category'   => 'Delete category ":name"',
     'delete_currency'   => 'Delete currency ":name"',
@@ -88,16 +87,10 @@ return [
     'tag_areYouSure'        => 'Are you sure you want to delete the tag ":tag"?',
 
     'permDeleteWarning'          => 'Deleting stuff from Firely is permanent and cannot be undone.',
-    'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.' .
-                                    '|All :count transactions connected to this account will be deleted as well.',
-    'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.' .
-                                    '|All :count piggy bank connected to this account will be deleted as well.',
-    'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.' .
-                                    '|All :count transactions connected to this bill will spared deletion.',
-    'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.' .
-                                    '|All :count transactions connected to this budget will spared deletion.',
-    'category_keep_transactions' => 'The only transaction connected to this category will not be deleted.' .
-                                    '|All :count transactions connected to this category will spared deletion.',
-    'tag_keep_transactions'      => 'The only transaction connected to this tag will not be deleted.' .
-                                    '|All :count transactions connected to this tag will spared deletion.',
+    'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
+    'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
+    'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
+    'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',
+    'category_keep_transactions' => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
+    'tag_keep_transactions'      => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
 ];

@@ -64,7 +64,7 @@
 
                 </td>
                 <td>
-                    {{ journal.amount|formatAmount }}
+                    {{ journal|formatJournal }}
                 </td>
                 <td class="hidden-sm hidden-xs">
                     {{ journal.date.formatLocalized(monthAndDayFormat) }}
@@ -115,24 +115,24 @@
     {% endfor %}
     </tbody>
     <tfoot>
-        {% if showPageSum %}
-            <tr>
-                <td colspan="3" style="text-align: right;"><em>{{ 'sum'|_ }}</em></td>
-                <td colspan="2">{{ _sum|formatAmount }}</td>
-            </tr>
-        {% endif %}
-        {% if showPeriodSum %}
-            <tr>
-                <td colspan="3" style="text-align: right;"><em>{{ 'period_sum'|_ }}</em></td>
-                <td colspan="2">{{ periodSum|formatAmount }}</td>
-            </tr>
-        {% endif %}
-        {% if showTotalSum %}
-            <tr>
-                <td colspan="3" style="text-align: right;"><em>{{ 'total_sum'|_ }}</em></td>
-                <td colspan="2">{{ totalSum|formatAmount }}</td>
-            </tr>
-        {% endif %}
+    {% if showPageSum %}
+        <tr>
+            <td colspan="3" style="text-align: right;"><em>{{ 'sum'|_ }}</em></td>
+            <td colspan="2">{{ _sum|formatAmount }}</td>
+        </tr>
+    {% endif %}
+    {% if showPeriodSum %}
+        <tr>
+            <td colspan="3" style="text-align: right;"><em>{{ 'period_sum'|_ }}</em></td>
+            <td colspan="2">{{ periodSum|formatAmount }}</td>
+        </tr>
+    {% endif %}
+    {% if showTotalSum %}
+        <tr>
+            <td colspan="3" style="text-align: right;"><em>{{ 'total_sum'|_ }}</em></td>
+            <td colspan="2">{{ totalSum|formatAmount }}</td>
+        </tr>
+    {% endif %}
     </tfoot>
 </table>
 

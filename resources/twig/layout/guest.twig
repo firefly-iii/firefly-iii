@@ -63,17 +63,17 @@
             a.src = g;
             m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-        ga('create', '{{ env('ANALYTICS_ID', 'XXX-XX-X')  }}', {'siteSpeedSampleRate': 100});
+        ga('create', '{{ env('ANALYTICS_ID', 'XXX-XX-X') }}', {'siteSpeedSampleRate': 100});
         ga('send', 'pageview');
 
         // send an event if relevant:
         {% if Session.has('gaEventCategory') and Session.has('gaEventAction') and not Session.has('gaEventLabel') %}
-        ga('send', 'event', '{{Session.get('gaEventCategory')}}', '{{Session.get('gaEventAction')}}');
+        ga('send', 'event', '{{ Session.get('gaEventCategory') }}', '{{ Session.get('gaEventAction') }}');
         {% endif %}
 
         // send event if relevant:
         {% if Session.has('gaEventCategory') and Session.has('gaEventAction') and Session.has('gaEventLabel') %}
-        ga('send', 'event', '{{Session.get('gaEventCategory')}}', '{{Session.get('gaEventAction')}}', '{{ Session.get('gaEventLabel') }}');
+        ga('send', 'event', '{{ Session.get('gaEventCategory') }}', '{{ Session.get('gaEventAction') }}', '{{ Session.get('gaEventLabel') }}');
         {% endif %}
     </script>
 {% endif %}

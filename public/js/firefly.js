@@ -1,7 +1,9 @@
 /* globals token, dateRangeConfig, $, */
 $(function () {
     "use strict";
-    $('.currencySelect').click(currencySelect);
+
+    // when you click on a currency, this happens:
+    $('.currency-option').click(currencySelect);
 
     var ranges = {};
     // range for the current month:
@@ -62,21 +64,51 @@ $(function () {
 
 function currencySelect(e) {
     "use strict";
-    var target = $(e.target);
+    // clicked on
+    var target = $(e.target); // target is the <A> tag.
+
+    // name of the field in question:
+    var name = target.data('name');
+
+    // id of menu button (used later on):
+    var menuID = 'currency_dropdown_' + name;
+
+    // the hidden input with the actual value of the selected currency:
+    var hiddenInputName = 'amount_currency_id_' + target.data('name');
+
+    // span with the current selection (next to the caret):
+    var spanId = 'currency_select_symbol_' + target.data('name');
+
+    // the selected currency symbol:
     var symbol = target.data('symbol');
-    var code = target.data('code');
+
+    // id of the selected currency.
     var id = target.data('id');
-    var fieldType = target.data('field');
-    var menu = $('.' + fieldType + 'CurrencyDropdown');
 
-    var symbolHolder = $('#' + fieldType + 'CurrentSymbol');
-    symbolHolder.text(symbol);
-    $('input[name="' + fieldType + '_currency_id"]').val(id);
+    // update the hidden input:
+    $('input[name="' + hiddenInputName + '"]').val(id);
 
-    // close dropdown (hack hack)
-    menu.click();
+    // update the symbol:
+    $('#' + spanId).text(symbol);
+
+    // close the menu (hack hack)
+    $('#' + menuID).click();
 
 
     return false;
+
+    //var code = target.data('code');
+    //var fieldType = target.data('field');
+    //var menu = $('.' + fieldType + 'CurrencyDropdown');
+    //
+    //var symbolHolder = $('#' + fieldType + 'CurrentSymbol');
+    //symbolHolder.text(symbol);
+    //$('input[name="' + fieldType + '_currency_id"]').val(id);
+    //
+    // close dropdown (hack hack)
+    //menu.click();
+
+
+    //return false;
 }
 

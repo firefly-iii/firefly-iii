@@ -9,6 +9,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
@@ -22,6 +23,7 @@ use Steam;
 class BillRepository implements BillRepositoryInterface
 {
     /**
+     * @deprecated
      * Returns the sum of all payments connected to this bill between the dates.
      *
      * @param Bill   $bill
@@ -84,7 +86,7 @@ class BillRepository implements BillRepositoryInterface
     public function getActiveBills()
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get()->sortBy('name');
+        $set = Auth::user()->bills()->where('active', 1)->get()->sortBy('name');
 
         return $set;
     }
@@ -496,22 +498,21 @@ class BillRepository implements BillRepositoryInterface
     {
 
         $accounts    = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $creditCards = $accounts->getCreditCards();
+        $creditCards = $accounts->getCreditCards($end);
         $paid        = $set->get('paid');
         $unpaid      = $set->get('unpaid');
 
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, $end, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
-            if ($balance < 0) {
+            if ($creditCard->balance < 0) {
                 // unpaid! create a fake bill that matches the amount.
                 $description = $creditCard->name;
-                $amount      = $balance * -1;
+                $amount      = $creditCard->balance * -1;
                 $fakeBill    = $this->createFakeBill($description, $date, $amount);
                 unset($description, $amount);
                 $unpaid->push([$fakeBill, $date]);
             }
-            if ($balance == 0) {
+            if ($creditCard->balance == 0) {
                 // find transfer(s) TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
                 $journals = $accounts->getTransfersInRange($creditCard, $start, $end);
@@ -521,6 +522,34 @@ class BillRepository implements BillRepositoryInterface
         $set = new Collection;
         $set->put('paid', $paid);
         $set->put('unpaid', $unpaid);
+
+        return $set;
+    }
+
+    /**
+     * This method returns all active bills which have been paid for in the given range,
+     * with the field "paid" indicating how much the bill was for.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function billsPaidInRange(Carbon $start, Carbon $end)
+    {
+        $set = Auth::user()->bills()
+                   ->leftJoin('transaction_journals', 'transaction_journals.bill_id', '=', 'bills.id')
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+                   }
+                   )
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->where('bills.active', 1)
+                   ->groupBy('bills.id')->get(
+                ['bills.*', DB::Raw('SUM(`transactions`.`amount`) as `paid`')]
+            );
 
         return $set;
     }

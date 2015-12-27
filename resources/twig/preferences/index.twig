@@ -21,9 +21,11 @@
                                 <div class="checkbox">
                                     <label>
                                         {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
-                                            <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}" checked> {{ account.name }}
+                                            <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"
+                                                   checked> {{ account.name }}
                                         {% else %}
-                                            <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"> {{ account.name }}
+                                            <input type="checkbox" name="frontPageAccounts[]"
+                                                   value="{{ account.id }}"> {{ account.name }}
                                         {% endif %}
                                     </label>
                                 </div>
@@ -55,35 +57,40 @@
 
                     <div class="radio">
                         <label>
-                            <input type="radio" name="viewRange" value="1D" {% if viewRange == '1D' %} checked {% endif %}>
+                            <input type="radio" name="viewRange"
+                                   value="1D" {% if viewRange == '1D' %} checked {% endif %}>
                             {{ 'pref_1D'|_ }}
                         </label>
                     </div>
 
                     <div class="radio">
                         <label>
-                            <input type="radio" name="viewRange" value="1W" {% if viewRange == '1W' %} checked {% endif %}>
+                            <input type="radio" name="viewRange"
+                                   value="1W" {% if viewRange == '1W' %} checked {% endif %}>
                             {{ 'pref_1W'|_ }}
                         </label>
                     </div>
 
                     <div class="radio">
                         <label>
-                            <input type="radio" name="viewRange" value="1M" {% if viewRange == '1M' %} checked {% endif %}>
+                            <input type="radio" name="viewRange"
+                                   value="1M" {% if viewRange == '1M' %} checked {% endif %}>
                             {{ 'pref_1M'|_ }}
                         </label>
                     </div>
 
                     <div class="radio">
                         <label>
-                            <input type="radio" name="viewRange" value="3M" {% if viewRange == '3M' %} checked {% endif %}>
+                            <input type="radio" name="viewRange"
+                                   value="3M" {% if viewRange == '3M' %} checked {% endif %}>
                             {{ 'pref_3M'|_ }}
                         </label>
                     </div>
 
                     <div class="radio">
                         <label>
-                            <input type="radio" name="viewRange" value="6M" {% if viewRange == '6M' %} checked {% endif %}>
+                            <input type="radio" name="viewRange"
+                                   value="6M" {% if viewRange == '6M' %} checked {% endif %}>
                             {{ 'pref_6M'|_ }}
                         </label>
                     </div>
@@ -97,17 +104,22 @@
                 </div>
                 <div class="box-body">
                     <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
-                    {% for key, lang in Config.get('firefly.lang') %}
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="language" value="{{ key }}"
-                                        {% if language == key %}
-                                            checked
-                                        {% endif %}
-                                        />
-                                {{ lang }}
-                            </label>
-                        </div>
+                    {% for key, lang in Config.get('firefly.languages') %}
+                        {% if lang.complete == true or (lang.complete == false and showIncomplete) %}
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="language" value="{{ key }}"
+                                            {% if language == key %}
+                                                checked
+                                            {% endif %}
+                                    />
+                                    {{ lang.name_locale }} ({{ lang.name_english }})
+                                    {% if lang.complete == false %}
+                                        <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        {% endif %}
                     {% endfor %}
 
                 </div>

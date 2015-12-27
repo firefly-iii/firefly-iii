@@ -14,7 +14,7 @@
                 <div class="box-body">
 
                     <form class="form-horizontal" id="report-form" action="{{ route('reports.index') }}" method="post">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <div class="form-group">
                             <label for="inputReportType" class="col-sm-3 control-label">{{ 'report_type'|_ }}</label>
 
@@ -64,7 +64,8 @@
                                     <ul class="list-inline">
                                         {% for month in data.months %}
                                             <li>
-                                                <a data-start="{{ month.start }}" data-end="{{ month.end }}" class="date-select" href="#">{{ month.formatted }}</a>
+                                                <a data-start="{{ month.start }}" data-end="{{ month.end }}" class="date-select"
+                                                   href="#">{{ month.formatted }}</a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -94,16 +95,16 @@
                         <li>
                             <a href="{{ route('reports.report',
                             ['default',
-                            Session.get('start').startOfMonth.format('Ymd'),
-                            Session.get('start').endOfMonth.format('Ymd'),
-                                accountList
+                            startOfMonth.format('Ymd'),
+                            endOfMonth.format('Ymd'),
+                            accountList
                             ]) }}">{{ 'report_this_month_quick'|_ }}</a>
                         </li>
                         <li>
                             <a href="{{ route('reports.report',
                             ['default',
-                            Session.get('start').startOfYear.format('Ymd'),
-                            Session.get('start').endOfYear.format('Ymd'),
+                            startOfYear.format('Ymd'),
+                            endOfYear.format('Ymd'),
                             accountList
                             ]) }}">{{ 'report_this_year_quick'|_ }}</a>
                         </li>
@@ -111,7 +112,7 @@
                             <a href="{{ route('reports.report',
                             ['default',
                             start.format('Ymd'),
-                            Session.get('end').endOfMonth.format('Ymd'),
+                            endOfMonth.format('Ymd'),
                             accountList
                             ]) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>

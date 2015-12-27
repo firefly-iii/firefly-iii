@@ -15,7 +15,6 @@ use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 use Session;
-use Steam;
 
 /**
  * Class JsonController
@@ -72,9 +71,8 @@ class JsonController extends Controller
      */
     public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = 0;
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
         bcscale(2);
 
         // works for json too!
@@ -85,21 +83,14 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $bills = $repository->getActiveBills(); // these two functions are the same as the chart
+        // get amount from bills
+        $amount = $repository->billsPaidInRange($start, $end)->sum('paid');
 
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $amount = bcadd($amount, $repository->billPaymentsInRange($bill, $start, $end));
-        }
-        unset($bill, $bills);
-
-        $amount = $amount * -1; // make the amount positive again.
-
-        $creditCards = $accountRepository->getCreditCards(); // Find credit card accounts and possibly unpaid credit card bills.
+        // add credit card bill.
+        $creditCards = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, $end, true); // if the balance is not zero, the monthly payment is still underway.
-            if ($balance == 0) {
+            if ($creditCard->balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
                 $amount = bcadd($amount, $accountRepository->getTransfersInRange($creditCard, $start, $end)->sum('amount'));
@@ -149,14 +140,15 @@ class JsonController extends Controller
         }
         unset($bill, $bills, $range, $ranges);
 
-        $creditCards = $accountRepository->getCreditCards();
+        $creditCards = $accountRepository->getCreditCards($end);
+
+        /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, $end, true);
-            $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
-            if ($balance < 0) {
+            $date = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
+            if ($creditCard->balance < 0) {
                 // unpaid! create a fake bill that matches the amount.
                 $description = $creditCard->name;
-                $fakeAmount  = $balance * -1;
+                $fakeAmount  = $creditCard->balance * -1;
                 $fakeBill    = $repository->createFakeBill($description, $date, $fakeAmount);
                 $unpaid->push([$fakeBill, $date]);
             }
@@ -192,7 +184,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-        $amount = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('amount');
+        $amount   = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('to_amount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -221,8 +213,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $amount = $reportQuery->expenseInPeriod($start, $end, $accounts)->sum('amount');
-        $amount = $amount * -1;
+        $amount = $reportQuery->expenseInPeriod($start, $end, $accounts)->sum('to_amount');
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -244,7 +235,6 @@ class JsonController extends Controller
         foreach ($list as $entry) {
             $return[] = $entry->name;
         }
-        sort($return);
 
         return Response::json($return);
     }

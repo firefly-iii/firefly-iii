@@ -1,13 +1,14 @@
 <?php namespace FireflyIII\Http\Middleware;
 
 use App;
+use Auth;
 use Carbon\Carbon;
 use Closure;
 use Config;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
-use Auth;
+
 /**
  * Class Authenticate
  *
@@ -55,16 +56,19 @@ class Authenticate
 
         if (intval($this->auth->user()->blocked) == 1) {
             Auth::logout();
+
             return redirect()->route('index');
         }
 
         // if logged in, set user language:
-        $pref = Preferences::get('language', 'en');
+        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'));
         App::setLocale($pref->data);
-        Carbon::setLocale($pref->data);
+        Carbon::setLocale(substr($pref->data,0,2));
+        $locale = explode(',', trans('config.locale'));
+        $locale = array_map('trim', $locale);
 
-        setlocale(LC_TIME, Config::get('firefly.locales.' . $pref->data));
-        setlocale(LC_MONETARY, Config::get('firefly.locales.' . $pref->data));
+        setlocale(LC_TIME, $locale);
+        setlocale(LC_MONETARY, $locale);
 
         return $next($request);
     }

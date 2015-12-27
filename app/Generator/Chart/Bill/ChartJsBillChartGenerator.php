@@ -71,8 +71,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
     public function single(Bill $bill, Collection $entries)
     {
         // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.month.' . $language);
+        $format   = trans('config.month');
 
         $data = [
             'count'    => 3,

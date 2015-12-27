@@ -273,7 +273,7 @@ class FireflyValidator extends Validator
 
         // get entries from table
         $set = DB::table($table)->where('user_id', Auth::user()->id)
-            ->where('id', '!=', $exclude)->get([$field]);
+                 ->where('id', '!=', $exclude)->get([$field]);
 
         foreach ($set as $entry) {
             $fieldValue = $this->tryDecrypt($entry->$field);

@@ -31,20 +31,20 @@ class JournalFormRequest extends Request
     public function getJournalData()
     {
         return [
-            'what'               => $this->get('what'),
-            'description'        => $this->get('description'),
-            'account_id'         => intval($this->get('account_id')),
-            'account_from_id'    => intval($this->get('account_from_id')),
-            'account_to_id'      => intval($this->get('account_to_id')),
-            'expense_account'    => $this->get('expense_account'),
-            'revenue_account'    => $this->get('revenue_account'),
-            'amount'             => round($this->get('amount'), 2),
-            'user'               => Auth::user()->id,
-            'amount_currency_id' => intval($this->get('amount_currency_id')),
-            'date'               => new Carbon($this->get('date')),
-            'budget_id'          => intval($this->get('budget_id')),
-            'category'           => $this->get('category'),
-            'tags'               => explode(',', $this->get('tags')),
+            'what'                      => $this->get('what'),
+            'description'               => $this->get('description'),
+            'account_id'                => intval($this->get('account_id')),
+            'account_from_id'           => intval($this->get('account_from_id')),
+            'account_to_id'             => intval($this->get('account_to_id')),
+            'expense_account'           => $this->get('expense_account'),
+            'revenue_account'           => $this->get('revenue_account'),
+            'amount'                    => round($this->get('amount'), 2),
+            'user'                      => Auth::user()->id,
+            'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
+            'date'                      => new Carbon($this->get('date')),
+            'budget_id'                 => intval($this->get('budget_id')),
+            'category'                  => $this->get('category'),
+            'tags'                      => explode(',', $this->get('tags')),
         ];
     }
 
@@ -57,11 +57,11 @@ class JournalFormRequest extends Request
     {
         $what  = Input::get('what');
         $rules = [
-            'description'        => 'required|min:1,max:255',
-            'what'               => 'required|in:withdrawal,deposit,transfer',
-            'amount'             => 'numeric|required|min:0.01',
-            'date'               => 'required|date',
-            'amount_currency_id' => 'required|exists:transaction_currencies,id',
+            'description'               => 'required|min:1,max:255',
+            'what'                      => 'required|in:withdrawal,deposit,transfer',
+            'amount'                    => 'numeric|required|min:0.01',
+            'date'                      => 'required|date',
+            'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
 
         ];
 
