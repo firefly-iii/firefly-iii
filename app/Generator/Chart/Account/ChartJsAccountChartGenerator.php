@@ -142,7 +142,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
         // language:
         $format = trans('config.month_and_day');
 
-        $data = [
+        $data     = [
             'count'    => 1,
             'labels'   => [],
             'datasets' => [
@@ -152,12 +152,17 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
                 ]
             ],
         ];
-
-        $current = clone $start;
+        $range    = Steam::balanceInRange($account, $start, $end);
+        $current  = clone $start;
+        $previous = array_values($range)[0];
 
         while ($end >= $current) {
+            $format  = $current->format('Y-m-d');
+            $balance = isset($range[$format]) ? $range[$format] : $previous;
+
             $data['labels'][]              = $current->formatLocalized($format);
-            $data['datasets'][0]['data'][] = Steam::balance($account, $current);
+            $data['datasets'][0]['data'][] = $balance;
+            $previous                      = $balance;
             $current->addDay();
         }
 
