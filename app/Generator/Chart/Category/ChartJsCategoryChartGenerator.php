@@ -50,79 +50,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     }
 
     /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function frontpage(Collection $entries)
-    {
-        $data = [
-            'count'    => 1,
-            'labels'   => [],
-            'datasets' => [
-                [
-                    'label' => trans('firefly.spent'),
-                    'data'  => []
-                ]
-            ],
-        ];
-        foreach ($entries as $entry) {
-            if ($entry['sum'] != 0) {
-                $data['labels'][]              = $entry['name'];
-                $data['datasets'][0]['data'][] = round(($entry['sum'] * -1), 2);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function period(Collection $entries)
-    {
-        return $this->all($entries);
-
-    }
-
-    /**
-     * @param Collection $categories
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function spentInYear(Collection $categories, Collection $entries)
-    {
-
-        // language:
-        $format = trans('config.month');
-
-        $data = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
-
-        foreach ($categories as $category) {
-            $data['labels'][] = $category->name;
-        }
-
-        foreach ($entries as $entry) {
-            $date = $entry[0]->formatLocalized($format);
-            array_shift($entry);
-            $data['count']++;
-            $data['datasets'][] = ['label' => $date, 'data' => $entry];
-        }
-
-        return $data;
-
-    }
-
-    /**
      * @param Collection $categories
      * @param Collection $entries
      *
@@ -156,36 +83,30 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     }
 
     /**
-     * @param Collection $categories
      * @param Collection $entries
      *
      * @return array
      */
-    public function spentInPeriod(Collection $categories, Collection $entries)
+    public function frontpage(Collection $entries)
     {
-
-        // language:
-        $format = trans('config.month');
-
         $data = [
-            'count'    => 0,
+            'count'    => 1,
             'labels'   => [],
-            'datasets' => [],
+            'datasets' => [
+                [
+                    'label' => trans('firefly.spent'),
+                    'data'  => []
+                ]
+            ],
         ];
-
-        foreach ($categories as $category) {
-            $data['labels'][] = $category->name;
-        }
-
         foreach ($entries as $entry) {
-            $date = $entry[0]->formatLocalized($format);
-            array_shift($entry);
-            $data['count']++;
-            $data['datasets'][] = ['label' => $date, 'data' => $entry];
+            if ($entry['sum'] != 0) {
+                $data['labels'][]              = $entry['name'];
+                $data['datasets'][0]['data'][] = round(($entry['sum'] * -1), 2);
+            }
         }
 
         return $data;
-
     }
 
     /**
@@ -220,6 +141,52 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             }
         }
         $data['count'] = count($data['datasets']);
+
+        return $data;
+
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function period(Collection $entries)
+    {
+        return $this->all($entries);
+
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function spentInPeriod(Collection $categories, Collection $entries)
+    {
+
+        // language:
+        $format = trans('config.month');
+
+        $data = [
+            'count'    => 0,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+
+        foreach ($categories as $category) {
+            $data['labels'][] = $category->name;
+        }
+
+        foreach ($entries as $entry) {
+            $date = $entry[0]->formatLocalized($format);
+            array_shift($entry);
+            $data['count']++;
+            $data['datasets'][] = ['label' => $date, 'data' => $entry];
+        }
 
         return $data;
 

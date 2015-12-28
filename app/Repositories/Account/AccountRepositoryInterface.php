@@ -76,18 +76,6 @@ interface AccountRepositoryInterface
      */
     public function getPiggyBankAccounts();
 
-
-    /**
-     * Get all transfers TO this account in this range.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return Collection
-     */
-    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end);
-
     /**
      * @param Preference $preference
      *

@@ -23,6 +23,9 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      *
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
      * @return int
      */
     public function countJournalsInRange(Category $category, Carbon $start, Carbon $end);
@@ -141,6 +144,9 @@ interface CategoryRepositoryInterface
      * @param Category $category
      * @param int      $page
      *
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
      * @return Collection
      */
     public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end);
@@ -190,8 +196,6 @@ interface CategoryRepositoryInterface
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
      *
-     * @param bool           $shared
-     *
      * @return string
      */
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end);
@@ -200,8 +204,6 @@ interface CategoryRepositoryInterface
      * @param Category       $category
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
-     *
-     * @param bool           $shared
      *
      * @return string
      */

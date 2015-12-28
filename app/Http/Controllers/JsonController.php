@@ -3,15 +3,12 @@
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 use Session;
@@ -65,108 +62,58 @@ class JsonController extends Controller
     /**
      * @param BillRepositoryInterface    $repository
      *
-     * @param AccountRepositoryInterface $accountRepository
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function boxBillsPaid(BillRepositoryInterface $repository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
         bcscale(2);
 
-        // works for json too!
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('box-bills-paid');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+        /*
+         * Since both this method and the chart use the exact same data, we can suffice
+         * with calling the one method in the bill repository that will get this amount.
+         */
+        $amount        = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $creditCardDue = $repository->getCreditCardBill($start, $end);
+        if ($creditCardDue >= 0) {
+            $amount = bcadd($amount, $creditCardDue);
         }
-        // get amount from bills
-        $amount = $repository->billsPaidInRange($start, $end)->sum('paid');
+        $amount = $amount * -1;
 
-        // add credit card bill.
-        $creditCards = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
-        /** @var Account $creditCard */
-        foreach ($creditCards as $creditCard) {
-            if ($creditCard->balance == 0) {
-                // find a transfer TO the credit card which should account for
-                // anything paid. If not, the CC is not yet used.
-                $amount = bcadd($amount, $accountRepository->getTransfersInRange($creditCard, $start, $end)->sum('amount'));
-            }
-        }
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
-        $cache->store($data);
 
         return Response::json($data);
     }
 
     /**
-     * @param BillRepositoryInterface    $repository
-     * @param AccountRepositoryInterface $accountRepository
+     * @param BillRepositoryInterface $repository
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function boxBillsUnpaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
-        $amount = 0;
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
         bcscale(2);
+        $start         = Session::get('start', Carbon::now()->startOfMonth());
+        $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $amount        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $creditCardDue = $repository->getCreditCardBill($start, $end);
 
-        // works for json too!
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('box-bills-unpaid');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        $bills  = $repository->getActiveBills();
-        $unpaid = new Collection; // bills
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $ranges = $repository->getRanges($bill, $start, $end);
-
-            foreach ($ranges as $range) {
-                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
-                if ($journals->count() == 0) {
-                    $unpaid->push([$bill, $range['start']]);
-                }
-            }
-        }
-        unset($bill, $bills, $range, $ranges);
-
-        $creditCards = $accountRepository->getCreditCards($end);
-
-        /** @var Account $creditCard */
-        foreach ($creditCards as $creditCard) {
-            $date = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
-            if ($creditCard->balance < 0) {
-                // unpaid! create a fake bill that matches the amount.
-                $description = $creditCard->name;
-                $fakeAmount  = $creditCard->balance * -1;
-                $fakeBill    = $repository->createFakeBill($description, $date, $fakeAmount);
-                $unpaid->push([$fakeBill, $date]);
-            }
-        }
-        /** @var Bill $entry */
-        foreach ($unpaid as $entry) {
-            $current = bcdiv(bcadd($entry[0]->amount_max, $entry[0]->amount_min), 2);
-            $amount  = bcadd($amount, $current);
+        if ($creditCardDue < 0) {
+            // expenses are negative (bill not yet paid),
+            $creditCardDue = bcmul($creditCardDue, '-1');
+            $amount        = bcadd($amount, $creditCardDue);
         }
 
         $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
-        $cache->store($data);
 
         return Response::json($data);
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
+     * @param ReportQueryInterface       $reportQuery
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -193,7 +140,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
+     * @param ReportQueryInterface       $reportQuery
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

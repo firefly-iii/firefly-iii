@@ -10,11 +10,13 @@ use FireflyIII\Events\JournalSaved;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Response;
@@ -264,6 +266,15 @@ class TransactionController extends Controller
      */
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+
+        /** @var Collection $set */
+        $events = $journal->piggyBankEvents()->get();
+        $events->each(
+            function (PiggyBankEvent $event) {
+                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
+            }
+        );
+
         bcscale(2);
         $journal->transactions->each(
             function (Transaction $t) use ($journal, $repository) {
@@ -274,12 +285,14 @@ class TransactionController extends Controller
         $what     = strtolower($journal->getTransactionType());
         $subTitle = trans('firefly.' . $journal->getTransactionType()) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'subTitle', 'what'));
+        return view('transactions.show', compact('journal','events', 'subTitle', 'what'));
     }
 
     /**
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
+     *
+     * @param AttachmentHelperInterface  $att
      *
      * @return \Illuminate\Http\RedirectResponse
      */

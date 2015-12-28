@@ -4,7 +4,7 @@ use App;
 use Auth;
 use Carbon\Carbon;
 use Closure;
-use Config;
+use FireflyIII\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
@@ -46,6 +46,7 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next)
     {
+
         if ($this->auth->guest()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
@@ -54,16 +55,16 @@ class Authenticate
             }
         }
 
-        if (intval($this->auth->user()->blocked) == 1) {
+        if ($this->auth->user() instanceof User && intval($this->auth->user()->blocked) == 1) {
             Auth::logout();
 
             return redirect()->route('index');
         }
 
         // if logged in, set user language:
-        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'));
+        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
         App::setLocale($pref->data);
-        Carbon::setLocale(substr($pref->data,0,2));
+        Carbon::setLocale(substr($pref->data, 0, 2));
         $locale = explode(',', trans('config.locale'));
         $locale = array_map('trim', $locale);
 

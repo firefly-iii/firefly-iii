@@ -16,7 +16,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -118,7 +117,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getCreditCards(Carbon $date)
     {
-        return Auth::user()->accounts()
+        $cache = new CacheProperties();
+        $cache->addProperty('user-credit-cards');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $set = Auth::user()->accounts()
                    ->hasMetaValue('accountRole', 'ccAsset')
                    ->hasMetaValue('ccType', 'monthlyFull')
                    ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
@@ -134,6 +139,9 @@ class AccountRepository implements AccountRepositoryInterface
                            DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
                        ]
                    );
+        $cache->store($set);
+
+        return $set;
     }
 
     /**
@@ -351,36 +359,6 @@ class AccountRepository implements AccountRepositoryInterface
         );
 
         return $accounts;
-    }
-
-    /**
-     * Get all transfers TO this account in this range.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return Collection
-     */
-    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
-    {
-        $set = TransactionJournal::whereIn(
-            'id', function (Builder $q) use ($account, $start, $end) {
-            $q->select('transaction_journals.id')
-              ->from('transactions')
-              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-              ->where('transactions.account_id', $account->id)
-              ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-              ->where('transaction_journals.user_id', Auth::user()->id)
-              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-              ->where('transaction_types.type', TransactionType::TRANSFER);
-
-        }
-        )->get();
-
-        return $set;
     }
 
     /**

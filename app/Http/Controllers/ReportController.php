@@ -64,9 +64,12 @@ class ReportController extends Controller
         $accountList = join(',', $accountIds);
 
 
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList',
-                                             'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
-        ));
+        return view(
+            'reports.index', compact(
+            'months', 'accounts', 'start', 'accountList',
+            'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
+        )
+        );
     }
 
     /**
@@ -154,6 +157,14 @@ class ReportController extends Controller
         );
     }
 
+    /**
+     * @param $report_type
+     * @param $start
+     * @param $end
+     * @param $accounts
+     *
+     * @return View
+     */
     public function defaultMultiYear($report_type, $start, $end, $accounts)
     {
 
@@ -212,7 +223,6 @@ class ReportController extends Controller
 
                 // more than one year date difference means year report.
                 if ($start->diffInMonths($end) > 12) {
-                    //                    return view('error')->with('message', 'No report yet for this time period.');
                     return $this->defaultMultiYear($report_type, $start, $end, $accounts);
                 }
                 // more than two months date difference means year report.
@@ -221,7 +231,6 @@ class ReportController extends Controller
                 }
 
                 return $this->defaultMonth($report_type, $start, $end, $accounts);
-                break;
         }
 
 

@@ -3,9 +3,7 @@
 namespace FireflyIII\Generator\Chart\PiggyBank;
 
 use Carbon\Carbon;
-use Config;
 use Illuminate\Support\Collection;
-use Preferences;
 
 
 /**
@@ -25,7 +23,7 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
     {
 
         // language:
-        $format   = trans('config.month_and_day');
+        $format = trans('config.month_and_day');
 
         $data = [
             'count'    => 1,

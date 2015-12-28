@@ -228,6 +228,11 @@ class AuthController extends Controller
         return $domains;
     }
 
+    /**
+     * @param $email
+     *
+     * @return bool
+     */
     protected function isBlockedDomain($email)
     {
         $parts   = explode('@', $email);

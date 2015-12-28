@@ -4,13 +4,16 @@ namespace FireflyIII\Repositories\Budget;
 
 use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
@@ -74,6 +77,50 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         );
 
         return $set;
+    }
+
+    /**
+     * Returns a list of budgets, budget limits and limit repetitions
+     * (doubling any of them in a left join)
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end)
+    {
+        /** @var Collection $set */
+        $set = Auth::user()
+                   ->budgets()
+                   ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
+                   ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                   ->where(
+                       function (Builder $query) use ($start, $end) {
+                           $query->where(
+                               function (Builder $query) use ($start, $end) {
+                                   $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'));
+                                   $query->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d'));
+                               }
+                           );
+                           $query->orWhere(
+                               function (Builder $query) {
+                                   $query->whereNull('limit_repetitions.startdate');
+                                   $query->whereNull('limit_repetitions.enddate');
+                               }
+                           );
+                       }
+                   )
+                   ->get(['budgets.*', 'limit_repetitions.startdate', 'limit_repetitions.enddate', 'limit_repetitions.amount']);
+
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        return $set;
+
     }
 
     /**
@@ -143,8 +190,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                        ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
                        ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
                        ->first(['limit_repetitions.*']);
-        //Log::debug('Looking for limit reps for budget #' . $budget->id . ' start [' . $start . '] and end [' . $end . '].');
-        //Log::debug(DB::getQueryLog())
         $cache->store($data);
 
         return $data;
@@ -247,6 +292,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
     /**
      * @deprecated
+     *
      * @param Budget $budget
      * @param Carbon $date
      *
@@ -294,25 +340,30 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getWithoutBudgetSum(Carbon $start, Carbon $end)
     {
-        $noBudgetSet = Auth::user()
-                           ->transactionjournals()
-                           ->whereNotIn(
-                               'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
-                               $query
-                                   ->select('transaction_journals.id')
-                                   ->from('transaction_journals')
-                                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
-                                   ->whereNotNull('budget_transaction_journal.budget_id');
-                           }
-                           )
-                           ->after($start)
-                           ->before($end)
-                           ->transactionTypes([TransactionType::WITHDRAWAL])
-                           ->get(['transaction_journals.*'])->sum('amount');
+        $entry = Auth::user()
+                     ->transactionjournals()
+                     ->whereNotIn(
+                         'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
+                         $query
+                             ->select('transaction_journals.id')
+                             ->from('transaction_journals')
+                             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                             ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                             ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
+                             ->whereNotNull('budget_transaction_journal.budget_id');
+                     }
+                     )
+                     ->after($start)
+                     ->before($end)
+                     ->leftJoin(
+                         'transactions', function (JoinClause $join) {
+                         $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                     }
+                     )
+                     ->transactionTypes([TransactionType::WITHDRAWAL])
+                     ->first([DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
 
-        return $noBudgetSet;
+        return $entry->journalAmount;
     }
 
     /**

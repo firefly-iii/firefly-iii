@@ -135,6 +135,8 @@ class CategoryController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      * @param Collection                  $categories
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function multiYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
@@ -248,6 +250,8 @@ class CategoryController extends Controller
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
      *
+     * @param                             $date
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, $date)
@@ -285,66 +289,6 @@ class CategoryController extends Controller
         return Response::json($data);
 
 
-    }
-
-    /**
-     * This chart will only show expenses.
-     *
-     * @param CategoryRepositoryInterface $repository
-     * @param                             $report_type
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function spentInYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
-    {
-
-        $cache = new CacheProperties; // chart properties for cache:
-        $cache->addProperty($start);
-        $cache->addProperty($report_type);
-        $cache->addProperty($end);
-        $cache->addProperty($accounts);
-        $cache->addProperty('category');
-        $cache->addProperty('spent-in-year');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        $allCategories = $repository->getCategories();
-        $entries       = new Collection;
-        $categories    = $allCategories->filter(
-            function (Category $category) use ($repository, $start, $end, $accounts) {
-                $spent = $repository->balanceInPeriod($category, $start, $end, $accounts);
-                if ($spent < 0) {
-                    return $category;
-                }
-
-                return null;
-            }
-        );
-
-        while ($start < $end) {
-            $month = clone $start; // month is the current end of the period
-            $month->endOfMonth();
-            $row = [clone $start]; // make a row:
-
-            foreach ($categories as $category) { // each budget, fill the row
-                $spent = $repository->balanceInPeriod($category, $start, $month, $accounts);
-                if ($spent < 0) {
-                    $row[] = $spent * -1;
-                } else {
-                    $row[] = 0;
-                }
-            }
-            $entries->push($row);
-            $start->addMonth();
-        }
-        $data = $this->generator->spentInYear($categories, $entries);
-        $cache->store($data);
-
-        return Response::json($data);
     }
 
     /**
@@ -389,7 +333,7 @@ class CategoryController extends Controller
             $categories = $categories->merge($set);
             // save the set combined with the data that is in it:
             // for example:
-            // [december 2015, salary:1000, bonus:200]
+            // december 2015, salary:1000, bonus:200
             $sets->push([$currentStart, $set]);
             $start->addMonth();
         }

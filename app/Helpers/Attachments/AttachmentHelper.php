@@ -67,7 +67,9 @@ class AttachmentHelper implements AttachmentHelperInterface
                 }
             }
         } else {
-            $this->processFile($files, $model);
+            if (!is_null($files)) {
+                $this->processFile($files, $model);
+            }
         }
 
         return true;

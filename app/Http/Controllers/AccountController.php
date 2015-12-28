@@ -56,7 +56,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account $account
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return \Illuminate\View\View
      */

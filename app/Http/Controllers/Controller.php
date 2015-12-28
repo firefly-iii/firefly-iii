@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Config;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;

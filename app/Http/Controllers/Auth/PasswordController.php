@@ -77,6 +77,8 @@ class PasswordController extends Controller
                 return redirect()->back()->withErrors(['email' => trans($response)]);
 
         }
+        abort(404);
+        return '';
     }
 
 }

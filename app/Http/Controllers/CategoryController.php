@@ -146,6 +146,8 @@ class CategoryController extends Controller
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
      *
+     * @param                             $date
+     *
      * @return \Illuminate\View\View
      */
     public function showWithDate(CategoryRepositoryInterface $repository, Category $category, $date)

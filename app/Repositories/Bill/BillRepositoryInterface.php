@@ -16,61 +16,41 @@ interface BillRepositoryInterface
 {
 
     /**
-     * Takes the paid/unpaid bills collection set up before and expands it using
-     * credit cards the user might have.
-     *
-     * @param Collection $set
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getCreditCardInfoForChart(Collection $set, Carbon $start, Carbon $end);
-
-    /**
-     * Gets a collection of paid bills and a collection of unpaid bills to be used
-     * in the pie chart on the front page.
+     * This method will tell you if you still have a CC bill to pay. Amount will be negative if the amount
+     * has been paid
      *
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return Collection
+     * @return string
      */
-    public function getBillsForChart(Carbon $start, Carbon $end);
+    public function getCreditCardBill(Carbon $start, Carbon $end);
 
     /**
-     * @deprecated
-     * Returns the sum of all payments connected to this bill between the dates.
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return float
-     */
-    public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end);
-
-    /**
-     * This method returns all active bills which have been paid for in the given range,
-     * with the field "paid" indicating how much the bill was for.
+     * Get the total amount of money paid for the users active bills in the date range given.
      *
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return Collection
+     * @return string
      */
-    public function billsPaidInRange(Carbon $start, Carbon $end);
+    public function getBillsPaidInRange(Carbon $start, Carbon $end);
 
     /**
-     * Create a fake bill to help the chart controller.
+     * Get the total amount of money due for the users active bills in the date range given.
      *
-     * @param string $description
-     * @param Carbon $date
-     * @param float  $amount
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Bill
+     * @return string
      */
-    public function createFakeBill($description, Carbon $date, $amount);
+    public function getBillsUnpaidInRange(Carbon $start, Carbon $end);
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBills();
+
 
     /**
      * @param Bill $bill
@@ -78,11 +58,6 @@ interface BillRepositoryInterface
      * @return mixed
      */
     public function destroy(Bill $bill);
-
-    /**
-     * @return Collection
-     */
-    public function getActiveBills();
 
     /**
      * @return Collection
@@ -126,7 +101,7 @@ interface BillRepositoryInterface
     /**
      * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
      * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
-     * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill.
+     * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill (from the 14th to the 31th).
      *
      * @param Bill   $bill
      * @param Carbon $start

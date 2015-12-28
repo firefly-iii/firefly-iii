@@ -33,7 +33,7 @@ class BillController extends Controller
     }
 
     /**
-     * Shows all bills and whether or not theyve been paid this month (pie chart).
+     * Shows all bills and whether or not they've been paid this month (pie chart).
      *
      * @param BillRepositoryInterface $repository
      *
@@ -41,28 +41,24 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $cache = new CacheProperties(); // chart properties for cache:
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('bills');
-        $cache->addProperty('frontpage');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+        $start         = Session::get('start', Carbon::now()->startOfMonth());
+        $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $paid          = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $unpaid        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $creditCardDue = $repository->getCreditCardBill($start, $end);
+
+        if ($creditCardDue < 0) {
+            // expenses are negative (bill not yet paid),
+            $creditCardDue = bcmul($creditCardDue, '-1');
+            $unpaid        = bcadd($unpaid, $creditCardDue);
+        } else {
+            // if more than zero, the bill has been paid: (transfer = positive).
+            // amount must be negative to be added to $paid:
+            $paid = bcadd($paid, $creditCardDue);
         }
-
-        $set = $repository->getBillsForChart($start, $end);
-
-        // optionally expand this set with credit card data
-        $set    = $repository->getCreditCardInfoForChart($set, $start, $end);
-        $paid   = $set->get('paid');
-        $unpaid = $set->get('unpaid');
-
 
         // build chart:
         $data = $this->generator->frontpage($paid, $unpaid);
-        $cache->store($data);
 
         return Response::json($data);
     }

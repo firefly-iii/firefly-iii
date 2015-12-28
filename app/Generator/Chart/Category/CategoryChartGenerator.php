@@ -54,5 +54,5 @@ interface CategoryChartGenerator
      *
      * @return array
      */
-    public function spentInYear(Collection $categories, Collection $entries);
+    public function spentInPeriod(Collection $categories, Collection $entries);
 }

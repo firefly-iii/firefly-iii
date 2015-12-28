@@ -83,8 +83,8 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
             if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
                 $data['labels'][] = $entry[0];
                 $left[]           = round($entry[1], 2);
-                $spent[]          = round($entry[2], 2);
-                $overspent[]      = round($entry[3], 2);
+                $spent[]          = round($entry[2] * -1, 2); // spent is coming in negative, must be positive
+                $overspent[]      = round($entry[3] * -1, 2); // same
             }
         }
 

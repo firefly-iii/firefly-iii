@@ -53,7 +53,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         $cache = new CacheProperties;
         $cache->addProperty('category-list');
 
-        if($cache->has()) {
+        if ($cache->has()) {
             return $cache->get();
         }
 
@@ -346,8 +346,6 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
      *
-     * @param bool           $shared
-     *
      * @return string
      */
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end)
@@ -377,8 +375,6 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
      *
-     * @param bool           $shared
-     *
      * @return string
      */
     public function earnedInPeriod(Category $category, Carbon $start, Carbon $end)
@@ -403,11 +399,14 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         return $sum;
     }
 
+
     /**
      * @param Category $category
      * @param int      $page
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
-     * @return Collection
+     * @return mixed
      */
     public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end)
     {
@@ -427,6 +426,9 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
 
     /**
      * @param Category $category
+     *
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return int
      */

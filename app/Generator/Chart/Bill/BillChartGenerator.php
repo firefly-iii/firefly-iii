@@ -14,12 +14,12 @@ interface BillChartGenerator
 {
 
     /**
-     * @param Collection $paid
-     * @param Collection $unpaid
+     * @param string $paid
+     * @param string $unpaid
      *
      * @return array
      */
-    public function frontpage(Collection $paid, Collection $unpaid);
+    public function frontpage($paid, $unpaid);
 
     /**
      * @param Bill       $bill

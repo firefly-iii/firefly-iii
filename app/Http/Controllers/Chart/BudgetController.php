@@ -43,6 +43,8 @@ class BudgetController extends Controller
      * @param Carbon                    $end
      * @param Collection                $accounts
      * @param Collection                $budgets
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function multiYear(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
     {
@@ -110,8 +112,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param BudgetRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Budget                     $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -205,17 +208,16 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @param BudgetRepositoryInterface $repository
+     * @param BudgetRepositoryInterface  $repository
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function frontpage(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $budgets    = $repository->getBudgets();
-        $start      = Session::get('start', Carbon::now()->startOfMonth());
-        $end        = Session::get('end', Carbon::now()->endOfMonth());
-        $allEntries = new Collection;
-        $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -227,52 +229,57 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        $budgets    = $repository->getBudgetsAndLimitsInRange($start, $end);
+        $allEntries = new Collection;
+        $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+
+
         bcscale(2);
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
-            if ($repetitions->count() == 0) {
-                $expenses = $repository->balanceInPeriod($budget, $start, $end, $accounts) * -1;
-                $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
-                continue;
+            // we already have amount, startdate and enddate.
+            // if this "is" a limit repetition (as opposed to a budget without one entirely)
+            // depends on whether startdate and enddate are null.
+            $name = $budget->name;
+            if (is_null($budget->startdate) && is_null($budget->enddate)) {
+                $currentStart = clone $start;
+                $currentEnd   = clone $end;
+                $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
+                $amount       = 0;
+                $left         = 0;
+                $spent        = $expenses;
+                $overspent    = 0;
+            } else {
+                $currentStart = clone $budget->startdate;
+                $currentEnd   = clone $budget->enddate;
+                $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
+                $amount       = $budget->amount;
+                // smaller than 1 means spent MORE than budget allows.
+                $left      = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? 0 : bcadd($budget->amount, $expenses);
+                $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? ($amount * -1) : $expenses;
+                $overspent = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcadd($budget->amount, $expenses) : 0;
             }
-            /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) {
-                $expenses = $repository->balanceInPeriod($budget, $repetition->startdate, $repetition->enddate, $accounts) * -1;
-                // $left can be less than zero.
-                // $overspent can be more than zero ( = overspending)
 
-                $left      = max(bcsub($repetition->amount, $expenses), 0); // limited at zero.
-                $overspent = max(bcsub($expenses, $repetition->amount), 0); // limited at zero.
-                $name      = $budget->name;
-
-                // $spent is maxed to the repetition amount:
-                $spent = $expenses > $repetition->amount ? $repetition->amount : $expenses;
-
-
-                $allEntries->push([$name, $left, $spent, $overspent, $repetition->amount, $expenses]);
-            }
+            $allEntries->push([$name, $left, $spent, $overspent, $amount, $expenses]);
         }
 
-        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end) * -1;
+        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
         $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses, 0, 0]);
-
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
-     * Show a yearly overview for a budget.
-     *
      * @param BudgetRepositoryInterface $repository
-     * @param                           $year
-     * @param bool                      $shared
+     * @param                           $report_type
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     * @param Collection                $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function year(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
@@ -291,7 +298,7 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-//         filter empty budgets:
+        //         filter empty budgets:
         foreach ($allBudgets as $budget) {
             $spent = $repository->balanceInPeriod($budget, $start, $end, $accounts);
             if ($spent != 0) {
