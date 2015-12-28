@@ -172,12 +172,12 @@ class JournalRepository implements JournalRepositoryInterface
         // store actual journal.
         $journal = new TransactionJournal(
             [
-                'user_id'                 => $data['user'],
-                'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['amount_currency_id_amount'],
-                'description'             => $data['description'],
-                'completed'               => 0,
-                'date'                    => $data['date'],
+                'user_id'                   => $data['user'],
+                'transaction_type_id'       => $transactionType->id,
+                'amount_currency_id_amount' => $data['amount_currency_id_amount'],
+                'description'               => $data['description'],
+                'completed'                 => 0,
+                'date'                      => $data['date'],
             ]
         );
         $journal->save();
@@ -236,7 +236,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function update(TransactionJournal $journal, array $data)
     {
         // update actual journal.
-        $journal->transaction_currency_id = $data['amount_currency_id'];
+        $journal->transaction_currency_id = $data['amount_currency_id_amount'];
         $journal->description             = $data['description'];
         $journal->date                    = $data['date'];
 
