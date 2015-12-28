@@ -132,7 +132,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
+     * @param BudgetRepositoryInterface  $repository
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Illuminate\View\View
      */

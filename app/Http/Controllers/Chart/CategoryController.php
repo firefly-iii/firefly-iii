@@ -135,6 +135,8 @@ class CategoryController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      * @param Collection                  $categories
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function multiYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
@@ -247,6 +249,8 @@ class CategoryController extends Controller
     /**
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
+     *
+     * @param                             $date
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

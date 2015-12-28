@@ -89,10 +89,11 @@ class JsonController extends Controller
     }
 
     /**
-     * @param BillRepositoryInterface    $repository
-     * @param AccountRepositoryInterface $accountRepository
+     * @param BillRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @internal param AccountRepositoryInterface $accountRepository
+     *
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
@@ -114,7 +115,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
+     * @param ReportQueryInterface       $reportQuery
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -141,7 +144,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
+     * @param ReportQueryInterface       $reportQuery
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -43,6 +43,8 @@ class BudgetController extends Controller
      * @param Carbon                    $end
      * @param Collection                $accounts
      * @param Collection                $budgets
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function multiYear(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
     {
@@ -110,8 +112,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param BudgetRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Budget                     $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -205,7 +208,9 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @param BudgetRepositoryInterface $repository
+     * @param BudgetRepositoryInterface  $repository
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

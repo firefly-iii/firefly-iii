@@ -23,6 +23,9 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      *
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
      * @return int
      */
     public function countJournalsInRange(Category $category, Carbon $start, Carbon $end);
@@ -140,6 +143,9 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      * @param int      $page
+     *
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return Collection
      */

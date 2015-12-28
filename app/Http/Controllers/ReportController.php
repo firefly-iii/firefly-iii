@@ -157,6 +157,14 @@ class ReportController extends Controller
         );
     }
 
+    /**
+     * @param $report_type
+     * @param $start
+     * @param $end
+     * @param $accounts
+     *
+     * @return View
+     */
     public function defaultMultiYear($report_type, $start, $end, $accounts)
     {
 

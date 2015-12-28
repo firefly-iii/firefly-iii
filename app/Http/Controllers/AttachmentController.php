@@ -90,7 +90,8 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Attachment $attachment
+     * @param Attachment                $attachment
+     * @param AttachmentHelperInterface $helper
      */
     public function download(Attachment $attachment, AttachmentHelperInterface $helper)
     {

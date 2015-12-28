@@ -292,6 +292,8 @@ class TransactionController extends Controller
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
+     * @param AttachmentHelperInterface  $att
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
