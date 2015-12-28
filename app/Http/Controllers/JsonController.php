@@ -62,11 +62,9 @@ class JsonController extends Controller
     /**
      * @param BillRepositoryInterface    $repository
      *
-     * @param AccountRepositoryInterface $accountRepository
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function boxBillsPaid(BillRepositoryInterface $repository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -91,9 +89,7 @@ class JsonController extends Controller
     /**
      * @param BillRepositoryInterface $repository
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @internal param AccountRepositoryInterface $accountRepository
-     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
