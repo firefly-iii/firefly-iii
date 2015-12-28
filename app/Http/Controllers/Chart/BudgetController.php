@@ -268,13 +268,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * Show a yearly overview for a budget.
-     *
      * @param BudgetRepositoryInterface $repository
-     * @param                           $year
-     * @param bool                      $shared
+     * @param                           $report_type
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     * @param Collection                $accounts
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function year(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
