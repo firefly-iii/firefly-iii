@@ -211,6 +211,59 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * Returns an array with every budget in it and the expenses for each budget
+     * per month.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getBudgetsAndExpenses(Carbon $start, Carbon $end)
+    {
+        /** @var Collection $set */
+        $set    = Auth::user()->budgets()
+                      ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                      ->leftJoin(
+                          'transactions', function (JoinClause $join) {
+                          $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                      }
+                      )
+                      ->groupBy('budgets.id')
+                      ->groupBy('dateFormatted')
+                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                      ->get(
+                          [
+                              'budgets.*',
+                              DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
+                              DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`')
+                          ]
+                      );
+
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        $return = [];
+        foreach ($set as $budget) {
+            $id = $budget->id;
+            if (!isset($return[$id])) {
+                $return[$id] = [
+                    'budget'  => $budget,
+                    'entries' => [],
+                ];
+            }
+            // store each entry:
+            $return[$id]['entries'][$budget->dateFormatted] = $budget->sumAmount;
+        }
+        return $return;
+    }
+
+    /**
      * @return Collection
      */
     public function getInactiveBudgets()

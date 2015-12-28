@@ -283,9 +283,6 @@ class BudgetController extends Controller
      */
     public function year(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $allBudgets = $repository->getBudgets();
-        $budgets    = new Collection;
-
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -298,26 +295,30 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        //         filter empty budgets:
-        foreach ($allBudgets as $budget) {
-            $spent = $repository->balanceInPeriod($budget, $start, $end, $accounts);
-            if ($spent != 0) {
-                $budgets->push($budget);
-            }
-        }
+        $budgetInformation = $repository->getBudgetsAndExpenses($start, $end);
+        $budgets           = new Collection;
+        $entries           = new Collection;
 
-        $entries = new Collection;
+        /** @var array $row */
+        foreach ($budgetInformation as $row) {
+            $budgets->push($row['budget']);
+        }
 
         while ($start < $end) {
             // month is the current end of the period:
             $month = clone $start;
             $month->endOfMonth();
-            $row = [clone $start];
+            $row           = [clone $start];
+            $dateFormatted = $start->format('Y-m');
 
-            // each budget, fill the row:
-            foreach ($budgets as $budget) {
-                $spent = $repository->balanceInPeriod($budget, $start, $month, $accounts);
-                $row[] = $spent * -1;
+            // each budget, check if there is an entry for this month:
+            /** @var array $row */
+            foreach ($budgetInformation as $budgetRow) {
+                $spent = 0; // nothing spent.
+                if (isset($budgetRow['entries'][$dateFormatted])) {
+                    $spent = $budgetRow['entries'][$dateFormatted] * -1; // to fit array
+                }
+                $row[] = $spent;
             }
             $entries->push($row);
             $start->endOfMonth()->addDay();

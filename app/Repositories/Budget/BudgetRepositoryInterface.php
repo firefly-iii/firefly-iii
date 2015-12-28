@@ -28,6 +28,17 @@ interface BudgetRepositoryInterface
     public function destroy(Budget $budget);
 
     /**
+     * Returns an array with every budget in it and the expenses for each budget
+     * per month.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getBudgetsAndExpenses(Carbon $start, Carbon $end);
+
+    /**
      * Takes tags into account.
      *
      * @param Budget $budget
