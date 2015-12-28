@@ -36,7 +36,7 @@ class AccountController extends Controller
 
     /**
      * Shows the balances for a given set of dates and accounts.
-     * 
+     *
      * @param            $report_type
      * @param Carbon     $start
      * @param Carbon     $end
