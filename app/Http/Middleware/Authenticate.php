@@ -4,7 +4,6 @@ use App;
 use Auth;
 use Carbon\Carbon;
 use Closure;
-use Config;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
@@ -61,9 +60,9 @@ class Authenticate
         }
 
         // if logged in, set user language:
-        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE','en_US'));
+        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
         App::setLocale($pref->data);
-        Carbon::setLocale(substr($pref->data,0,2));
+        Carbon::setLocale(substr($pref->data, 0, 2));
         $locale = explode(',', trans('config.locale'));
         $locale = array_map('trim', $locale);
 

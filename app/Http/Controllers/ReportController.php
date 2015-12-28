@@ -64,9 +64,12 @@ class ReportController extends Controller
         $accountList = join(',', $accountIds);
 
 
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList',
-                                             'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
-        ));
+        return view(
+            'reports.index', compact(
+            'months', 'accounts', 'start', 'accountList',
+            'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
+        )
+        );
     }
 
     /**

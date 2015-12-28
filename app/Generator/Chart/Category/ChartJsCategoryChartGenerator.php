@@ -50,6 +50,39 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     }
 
     /**
+     * @param Collection $categories
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function earnedInPeriod(Collection $categories, Collection $entries)
+    {
+
+        // language:
+        $format = trans('config.month');
+
+        $data = [
+            'count'    => 0,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+
+        foreach ($categories as $category) {
+            $data['labels'][] = $category->name;
+        }
+
+        foreach ($entries as $entry) {
+            $date = $entry[0]->formatLocalized($format);
+            array_shift($entry);
+            $data['count']++;
+            $data['datasets'][] = ['label' => $date, 'data' => $entry];
+        }
+
+        return $data;
+
+    }
+
+    /**
      * @param Collection $entries
      *
      * @return array
@@ -74,6 +107,43 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         }
 
         return $data;
+    }
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function multiYear(Collection $entries)
+    {
+        // dataset:
+        $data = [
+            'count'    => 0,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+        // get labels from one of the categories (assuming there's at least one):
+        $first = $entries->first();
+        foreach ($first['spent'] as $year => $noInterest) {
+            $data['labels'][] = strval($year);
+        }
+
+        // then, loop all entries and create datasets:
+        foreach ($entries as $entry) {
+            $name   = $entry['name'];
+            $spent  = $entry['spent'];
+            $earned = $entry['earned'];
+            if (array_sum(array_values($spent)) != 0) {
+                $data['datasets'][] = ['label' => 'Spent in category ' . $name, 'data' => array_values($spent)];
+            }
+            if (array_sum(array_values($earned)) != 0) {
+                $data['datasets'][] = ['label' => 'Earned in category ' . $name, 'data' => array_values($earned)];
+            }
+        }
+        $data['count'] = count($data['datasets']);
+
+        return $data;
+
     }
 
     /**
@@ -128,39 +198,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
      *
      * @return array
      */
-    public function earnedInPeriod(Collection $categories, Collection $entries)
-    {
-
-        // language:
-        $format = trans('config.month');
-
-        $data = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
-
-        foreach ($categories as $category) {
-            $data['labels'][] = $category->name;
-        }
-
-        foreach ($entries as $entry) {
-            $date = $entry[0]->formatLocalized($format);
-            array_shift($entry);
-            $data['count']++;
-            $data['datasets'][] = ['label' => $date, 'data' => $entry];
-        }
-
-        return $data;
-
-    }
-
-    /**
-     * @param Collection $categories
-     * @param Collection $entries
-     *
-     * @return array
-     */
     public function spentInPeriod(Collection $categories, Collection $entries)
     {
 
@@ -183,43 +220,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             $data['count']++;
             $data['datasets'][] = ['label' => $date, 'data' => $entry];
         }
-
-        return $data;
-
-    }
-
-    /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function multiYear(Collection $entries)
-    {
-        // dataset:
-        $data = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
-        // get labels from one of the categories (assuming there's at least one):
-        $first = $entries->first();
-        foreach ($first['spent'] as $year => $noInterest) {
-            $data['labels'][] = strval($year);
-        }
-
-        // then, loop all entries and create datasets:
-        foreach ($entries as $entry) {
-            $name   = $entry['name'];
-            $spent  = $entry['spent'];
-            $earned = $entry['earned'];
-            if (array_sum(array_values($spent)) != 0) {
-                $data['datasets'][] = ['label' => 'Spent in category ' . $name, 'data' => array_values($spent)];
-            }
-            if (array_sum(array_values($earned)) != 0) {
-                $data['datasets'][] = ['label' => 'Earned in category ' . $name, 'data' => array_values($earned)];
-            }
-        }
-        $data['count'] = count($data['datasets']);
 
         return $data;
 

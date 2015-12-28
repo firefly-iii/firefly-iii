@@ -2,9 +2,7 @@
 
 namespace FireflyIII\Generator\Chart\Report;
 
-use Config;
 use Illuminate\Support\Collection;
-use Preferences;
 
 /**
  * Class ChartJsReportChartGenerator
@@ -13,40 +11,6 @@ use Preferences;
  */
 class ChartJsReportChartGenerator implements ReportChartGenerator
 {
-
-    /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function yearInOut(Collection $entries)
-    {
-        // language:
-        $format   = trans('config.month');
-
-        $data = [
-            'count'    => 2,
-            'labels'   => [],
-            'datasets' => [
-                [
-                    'label' => trans('firefly.income'),
-                    'data'  => []
-                ],
-                [
-                    'label' => trans('firefly.expenses'),
-                    'data'  => []
-                ]
-            ],
-        ];
-
-        foreach ($entries as $entry) {
-            $data['labels'][]              = $entry[0]->formatLocalized($format);
-            $data['datasets'][0]['data'][] = round($entry[1], 2);
-            $data['datasets'][1]['data'][] = round($entry[2], 2);
-        }
-
-        return $data;
-    }
 
     /**
      * Same as above but other translations.
@@ -88,12 +52,11 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
      *
      * @return array
      */
-    public function yearInOutSummarized($income, $expense, $count)
+    public function multiYearInOutSummarized($income, $expense, $count)
     {
-
         $data                          = [
             'count'    => 2,
-            'labels'   => [trans('firefly.sum_of_year'), trans('firefly.average_of_year')],
+            'labels'   => [trans('firefly.sum_of_years'), trans('firefly.average_of_years')],
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),
@@ -114,17 +77,52 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
     }
 
     /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function yearInOut(Collection $entries)
+    {
+        // language:
+        $format = trans('config.month');
+
+        $data = [
+            'count'    => 2,
+            'labels'   => [],
+            'datasets' => [
+                [
+                    'label' => trans('firefly.income'),
+                    'data'  => []
+                ],
+                [
+                    'label' => trans('firefly.expenses'),
+                    'data'  => []
+                ]
+            ],
+        ];
+
+        foreach ($entries as $entry) {
+            $data['labels'][]              = $entry[0]->formatLocalized($format);
+            $data['datasets'][0]['data'][] = round($entry[1], 2);
+            $data['datasets'][1]['data'][] = round($entry[2], 2);
+        }
+
+        return $data;
+    }
+
+    /**
      * @param string $income
      * @param string $expense
      * @param int    $count
      *
      * @return array
      */
-    public function multiYearInOutSummarized($income, $expense, $count)
+    public function yearInOutSummarized($income, $expense, $count)
     {
+
         $data                          = [
             'count'    => 2,
-            'labels'   => [trans('firefly.sum_of_years'), trans('firefly.average_of_years')],
+            'labels'   => [trans('firefly.sum_of_year'), trans('firefly.average_of_year')],
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),

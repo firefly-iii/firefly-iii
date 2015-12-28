@@ -46,7 +46,6 @@ class ComponentRepository
         }
 
 
-
         $entry  = $object->transactionjournals()
                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
                          ->before($end)

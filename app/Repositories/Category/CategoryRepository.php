@@ -53,7 +53,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         $cache = new CacheProperties;
         $cache->addProperty('category-list');
 
-        if($cache->has()) {
+        if ($cache->has()) {
             return $cache->get();
         }
 

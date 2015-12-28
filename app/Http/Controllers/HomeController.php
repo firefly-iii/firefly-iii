@@ -1,15 +1,12 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Artisan;
-use Auth;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
-use Log;
 use Preferences;
-use Route;
 use Session;
 use Steam;
 

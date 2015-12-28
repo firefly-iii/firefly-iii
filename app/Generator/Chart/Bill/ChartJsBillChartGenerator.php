@@ -25,13 +25,13 @@ class ChartJsBillChartGenerator implements BillChartGenerator
         bcscale(2);
         $data = [
             [
-                'value'     => round($unpaid,2),
+                'value'     => round($unpaid, 2),
                 'color'     => 'rgba(53, 124, 165,0.7)',
                 'highlight' => 'rgba(53, 124, 165,0.9)',
                 'label'     => trans('firefly.unpaid'),
             ],
             [
-                'value'     => round($paid * -1,2), // paid is negative, must be positive.
+                'value'     => round($paid * -1, 2), // paid is negative, must be positive.
                 'color'     => 'rgba(0, 141, 76, 0.7)',
                 'highlight' => 'rgba(0, 141, 76, 0.9)',
                 'label'     => trans('firefly.paid'),
@@ -73,7 +73,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
             /*
              * journalAmount has been collected in BillRepository::getJournals
              */
-            $actualAmount[]   = round(($entry->journalAmount * -1), 2);
+            $actualAmount[] = round(($entry->journalAmount * -1), 2);
         }
 
         $data['datasets'][] = [

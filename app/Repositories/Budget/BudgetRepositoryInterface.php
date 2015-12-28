@@ -108,6 +108,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @deprecated
+     *
      * @param Budget $budget
      *
      * @return Carbon
@@ -116,6 +117,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @deprecated
+     *
      * @param Budget $budget
      * @param Carbon $date
      *

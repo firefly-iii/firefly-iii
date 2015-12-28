@@ -161,15 +161,15 @@ class ReportQuery implements ReportQueryInterface
                 }
             }
         );
-//        $data = $data->filter(
-//            function (TransactionJournal $journal) {
-//                if ($journal->amount != 0) {
-//                    return $journal;
-//                }
-//
-//                return null;
-//            }
-//        );
+        //        $data = $data->filter(
+        //            function (TransactionJournal $journal) {
+        //                if ($journal->amount != 0) {
+        //                    return $journal;
+        //                }
+        //
+        //                return null;
+        //            }
+        //        );
 
         return $data;
     }

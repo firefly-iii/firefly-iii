@@ -236,7 +236,7 @@ class BudgetController extends Controller
             // we already have amount, startdate and enddate.
             // if this "is" a limit repetition (as opposed to a budget without one entirely)
             // depends on whether startdate and enddate are null.
-            $name         = $budget->name;
+            $name = $budget->name;
             if (is_null($budget->startdate) && is_null($budget->enddate)) {
                 $currentStart = clone $start;
                 $currentEnd   = clone $end;
@@ -252,7 +252,7 @@ class BudgetController extends Controller
                 $amount       = $budget->amount;
                 // smaller than 1 means spent MORE than budget allows.
                 $left      = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? 0 : bcadd($budget->amount, $expenses);
-                $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? ($amount*-1) : $expenses;
+                $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? ($amount * -1) : $expenses;
                 $overspent = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcadd($budget->amount, $expenses) : 0;
             }
 

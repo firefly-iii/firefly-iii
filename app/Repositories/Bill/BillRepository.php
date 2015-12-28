@@ -115,16 +115,16 @@ class BillRepository implements BillRepositoryInterface
         }
 
         $set = $bill->transactionjournals()
-            ->leftJoin(
-                'transactions', function (JoinClause $join) {
-                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->where('amount', '<', 0);
-            }
-            )
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
+                    ->leftJoin(
+                        'transactions', function (JoinClause $join) {
+                        $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                             ->where('amount', '<', 0);
+                    }
+                    )
+                    ->orderBy('transaction_journals.date', 'DESC')
+                    ->orderBy('transaction_journals.order', 'ASC')
+                    ->orderBy('transaction_journals.id', 'DESC')
+                    ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
         $cache->store($set);
 
         return $set;
