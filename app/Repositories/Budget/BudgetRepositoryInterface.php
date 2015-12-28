@@ -31,12 +31,26 @@ interface BudgetRepositoryInterface
      * Returns an array with every budget in it and the expenses for each budget
      * per month.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
-    public function getBudgetsAndExpenses(Carbon $start, Carbon $end);
+    public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns an array with every budget in it and the expenses for each budget
+     * per year for.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * Takes tags into account.
@@ -52,6 +66,17 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getActiveBudgets();
+
+    /**
+     * Get the budgeted amounts for each budgets in each year.
+     *
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end);
 
     /**
      * @param Budget $budget

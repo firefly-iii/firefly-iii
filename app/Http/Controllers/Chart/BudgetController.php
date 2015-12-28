@@ -37,6 +37,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * TODO expand with no budget chart.
+     *
      * @param BudgetRepositoryInterface $repository
      * @param                           $report_type
      * @param Carbon                    $start
@@ -61,41 +63,43 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        /**
-         *  budget
-         *   year:
-         *    spent: x
-         *    budgeted: x
-         *   year
-         *    spent: x
-         *    budgeted: x
+        /*
+         * Get the budgeted amounts for each budgets in each year.
          */
+        $budgetedSet   = $repository->getBudgetedPerYear($budgets, $start, $end);
+        $budgetedArray = [];
+        /** @var Budget $entry */
+        foreach ($budgetedSet as $entry) {
+            $budgetedArray[$entry->id][$entry->dateFormatted] = $entry->budgeted;
+        }
+
+        $set     = $repository->getBudgetsAndExpensesPerYear($budgets, $accounts, $start, $end);
         $entries = new Collection;
         // go by budget, not by year.
+        /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $entry = ['name' => '', 'spent' => [], 'budgeted' => []];
-
+            $entry        = ['name' => '', 'spent' => [], 'budgeted' => []];
+            $id           = $budget->id;
             $currentStart = clone $start;
             while ($currentStart < $end) {
                 // fix the date:
                 $currentEnd = clone $currentStart;
                 $currentEnd->endOfYear();
 
-                // get data:
-                if (is_null($budget->id)) {
-                    $name     = trans('firefly.noBudget');
-                    $sum      = $repository->getWithoutBudgetSum($currentStart, $currentEnd);
-                    $budgeted = 0;
-                } else {
-                    $name     = $budget->name;
-                    $sum      = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
-                    $budgeted = $repository->getBudgetLimitRepetitions($budget, $currentStart, $currentEnd)->sum('amount');
+                // save to array:
+                $year          = $currentStart->year;
+                $entry['name'] = $budget->name;
+                $spent         = 0;
+                $budgeted      = 0;
+                if (isset($set[$id]['entries'][$year])) {
+                    $spent = $set[$id]['entries'][$year] * -1;
                 }
 
-                // save to array:
-                $year                     = $currentStart->year;
-                $entry['name']            = $name;
-                $entry['spent'][$year]    = ($sum * -1);
+                if (isset($budgetedArray[$id][$year])) {
+                    $budgeted = round($budgetedArray[$id][$year], 2);
+                }
+
+                $entry['spent'][$year]    = $spent;
                 $entry['budgeted'][$year] = $budgeted;
 
                 // jump to next year.
@@ -106,6 +110,7 @@ class BudgetController extends Controller
         }
         // generate chart with data:
         $data = $this->generator->multiYear($entries);
+        $cache->store($data);
 
         return Response::json($data);
 
@@ -273,6 +278,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * TODO expand with no budget chart.
+     *
      * @param BudgetRepositoryInterface $repository
      * @param                           $report_type
      * @param Carbon                    $start
@@ -295,7 +302,7 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $budgetInformation = $repository->getBudgetsAndExpenses($start, $end);
+        $budgetInformation = $repository->getBudgetsAndExpensesPerMonth($accounts, $start, $end);
         $budgets           = new Collection;
         $entries           = new Collection;
 

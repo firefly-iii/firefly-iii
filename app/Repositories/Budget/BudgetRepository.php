@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Budget;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
@@ -214,33 +215,41 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * Returns an array with every budget in it and the expenses for each budget
      * per month.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
-    public function getBudgetsAndExpenses(Carbon $start, Carbon $end)
+    public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
+        $ids = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+
         /** @var Collection $set */
-        $set    = Auth::user()->budgets()
-                      ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                      ->leftJoin(
-                          'transactions', function (JoinClause $join) {
-                          $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                      }
-                      )
-                      ->groupBy('budgets.id')
-                      ->groupBy('dateFormatted')
-                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                      ->get(
-                          [
-                              'budgets.*',
-                              DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                              DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`')
-                          ]
-                      );
+        $set = Auth::user()->budgets()
+                   ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->groupBy('budgets.id')
+                   ->groupBy('dateFormatted')
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->whereIn('transactions.account_id', $ids)
+                   ->get(
+                       [
+                           'budgets.*',
+                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
+                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`')
+                       ]
+                   );
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -260,6 +269,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             // store each entry:
             $return[$id]['entries'][$budget->dateFormatted] = $budget->sumAmount;
         }
+
         return $return;
     }
 
@@ -503,7 +513,110 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         }
 
         return $limit;
+    }
 
+    /**
+     * Get the budgeted amounts for each budgets in each year.
+     *
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end)
+    {
+        $budgetIds = [];
 
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetIds[] = $budget->id;
+        }
+
+        $set = Auth::user()->budgets()
+            ->leftJoin('budget_limits', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+            ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))
+            ->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d'))
+            ->groupBy('budgets.id')
+            ->groupBy('dateFormatted')
+            ->whereIn('budgets.id', $budgetIds)
+            ->get(
+                [
+                    'budgets.*',
+                    DB::Raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
+                    DB::Raw('SUM(`limit_repetitions`.`amount`) as `budgeted`')
+                ]
+            );
+        return $set;
+    }
+
+    /**
+     * Returns an array with every budget in it and the expenses for each budget
+     * per year for.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $ids[] = $account->id;
+        }
+        $budgetIds = [];
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetIds[] = $budget->id;
+        }
+
+        /** @var Collection $set */
+        $set = Auth::user()->budgets()
+                   ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->groupBy('budgets.id')
+                   ->groupBy('dateFormatted')
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->whereIn('transactions.account_id', $ids)
+                   ->whereIn('budgets.id', $budgetIds)
+                   ->get(
+                       [
+                           'budgets.*',
+                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
+                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`')
+                       ]
+                   );
+
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        $return = [];
+        foreach ($set as $budget) {
+            $id = $budget->id;
+            if (!isset($return[$id])) {
+                $return[$id] = [
+                    'budget'  => $budget,
+                    'entries' => [],
+                ];
+            }
+            // store each entry:
+            $return[$id]['entries'][$budget->dateFormatted] = $budget->sumAmount;
+        }
+
+        return $return;
     }
 }
