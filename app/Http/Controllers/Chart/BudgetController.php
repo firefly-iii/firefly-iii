@@ -40,7 +40,7 @@ class BudgetController extends Controller
      * TODO expand with no budget chart.
      *
      * @param BudgetRepositoryInterface $repository
-     * @param                           $report_type
+     * @param                           $reportType
      * @param Carbon                    $start
      * @param Carbon                    $end
      * @param Collection                $accounts
@@ -48,11 +48,11 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
+    public function multiYear(BudgetRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
-        $cache->addProperty($report_type);
+        $cache->addProperty($reportType);
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($accounts);
@@ -281,20 +281,20 @@ class BudgetController extends Controller
      * TODO expand with no budget chart.
      *
      * @param BudgetRepositoryInterface $repository
-     * @param                           $report_type
+     * @param                           $reportType
      * @param Carbon                    $start
      * @param Carbon                    $end
      * @param Collection                $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function year(BudgetRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function year(BudgetRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($report_type);
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty('budget');
         $cache->addProperty('year');

@@ -36,14 +36,14 @@ class ReportController extends Controller
      * Summarizes all income and expenses, per month, for a given year.
      *
      * @param ReportQueryInterface $query
-     * @param                      $report_type
+     * @param                      $reportType
      * @param Carbon               $start
      * @param Carbon               $end
      * @param Collection           $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOut(ReportQueryInterface $query, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOut(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -105,14 +105,14 @@ class ReportController extends Controller
      * Summarizes all income and expenses for a given year. Gives a total and an average.
      *
      * @param ReportQueryInterface $query
-     * @param                      $report_type
+     * @param                      $reportType
      * @param Carbon               $start
      * @param Carbon               $end
      * @param Collection           $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOutSummarized(ReportQueryInterface $query, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOutSummarized(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:

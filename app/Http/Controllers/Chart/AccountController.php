@@ -37,14 +37,14 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties();

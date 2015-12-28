@@ -130,7 +130,7 @@ class CategoryController extends Controller
 
     /**
      * @param CategoryRepositoryInterface $repository
-     * @param                             $report_type
+     * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
@@ -138,11 +138,11 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function multiYear(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
-        $cache->addProperty($report_type);
+        $cache->addProperty($reportType);
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($accounts);
@@ -296,20 +296,20 @@ class CategoryController extends Controller
      * grouped by month.
      *
      * @param CategoryRepositoryInterface $repository
-     * @param                             $report_type
+     * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInPeriod(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function earnedInPeriod(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $original = clone $start;
         $cache    = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($report_type);
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty('category');
         $cache->addProperty('earned-in-period');
@@ -400,20 +400,20 @@ class CategoryController extends Controller
      * grouped by month.
      *
      * @param CategoryRepositoryInterface $repository
-     * @param                             $report_type
+     * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function spentInPeriod(CategoryRepositoryInterface $repository, $report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function spentInPeriod(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $original = clone $start;
         $cache    = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($report_type);
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty('category');
         $cache->addProperty('spent-in-period');

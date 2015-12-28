@@ -73,14 +73,14 @@ class ReportController extends Controller
     }
 
     /**
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
      */
-    public function defaultYear($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
@@ -104,7 +104,7 @@ class ReportController extends Controller
         return view(
             'reports.default.year',
             compact(
-                'start', 'accountReport', 'incomes', 'report_type', 'accountIds', 'end',
+                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
                 'expenses', 'incomeTopLength', 'expenseTopLength'
             )
         );
@@ -112,14 +112,14 @@ class ReportController extends Controller
 
 
     /**
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
      */
-    public function defaultMonth($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultMonth($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
@@ -145,27 +145,27 @@ class ReportController extends Controller
         return view(
             'reports.default.month',
             compact(
-                'start', 'end', 'report_type',
+                'start', 'end', 'reportType',
                 'accountReport',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
                 'budgets', 'balance',
                 'categories',
                 'bills',
-                'accountIds', 'report_type'
+                'accountIds', 'reportType'
             )
         );
     }
 
     /**
-     * @param $report_type
+     * @param $reportType
      * @param $start
      * @param $end
      * @param $accounts
      *
      * @return View
      */
-    public function defaultMultiYear($report_type, $start, $end, $accounts)
+    public function defaultMultiYear($reportType, $start, $end, $accounts)
     {
 
 
@@ -182,19 +182,19 @@ class ReportController extends Controller
         $accountIds = join(',', $accountIds);
 
         return view(
-            'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'report_type')
+            'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType')
         );
     }
 
     /**
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
      */
-    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // throw an error if necessary.
         if ($end < $start) {
@@ -206,7 +206,7 @@ class ReportController extends Controller
             $start = Session::get('first');
         }
 
-        switch ($report_type) {
+        switch ($reportType) {
             default:
             case 'default':
 
@@ -223,14 +223,14 @@ class ReportController extends Controller
 
                 // more than one year date difference means year report.
                 if ($start->diffInMonths($end) > 12) {
-                    return $this->defaultMultiYear($report_type, $start, $end, $accounts);
+                    return $this->defaultMultiYear($reportType, $start, $end, $accounts);
                 }
                 // more than two months date difference means year report.
                 if ($start->diffInMonths($end) > 1) {
-                    return $this->defaultYear($report_type, $start, $end, $accounts);
+                    return $this->defaultYear($reportType, $start, $end, $accounts);
                 }
 
-                return $this->defaultMonth($report_type, $start, $end, $accounts);
+                return $this->defaultMonth($reportType, $start, $end, $accounts);
         }
 
 

@@ -389,7 +389,7 @@ Route::group(
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
     Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
-    Route::get('/chart/account/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
+    Route::get('/chart/account/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
 
@@ -401,8 +401,8 @@ Route::group(
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
 
     // this chart is used in reports:
-    Route::get('/chart/budget/year/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year']);
-    Route::get('/chart/budget/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
+    Route::get('/chart/budget/year/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year']);
+    Route::get('/chart/budget/multi-year/{reportType}/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
 
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
     Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
@@ -411,10 +411,10 @@ Route::group(
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
 
     // these three charts are for reports:
-    Route::get('/chart/category/earned-in-period/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInPeriod']);
-    Route::get('/chart/category/spent-in-period/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInPeriod']);
+    Route::get('/chart/category/earned-in-period/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInPeriod']);
+    Route::get('/chart/category/spent-in-period/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInPeriod']);
     Route::get(
-        '/chart/category/multi-year/{report_type}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
+        '/chart/category/multi-year/{reportType}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
     );
 
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
@@ -425,8 +425,8 @@ Route::group(
     Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
     // reports:
-    Route::get('/chart/report/in-out/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
-    Route::get('/chart/report/in-out-sum/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
+    Route::get('/chart/report/in-out/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
+    Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
 
 
     /**
@@ -492,7 +492,7 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    Route::get('/reports/report/{report_type}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
+    Route::get('/reports/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
 
     /**
      * Search Controller
