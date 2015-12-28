@@ -329,7 +329,7 @@ class CategoryController extends Controller
             $categories = $categories->merge($set);
             // save the set combined with the data that is in it:
             // for example:
-            // [december 2015, salary:1000, bonus:200]
+            // december 2015, salary:1000, bonus:200
             $sets->push([$currentStart, $set]);
             $start->addMonth();
         }

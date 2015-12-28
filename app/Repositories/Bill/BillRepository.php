@@ -76,7 +76,7 @@ class BillRepository implements BillRepositoryInterface
         $set = $set->filter(
             function (Bill $bill) use ($ids) {
                 // get transaction journals from or to any of the mentioned accounts.
-                // if zero, return null.
+                // when zero, return null.
                 $journals = $bill->transactionjournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                  ->whereIn('transactions.account_id', $ids)->count();
 

@@ -30,7 +30,7 @@ Route::bind(
         throw new NotFoundHttpException;
     }
 );
-// account list! Yay!
+// accounts
 Route::bind(
     'accountList',
     function ($value) {
