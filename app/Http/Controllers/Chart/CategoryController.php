@@ -123,7 +123,6 @@ class CategoryController extends Controller
         $data = $this->generator->frontpage($set);
         $cache->store($data);
 
-
         return Response::json($data);
 
     }

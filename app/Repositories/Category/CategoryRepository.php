@@ -4,7 +4,6 @@ namespace FireflyIII\Repositories\Category;
 
 use Auth;
 use Carbon\Carbon;
-use Crypt;
 use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
@@ -137,7 +136,6 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
 
 
     /**
-     *
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -145,36 +143,55 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
      */
     public function getCategoriesAndExpenses(Carbon $start, Carbon $end)
     {
-        $set = Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                   )
-                   ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
-                   ->before($end)
-                   ->where('categories.user_id', Auth::user()->id)
-                   ->after($start)
-                   ->transactionTypes([TransactionType::WITHDRAWAL])
-                   ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
-
-        bcscale(2);
-        $result = [];
+        $set   = Auth::user()->categories()
+                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                     ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                     ->leftJoin(
+                         'transactions', function (JoinClause $join) {
+                         $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                     }
+                     )
+                     ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                     ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                     ->whereIn('transaction_types.type', [TransactionType::WITHDRAWAL])
+                     ->whereNull('transaction_journals.deleted_at')
+                     ->groupBy('categories.id')
+                     ->orderBy('totalAmount')
+                     ->get(
+                         [
+                             'categories.*',
+                             DB::Raw('SUM(`transactions`.`amount`) as `totalAmount`')
+                         ]
+                     );
+        $array = [];
+        /** @var Category $entry */
         foreach ($set as $entry) {
-            $categoryId = intval($entry->category_id);
-            if (isset($result[$categoryId])) {
-                $result[$categoryId]['sum'] = bcadd($result[$categoryId]['sum'], $entry->amount);
-            } else {
-                $isEncrypted         = intval($entry->category_encrypted) === 1 ? true : false;
-                $name                = strlen($entry->name) === 0 ? trans('firefly.no_category') : $entry->name;
-                $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
-                $result[$categoryId] = [
-                    'name' => $name,
-                    'sum'  => $entry->amount,
-                ];
-
-            }
+            $id         = $entry->id;
+            $array[$id] = ['name' => $entry->name, 'sum' => $entry->totalAmount];
         }
 
-        return $result;
+        // without category:
+        $single     = Auth::user()->transactionjournals()
+                          ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->whereNull('category_transaction_journal.id')
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                          ->whereIn('transaction_types.type', [TransactionType::WITHDRAWAL])
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->first([DB::Raw('SUM(transactions.amount) as `totalAmount`')]);
+        $noCategory = is_null($single->totalAmount) ? '0' : $single->totalAmount;
+        $array[0]   = ['name' => trans('firefly.no_category'), 'sum' => $noCategory];
+
+        return $array;
+
     }
 
     /**
