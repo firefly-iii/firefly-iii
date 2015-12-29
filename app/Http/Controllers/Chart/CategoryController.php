@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -38,12 +39,12 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SingleCategoryRepositoryInterface $repository
+     * @param Category                          $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(CategoryRepositoryInterface $repository, Category $category)
+    public function all(SingleCategoryRepositoryInterface $repository, Category $category)
     {
         // oldest transaction in category:
         $start   = $repository->getFirstActivityDate($category);
@@ -137,8 +138,13 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function multiYear($reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        /** @var SingleCategoryRepositoryInterface $singleRepository */
+        $singleRepository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($reportType);
@@ -180,8 +186,8 @@ class CategoryController extends Controller
                     $earned = $repository->earnedNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
                 } else {
                     $name   = $category->name;
-                    $spent  = $repository->spentInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
-                    $earned = $repository->earnedInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                    $spent  = $singleRepository->spentInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                    $earned = $singleRepository->earnedInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
                 }
 
                 // save to array:
@@ -206,12 +212,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
+     * @param SingleCategoryRepositoryInterface $repository
      * @param Category                    $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function currentPeriod(CategoryRepositoryInterface $repository, Category $category)
+    public function currentPeriod(SingleCategoryRepositoryInterface $repository, Category $category)
     {
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -246,14 +252,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
+     * @param SingleCategoryRepositoryInterface $repository
      * @param Category                    $category
      *
      * @param                             $date
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, $date)
+    public function specificPeriod(SingleCategoryRepositoryInterface $repository, Category $category, $date)
     {
         $carbon = new Carbon($date);
         $range  = Preferences::get('viewRange', '1M')->data;
