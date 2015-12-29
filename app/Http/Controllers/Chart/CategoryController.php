@@ -304,8 +304,7 @@ class CategoryController extends Controller
      */
     public function earnedInPeriod(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $original = clone $start;
-        $cache    = new CacheProperties; // chart properties for cache:
+        $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($reportType);
@@ -315,78 +314,42 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $categories = new Collection;
-        $sets       = new Collection;
-        $entries    = new Collection;
 
-        // run a very special query each month:
-        $start = clone $original;
-        while ($start < $end) {
-            $currentEnd   = clone $start;
-            $currentStart = clone $start;
-            $currentStart->startOfMonth();
-            $currentEnd->endOfMonth();
-            // get a list of categories, and what the user has earned for that category
-            // (if the user has earned anything)
-            $set        = $repository->earnedForAccounts($accounts, $currentStart, $currentEnd);
-            $categories = $categories->merge($set);
-            // save the set combined with the data that is in it:
-            // for example:
-            // december 2015, salary:1000, bonus:200
-            $sets->push([$currentStart, $set]);
-            $start->addMonth();
-        }
-        // filter categories into a single bunch. Useful later on.
-        // $categories contains all the categories the user has earned money
-        // in in this period.
-        $categories = $categories->unique('id');
-        $categories = $categories->sortBy(
+        $set        = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
+        $categories = $set->unique('id')->sortBy(
             function (Category $category) {
                 return $category->name;
             }
         );
+        $entries    = new Collection;
 
-        // start looping the time again, this time processing the
-        // data for each month.
-        $start = clone $original;
-        while ($start < $end) {
-            $currentEnd   = clone $start;
-            $currentStart = clone $start;
-            $currentStart->startOfMonth();
-            $currentEnd->endOfMonth();
-
-            // in $sets we have saved all the sets of data for each month
-            // so now we need to retrieve the corrent one.
-            // match is on date of course.
-            $currentSet = $sets->first(
-                function ($key, $value) use ($currentStart) {
-                    // set for this date.
-                    return ($value[0] == $currentStart);
+        while ($start < $end) { // filter the set:
+            $row = [clone $start];
+            // get possibly relevant entries from the big $set
+            $currentSet = $set->filter(
+                function (Category $category) use ($start) {
+                    return $category->dateFormatted == $start->format("Y-m");
                 }
             );
-            // create a row used later on.
-            $row = [clone $currentStart];
-
-            // loop all categories:
+            // check for each category if its in the current set.
             /** @var Category $category */
             foreach ($categories as $category) {
-                // if entry is not null, we've earned money in this period for this category.
-                $entry = $currentSet[1]->first(
-                    function ($key, $value) use ($category) {
-                        return $value->id == $category->id;
+                // if its in there, use the value.
+                $entry = $currentSet->filter(
+                    function (Category $cat) use ($category) {
+                        return ($cat->id == $category->id);
                     }
-                );
-                // save amount
+                )->first();
                 if (!is_null($entry)) {
-                    $row[] = $entry->earned;
+                    $row[] = round($entry->earned, 2);
                 } else {
                     $row[] = 0;
                 }
             }
+
             $entries->push($row);
             $start->addMonth();
         }
-
         $data = $this->generator->earnedInPeriod($categories, $entries);
         $cache->store($data);
 
@@ -408,8 +371,7 @@ class CategoryController extends Controller
      */
     public function spentInPeriod(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $original = clone $start;
-        $cache    = new CacheProperties; // chart properties for cache:
+        $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($reportType);
@@ -419,66 +381,46 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $categories = new Collection;
-        $sets       = new Collection;
-        $entries    = new Collection;
 
-        // run a very special query each month:
-        $start = clone $original;
-        while ($start < $end) {
-            $currentEnd   = clone $start;
-            $currentStart = clone $start;
-            $currentStart->startOfMonth();
-            $currentEnd->endOfMonth();
-            $set        = $repository->spentForAccounts($accounts, $currentStart, $currentEnd);
-            $categories = $categories->merge($set);
-            $sets->push([$currentStart, $set]);
-            $start->addMonth();
-        }
-        $categories = $categories->unique('id');
-        $categories = $categories->sortBy(
+        $set        = $repository->spentForAccountsPerMonth($accounts, $start, $end);
+        $categories = $set->unique('id')->sortBy(
             function (Category $category) {
                 return $category->name;
             }
         );
+        $entries    = new Collection;
 
-        $start = clone $original;
-        while ($start < $end) {
-            $currentEnd   = clone $start;
-            $currentStart = clone $start;
-            $currentStart->startOfMonth();
-            $currentEnd->endOfMonth();
-            $currentSet = $sets->first(
-                function ($key, $value) use ($currentStart) {
-                    // set for this date.
-                    return ($value[0] == $currentStart);
+        while ($start < $end) { // filter the set:
+            $row = [clone $start];
+            // get possibly relevant entries from the big $set
+            $currentSet = $set->filter(
+                function (Category $category) use ($start) {
+                    return $category->dateFormatted == $start->format("Y-m");
                 }
             );
-            $row        = [clone $currentStart];
-
+            // check for each category if its in the current set.
             /** @var Category $category */
             foreach ($categories as $category) {
-                /** @var Category $entry */
-                $entry = $currentSet[1]->first(
-                    function ($key, $value) use ($category) {
-                        return $value->id == $category->id;
+                // if its in there, use the value.
+                $entry = $currentSet->filter(
+                    function (Category $cat) use ($category) {
+                        return ($cat->id == $category->id);
                     }
-                );
+                )->first();
                 if (!is_null($entry)) {
-                    $row[] = $entry->spent;
+                    $row[] = round(($entry->spent * -1), 2);
                 } else {
                     $row[] = 0;
                 }
             }
+
             $entries->push($row);
             $start->addMonth();
         }
-
         $data = $this->generator->spentInPeriod($categories, $entries);
         $cache->store($data);
 
         return $data;
-
     }
 
 }
