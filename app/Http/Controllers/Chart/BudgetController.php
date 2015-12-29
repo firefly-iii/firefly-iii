@@ -130,11 +130,6 @@ class BudgetController extends Controller
         $first = $repository->getFirstBudgetLimitDate($budget);
         $range = Preferences::get('viewRange', '1M')->data;
         $last  = Session::get('end', new Carbon);
-        $final = clone $last;
-        $final->addYears(2);
-        $last     = Navigation::endOfX($last, $range, $final);
-        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -142,18 +137,29 @@ class BudgetController extends Controller
         $cache->addProperty($last);
         $cache->addProperty('budget');
         if ($cache->has()) {
+
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        $final = clone $last;
+        $final->addYears(2);
+        $last    = Navigation::endOfX($last, $range, $final);
         $entries = new Collection;
+        // get all expenses:
+        $set = $repository->getExpensesPerMonth($budget, $first, $last);
 
         while ($first < $last) {
-            $end = Navigation::addPeriod($first, $range, 0);
-            $end->subDay();
-            $chartDate = clone $end;
-            $chartDate->startOfMonth();
-            $spent = $repository->balanceInPeriod($budget, $first, $end, $accounts) * -1;
-            $entries->push([$chartDate, $spent]);
+            $monthFormatted = $first->format('Y-m');
+
+            $filtered = $set->filter(
+                function (Budget $obj) use ($monthFormatted) {
+                    return $obj->dateFormatted == $monthFormatted;
+                }
+            );
+            $spent    = is_null($filtered->first()) ? '0' : $filtered->first()->monthlyAmount;
+
+            $entries->push([$first, round(($spent * -1), 2)]);
+
             $first = Navigation::addPeriod($first, $range, 0);
         }
 

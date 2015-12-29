@@ -33,6 +33,18 @@ interface BudgetRepositoryInterface
     public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
 
     /**
+     * Returns the expenses for this budget grouped per month, with the date
+     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
      * @param Budget $budget
      *
      * @return boolean
