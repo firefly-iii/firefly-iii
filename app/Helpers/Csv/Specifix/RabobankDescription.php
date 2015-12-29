@@ -30,6 +30,22 @@ class RabobankDescription
     }
 
     /**
+     * @param array $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @param array $row
+     */
+    public function setRow($row)
+    {
+        $this->row = $row;
+    }
+
+    /**
      * Fixes Rabobank specific thing.
      */
     protected function rabobankFixEmptyOpposing()
@@ -44,22 +60,6 @@ class RabobankDescription
             Log::debug('Description is now: "******".');
         }
 
-    }
-
-    /**
-     * @param array $data
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @param array $row
-     */
-    public function setRow($row)
-    {
-        $this->row = $row;
     }
 
 

@@ -4,8 +4,8 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -69,12 +69,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SingleCategoryRepositoryInterface $repository
-     * @param Category                          $category
+     * @param SCRI     $repository
+     * @param Category $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(SingleCategoryRepositoryInterface $repository, Category $category)
+    public function destroy(SCRI $repository, Category $category)
     {
 
         $name = $category->name;
@@ -108,12 +108,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface       $repository
-     * @param SingleCategoryRepositoryInterface $singleRepository
+     * @param CRI  $repository
+     * @param SCRI $singleRepository
      *
      * @return \Illuminate\View\View
      */
-    public function index(CategoryRepositoryInterface $repository, SingleCategoryRepositoryInterface $singleRepository)
+    public function index(CRI $repository, SCRI $singleRepository)
     {
         $categories = $repository->getCategories();
 
@@ -127,11 +127,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI $repository
      *
      * @return \Illuminate\View\View
      */
-    public function noCategory(CategoryRepositoryInterface $repository)
+    public function noCategory(CRI $repository)
     {
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
@@ -145,14 +145,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SingleCategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SCRI                              $repository
+     * @param Category                          $category
      *
-     * @param                             $date
+     * @param                                   $date
      *
      * @return \Illuminate\View\View
      */
-    public function showWithDate(SingleCategoryRepositoryInterface $repository, Category $category, $date)
+    public function showWithDate(SCRI $repository, Category $category, $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;
@@ -172,12 +172,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SingleCategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SCRI     $repository
+     * @param Category $category
      *
      * @return \Illuminate\View\View
      */
-    public function show(SingleCategoryRepositoryInterface $repository, Category $category)
+    public function show(SCRI $repository, Category $category)
     {
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
@@ -227,12 +227,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryFormRequest         $request
-     * @param SingleCategoryRepositoryInterface $repository
+     * @param CategoryFormRequest $request
+     * @param SCRI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(CategoryFormRequest $request, SingleCategoryRepositoryInterface $repository)
+    public function store(CategoryFormRequest $request, SCRI $repository)
     {
         $categoryData = [
             'name' => $request->input('name'),
@@ -254,13 +254,13 @@ class CategoryController extends Controller
 
 
     /**
-     * @param CategoryFormRequest         $request
-     * @param SingleCategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param CategoryFormRequest $request
+     * @param SCRI                $repository
+     * @param Category            $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CategoryFormRequest $request, SingleCategoryRepositoryInterface $repository, Category $category)
+    public function update(CategoryFormRequest $request, SCRI $repository, Category $category)
     {
         $categoryData = [
             'name' => $request->input('name'),

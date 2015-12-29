@@ -66,9 +66,9 @@ class ReportController extends Controller
 
         return view(
             'reports.index', compact(
-            'months', 'accounts', 'start', 'accountList',
-            'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
-        )
+                               'months', 'accounts', 'start', 'accountList',
+                               'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
+                           )
         );
     }
 

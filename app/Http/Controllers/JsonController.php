@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -60,7 +60,7 @@ class JsonController extends Controller
     }
 
     /**
-     * @param BillRepositoryInterface    $repository
+     * @param BillRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -173,11 +173,11 @@ class JsonController extends Controller
     /**
      * Returns a list of categories.
      *
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categories(CategoryRepositoryInterface $repository)
+    public function categories(CRI $repository)
     {
         $list   = $repository->getCategories();
         $return = [];

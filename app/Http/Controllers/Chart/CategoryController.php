@@ -6,8 +6,8 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -39,12 +39,12 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
-     * @param SingleCategoryRepositoryInterface $repository
-     * @param Category                          $category
+     * @param SCRI     $repository
+     * @param Category $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(SingleCategoryRepositoryInterface $repository, Category $category)
+    public function all(SCRI $repository, Category $category)
     {
         // oldest transaction in category:
         $start   = $repository->getFirstActivityDate($category);
@@ -88,11 +88,11 @@ class CategoryController extends Controller
     /**
      * Show this month's category overview.
      *
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(CategoryRepositoryInterface $repository)
+    public function frontpage(CRI $repository)
     {
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
@@ -212,12 +212,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SingleCategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SCRI     $repository
+     * @param Category $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function currentPeriod(SingleCategoryRepositoryInterface $repository, Category $category)
+    public function currentPeriod(SCRI $repository, Category $category)
     {
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -252,14 +252,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SingleCategoryRepositoryInterface $repository
+     * @param SCRI                        $repository
      * @param Category                    $category
      *
      * @param                             $date
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function specificPeriod(SingleCategoryRepositoryInterface $repository, Category $category, $date)
+    public function specificPeriod(SCRI $repository, Category $category, $date)
     {
         $carbon = new Carbon($date);
         $range  = Preferences::get('viewRange', '1M')->data;
@@ -300,7 +300,7 @@ class CategoryController extends Controller
      * Returns a chart of what has been earned in this period in each category
      * grouped by month.
      *
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI                         $repository
      * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
@@ -308,7 +308,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInPeriod(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
@@ -367,7 +367,7 @@ class CategoryController extends Controller
      * Returns a chart of what has been spent in this period in each category
      * grouped by month.
      *
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI                         $repository
      * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
@@ -375,7 +375,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function spentInPeriod(CategoryRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function spentInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);

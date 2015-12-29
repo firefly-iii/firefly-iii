@@ -98,7 +98,6 @@ interface SingleCategoryRepositoryInterface
     public function getJournals(Category $category, $page);
 
 
-
     /**
      * @param Category $category
      * @param int      $page

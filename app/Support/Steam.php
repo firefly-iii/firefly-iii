@@ -76,6 +76,7 @@ class Steam
      * Gets the balance for the given account during the whole range, using this format:
      *
      * [yyyy-mm-dd] => 123,2
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end

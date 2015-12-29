@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer                                    $transaction_journal_id
  * @property \Carbon\Carbon                             $date
  * @property float                                      $amount
- * @property \FireflyIII\Models\PiggyBank          $piggyBank
+ * @property \FireflyIII\Models\PiggyBank               $piggyBank
  * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereCreatedAt($value)
