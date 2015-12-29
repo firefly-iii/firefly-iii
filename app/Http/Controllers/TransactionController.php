@@ -285,7 +285,7 @@ class TransactionController extends Controller
         $what     = strtolower($journal->getTransactionType());
         $subTitle = trans('firefly.' . $journal->getTransactionType()) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal','events', 'subTitle', 'what'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what'));
     }
 
     /**

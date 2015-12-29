@@ -33,6 +33,7 @@ class AccountType extends Model
     /**
      * @return array
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function getDates()
     {
         return ['created_at', 'updated_at'];
