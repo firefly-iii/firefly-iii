@@ -38,6 +38,49 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * Returns the expenses for this budget grouped per day, with the date
+     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end)
+    {
+        /*
+         * select transaction_journals.date, SUM(transactions.amount) as dailyAmount from budgets
+left join budget_transaction_journal ON budget_transaction_journal.budget_id = budgets.id
+left join transaction_journals ON budget_transaction_journal.transaction_journal_id = transaction_journals.id
+left join transactions ON transaction_journals.id = transactions.transaction_journal_id
+where
+
+transaction_journals.date >= "2015-12-01"
+and transaction_journals.date <= "2015-12-31"
+and budgets.id = 1
+and transactions.amount < 0
+group by transaction_journals.date
+order by transaction_journals.date
+         */
+
+        $set = Auth::user()->budgets()
+                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
+                   ->leftJoin('transaction_journals', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->where('budgets.id', $budget->id)
+                   ->where('transactions.amount', '<', 0)
+                   ->groupBy('transaction_journals.date')
+                   ->orderBy('transaction_journals.date')
+                   ->get(['transaction_journals.date', DB::Raw('SUM(`transactions`.`amount`) as `dailyAmount`')]);
+
+        return $set;
+
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return boolean
@@ -534,20 +577,21 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         }
 
         $set = Auth::user()->budgets()
-            ->leftJoin('budget_limits', 'budgets.id', '=', 'budget_limits.budget_id')
-            ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-            ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))
-            ->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d'))
-            ->groupBy('budgets.id')
-            ->groupBy('dateFormatted')
-            ->whereIn('budgets.id', $budgetIds)
-            ->get(
-                [
-                    'budgets.*',
-                    DB::Raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
-                    DB::Raw('SUM(`limit_repetitions`.`amount`) as `budgeted`')
-                ]
-            );
+                   ->leftJoin('budget_limits', 'budgets.id', '=', 'budget_limits.budget_id')
+                   ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                   ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))
+                   ->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d'))
+                   ->groupBy('budgets.id')
+                   ->groupBy('dateFormatted')
+                   ->whereIn('budgets.id', $budgetIds)
+                   ->get(
+                       [
+                           'budgets.*',
+                           DB::Raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
+                           DB::Raw('SUM(`limit_repetitions`.`amount`) as `budgeted`')
+                       ]
+                   );
+
         return $set;
     }
 

@@ -190,15 +190,24 @@ class BudgetController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        $set     = $repository->getExpensesPerDay($budget, $start, $end);
         $entries = new Collection;
         $amount  = $repetition->amount;
 
+        // get sum (har har)!
         while ($start <= $end) {
+            $formatted = $start->format('Y-m-d');
+            $filtered  = $set->filter(
+                function (Budget $obj) use ($formatted) {
+                    return $obj->date == $formatted;
+                }
+            );
+            $sum       = is_null($filtered->first()) ? '0' : $filtered->first()->dailyAmount;
+
             /*
              * Sum of expenses on this day:
              */
-            $sum    = $repository->expensesOnDay($budget, $start);
-            $amount = bcadd($amount, $sum);
+            $amount = round(bcadd($amount, $sum), 2);
             $entries->push([clone $start, $amount]);
             $start->addDay();
         }

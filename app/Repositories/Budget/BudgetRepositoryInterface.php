@@ -21,6 +21,18 @@ interface BudgetRepositoryInterface
     public function cleanupBudgets();
 
     /**
+     * Returns the expenses for this budget grouped per day, with the date
+     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
      * @param Budget $budget
      *
      * @return boolean
