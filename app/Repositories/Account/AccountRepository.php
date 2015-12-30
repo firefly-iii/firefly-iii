@@ -266,16 +266,10 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getPiggyBankAccounts()
     {
-        $ids        = [];
-        $start      = clone Session::get('start', new Carbon);
-        $end        = clone Session::get('end', new Carbon);
-        $accountIds = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']);
-        $accounts   = new Collection;
-
-        /** @var PiggyBank $id */
-        foreach ($accountIds as $id) {
-            $ids[] = intval($id->account_id);
-        }
+        $start    = clone Session::get('start', new Carbon);
+        $end      = clone Session::get('end', new Carbon);
+        $ids      = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id'])->pluck('account_id')->toArray();
+        $accounts = new Collection;
 
         $cache = new CacheProperties;
         $cache->addProperty($ids);
