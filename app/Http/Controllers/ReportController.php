@@ -171,7 +171,7 @@ class ReportController extends Controller
 
         // list of users stuff:
         $budgets    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
-        $categories = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->getCategories();
+        $categories = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
 
         // and some id's, joined:
         $accountIds = [];
