@@ -50,6 +50,8 @@ interface SingleCategoryRepositoryInterface
     public function destroy(Category $category);
 
     /**
+     * @deprecated
+     *
      * @param Category       $category
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
@@ -58,29 +60,22 @@ interface SingleCategoryRepositoryInterface
      */
     public function earnedInPeriod(Category $category, Carbon $start, Carbon $end);
 
-
     /**
-     * Calculate how much is earned in this period.
+     * Returns an array with the following key:value pairs:
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * yyyy-mm-dd:<amount>
      *
-     * @return string
-     */
-    public function earnedInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end);
-
-    /**
-     *
-     * Corrected for tags.
+     * Where yyyy-mm-dd is the date and <amount> is the money earned using DEPOSITS in the $category
+     * from all the users accounts.
      *
      * @param Category $category
-     * @param Carbon   $date
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
-     * @return float
+     * @return array
      */
-    public function earnedOnDaySum(Category $category, Carbon $date);
+    public function earnedPerDay(Category $category, Carbon $start, Carbon $end);
+
 
     /**
      * @param Category $category
@@ -117,6 +112,8 @@ interface SingleCategoryRepositoryInterface
     public function getLatestActivity(Category $category);
 
     /**
+     * @deprecated
+     *
      * @param Category       $category
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
@@ -126,27 +123,21 @@ interface SingleCategoryRepositoryInterface
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end);
 
     /**
-     * Calculates how much is spent in this period.
+     * Returns an array with the following key:value pairs:
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * yyyy-mm-dd:<amount>
      *
-     * @return string
-     */
-    public function spentInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end);
-
-    /**
-     *
-     * Corrected for tags.
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $category
+     * from all the users accounts.
      *
      * @param Category $category
-     * @param Carbon   $date
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
-     * @return float
+     * @return array
      */
-    public function spentOnDaySum(Category $category, Carbon $date);
+    public function spentPerDay(Category $category, Carbon $start, Carbon $end);
+
 
     /**
      * @param array $data

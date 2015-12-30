@@ -244,16 +244,21 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($category->id);
         $cache->addProperty('category');
-        $cache->addProperty('currentPeriod');
+        $cache->addProperty('current-period');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $entries = new Collection;
 
+        // get amount earned in period, grouped by day.
+        $spentArray  = $repository->spentPerDay($category, $start, $end);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+        // get amount spent in period, grouped by day.
 
         while ($start <= $end) {
-            $spent  = $repository->spentOnDaySum($category, $start);
-            $earned = $repository->earnedOnDaySum($category, $start);
+            $str    = $start->format('Y-m-d');
+            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
+            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
             $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
@@ -263,8 +268,6 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
-
     }
 
     /**
@@ -295,12 +298,17 @@ class CategoryController extends Controller
         }
         $entries = new Collection;
 
+        // get amount earned in period, grouped by day.
+        $spentArray  = $repository->spentPerDay($category, $start, $end);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+        // get amount spent in period, grouped by day.
 
         while ($start <= $end) {
-            $spent   = $repository->spentOnDaySum($category, $start);
-            $earned  = $repository->earnedOnDaySum($category, $start);
-            $theDate = Navigation::periodShow($start, '1D');
-            $entries->push([clone $start, $theDate, $spent, $earned]);
+            $str    = $start->format('Y-m-d');
+            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
+            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
+            $date   = Navigation::periodShow($start, '1D');
+            $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
         }
 

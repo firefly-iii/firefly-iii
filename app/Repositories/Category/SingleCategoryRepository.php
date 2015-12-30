@@ -2,12 +2,13 @@
 
 namespace FireflyIII\Repositories\Category;
 
+use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -69,6 +70,10 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     }
 
     /**
+     * TODO this method is not optimal, and should be replaced.
+     *
+     * @deprecated
+     *
      * @param Category       $category
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
@@ -77,67 +82,47 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function earnedInPeriod(Category $category, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties; // we must cache this.
-        $cache->addProperty($category->id);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('earnedInPeriod');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $sum = $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->before($end)->after($start)->get(['transaction_journals.*'])
                         ->sum(
                             'amount'
                         );
 
-        $cache->store($sum);
-
         return $sum;
     }
 
-
     /**
-     * Calculate how much is earned in this period.
+     * Returns an array with the following key:value pairs:
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * yyyy-mm-dd:<amount>
      *
-     * @return string
-     */
-    public function earnedInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end)
-    {
-        $accountIds = $accounts->pluck('id')->toArray();
-        $sum
-            = $category
-            ->transactionjournals()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->before($end)
-            ->whereIn('transactions.account_id', $accountIds)
-            ->transactionTypes([TransactionType::DEPOSIT])
-            ->after($start)
-            ->get(['transaction_journals.*'])
-            ->sum('amount');
-
-        return $sum;
-
-    }
-
-    /**
-     *
-     * Corrected for tags.
+     * Where yyyy-mm-dd is the date and <amount> is the money earned using DEPOSITS in the $category
+     * from all the users $accounts.
      *
      * @param Category $category
-     * @param Carbon   $date
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
-     * @return float
+     * @return array
      */
-    public function earnedOnDaySum(Category $category, Carbon $date)
+    public function earnedPerDay(Category $category, Carbon $start, Carbon $end)
     {
-        return $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+        /** @var Collection $query */
+        $query = Auth::user()->transactionJournals()
+                     ->transactionTypes([TransactionType::DEPOSIT])
+                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('transactions.amount', '>', 0)
+                     ->before($end)
+                     ->after($start)
+                     ->where('category_transaction_journal.category_id', $category->id)
+                     ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+
+        $return = [];
+        foreach ($query->toArray() as $entry) {
+            $return[$entry['dateFormatted']] = $entry['sum'];
+        }
+
+        return $return;
     }
 
     /**
@@ -221,37 +206,11 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
         return null;
     }
 
-
     /**
-     * Calculates how much is spent in this period.
+     * TODO this method is not optimal, and should be replaced.
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @deprecated
      *
-     * @return string
-     */
-    public function spentInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end)
-    {
-        $accountIds = $accounts->pluck('id')->toArray();
-
-        $sum
-            = $category
-            ->transactionjournals()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->after($start)
-            ->before($end)
-            ->whereIn('transactions.account_id', $accountIds)
-            ->transactionTypes([TransactionType::WITHDRAWAL])
-            ->get(['transaction_journals.*'])
-            ->sum('amount');
-
-        return $sum;
-
-    }
-
-    /**
      * @param Category       $category
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
@@ -260,38 +219,48 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties; // we must cache this.
-        $cache->addProperty($category->id);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('spentInPeriod');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $sum = $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->before($end)->after($start)->get(['transaction_journals.*'])
                         ->sum(
                             'amount'
                         );
-
-        $cache->store($sum);
 
         return $sum;
     }
 
 
     /**
-     * Corrected for tags
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using DEPOSITS in the $category
+     * from all the users accounts.
      *
      * @param Category $category
-     * @param Carbon   $date
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
-     * @return string
+     * @return array
      */
-    public function spentOnDaySum(Category $category, Carbon $date)
+    public function spentPerDay(Category $category, Carbon $start, Carbon $end)
     {
-        return $category->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
+        /** @var Collection $query */
+        $query = Auth::user()->transactionJournals()
+                     ->transactionTypes([TransactionType::WITHDRAWAL])
+                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('transactions.amount', '<', 0)
+                     ->before($end)
+                     ->after($start)
+                     ->where('category_transaction_journal.category_id', $category->id)
+                     ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+
+        $return = [];
+        foreach ($query->toArray() as $entry) {
+            $return[$entry['dateFormatted']] = $entry['sum'];
+        }
+
+        return $return;
     }
 
     /**

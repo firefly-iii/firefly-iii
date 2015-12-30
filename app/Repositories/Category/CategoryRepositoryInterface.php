@@ -86,18 +86,6 @@ interface CategoryRepositoryInterface
 
     /**
      * Returns the total amount of money related to transactions without any category connected to
-     * it. Returns either the spent amount.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end);
-
-    /**
-     * Returns the total amount of money related to transactions without any category connected to
      * it. Returns either the earned amount.
      *
      * @param Collection $accounts
@@ -107,5 +95,17 @@ interface CategoryRepositoryInterface
      * @return string
      */
     public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the spent amount.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end);
 
 }
