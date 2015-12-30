@@ -122,6 +122,62 @@ class CategoryRepository implements CategoryRepositoryInterface
                    ->get(['transaction_journals.*']);
     }
 
+    /**
+     * This method returns a very special collection for each category:
+     *
+     * category, year, expense/earned, amount
+     *
+     * categories can be duplicated.
+     *
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        /*
+         * select categories.id, DATE_FORMAT(transaction_journals.date,"%Y") as dateFormatted, transaction_types.type, SUM(amount) as sum from categories
+
+left join category_transaction_journal ON category_transaction_journal.category_id = categories.id
+left join transaction_journals ON transaction_journals.id = category_transaction_journal.transaction_journal_id
+left join transaction_types ON transaction_types.id = transaction_journals.transaction_type_id
+left join transactions ON transactions.transaction_journal_id = transaction_journals.id
+
+
+where
+categories.user_id =1
+and transaction_types.type in ("Withdrawal","Deposit")
+and transactions.account_id IN (2,4,6,10,11,610,725,879,1248)
+
+group by categories.id, transaction_types.type, dateFormatted
+         */
+        $set = Auth::user()->categories()
+                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
+                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereIn('transaction_types.type', [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL])
+                   ->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
+                   ->whereIn('categories.id', $categories->pluck('id')->toArray())
+                   ->groupBy('categories.id')
+                   ->groupBy('transaction_types.type')
+                   ->groupBy('dateFormatted')
+                   ->get(
+                       [
+                           'categories.*',
+                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
+                           'transaction_types.type',
+                           DB::Raw('SUM(`amount`) as `sum`')
+                       ]
+                   );
+
+        return $set;
+
+    }
+
 
     /**
      * Returns a collection of Categories appended with the amount of money that has been earned
@@ -136,11 +192,6 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-
 
         $collection = Auth::user()->categories()
                           ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
@@ -156,8 +207,8 @@ class CategoryRepository implements CategoryRepositoryInterface
                               $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
                           }
                           )
-                          ->whereIn('t_dest.account_id', $accountIds)// to these accounts (earned)
-                          ->whereNotIn('t_src.account_id', $accountIds)//-- but not from these accounts
+                          ->whereIn('t_dest.account_id', $accounts->pluck('id')->toArray())// to these accounts (earned)
+                          ->whereNotIn('t_src.account_id', $accounts->pluck('id')->toArray())//-- but not from these accounts
                           ->whereIn(
                 'transaction_types.type', [TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
             )
@@ -191,12 +242,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-
-
+        $accountIds = $accounts->pluck('id')->toArray();
         $collection = Auth::user()->categories()
                           ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
                           ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
@@ -275,10 +321,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     protected function sumNoCategory(Collection $accounts, Carbon $start, Carbon $end, $group = Query::EARNED)
     {
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
+        $accountIds = $accounts->pluck('id')->toArray();
         if ($group == Query::EARNED) {
             $types = [TransactionType::DEPOSIT];
         } else {

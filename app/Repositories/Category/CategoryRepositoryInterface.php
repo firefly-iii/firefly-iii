@@ -3,7 +3,6 @@
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Sql\Query;
 use Illuminate\Support\Collection;
 
 /**
@@ -44,6 +43,22 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function listCategories();
+
+    /**
+     * This method returns a very special collection for each category:
+     *
+     * category, year, expense/earned, amount
+     *
+     * categories can be duplicated.
+     *
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * Returns a list of transaction journals in the range (all types, all accounts) that have no category

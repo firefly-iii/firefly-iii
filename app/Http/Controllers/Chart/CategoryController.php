@@ -141,8 +141,6 @@ class CategoryController extends Controller
     {
         /** @var CRI $repository */
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-        /** @var SCRI $singleRepository */
-        $singleRepository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -167,7 +165,14 @@ class CategoryController extends Controller
          *    earned: x
          */
         $entries = new Collection;
-        // go by budget, not by year.
+        // go by category, not by year.
+
+        // given a set of categories and accounts, it should not be difficult to get
+        // the exact array of data we need.
+
+        // then get the data for "no category".
+        $set = $repository->listMultiYear($categories, $accounts, $start, $end);
+
         /** @var Category $category */
         foreach ($categories as $category) {
             $entry = ['name' => '', 'spent' => [], 'earned' => []];
@@ -175,8 +180,10 @@ class CategoryController extends Controller
             $currentStart = clone $start;
             while ($currentStart < $end) {
                 // fix the date:
+                $year       = $currentStart->year;
                 $currentEnd = clone $currentStart;
                 $currentEnd->endOfYear();
+
 
                 // get data:
                 if (is_null($category->id)) {
@@ -184,13 +191,24 @@ class CategoryController extends Controller
                     $spent  = $repository->sumSpentNoCategory($accounts, $currentStart, $currentEnd);
                     $earned = $repository->sumEarnedNoCategory($accounts, $currentStart, $currentEnd);
                 } else {
+                    // get from set:
+                    $entrySpent  = $set->filter(
+                        function (Category $cat) use ($year, $category) {
+                            return ($cat->type == 'Withdrawal' && $cat->dateFormatted == $year && $cat->id == $category->id);
+                        }
+                    )->first();
+                    $entryEarned = $set->filter(
+                        function (Category $cat) use ($year, $category) {
+                            return ($cat->type == 'Deposit' && $cat->dateFormatted == $year && $cat->id == $category->id);
+                        }
+                    )->first();
+
                     $name   = $category->name;
-                    $spent  = $singleRepository->spentInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
-                    $earned = $singleRepository->earnedInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);
+                    $spent  = !is_null($entrySpent) ? $entrySpent->sum : 0;
+                    $earned = !is_null($entryEarned) ? $entryEarned->sum : 0;
                 }
 
                 // save to array:
-                $year                   = $currentStart->year;
                 $entry['name']          = $name;
                 $entry['spent'][$year]  = ($spent * -1);
                 $entry['earned'][$year] = $earned;
@@ -204,7 +222,6 @@ class CategoryController extends Controller
         // generate chart with data:
         $data = $this->generator->multiYear($entries);
         $cache->store($data);
-
 
         return Response::json($data);
 
