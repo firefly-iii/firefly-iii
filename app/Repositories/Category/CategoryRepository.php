@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Sql\Query;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -45,72 +46,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * Returns the amount earned without category by accounts in period.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function earnedNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end)
-    {
-
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-
-        // is deposit AND account_from is in the list of $accounts
-        // not from any of the accounts in the list?
-
-        return Auth::user()
-                   ->transactionjournals()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereNull('category_transaction_journal.id')
-                   ->before($end)
-                   ->after($start)
-                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereIn('transactions.account_id', $accountIds)
-                   ->transactionTypes([TransactionType::DEPOSIT])
-                   ->get(['transaction_journals.*'])->sum('amount');
-    }
-
-
-    /**
-     * Returns the amount spent without category by accounts in period.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end)
-    {
-
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-
-        // is withdrawal or transfer AND account_from is in the list of $accounts
-
-
-        return Auth::user()
-                   ->transactionjournals()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereNull('category_transaction_journal.id')
-                   ->before($end)
-                   ->after($start)
-                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereIn('transactions.account_id', $accountIds)
-                   ->transactionTypes([TransactionType::WITHDRAWAL])
-                   ->get(['transaction_journals.*'])->sum('amount');
-    }
-
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -147,6 +82,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         // without category:
+        // TODO REMOVE ME
         $single     = Auth::user()->transactionjournals()
                           ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -392,4 +328,79 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $collection;
     }
 
+
+    /**
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the spent amount.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        return $this->sumNoCategory($accounts, $start, $end, Query::SPENT);
+    }
+
+    /**
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the earned amount.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        return $this->sumNoCategory($accounts, $start, $end, Query::EARNED);
+    }
+
+    /**
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the earned or the spent amount.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param int        $group
+     *
+     * @return string
+     */
+    protected function sumNoCategory(Collection $accounts, Carbon $start, Carbon $end, $group = Query::EARNED)
+    {
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        if ($group == Query::EARNED) {
+            $types = [TransactionType::DEPOSIT];
+        } else {
+            $types = [TransactionType::WITHDRAWAL];
+        }
+
+        // is withdrawal or transfer AND account_from is in the list of $accounts
+        $single = Auth::user()
+                      ->transactionjournals()
+                      ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                      ->whereNull('category_transaction_journal.id')
+                      ->before($end)
+                      ->after($start)
+                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                      ->whereIn('transactions.account_id', $accountIds)
+                      ->transactionTypes($types)
+                      ->first(
+                          [
+                              DB::Raw('SUM(`transactions`.`amount`) as `sum`)')]
+                      );
+        if (!is_null($single)) {
+            return $single->sum;
+        }
+
+        return '0';
+
+    }
 }

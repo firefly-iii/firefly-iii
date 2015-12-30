@@ -129,7 +129,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
      * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
@@ -140,9 +139,9 @@ class CategoryController extends Controller
      */
     public function multiYear($reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
-        /** @var CategoryRepositoryInterface $repository */
+        /** @var CRI $repository */
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-        /** @var SingleCategoryRepositoryInterface $singleRepository */
+        /** @var SCRI $singleRepository */
         $singleRepository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
 
         // chart properties for cache:
@@ -182,8 +181,8 @@ class CategoryController extends Controller
                 // get data:
                 if (is_null($category->id)) {
                     $name   = trans('firefly.noCategory');
-                    $spent  = $repository->spentNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
-                    $earned = $repository->earnedNoCategoryForAccounts($accounts, $currentStart, $currentEnd);
+                    $spent  = $repository->sumSpentNoCategory($accounts, $currentStart, $currentEnd);
+                    $earned = $repository->sumEarnedNoCategory($accounts, $currentStart, $currentEnd);
                 } else {
                     $name   = $category->name;
                     $spent  = $singleRepository->spentInPeriodForAccounts($category, $accounts, $currentStart, $currentEnd);

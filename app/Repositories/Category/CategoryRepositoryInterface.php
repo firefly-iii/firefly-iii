@@ -3,6 +3,7 @@
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Sql\Query;
 use Illuminate\Support\Collection;
 
 /**
@@ -38,17 +39,6 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end);
-
-    /**
-     * Returns the amount earned without category by accounts in period.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function earnedNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @return Collection
@@ -100,7 +90,8 @@ interface CategoryRepositoryInterface
     public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * Returns the amount spent without category by accounts in period.
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the spent amount.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -108,6 +99,18 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentNoCategoryForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the earned amount.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end);
 
 }
