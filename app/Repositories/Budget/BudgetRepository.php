@@ -284,11 +284,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
+        $ids = $accounts->pluck('id')->toArray();
 
         /** @var Collection $set */
         $set = Auth::user()->budgets()
@@ -587,12 +583,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end)
     {
-        $budgetIds = [];
-
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $budgetIds[] = $budget->id;
-        }
+        $budgetIds = $budgets->pluck('id')->toArray();
 
         $set = Auth::user()->budgets()
                    ->leftJoin('budget_limits', 'budgets.id', '=', 'budget_limits.budget_id')
@@ -626,16 +617,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
     {
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
-        $budgetIds = [];
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $budgetIds[] = $budget->id;
-        }
+        $ids = $accounts->pluck('id')->toArray();
+        $budgetIds = $budgets->pluck('id')->toArray();
 
         /** @var Collection $set */
         $set = Auth::user()->budgets()
