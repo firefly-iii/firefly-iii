@@ -39,11 +39,7 @@ class ComponentRepository
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
+        $ids = $accounts->pluck('id')->toArray();
 
 
         $entry  = $object->transactionjournals()

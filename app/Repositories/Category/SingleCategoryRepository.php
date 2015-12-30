@@ -110,10 +110,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function earnedInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end)
     {
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
+        $accountIds = $accounts->pluck('id')->toArray();
         $sum
             = $category
             ->transactionjournals()
@@ -237,10 +234,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function spentInPeriodForAccounts(Category $category, Collection $accounts, Carbon $start, Carbon $end)
     {
-        $accountIds = [];
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
+        $accountIds = $accounts->pluck('id')->toArray();
 
         $sum
             = $category
