@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -66,13 +65,7 @@ class BillRepository implements BillRepositoryInterface
     {
         /** @var Collection $set */
         $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
-
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
-
+        $ids = $accounts->pluck('id')->toArray();
         $set = $set->filter(
             function (Bill $bill) use ($ids) {
                 // get transaction journals from or to any of the mentioned accounts.
@@ -156,12 +149,8 @@ class BillRepository implements BillRepositoryInterface
         $set = DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
             ['transaction_journal_id']
         );
-        $ids = [];
+        $ids = $set->pluck('transaction_journal_id')->toArray();
 
-        /** @var Transaction $entry */
-        foreach ($set as $entry) {
-            $ids[] = intval($entry->transaction_journal_id);
-        }
         $journals = new Collection;
         if (count($ids) > 0) {
             $journals = Auth::user()->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
