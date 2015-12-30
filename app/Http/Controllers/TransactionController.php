@@ -14,7 +14,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -43,12 +43,12 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param string                     $what
      *
      * @return \Illuminate\View\View
      */
-    public function create(AccountRepositoryInterface $repository, $what = TransactionType::DEPOSIT)
+    public function create(ARI $repository, $what = TransactionType::DEPOSIT)
     {
         $what        = strtolower($what);
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
@@ -133,12 +133,12 @@ class TransactionController extends Controller
     /**
      * Shows the view to edit a transaction.
      *
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param TransactionJournal         $journal
      *
      * @return $this
      */
-    public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
+    public function edit(ARI $repository, TransactionJournal $journal)
     {
         // cannot edit opening balance
         if ($journal->isOpeningBalance()) {

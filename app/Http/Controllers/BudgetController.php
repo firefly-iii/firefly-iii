@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Input;
 use Navigation;
@@ -134,11 +134,11 @@ class BudgetController extends Controller
     /**
      * @param BudgetRepositoryInterface  $repository
      *
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI $accountRepository
      *
      * @return \Illuminate\View\View
      */
-    public function index(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function index(BudgetRepositoryInterface $repository, ARI $accountRepository)
     {
         $budgets           = $repository->getActiveBudgets();
         $inactive          = $repository->getInactiveBudgets();

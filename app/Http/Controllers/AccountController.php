@@ -6,7 +6,7 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
 use Preferences;
 use Session;
@@ -56,12 +56,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param Account                    $account
      *
      * @return \Illuminate\View\View
      */
-    public function delete(AccountRepositoryInterface $repository, Account $account)
+    public function delete(ARI $repository, Account $account)
     {
         $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
@@ -77,12 +77,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param Account                    $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(AccountRepositoryInterface $repository, Account $account)
+    public function destroy(ARI $repository, Account $account)
     {
         $type     = $account->accountType->type;
         $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
@@ -98,12 +98,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param Account                    $account
      *
      * @return \Illuminate\View\View
      */
-    public function edit(AccountRepositoryInterface $repository, Account $account)
+    public function edit(ARI $repository, Account $account)
     {
 
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -143,12 +143,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param                            $what
      *
      * @return \Illuminate\View\View
      */
-    public function index(AccountRepositoryInterface $repository, $what)
+    public function index(ARI $repository, $what)
     {
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
@@ -184,12 +184,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param Account                    $account
      *
      * @return \Illuminate\View\View
      */
-    public function show(AccountRepositoryInterface $repository, Account $account)
+    public function show(ARI $repository, Account $account)
     {
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
@@ -204,11 +204,11 @@ class AccountController extends Controller
 
     /**
      * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
+    public function store(AccountFormRequest $request, ARI $repository)
     {
         $accountData = [
             'name'                   => $request->input('name'),
@@ -243,12 +243,12 @@ class AccountController extends Controller
 
     /**
      * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param Account                    $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
+    public function update(AccountFormRequest $request, ARI $repository, Account $account)
     {
 
         $accountData = [

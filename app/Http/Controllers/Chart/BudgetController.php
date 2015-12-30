@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -117,13 +117,12 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface  $repository
-     * @param AccountRepositoryInterface $accountRepository
-     * @param Budget                     $budget
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budget(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
+    public function budget(BudgetRepositoryInterface $repository, Budget $budget)
     {
 
         // dates and times
@@ -146,7 +145,7 @@ class BudgetController extends Controller
         $last    = Navigation::endOfX($last, $range, $final);
         $entries = new Collection;
         // get all expenses:
-        $set = $repository->getExpensesPerMonth($budget, $first, $last);
+        $set = $repository->getExpensesPerMonth($budget, $first, $last); // TODO
 
         while ($first < $last) {
             $monthFormatted = $first->format('Y-m');
@@ -230,11 +229,11 @@ class BudgetController extends Controller
      *
      * @param BudgetRepositoryInterface  $repository
      *
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function frontpage(BudgetRepositoryInterface $repository, ARI $accountRepository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());

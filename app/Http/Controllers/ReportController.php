@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
 use Session;
 use View;
@@ -35,12 +35,12 @@ class ReportController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return View
      * @internal param ReportHelperInterface $helper
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(ARI $repository)
     {
         $start        = Session::get('first');
         $months       = $this->helper->listOfMonths($start);

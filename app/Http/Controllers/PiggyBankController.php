@@ -6,7 +6,7 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -40,12 +40,12 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank
      *
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param PiggyBank                  $piggyBank
      *
      * @return $this
      */
-    public function add(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function add(ARI $repository, PiggyBank $piggyBank)
     {
         bcscale(2);
         $date          = Session::get('end', Carbon::now()->endOfMonth());
@@ -58,11 +58,11 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return mixed
      */
-    public function create(AccountRepositoryInterface $repository)
+    public function create(ARI $repository)
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
@@ -116,12 +116,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      * @param PiggyBank                  $piggyBank
      *
      * @return View
      */
-    public function edit(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function edit(ARI $repository, PiggyBank $piggyBank)
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
@@ -162,7 +162,7 @@ class PiggyBankController extends Controller
      *
      * @return View
      */
-    public function index(AccountRepositoryInterface $repository, PiggyBankRepositoryInterface $piggyRepository)
+    public function index(ARI $repository, PiggyBankRepositoryInterface $piggyRepository)
     {
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
@@ -219,12 +219,12 @@ class PiggyBankController extends Controller
 
     /**
      * @param PiggyBankRepositoryInterface $repository
-     * @param AccountRepositoryInterface   $accounts
+     * @param ARI   $accounts
      * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAdd(PiggyBankRepositoryInterface $repository, AccountRepositoryInterface $accounts, PiggyBank $piggyBank)
+    public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
     {
         bcscale(2);
         $amount        = round(Input::get('amount'), 2);
