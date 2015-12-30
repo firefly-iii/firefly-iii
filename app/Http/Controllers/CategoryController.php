@@ -115,7 +115,7 @@ class CategoryController extends Controller
      */
     public function index(CRI $repository, SCRI $singleRepository)
     {
-        $categories = $repository->getCategories();
+        $categories = $repository->listCategories();
 
         $categories->each(
             function (Category $category) use ($singleRepository) {
@@ -135,7 +135,7 @@ class CategoryController extends Controller
     {
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
-        $list     = $repository->getWithoutCategory($start, $end);
+        $list     = $repository->listNoCategory($start, $end);
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]

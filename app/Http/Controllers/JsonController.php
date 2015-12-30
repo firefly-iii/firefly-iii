@@ -179,7 +179,7 @@ class JsonController extends Controller
      */
     public function categories(CRI $repository)
     {
-        $list   = $repository->getCategories();
+        $list   = $repository->listCategories();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;

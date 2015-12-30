@@ -65,7 +65,7 @@ class ReportHelper implements ReportHelperInterface
         /** @var \FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface $singleRepository */
         $singleRepository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
 
-        $set = $repository->getCategories();
+        $set = $repository->listCategories();
         foreach ($set as $category) {
             $spent           = $singleRepository->balanceInPeriod($category, $start, $end, $accounts);
             $category->spent = $spent;
