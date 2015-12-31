@@ -55,20 +55,18 @@ class ReportController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        // spent per month, and earned per month. For a specific set of accounts
+        // grouped by month
+        $spentArray  = $query->spentPerMonth($accounts, $start, $end);
+        $earnedArray = $query->earnedPerMonth($accounts, $start, $end);
 
-        // per year?
+        // per year? put all months together.
         if ($start->diffInMonths($end) > 12) {
-
             $entries = new Collection;
             while ($start < $end) {
-                $startOfYear = clone $start;
-                $startOfYear->startOfYear();
-                $endOfYear = clone $startOfYear;
-                $endOfYear->endOfYear();
 
-                // total income and total expenses:
-                $incomeSum  = $query->incomeInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
-                $expenseSum = $query->expenseInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
+                $incomeSum  = $this->pluckFromArray($start->year, $earnedArray);
+                $expenseSum = $this->pluckFromArray($start->year, $spentArray);
 
                 $entries->push([clone $start, $incomeSum, $expenseSum]);
                 $start->addYear();
@@ -77,16 +75,14 @@ class ReportController extends Controller
             $data = $this->generator->multiYearInOut($entries);
             $cache->store($data);
         } else {
-            // per month:
+            // per month? simply use each month.
 
             $entries = new Collection;
             while ($start < $end) {
-                $month = clone $start;
-                $month->endOfMonth();
                 // total income and total expenses:
-                $incomeSum  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
-                $expenseSum = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
-
+                $date       = $start->format('Y-m');
+                $incomeSum  = isset($earnedArray[$date]) ? $earnedArray[$date] : 0;
+                $expenseSum = isset($spentArray[$date]) ? $spentArray[$date] : 0;
 
                 $entries->push([clone $start, $incomeSum, $expenseSum]);
                 $start->addMonth();
@@ -95,7 +91,6 @@ class ReportController extends Controller
             $data = $this->generator->yearInOut($entries);
             $cache->store($data);
         }
-
 
         return Response::json($data);
 
@@ -172,6 +167,26 @@ class ReportController extends Controller
 
 
         return Response::json($data);
+
+    }
+
+    /**
+     * @param int   $year
+     * @param array $set
+     *
+     * @return string
+     */
+    protected function pluckFromArray($year, array $set)
+    {
+        bcscale(2);
+        $sum = '0';
+        foreach ($set as $date => $amount) {
+            if (substr($date, 0, 4) == $year) {
+                $sum = bcadd($sum, $amount);
+            }
+        }
+
+        return $sum;
 
     }
 }

@@ -5,6 +5,7 @@ namespace FireflyIII\Helpers\Report;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionJournal;
@@ -100,6 +101,7 @@ class ReportQuery implements ReportQueryInterface
 
         return $query;
     }
+
 
     /**
      * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
@@ -231,4 +233,95 @@ class ReportQuery implements ReportQueryInterface
 
         return $data;
     }
+
+
+    /**
+     * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
+     * grouped by month like so: "2015-01" => '123.45'
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids   = $accounts->pluck('id')->toArray();
+        $query = Auth::user()->transactionjournals()
+                     ->leftJoin(
+                         'transactions AS t_from', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                     }
+                     )
+                     ->leftJoin(
+                         'transactions AS t_to', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                     }
+                     )
+                     ->whereIn('t_from.account_id', $ids)
+                     ->whereNotIn('t_to.account_id', $ids)
+                     ->after($start)
+                     ->before($end)
+                     ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                     ->groupBy('dateFormatted')
+                     ->get(
+                         [
+                             DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") AS `dateFormatted`'),
+                             DB::Raw('SUM(`t_from`.`amount`) AS `sum`')
+                         ]
+                     );
+        $array = [];
+        foreach ($query as $result) {
+            $array[$result->dateFormatted] = $result->sum;
+        }
+
+        return $array;
+
+    }
+
+    /**
+     * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
+     * grouped by month like so: "2015-01" => '123.45'
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function earnedPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids   = $accounts->pluck('id')->toArray();
+        $query = Auth::user()->transactionjournals()
+                     ->leftJoin(
+                         'transactions AS t_from', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                     }
+                     )
+                     ->leftJoin(
+                         'transactions AS t_to', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                     }
+                     )
+                     ->whereIn('t_to.account_id', $ids)
+                     ->whereNotIn('t_from.account_id', $ids)
+                     ->after($start)
+                     ->before($end)
+                     ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                     ->groupBy('dateFormatted')
+                     ->get(
+                         [
+                             DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") AS `dateFormatted`'),
+                             DB::Raw('SUM(`t_from`.`amount`) AS `sum`')
+                         ]
+                     );
+        $array = [];
+        foreach ($query as $result) {
+            $array[$result->dateFormatted] = $result->sum;
+        }
+
+        return $array;
+    }
+
 }
