@@ -5,7 +5,6 @@ namespace FireflyIII\Repositories\Budget;
 use Auth;
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
@@ -187,6 +186,33 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
     /**
      * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function firstActivity(Budget $budget)
+    {
+        $first = $budget->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            return $first->date;
+        }
+
+        return new Carbon;
+    }
+
+    /**
+     * Get a collection of all the limit repetitions belonging to this $budget.
+     *
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getBudgetReps(Budget $budget) {
+        $set = $budget->limitrepetitions()->count();
+        var_dump($set);
+    }
+
+    /**
+     * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -212,6 +238,41 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
     }
+
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using DEPOSITS in the $budget
+     * from all the users accounts.
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end)
+    {
+        /** @var Collection $query */
+        $query = $budget->transactionJournals()
+                        ->transactionTypes([TransactionType::WITHDRAWAL])
+                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                        ->where('transactions.amount', '<', 0)
+                        ->before($end)
+                        ->after($start)
+                        ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+
+        $return = [];
+        foreach ($query->toArray() as $entry) {
+            $return[$entry['dateFormatted']] = $entry['sum'];
+        }
+
+        return $return;
+    }
+
 
     /**
      * @return Collection
@@ -617,7 +678,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
     {
-        $ids = $accounts->pluck('id')->toArray();
+        $ids       = $accounts->pluck('id')->toArray();
         $budgetIds = $budgets->pluck('id')->toArray();
 
         /** @var Collection $set */

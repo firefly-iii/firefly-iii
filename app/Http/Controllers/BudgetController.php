@@ -8,6 +8,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Navigation;
 use Preferences;
@@ -132,9 +133,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface  $repository
+     * @param BudgetRepositoryInterface $repository
      *
-     * @param ARI $accountRepository
+     * @param ARI                       $accountRepository
      *
      * @return \Illuminate\View\View
      */
@@ -232,12 +233,37 @@ class BudgetController extends Controller
         $journals = $repository->getJournals($budget, $repetition);
 
         if (is_null($repetition->id)) {
-            $limits   = $repository->getBudgetLimits($budget);
-            $subTitle = e($budget->name);
+            $start = $repository->firstActivity($budget);
+            $end = new Carbon;
+            $set = $budget->limitrepetitions()->orderBy('startdate','DESC')->get();
+            //$set      = $repository->getBudgetLimits($budget);
+            //$subTitle = e($budget->name);
         } else {
-            $limits   = [$repetition->budgetLimit];
-            $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+            $start = $repetition->startdate;
+            $end   = $repetition->enddate;
+            $set   = new Collection([$repetition]);
+            //            $spentArray         = $repository->spentPerDay($budget, $start, $end);
+            //            $budgetLimit        = $repetition->budgetLimit;
+            //            $budgetLimit->spent = $this->getSumOfRange($start, $end, $spentArray); // bit weird but it works.
+            //            $limits             = new Collection([$budgetLimit]);
+            //$subTitle           = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
         }
+
+        $spentArray = $repository->spentPerDay($budget, $start, $end);
+        $limits     = new Collection();
+
+        /** @var LimitRepetition $entry */
+        foreach ($set as $entry) {
+            $entry->spent = $this->getSumOfRange($entry->startdate, $entry->enddate, $spentArray);
+            $limits->push($entry);
+        }
+
+        // loop limits and set the amount spent for each limit.
+        // /** @var BudgetLimit $budgetLimit */
+        //        foreach ($set as $budgetLimit) {
+        //            $start = $budgetLimit->startdate;
+        //            $end = $budgetLimit->lim
+        //        }
 
         $journals->setPath('/budgets/show/' . $budget->id);
 

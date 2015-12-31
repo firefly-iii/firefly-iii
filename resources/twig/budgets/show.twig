@@ -44,47 +44,43 @@
             {% endif %}
 
             {% for limit in limits %}
-                {% for rep in limit.limitRepetitions %}
-                    {% set spentInRep = spentInRepetition(rep) %}
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><a href="{{ route('budgets.show',[budget.id,rep.id]) }}">{{ rep.startdate.formatLocalized(monthFormat) }}</a>
-                            </h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    {{ 'amount'|_ }}: {{ rep.amount|formatAmount }}
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    {{ 'spent'|_ }}: {{ spentInRep|formatAmount }}
-                                </div>
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><a href="{{ route('budgets.show',[budget.id,limit.id]) }}">{{ limit.startdate.formatLocalized(monthFormat) }}</a>
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                {{ 'amount'|_ }}: {{ limit.amount|formatAmount }}
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    {% set overspent = rep.amount + spentInRep < 0 %}
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                {{ 'spent'|_ }}: {{ limit.spent|formatAmount }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                {% set overspent = limit.amount + limit.spent < 0 %}
 
-                                    {% if overspent %}
-                                        {% set pct = (spentInRep != 0 ? (rep.amount / (spentInRep*-1))*100 : 0) %} <!-- must have -1 here -->
-                                        <div class="progress progress-striped">
-                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
-                                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
-                                        </div>
-                                    {% else %}
-                                        {% set amount = rep.amount %}
-                                        {% set pct = (amount != 0 ? (((spentInRep*-1) / amount)*100) : 0) %} <!-- must have -1 here -->
-                                        <div class="progress progress-striped">
-                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                        </div>
-                                    {% endif %}
-                                </div>
+                                {% if overspent %}
+                                    {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} <!-- must have -1 here -->
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
+                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
+                                    </div>
+                                {% else %}
+                                    {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} <!-- must have -1 here -->
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
             {% endfor %}
 
             {% if limits|length == 1 %}

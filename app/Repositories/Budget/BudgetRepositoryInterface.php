@@ -33,6 +33,22 @@ interface BudgetRepositoryInterface
     public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
 
     /**
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function firstActivity(Budget $budget);
+
+    /**
+     * Get a collection of all the limit repetitions belonging to this $budget.
+     *
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getBudgetReps(Budget $budget);
+
+    /**
      * Returns the expenses for this budget grouped per month, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *
@@ -43,6 +59,22 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
+     * from all the users accounts.
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end);
 
     /**
      * @param Budget $budget
