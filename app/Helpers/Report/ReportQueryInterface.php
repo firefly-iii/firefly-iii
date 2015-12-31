@@ -31,18 +31,18 @@ interface ReportQueryInterface
      */
     public function expenseInPeriod(Carbon $start, Carbon $end, Collection $accounts);
 
-    /**
-     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
-     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
-     * regards to tags. It will only get the incomes to the specified accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts);
+//    /**
+//     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
+//     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
+//     * regards to tags. It will only get the incomes to the specified accounts.
+//     *
+//     * @param Carbon     $start
+//     * @param Carbon     $end
+//     * @param Collection $accounts
+//     *
+//     * @return Collection
+//     */
+//    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * Covers tags as well.

@@ -125,9 +125,9 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done
         $budgets       = $this->helper->getBudgetReport($start, $end, $accounts);
         $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
         $balance       = $this->helper->getBalanceReport($start, $end, $accounts);

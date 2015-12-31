@@ -103,69 +103,69 @@ class ReportQuery implements ReportQueryInterface
     }
 
 
-    /**
-     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
-     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
-     * regards to tags. It will only get the incomes to the specified accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $query = $this->queryJournalsWithTransactions($start, $end);
-
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
-
-        // OR is a deposit
-        // OR any transfer TO the accounts in $accounts, not FROM any of the accounts in $accounts.
-        $query->where(
-            function (Builder $query) use ($ids) {
-                $query->where(
-                    function (Builder $q) {
-                        $q->where('transaction_types.type', TransactionType::DEPOSIT);
-                    }
-                );
-                $query->orWhere(
-                    function (Builder $q) use ($ids) {
-                        $q->where('transaction_types.type', TransactionType::TRANSFER);
-                        $q->whereNotIn('ac_from.id', $ids);
-                        $q->whereIn('ac_to.id', $ids);
-                    }
-                );
-            }
-        );
-
-        // only include selected accounts.
-        $query->whereIn('ac_to.id', $ids);
-        $query->orderBy('transaction_journals.date');
-
-        // get everything
-        $data = $query->get(
-            ['transaction_journals.*',
-             'transaction_types.type', 'ac_from.name as name',
-             't_from.amount as from_amount',
-             't_to.amount as to_amount',
-             'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
-        );
-
-        $data->each(
-            function (TransactionJournal $journal) {
-                if (intval($journal->account_encrypted) == 1) {
-                    $journal->name = Crypt::decrypt($journal->name);
-                }
-            }
-        );
-
-        return $data;
-    }
+//    /**
+//     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
+//     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
+//     * regards to tags. It will only get the incomes to the specified accounts.
+//     *
+//     * @param Carbon     $start
+//     * @param Carbon     $end
+//     * @param Collection $accounts
+//     *
+//     * @return Collection
+//     */
+//    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts)
+//    {
+//        $query = $this->queryJournalsWithTransactions($start, $end);
+//
+//        $ids = [];
+//        /** @var Account $account */
+//        foreach ($accounts as $account) {
+//            $ids[] = $account->id;
+//        }
+//
+//        // OR is a deposit
+//        // OR any transfer TO the accounts in $accounts, not FROM any of the accounts in $accounts.
+//        $query->where(
+//            function (Builder $query) use ($ids) {
+//                $query->where(
+//                    function (Builder $q) {
+//                        $q->where('transaction_types.type', TransactionType::DEPOSIT);
+//                    }
+//                );
+//                $query->orWhere(
+//                    function (Builder $q) use ($ids) {
+//                        $q->where('transaction_types.type', TransactionType::TRANSFER);
+//                        $q->whereNotIn('ac_from.id', $ids);
+//                        $q->whereIn('ac_to.id', $ids);
+//                    }
+//                );
+//            }
+//        );
+//
+//        // only include selected accounts.
+//        $query->whereIn('ac_to.id', $ids);
+//        $query->orderBy('transaction_journals.date');
+//
+//        // get everything
+//        $data = $query->get(
+//            ['transaction_journals.*',
+//             'transaction_types.type', 'ac_from.name as name',
+//             't_from.amount as from_amount',
+//             't_to.amount as to_amount',
+//             'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
+//        );
+//
+//        $data->each(
+//            function (TransactionJournal $journal) {
+//                if (intval($journal->account_encrypted) == 1) {
+//                    $journal->name = Crypt::decrypt($journal->name);
+//                }
+//            }
+//        );
+//
+//        return $data;
+//    }
 
     /**
      * See ReportQueryInterface::incomeInPeriod

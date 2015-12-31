@@ -2,7 +2,9 @@
 
 namespace FireflyIII\Helpers\Report;
 
+use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
@@ -19,8 +21,9 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionType;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class ReportHelper
@@ -127,21 +130,59 @@ class ReportHelper implements ReportHelperInterface
         $startAmount = '0';
         $endAmount   = '0';
         $diff        = '0';
+        $ids         = $accounts->pluck('id')->toArray();
+
+        $yesterday = clone $start;
+        $yesterday->subDay();
+
         bcscale(2);
 
+        // get balances for start.
+        $startSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                           ->whereIn('accounts.id', $ids)
+                           ->whereNull('transaction_journals.deleted_at')
+                           ->whereNull('transactions.deleted_at')
+                           ->where('transaction_journals.date', '<=', $yesterday->format('Y-m-d'))
+                           ->groupBy('accounts.id')
+                           ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+
+        // and for end:
+        $endSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                         ->whereIn('accounts.id', $ids)
+                         ->whereNull('transaction_journals.deleted_at')
+                         ->whereNull('transactions.deleted_at')
+                         ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                         ->groupBy('accounts.id')
+                         ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+
+
         $accounts->each(
-            function (Account $account) use ($start, $end) {
+            function (Account $account) use ($startSet, $endSet) {
                 /**
                  * The balance for today always incorporates transactions
                  * made on today. So to get todays "start" balance, we sub one
                  * day.
                  */
-                $yesterday = clone $start;
-                $yesterday->subDay();
+                //
+                $currentStart = $startSet->filter(
+                    function (Account $entry) use ($account) {
+                        return $account->id == $entry->id;
+                    }
+                );
+                if ($currentStart->first()) {
+                    $account->startBalance = $currentStart->first()->balance;
+                }
 
-                /** @noinspection PhpParamsInspection */
-                $account->startBalance = Steam::balance($account, $yesterday);
-                $account->endBalance   = Steam::balance($account, $end);
+                $currentEnd = $endSet->filter(
+                    function (Account $entry) use ($account) {
+                        return $account->id == $entry->id;
+                    }
+                );
+                if ($currentEnd->first()) {
+                    $account->endBalance = $currentEnd->first()->balance;
+                }
             }
         );
 
@@ -174,9 +215,32 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport($start, $end, Collection $accounts)
     {
         $object = new Income;
-        $set    = $this->query->incomeInPeriod($start, $end, $accounts);
+
+        /*
+         * TODO move to ReportQuery class.
+         */
+        $ids = $accounts->pluck('id')->toArray();
+        $set = Auth::user()->transactionjournals()
+                   ->leftJoin(
+                       'transactions as t_from', function (JoinClause $join) {
+                       $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
+                   }
+                   )
+                   ->leftJoin(
+                       'transactions as t_to', function (JoinClause $join) {
+                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                   }
+                   )
+                   ->leftJoin('accounts', 't_from.account_id', '=', 'accounts.id')
+                   ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                   ->before($end)
+                   ->after($start)
+                   ->whereIn('t_to.account_id', $ids)
+                   ->whereNotIn('t_from.account_id', $ids)
+                   ->get(['transaction_journals.*', 't_to.amount as journalAmount', 'accounts.id as account_id', 'accounts.name as account_name']);
+
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount_positive);
+            $object->addToTotal($entry->journalAmount);
             $object->addOrCreateIncome($entry);
         }
 
@@ -195,9 +259,33 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport($start, $end, Collection $accounts)
     {
         $object = new Expense;
-        $set    = $this->query->expenseInPeriod($start, $end, $accounts);
+
+
+        /*
+         * TODO move to ReportQuery class.
+         */
+        $ids = $accounts->pluck('id')->toArray();
+        $set = Auth::user()->transactionjournals()
+                   ->leftJoin(
+                       'transactions as t_from', function (JoinClause $join) {
+                       $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
+                   }
+                   )
+                   ->leftJoin(
+                       'transactions as t_to', function (JoinClause $join) {
+                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                   }
+                   )
+                   ->leftJoin('accounts', 't_to.account_id', '=', 'accounts.id')
+                   ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                   ->before($end)
+                   ->after($start)
+                   ->whereIn('t_from.account_id', $ids)
+                   ->whereNotIn('t_to.account_id', $ids)
+                   ->get(['transaction_journals.*', 't_from.amount as journalAmount', 'accounts.id as account_id', 'accounts.name as account_name']);
+
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount); // can be positive, if it's a transfer
+            $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer
             $object->addOrCreateExpense($entry);
         }
 
