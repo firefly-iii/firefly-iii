@@ -422,7 +422,7 @@ Route::group(
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
 
     // piggy banks:
-    Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
+    Route::get('/chart/piggy-bank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
     // reports:
     Route::get('/chart/report/in-out/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
