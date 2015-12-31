@@ -66,7 +66,7 @@ class ReportController extends Controller
             while ($start < $end) {
 
                 $incomeSum  = $this->pluckFromArray($start->year, $earnedArray);
-                $expenseSum = $this->pluckFromArray($start->year, $spentArray);
+                $expenseSum = $this->pluckFromArray($start->year, $spentArray) * -1;
 
                 $entries->push([clone $start, $incomeSum, $expenseSum]);
                 $start->addYear();
@@ -82,7 +82,7 @@ class ReportController extends Controller
                 // total income and total expenses:
                 $date       = $start->format('Y-m');
                 $incomeSum  = isset($earnedArray[$date]) ? $earnedArray[$date] : 0;
-                $expenseSum = isset($spentArray[$date]) ? $spentArray[$date] : 0;
+                $expenseSum = isset($spentArray[$date]) ? ($spentArray[$date]*-1) : 0;
 
                 $entries->push([clone $start, $incomeSum, $expenseSum]);
                 $start->addMonth();
