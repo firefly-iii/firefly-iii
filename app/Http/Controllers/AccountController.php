@@ -56,8 +56,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
@@ -77,8 +77,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -98,8 +98,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
@@ -143,7 +143,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param ARI                        $repository
      * @param                            $what
      *
      * @return \Illuminate\View\View
@@ -184,8 +184,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
@@ -195,7 +195,7 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $journals     = $repository->getJournals($account, $page);
-        $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
+        $subTitle = trans('firefly.details_for_' . $what, ['name' => $account->name]);
         $journals->setPath('accounts/show/' . $account->id);
 
 
@@ -203,8 +203,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param ARI $repository
+     * @param AccountFormRequest $request
+     * @param ARI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -242,9 +242,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param ARI $repository
-     * @param Account                    $account
+     * @param AccountFormRequest $request
+     * @param ARI                $repository
+     * @param Account            $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */

@@ -202,6 +202,12 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('category-show');
         $cache->addProperty($category->id);
+
+        // get all spent and earned data:
+        // get amount earned in period, grouped by day.
+        $spentArray  = $repository->spentPerDay($category, $start, $end);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+
         if ($cache->has()) {
             $entries = $cache->get();
         } else {
@@ -210,9 +216,9 @@ class CategoryController extends Controller
                 $end        = Navigation::startOfPeriod($end, $range);
                 $currentEnd = Navigation::endOfPeriod($end, $range);
 
-                // here do something.
-                $spent    = $repository->spentInPeriod($category, $end, $currentEnd);
-                $earned   = $repository->earnedInPeriod($category, $end, $currentEnd);
+                // get data from spentArray:
+                $spent    = $this->getSumOfRange($end, $currentEnd, $spentArray);
+                $earned   = $this->getSumOfRange($end, $currentEnd, $earnedArray);
                 $dateStr  = $end->format('Y-m-d');
                 $dateName = Navigation::periodShow($end, $range);
                 $entries->push([$dateStr, $dateName, $spent, $earned]);

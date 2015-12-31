@@ -100,11 +100,11 @@ class Navigation
 
     /**
      *
-     * @param Carbon         $theCurrentEnd
+     * @param \Carbon\Carbon $theCurrentEnd
      * @param                $repeatFreq
-     * @param Carbon         $maxDate
+     * @param \Carbon\Carbon $maxDate
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      */
     public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate = null)
     {
@@ -218,11 +218,11 @@ class Navigation
     }
 
     /**
-     * @param Carbon         $theDate
+     * @param \Carbon\Carbon $theDate
      * @param                $repeatFreq
      * @param int            $subtract
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
     public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
