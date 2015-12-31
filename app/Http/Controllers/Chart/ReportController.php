@@ -82,7 +82,7 @@ class ReportController extends Controller
                 // total income and total expenses:
                 $date       = $start->format('Y-m');
                 $incomeSum  = isset($earnedArray[$date]) ? $earnedArray[$date] : 0;
-                $expenseSum = isset($spentArray[$date]) ? ($spentArray[$date]*-1) : 0;
+                $expenseSum = isset($spentArray[$date]) ? ($spentArray[$date] * -1) : 0;
 
                 $entries->push([clone $start, $incomeSum, $expenseSum]);
                 $start->addMonth();
@@ -119,24 +119,22 @@ class ReportController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-
-        $income  = '0';
-        $expense = '0';
-        $count   = 0;
+        // spent per month, and earned per month. For a specific set of accounts
+        // grouped by month
+        $spentArray  = $query->spentPerMonth($accounts, $start, $end);
+        $earnedArray = $query->earnedPerMonth($accounts, $start, $end);
+        $income      = '0';
+        $expense     = '0';
+        $count       = 0;
 
         bcscale(2);
 
         if ($start->diffInMonths($end) > 12) {
             // per year
             while ($start < $end) {
-                $startOfYear = clone $start;
-                $startOfYear->startOfYear();
-                $endOfYear = clone $startOfYear;
-                $endOfYear->endOfYear();
 
-                // total income and total expenses:
-                $currentIncome  = $query->incomeInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
-                $currentExpense = $query->expenseInPeriod($startOfYear, $endOfYear, $accounts)->sum('amount_positive');
+                $currentIncome  = $this->pluckFromArray($start->year, $earnedArray);
+                $currentExpense = $this->pluckFromArray($start->year, $spentArray) * -1;
                 $income         = bcadd($income, $currentIncome);
                 $expense        = bcadd($expense, $currentExpense);
 
@@ -149,11 +147,9 @@ class ReportController extends Controller
         } else {
             // per month!
             while ($start < $end) {
-                $month = clone $start;
-                $month->endOfMonth();
-                // total income and total expenses:
-                $currentIncome  = $query->incomeInPeriod($start, $month, $accounts)->sum('amount_positive');
-                $currentExpense = $query->expenseInPeriod($start, $month, $accounts)->sum('amount_positive');
+                $date           = $start->format('Y-m');
+                $currentIncome  = isset($earnedArray[$date]) ? $earnedArray[$date] : 0;
+                $currentExpense = isset($spentArray[$date]) ? ($spentArray[$date] * -1) : 0;
                 $income         = bcadd($income, $currentIncome);
                 $expense        = bcadd($expense, $currentExpense);
 
