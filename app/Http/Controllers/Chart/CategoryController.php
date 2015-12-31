@@ -63,12 +63,18 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
+        $spentArray  = $repository->spentPerDay($category, $start, $end);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
-            $earned     = $repository->earnedInPeriod($category, $start, $currentEnd);
-            $date       = Navigation::periodShow($start, $range);
+
+            // get the sum from $spentArray and $earnedArray:
+            $spent  = $this->getSumOfRange($start, $currentEnd, $spentArray);
+            $earned = $this->getSumOfRange($start, $currentEnd, $earnedArray);
+
+            $date = Navigation::periodShow($start, $range);
             $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
         }
@@ -84,6 +90,7 @@ class CategoryController extends Controller
 
 
     }
+
 
     /**
      * Show this month's category overview.
@@ -251,9 +258,9 @@ class CategoryController extends Controller
         $entries = new Collection;
 
         // get amount earned in period, grouped by day.
+        // get amount spent in period, grouped by day.
         $spentArray  = $repository->spentPerDay($category, $start, $end);
         $earnedArray = $repository->earnedPerDay($category, $start, $end);
-        // get amount spent in period, grouped by day.
 
         while ($start <= $end) {
             $str    = $start->format('Y-m-d');
@@ -451,6 +458,34 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return $data;
+    }
+
+    /**
+     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * and sum up everything in the array in the given range.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param array  $array
+     *
+     * @return string
+     */
+    protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
+    {
+        bcscale(2);
+        $sum          = '0';
+        $currentStart = clone $start; // to not mess with the original one
+        $currentEnd   = clone $end; // to not mess with the original one
+
+        while ($currentStart <= $currentEnd) {
+            $date = $currentStart->format('Y-m-d');
+            if (isset($array[$date])) {
+                $sum = bcadd($sum, $array[$date]);
+            }
+            $currentStart->addDay();
+        }
+
+        return $sum;
     }
 
 }

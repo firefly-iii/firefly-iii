@@ -107,14 +107,12 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     public function earnedPerDay(Category $category, Carbon $start, Carbon $end)
     {
         /** @var Collection $query */
-        $query = Auth::user()->transactionJournals()
+        $query = $category->transactionJournals()
                      ->transactionTypes([TransactionType::DEPOSIT])
-                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                      ->where('transactions.amount', '>', 0)
                      ->before($end)
                      ->after($start)
-                     ->where('category_transaction_journal.category_id', $category->id)
                      ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
@@ -245,14 +243,12 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     public function spentPerDay(Category $category, Carbon $start, Carbon $end)
     {
         /** @var Collection $query */
-        $query = Auth::user()->transactionJournals()
+        $query = $category->transactionJournals()
                      ->transactionTypes([TransactionType::WITHDRAWAL])
-                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                      ->where('transactions.amount', '<', 0)
                      ->before($end)
                      ->after($start)
-                     ->where('category_transaction_journal.category_id', $category->id)
                      ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
