@@ -153,15 +153,6 @@ interface BudgetRepositoryInterface
     public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end);
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBudgetLimitRepetitions(Budget $budget, Carbon $start, Carbon $end);
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *

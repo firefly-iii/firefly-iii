@@ -203,25 +203,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                               ->get(['limit_repetitions.*', 'budget_limits.budget_id']);
     }
 
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBudgetLimitRepetitions(Budget $budget, Carbon $start, Carbon $end)
-    {
-        /** @var Collection $repetitions */
-        return LimitRepetition::
-        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                              ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
-                              ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-                              ->where('budget_limits.budget_id', $budget->id)
-                              ->get(['limit_repetitions.*']);
-    }
-
     /**
      * @param Budget $budget
      *
