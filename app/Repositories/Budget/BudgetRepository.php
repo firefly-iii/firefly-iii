@@ -420,23 +420,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * @deprecated
      *
      * @param Budget $budget
-     *
-     * @return Carbon
-     */
-    public function getLastBudgetLimitDate(Budget $budget)
-    {
-        $limit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
-        if ($limit) {
-            return $limit->startdate;
-        }
-
-        return Carbon::now()->startOfYear();
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param Budget $budget
      * @param Carbon $date
      *
      * @return float|null

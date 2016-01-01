@@ -212,15 +212,6 @@ interface BudgetRepositoryInterface
      * @deprecated
      *
      * @param Budget $budget
-     *
-     * @return Carbon
-     */
-    public function getLastBudgetLimitDate(Budget $budget);
-
-    /**
-     * @deprecated
-     *
-     * @param Budget $budget
      * @param Carbon $date
      *
      * @return float
