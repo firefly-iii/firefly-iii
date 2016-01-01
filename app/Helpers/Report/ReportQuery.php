@@ -20,26 +20,6 @@ class ReportQuery implements ReportQueryInterface
 {
 
     /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return string
-     */
-    public function spentNoBudget(Account $account, Carbon $start, Carbon $end)
-    {
-        return
-            Auth::user()->transactionjournals()
-                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->transactionTypes([TransactionType::WITHDRAWAL])
-                ->where('transactions.account_id', $account->id)
-                ->before($end)
-                ->after($start)
-                ->whereNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])->sum('amount');
-    }
-
-    /**
      * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
      * grouped by month like so: "2015-01" => '123.45'
      *

@@ -384,7 +384,6 @@ class ReportHelper implements ReportHelperInterface
         $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
 
         foreach ($accounts as $account) {
-            //$spent = $this->query->spentNoBudget($account, $start, $end);
             $entry = $spentData->filter(
                 function (TransactionJournal $model) use ($budget, $account) {
                     return $model->account_id == $account->id && is_null($model->budget_id);

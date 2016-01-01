@@ -40,15 +40,6 @@ interface ReportQueryInterface
     public function expense(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return string
-     */
-    public function spentNoBudget(Account $account, Carbon $start, Carbon $end);
-
-    /**
      * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
      * grouped by month like so: "2015-01" => '123.45'
      *
