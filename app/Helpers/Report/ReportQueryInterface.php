@@ -16,33 +16,28 @@ interface ReportQueryInterface
 {
 
     /**
-     * See ReportQueryInterface::incomeInPeriod
+     * This method returns all the "in" transaction journals for the given account and given period. The amount
+     * is stored in "journalAmount".
      *
-     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
-     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
-     * not group and returns different fields.
-     *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return Collection
-     *
      */
-    public function expenseInPeriod(Carbon $start, Carbon $end, Collection $accounts);
+    public function income(Collection $accounts, Carbon $start, Carbon $end);
 
-//    /**
-//     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
-//     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
-//     * regards to tags. It will only get the incomes to the specified accounts.
-//     *
-//     * @param Carbon     $start
-//     * @param Carbon     $end
-//     * @param Collection $accounts
-//     *
-//     * @return Collection
-//     */
-//    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts);
+    /**
+     * This method returns all the "out" transaction journals for the given account and given period. The amount
+     * is stored in "journalAmount".
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function expense(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * Covers tags as well.

@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Helpers\Report;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
@@ -21,8 +20,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\TransactionType;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -215,29 +212,7 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport($start, $end, Collection $accounts)
     {
         $object = new Income;
-
-        /*
-         * TODO move to ReportQuery class.
-         */
-        $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'transactions as t_from', function (JoinClause $join) {
-                       $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions as t_to', function (JoinClause $join) {
-                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                   }
-                   )
-                   ->leftJoin('accounts', 't_from.account_id', '=', 'accounts.id')
-                   ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
-                   ->before($end)
-                   ->after($start)
-                   ->whereIn('t_to.account_id', $ids)
-                   ->whereNotIn('t_from.account_id', $ids)
-                   ->get(['transaction_journals.*', 't_to.amount as journalAmount', 'accounts.id as account_id', 'accounts.name as account_name']);
+        $set    = $this->query->income($accounts, $start, $end);
 
         foreach ($set as $entry) {
             $object->addToTotal($entry->journalAmount);
@@ -259,30 +234,7 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport($start, $end, Collection $accounts)
     {
         $object = new Expense;
-
-
-        /*
-         * TODO move to ReportQuery class.
-         */
-        $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'transactions as t_from', function (JoinClause $join) {
-                       $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions as t_to', function (JoinClause $join) {
-                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                   }
-                   )
-                   ->leftJoin('accounts', 't_to.account_id', '=', 'accounts.id')
-                   ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
-                   ->before($end)
-                   ->after($start)
-                   ->whereIn('t_from.account_id', $ids)
-                   ->whereNotIn('t_to.account_id', $ids)
-                   ->get(['transaction_journals.*', 't_from.amount as journalAmount', 'accounts.id as account_id', 'accounts.name as account_name']);
+        $set    = $this->query->expense($accounts, $start, $end);
 
         foreach ($set as $entry) {
             $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer

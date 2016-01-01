@@ -111,9 +111,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface       $reportQuery
+     * @param ReportQueryInterface $reportQuery
      *
-     * @param ARI $accountRepository
+     * @param ARI                  $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -131,7 +131,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-        $amount   = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('to_amount');
+        $amount   = $reportQuery->income($accounts, $start, $end)->sum('journalAmount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -140,9 +140,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface       $reportQuery
+     * @param ReportQueryInterface $reportQuery
      *
-     * @param ARI $accountRepository
+     * @param ARI                  $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -162,7 +162,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $amount = $reportQuery->expenseInPeriod($start, $end, $accounts)->sum('to_amount');
+        $amount = $reportQuery->expense($accounts, $start, $end)->sum('journalAmount');
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
