@@ -40,15 +40,6 @@ interface BudgetRepositoryInterface
     public function firstActivity(Budget $budget);
 
     /**
-     * Get a collection of all the limit repetitions belonging to this $budget.
-     *
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
-    public function getBudgetReps(Budget $budget);
-
-    /**
      * Returns the expenses for this budget grouped per month, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *
@@ -75,6 +66,43 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function spentPerDay(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
+     * from the given users accounts..
+     *
+     * @param Budget $budget
+     * @param Collection $accounts
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function spentPerDayForAccounts(Budget $budget, Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<array>
+     *
+     * That array contains:
+     *
+     * budgetid:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
+     * from the given users accounts..
+     *
+     * @param Collection $accounts
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @param Budget $budget
@@ -142,6 +170,14 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getBudgetLimitRepetitions(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end);
 
     /**
      * @param Budget $budget

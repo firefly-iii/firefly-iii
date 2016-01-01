@@ -200,17 +200,23 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * Get a collection of all the limit repetitions belonging to this $budget.
-     *
-     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
-    public function getBudgetReps(Budget $budget)
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end)
     {
-        $set = $budget->limitrepetitions()->count();
-        var_dump($set);
+        /** @var Collection $repetitions */
+        return LimitRepetition::
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                              ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                              ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                              ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                              ->where('budgets.user_id', Auth::user()->id)
+                              ->get(['limit_repetitions.*', 'budget_limits.budget_id']);
     }
+
 
     /**
      * @param Budget $budget
@@ -264,7 +270,43 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                         ->where('transactions.amount', '<', 0)
                         ->before($end)
                         ->after($start)
-                        ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                        ->groupBy('dateFormatted')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+
+        $return = [];
+        foreach ($query->toArray() as $entry) {
+            $return[$entry['dateFormatted']] = $entry['sum'];
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using DEPOSITS in the $budget
+     * from all the users accounts.
+     *
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentPerDayForAccounts(Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        /** @var Collection $query */
+        $query = $budget->transactionJournals()
+                        ->transactionTypes([TransactionType::WITHDRAWAL])
+                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                        ->whereIn('transactions.account_id', $ids)
+                        ->where('transactions.amount', '<', 0)
+                        ->before($end)
+                        ->after($start)
+                        ->groupBy('dateFormatted')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($query->toArray() as $entry) {
@@ -722,6 +764,55 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             }
             // store each entry:
             $return[$id]['entries'][$budget->dateFormatted] = $budget->sumAmount;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<array>
+     *
+     * That array contains:
+     *
+     * budgetid:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
+     * from the given users accounts..
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        /** @var Collection $query */
+        $query = Auth::user()->transactionJournals()
+                     ->transactionTypes([TransactionType::WITHDRAWAL])
+                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                     ->whereIn('transactions.account_id', $ids)
+                     ->where('transactions.amount', '<', 0)
+                     ->before($end)
+                     ->after($start)
+                     ->groupBy('budget_id')
+                     ->groupBy('dateFormatted')
+                     ->get(
+                         ['transaction_journals.date as dateFormatted', 'budget_transaction_journal.budget_id',
+                          DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]
+                     );
+
+        $return = [];
+        foreach ($query->toArray() as $entry) {
+            $budgetId = $entry['budget_id'];
+            if (!isset($return[$budgetId])) {
+                $return[$budgetId] = [];
+            }
+            $return[$budgetId][$entry['dateFormatted']] = $entry['sum'];
         }
 
         return $return;
