@@ -204,17 +204,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
-    public function getBudgetLimits(Budget $budget)
-    {
-        return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
-    }
-
-
-    /**
      * Returns an array with the following key:value pairs:
      *
      * yyyy-mm-dd:<amount>

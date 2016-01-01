@@ -161,13 +161,6 @@ interface BudgetRepositoryInterface
     public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end);
 
     /**
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
-    public function getBudgetLimits(Budget $budget);
-
-    /**
      * @return Collection
      */
     public function getBudgets();
