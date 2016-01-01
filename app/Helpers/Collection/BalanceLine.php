@@ -26,9 +26,6 @@ class BalanceLine
     /** @var BudgetModel */
     protected $budget;
 
-    /** @var  LimitRepetition */
-    protected $repetition;
-
     protected $role = self::ROLE_DEFAULTROLE;
 
     /**
@@ -110,29 +107,13 @@ class BalanceLine
      */
     public function leftOfRepetition()
     {
-        $start = $this->getRepetition() ? $this->getRepetition()->amount : 0;
+        $start = isset($this->budget->amount) ? $this->budget->amount : 0;
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
             $start += $balanceEntry->getSpent();
         }
 
         return $start;
-    }
-
-    /**
-     * @return LimitRepetition
-     */
-    public function getRepetition()
-    {
-        return $this->repetition;
-    }
-
-    /**
-     * @param LimitRepetition $repetition
-     */
-    public function setRepetition($repetition)
-    {
-        $this->repetition = $repetition;
     }
 
     /**

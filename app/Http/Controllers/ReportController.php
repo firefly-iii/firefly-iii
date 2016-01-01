@@ -125,21 +125,18 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done
-        $budgets       = $this->helper->getBudgetReport($start, $end, $accounts);
-        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
-        $balance       = $this->helper->getBalanceReport($start, $end, $accounts);
-        $bills         = $this->helper->getBillReport($start, $end, $accounts);
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done (+2)
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
+        $budgets       = $this->helper->getBudgetReport($start, $end, $accounts); // done (+5)
+        $categories    = $this->helper->getCategoryReport($start, $end, $accounts); // done (+1) (20)
+        $balance       = $this->helper->getBalanceReport($start, $end, $accounts); // +566
+        //        $bills         = $this->helper->getBillReport($start, $end, $accounts);
+
+        $bills = [];
 
         // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
+        $accountIds = join(',', $accounts->pluck('id')->toArray());
 
         // continue!
         return view(

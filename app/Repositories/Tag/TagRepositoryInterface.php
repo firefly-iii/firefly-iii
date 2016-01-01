@@ -16,7 +16,14 @@ use Illuminate\Support\Collection;
  */
 interface TagRepositoryInterface
 {
-
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @param TransactionJournal $journal

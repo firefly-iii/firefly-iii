@@ -817,4 +817,56 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
         return $return;
     }
+
+    /**
+     * Returns a list of expenses (in the field "spent", grouped per budget per account.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
+    {
+
+        $accountIds = $accounts->pluck('id')->toArray();
+        $budgetIds  = $budgets->pluck('id')->toArray();
+        $set        = Auth::user()->transactionjournals()
+                          ->leftJoin(
+                              'transactions AS t_from', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                          }
+                          )
+                          ->leftJoin(
+                              'transactions AS t_to', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                          }
+                          )
+                          ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                          ->whereIn('t_from.account_id', $accountIds)
+                          ->whereNotIn('t_to.account_id', $accountIds)
+                          ->where(
+                              function (Builder $q) use ($budgetIds) {
+                                  $q->whereIn('budget_transaction_journal.budget_id', $budgetIds);
+                                  $q->orWhereNull('budget_transaction_journal.budget_id');
+                              }
+                          )
+                          ->after($start)
+                          ->before($end)
+                          ->groupBy('t_from.account_id')
+                          ->groupBy('budget_transaction_journal.budget_id')
+                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                          ->get(
+                              [
+                                  't_from.account_id',
+                                  'budget_transaction_journal.budget_id',
+                                  DB::Raw('SUM(`t_from`.`amount`) AS `spent`')
+                              ]
+                          );
+
+        return $set;
+
+    }
 }

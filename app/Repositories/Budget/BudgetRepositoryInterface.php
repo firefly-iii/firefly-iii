@@ -15,6 +15,10 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
+
+
+
+
     /**
      * @return void
      */
@@ -51,6 +55,19 @@ interface BudgetRepositoryInterface
      */
     public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end);
 
+
+    /**
+     * Returns a list of expenses (in the field "spent", grouped per budget per account.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
+
     /**
      * Returns an array with the following key:value pairs:
      *
@@ -83,6 +100,8 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function spentPerDayForAccounts(Budget $budget, Collection $accounts, Carbon $start, Carbon $end);
+
+
 
     /**
      * Returns an array with the following key:value pairs:
