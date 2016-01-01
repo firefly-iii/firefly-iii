@@ -451,6 +451,7 @@ class ReportHelper implements ReportHelperInterface
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
         $bills      = $repository->getBillsForAccounts($accounts);
+        $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
         $collection = new BillCollection;
 
         /** @var Bill $bill */
@@ -463,16 +464,17 @@ class ReportHelper implements ReportHelperInterface
 
             // is hit in period?
             bcscale(2);
-            $set = $repository->getJournalsInRange($bill, $start, $end);
-            if ($set->count() == 0) {
-                $billLine->setHit(false);
-            } else {
-                $billLine->setHit(true);
-                $amount = '0';
-                foreach ($set as $entry) {
-                    $amount = bcadd($amount, $entry->amount);
+
+            $entry = $journals->filter(
+                function (TransactionJournal $journal) use ($bill) {
+                    return $journal->bill_id == $bill->id;
                 }
-                $billLine->setAmount($amount);
+            );
+            if (!is_null($entry->first())) {
+                $billLine->setAmount($entry->first()->journalAmount);
+                $billLine->setHit(true);
+            } else {
+                $billLine->setHit(false);
             }
 
             $collection->addBill($billLine);

@@ -35,6 +35,40 @@ class BillRepository implements BillRepositoryInterface
         return $bill->delete();
     }
 
+    /**
+     * Returns all journals connected to these bills in the given range. Amount paid
+     * is stored in "journalAmount" as a negative number.
+     *
+     * @param Collection $bills
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end)
+    {
+        $ids = $bills->pluck('id')->toArray();
+
+        $set = Auth::user()->transactionjournals()
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->whereIn('bill_id', $ids)
+                   ->before($end)
+                   ->after($start)
+                   ->groupBy('transaction_journals.bill_id')
+                   ->get(
+                       [
+                           'transaction_journals.bill_id',
+                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')
+                       ]
+                   );
+
+        return $set;
+    }
+
 
     /**
      * @return Collection
@@ -63,20 +97,22 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsForAccounts(Collection $accounts)
     {
-        /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
         $ids = $accounts->pluck('id')->toArray();
-        $set = $set->filter(
-            function (Bill $bill) use ($ids) {
-                // get transaction journals from or to any of the mentioned accounts.
-                // when zero, return null.
-                $journals = $bill->transactionjournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->whereIn('transactions.account_id', $ids)->count();
-
-                return ($journals > 0);
-
-            }
-        );
+        $set = Auth::user()->bills()
+                   ->leftJoin(
+                       'transaction_journals', function (JoinClause $join) {
+                       $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
+                   }
+                   )
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->whereIn('transactions.account_id', $ids)
+                   ->whereNull('transaction_journals.deleted_at')
+                   ->groupBy('bills.id')
+                   ->get(['bills.*']);
 
         $set = $set->sortBy(
             function (Bill $bill) {
