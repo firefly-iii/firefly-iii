@@ -19,20 +19,6 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
 {
 
     /**
-     * @param Category   $category
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        return $this->commonBalanceInPeriod($category, $start, $end, $accounts);
-    }
-
-
-    /**
      * @param Category $category
      *
      * @return int

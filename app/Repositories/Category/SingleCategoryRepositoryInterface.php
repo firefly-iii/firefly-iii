@@ -14,18 +14,6 @@ use Illuminate\Support\Collection;
 interface SingleCategoryRepositoryInterface
 {
     /**
-     * Corrected for tags and list of accounts.
-     *
-     * @param Category       $category
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     * @param Collection     $accounts
-     *
-     * @return string
-     */
-    public function balanceInPeriod(Category $category, Carbon $start, Carbon $end, Collection $accounts);
-
-    /**
      * @param Category $category
      *
      * @return int
