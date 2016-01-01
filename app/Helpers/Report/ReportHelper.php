@@ -365,8 +365,6 @@ class ReportHelper implements ReportHelperInterface
                 if (!is_null($entry->first())) {
                     $spent = $entry->first()->spent;
                 }
-                //$spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
-
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
             }

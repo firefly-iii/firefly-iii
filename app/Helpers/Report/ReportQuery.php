@@ -18,29 +18,6 @@ use Illuminate\Support\Collection;
  */
 class ReportQuery implements ReportQueryInterface
 {
-    /**
-     * Covers tags
-     *
-     * @param Account $account
-     * @param Budget  $budget
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return float
-     */
-    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end)
-    {
-
-        return Auth::user()->transactionjournals()
-                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->transactionTypes([TransactionType::WITHDRAWAL])
-                   ->where('transactions.account_id', $account->id)
-                   ->before($end)
-                   ->after($start)
-                   ->where('budget_transaction_journal.budget_id', $budget->id)
-                   ->get(['transaction_journals.*'])->sum('amount');
-    }
 
     /**
      * @param Account $account
