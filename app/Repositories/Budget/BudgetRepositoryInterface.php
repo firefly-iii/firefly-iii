@@ -137,16 +137,6 @@ interface BudgetRepositoryInterface
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * Takes tags into account.
-     *
-     * @param Budget $budget
-     * @param Carbon $date
-     *
-     * @return float
-     */
-    public function expensesOnDay(Budget $budget, Carbon $date);
-
-    /**
      * @return Collection
      */
     public function getActiveBudgets();

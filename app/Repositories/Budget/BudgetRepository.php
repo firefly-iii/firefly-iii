@@ -110,20 +110,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $date
-     *
-     * @return float
-     */
-    public function expensesOnDay(Budget $budget, Carbon $date)
-    {
-        bcscale(2);
-        $sum = $budget->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->onDate($date)->get(['transaction_journals.*'])->sum('amount');
-
-        return $sum;
-    }
-
-    /**
      * @return Collection
      */
     public function getActiveBudgets()
