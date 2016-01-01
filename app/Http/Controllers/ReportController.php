@@ -131,9 +131,7 @@ class ReportController extends Controller
         $budgets       = $this->helper->getBudgetReport($start, $end, $accounts); // done (+5)
         $categories    = $this->helper->getCategoryReport($start, $end, $accounts); // done (+1) (20)
         $balance       = $this->helper->getBalanceReport($start, $end, $accounts); // +566
-        //        $bills         = $this->helper->getBillReport($start, $end, $accounts);
-
-        $bills = [];
+        $bills         = $this->helper->getBillReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = join(',', $accounts->pluck('id')->toArray());
