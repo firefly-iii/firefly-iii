@@ -55,27 +55,6 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     }
 
     /**
-     * TODO this method is not optimal, and should be replaced.
-     *
-     * @deprecated
-     *
-     * @param Category       $category
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     *
-     * @return string
-     */
-    public function earnedInPeriod(Category $category, Carbon $start, Carbon $end)
-    {
-        $sum = $category->transactionjournals()->transactionTypes([TransactionType::DEPOSIT])->before($end)->after($start)->get(['transaction_journals.*'])
-                        ->sum(
-                            'amount'
-                        );
-
-        return $sum;
-    }
-
-    /**
      * Returns an array with the following key:value pairs:
      *
      * yyyy-mm-dd:<amount>

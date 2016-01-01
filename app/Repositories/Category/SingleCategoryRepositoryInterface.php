@@ -38,17 +38,6 @@ interface SingleCategoryRepositoryInterface
     public function destroy(Category $category);
 
     /**
-     * @deprecated
-     *
-     * @param Category       $category
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     *
-     * @return string
-     */
-    public function earnedInPeriod(Category $category, Carbon $start, Carbon $end);
-
-    /**
      * Returns an array with the following key:value pairs:
      *
      * yyyy-mm-dd:<amount>
