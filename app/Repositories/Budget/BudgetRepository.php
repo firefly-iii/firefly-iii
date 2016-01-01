@@ -281,43 +281,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * Returns an array with the following key:value pairs:
-     *
-     * yyyy-mm-dd:<amount>
-     *
-     * Where yyyy-mm-dd is the date and <amount> is the money spent using DEPOSITS in the $budget
-     * from all the users accounts.
-     *
-     * @param Budget     $budget
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentPerDayForAccounts(Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
-    {
-        $ids = $accounts->pluck('id')->toArray();
-        /** @var Collection $query */
-        $query = $budget->transactionJournals()
-                        ->transactionTypes([TransactionType::WITHDRAWAL])
-                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->whereIn('transactions.account_id', $ids)
-                        ->where('transactions.amount', '<', 0)
-                        ->before($end)
-                        ->after($start)
-                        ->groupBy('dateFormatted')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
-
-        $return = [];
-        foreach ($query->toArray() as $entry) {
-            $return[$entry['dateFormatted']] = $entry['sum'];
-        }
-
-        return $return;
-    }
-
-
-    /**
      * @return Collection
      */
     public function getBudgets()

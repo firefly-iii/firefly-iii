@@ -87,25 +87,6 @@ interface BudgetRepositoryInterface
     /**
      * Returns an array with the following key:value pairs:
      *
-     * yyyy-mm-dd:<amount>
-     *
-     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
-     * from the given users accounts..
-     *
-     * @param Budget $budget
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function spentPerDayForAccounts(Budget $budget, Collection $accounts, Carbon $start, Carbon $end);
-
-
-
-    /**
-     * Returns an array with the following key:value pairs:
-     *
      * yyyy-mm-dd:<array>
      *
      * That array contains:
