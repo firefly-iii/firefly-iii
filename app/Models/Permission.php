@@ -2,25 +2,20 @@
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Zizaco\Entrust\EntrustPermission;
 
 /**
- * Class Permission
+ * FireflyIII\Models\Permission
  *
- * @package FireflyIII\Models
- * @property integer        $id
- * @property string         $name
- * @property string         $display_name
- * @property string         $description
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Config::get('entrust.role[] $roles
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Permission whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Permission whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Permission whereDisplayName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Permission whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Permission whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Permission whereUpdatedAt($value)
+ * @property integer                $id
+ * @property string                 $name
+ * @property string                 $display_name
+ * @property string                 $description
+ * @property Carbon                 $created_at
+ * @property Carbon                 $updated_at
+ * @property-read Collection|Role[] $roles
  */
 class Permission extends EntrustPermission
 {

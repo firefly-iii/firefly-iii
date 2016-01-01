@@ -710,7 +710,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
     {
-
         $accountIds = $accounts->pluck('id')->toArray();
         $budgetIds  = $budgets->pluck('id')->toArray();
         $set        = Auth::user()->transactionjournals()
@@ -740,8 +739,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                           ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
                           ->get(
                               [
-                                  't_from.account_id',
-                                  'budget_transaction_journal.budget_id',
+                                  't_from.account_id', 'budget_transaction_journal.budget_id',
                                   DB::Raw('SUM(`t_from`.`amount`) AS `spent`')
                               ]
                           );

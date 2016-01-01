@@ -1,29 +1,22 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Preference
+ * FireflyIII\Models\Preference
  *
- * @package FireflyIII\Models
- * @property integer               $id
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
- * @property integer               $user_id
- * @property string                $name
- * @property string                $name_encrypted
- * @property string                $data
- * @property string                $data_encrypted
- * @property-read \FireflyIII\User $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereNameEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereData($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereDataEncrypted($value)
+ * @property integer   $id
+ * @property Carbon    $created_at
+ * @property Carbon    $updated_at
+ * @property integer   $user_id
+ * @property string    $name
+ * @property string    $name_encrypted
+ * @property string    $data
+ * @property string    $data_encrypted
+ * @property-read User $user
  */
 class Preference extends Model
 {

@@ -49,6 +49,7 @@ class ReportController extends Controller
         $cache = new CacheProperties;
         $cache->addProperty('yearInOut');
         $cache->addProperty($start);
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
@@ -115,6 +116,7 @@ class ReportController extends Controller
         $cache->addProperty('yearInOutSummarized');
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore

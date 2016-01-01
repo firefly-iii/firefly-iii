@@ -53,6 +53,7 @@ class AccountController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('accounts');
         $cache->addProperty('default');
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore

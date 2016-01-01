@@ -54,8 +54,9 @@ class Authenticate
                 return redirect()->guest('auth/login');
             }
         }
-
-        if ($this->auth->user() instanceof User && intval($this->auth->user()->blocked) == 1) {
+        /** @var User $user */
+        $user = $this->auth->user();
+        if ($user instanceof User && intval($user->blocked) == 1) {
             Auth::logout();
 
             return redirect()->route('index');

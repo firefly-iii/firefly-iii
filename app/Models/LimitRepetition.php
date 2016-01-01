@@ -1,26 +1,19 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class LimitRepetition
+ * FireflyIII\Models\LimitRepetition
  *
- * @package FireflyIII\Models
- * @property integer                             $id
- * @property \Carbon\Carbon                      $created_at
- * @property \Carbon\Carbon                      $updated_at
- * @property integer                             $budget_limit_id
- * @property \Carbon\Carbon                      $startdate
- * @property \Carbon\Carbon                      $enddate
- * @property float                               $amount
- * @property-read \FireflyIII\Models\BudgetLimit $budgetLimit
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereBudgetLimitId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereEnddate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereAmount($value)
+ * @property integer          $id
+ * @property Carbon           $created_at
+ * @property Carbon           $updated_at
+ * @property integer          $budget_limit_id
+ * @property Carbon           $startdate
+ * @property Carbon           $enddate
+ * @property float            $amount
+ * @property-read BudgetLimit $budgetLimit
  */
 class LimitRepetition extends Model
 {

@@ -77,9 +77,9 @@ class Steam
      *
      * [yyyy-mm-dd] => 123,2
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param \FireflyIII\Models\Account $account
+     * @param \Carbon\Carbon             $start
+     * @param \Carbon\Carbon             $end
      *
      * @return array
      */
