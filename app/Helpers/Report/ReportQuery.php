@@ -5,8 +5,6 @@ namespace FireflyIII\Helpers\Report;
 use Auth;
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;

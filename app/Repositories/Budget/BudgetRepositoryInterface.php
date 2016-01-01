@@ -17,8 +17,6 @@ interface BudgetRepositoryInterface
 {
 
 
-
-
     /**
      * @return void
      */
@@ -97,8 +95,8 @@ interface BudgetRepositoryInterface
      * from the given users accounts..
      *
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
