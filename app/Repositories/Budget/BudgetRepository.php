@@ -417,28 +417,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * @deprecated
-     *
-     * @param Budget $budget
-     * @param Carbon $date
-     *
-     * @return float|null
-     */
-    public function getLimitAmountOnDate(Budget $budget, Carbon $date)
-    {
-        $repetition = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                     ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
-                                     ->where('budget_limits.budget_id', $budget->id)
-                                     ->first(['limit_repetitions.*']);
-
-        if ($repetition) {
-            return $repetition->amount;
-        }
-
-        return null;
-    }
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *

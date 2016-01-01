@@ -209,16 +209,6 @@ interface BudgetRepositoryInterface
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50);
 
     /**
-     * @deprecated
-     *
-     * @param Budget $budget
-     * @param Carbon $date
-     *
-     * @return float
-     */
-    public function getLimitAmountOnDate(Budget $budget, Carbon $date);
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *
