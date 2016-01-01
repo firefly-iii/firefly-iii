@@ -89,17 +89,6 @@ interface SingleCategoryRepositoryInterface
     public function getLatestActivity(Category $category);
 
     /**
-     * @deprecated
-     *
-     * @param Category       $category
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Category $category, Carbon $start, Carbon $end);
-
-    /**
      * Returns an array with the following key:value pairs:
      *
      * yyyy-mm-dd:<amount>
