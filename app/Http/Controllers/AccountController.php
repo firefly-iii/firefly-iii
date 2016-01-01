@@ -195,7 +195,7 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $journals     = $repository->getJournals($account, $page);
-        $subTitle = trans('firefly.details_for_' . $what, ['name' => $account->name]);
+        $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
         $journals->setPath('accounts/show/' . $account->id);
 
 

@@ -65,8 +65,8 @@ interface ReportQueryInterface
      * grouped by month like so: "2015-01" => '123.45'
      *
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -77,8 +77,8 @@ interface ReportQueryInterface
      * grouped by month like so: "2015-01" => '123.45'
      *
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */

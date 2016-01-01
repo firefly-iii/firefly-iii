@@ -40,8 +40,8 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank
      *
-     * @param ARI $repository
-     * @param PiggyBank                  $piggyBank
+     * @param ARI       $repository
+     * @param PiggyBank $piggyBank
      *
      * @return $this
      */
@@ -116,8 +116,8 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param ARI $repository
-     * @param PiggyBank                  $piggyBank
+     * @param ARI       $repository
+     * @param PiggyBank $piggyBank
      *
      * @return View
      */
@@ -219,7 +219,7 @@ class PiggyBankController extends Controller
 
     /**
      * @param PiggyBankRepositoryInterface $repository
-     * @param ARI   $accounts
+     * @param ARI                          $accounts
      * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse

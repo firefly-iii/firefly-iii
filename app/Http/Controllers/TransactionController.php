@@ -43,8 +43,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param ARI $repository
-     * @param string                     $what
+     * @param ARI    $repository
+     * @param string $what
      *
      * @return \Illuminate\View\View
      */
@@ -133,8 +133,8 @@ class TransactionController extends Controller
     /**
      * Shows the view to edit a transaction.
      *
-     * @param ARI $repository
-     * @param TransactionJournal         $journal
+     * @param ARI                $repository
+     * @param TransactionJournal $journal
      *
      * @return $this
      */

@@ -206,7 +206,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getBudgetReps(Budget $budget) {
+    public function getBudgetReps(Budget $budget)
+    {
         $set = $budget->limitrepetitions()->count();
         var_dump($set);
     }

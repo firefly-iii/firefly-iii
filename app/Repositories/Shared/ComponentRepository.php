@@ -4,7 +4,6 @@ namespace FireflyIII\Repositories\Shared;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;

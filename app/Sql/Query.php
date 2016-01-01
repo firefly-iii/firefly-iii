@@ -11,7 +11,7 @@ namespace FireflyIII\Sql;
  */
 class Query
 {
-    const SPENT = 1;
+    const SPENT  = 1;
     const EARNED = 2;
 
 }

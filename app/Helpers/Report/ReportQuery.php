@@ -7,9 +7,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 

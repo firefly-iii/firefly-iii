@@ -234,8 +234,8 @@ class BudgetController extends Controller
 
         if (is_null($repetition->id)) {
             $start = $repository->firstActivity($budget);
-            $end = new Carbon;
-            $set = $budget->limitrepetitions()->orderBy('startdate','DESC')->get();
+            $end   = new Carbon;
+            $set   = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
             //$set      = $repository->getBudgetLimits($budget);
             //$subTitle = e($budget->name);
         } else {

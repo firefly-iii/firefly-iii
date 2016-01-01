@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Repositories\Category;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Category;
@@ -108,12 +107,12 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     {
         /** @var Collection $query */
         $query = $category->transactionJournals()
-                     ->transactionTypes([TransactionType::DEPOSIT])
-                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->where('transactions.amount', '>', 0)
-                     ->before($end)
-                     ->after($start)
-                     ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                          ->transactionTypes([TransactionType::DEPOSIT])
+                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->where('transactions.amount', '>', 0)
+                          ->before($end)
+                          ->after($start)
+                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($query->toArray() as $entry) {
@@ -244,12 +243,12 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     {
         /** @var Collection $query */
         $query = $category->transactionJournals()
-                     ->transactionTypes([TransactionType::WITHDRAWAL])
-                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->where('transactions.amount', '<', 0)
-                     ->before($end)
-                     ->after($start)
-                     ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                          ->transactionTypes([TransactionType::WITHDRAWAL])
+                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->where('transactions.amount', '<', 0)
+                          ->before($end)
+                          ->after($start)
+                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($query->toArray() as $entry) {

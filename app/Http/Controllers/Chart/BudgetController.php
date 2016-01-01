@@ -227,9 +227,9 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @param BudgetRepositoryInterface  $repository
+     * @param BudgetRepositoryInterface $repository
      *
-     * @param ARI $accountRepository
+     * @param ARI                       $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

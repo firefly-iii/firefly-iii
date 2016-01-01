@@ -6,7 +6,7 @@ use Config;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
-use Preferences ;
+use Preferences;
 use Session;
 use View;
 
@@ -42,8 +42,8 @@ class NewUserController extends Controller
     }
 
     /**
-     * @param NewUserFormRequest         $request
-     * @param ARI $repository
+     * @param NewUserFormRequest $request
+     * @param ARI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
