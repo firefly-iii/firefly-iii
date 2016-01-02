@@ -61,37 +61,15 @@ class ReportController extends Controller
         $spentArray  = $query->spentPerMonth($accounts, $start, $end);
         $earnedArray = $query->earnedPerMonth($accounts, $start, $end);
 
-        // per year? put all months together.
         if ($start->diffInMonths($end) > 12) {
-            $entries = new Collection;
-            while ($start < $end) {
-
-                $incomeSum  = $this->pluckFromArray($start->year, $earnedArray);
-                $expenseSum = $this->pluckFromArray($start->year, $spentArray) * -1;
-
-                $entries->push([clone $start, $incomeSum, $expenseSum]);
-                $start->addYear();
-            }
-
-            $data = $this->generator->multiYearInOut($entries);
-            $cache->store($data);
+            // data = method X
+            $data = $this->multiYearInOut($earnedArray, $spentArray, $start, $end);
         } else {
-            // per month? simply use each month.
-
-            $entries = new Collection;
-            while ($start < $end) {
-                // total income and total expenses:
-                $date       = $start->format('Y-m');
-                $incomeSum  = isset($earnedArray[$date]) ? $earnedArray[$date] : 0;
-                $expenseSum = isset($spentArray[$date]) ? ($spentArray[$date] * -1) : 0;
-
-                $entries->push([clone $start, $incomeSum, $expenseSum]);
-                $start->addMonth();
-            }
-
-            $data = $this->generator->yearInOut($entries);
-            $cache->store($data);
+            // data = method Y
+            $data = $this->singleYearInOut($earnedArray, $spentArray, $start, $end);
         }
+
+        $cache->store($data);
 
         return Response::json($data);
 
@@ -125,47 +103,127 @@ class ReportController extends Controller
         // grouped by month
         $spentArray  = $query->spentPerMonth($accounts, $start, $end);
         $earnedArray = $query->earnedPerMonth($accounts, $start, $end);
-        $income      = '0';
-        $expense     = '0';
-        $count       = 0;
-
-        bcscale(2);
-
         if ($start->diffInMonths($end) > 12) {
             // per year
-            while ($start < $end) {
-
-                $currentIncome  = $this->pluckFromArray($start->year, $earnedArray);
-                $currentExpense = $this->pluckFromArray($start->year, $spentArray) * -1;
-                $income         = bcadd($income, $currentIncome);
-                $expense        = bcadd($expense, $currentExpense);
-
-                $count++;
-                $start->addYear();
-            }
-
-            $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
-            $cache->store($data);
+            $data = $this->multiYearInOutSummarized($earnedArray, $spentArray, $start, $end);
         } else {
             // per month!
-            while ($start < $end) {
-                $date           = $start->format('Y-m');
-                $currentIncome  = isset($earnedArray[$date]) ? $earnedArray[$date] : 0;
-                $currentExpense = isset($spentArray[$date]) ? ($spentArray[$date] * -1) : 0;
-                $income         = bcadd($income, $currentIncome);
-                $expense        = bcadd($expense, $currentExpense);
-
-                $count++;
-                $start->addMonth();
-            }
-
-            $data = $this->generator->yearInOutSummarized($income, $expense, $count);
-            $cache->store($data);
+            $data = $this->singleYearInOutSummarized($earnedArray, $spentArray, $start, $end);
         }
-
+        $cache->store($data);
 
         return Response::json($data);
+    }
 
+    /**
+     * @param array  $earned
+     * @param array  $spent
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
+    {
+        $income  = '0';
+        $expense = '0';
+        $count   = 0;
+        while ($start < $end) {
+            $date           = $start->format('Y-m');
+            $currentIncome  = isset($earned[$date]) ? $earned[$date] : 0;
+            $currentExpense = isset($spent[$date]) ? ($spent[$date] * -1) : 0;
+            $income         = bcadd($income, $currentIncome);
+            $expense        = bcadd($expense, $currentExpense);
+
+            $count++;
+            $start->addMonth();
+        }
+
+        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
+
+        return $data;
+    }
+
+    /**
+     * @param array  $earned
+     * @param array  $spent
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
+    {
+        $income  = '0';
+        $expense = '0';
+        $count   = 0;
+        while ($start < $end) {
+
+            $currentIncome  = $this->pluckFromArray($start->year, $earned);
+            $currentExpense = $this->pluckFromArray($start->year, $spent) * -1;
+            $income         = bcadd($income, $currentIncome);
+            $expense        = bcadd($expense, $currentExpense);
+
+            $count++;
+            $start->addYear();
+        }
+
+        $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
+
+        return $data;
+    }
+
+    /**
+     * @param array  $earned
+     * @param array  $spent
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    protected function multiYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
+    {
+        $entries = new Collection;
+        while ($start < $end) {
+
+            $incomeSum  = $this->pluckFromArray($start->year, $earned);
+            $expenseSum = $this->pluckFromArray($start->year, $spent) * -1;
+
+            $entries->push([clone $start, $incomeSum, $expenseSum]);
+            $start->addYear();
+        }
+
+        $data = $this->generator->multiYearInOut($entries);
+
+        return $data;
+    }
+
+    /**
+     * @param array  $earned
+     * @param array  $spent
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    protected function singleYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
+    {
+        // per month? simply use each month.
+
+        $entries = new Collection;
+        while ($start < $end) {
+            // total income and total expenses:
+            $date       = $start->format('Y-m');
+            $incomeSum  = isset($earned[$date]) ? $earned[$date] : 0;
+            $expenseSum = isset($spent[$date]) ? ($spent[$date] * -1) : 0;
+
+            $entries->push([clone $start, $incomeSum, $expenseSum]);
+            $start->addMonth();
+        }
+
+        $data = $this->generator->yearInOut($entries);
+
+        return $data;
     }
 
     /**

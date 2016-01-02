@@ -43,8 +43,8 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateBelongsToUser($attribute, $value, $parameters
-    ) {
+    public function validateBelongsToUser($attribute, $value, $parameters)
+    {
 
         $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where('id', $value)->count();
         if ($count == 1) {

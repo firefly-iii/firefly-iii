@@ -154,29 +154,20 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
-        // last activity:
-        /**
-         * HERE WE ARE
-         */
-        $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end   = clone Session::get('end', Carbon::now()->endOfMonth());
+        $start        = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end          = clone Session::get('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
-        // start balances:
-        $ids = [];
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
-
+        $ids           = $accounts->pluck('id')->toArray();
         $startBalances = Steam::balancesById($ids, $start);
         $endBalances   = Steam::balancesById($ids, $end);
         $activities    = Steam::getLastActivities($ids);
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-                $account->lastActivityDate = isset($activities[$account->id]) ? $activities[$account->id] : null;
-                $account->startBalance     = isset($startBalances[$account->id]) ? $startBalances[$account->id] : null;
-                $account->endBalance       = isset($endBalances[$account->id]) ? $endBalances[$account->id] : null;
+                $account->lastActivityDate = $this->isInArray($activities, $account->id);
+                $account->startBalance     = $this->isInArray($startBalances, $account->id);
+                $account->endBalance       = $this->isInArray($endBalances, $account->id);
             }
         );
 
@@ -281,6 +272,22 @@ class AccountController extends Controller
         // redirect to previous URL.
         return redirect(Session::get('accounts.edit.url'));
 
+    }
+
+
+    /**
+     * @param array $array
+     * @param       $entryId
+     *
+     * @return null|mixed
+     */
+    protected function isInArray(array $array, $entryId)
+    {
+        if (isset($array[$entryId])) {
+            return $array[$entryId];
+        }
+
+        return null;
     }
 
 }

@@ -127,7 +127,7 @@ class Steam
      * @param array          $ids
      * @param \Carbon\Carbon $date
      *
-     * @return float
+     * @return array
      */
     public function balancesById(array $ids, Carbon $date)
     {
