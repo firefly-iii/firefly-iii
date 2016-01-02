@@ -10,7 +10,6 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -262,21 +261,10 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($budget->id);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-
-        $cache->addProperty('getCurrentRepetition');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $data = $budget->limitrepetitions()
                        ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
                        ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
                        ->first(['limit_repetitions.*']);
-        $cache->store($data);
-
         return $data;
     }
 
@@ -381,17 +369,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($budget->id);
-        if ($repetition) {
-            $cache->addProperty($repetition->id);
-        }
-        $cache->addProperty($take);
-        $cache->addProperty('getJournals');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
         $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
                              ->orderBy('transaction_journals.date', 'DESC')
@@ -411,7 +388,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
 
         $paginator = new LengthAwarePaginator($set, $count, $take, $offset);
-        $cache->store($paginator);
 
         return $paginator;
     }

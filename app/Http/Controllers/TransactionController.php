@@ -163,11 +163,7 @@ class TransactionController extends Controller
             'piggy_bank_id' => 0
         ];
         // get tags:
-        $tags = [];
-        foreach ($journal->tags as $tag) {
-            $tags[] = $tag->tag;
-        }
-        $preFilled['tags'] = join(',', $tags);
+        $preFilled['tags'] = join(',', $journal->tags->pluck('tag')->toArray());
 
         $category = $journal->categories()->first();
         if (!is_null($category)) {
@@ -354,7 +350,6 @@ class TransactionController extends Controller
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
 
-        // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
             return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
         }

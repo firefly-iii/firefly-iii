@@ -10,7 +10,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -136,13 +135,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getJournals(Bill $bill)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($bill->id);
-        $cache->addProperty('journals-for-bill');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $set = $bill->transactionjournals()
                     ->leftJoin(
                         'transactions', function (JoinClause $join) {
@@ -154,8 +146,6 @@ class BillRepository implements BillRepositoryInterface
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
                     ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
-        $cache->store($set);
-
         return $set;
     }
 
@@ -450,13 +440,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsPaidInRange(Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('bills-paid-in-range');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $amount = '0';
         $bills  = $this->getActiveBills();
 
@@ -477,8 +460,6 @@ class BillRepository implements BillRepositoryInterface
                 $amount = bcadd($amount, $paid->sum_amount);
             }
         }
-        $cache->store($amount);
-
         return $amount;
     }
 
@@ -511,13 +492,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('bills-unpaid-in-range');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $amount = '0';
         $bills  = $this->getActiveBills();
 
@@ -541,8 +515,6 @@ class BillRepository implements BillRepositoryInterface
                 $amount = bcadd($amount, $bill->expectedAmount);
             }
         }
-        $cache->store($amount);
-
         return $amount;
     }
 
@@ -558,13 +530,6 @@ class BillRepository implements BillRepositoryInterface
     public function getCreditCardBill(Carbon $start, Carbon $end)
     {
 
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('credit-card-bill');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $amount            = '0';
