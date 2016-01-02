@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer                 $transaction_journal_id
  * @property Carbon                  $date
  * @property float                   $amount
- * @property-read PiggyBank          $piggyBank
+ * @property PiggyBank               $piggyBank
  * @property-read TransactionJournal $transactionJournal
  */
 class PiggyBankEvent extends Model
