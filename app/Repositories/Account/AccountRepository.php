@@ -24,7 +24,6 @@ use Steam;
 
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
  *
  * Class AccountRepository
  *
@@ -609,7 +608,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function updateMetadata(Account $account, array $data)
     {

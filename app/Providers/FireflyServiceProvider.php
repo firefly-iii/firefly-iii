@@ -47,7 +47,7 @@ class FireflyServiceProvider extends ServiceProvider
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function register()
     {

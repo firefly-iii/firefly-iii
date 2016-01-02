@@ -24,7 +24,6 @@ class TagRepository implements TagRepositoryInterface
 
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five.
      *
      * @param TransactionJournal $journal
      * @param Tag                $tag
@@ -33,7 +32,6 @@ class TagRepository implements TagRepositoryInterface
      */
     public function connect(TransactionJournal $journal, Tag $tag)
     {
-
         /*
          * Already connected:
          */

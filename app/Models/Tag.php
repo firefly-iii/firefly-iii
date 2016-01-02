@@ -44,8 +44,6 @@ class Tag extends Model
 
     /**
      * @param array $fields
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @return Tag|null
      */

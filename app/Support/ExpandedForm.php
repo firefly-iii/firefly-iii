@@ -15,7 +15,6 @@ use Session;
  *
  * @package FireflyIII\Support
  *
- * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class ExpandedForm
 {

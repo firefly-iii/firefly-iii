@@ -18,7 +18,6 @@ use View;
 
 /**
  *
- * @SuppressWarnings(PHPMD.TooManyMethods)
  *
  * Class PiggyBankController
  *

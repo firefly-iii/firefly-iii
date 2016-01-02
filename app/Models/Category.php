@@ -29,7 +29,6 @@ class Category extends Model
 
     /**
      * @param array $fields
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return Category
      */
