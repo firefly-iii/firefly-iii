@@ -20,68 +20,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
 
     /**
-     * TODO REMOVE ME
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getCategoriesAndExpenses(Carbon $start, Carbon $end)
-    {
-        $set   = Auth::user()->categories()
-                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
-                     ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                     ->leftJoin(
-                         'transactions', function (JoinClause $join) {
-                         $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                     }
-                     )
-                     ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                     ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                     ->whereIn('transaction_types.type', [TransactionType::WITHDRAWAL])
-                     ->whereNull('transaction_journals.deleted_at')
-                     ->groupBy('categories.id')
-                     ->orderBy('totalAmount')
-                     ->get(
-                         [
-                             'categories.*',
-                             DB::Raw('SUM(`transactions`.`amount`) as `totalAmount`')
-                         ]
-                     );
-        $array = [];
-        /** @var Category $entry */
-        foreach ($set as $entry) {
-            $id         = $entry->id;
-            $array[$id] = ['name' => $entry->name, 'sum' => $entry->totalAmount];
-        }
-
-        // without category:
-        // TODO REMOVE ME
-        $single     = Auth::user()->transactionjournals()
-                          ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                          ->leftJoin(
-                              'transactions', function (JoinClause $join) {
-                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                          }
-                          )
-                          ->whereNull('category_transaction_journal.id')
-                          ->whereNull('transaction_journals.deleted_at')
-                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                          ->whereIn('transaction_types.type', [TransactionType::WITHDRAWAL])
-                          ->whereNull('transaction_journals.deleted_at')
-                          ->first([DB::Raw('SUM(transactions.amount) as `totalAmount`')]);
-        $noCategory = is_null($single->totalAmount) ? '0' : $single->totalAmount;
-        $array[0]   = ['name' => trans('firefly.no_category'), 'sum' => $noCategory];
-
-        return $array;
-
-    }
-
-    /**
      * Returns a list of all the categories belonging to a user.
      *
      * @return Collection
@@ -232,7 +170,7 @@ group by categories.id, transaction_types.type, dateFormatted
     /**
      * Returns a collection of Categories appended with the amount of money that has been spent
      * in these categories, based on the $accounts involved, in period X, grouped per month.
-     * The amount earned in category X in period X is saved in field "spent".
+     * The amount spent in category X in period X is saved in field "spent".
      *
      * @param $accounts
      * @param $start
@@ -243,7 +181,7 @@ group by categories.id, transaction_types.type, dateFormatted
     public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
         $accountIds = $accounts->pluck('id')->toArray();
-        $collection = Auth::user()->categories()
+        $query      = Auth::user()->categories()
                           ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
                           ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -257,22 +195,26 @@ group by categories.id, transaction_types.type, dateFormatted
                               $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
                           }
                           )
-                          ->whereIn('t_src.account_id', $accountIds)// from these accounts (spent)
-                          ->whereNotIn('t_dest.account_id', $accountIds)//-- but not from these accounts (spent internally)
                           ->whereIn(
-                'transaction_types.type', [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
-            )// spent on these things.
+                              'transaction_types.type', [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
+                          )// spent on these things.
                           ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                           ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                           ->groupBy('categories.id')
-                          ->groupBy('dateFormatted')
-                          ->get(
-                              [
-                                  'categories.*',
-                                  DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
-                                  DB::Raw('SUM(`t_src`.`amount`) AS `spent`')
-                              ]
-                          );
+                          ->groupBy('dateFormatted');
+
+        if (count($accountIds) > 0) {
+            $query->whereIn('t_src.account_id', $accountIds)// from these accounts (spent)
+                  ->whereNotIn('t_dest.account_id', $accountIds);//-- but not from these accounts (spent internally)
+        }
+
+        $collection = $query->get(
+            [
+                'categories.*',
+                DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
+                DB::Raw('SUM(`t_src`.`amount`) AS `spent`')
+            ]
+        );
 
         return $collection;
     }
@@ -329,19 +271,24 @@ group by categories.id, transaction_types.type, dateFormatted
         }
 
         // is withdrawal or transfer AND account_from is in the list of $accounts
-        $single = Auth::user()
-                      ->transactionjournals()
-                      ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                      ->whereNull('category_transaction_journal.id')
-                      ->before($end)
-                      ->after($start)
-                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                      ->whereIn('transactions.account_id', $accountIds)
-                      ->transactionTypes($types)
-                      ->first(
-                          [
-                              DB::Raw('SUM(`transactions`.`amount`) as `sum`)')]
-                      );
+        $query = Auth::user()
+                     ->transactionjournals()
+                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->whereNull('category_transaction_journal.id')
+                     ->before($end)
+                     ->after($start)
+                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->transactionTypes($types);
+        if (count($accountIds) > 0) {
+            $query->whereIn('transactions.account_id', $accountIds);
+        }
+
+
+        $single = $query->first(
+            [
+                DB::Raw('SUM(`transactions`.`amount`) as `sum`')
+            ]
+        );
         if (!is_null($single)) {
             return $single->sum;
         }

@@ -28,16 +28,6 @@ interface CategoryRepositoryInterface
     public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * Corrected for tags.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getCategoriesAndExpenses(Carbon $start, Carbon $end);
-
-    /**
      * Returns a list of all the categories belonging to a user.
      *
      * @return Collection

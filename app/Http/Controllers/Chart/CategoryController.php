@@ -14,6 +14,7 @@ use Navigation;
 use Preferences;
 use Response;
 use Session;
+use stdClass;
 
 /**
  * Class CategoryController
@@ -115,19 +116,17 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $array = $repository->getCategoriesAndExpenses($start, $end);
-        // sort by callback:
-        uasort(
-            $array,
-            function ($left, $right) {
-                if ($left['sum'] == $right['sum']) {
-                    return 0;
-                }
+        // get data for categories (and "no category"):
+        $set     = $repository->spentForAccountsPerMonth(new Collection, $start, $end);
+        $outside = $repository->sumSpentNoCategory(new Collection, $start, $end);
 
-                return ($left['sum'] < $right['sum']) ? -1 : 1;
-            }
-        );
-        $set  = new Collection($array);
+        // this is a "fake" entry for the "no category" entry.
+        $entry = new stdClass();
+        $entry->name = trans('firefly.no_category');
+        $entry->spent = $outside;
+        $set->push($entry);
+
+        $set = $set->sortBy('spent');
         $data = $this->generator->frontpage($set);
         $cache->store($data);
 
