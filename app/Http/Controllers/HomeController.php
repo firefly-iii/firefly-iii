@@ -4,7 +4,7 @@ use Artisan;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Tag;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
 use Preferences;
 use Session;
@@ -62,11 +62,11 @@ class HomeController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(ARI $repository)
     {
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);

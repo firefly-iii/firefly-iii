@@ -1,26 +1,22 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
+use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class TransactionGroup
+ * FireflyIII\Models\TransactionGroup
  *
- * @package FireflyIII\Models
- * @property integer                                                                               $id
- * @property \Carbon\Carbon                                                                        $created_at
- * @property \Carbon\Carbon                                                                        $updated_at
- * @property \Carbon\Carbon                                                                        $deleted_at
- * @property integer                                                                               $user_id
- * @property string                                                                                $relation
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                                                 $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereRelation($value)
+ * @property integer                              $id
+ * @property Carbon                               $created_at
+ * @property Carbon                               $updated_at
+ * @property Carbon                               $deleted_at
+ * @property integer                              $user_id
+ * @property string                               $relation
+ * @property-read Collection|TransactionJournal[] $transactionjournals
+ * @property-read User                            $user
  */
 class TransactionGroup extends Model
 {

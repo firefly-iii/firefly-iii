@@ -1,45 +1,30 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class PiggyBank
+ * FireflyIII\Models\PiggyBank
  *
- * @package FireflyIII\Models
- * @property integer                                                                                $id
- * @property \Carbon\Carbon                                                                         $created_at
- * @property \Carbon\Carbon                                                                         $updated_at
- * @property \Carbon\Carbon                                                                         $deleted_at
- * @property integer                                                                                $account_id
- * @property string                                                                                 $name
- * @property float                                                                                  $targetamount
- * @property \Carbon\Carbon                                                                         $startdate
- * @property \Carbon\Carbon                                                                         $targetdate
- * @property integer                                                                                $order
- * @property boolean                                                                                $encrypted
- * @property boolean                                                                                $remind_me
- * @property integer                                                                                $reminder_skip
- * @property-read \FireflyIII\Models\Account                                                        $account
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]      $piggyBankEvents
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetamount($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereRemindMe($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminderSkip($value)
- * @property-read \FireflyIII\Models\PiggyBankRepetition                                            $currentRep
- * @property string                                                                                 $reminder
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminder($value)
+ * @property integer                               $id
+ * @property Carbon                                $created_at
+ * @property Carbon                                $updated_at
+ * @property Carbon                                $deleted_at
+ * @property integer                               $account_id
+ * @property string                                $name
+ * @property float                                 $targetamount
+ * @property Carbon                                $startdate
+ * @property Carbon                                $targetdate
+ * @property integer                               $order
+ * @property boolean                               $encrypted
+ * @property boolean                               $remind_me
+ * @property integer                               $reminder_skip
+ * @property-read Account                          $account
+ * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
+ * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
  */
 class PiggyBank extends Model
 {

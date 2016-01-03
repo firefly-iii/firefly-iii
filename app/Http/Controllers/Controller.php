@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -43,5 +44,33 @@ abstract class Controller extends BaseController
             View::share('language', $lang);
             View::share('localeconv', localeconv());
         }
+    }
+
+    /**
+     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * and sum up everything in the array in the given range.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param array  $array
+     *
+     * @return string
+     */
+    protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
+    {
+        bcscale(2);
+        $sum          = '0';
+        $currentStart = clone $start; // to not mess with the original one
+        $currentEnd   = clone $end; // to not mess with the original one
+
+        while ($currentStart <= $currentEnd) {
+            $date = $currentStart->format('Y-m-d');
+            if (isset($array[$date])) {
+                $sum = bcadd($sum, $array[$date]);
+            }
+            $currentStart->addDay();
+        }
+
+        return $sum;
     }
 }

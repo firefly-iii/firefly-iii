@@ -14,7 +14,6 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -24,7 +23,6 @@ use Steam;
 
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
  *
  * Class AccountRepository
  *
@@ -40,14 +38,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function countAccounts(array $types)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty('user-count-accounts');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $count = Auth::user()->accounts()->accountTypeIn($types)->count();
-        $cache->store($count);
 
         return $count;
     }
@@ -77,14 +68,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccounts(array $types)
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('get-accounts');
-        $cache->addProperty($types);
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         /** @var Collection $result */
         $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
@@ -97,9 +80,6 @@ class AccountRepository implements AccountRepositoryInterface
                 return strtolower($account->name);
             }
         );
-
-        $cache->store($result);
-
         return $result;
     }
 
@@ -117,12 +97,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getCreditCards(Carbon $date)
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('user-credit-cards');
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         $set = Auth::user()->accounts()
                    ->hasMetaValue('accountRole', 'ccAsset')
                    ->hasMetaValue('ccType', 'monthlyFull')
@@ -139,8 +113,6 @@ class AccountRepository implements AccountRepositoryInterface
                            DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
                        ]
                    );
-        $cache->store($set);
-
         return $set;
     }
 
@@ -152,16 +124,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFirstTransaction(TransactionJournal $journal, Account $account)
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('first-transaction');
-        $cache->addProperty($journal->id);
-        $cache->addProperty($account->id);
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
         $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        $cache->store($transaction);
 
         return $transaction;
     }
@@ -173,11 +136,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageAccounts(Preference $preference)
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('user-frontpage-accounts');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
 
         if (count($preference->data) > 0) {
@@ -185,9 +143,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $result = $query->get(['accounts.*']);
-
-        $cache->store($result);
-
         return $result;
     }
 
@@ -204,15 +159,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
-        $cache->addProperty($account->id);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('frontpage-transactions');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $set = Auth::user()
                    ->transactionjournals()
                    ->with(['transactions'])
@@ -227,8 +173,6 @@ class AccountRepository implements AccountRepositoryInterface
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
-        $cache->store($set);
-
         return $set;
     }
 
@@ -266,23 +210,11 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getPiggyBankAccounts()
     {
-        $ids        = [];
         $start      = clone Session::get('start', new Carbon);
         $end        = clone Session::get('end', new Carbon);
-        $accountIds = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']);
+        $collection = new Collection(DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']));
+        $ids        = $collection->pluck('account_id')->toArray();
         $accounts   = new Collection;
-
-        /** @var PiggyBank $id */
-        foreach ($accountIds as $id) {
-            $ids[] = intval($id->account_id);
-        }
-
-        $cache = new CacheProperties;
-        $cache->addProperty($ids);
-        $cache->addProperty('user-piggy-bank-accounts');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
 
         $ids = array_unique($ids);
         if (count($ids) > 0) {
@@ -308,8 +240,6 @@ class AccountRepository implements AccountRepositoryInterface
 
             }
         );
-
-        $cache->store($accounts);
 
         return $accounts;
 
@@ -387,21 +317,12 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function openingBalanceTransaction(Account $account)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($account->id);
-        $cache->addProperty('opening-balance-journal');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-
         $journal = TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
             ->accountIs($account)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
-        $cache->store($journal);
 
         return $journal;
     }
@@ -614,7 +535,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function updateMetadata(Account $account, array $data)
     {

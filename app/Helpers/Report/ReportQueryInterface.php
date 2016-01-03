@@ -3,8 +3,6 @@
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
 use Illuminate\Support\Collection;
 
 /**
@@ -16,54 +14,52 @@ interface ReportQueryInterface
 {
 
     /**
-     * See ReportQueryInterface::incomeInPeriod
+     * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
+     * grouped by month like so: "2015-01" => '123.45'
      *
-     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
-     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
-     * not group and returns different fields.
-     *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
-     * @return Collection
-     *
+     * @return array
      */
-    public function expenseInPeriod(Carbon $start, Carbon $end, Collection $accounts);
+    public function earnedPerMonth(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
-     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
-     * regards to tags. It will only get the incomes to the specified accounts.
+     * This method returns all the "out" transaction journals for the given account and given period. The amount
+     * is stored in "journalAmount".
      *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return Collection
      */
-    public function incomeInPeriod(Carbon $start, Carbon $end, Collection $accounts);
+    public function expense(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * Covers tags as well.
+     * This method returns all the "in" transaction journals for the given account and given period. The amount
+     * is stored in "journalAmount".
      *
-     * @param Account $account
-     * @param Budget  $budget
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return float
+     * @return Collection
      */
-    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end);
+    public function income(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
+     * grouped by month like so: "2015-01" => '123.45'
      *
-     * @return string
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
      */
-    public function spentNoBudget(Account $account, Carbon $start, Carbon $end);
+    public function spentPerMonth(Collection $accounts, Carbon $start, Carbon $end);
 
 
 }

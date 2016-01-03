@@ -68,24 +68,24 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
      */
     public function frontpage(Collection $entries)
     {
-        $data = [
+        $data      = [
             'count'    => 0,
             'labels'   => [],
             'datasets' => [],
         ];
-        // dataset: left
-        // dataset: spent
-        // dataset: overspent
         $left      = [];
         $spent     = [];
         $overspent = [];
-        foreach ($entries as $entry) {
-            if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
-                $data['labels'][] = $entry[0];
-                $left[]           = round($entry[1], 2);
-                $spent[]          = round($entry[2] * -1, 2); // spent is coming in negative, must be positive
-                $overspent[]      = round($entry[3] * -1, 2); // same
+        $filtered  = $entries->filter(
+            function ($entry) {
+                return ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0);
             }
+        );
+        foreach ($filtered as $entry) {
+            $data['labels'][] = $entry[0];
+            $left[]           = round($entry[1], 2);
+            $spent[]          = round($entry[2] * -1, 2); // spent is coming in negative, must be positive
+            $overspent[]      = round($entry[3] * -1, 2); // same
         }
 
         $data['datasets'][] = [

@@ -28,8 +28,6 @@ class ConnectJournalToPiggyBank
     /**
      * Handle the event when journal is saved.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      * @param  JournalCreated $event
      *
      * @return boolean

@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Helpers\Collection;
 
+use Crypt;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use stdClass;
@@ -36,7 +37,7 @@ class Expense
         bcscale(2);
 
         $accountId = $entry->account_id;
-        $amount    = strval(round($entry->amount, 2));
+        $amount    = strval(round($entry->journalAmount, 2));
         if (bccomp('0', $amount) === -1) {
             $amount = bcmul($amount, '-1');
         }
@@ -44,7 +45,7 @@ class Expense
         if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
             $newObject->amount = $amount;
-            $newObject->name   = $entry->name;
+            $newObject->name   = Crypt::decrypt($entry->account_name);
             $newObject->count  = 1;
             $newObject->id     = $accountId;
             $this->expenses->put($accountId, $newObject);

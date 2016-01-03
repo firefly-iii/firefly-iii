@@ -1,7 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Config;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
 use Preferences;
 use Session;
@@ -26,11 +26,11 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return $this|\Illuminate\View\View
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(ARI $repository)
     {
         $accounts          = $repository->getAccounts(['Default account', 'Asset account']);
         $viewRangePref     = Preferences::get('viewRange', '1M');

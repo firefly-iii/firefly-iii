@@ -3,9 +3,9 @@
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -60,7 +60,7 @@ class JsonController extends Controller
     }
 
     /**
-     * @param BillRepositoryInterface    $repository
+     * @param BillRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -111,13 +111,13 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface       $reportQuery
+     * @param ReportQueryInterface $reportQuery
      *
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI                  $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxIn(ReportQueryInterface $reportQuery, AccountRepositoryInterface $accountRepository)
+    public function boxIn(ReportQueryInterface $reportQuery, ARI $accountRepository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -131,7 +131,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-        $amount   = $reportQuery->incomeInPeriod($start, $end, $accounts)->sum('to_amount');
+        $amount   = $reportQuery->income($accounts, $start, $end)->sum('journalAmount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -140,13 +140,13 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface       $reportQuery
+     * @param ReportQueryInterface $reportQuery
      *
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI                  $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxOut(ReportQueryInterface $reportQuery, AccountRepositoryInterface $accountRepository)
+    public function boxOut(ReportQueryInterface $reportQuery, ARI $accountRepository)
     {
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -162,7 +162,7 @@ class JsonController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $amount = $reportQuery->expenseInPeriod($start, $end, $accounts)->sum('to_amount');
+        $amount = $reportQuery->expense($accounts, $start, $end)->sum('journalAmount');
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -173,13 +173,13 @@ class JsonController extends Controller
     /**
      * Returns a list of categories.
      *
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categories(CategoryRepositoryInterface $repository)
+    public function categories(CRI $repository)
     {
-        $list   = $repository->getCategories();
+        $list   = $repository->listCategories();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -191,11 +191,11 @@ class JsonController extends Controller
     /**
      * Returns a JSON list of all beneficiaries.
      *
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAccounts(AccountRepositoryInterface $accountRepository)
+    public function expenseAccounts(ARI $accountRepository)
     {
         $list   = $accountRepository->getAccounts(['Expense account', 'Beneficiary account']);
         $return = [];
@@ -208,11 +208,11 @@ class JsonController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function revenueAccounts(AccountRepositoryInterface $accountRepository)
+    public function revenueAccounts(ARI $accountRepository)
     {
         $list   = $accountRepository->getAccounts(['Revenue account']);
         $return = [];

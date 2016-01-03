@@ -6,7 +6,7 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
 use Preferences;
 use Session;
@@ -56,12 +56,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
-    public function delete(AccountRepositoryInterface $repository, Account $account)
+    public function delete(ARI $repository, Account $account)
     {
         $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
@@ -77,12 +77,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(AccountRepositoryInterface $repository, Account $account)
+    public function destroy(ARI $repository, Account $account)
     {
         $type     = $account->accountType->type;
         $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
@@ -98,12 +98,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
-    public function edit(AccountRepositoryInterface $repository, Account $account)
+    public function edit(ARI $repository, Account $account)
     {
 
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -143,40 +143,31 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI                        $repository
      * @param                            $what
      *
      * @return \Illuminate\View\View
      */
-    public function index(AccountRepositoryInterface $repository, $what)
+    public function index(ARI $repository, $what)
     {
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
-        // last activity:
-        /**
-         * HERE WE ARE
-         */
-        $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end   = clone Session::get('end', Carbon::now()->endOfMonth());
+        $start        = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end          = clone Session::get('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
-        // start balances:
-        $ids = [];
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
-
+        $ids           = $accounts->pluck('id')->toArray();
         $startBalances = Steam::balancesById($ids, $start);
         $endBalances   = Steam::balancesById($ids, $end);
         $activities    = Steam::getLastActivities($ids);
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-                $account->lastActivityDate = isset($activities[$account->id]) ? $activities[$account->id] : null;
-                $account->startBalance     = isset($startBalances[$account->id]) ? $startBalances[$account->id] : null;
-                $account->endBalance       = isset($endBalances[$account->id]) ? $endBalances[$account->id] : null;
+                $account->lastActivityDate = $this->isInArray($activities, $account->id);
+                $account->startBalance     = $this->isInArray($startBalances, $account->id);
+                $account->endBalance       = $this->isInArray($endBalances, $account->id);
             }
         );
 
@@ -184,12 +175,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
-    public function show(AccountRepositoryInterface $repository, Account $account)
+    public function show(ARI $repository, Account $account)
     {
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
@@ -203,12 +194,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
+     * @param AccountFormRequest $request
+     * @param ARI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
+    public function store(AccountFormRequest $request, ARI $repository)
     {
         $accountData = [
             'name'                   => $request->input('name'),
@@ -242,13 +233,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param AccountFormRequest $request
+     * @param ARI                $repository
+     * @param Account            $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
+    public function update(AccountFormRequest $request, ARI $repository, Account $account)
     {
 
         $accountData = [
@@ -281,6 +272,22 @@ class AccountController extends Controller
         // redirect to previous URL.
         return redirect(Session::get('accounts.edit.url'));
 
+    }
+
+
+    /**
+     * @param array $array
+     * @param       $entryId
+     *
+     * @return null|mixed
+     */
+    protected function isInArray(array $array, $entryId)
+    {
+        if (isset($array[$entryId])) {
+            return $array[$entryId];
+        }
+
+        return null;
     }
 
 }

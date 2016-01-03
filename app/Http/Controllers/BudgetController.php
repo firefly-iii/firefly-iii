@@ -6,8 +6,9 @@ use Carbon\Carbon;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Navigation;
 use Preferences;
@@ -20,7 +21,6 @@ use View;
  * Class BudgetController
  *
  * @package FireflyIII\Http\Controllers
- * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class BudgetController extends Controller
 {
@@ -132,13 +132,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface  $repository
+     * @param BudgetRepositoryInterface $repository
      *
-     * @param AccountRepositoryInterface $accountRepository
+     * @param ARI                       $accountRepository
      *
      * @return \Illuminate\View\View
      */
-    public function index(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function index(BudgetRepositoryInterface $repository, ARI $accountRepository)
     {
         $budgets           = $repository->getActiveBudgets();
         $inactive          = $repository->getInactiveBudgets();
@@ -232,11 +232,24 @@ class BudgetController extends Controller
         $journals = $repository->getJournals($budget, $repetition);
 
         if (is_null($repetition->id)) {
-            $limits   = $repository->getBudgetLimits($budget);
+            $start    = $repository->firstActivity($budget);
+            $end      = new Carbon;
+            $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
             $subTitle = e($budget->name);
         } else {
-            $limits   = [$repetition->budgetLimit];
+            $start    = $repetition->startdate;
+            $end      = $repetition->enddate;
+            $set      = new Collection([$repetition]);
             $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+        }
+
+        $spentArray = $repository->spentPerDay($budget, $start, $end);
+        $limits     = new Collection();
+
+        /** @var LimitRepetition $entry */
+        foreach ($set as $entry) {
+            $entry->spent = $this->getSumOfRange($entry->startdate, $entry->enddate, $spentArray);
+            $limits->push($entry);
         }
 
         $journals->setPath('/budgets/show/' . $budget->id);

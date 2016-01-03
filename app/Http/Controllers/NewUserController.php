@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Config;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\AccountMeta;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Preferences;
 use Session;
 use View;
@@ -20,11 +20,11 @@ class NewUserController extends Controller
 
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @@return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(ARI $repository)
     {
         View::share('title', 'Welcome to Firefly!');
         View::share('mainTitleIcon', 'fa-fire');
@@ -42,12 +42,12 @@ class NewUserController extends Controller
     }
 
     /**
-     * @param NewUserFormRequest         $request
-     * @param AccountRepositoryInterface $repository
+     * @param NewUserFormRequest $request
+     * @param ARI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository)
+    public function submit(NewUserFormRequest $request, ARI $repository)
     {
         // create normal asset account:
         $assetAccount = [

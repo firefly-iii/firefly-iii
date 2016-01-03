@@ -4,9 +4,7 @@ namespace FireflyIII\Repositories\Shared;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -27,23 +25,7 @@ class ComponentRepository
      */
     protected function commonBalanceInPeriod($object, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $cache = new CacheProperties; // we must cache this.
-        $cache->addProperty($object->id);
-        $cache->addProperty(get_class($object));
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($accounts);
-        $cache->addProperty('balanceInPeriodList');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
+        $ids = $accounts->pluck('id')->toArray();
 
 
         $entry  = $object->transactionjournals()
@@ -55,8 +37,6 @@ class ComponentRepository
                          ->after($start)
                          ->first([DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
         $amount = $entry->journalAmount;
-
-        $cache->store($amount);
 
         return $amount;
     }

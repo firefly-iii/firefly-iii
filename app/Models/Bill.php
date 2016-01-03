@@ -1,47 +1,31 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
+use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Bill
+ * FireflyIII\Models\Bill
  *
- * @package FireflyIII\Models
- * @property integer                                                                               $id
- * @property \Carbon\Carbon                                                                        $created_at
- * @property \Carbon\Carbon                                                                        $updated_at
- * @property integer                                                                               $user_id
- * @property string                                                                                $name
- * @property string                                                                                $match
- * @property float                                                                                 $amount_min
- * @property float                                                                                 $amount_max
- * @property \Carbon\Carbon                                                                        $date
- * @property boolean                                                                               $active
- * @property boolean                                                                               $automatch
- * @property string                                                                                $repeat_freq
- * @property integer                                                                               $skip
- * @property boolean                                                                               $name_encrypted
- * @property boolean                                                                               $match_encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                                                 $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatch($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereAmountMin($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereAmountMax($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereAutomatch($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereRepeatFreq($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereSkip($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
- * @property \Carbon\Carbon                                                                        $nextExpectedMatch
- * @property \Carbon\Carbon                                                                        $lastFoundMatch
- * @property-read string                                                                           $expectedAmount
+ * @property integer                              $id
+ * @property Carbon                               $created_at
+ * @property Carbon                               $updated_at
+ * @property integer                              $user_id
+ * @property string                               $name
+ * @property string                               $match
+ * @property float                                $amount_min
+ * @property float                                $amount_max
+ * @property Carbon                               $date
+ * @property boolean                              $active
+ * @property boolean                              $automatch
+ * @property string                               $repeat_freq
+ * @property integer                              $skip
+ * @property boolean                              $name_encrypted
+ * @property boolean                              $match_encrypted
+ * @property-read Collection|TransactionJournal[] $transactionjournals
+ * @property-read User                            $user
  */
 class Bill extends Model
 {

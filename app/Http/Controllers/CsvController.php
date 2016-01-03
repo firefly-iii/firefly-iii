@@ -8,7 +8,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
 use FireflyIII\Helpers\Csv\Importer;
 use FireflyIII\Helpers\Csv\WizardInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Http\Request;
 use Input;
 use Log;
@@ -146,11 +146,11 @@ class CsvController extends Controller
      *
      * STEP ONE
      *
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return \Illuminate\View\View
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(ARI $repository)
     {
         $subTitle = trans('firefly.csv_import');
 

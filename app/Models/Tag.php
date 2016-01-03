@@ -2,40 +2,30 @@
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
+use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Tag
+ * FireflyIII\Models\Tag
  *
- * @package FireflyIII\Models
- * @property integer                                                                               $id
- * @property \Carbon\Carbon                                                                        $created_at
- * @property \Carbon\Carbon                                                                        $updated_at
- * @property string                                                                                $deleted_at
- * @property integer                                                                               $user_id
- * @property string                                                                                $tag
- * @property string                                                                                $tagMode
- * @property \Carbon\Carbon                                                                        $date
- * @property string                                                                                $description
- * @property float                                                                                 $latitude
- * @property float                                                                                 $longitude
- * @property integer                                                                               $zoomLevel
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                                                 $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereTag($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereTagMode($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereLatitude($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereLongitude($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereZoomLevel($value)
+ * @property integer                              $id
+ * @property Carbon                               $created_at
+ * @property Carbon                               $updated_at
+ * @property string                               $deleted_at
+ * @property integer                              $user_id
+ * @property string                               $tag
+ * @property string                               $tagMode
+ * @property Carbon                               $date
+ * @property string                               $description
+ * @property float                                $latitude
+ * @property float                                $longitude
+ * @property integer                              $zoomLevel
+ * @property-read Collection|TransactionJournal[] $transactionjournals
+ * @property-read User                            $user
  */
 class Tag extends Model
 {
@@ -54,8 +44,6 @@ class Tag extends Model
 
     /**
      * @param array $fields
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @return Tag|null
      */

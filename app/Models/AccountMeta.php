@@ -1,25 +1,19 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class AccountMeta
+ * FireflyIII\Models\AccountMeta
  *
- * @package FireflyIII\Models
- * @property integer                         $id
- * @property \Carbon\Carbon                  $created_at
- * @property \Carbon\Carbon                  $updated_at
- * @property integer                         $account_id
- * @property string                          $name
- * @property string                          $data
- * @property-read \FireflyIII\Models\Account $account
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereData($value)
+ * @property integer      $id
+ * @property Carbon       $created_at
+ * @property Carbon       $updated_at
+ * @property integer      $account_id
+ * @property string       $name
+ * @property string       $data
+ * @property-read Account $account
  */
 class AccountMeta extends Model
 {

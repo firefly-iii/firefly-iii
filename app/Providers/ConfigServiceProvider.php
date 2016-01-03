@@ -19,7 +19,6 @@ class ConfigServiceProvider extends ServiceProvider
      * to overwrite any "vendor" or package configuration that you may want to
      * modify before the application handles the incoming request / command.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return void
      */
