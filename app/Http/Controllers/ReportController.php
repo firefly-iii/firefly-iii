@@ -163,10 +163,14 @@ class ReportController extends Controller
     public function defaultMultiYear($reportType, $start, $end, $accounts)
     {
 
-
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
         // list of users stuff:
-        $budgets    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
-        $categories = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
+        $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
+        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done (+2)
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
 
         // and some id's, joined:
         $accountIds = [];
@@ -177,7 +181,11 @@ class ReportController extends Controller
         $accountIds = join(',', $accountIds);
 
         return view(
-            'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType')
+            'reports.default.multi-year',
+            compact(
+                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
+                'incomeTopLength', 'expenseTopLength'
+            )
         );
     }
 
