@@ -264,7 +264,6 @@ Route::bind(
  * Auth\AuthController
  */
 Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
-Route::get('/cron/sendgrid', ['uses' => 'CronController@sendgrid']);
 
 Route::controllers(
     [
