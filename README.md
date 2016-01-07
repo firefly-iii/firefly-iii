@@ -11,8 +11,6 @@
 "Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared 
 household accounts and savings accounts! It's pretty fancy. You should use it to save and organise money.
  
-_Firefly is a system you'll have install yourself on webhosting of your choosing._
-
 Personal financial management is pretty difficult, and everybody has their own approach to it. Some people
 make budgets, other people limit their cashflow by throwing away their credit cards, others try to increase
 their current cashflow. There are tons of ways to save and earn money.
@@ -25,6 +23,11 @@ To get to know Firefly, and to see if it fits you, check out these resources:
 - The featurelist below, also on this very page.
 - The [full description](https://github.com/JC5/firefly-iii/wiki/full-description), which will tell you how Firefly works,
 and the philosophy behind it.
+
+#### A quick technical overview
+
+Firefly is a system you'll have install yourself on webhosting of your choosing. It needs PHP and MySQL. The current version of Firefly III requires PHP 5.6.4 or
+higher. Soon, this will be PHP 7.0.0 or higher.
 
 
 #### About the name (should you care)
@@ -92,7 +95,7 @@ is open source software under active development, and it is in no way guaranteed
 
 ## Translations
 
-Firefly III is currently available in Dutch and English. Support for other languages is being worked on. I can use
+Firefly III is currently available in Dutch and English. Support for other languages is being worked on. I could use
 your help. Checkout [Crowdin](https://crowdin.com/project/firefly-iii) for more information.
 
 ## Credits
