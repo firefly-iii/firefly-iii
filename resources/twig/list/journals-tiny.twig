@@ -1,7 +1,7 @@
 <div class="list-group">
     {% for journal in transactions %}
 
-        <a class="list-group-item" title="{{ journal.date.format('jS M Y') }}" href="{{ route('transactions.show',journal.id) }}">
+        <a class="list-group-item" title="{{ journal.date.formatLocalized(trans('config.month_and_day')) }}" href="{{ route('transactions.show',journal.id) }}">
 
             {{ journal|typeIcon }}
 

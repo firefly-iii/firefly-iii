@@ -14,7 +14,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -43,12 +43,12 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param string                     $what
+     * @param ARI    $repository
+     * @param string $what
      *
      * @return \Illuminate\View\View
      */
-    public function create(AccountRepositoryInterface $repository, $what = TransactionType::DEPOSIT)
+    public function create(ARI $repository, $what = TransactionType::DEPOSIT)
     {
         $what        = strtolower($what);
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
@@ -133,12 +133,12 @@ class TransactionController extends Controller
     /**
      * Shows the view to edit a transaction.
      *
-     * @param AccountRepositoryInterface $repository
-     * @param TransactionJournal         $journal
+     * @param ARI                $repository
+     * @param TransactionJournal $journal
      *
      * @return $this
      */
-    public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
+    public function edit(ARI $repository, TransactionJournal $journal)
     {
         // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
@@ -163,11 +163,7 @@ class TransactionController extends Controller
             'piggy_bank_id' => 0
         ];
         // get tags:
-        $tags = [];
-        foreach ($journal->tags as $tag) {
-            $tags[] = $tag->tag;
-        }
-        $preFilled['tags'] = join(',', $tags);
+        $preFilled['tags'] = join(',', $journal->tags->pluck('tag')->toArray());
 
         $category = $journal->categories()->first();
         if (!is_null($category)) {
@@ -285,7 +281,7 @@ class TransactionController extends Controller
         $what     = strtolower($journal->getTransactionType());
         $subTitle = trans('firefly.' . $journal->getTransactionType()) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal','events', 'subTitle', 'what'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what'));
     }
 
     /**
@@ -354,7 +350,6 @@ class TransactionController extends Controller
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
 
-        // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
             return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
         }

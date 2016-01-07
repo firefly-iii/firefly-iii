@@ -1,7 +1,7 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, report_type, accountIds) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
 {% endblock %}
 
 {% block content %}
@@ -75,7 +75,7 @@
         // to report another URL:
         var startDate = '{{ start.format('Ymd') }}';
         var endDate = '{{ end.format('Ymd') }}';
-        var reportType = '{{ report_type }}';
+        var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
         var incomeTopLength = {{ incomeTopLength }};

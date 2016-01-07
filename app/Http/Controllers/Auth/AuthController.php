@@ -58,15 +58,7 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        $this->validate(
-            $request, [
-                        $this->loginUsername() => 'required', 'password' => 'required',
-                    ]
-        );
-
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
+        $this->validate($request, [$this->loginUsername() => 'required', 'password' => 'required',]);
         $throttles = $this->isUsingThrottlesLoginsTrait();
 
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
@@ -80,10 +72,7 @@ class AuthController extends Controller
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
-        // default error message:
         $message = $this->getFailedLoginMessage();
-
-        // try to find a blocked user with this email address.
         /** @var User $foundUser */
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
@@ -95,22 +84,13 @@ class AuthController extends Controller
             $message = trans('firefly.' . $code . '_error', ['email' => $credentials['email']]);
         }
 
-        // try
-
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
         if ($throttles) {
             $this->incrementLoginAttempts($request);
         }
 
         return redirect($this->loginPath())
             ->withInput($request->only($this->loginUsername(), 'remember'))
-            ->withErrors(
-                [
-                    $this->loginUsername() => $message,
-                ]
-            );
+            ->withErrors([$this->loginUsername() => $message,]);
     }
 
 

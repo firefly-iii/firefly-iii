@@ -7,11 +7,9 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -34,6 +32,40 @@ class BillRepository implements BillRepositoryInterface
     public function destroy(Bill $bill)
     {
         return $bill->delete();
+    }
+
+    /**
+     * Returns all journals connected to these bills in the given range. Amount paid
+     * is stored in "journalAmount" as a negative number.
+     *
+     * @param Collection $bills
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end)
+    {
+        $ids = $bills->pluck('id')->toArray();
+
+        $set = Auth::user()->transactionjournals()
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->whereIn('bill_id', $ids)
+                   ->before($end)
+                   ->after($start)
+                   ->groupBy('transaction_journals.bill_id')
+                   ->get(
+                       [
+                           'transaction_journals.bill_id',
+                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')
+                       ]
+                   );
+
+        return $set;
     }
 
 
@@ -64,26 +96,22 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsForAccounts(Collection $accounts)
     {
-        /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
-
-        $ids = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $ids[] = $account->id;
-        }
-
-        $set = $set->filter(
-            function (Bill $bill) use ($ids) {
-                // get transaction journals from or to any of the mentioned accounts.
-                // when zero, return null.
-                $journals = $bill->transactionjournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->whereIn('transactions.account_id', $ids)->count();
-
-                return ($journals > 0);
-
-            }
-        );
+        $ids = $accounts->pluck('id')->toArray();
+        $set = Auth::user()->bills()
+                   ->leftJoin(
+                       'transaction_journals', function (JoinClause $join) {
+                       $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
+                   }
+                   )
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->whereIn('transactions.account_id', $ids)
+                   ->whereNull('transaction_journals.deleted_at')
+                   ->groupBy('bills.id')
+                   ->get(['bills.*']);
 
         $set = $set->sortBy(
             function (Bill $bill) {
@@ -107,13 +135,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getJournals(Bill $bill)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($bill->id);
-        $cache->addProperty('journals-for-bill');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
         $set = $bill->transactionjournals()
                     ->leftJoin(
                         'transactions', function (JoinClause $join) {
@@ -125,8 +146,6 @@ class BillRepository implements BillRepositoryInterface
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
                     ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
-        $cache->store($set);
-
         return $set;
     }
 
@@ -156,12 +175,8 @@ class BillRepository implements BillRepositoryInterface
         $set = DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
             ['transaction_journal_id']
         );
-        $ids = [];
+        $ids = $set->pluck('transaction_journal_id')->toArray();
 
-        /** @var Transaction $entry */
-        foreach ($set as $entry) {
-            $ids[] = intval($entry->transaction_journal_id);
-        }
         $journals = new Collection;
         if (count($ids) > 0) {
             $journals = Auth::user()->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
@@ -425,13 +440,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsPaidInRange(Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('bills-paid-in-range');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $amount = '0';
         $bills  = $this->getActiveBills();
 
@@ -452,8 +460,6 @@ class BillRepository implements BillRepositoryInterface
                 $amount = bcadd($amount, $paid->sum_amount);
             }
         }
-        $cache->store($amount);
-
         return $amount;
     }
 
@@ -486,13 +492,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('bills-unpaid-in-range');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $amount = '0';
         $bills  = $this->getActiveBills();
 
@@ -516,8 +515,6 @@ class BillRepository implements BillRepositoryInterface
                 $amount = bcadd($amount, $bill->expectedAmount);
             }
         }
-        $cache->store($amount);
-
         return $amount;
     }
 
@@ -533,13 +530,6 @@ class BillRepository implements BillRepositoryInterface
     public function getCreditCardBill(Carbon $start, Carbon $end)
     {
 
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('credit-card-bill');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $amount            = '0';

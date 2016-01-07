@@ -51,7 +51,6 @@ class JournalFormRequest extends Request
     /**
      * @return array
      * @throws Exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function rules()
     {

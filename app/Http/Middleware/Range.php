@@ -42,7 +42,6 @@ class Range
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $theNext
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return mixed
      */

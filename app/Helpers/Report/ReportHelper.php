@@ -3,6 +3,7 @@
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
@@ -19,8 +20,9 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class ReportHelper
@@ -61,10 +63,9 @@ class ReportHelper implements ReportHelperInterface
          */
         /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-        $set        = $repository->getCategories();
+
+        $set = $repository->spentForAccountsPerMonth($accounts, $start, $end);
         foreach ($set as $category) {
-            $spent           = $repository->balanceInPeriod($category, $start, $end, $accounts);
-            $category->spent = $spent;
             $object->addCategory($category);
         }
 
@@ -123,21 +124,59 @@ class ReportHelper implements ReportHelperInterface
         $startAmount = '0';
         $endAmount   = '0';
         $diff        = '0';
+        $ids         = $accounts->pluck('id')->toArray();
+
+        $yesterday = clone $start;
+        $yesterday->subDay();
+
         bcscale(2);
 
+        // get balances for start.
+        $startSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                           ->whereIn('accounts.id', $ids)
+                           ->whereNull('transaction_journals.deleted_at')
+                           ->whereNull('transactions.deleted_at')
+                           ->where('transaction_journals.date', '<=', $yesterday->format('Y-m-d'))
+                           ->groupBy('accounts.id')
+                           ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+
+        // and for end:
+        $endSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                         ->whereIn('accounts.id', $ids)
+                         ->whereNull('transaction_journals.deleted_at')
+                         ->whereNull('transactions.deleted_at')
+                         ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                         ->groupBy('accounts.id')
+                         ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+
+
         $accounts->each(
-            function (Account $account) use ($start, $end) {
+            function (Account $account) use ($startSet, $endSet) {
                 /**
                  * The balance for today always incorporates transactions
                  * made on today. So to get todays "start" balance, we sub one
                  * day.
                  */
-                $yesterday = clone $start;
-                $yesterday->subDay();
+                //
+                $currentStart = $startSet->filter(
+                    function (Account $entry) use ($account) {
+                        return $account->id == $entry->id;
+                    }
+                );
+                if ($currentStart->first()) {
+                    $account->startBalance = $currentStart->first()->balance;
+                }
 
-                /** @noinspection PhpParamsInspection */
-                $account->startBalance = Steam::balance($account, $yesterday);
-                $account->endBalance   = Steam::balance($account, $end);
+                $currentEnd = $endSet->filter(
+                    function (Account $entry) use ($account) {
+                        return $account->id == $entry->id;
+                    }
+                );
+                if ($currentEnd->first()) {
+                    $account->endBalance = $currentEnd->first()->balance;
+                }
             }
         );
 
@@ -170,9 +209,10 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport($start, $end, Collection $accounts)
     {
         $object = new Income;
-        $set    = $this->query->incomeInPeriod($start, $end, $accounts);
+        $set    = $this->query->income($accounts, $start, $end);
+
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount_positive);
+            $object->addToTotal($entry->journalAmount);
             $object->addOrCreateIncome($entry);
         }
 
@@ -191,9 +231,10 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport($start, $end, Collection $accounts)
     {
         $object = new Expense;
-        $set    = $this->query->expenseInPeriod($start, $end, $accounts);
+        $set    = $this->query->expense($accounts, $start, $end);
+
         foreach ($set as $entry) {
-            $object->addToTotal($entry->amount); // can be positive, if it's a transfer
+            $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer
             $object->addOrCreateExpense($entry);
         }
 
@@ -211,18 +252,24 @@ class ReportHelper implements ReportHelperInterface
     {
         $object = new BudgetCollection;
         /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $set        = $repository->getBudgets();
-
+        $repository     = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $set            = $repository->getBudgets();
+        $allRepetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
+        $allTotalSpent  = $repository->spentAllPerDayForAccounts($accounts, $start, $end);
         bcscale(2);
 
         foreach ($set as $budget) {
 
-            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
+            $repetitions = $allRepetitions->filter(
+                function (LimitRepetition $rep) use ($budget) {
+                    return $rep->budget_id == $budget->id;
+                }
+            );
+            $totalSpent  = isset($allTotalSpent[$budget->id]) ? $allTotalSpent[$budget->id] : [];
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
-                $spent      = $repository->balanceInPeriod($budget, $start, $end, $accounts);
+                $spent      = array_sum($totalSpent);
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setOverspent($spent);
@@ -237,7 +284,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses = $repository->balanceInPeriod($budget, $start, $end, $accounts);
+                $expenses = $this->getSumOfRange($start, $end, $totalSpent);
 
                 // 200 en -100 is 100, vergeleken met 0 === 1
                 // 200 en -200 is 0, vergeleken met 0 === 0
@@ -282,13 +329,18 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        $repository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+
+        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
         $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
-        $balance       = new Balance;
+
+        $balance = new Balance;
 
         // build a balance header:
-        $header  = new BalanceHeader;
-        $budgets = $repository->getBudgets();
+        $header    = new BalanceHeader;
+        $budgets   = $repository->getBudgetsAndLimitsInRange($start, $end);
+        $spentData = $repository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end);
         foreach ($accounts as $account) {
             $header->addAccount($account);
         }
@@ -298,19 +350,21 @@ class ReportHelper implements ReportHelperInterface
             $line = new BalanceLine;
             $line->setBudget($budget);
 
-            // get budget amount for current period:
-            $rep = $repository->getCurrentRepetition($budget, $start, $end);
-            // could be null?
-            $line->setRepetition($rep);
-
             // loop accounts:
             foreach ($accounts as $account) {
                 $balanceEntry = new BalanceEntry;
                 $balanceEntry->setAccount($account);
 
                 // get spent:
-                $spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
-
+                $entry = $spentData->filter(
+                    function (TransactionJournal $model) use ($budget, $account) {
+                        return $model->account_id == $account->id && $model->budget_id == $budget->id;
+                    }
+                );
+                $spent = 0;
+                if (!is_null($entry->first())) {
+                    $spent = $entry->first()->spent;
+                }
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
             }
@@ -324,13 +378,30 @@ class ReportHelper implements ReportHelperInterface
         $empty    = new BalanceLine;
         $tags     = new BalanceLine;
         $diffLine = new BalanceLine;
+        $tagsLeft = $tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
 
         $tags->setRole(BalanceLine::ROLE_TAGROLE);
         $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
 
         foreach ($accounts as $account) {
-            $spent = $this->query->spentNoBudget($account, $start, $end);
-            $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($budget, $account) {
+                    return $model->account_id == $account->id && is_null($model->budget_id);
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+            $leftEntry = $tagsLeft->filter(
+                function (Tag $tag) use ($account) {
+                    return $tag->account_id == $account->id;
+                }
+            );
+            $left      = 0;
+            if (!is_null($leftEntry->first())) {
+                $left = $leftEntry->first()->sum;
+            }
             bcscale(2);
             $diff = bcadd($spent, $left);
 
@@ -380,6 +451,7 @@ class ReportHelper implements ReportHelperInterface
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
         $bills      = $repository->getBillsForAccounts($accounts);
+        $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
         $collection = new BillCollection;
 
         /** @var Bill $bill */
@@ -392,16 +464,17 @@ class ReportHelper implements ReportHelperInterface
 
             // is hit in period?
             bcscale(2);
-            $set = $repository->getJournalsInRange($bill, $start, $end);
-            if ($set->count() == 0) {
-                $billLine->setHit(false);
-            } else {
-                $billLine->setHit(true);
-                $amount = '0';
-                foreach ($set as $entry) {
-                    $amount = bcadd($amount, $entry->amount);
+
+            $entry = $journals->filter(
+                function (TransactionJournal $journal) use ($bill) {
+                    return $journal->bill_id == $bill->id;
                 }
-                $billLine->setAmount($amount);
+            );
+            if (!is_null($entry->first())) {
+                $billLine->setAmount($entry->first()->journalAmount);
+                $billLine->setHit(true);
+            } else {
+                $billLine->setHit(false);
             }
 
             $collection->addBill($billLine);
@@ -409,5 +482,33 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $collection;
+    }
+
+    /**
+     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * and sum up everything in the array in the given range.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param array  $array
+     *
+     * @return string
+     */
+    protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
+    {
+        bcscale(2);
+        $sum          = '0';
+        $currentStart = clone $start; // to not mess with the original one
+        $currentEnd   = clone $end; // to not mess with the original one
+
+        while ($currentStart <= $currentEnd) {
+            $date = $currentStart->format('Y-m-d');
+            if (isset($array[$date])) {
+                $sum = bcadd($sum, $array[$date]);
+            }
+            $currentStart->addDay();
+        }
+
+        return $sum;
     }
 }

@@ -28,7 +28,6 @@ class FireflyValidator extends Validator
      * @param array               $rules
      * @param array               $messages
      * @param array               $customAttributes
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -39,6 +38,8 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -57,6 +58,8 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -86,6 +89,8 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -232,6 +237,8 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateUniqueForUser($attribute, $value, $parameters)
@@ -260,6 +267,8 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -290,6 +299,8 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */

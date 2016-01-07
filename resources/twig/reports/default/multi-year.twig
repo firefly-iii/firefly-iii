@@ -1,7 +1,7 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, report_type, accountIds) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
 {% endblock %}
 
 {% block content %}
@@ -26,6 +26,22 @@
                     <canvas id="income-expenses-sum-chart" style="width:100%;height:400px;"></canvas>
                 </div>
             </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            {% include 'reports/partials/accounts.twig' %}
+            {% include 'reports/partials/income-vs-expenses.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <!-- income -->
+            {% include 'reports/partials/income.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <!-- expenses -->
+            {% include 'reports/partials/expenses.twig' %}
         </div>
     </div>
 
@@ -125,8 +141,18 @@
         // to report another URL:
         var startDate = '{{ start.format('Ymd') }}';
         var endDate = '{{ end.format('Ymd') }}';
-        var reportType = '{{ report_type }}';
+        var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
+
+        var incomeTopLength = {{ incomeTopLength }};
+        var expenseTopLength = {{ expenseTopLength }};
+        var incomeRestShow = false; // starts hidden.
+        var expenseRestShow = false; // starts hidden.
+        var showTheRest = '{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}';
+        var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
+        var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
+        var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
+
     </script>
     <script type="text/javascript" src="js/reports/default/multi-year.js"></script>
 {% endblock %}

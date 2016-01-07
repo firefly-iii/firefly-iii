@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
 use Session;
 use View;
@@ -35,12 +35,12 @@ class ReportController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return View
      * @internal param ReportHelperInterface $helper
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(ARI $repository)
     {
         $start        = Session::get('first');
         $months       = $this->helper->listOfMonths($start);
@@ -66,21 +66,21 @@ class ReportController extends Controller
 
         return view(
             'reports.index', compact(
-            'months', 'accounts', 'start', 'accountList',
-            'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
-        )
+                               'months', 'accounts', 'start', 'accountList',
+                               'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
+                           )
         );
     }
 
     /**
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
      */
-    public function defaultYear($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
@@ -104,7 +104,7 @@ class ReportController extends Controller
         return view(
             'reports.default.year',
             compact(
-                'start', 'accountReport', 'incomes', 'report_type', 'accountIds', 'end',
+                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
                 'expenses', 'incomeTopLength', 'expenseTopLength'
             )
         );
@@ -112,66 +112,65 @@ class ReportController extends Controller
 
 
     /**
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
      */
-    public function defaultMonth($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultMonth($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $budgets       = $this->helper->getBudgetReport($start, $end, $accounts);
-        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
-        $balance       = $this->helper->getBalanceReport($start, $end, $accounts);
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done (+2)
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
+        $budgets       = $this->helper->getBudgetReport($start, $end, $accounts); // done (+5)
+        $categories    = $this->helper->getCategoryReport($start, $end, $accounts); // done (+1) (20)
+        $balance       = $this->helper->getBalanceReport($start, $end, $accounts); // +566
         $bills         = $this->helper->getBillReport($start, $end, $accounts);
 
         // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
+        $accountIds = join(',', $accounts->pluck('id')->toArray());
 
         // continue!
         return view(
             'reports.default.month',
             compact(
-                'start', 'end', 'report_type',
+                'start', 'end', 'reportType',
                 'accountReport',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
                 'budgets', 'balance',
                 'categories',
                 'bills',
-                'accountIds', 'report_type'
+                'accountIds', 'reportType'
             )
         );
     }
 
     /**
-     * @param $report_type
+     * @param $reportType
      * @param $start
      * @param $end
      * @param $accounts
      *
      * @return View
      */
-    public function defaultMultiYear($report_type, $start, $end, $accounts)
+    public function defaultMultiYear($reportType, $start, $end, $accounts)
     {
 
-
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
         // list of users stuff:
-        $budgets    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
-        $categories = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->getCategories();
+        $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
+        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done (+2)
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
 
         // and some id's, joined:
         $accountIds = [];
@@ -182,19 +181,23 @@ class ReportController extends Controller
         $accountIds = join(',', $accountIds);
 
         return view(
-            'reports.default.multi-year', compact('budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'report_type')
+            'reports.default.multi-year',
+            compact(
+                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
+                'incomeTopLength', 'expenseTopLength'
+            )
         );
     }
 
     /**
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
      */
-    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // throw an error if necessary.
         if ($end < $start) {
@@ -206,7 +209,7 @@ class ReportController extends Controller
             $start = Session::get('first');
         }
 
-        switch ($report_type) {
+        switch ($reportType) {
             default:
             case 'default':
 
@@ -223,14 +226,14 @@ class ReportController extends Controller
 
                 // more than one year date difference means year report.
                 if ($start->diffInMonths($end) > 12) {
-                    return $this->defaultMultiYear($report_type, $start, $end, $accounts);
+                    return $this->defaultMultiYear($reportType, $start, $end, $accounts);
                 }
                 // more than two months date difference means year report.
                 if ($start->diffInMonths($end) > 1) {
-                    return $this->defaultYear($report_type, $start, $end, $accounts);
+                    return $this->defaultYear($reportType, $start, $end, $accounts);
                 }
 
-                return $this->defaultMonth($report_type, $start, $end, $accounts);
+                return $this->defaultMonth($reportType, $start, $end, $accounts);
         }
 
 

@@ -44,7 +44,7 @@ interface AccountRepositoryInterface
     /**
      * @param array $types
      *
-     * @return mixed
+     * @return Collection
      */
     public function getAccounts(array $types);
 

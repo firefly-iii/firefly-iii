@@ -5,7 +5,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -37,14 +37,14 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
-     * @param            $report_type
+     * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function report($report_type, Carbon $start, Carbon $end, Collection $accounts)
+    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -53,6 +53,7 @@ class AccountController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('accounts');
         $cache->addProperty('default');
+        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
@@ -68,11 +69,11 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's expense accounts.
      *
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function expenseAccounts(AccountRepositoryInterface $repository)
+    public function expenseAccounts(ARI $repository)
     {
         $start    = clone Session::get('start', Carbon::now()->startOfMonth());
         $end      = clone Session::get('end', Carbon::now()->endOfMonth());
@@ -98,11 +99,11 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param AccountRepositoryInterface $repository
+     * @param ARI $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(AccountRepositoryInterface $repository)
+    public function frontpage(ARI $repository)
     {
         $frontPage = Preferences::get('frontPageAccounts', []);
         $start     = clone Session::get('start', Carbon::now()->startOfMonth());

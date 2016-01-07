@@ -15,7 +15,7 @@ $(function () {
     $('.removeMoney').on('click', removeMoney);
 
     if (typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
-        lineChart('chart/piggyBank/' + piggyBankID, 'piggy-bank-history');
+        lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
     }
 
     $('#sortable tbody').sortable(

@@ -39,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @param  \Illuminate\Routing\Router $router
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return void
      */
     public function map(Router $router)

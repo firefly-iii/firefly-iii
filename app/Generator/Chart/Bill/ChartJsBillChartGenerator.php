@@ -49,19 +49,12 @@ class ChartJsBillChartGenerator implements BillChartGenerator
      */
     public function single(Bill $bill, Collection $entries)
     {
-        // language:
-        $format = trans('config.month');
-
-        $data = [
+        $format       = trans('config.month');
+        $data         = [
             'count'    => 3,
             'labels'   => [],
             'datasets' => [],
         ];
-
-        // dataset: max amount
-        // dataset: min amount
-        // dataset: actual amount
-
         $minAmount    = [];
         $maxAmount    = [];
         $actualAmount = [];

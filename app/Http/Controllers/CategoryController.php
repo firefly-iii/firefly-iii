@@ -4,7 +4,8 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -68,12 +69,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SCRI     $repository
+     * @param Category $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(CategoryRepositoryInterface $repository, Category $category)
+    public function destroy(SCRI $repository, Category $category)
     {
 
         $name = $category->name;
@@ -107,17 +108,18 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI  $repository
+     * @param SCRI $singleRepository
      *
      * @return \Illuminate\View\View
      */
-    public function index(CategoryRepositoryInterface $repository)
+    public function index(CRI $repository, SCRI $singleRepository)
     {
-        $categories = $repository->getCategories();
+        $categories = $repository->listCategories();
 
         $categories->each(
-            function (Category $category) use ($repository) {
-                $category->lastActivity = $repository->getLatestActivity($category);
+            function (Category $category) use ($singleRepository) {
+                $category->lastActivity = $singleRepository->getLatestActivity($category);
             }
         );
 
@@ -125,15 +127,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
+     * @param CRI $repository
      *
      * @return \Illuminate\View\View
      */
-    public function noCategory(CategoryRepositoryInterface $repository)
+    public function noCategory(CRI $repository)
     {
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
-        $list     = $repository->getWithoutCategory($start, $end);
+        $list     = $repository->listNoCategory($start, $end);
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -143,14 +145,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SCRI                              $repository
+     * @param Category                          $category
      *
-     * @param                             $date
+     * @param                                   $date
      *
      * @return \Illuminate\View\View
      */
-    public function showWithDate(CategoryRepositoryInterface $repository, Category $category, $date)
+    public function showWithDate(SCRI $repository, Category $category, $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;
@@ -170,12 +172,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param SCRI     $repository
+     * @param Category $category
      *
      * @return \Illuminate\View\View
      */
-    public function show(CategoryRepositoryInterface $repository, Category $category)
+    public function show(SCRI $repository, Category $category)
     {
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
@@ -200,6 +202,12 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('category-show');
         $cache->addProperty($category->id);
+
+        // get all spent and earned data:
+        // get amount earned in period, grouped by day.
+        $spentArray  = $repository->spentPerDay($category, $start, $end);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+
         if ($cache->has()) {
             $entries = $cache->get();
         } else {
@@ -208,9 +216,9 @@ class CategoryController extends Controller
                 $end        = Navigation::startOfPeriod($end, $range);
                 $currentEnd = Navigation::endOfPeriod($end, $range);
 
-                // here do something.
-                $spent    = $repository->spentInPeriod($category, $end, $currentEnd);
-                $earned   = $repository->earnedInPeriod($category, $end, $currentEnd);
+                // get data from spentArray:
+                $spent    = $this->getSumOfRange($end, $currentEnd, $spentArray);
+                $earned   = $this->getSumOfRange($end, $currentEnd, $earnedArray);
                 $dateStr  = $end->format('Y-m-d');
                 $dateName = Navigation::periodShow($end, $range);
                 $entries->push([$dateStr, $dateName, $spent, $earned]);
@@ -225,12 +233,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CategoryFormRequest         $request
-     * @param CategoryRepositoryInterface $repository
+     * @param CategoryFormRequest $request
+     * @param SCRI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(CategoryFormRequest $request, CategoryRepositoryInterface $repository)
+    public function store(CategoryFormRequest $request, SCRI $repository)
     {
         $categoryData = [
             'name' => $request->input('name'),
@@ -252,13 +260,13 @@ class CategoryController extends Controller
 
 
     /**
-     * @param CategoryFormRequest         $request
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param CategoryFormRequest $request
+     * @param SCRI                $repository
+     * @param Category            $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CategoryFormRequest $request, CategoryRepositoryInterface $repository, Category $category)
+    public function update(CategoryFormRequest $request, SCRI $repository, Category $category)
     {
         $categoryData = [
             'name' => $request->input('name'),

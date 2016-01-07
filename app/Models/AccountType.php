@@ -1,22 +1,18 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class AccountType
+ * FireflyIII\Models\AccountType
  *
- * @package FireflyIII\Models
- * @property integer                                                                    $id
- * @property \Carbon\Carbon                                                             $created_at
- * @property \Carbon\Carbon                                                             $updated_at
- * @property string                                                                     $type
- * @property boolean                                                                    $editable
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereType($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereEditable($value)
+ * @property integer                   $id
+ * @property Carbon                    $created_at
+ * @property Carbon                    $updated_at
+ * @property string                    $type
+ * @property boolean                   $editable
+ * @property-read Collection|Account[] $accounts
  */
 class AccountType extends Model
 {
@@ -33,6 +29,7 @@ class AccountType extends Model
     /**
      * @return array
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function getDates()
     {
         return ['created_at', 'updated_at'];

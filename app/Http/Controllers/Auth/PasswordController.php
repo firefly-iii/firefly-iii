@@ -78,6 +78,7 @@ class PasswordController extends Controller
 
         }
         abort(404);
+
         return '';
     }
 
