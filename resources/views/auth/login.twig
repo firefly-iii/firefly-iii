@@ -17,7 +17,7 @@
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
 
-        <form action="{{ URL.to('/auth/login') }}" method="post">
+        <form action="{{ URL.to('/login') }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
