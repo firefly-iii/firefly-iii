@@ -22,7 +22,7 @@
                 work for one (1) month.</p>
         {% endif %}
 
-        <form role="form" id="register" method="POST" action="{{ URL.to('/auth/register') }}">
+        <form role="form" id="register" method="POST" action="{{ URL.to('/register') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group has-feedback">
