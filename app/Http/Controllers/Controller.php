@@ -1,30 +1,27 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
 
-use Auth;
-use Carbon\Carbon;
+namespace FireflyIII\Http\Controllers;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Preferences;
 use View;
+use Auth;
+use Preferences;
+use Carbon\Carbon;
 
 /**
  * Class Controller
  *
  * @package FireflyIII\Http\Controllers
  */
-abstract class Controller extends BaseController
+class Controller extends BaseController
 {
-
-    use DispatchesJobs, ValidatesRequests;
-
-    /** @var string */
-    protected $monthAndDayFormat;
-    /** @var string */
-    protected $monthFormat;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @codeCoverageIgnore
+     * Controller constructor.
      */
     public function __construct()
     {
@@ -73,4 +70,6 @@ abstract class Controller extends BaseController
 
         return $sum;
     }
+
+
 }

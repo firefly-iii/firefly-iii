@@ -260,21 +260,18 @@ Route::bind(
 );
 
 
-/**
- * Auth\AuthController
- */
-Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
+// auth routes, i think
+Route::group(
+    ['middleware' => 'web'], function () {
+    Route::auth();
 
-Route::controllers(
-    [
-        'auth'     => 'Auth\AuthController',
-        'password' => 'Auth\PasswordController',
-    ]
+    Route::get('/home', 'HomeController@index');
+}
 );
 
 
 Route::group(
-    ['middleware' => ['auth', 'range']], function () {
+    ['middleware' => ['auth', 'range', 'web']], function () {
 
     /**
      * Home Controller
