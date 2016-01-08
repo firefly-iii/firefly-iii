@@ -26,7 +26,7 @@ class Kernel extends HttpKernel
     protected $middlewareGroups
         = [
             'web' => [
-                \FireflyIII\Http\Middleware\EncryptCookies::class,
+//                \FireflyIII\Http\Middleware\EncryptCookies::class,
                 \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
                 \Illuminate\Session\Middleware\StartSession::class,
                 \Illuminate\View\Middleware\ShareErrorsFromSession::class,
