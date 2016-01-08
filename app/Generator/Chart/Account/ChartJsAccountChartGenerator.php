@@ -114,10 +114,10 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             ];
             $current  = clone $start;
             $range    = Steam::balanceInRange($account, $start, clone $end);
-            $previous = array_values($range)[0];
+            $previous = round(array_values($range)[0], 2);
             while ($current <= $end) {
                 $format  = $current->format('Y-m-d');
-                $balance = isset($range[$format]) ? $range[$format] : $previous;
+                $balance = isset($range[$format]) ? round($range[$format], 2) : $previous;
 
                 $set['data'][] = $balance;
                 $previous      = $balance;
