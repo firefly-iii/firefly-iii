@@ -1,73 +1,27 @@
-<?php namespace FireflyIII;
+<?php
 
-use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Preference;
-use FireflyIII\Models\Role;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
+namespace FireflyIII;
 
-/**
- * Class User
- *
- * @package FireflyIII
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property string                               $email
- * @property string                               $password
- * @property string                               $reset
- * @property string                               $remember_token
- * @property-read Collection|Account[]            $accounts
- * @property-read Collection|Tag[]                $tags
- * @property-read Collection|Bill[]               $bills
- * @property-read Collection|Budget[]             $budgets
- * @property-read Collection|Category[]           $categories
- * @property-read Collection|Preference[]         $preferences
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read Collection|Role                 $roles
- * @method static Builder|User whereId($value)
- * @method static Builder|User whereCreatedAt($value)
- * @method static Builder|User whereUpdatedAt($value)
- * @method static Builder|User whereEmail($value)
- * @method static Builder|User wherePassword($value)
- * @method static Builder|User whereReset($value)
- * @method static Builder|User whereRememberToken($value)
- * @property boolean                              $blocked
- * @property-read Collection|Attachment[]         $attachments
- * @method static Builder|User whereBlocked($value)
- * @property string                               $blocked_code
- * @method static Builder|User whereBlockedCode($value)
- */
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
 {
-
-    use Authenticatable, CanResetPassword, EntrustUserTrait;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
+
+
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+
     /**
      * The database table used by the model.
      *

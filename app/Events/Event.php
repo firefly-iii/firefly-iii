@@ -1,14 +1,8 @@
-<?php namespace FireflyIII\Events;
+<?php
 
-/**
- * Class Event
- *
- * @codeCoverageIgnore
- * @package FireflyIII\Events
- */
+namespace FireflyIII\Events;
+
 abstract class Event
 {
-
     //
-
 }
