@@ -2,6 +2,8 @@
 
 return [
 
+    'allow_register' => true,
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
