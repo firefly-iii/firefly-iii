@@ -22,6 +22,8 @@ use Validator;
 
 class AuthController extends Controller
 {
+    protected $guard = 'session';
+
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -93,7 +95,7 @@ class AuthController extends Controller
         $credentials            = $this->getCredentials($request);
         $credentials['blocked'] = 0; // most not be blocked.
 
-        if (Auth::guard($this->getGuard())->attempt($credentials, true)) {
+        if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 

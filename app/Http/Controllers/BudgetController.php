@@ -30,6 +30,7 @@ class BudgetController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         parent::__construct();
         View::share('title', trans('firefly.budgets'));
         View::share('mainTitleIcon', 'fa-tasks');

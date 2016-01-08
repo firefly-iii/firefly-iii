@@ -11,6 +11,10 @@ use Response;
  */
 class HelpController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * @param HelpInterface $help

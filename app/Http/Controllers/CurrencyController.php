@@ -25,6 +25,7 @@ class CurrencyController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         parent::__construct();
         View::share('title', trans('firefly.currencies'));
         View::share('mainTitleIcon', 'fa-usd');

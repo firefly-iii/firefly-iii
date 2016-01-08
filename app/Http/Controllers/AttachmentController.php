@@ -29,6 +29,7 @@ class AttachmentController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         parent::__construct();
         View::share('mainTitleIcon', 'fa-paperclip');
         View::share('title', trans('firefly.attachments'));

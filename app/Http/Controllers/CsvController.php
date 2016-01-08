@@ -34,6 +34,7 @@ class CsvController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         parent::__construct();
         View::share('title', trans('firefly.csv'));
         View::share('mainTitleIcon', 'fa-file-text-o');

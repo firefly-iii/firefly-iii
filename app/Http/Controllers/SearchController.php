@@ -10,6 +10,11 @@ use Input;
  */
 class SearchController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Results always come in the form of an array [results, count, fullCount]
      *

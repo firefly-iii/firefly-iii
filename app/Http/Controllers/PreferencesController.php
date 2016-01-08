@@ -20,6 +20,7 @@ class PreferencesController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         parent::__construct();
         View::share('title', trans('firefly.preferences'));
         View::share('mainTitleIcon', 'fa-gear');

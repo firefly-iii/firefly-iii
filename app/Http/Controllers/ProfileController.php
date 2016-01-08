@@ -15,6 +15,10 @@ use Session;
  */
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * @return \Illuminate\View\View

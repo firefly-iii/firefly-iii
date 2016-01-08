@@ -6,6 +6,7 @@ use Config;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
+use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -17,6 +18,10 @@ use Steam;
  */
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function dateRange()
     {
@@ -68,6 +73,7 @@ class HomeController extends Controller
      */
     public function index(ARI $repository)
     {
+        Log::debug('You are at index.');
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
         bcscale(2);
