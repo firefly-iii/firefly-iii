@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Http\Controllers;
 
+use App;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -35,6 +36,14 @@ class Controller extends BaseController
             $lang                    = $pref->data;
             $this->monthFormat       = trans('config.month');
             $this->monthAndDayFormat = trans('config.month_and_day');
+
+            App::setLocale($lang);
+            Carbon::setLocale(substr($lang, 0, 2));
+            $locale = explode(',', trans('config.locale'));
+            $locale = array_map('trim', $locale);
+
+            setlocale(LC_TIME, $locale);
+            setlocale(LC_MONETARY, $locale);
 
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
