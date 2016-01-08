@@ -160,7 +160,7 @@ return [
         FireflyIII\Providers\FireflyServiceProvider::class,
 
         // own stuff:
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+//        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'TwigBridge\ServiceProvider',
 
