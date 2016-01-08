@@ -30,17 +30,6 @@ class Authenticate
             }
         }
 
-        // if logged in, set user language:
-        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
-        App::setLocale($pref->data);
-        Carbon::setLocale(substr($pref->data, 0, 2));
-        $locale = explode(',', trans('config.locale'));
-        $locale = array_map('trim', $locale);
-
-        setlocale(LC_TIME, $locale);
-        setlocale(LC_MONETARY, $locale);
-
-
         return $next($request);
     }
 }
