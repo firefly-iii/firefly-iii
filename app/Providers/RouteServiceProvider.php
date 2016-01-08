@@ -1,17 +1,12 @@
-<?php namespace FireflyIII\Providers;
+<?php
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+namespace FireflyIII\Providers;
+
 use Illuminate\Routing\Router;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-/**
- * Class RouteServiceProvider
- *
- * @package FireflyIII\Providers
- * @codeCoverageIgnore
- */
 class RouteServiceProvider extends ServiceProvider
 {
-
     /**
      * This namespace is applied to the controller routes in your routes file.
      *
@@ -24,33 +19,26 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router $router
-     *
+     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
     public function boot(Router $router)
     {
-        parent::boot($router);
+        //
 
+        parent::boot($router);
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router $router
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
+     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
     public function map(Router $router)
     {
-        $router->group(
-            ['namespace' => $this->namespace], function ($router) {
-            /** @noinspection PhpIncludeInspection */
+        $router->group(['namespace' => $this->namespace], function ($router) {
             require app_path('Http/routes.php');
-        }
-        );
+        });
     }
-
 }
