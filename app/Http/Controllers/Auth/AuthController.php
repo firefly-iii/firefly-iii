@@ -93,7 +93,7 @@ class AuthController extends Controller
         $credentials            = $this->getCredentials($request);
         $credentials['blocked'] = 0; // most not be blocked.
 
-        if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+        if (Auth::guard($this->getGuard())->attempt($credentials, true)) {
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
