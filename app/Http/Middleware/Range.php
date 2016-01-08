@@ -45,7 +45,7 @@ class Range
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $theNext)
+    public function handle($request, Closure $theNext, $guard = null)
     {
         if ($this->auth->check()) {
 
