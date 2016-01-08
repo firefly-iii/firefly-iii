@@ -1,4 +1,3 @@
-/* globals require */
 var elixir = require('laravel-elixir');
 
 /*
@@ -7,12 +6,11 @@ var elixir = require('laravel-elixir');
  |--------------------------------------------------------------------------
  |
  | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Less
+ | for your Laravel application. By default, we are compiling the Sass
  | file for our application, as well as publishing vendor resources.
  |
  */
 
 elixir(function(mix) {
-    "use strict";
-    mix.less('app.less');
+    mix.sass('app.scss');
 });
