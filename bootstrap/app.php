@@ -11,9 +11,8 @@
 |
 */
 
-
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__ . '/../')
+    realpath(__DIR__.'/../')
 );
 
 /*
@@ -27,22 +26,20 @@ $app = new Illuminate\Foundation\Application(
 |
 */
 
-
 $app->singleton(
-    'Illuminate\Contracts\Http\Kernel',
-    'FireflyIII\Http\Kernel'
+    Illuminate\Contracts\Http\Kernel::class,
+    FireflyIII\Http\Kernel::class
 );
 
 $app->singleton(
-    'Illuminate\Contracts\Console\Kernel',
-    'FireflyIII\Console\Kernel'
+    Illuminate\Contracts\Console\Kernel::class,
+    FireflyIII\Console\Kernel::class
 );
 
 $app->singleton(
-    'Illuminate\Contracts\Debug\ExceptionHandler',
-    'FireflyIII\Exceptions\Handler'
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    FireflyIII\Exceptions\Handler::class
 );
-
 
 /*
 |--------------------------------------------------------------------------
