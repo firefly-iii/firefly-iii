@@ -264,7 +264,7 @@ class AuthController extends Controller
      */
     protected function getBlockedDomains()
     {
-        $set     = Config::get('mail.blocked_domains');
+        $set     = explode(',',env('BLOCKED_DOMAINS',''));
         $domains = [];
         foreach ($set as $entry) {
             $domain = trim($entry);
