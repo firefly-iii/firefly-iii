@@ -48,6 +48,7 @@ class Binder
      */
     private function performBinding($key, $value, $route)
     {
-        return $this->binders[$key]::routeBinder($value, $route);
+        $class = $this->binders[$key];
+        return $class::routeBinder($value, $route);
     }
 }
