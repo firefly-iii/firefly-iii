@@ -534,7 +534,7 @@ Route::group(
     /**
      * Auth\Auth Controller
      */
-    Route::get('/logout', ['uses' => 'Auth\AuthController@getLogout', 'as' => 'logout']);
+    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
 
 
 }
