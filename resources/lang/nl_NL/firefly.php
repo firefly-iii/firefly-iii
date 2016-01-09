@@ -220,7 +220,7 @@ return [
     'createBudget'                     => 'Maak nieuw budget',
     'inactiveBudgets'                  => 'Inactieve budgetten',
     'without_budget_between'           => 'Transacties zonder budget tussen :start en :end',
-    'budget_in_month'                  => ':name in :month',
+    'budget_in_month'                  => ':naam in :maand',
     'delete_budget'                    => 'Verwijder budget ":name"',
     'edit_budget'                      => 'Wijzig budget ":name"',
     'update_amount'                    => 'Bedrag bijwerken',

@@ -275,6 +275,7 @@ return [
     'category'                         => 'Category',
     'delete_category'                  => 'Delete category ":name"',
     'store_category'                   => 'Store new category',
+    'without_category_between'         => 'Without category between :start and :end',
 
     // transactions:
     'update_withdrawal'                => 'Update withdrawal',
