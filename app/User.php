@@ -4,6 +4,11 @@ namespace FireflyIII;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ *
+ * @package FireflyIII
+ */
 class User extends Authenticatable
 {
     /**

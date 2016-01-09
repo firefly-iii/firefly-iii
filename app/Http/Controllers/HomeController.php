@@ -18,6 +18,9 @@ use Steam;
  */
 class HomeController extends Controller
 {
+    /**
+     * HomeController constructor.
+     */
     public function __construct()
     {
         parent::__construct();

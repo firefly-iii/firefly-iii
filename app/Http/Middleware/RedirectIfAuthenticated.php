@@ -4,8 +4,12 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Log;
 
+/**
+ * Class RedirectIfAuthenticated
+ *
+ * @package FireflyIII\Http\Middleware
+ */
 class RedirectIfAuthenticated
 {
     /**

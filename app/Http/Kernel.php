@@ -2,8 +2,24 @@
 
 namespace FireflyIII\Http;
 
+use FireflyIII\Http\Middleware\Authenticate;
+use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\Range;
+use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
+use FireflyIII\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * Class Kernel
+ *
+ * @package FireflyIII\Http
+ */
 class Kernel extends HttpKernel
 {
     /**
@@ -15,7 +31,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware
         = [
-            \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+            CheckForMaintenanceMode::class,
         ];
 
     /**
@@ -26,28 +42,28 @@ class Kernel extends HttpKernel
     protected $middlewareGroups
         = [
             'web'            => [
-                \FireflyIII\Http\Middleware\EncryptCookies::class,
-                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                \Illuminate\Session\Middleware\StartSession::class,
-                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
             ],
             'web-auth'       => [
-                \FireflyIII\Http\Middleware\EncryptCookies::class,
-                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                \Illuminate\Session\Middleware\StartSession::class,
-                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
-                \FireflyIII\Http\Middleware\Authenticate::class,
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
             ],
             'web-auth-range' => [
-                \FireflyIII\Http\Middleware\EncryptCookies::class,
-                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                \Illuminate\Session\Middleware\StartSession::class,
-                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
-                \FireflyIII\Http\Middleware\Authenticate::class,
-                \FireflyIII\Http\Middleware\Range::class,
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+                Range::class,
             ],
 
             'api' => [
@@ -64,10 +80,10 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware
         = [
-            'auth'       => \FireflyIII\Http\Middleware\Authenticate::class,
-            'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-            'guest'      => \FireflyIII\Http\Middleware\RedirectIfAuthenticated::class,
-            'throttle'   => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-            'range'      => \FireflyIII\Http\Middleware\Range::class,
+            'auth'       => Authenticate::class,
+            'auth.basic' => AuthenticateWithBasicAuth::class,
+            'guest'      => RedirectIfAuthenticated::class,
+            'throttle'   => ThrottleRequests::class,
+            'range'      => Range::class,
         ];
 }

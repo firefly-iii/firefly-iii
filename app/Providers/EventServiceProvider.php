@@ -4,6 +4,7 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
@@ -14,6 +15,11 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Log;
 use Navigation;
 
+/**
+ * Class EventServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class EventServiceProvider extends ServiceProvider
 {
     /**

@@ -10,6 +10,9 @@ use Input;
  */
 class SearchController extends Controller
 {
+    /**
+     * SearchController constructor.
+     */
     public function __construct()
     {
         parent::__construct();

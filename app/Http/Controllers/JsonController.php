@@ -20,6 +20,9 @@ use Session;
  */
 class JsonController extends Controller
 {
+    /**
+     * JsonController constructor.
+     */
     public function __construct()
     {
         parent::__construct();

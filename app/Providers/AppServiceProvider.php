@@ -4,6 +4,11 @@ namespace FireflyIII\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class AppServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**

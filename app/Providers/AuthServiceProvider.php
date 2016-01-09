@@ -5,6 +5,11 @@ namespace FireflyIII\Providers;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
+/**
+ * Class AuthServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class AuthServiceProvider extends ServiceProvider
 {
     /**

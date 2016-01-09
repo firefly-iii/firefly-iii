@@ -18,6 +18,11 @@ use Session;
 use Validator;
 
 
+/**
+ * Class AuthController
+ *
+ * @package FireflyIII\Http\Controllers\Auth
+ */
 class AuthController extends Controller
 {
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
@@ -32,11 +37,11 @@ class AuthController extends Controller
     /**
      * Create a new authentication controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+        parent::__construct();
     }
 
     /**
@@ -113,6 +118,8 @@ class AuthController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      *
+     * @param                          $message
+     *
      * @return \Illuminate\Http\Response
      */
     protected function sendFailedLoginResponse(Request $request, $message)
@@ -128,6 +135,8 @@ class AuthController extends Controller
 
     /**
      * Get the failed login message.
+     *
+     * @param $message
      *
      * @return string
      */

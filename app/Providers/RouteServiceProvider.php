@@ -5,6 +5,11 @@ namespace FireflyIII\Providers;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
+/**
+ * Class RouteServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     /**

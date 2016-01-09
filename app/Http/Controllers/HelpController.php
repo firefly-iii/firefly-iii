@@ -11,6 +11,9 @@ use Response;
  */
 class HelpController extends Controller
 {
+    /**
+     * HelpController constructor.
+     */
     public function __construct()
     {
         parent::__construct();

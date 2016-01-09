@@ -15,6 +15,9 @@ use Session;
  */
 class ProfileController extends Controller
 {
+    /**
+     * ProfileController constructor.
+     */
     public function __construct()
     {
         parent::__construct();

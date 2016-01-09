@@ -4,6 +4,11 @@ namespace FireflyIII\Jobs;
 
 use Illuminate\Bus\Queueable;
 
+/**
+ * Class Job
+ *
+ * @package FireflyIII\Jobs
+ */
 abstract class Job
 {
     /*

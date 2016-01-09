@@ -1,10 +1,22 @@
 <?php
+/**
+ * Kernel.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 namespace FireflyIII\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+/**
+ * Class Kernel
+ *
+ * @package FireflyIII\Console
+ */
 class Kernel extends ConsoleKernel
 {
     /**

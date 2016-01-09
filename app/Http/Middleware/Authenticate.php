@@ -2,12 +2,14 @@
 
 namespace FireflyIII\Http\Middleware;
 
-use App;
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Preferences;
 
+/**
+ * Class Authenticate
+ *
+ * @package FireflyIII\Http\Middleware
+ */
 class Authenticate
 {
     /**

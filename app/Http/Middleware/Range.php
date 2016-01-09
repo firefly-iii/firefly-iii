@@ -42,10 +42,11 @@ class Range
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param Closure                   $theNext
      * @param  string|null              $guard
      *
      * @return mixed
+     * @internal param Closure $next
      */
     public function handle($request, Closure $theNext, $guard = null)
     {

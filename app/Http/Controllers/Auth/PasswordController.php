@@ -10,6 +10,11 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Password;
 
 
+/**
+ * Class PasswordController
+ *
+ * @package FireflyIII\Http\Controllers\Auth
+ */
 class PasswordController extends Controller
 {
     /*
@@ -28,7 +33,6 @@ class PasswordController extends Controller
     /**
      * Create a new password controller instance.
      *
-     * @return void
      */
     public function __construct()
     {

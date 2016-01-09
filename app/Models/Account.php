@@ -11,28 +11,32 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Watson\Validating\ValidatingTrait;
 
+
 /**
  * FireflyIII\Models\Account
  *
- * @property integer                       $id
- * @property Carbon                        $created_at
- * @property Carbon                        $updated_at
- * @property Carbon                        $deleted_at
- * @property integer                       $user_id
- * @property integer                       $account_type_id
- * @property string                        $name
- * @property boolean                       $active
- * @property boolean                       $encrypted
- * @property float                         $virtual_balance
- * @property string                        $iban
- * @property-read Collection|AccountMeta[] $accountMeta
- * @property-read AccountType              $accountType
- * @property-read mixed                    $name_for_editform
- * @property-read Collection|PiggyBank[]   $piggyBanks
- * @property-read Collection|Transaction[] $transactions
- * @property-read User                     $user
- * @method static Builder|Account accountTypeIn($types)
- * @method static Builder|Account hasMetaValue($name, $value)
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property integer $user_id
+ * @property integer $account_type_id
+ * @property string $name
+ * @property boolean $active
+ * @property boolean $encrypted
+ * @property float $virtual_balance
+ * @property string $iban
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
+ * @property-read \FireflyIII\Models\AccountType $accountType
+ * @property-read mixed $name_for_editform
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \FireflyIII\User $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
+ * @property string $startBalance
+ * @property string $endBalance
+ *
  */
 class Account extends Model
 {
