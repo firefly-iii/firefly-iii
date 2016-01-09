@@ -2,6 +2,7 @@
 
 return [
     // general stuff:
+    'language_incomplete'              => 'Deze taal is nog niet helemaal af',
     'test'                             => 'Nederlands geselecteerd!',
     'close'                            => 'Sluiten',
     'pleaseHold'                       => 'Momentje...',
@@ -219,7 +220,7 @@ return [
     'createBudget'                     => 'Maak nieuw budget',
     'inactiveBudgets'                  => 'Inactieve budgetten',
     'without_budget_between'           => 'Transacties zonder budget tussen :start en :end',
-    'budget_in_month'                  => ':naam in :maand',
+    'budget_in_month'                  => ':name in :month',
     'delete_budget'                    => 'Verwijder budget ":name"',
     'edit_budget'                      => 'Wijzig budget ":name"',
     'update_amount'                    => 'Bedrag bijwerken',
