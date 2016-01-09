@@ -127,4 +127,3 @@ If you like this tool, feel free to [donate me some beer money](https://www.payp
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
-![GA](https://ga-beacon.appspot.com/UA-58172398-6/firefly-iii/readme)
