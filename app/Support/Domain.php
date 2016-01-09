@@ -28,7 +28,7 @@ class Domain
             'bill'            => 'FireflyIII\Models\Bill',
             'budget'          => 'FireflyIII\Models\Budget',
             'category'        => 'FireflyIII\Models\Category',
-            'currency'        => 'FireflyIII\Models\Currency',
+            'currency'        => 'FireflyIII\Models\TransactionCurrency',
             'limitrepetition' => 'FireflyIII\Models\LimitRepetition',
             'piggyBank'       => 'FireflyIII\Models\PiggyBank',
             'tj'              => 'FireflyIII\Models\TransactionJournal',

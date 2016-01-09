@@ -1,9 +1,11 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\TransactionCurrency
@@ -38,5 +40,16 @@ class TransactionCurrency extends Model
     public function transactionJournals()
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     */
+    public static function routeBinder(TransactionCurrency $currency)
+    {
+        if (Auth::check()) {
+            return $currency;
+        }
+        throw new NotFoundHttpException;
     }
 }

@@ -1,10 +1,12 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\PiggyBank
@@ -117,5 +119,15 @@ class PiggyBank extends Model
     public function setTargetamountAttribute($value)
     {
         $this->attributes['targetamount'] = strval(round($value, 2));
+    }
+
+    public static function routeBinder(PiggyBank $value)
+    {
+        if (Auth::check()) {
+            if ($value->account->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 }
