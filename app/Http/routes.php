@@ -12,43 +12,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
-// models
-Route::bind(
-    'account',
-    function ($value) {
-        if (Auth::check()) {
-            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                             ->where('account_types.editable', 1)
-                             ->where('accounts.id', $value)
-                             ->where('user_id', Auth::user()->id)
-                             ->first(['accounts.*']);
-            if ($object) {
-                return $object;
-            }
-        }
-        throw new NotFoundHttpException;
-    }
-);
-// accounts
-Route::bind(
-    'accountList',
-    function ($value) {
-        if (Auth::check()) {
-            $ids = explode(',', $value);
-            /** @var \Illuminate\Support\Collection $object */
-            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                             ->where('account_types.editable', 1)
-                             ->whereIn('accounts.id', $ids)
-                             ->where('user_id', Auth::user()->id)
-                             ->get(['accounts.*']);
-            if ($object->count() > 0) {
-                return $object;
-            }
-        }
-        throw new NotFoundHttpException;
-    }
-);
 // budget list
 Route::bind(
     'budgetList',
@@ -93,44 +56,6 @@ Route::bind(
             if ($object->count() > 0) {
                 return $object;
             }
-        }
-        throw new NotFoundHttpException;
-    }
-);
-
-// Date
-Route::bind(
-    'start_date',
-    function ($value) {
-        if (Auth::check()) {
-
-            try {
-                $date = new Carbon($value);
-            } catch (Exception $e) {
-                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
-                throw new NotFoundHttpException;
-            }
-
-            return $date;
-        }
-        throw new NotFoundHttpException;
-    }
-);
-
-// Date
-Route::bind(
-    'end_date',
-    function ($value) {
-        if (Auth::check()) {
-
-            try {
-                $date = new Carbon($value);
-            } catch (Exception $e) {
-                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
-                throw new NotFoundHttpException;
-            }
-
-            return $date;
         }
         throw new NotFoundHttpException;
     }

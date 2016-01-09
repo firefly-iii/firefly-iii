@@ -1,41 +1,39 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 
 /**
  * FireflyIII\Models\Account
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property integer $user_id
- * @property integer $account_type_id
- * @property string $name
- * @property boolean $active
- * @property boolean $encrypted
- * @property float $virtual_balance
- * @property string $iban
+ * @property integer                                                                        $id
+ * @property \Carbon\Carbon                                                                 $created_at
+ * @property \Carbon\Carbon                                                                 $updated_at
+ * @property \Carbon\Carbon                                                                 $deleted_at
+ * @property integer                                                                        $user_id
+ * @property integer                                                                        $account_type_id
+ * @property string                                                                         $name
+ * @property boolean                                                                        $active
+ * @property boolean                                                                        $encrypted
+ * @property float                                                                          $virtual_balance
+ * @property string                                                                         $iban
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read \FireflyIII\Models\AccountType $accountType
- * @property-read mixed $name_for_editform
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property-read \FireflyIII\Models\AccountType                                            $accountType
+ * @property-read mixed                                                                     $name_for_editform
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read \FireflyIII\User $user
+ * @property-read \FireflyIII\User                                                          $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
- * @property string $startBalance
- * @property string $endBalance
+ * @property string                                                                         $startBalance
+ * @property string                                                                         $endBalance
  *
  */
 class Account extends Model
@@ -296,4 +294,14 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    public static function routeBinder(Account $value)
+    {
+
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 }
