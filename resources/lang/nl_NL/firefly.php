@@ -220,7 +220,7 @@ return [
     'createBudget'                     => 'Maak nieuw budget',
     'inactiveBudgets'                  => 'Inactieve budgetten',
     'without_budget_between'           => 'Transacties zonder budget tussen :start en :end',
-    'budget_in_month'                  => ':naam in :maand',
+    'budget_in_month'                  => ':name in :month',
     'delete_budget'                    => 'Verwijder budget ":name"',
     'edit_budget'                      => 'Wijzig budget ":name"',
     'update_amount'                    => 'Bedrag bijwerken',
@@ -275,6 +275,7 @@ return [
     'category'                         => 'Categorie',
     'delete_category'                  => 'Verwijder categorie ":name"',
     'store_category'                   => 'Sla nieuwe categorie op',
+    'without_category_between'         => 'Zonder categorie tussen :start en :end',
 
     // transactions:
     'update_withdrawal'                => 'Wijzig uitgave',
