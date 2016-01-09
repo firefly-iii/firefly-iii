@@ -22,11 +22,28 @@ class Domain
     public static function getBindables()
     {
         return [
-            'account'     => 'FireflyIII\Models\Account',
-            'accountList' => 'FireflyIII\Support\Binder\AccountList',
-            'start_date'  => 'FireflyIII\Support\Binder\Date',
-            'end_date'    => 'FireflyIII\Support\Binder\Date',
+            // models
+            'account'         => 'FireflyIII\Models\Account',
+            'attachment'      => 'FireflyIII\Models\Attachment',
+            'bill'            => 'FireflyIII\Models\Bill',
+            'budget'          => 'FireflyIII\Models\Budget',
+            'category'        => 'FireflyIII\Models\Category',
+            'currency'        => 'FireflyIII\Models\Currency',
+            'limitrepetition' => 'FireflyIII\Models\LimitRepetition',
+            'piggyBank'       => 'FireflyIII\Models\PiggyBank',
+            'tj'              => 'FireflyIII\Models\TransactionJournal',
+            'tag'             => 'FireflyIII\Models\Tag',
+            // lists
+            'accountList'     => 'FireflyIII\Support\Binder\AccountList',
+            'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
+            'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
+
+            // others
+            'start_date'      => 'FireflyIII\Support\Binder\Date',
+            'end_date'        => 'FireflyIII\Support\Binder\Date'
         ];
+
+
     }
 
 }
