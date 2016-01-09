@@ -27,7 +27,6 @@ class ReportController extends Controller
      */
     public function __construct(ReportHelperInterface $helper)
     {
-        $this->middleware('auth');
         parent::__construct();
         $this->helper = $helper;
 

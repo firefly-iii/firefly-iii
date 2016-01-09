@@ -26,7 +26,6 @@ class ReportController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
         parent::__construct();
         // create chart generator:
         $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGenerator');

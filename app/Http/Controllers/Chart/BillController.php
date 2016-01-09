@@ -27,7 +27,6 @@ class BillController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
         parent::__construct();
         // create chart generator:
         $this->generator = app('FireflyIII\Generator\Chart\Bill\BillChartGenerator');
