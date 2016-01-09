@@ -385,7 +385,7 @@ class ReportHelper implements ReportHelperInterface
 
         foreach ($accounts as $account) {
             $entry = $spentData->filter(
-                function (TransactionJournal $model) use ($budget, $account) {
+                function (TransactionJournal $model) use ($account) {
                     return $model->account_id == $account->id && is_null($model->budget_id);
                 }
             );
