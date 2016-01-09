@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -524,5 +526,24 @@ class TransactionJournal extends Model
         }
 
         return $this->transactionType->isOpeningBalance();
+    }
+
+    /**
+     * @param $value
+     * @param $route
+     *
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder($value, $route)
+    {
+        if (Auth::check()) {
+            $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
+            if ($object) {
+                return $object;
+            }
+        }
+
+        throw new NotFoundHttpException;
     }
 }

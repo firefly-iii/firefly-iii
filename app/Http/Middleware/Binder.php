@@ -9,6 +9,9 @@ class Binder
 {
     protected $binders = [];
 
+    /**
+     * Binder constructor.
+     */
     public function __construct()
     {
         $this->binders = Domain::getBindables();
