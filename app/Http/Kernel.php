@@ -25,12 +25,29 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups
         = [
-            'web' => [
+            'web'            => [
                 \FireflyIII\Http\Middleware\EncryptCookies::class,
                 \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
                 \Illuminate\Session\Middleware\StartSession::class,
                 \Illuminate\View\Middleware\ShareErrorsFromSession::class,
                 \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
+            ],
+            'web-auth'       => [
+                \FireflyIII\Http\Middleware\EncryptCookies::class,
+                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                \Illuminate\Session\Middleware\StartSession::class,
+                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
+                \FireflyIII\Http\Middleware\Authenticate::class,
+            ],
+            'web-auth-range' => [
+                \FireflyIII\Http\Middleware\EncryptCookies::class,
+                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                \Illuminate\Session\Middleware\StartSession::class,
+                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
+                \FireflyIII\Http\Middleware\Authenticate::class,
+                \FireflyIII\Http\Middleware\Range::class,
             ],
 
             'api' => [

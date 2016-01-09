@@ -271,7 +271,7 @@ Route::group(
 
 
 Route::group(
-    ['middleware' => ['range', 'web']], function () {
+    ['middleware' => ['web-auth-range']], function () {
 
     /**
      * Home Controller

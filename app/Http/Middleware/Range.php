@@ -6,11 +6,12 @@ namespace FireflyIII\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Navigation;
 use Preferences;
 use Session;
 use View;
+
 
 /**
  * Class SessionFilter
@@ -41,14 +42,14 @@ class Range
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $theNext
+     * @param  \Closure                 $next
+     * @param  string|null              $guard
      *
      * @return mixed
      */
     public function handle($request, Closure $theNext, $guard = null)
     {
-        if ($this->auth->check()) {
-
+        if (!Auth::guard($guard)->guest()) {
             // ignore preference. set the range to be the current month:
             if (!Session::has('start') && !Session::has('end')) {
 
