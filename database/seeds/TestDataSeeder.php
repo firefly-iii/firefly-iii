@@ -8,6 +8,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
@@ -48,8 +49,11 @@ class TestDataSeeder extends Seeder
         $this->createBills();
         $this->createPiggybanks();
 
+        // preference to only see account #1 on frontpage.
+        $this->createPreferences();
+
         // dates:
-        $start = Carbon::now()->subYears(5)->startOfMonth();
+        $start = Carbon::now()->subYears(2)->startOfMonth();
         $end   = Carbon::now()->endOfDay();
 
 
@@ -57,13 +61,14 @@ class TestDataSeeder extends Seeder
         while ($current < $end) {
             $month = $current->format('F Y');
             // create salaries:
-            $this->createIncome('Salary ' . $month, $current, rand(2000, 2200));
+            $this->createIncome('Salary ' . $month, $current, rand(2000, 2100));
 
             // pay bills:
             $this->createRent('Rent for ' . $month, $current, 800);
             $this->createWater('Water bill for ' . $month, $current, 15);
             $this->createTV('TV bill for ' . $month, $current, 60);
             $this->createPower('Power bill for ' . $month, $current, 120);
+
 
             // pay daily groceries:
             $this->createGroceries($current);
@@ -77,9 +82,13 @@ class TestDataSeeder extends Seeder
             // save money every month:
             $this->createSavings($current);
 
+            // buy gas for the car every month:
+            $this->createCar($current);
+
             // budget limit for this month, on "Groceries".
             $this->createBudgetLimit($current, 'Groceries', 400);
             $this->createBudgetLimit($current, 'Bills', 1000);
+            $this->createBudgetLimit($current, 'Car', 100);
 
             echo 'Created test data for ' . $month . "\n";
             $current->addMonth();
@@ -167,7 +176,7 @@ class TestDataSeeder extends Seeder
     protected function createExpenseAccounts()
     {
         $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
-                     'coolblue',
+                     'coolblue', 'Shell',
                      'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
         foreach ($expenses as $name) {
             // create account:
@@ -638,15 +647,16 @@ class TestDataSeeder extends Seeder
         $start->startOfMonth();
         $end->endOfMonth();
 
-        $fromAccount = $this->findAccount('MyBank Checking Account');
-        $stores      = ['Albert Heijn', 'PLUS', 'Bakker'];
-        $category    = Category::firstOrCreateEncrypted(['name' => 'Daily groceries', 'user_id' => $this->user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $this->user->id]);
+        $fromAccount  = $this->findAccount('MyBank Checking Account');
+        $stores       = ['Albert Heijn', 'PLUS', 'Bakker'];
+        $descriptions = ['Groceries', 'Bought some food', 'Got groceries'];
+        $category     = Category::firstOrCreateEncrypted(['name' => 'Daily groceries', 'user_id' => $this->user->id]);
+        $budget       = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $this->user->id]);
 
         $current = clone $start;
         while ($current < $end && $current < $today) {
             // daily groceries:
-            $amount    = rand(1000, 2500) / 100;
+            $amount    = rand(1500, 2500) / 100;
             $toAccount = $this->findAccount($stores[rand(0, count($stores) - 1)]);
 
             $journal = TransactionJournal::create(
@@ -654,7 +664,7 @@ class TestDataSeeder extends Seeder
                     'user_id'                 => $this->user->id,
                     'transaction_type_id'     => 1,
                     'transaction_currency_id' => 1,
-                    'description'             => 'Groceries',
+                    'description'             => $descriptions[rand(0, count($descriptions) - 1)],
                     'completed'               => 1,
                     'date'                    => $current,
                 ]
@@ -901,6 +911,90 @@ class TestDataSeeder extends Seeder
         }
 
         return null;
+    }
+
+    protected function createCar($date)
+    {
+        // twice:
+        $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
+        $fromAccount = $this->findAccount('MyBank Checking Account');
+        $toAccount   = $this->findAccount('Shell');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $this->user->id]);
+        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $this->user->id]);
+        $amount      = rand(4000, 5000) / 100;
+        $journal     = TransactionJournal::create(
+            [
+                'user_id'                 => $this->user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => 'Bought gas',
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount * -1,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+        $journal->categories()->save($category);
+        $journal->budgets()->save($budget);
+
+        // and again!
+        $date   = new Carbon($date->format('Y-m') . '-20'); // paid on 20th
+        $amount = rand(4000, 5000) / 100;
+
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $this->user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => 'Gas for car',
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount * -1,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+
+        // and again!
+
+        return $journal;
+    }
+
+    protected function createPreferences()
+    {
+        $preference       = new Preference;
+        $preference->name = 'frontPageAccounts';
+        $preference->data = [1];
+        $preference->user()->associate($this->user);
+        $preference->save();
     }
 
 
