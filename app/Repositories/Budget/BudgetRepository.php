@@ -265,6 +265,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                        ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
                        ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
                        ->first(['limit_repetitions.*']);
+
         return $data;
     }
 
@@ -402,6 +403,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         return Auth::user()
                    ->transactionjournals()
+                   ->transactionTypes([TransactionType::WITHDRAWAL])
                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                    ->whereNull('budget_transaction_journal.id')
                    ->before($end)
