@@ -4,6 +4,7 @@ sudo: false
 
 php:
   - 5.6
+  - 7
 
 install:
   - composer install
