@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use NumberFormatter;
 use Preferences;
 use View;
 
@@ -21,10 +22,10 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var string|\Symfony\Component\Translation\TranslatorInterface  */
+    /** @var string|\Symfony\Component\Translation\TranslatorInterface */
     protected $monthFormat;
 
-    /** @var string|\Symfony\Component\Translation\TranslatorInterface  */
+    /** @var string|\Symfony\Component\Translation\TranslatorInterface */
     protected $monthAndDayFormat;
 
     /**
@@ -51,10 +52,17 @@ class Controller extends BaseController
             setlocale(LC_TIME, $locale);
             setlocale(LC_MONETARY, $locale);
 
+            // change localeconv to a new array:
+            $numberFormatter = numfmt_create($lang, NumberFormatter::CURRENCY);
+            $localeconv      = [
+                'mon_decimal_point' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL)),
+                'mon_thousands_sep' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL)),
+                'frac_digits'       => $numberFormatter->getAttribute(NumberFormatter::MAX_FRACTION_DIGITS)
+            ];
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
             View::share('language', $lang);
-            View::share('localeconv', localeconv());
+            View::share('localeconv', $localeconv);
         }
     }
 
