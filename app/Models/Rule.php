@@ -15,6 +15,21 @@ use Illuminate\Database\Eloquent\Model;
  * Class Rule
  *
  * @package FireflyIII\Models
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $deleted_at
+ * @property integer $user_id
+ * @property integer $rule_group_id
+ * @property integer $order
+ * @property string $title
+ * @property string $description
+ * @property boolean $active
+ * @property boolean $stop_processing
+ * @property-read \FireflyIII\User $user
+ * @property-read \FireflyIII\Models\RuleGroup $ruleGroup
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleAction[] $ruleActions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleTrigger[] $ruleTriggers
  */
 class Rule extends Model
 {

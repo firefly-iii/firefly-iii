@@ -15,6 +15,17 @@ use Illuminate\Database\Eloquent\Model;
  * Class RuleGroup
  *
  * @package FireflyIII\Models
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $deleted_at
+ * @property integer $user_id
+ * @property integer $order
+ * @property string $title
+ * @property string $description
+ * @property boolean $active
+ * @property-read \FireflyIII\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
  */
 class RuleGroup extends Model
 {

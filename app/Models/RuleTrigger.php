@@ -15,6 +15,18 @@ use Illuminate\Database\Eloquent\Model;
  * Class RuleTrigger
  *
  * @package FireflyIII\Models
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $rule_id
+ * @property integer $order
+ * @property string $title
+ * @property string $trigger_field
+ * @property string $trigger_type
+ * @property string $trigger_value
+ * @property boolean $active
+ * @property boolean $stop_processing
+ * @property-read \FireflyIII\Models\Rule $rule
  */
 class RuleTrigger extends Model
 {

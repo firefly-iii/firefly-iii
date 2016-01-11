@@ -9,6 +9,24 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * Class User
  *
  * @package FireflyIII
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $email
+ * @property string $password
+ * @property string $remember_token
+ * @property string $reset
+ * @property boolean $blocked
+ * @property string $blocked_code
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Bill[] $bills
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[] $preferences
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
  */
 class User extends Authenticatable
 {

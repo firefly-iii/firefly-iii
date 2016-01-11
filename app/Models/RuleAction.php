@@ -15,6 +15,17 @@ use Illuminate\Database\Eloquent\Model;
  * Class RuleAction
  *
  * @package FireflyIII\Models
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $rule_id
+ * @property integer $order
+ * @property boolean $active
+ * @property boolean $stop_processing
+ * @property string $action_field
+ * @property string $action
+ * @property string $action_value
+ * @property-read \FireflyIII\Models\Rule $rule
  */
 class RuleAction extends Model
 {
