@@ -361,6 +361,16 @@ Breadcrumbs::register(
 }
 );
 
+/**
+ * Rules
+ */
+Breadcrumbs::register(
+    'rules.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.rules'), route('rules.index'));
+}
+);
+
 // search
 Breadcrumbs::register(
     'search', function (BreadCrumbGenerator $breadcrumbs, $query) {
