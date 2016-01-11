@@ -38,6 +38,9 @@ return [
     'new_budget'                       => 'New budget',
     'new_bill'                         => 'New bill',
 
+    // rules
+    'rules'                            => 'Rules',
+
     // tags
     'store_new_tag'                    => 'Store new tag',
     'update_tag'                       => 'Update tag',
