@@ -1,6 +1,6 @@
 <?php namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\JournalSaved;
+use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 
@@ -25,11 +25,11 @@ class UpdateJournalConnection
     /**
      * Handle the event.
      *
-     * @param  JournalSaved $event
+     * @param  TransactionJournalUpdated $event
      *
      * @return void
      */
-    public function handle(JournalSaved $event)
+    public function handle(TransactionJournalUpdated $event)
     {
         $journal = $event->journal;
 

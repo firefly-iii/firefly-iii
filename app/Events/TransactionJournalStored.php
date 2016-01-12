@@ -1,6 +1,6 @@
 <?php
 /**
- * JournalWasCreated.php
+ * TransactionJournalStored.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -13,7 +13,7 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class JournalWasCreated
+ * Class TransactionJournalStored
  *
  * @codeCoverageIgnore
  * @package FireflyIII\Events

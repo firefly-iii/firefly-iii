@@ -5,8 +5,8 @@ use Auth;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
-use FireflyIII\Events\JournalCreated;
-use FireflyIII\Events\JournalSaved;
+use FireflyIII\Events\TransactionJournalStored;
+use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
@@ -317,10 +317,10 @@ class TransactionController extends Controller
         }
 
         // rescan journal, UpdateJournalConnection
-        event(new JournalSaved($journal));
+        event(new TransactionJournalUpdated($journal));
 
         if ($journal->isTransfer() && intval($request->get('piggy_bank_id')) > 0) {
-            event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+            event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
         }
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
@@ -369,7 +369,7 @@ class TransactionController extends Controller
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
-        event(new JournalSaved($journal));
+        event(new TransactionJournalUpdated($journal));
         // update, get events by date and sort DESC
 
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
