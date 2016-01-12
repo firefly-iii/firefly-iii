@@ -169,6 +169,7 @@ return [
     ],
 
     'rule-triggers' => [
+        'user_action'           => 'FireflyIII\Rules\Triggers',
         'from_account_starts'   => 'FireflyIII\Rules\Triggers',
         'from_account_ends'     => 'FireflyIII\Rules\Triggers',
         'from_account_is'       => 'FireflyIII\Rules\Triggers',
