@@ -11,6 +11,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
@@ -44,9 +45,9 @@ class TestDataSeeder extends Seeder
         $ruleGroup = new RuleGroup;
         $ruleGroup->user()->associate($this->user);
         $ruleGroup->order       = 1;
+        $ruleGroup->active      = 1;
         $ruleGroup->title       = 'Default rules';
         $ruleGroup->description = 'All your rules not in a particular group.';
-        $ruleGroup->active      = 1;
         $ruleGroup->save();
 
 
@@ -57,23 +58,59 @@ class TestDataSeeder extends Seeder
         $rule->user()->associate($this->user);
         $rule->ruleGroup()->associate($ruleGroup);
         $rule->order           = 1;
-        $rule->title           = 'A strange rule for testing.';
-        $rule->description     = 'This rule triggers on transactions with the description "David Bowie" and puts them in the category "Blackstar".';
         $rule->active          = 1;
         $rule->stop_processing = 0;
+        $rule->title           = 'A strange rule for testing.';
+        $rule->description     = 'This rule triggers on transactions with the description "David Bowie" and puts them in the category "Blackstar".';
+
         $rule->save();
 
         // trigger for this rule:
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = 1;
-        $ruleTrigger->title           = 'Groceries';
-        $ruleTrigger->trigger_type    = 'description_contains';
-        $ruleTrigger->trigger_value   = 'groceries';
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'description_contains';
+        $ruleTrigger->trigger_value   = 'groceries';
 
-        // actions for this rule.
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // another
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 2;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'from_account_is';
+        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // actions for this rule. one, set category
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 1;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_category';
+        $ruleAction->action_value    = 'Automated Groceries';
+        $ruleAction->save();
+
+        // actions for this rule. one, set budget
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 2;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_budget';
+        $ruleAction->action_value    = 'Groceries';
+        $ruleAction->save();
+
+
+        //$ruleAction
 
         // TODO a rule that triggers on something, just like the previous one, but it has "stop_processing" set to 1.
         // TODO a rule that triggers on that same thing, but it will not file, because the previous rule made FF skip it.
