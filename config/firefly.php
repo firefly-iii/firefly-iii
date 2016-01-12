@@ -98,7 +98,7 @@ return [
             'Revenue account'     => 'revenue',
             'Cash account'        => 'cash',
         ],
-    'languages' => [
+    'languages'                => [
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portugese (Brazil)', 'complete' => false],
@@ -146,5 +146,27 @@ return [
         'fr_FR' => '%B %e, %Y',
         'pt_BR' => '%B %e, %Y',
     ],
+    'bindables'   => [
+        // models
+        'account'         => 'FireflyIII\Models\Account',
+        'attachment'      => 'FireflyIII\Models\Attachment',
+        'bill'            => 'FireflyIII\Models\Bill',
+        'budget'          => 'FireflyIII\Models\Budget',
+        'category'        => 'FireflyIII\Models\Category',
+        'currency'        => 'FireflyIII\Models\TransactionCurrency',
+        'limitrepetition' => 'FireflyIII\Models\LimitRepetition',
+        'piggyBank'       => 'FireflyIII\Models\PiggyBank',
+        'tj'              => 'FireflyIII\Models\TransactionJournal',
+        'tag'             => 'FireflyIII\Models\Tag',
+        // lists
+        'accountList'     => 'FireflyIII\Support\Binder\AccountList',
+        'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
+        'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
+
+        // others
+        'start_date'      => 'FireflyIII\Support\Binder\Date',
+        'end_date'        => 'FireflyIII\Support\Binder\Date'
+    ],
+
 
 ];
