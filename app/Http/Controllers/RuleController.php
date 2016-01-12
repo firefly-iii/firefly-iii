@@ -19,6 +19,9 @@ use View;
  */
 class RuleController extends Controller
 {
+    /**
+     * RuleController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -27,6 +30,9 @@ class RuleController extends Controller
     }
 
 
+    /**
+     * @return View
+     */
     public function index()
     {
         return view('rules.index');
