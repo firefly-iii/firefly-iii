@@ -32,10 +32,12 @@ class EventServiceProvider extends ServiceProvider
             'FireflyIII\Events\TransactionJournalUpdated'   => [
                 'FireflyIII\Handlers\Events\RescanJournal',
                 'FireflyIII\Handlers\Events\UpdateJournalConnection',
+                'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
             'FireflyIII\Events\TransactionJournalStored' => [
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
+                'FireflyIII\Handlers\Events\FireRulesForStore',
             ]
         ];
 
