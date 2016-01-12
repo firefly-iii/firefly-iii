@@ -104,8 +104,7 @@ class ChangesForV370 extends Migration
             $table->unsignedTinyInteger('active')->default(1);
             $table->unsignedTinyInteger('stop_processing')->default(0);
 
-            $table->string('action_field', 50);
-            $table->string('action', 50);
+            $table->string('action_type', 50);
             $table->string('action_value', 255);
 
 
