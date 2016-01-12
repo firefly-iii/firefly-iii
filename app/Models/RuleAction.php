@@ -11,10 +11,10 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 /**
- * Class RuleAction
+ * FireflyIII\Models\RuleAction
  *
- * @package FireflyIII\Models
  * @property integer $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -22,8 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $order
  * @property boolean $active
  * @property boolean $stop_processing
- * @property string $action_field
- * @property string $action
+ * @property string $action_type
  * @property string $action_value
  * @property-read \FireflyIII\Models\Rule $rule
  */
