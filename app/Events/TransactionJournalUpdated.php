@@ -4,31 +4,27 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class JournalCreated
+ * Class TransactionJournalUpdated
  *
  * @codeCoverageIgnore
  * @package FireflyIII\Events
  */
-class JournalCreated extends Event
+class TransactionJournalUpdated extends Event
 {
 
     use SerializesModels;
 
     public $journal;
-    public $piggyBankId;
 
     /**
      * Create a new event instance.
      *
      * @param TransactionJournal $journal
-     * @param                    $piggyBankId
      */
-    public function __construct(TransactionJournal $journal, $piggyBankId)
+    public function __construct(TransactionJournal $journal)
     {
         //
-        $this->journal     = $journal;
-        $this->piggyBankId = $piggyBankId;
-
+        $this->journal = $journal;
     }
 
 }

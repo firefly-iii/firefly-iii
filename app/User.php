@@ -82,6 +82,22 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function rules()
+    {
+        return $this->hasMany('FireflyIII\Models\Rule');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ruleGroups()
+    {
+        return $this->hasMany('FireflyIII\Models\RuleGroup');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function bills()
     {
         return $this->hasMany('FireflyIII\Models\Bill');
