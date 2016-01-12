@@ -169,4 +169,47 @@ return [
     ],
 
 
+    'bindables'     => [
+        // models
+        'account'         => 'FireflyIII\Models\Account',
+        'attachment'      => 'FireflyIII\Models\Attachment',
+        'bill'            => 'FireflyIII\Models\Bill',
+        'budget'          => 'FireflyIII\Models\Budget',
+        'category'        => 'FireflyIII\Models\Category',
+        'currency'        => 'FireflyIII\Models\TransactionCurrency',
+        'limitrepetition' => 'FireflyIII\Models\LimitRepetition',
+        'piggyBank'       => 'FireflyIII\Models\PiggyBank',
+        'tj'              => 'FireflyIII\Models\TransactionJournal',
+        'tag'             => 'FireflyIII\Models\Tag',
+        // lists
+        'accountList'     => 'FireflyIII\Support\Binder\AccountList',
+        'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
+        'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
+
+        // others
+        'start_date'      => 'FireflyIII\Support\Binder\Date',
+        'end_date'        => 'FireflyIII\Support\Binder\Date'
+    ],
+    'rule-triggers' => [
+        'from_account_starts'   => 'FireflyIII\Rules\Triggers',
+        'from_account_ends'     => 'FireflyIII\Rules\Triggers',
+        'from_account_is'       => 'FireflyIII\Rules\Triggers',
+        'from_account_contains' => 'FireflyIII\Rules\Triggers',
+        'to_account_starts'     => 'FireflyIII\Rules\Triggers',
+        'to_account_ends'       => 'FireflyIII\Rules\Triggers',
+        'to_account_is'         => 'FireflyIII\Rules\Triggers',
+        'to_account_contains'   => 'FireflyIII\Rules\Triggers',
+
+
+        'transaction_type'     => 'FireflyIII\Rules\Triggers',
+        'amount_less'          => 'FireflyIII\Rules\Triggers',
+        'amount_exactly'       => 'FireflyIII\Rules\Triggers',
+        'amount_exactly_not'   => 'FireflyIII\Rules\Triggers',
+        'amount_more'          => 'FireflyIII\Rules\Triggers',
+        'description_starts'   => 'FireflyIII\Rules\Triggers',
+        'description_ends'     => 'FireflyIII\Rules\Triggers',
+        'description_contains' => 'FireflyIII\Rules\Triggers',
+        'description_is'       => 'FireflyIII\Rules\Triggers',
+    ],
+
 ];

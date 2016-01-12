@@ -243,6 +243,11 @@ Route::group(
     Route::get('/reports/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
 
     /**
+     * Rules Controller
+     */
+    Route::get('/rules', ['uses' => 'RuleController@index', 'as' => 'rules.index']);
+
+    /**
      * Search Controller
      */
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);

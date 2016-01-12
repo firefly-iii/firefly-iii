@@ -34,7 +34,6 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
  * @property string                                                                         $startBalance
  * @property string                                                                         $endBalance
- *
  */
 class Account extends Model
 {

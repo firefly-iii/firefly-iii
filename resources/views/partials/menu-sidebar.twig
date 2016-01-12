@@ -86,7 +86,7 @@
 
     </li>
     <!-- money management -->
-    <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }} treeview">
+    <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }} {{ activeRoutePartial('rules') }} treeview">
         <a href="#">
             <i class="fa fa-euro fa-fw"></i>
             <span>{{ 'moneyManagement'|_ }}</span>
@@ -100,6 +100,10 @@
             <li class="{{ activeRoutePartial('bills') }}">
                 <a href="{{ route('bills.index') }}">
                     <i class="fa fa-calendar-o fa-fw"></i> {{ 'bills'|_ }}</a>
+            </li>
+            <li class="{{ activeRoutePartial('rules') }}">
+                <a href="{{ route('rules.index') }}">
+                    <i class="fa fa-random fa-fw"></i> {{ 'rules'|_ }}</a>
             </li>
         </ul>
 

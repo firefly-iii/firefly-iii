@@ -10,6 +10,9 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Role;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -35,6 +38,52 @@ class TestDataSeeder extends Seeder
 
     }
 
+    public function createRules()
+    {
+        // basic rules group. user should always have one
+        $ruleGroup = new RuleGroup;
+        $ruleGroup->user()->associate($this->user);
+        $ruleGroup->order       = 1;
+        $ruleGroup->title       = 'Default rules';
+        $ruleGroup->description = 'All your rules not in a particular group.';
+        $ruleGroup->active      = 1;
+        $ruleGroup->save();
+
+
+        // a normal rule: saves transactions where description contains "groceries"
+        // and from account is "MyBank Checking Account"
+        // send it to Groceries/Groceries
+        $rule = new Rule;
+        $rule->user()->associate($this->user);
+        $rule->ruleGroup()->associate($ruleGroup);
+        $rule->order           = 1;
+        $rule->title           = 'A strange rule for testing.';
+        $rule->description     = 'This rule triggers on transactions with the description "David Bowie" and puts them in the category "Blackstar".';
+        $rule->active          = 1;
+        $rule->stop_processing = 0;
+        $rule->save();
+
+        // trigger for this rule:
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 1;
+        $ruleTrigger->title           = 'Groceries';
+        $ruleTrigger->trigger_type    = 'description_contains';
+        $ruleTrigger->trigger_value   = 'groceries';
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+
+        // actions for this rule.
+
+        // TODO a rule that triggers on something, just like the previous one, but it has "stop_processing" set to 1.
+        // TODO a rule that triggers on that same thing, but it will not file, because the previous rule made FF skip it.
+
+        // TODO rule with specific actions.
+        // TODO rule with actions and one action has stop_processing and other actions are not processed. Somewhere in test?
+
+
+    }
+
     /**
      *
      */
@@ -48,6 +97,8 @@ class TestDataSeeder extends Seeder
         $this->createRevenueAccounts();
         $this->createBills();
         $this->createPiggybanks();
+
+        $this->createRules();
 
         // preference to only see account #1 on frontpage.
         $this->createPreferences();
@@ -649,7 +700,7 @@ class TestDataSeeder extends Seeder
 
         $fromAccount  = $this->findAccount('MyBank Checking Account');
         $stores       = ['Albert Heijn', 'PLUS', 'Bakker'];
-        $descriptions = ['Groceries', 'Bought some food', 'Got groceries'];
+        $descriptions = ['Groceries', 'Bought some groceries', 'Got groceries'];
         $category     = Category::firstOrCreateEncrypted(['name' => 'Daily groceries', 'user_id' => $this->user->id]);
         $budget       = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $this->user->id]);
 
