@@ -30,8 +30,8 @@ class ChangesForV370 extends Migration
             $table->softDeletes();
             $table->integer('user_id')->unsigned();
             $table->unsignedSmallInteger('order');
-            $table->string('title', 2048);
-            $table->mediumText('description');
+            $table->string('title', 255);
+            $table->text('description');
             $table->unsignedTinyInteger('active')->default(1);
 
             // connect rule groups to users
@@ -52,8 +52,8 @@ class ChangesForV370 extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('rule_group_id')->unsigned();
             $table->unsignedSmallInteger('order');
-            $table->string('title', 2048);
-            $table->mediumText('description');
+            $table->string('title', 255);
+            $table->text('description');
             $table->unsignedTinyInteger('active')->default(1);
             $table->unsignedTinyInteger('stop_processing')->default(0);
 
@@ -78,9 +78,8 @@ class ChangesForV370 extends Migration
             $table->unsignedSmallInteger('order');
             $table->string('title', 2048);
 
-            $table->string('trigger_field', 2048);
-            $table->string('trigger_type', 1024);
-            $table->string('trigger_value', 2048);
+            $table->string('trigger_type', 50);
+            $table->string('trigger_value', 255);
 
             $table->unsignedTinyInteger('active')->default(1);
             $table->unsignedTinyInteger('stop_processing')->default(0);
@@ -88,7 +87,7 @@ class ChangesForV370 extends Migration
             // order must be unique for rule triggers:
             $table->unique(['rule_id', 'order']);
 
-            // connect rule tiggers to rules
+            // connect rule triggers to rules
             $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
         }
         );
@@ -104,9 +103,9 @@ class ChangesForV370 extends Migration
             $table->unsignedTinyInteger('active')->default(1);
             $table->unsignedTinyInteger('stop_processing')->default(0);
 
-            $table->string('action_field', 2048);
-            $table->string('action', 1024);
-            $table->string('action_value', 2048);
+            $table->string('action_field', 50);
+            $table->string('action', 50);
+            $table->string('action_value', 255);
 
             // connect rule actions to rules
             $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
