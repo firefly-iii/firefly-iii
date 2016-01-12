@@ -65,10 +65,22 @@ class TestDataSeeder extends Seeder
 
         $rule->save();
 
-        // trigger for this rule:
+        // initial trigger for this rule:
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = 1;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'user_action';
+        $ruleTrigger->trigger_value   = 'create-journal';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // content trigger for this rule.
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 2;
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'description_contains';
@@ -80,7 +92,7 @@ class TestDataSeeder extends Seeder
         // another
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
-        $ruleTrigger->order           = 2;
+        $ruleTrigger->order           = 3;
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'from_account_is';
