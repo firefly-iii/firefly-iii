@@ -12,6 +12,7 @@ namespace FireflyIII\Http\Controllers;
 use Auth;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
 use View;
 
 /**
@@ -47,6 +48,13 @@ class RuleController extends Controller
      */
     public function upRule(Rule $rule)
     {
+
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     */
+    public function editRuleGroup(RuleGroup $ruleGroup) {
 
     }
 }
