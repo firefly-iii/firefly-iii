@@ -9,6 +9,7 @@
 
 namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\TransactionJournalUpdated;
+use Log;
 
 /**
  * Class FireRulesForUpdate
@@ -35,6 +36,7 @@ class FireRulesForUpdate
      */
     public function handle(TransactionJournalUpdated $event)
     {
+        Log::debug('Fire rules for update!');
 
     }
 }
