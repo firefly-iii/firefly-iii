@@ -1,6 +1,6 @@
 <?php
 /**
- * UserAction.php
+ * ToAccountContains.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -14,11 +14,11 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class UserAction
+ * Class ToAccountContains
  *
  * @package FireflyIII\Rules\Triggers
  */
-class UserAction implements TriggerInterface
+class ToAccountContains implements TriggerInterface
 {
     /** @var RuleTrigger */
     protected $trigger;
@@ -37,19 +37,28 @@ class UserAction implements TriggerInterface
     {
         $this->trigger = $trigger;
         $this->journal = $journal;
-
     }
 
     /**
-     * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
-     *
      * @return bool
      */
     public function triggered()
     {
-        Log::debug('user_action always returns true.');
+        $toAccountName = strtolower($this->journal->destination_account->name);
+        $search        = strtolower($this->trigger->trigger_value);
+        $strpos        = strpos($toAccountName, $search);
 
-        return true;
+        if (!($strpos === false)) {
+            // found something
+            Log::debug('"' . $toAccountName . '" contains the text "' . $search . '". Return true.');
+
+            return true;
+        }
+
+        // found nothing.
+        Log::debug('"' . $toAccountName . '" does not contain the text "' . $search . '". Return false.');
+
+        return false;
+
     }
-
 }

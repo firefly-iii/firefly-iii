@@ -1,6 +1,6 @@
 <?php
 /**
- * UserAction.php
+ * ToAccountStarts.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -14,11 +14,11 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class UserAction
+ * Class ToAccountStarts
  *
  * @package FireflyIII\Rules\Triggers
  */
-class UserAction implements TriggerInterface
+class ToAccountStarts implements TriggerInterface
 {
     /** @var RuleTrigger */
     protected $trigger;
@@ -37,19 +37,26 @@ class UserAction implements TriggerInterface
     {
         $this->trigger = $trigger;
         $this->journal = $journal;
-
     }
 
     /**
-     * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
-     *
      * @return bool
      */
     public function triggered()
     {
-        Log::debug('user_action always returns true.');
+        $toAccountName = strtolower($this->journal->destination_account->name);
+        $search        = strtolower($this->trigger->trigger_value);
 
-        return true;
+        $part = substr($toAccountName, 0, strlen($search));
+
+        if ($part == $search) {
+            Log::debug('"' . $toAccountName . '" starts with "' . $search . '". Return true.');
+
+            return true;
+        }
+        Log::debug('"' . $toAccountName . '" does not start with "' . $search . '". Return false.');
+
+        return false;
+
     }
-
 }

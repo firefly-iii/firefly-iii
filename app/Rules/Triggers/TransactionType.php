@@ -1,6 +1,6 @@
 <?php
 /**
- * UserAction.php
+ * TransactionType.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -14,11 +14,11 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class UserAction
+ * Class TransactionType
  *
  * @package FireflyIII\Rules\Triggers
  */
-class UserAction implements TriggerInterface
+class TransactionType implements TriggerInterface
 {
     /** @var RuleTrigger */
     protected $trigger;
@@ -37,19 +37,23 @@ class UserAction implements TriggerInterface
     {
         $this->trigger = $trigger;
         $this->journal = $journal;
-
     }
 
     /**
-     * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
-     *
      * @return bool
      */
     public function triggered()
     {
-        Log::debug('user_action always returns true.');
+        $type   = strtolower($this->journal->transactionType->type);
+        $search = strtolower($this->trigger->trigger_value);
 
-        return true;
+        if ($type == $search) {
+            Log::debug('Journal is of type "' . $type . '" which matches with "' . $search . '". Return true');
+
+            return true;
+        }
+        Log::debug('Journal is of type "' . $type . '" which does not match with "' . $search . '". Return false');
+
+        return false;
     }
-
 }
