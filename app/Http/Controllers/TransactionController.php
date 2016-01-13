@@ -18,6 +18,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -315,6 +316,7 @@ class TransactionController extends Controller
         if (count($att->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
+        Log::debug('Before event. From account name is: ' . $journal->source_account->name);
 
         event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 

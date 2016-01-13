@@ -291,7 +291,7 @@ class TransactionJournal extends Model
     public function getDestinationAccountAttribute()
     {
         $account = $this->transactions()->where('amount', '>', 0)->first()->account;
-        
+
         return $account;
     }
 

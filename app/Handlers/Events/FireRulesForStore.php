@@ -45,6 +45,7 @@ class FireRulesForStore
      */
     public function handle(TransactionJournalStored $event)
     {
+        Log::debug('Before event (in handle). From account name is: ' . $event->journal->source_account->name);
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
         $user   = Auth::user();
@@ -52,6 +53,7 @@ class FireRulesForStore
         //
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
+            Log::debug('Now processing group "' . $group->title . '".');
             $rules = $group->rules()
                            ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                            ->where('rule_triggers.trigger_type', 'user_action')
@@ -59,7 +61,7 @@ class FireRulesForStore
                            ->get(['rules.*']);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                Log::debug('Now handling rule #' . $rule->id);
+                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title. ')');
                 $processor = new Processor($rule, $event->journal);
 
                 // get some return out of this?
@@ -67,5 +69,7 @@ class FireRulesForStore
 
             }
         }
+//        echo 'Done processing rules. See log.';
+//        exit;
     }
 }

@@ -71,7 +71,12 @@ class Processor
         /** @var RuleTrigger $trigger */
         foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $index => $trigger) {
             $foundTriggers++;
-            $type  = $trigger->trigger_type;
+            $type = $trigger->trigger_type;
+
+            if (!isset($this->triggerTypes[$type])) {
+                abort(500, 'No such trigger exists ("' . $type . '").');
+            }
+
             $class = $this->triggerTypes[$type];
             Log::debug('Trigger #' . $trigger->id . ' for rule #' . $trigger->rule_id . ' (' . $type . ')');
             if (!class_exists($class)) {
