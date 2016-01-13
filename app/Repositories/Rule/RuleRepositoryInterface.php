@@ -30,4 +30,13 @@ interface RuleRepositoryInterface
      */
     public function getHighestOrderRuleGroup();
 
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @param array     $data
+     *
+     * @return RuleGroup
+     */
+    public function update(RuleGroup $ruleGroup, array $data);
+
 }

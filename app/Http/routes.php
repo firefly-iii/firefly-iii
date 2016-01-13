@@ -248,7 +248,7 @@ Route::group(
     Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleController@deleteRuleGroup', 'as' => 'rules.rule-group.delete']);
 
     Route::post('/rules/groups/store', ['uses' => 'RuleController@storeRuleGroup', 'as' => 'rules.rule-group.store']);
-
+    Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleController@updateRuleGroup', 'as' => 'rules.rule-group.update']);
 
     /**
      * Search Controller

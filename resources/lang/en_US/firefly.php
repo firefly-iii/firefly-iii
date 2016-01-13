@@ -51,6 +51,9 @@ return [
     'make_new_rule_group'                => 'Make new rule group',
     'store_new_rule_group'               => 'Store new rule group',
     'created_new_rule_group'             => 'New rule group ":title" stored!',
+    'updated_rule_group'                 => 'Successfully updated rule group ":title".',
+    'edit_rule_group'                    => 'Edit rule group ":title"',
+    'update_rule_group'                  => 'Update rule group',
     'no_rules_in_group'                  => 'There are no rules in this group',
 
     // actions and triggers

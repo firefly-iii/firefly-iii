@@ -47,14 +47,14 @@ class RuleController extends Controller
         $subTitle     = trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('rule-groups.create.fromStore') !== true) {
-            Session::put('rule-groups.create.url', URL::previous());
+        if (Session::get('rules.rule-group.create.fromStore') !== true) {
+            Session::put('rules.rule-group.create.url', URL::previous());
         }
         Session::forget('accounts.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
-        return view('rules.create-rule-group', compact('subTitleIcon', 'what', 'subTitle'));
+        return view('rules.rule-group.create', compact('subTitleIcon', 'what', 'subTitle'));
     }
 
     /**
@@ -78,14 +78,69 @@ class RuleController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('rule-groups.create.fromStore', true);
+            Session::put('rules.rule-group.create.fromStore', true);
 
             return redirect(route('rules.rule-group.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('rule-groups.create.url'));
+        return redirect(Session::get('rules.rule-group.create.url'));
     }
+
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return View
+     */
+    public function editRuleGroup(RuleGroup $ruleGroup)
+    {
+        $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('rules.rule-group.edit.fromUpdate') !== true) {
+            Session::put('rules.rule-group.edit.url', URL::previous());
+        }
+        Session::forget('rules.rule-group.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'rules');
+        Session::flash('gaEventAction', 'edit-rule-group');
+
+        return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
+
+    }
+
+    /**
+     * @param RuleGroupFormRequest    $request
+     * @param RuleRepositoryInterface $repository
+     * @param RuleGroup               $ruleGroup
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function updateRuleGroup(RuleGroupFormRequest $request, RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
+    {
+        $data = [
+            'title'       => $request->input('title'),
+            'description' => $request->input('description'),
+            'active'      => intval($request->input('active')) == 1,
+        ];
+
+        $repository->update($ruleGroup, $data);
+
+        Session::flash('success', trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
+        Preferences::mark();
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('rules.rule-group.edit.fromUpdate', true);
+
+            return redirect(route('rules.rule-group.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return redirect(Session::get('rules.rule-group.edit.url'));
+
+    }
+
 
     /**
      * @return View
@@ -105,11 +160,4 @@ class RuleController extends Controller
 
     }
 
-    /**
-     * @param RuleGroup $ruleGroup
-     */
-    public function editRuleGroup(RuleGroup $ruleGroup)
-    {
-
-    }
 }

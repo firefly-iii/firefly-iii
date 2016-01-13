@@ -53,4 +53,21 @@ class RuleRepository implements RuleRepositoryInterface
 
         return $newRuleGroup;
     }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @param array     $data
+     *
+     * @return RuleGroup
+     */
+    public function update(RuleGroup $ruleGroup, array $data)
+    {
+        // update the account:
+        $ruleGroup->title       = $data['title'];
+        $ruleGroup->description = $data['description'];
+        $ruleGroup->active      = $data['active'];
+        $ruleGroup->save();
+
+        return $ruleGroup;
+    }
 }
