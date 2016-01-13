@@ -11,6 +11,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use FireflyIII\Http\Requests;
+use FireflyIII\Models\Rule;
 use View;
 
 /**
@@ -39,5 +40,13 @@ class RuleController extends Controller
         $ruleGroups = Auth::user()->ruleGroups()->with('rules')->get();
 
         return view('rules.index', compact('ruleGroups'));
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    public function upRule(Rule $rule)
+    {
+
     }
 }

@@ -9,8 +9,9 @@
 
 namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Rule
@@ -64,6 +65,21 @@ class Rule extends Model
     public function ruleTriggers()
     {
         return $this->hasMany('FireflyIII\Models\RuleTrigger');
+    }
+
+    /**
+     * @param Rule $value
+     *
+     * @return Rule
+     */
+    public static function routeBinder(Rule $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
 }

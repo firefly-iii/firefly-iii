@@ -158,6 +158,8 @@ return [
         'piggyBank'       => 'FireflyIII\Models\PiggyBank',
         'tj'              => 'FireflyIII\Models\TransactionJournal',
         'tag'             => 'FireflyIII\Models\Tag',
+        'rule'            => 'FireflyIII\Models\Rule',
+        'ruleGroup'       => 'FireflyIII\Models\RuleGroup',
         // lists
         'accountList'     => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
