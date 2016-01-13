@@ -49,7 +49,7 @@ class DescriptionEnds implements TriggerInterface
         $search            = strtolower($this->trigger->trigger_value);
         $searchLength      = strlen($search);
 
-        // if the string to search for is longer than the account name,
+        // if the string to search for is longer than the description,
         // shorten the search string.
         if ($searchLength > $descriptionLength) {
             Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $description . '" (' . $descriptionLength . '). ');
