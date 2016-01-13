@@ -60,7 +60,7 @@ class Processor
             $type  = $trigger->trigger_type;
             $class = $this->triggerTypes[$type];
             if (!class_exists($class)) {
-                throw new Exception('Could not instantiate class for rule trigger type "' . $type . '".');
+                abort(500, 'Could not instantiate class for rule trigger type "' . $type . '" ('.$class.').');
             }
         }
 

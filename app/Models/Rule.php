@@ -9,7 +9,7 @@
 
 namespace FireflyIII\Models;
 
-use Crypt;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Rule extends Model
 {
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -65,6 +64,24 @@ class Rule extends Model
     public function ruleTriggers()
     {
         return $this->hasMany('FireflyIII\Models\RuleTrigger');
+    }
+
+    /**
+     * @param      $query
+     * @param      $triggerType
+     * @param null $triggerValue
+     *
+     * @return Builder
+     */
+    public function scopeHasTrigger(Builder $query, $triggerType, $triggerValue = null)
+    {
+        $query->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id');
+        $query->where('rule_triggers.trigger_type', $triggerType);
+        if (!is_null($triggerValue)) {
+            $query->where('rule_triggers.trigger_value', $triggerValue);
+        }
+        return $query;
+
     }
 
 

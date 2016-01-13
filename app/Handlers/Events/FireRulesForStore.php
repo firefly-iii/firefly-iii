@@ -15,6 +15,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Log;
 
@@ -48,7 +49,13 @@ class FireRulesForStore
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
         $user   = Auth::user();
-        $groups = $user->ruleGroups()->with('rules')->hasTrigger('user_action','store-journal')->orderBy('order', 'ASC')->get();
+        $groups = $user->ruleGroups()->with(
+            [
+                'rules' => function (HasMany $query) {
+                    $query->hasTrigger('user_action', 'store-journal');
+                }
+            ]
+        )->orderBy('order', 'ASC')->get();
         //
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
@@ -63,7 +70,7 @@ class FireRulesForStore
             }
         }
         Log::debug('FireRulesForStore!');
-        echo 'handle';
+        echo 'done handling rules.';
         exit;
     }
 }
