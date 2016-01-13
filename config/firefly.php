@@ -173,7 +173,7 @@ return [
         'from_account_starts'   => 'FireflyIII\Rules\Triggers\FromAccountStarts',
         'from_account_ends'     => 'FireflyIII\Rules\Triggers\FromAccountEnds',
         'from_account_is'       => 'FireflyIII\Rules\Triggers\FromAccountIs',
-        'from_account_contains' => 'FireflyIII\Rules\Triggers',
+        'from_account_contains' => 'FireflyIII\Rules\Triggers\FromAccountContains',
         'to_account_starts'     => 'FireflyIII\Rules\Triggers',
         'to_account_ends'       => 'FireflyIII\Rules\Triggers',
         'to_account_is'         => 'FireflyIII\Rules\Triggers',
