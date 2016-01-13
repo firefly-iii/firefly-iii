@@ -13,7 +13,7 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Rules\Processor;
+use FireflyIII\Rules\TriggerProcessor;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +63,7 @@ class FireRulesForStore
             /** @var Rule $rule */
             foreach ($rules as $rule) {
                 Log::debug('Now handling rule #' . $rule->id);
-                $processor = new Processor($rule, $event->journal);
+                $processor = new TriggerProcessor($rule, $event->journal);
 
                 // get some return out of this?
                 $processor->handle();

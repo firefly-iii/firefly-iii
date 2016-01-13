@@ -1,6 +1,6 @@
 <?php
 /**
- * Processor.php
+ * TriggerProcessor.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -17,11 +17,11 @@ use FireflyIII\Support\Domain;
 use Log;
 
 /**
- * Class Processor
+ * Class TriggerProcessor
  *
  * @package FireflyIII\Rules
  */
-class Processor
+class TriggerProcessor
 {
     /** @var  Rule */
     protected $rule;
@@ -32,7 +32,7 @@ class Processor
     private $triggerTypes = [];
 
     /**
-     * Processor constructor.
+     * TriggerProcessor constructor.
      */
     public function __construct(Rule $rule, TransactionJournal $journal)
     {
