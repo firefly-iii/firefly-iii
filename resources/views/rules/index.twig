@@ -50,23 +50,27 @@
                         </p>
 
                         {% if ruleGroup.rules.count > 0 %}
-                            <table class="table table- table-striped sortable">
+                            <table class="table table-hover table-striped sortable">
                                 <thead>
-                                    <tr>
-                                        <th colspan="2">{{ 'rule_name'|_ }}</th>
-                                        <th>{{ 'rule_triggers'|_ }}</th>
-                                        <th>{{ 'rule_actions'|_ }}</th>
-                                    </tr>
+                                <tr>
+                                    <th colspan="2">{{ 'rule_name'|_ }}</th>
+                                    <th>{{ 'rule_triggers'|_ }}</th>
+                                    <th>{{ 'rule_actions'|_ }}</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 {% for rule in ruleGroup.rules %}
                                     <tr>
                                         <td>
                                             <div class="btn-group btn-group-xs">
-                                                <a title="{{ 'rule_priority_up' }}" href="{{ route('rules.rule.up', rule.id) }}" class="btn btn-default"><span class="fa fa-arrow-up"></span></a>
-                                                <a title="{{ 'rule_priority_down' }}" href="{{ route('rules.rule.down', rule.id) }}" class="btn btn-default"><span class="fa fa-arrow-down"></span></a>
-                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.rule.edit', rule.id) }}" class="btn btn-default"><span class="fa fa-pencil"></span></a>
-                                                <a title="{{ 'delete'|_ }}" href="{{ route('rules.rule.delete', rule.id) }}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
+                                                <a title="{{ 'rule_priority_up'|_ }}" href="{{ route('rules.rule.up', rule.id) }}" class="btn btn-default"><span
+                                                            class="fa fa-arrow-up"></span></a>
+                                                <a title="{{ 'rule_priority_down'|_ }}" href="{{ route('rules.rule.down', rule.id) }}"
+                                                   class="btn btn-default"><span class="fa fa-arrow-down"></span></a>
+                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.rule.edit', rule.id) }}" class="btn btn-default"><span
+                                                            class="fa fa-pencil"></span></a>
+                                                <a title="{{ 'delete'|_ }}" href="{{ route('rules.rule.delete', rule.id) }}" class="btn btn-danger"><span
+                                                            class="fa fa-trash"></span></a>
                                             </div>
 
                                         </td>
@@ -75,8 +79,26 @@
                                                 <small><br/>{{ rule.description }}</small>
                                             {% endif %}
                                         </td>
-                                        <td>X</td>
-                                        <td>Y</td>
+                                        <td>
+                                            {% if rule.ruleTriggers.count > 0 %}
+                                                <ul class="small">
+                                                    {% for trigger in rule.ruleTriggers %}
+                                                        {% if trigger.trigger_type != "user_action" %}
+                                                            <li>{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}</li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if rule.ruleActions.count > 0 %}
+                                                <ul class="small">
+                                                    {% for action in rule.ruleActions %}
+                                                        <li>{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -87,7 +109,7 @@
                             </p>
                         {% endif %}
                         <p>
-                            <br />
+                            <br/>
                             <a href="{{ route('rules.rule.create') }}" class="btn btn-success">{{ 'new_rule'|_ }}</a>
                         </p>
                     </div>
