@@ -31,6 +31,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class RuleGroup extends Model
 {
+
+    protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -48,6 +48,10 @@ return [
     'new_rule_group'                     => 'New rule group',
     'rule_priority_up'                   => 'Give rule more priority',
     'rule_priority_down'                 => 'Give rule less priority',
+    'make_new_rule_group'                => 'Make new rule group',
+    'store_new_rule_group'               => 'Store new rule group',
+    'created_new_rule_group'             => 'New rule group ":title" stored!',
+    'no_rules_in_group'                  => 'There are no rules in this group',
 
     // actions and triggers
     'rule_trigger_user_action'           => '',
