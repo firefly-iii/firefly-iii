@@ -290,16 +290,8 @@ class TransactionJournal extends Model
      */
     public function getDestinationAccountAttribute()
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($this->id);
-        $cache->addProperty('destinationAccount');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $account = $this->transactions()->where('amount', '>', 0)->first()->account;
-        $cache->store($account);
-
+        
         return $account;
     }
 
