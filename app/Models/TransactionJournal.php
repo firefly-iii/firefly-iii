@@ -308,15 +308,7 @@ class TransactionJournal extends Model
      */
     public function getSourceAccountAttribute()
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($this->id);
-        $cache->addProperty('sourceAccount');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $account = $this->transactions()->where('amount', '<', 0)->first()->account;
-
-        $cache->store($account);
 
         return $account;
     }
