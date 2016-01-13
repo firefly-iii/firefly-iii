@@ -9,11 +9,12 @@
 
 namespace FireflyIII\Rules;
 
-use Exception;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Support\Domain;
+use Log;
 
 /**
  * Class Processor
@@ -45,27 +46,39 @@ class Processor
         // get all triggers:
         $triggered = $this->triggered();
         if ($triggered) {
-
+            Log::debug('Rule #' . $this->rule->id . ' was triggered. Now process each action.');
         }
 
     }
 
     /**
+     * TODO stop when stop_processing is present.
+     *
      * @return bool
      */
     protected function triggered()
     {
+        $foundTriggers = 0;
+        $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
-        foreach ($this->rule->ruleTriggers as $trigger) {
+        foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $index => $trigger) {
+            $foundTriggers++;
             $type  = $trigger->trigger_type;
             $class = $this->triggerTypes[$type];
+            Log::debug('Trigger #' . $trigger->id . ' for rule #' . $trigger->rule_id . ' (' . $type . ')');
             if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule trigger type "' . $type . '" ('.$class.').');
+                abort(500, 'Could not instantiate class for rule trigger type "' . $type . '" (' . $class . ').');
             }
+            /** @var TriggerInterface $triggerClass */
+            $triggerClass = new $class($trigger, $this->journal);
+            if ($triggerClass->triggered()) {
+                $hitTriggers++;
+            }
+
         }
+        Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
-
-        return true;
+        return ($hitTriggers == $foundTriggers);
 
     }
 

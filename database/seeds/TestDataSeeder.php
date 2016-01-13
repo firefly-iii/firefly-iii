@@ -72,7 +72,7 @@ class TestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'user_action';
-        $ruleTrigger->trigger_value   = 'create-journal';
+        $ruleTrigger->trigger_value   = 'store-journal';
 
         $ruleTrigger->save();
         unset($ruleTrigger);

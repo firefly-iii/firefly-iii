@@ -169,10 +169,10 @@ return [
     ],
 
     'rule-triggers' => [
-        'user_action'           => 'FireflyIII\Rules\Triggers',
+        'user_action'           => 'FireflyIII\Rules\Triggers\UserAction',
         'from_account_starts'   => 'FireflyIII\Rules\Triggers',
         'from_account_ends'     => 'FireflyIII\Rules\Triggers',
-        'from_account_is'       => 'FireflyIII\Rules\Triggers',
+        'from_account_is'       => 'FireflyIII\Rules\Triggers\FromAccountIs',
         'from_account_contains' => 'FireflyIII\Rules\Triggers',
         'to_account_starts'     => 'FireflyIII\Rules\Triggers',
         'to_account_ends'       => 'FireflyIII\Rules\Triggers',
@@ -185,7 +185,7 @@ return [
         'amount_more'           => 'FireflyIII\Rules\Triggers',
         'description_starts'    => 'FireflyIII\Rules\Triggers',
         'description_ends'      => 'FireflyIII\Rules\Triggers',
-        'description_contains'  => 'FireflyIII\Rules\Triggers',
+        'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
         'description_is'        => 'FireflyIII\Rules\Triggers',
     ],
     'rule-actions'  => [

@@ -62,6 +62,7 @@ class FireRulesForStore
             $rules = $group->rules;
             /** @var Rule $rule */
             foreach ($rules as $rule) {
+                Log::debug('Now handling rule #' . $rule->id);
                 $processor = new Processor($rule, $event->journal);
 
                 // get some return out of this?
