@@ -1,16 +1,4 @@
 <?php
-use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 // auth routes, i think
 Route::group(
@@ -246,6 +234,19 @@ Route::group(
      * Rules Controller
      */
     Route::get('/rules', ['uses' => 'RuleController@index', 'as' => 'rules.index']);
+
+    // rules:
+    Route::get('/rules/rules/create', ['uses' => 'RuleController@createRule', 'as' => 'rules.rule.create']);
+    Route::get('/rules/rules/up/{rule}', ['uses' => 'RuleController@upRule', 'as' => 'rules.rule.up']);
+    Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@downRule', 'as' => 'rules.rule.down']);
+    Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@editRule', 'as' => 'rules.rule.edit']);
+    Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@deleteRule', 'as' => 'rules.rule.delete']);
+
+    // rule groups:
+    Route::get('/rules/groups/create', ['uses' => 'RuleController@createRuleGroup', 'as' => 'rules.rule-group.create']);
+    Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleController@editRuleGroup', 'as' => 'rules.rule-group.edit']);
+    Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleController@deleteRuleGroup', 'as' => 'rules.rule-group.delete']);
+
 
     /**
      * Search Controller
