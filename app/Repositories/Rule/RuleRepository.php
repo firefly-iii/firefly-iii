@@ -10,6 +10,7 @@
 namespace FireflyIII\Repositories\Rule;
 
 use Auth;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 
 /**
@@ -50,6 +51,7 @@ class RuleRepository implements RuleRepositoryInterface
             ]
         );
         $newRuleGroup->save();
+        $this->resetRuleGroupOrder();
 
         return $newRuleGroup;
     }
@@ -60,14 +62,54 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function update(RuleGroup $ruleGroup, array $data)
+    public function updateRuleGroup(RuleGroup $ruleGroup, array $data)
     {
         // update the account:
         $ruleGroup->title       = $data['title'];
         $ruleGroup->description = $data['description'];
         $ruleGroup->active      = $data['active'];
         $ruleGroup->save();
+        $this->resetRuleGroupOrder();
 
         return $ruleGroup;
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return boolean
+     */
+    public function destroyRuleGroup(RuleGroup $ruleGroup)
+    {
+        /** @var Rule $rule */
+        foreach ($ruleGroup->rules as $rule) {
+            $rule->delete();
+        }
+
+        $ruleGroup->delete();
+
+        $this->resetRuleGroupOrder();
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function resetRuleGroupOrder()
+    {
+        Auth::user()->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = Auth::user()->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
+        $count = 1;
+        /** @var RuleGroup $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            $count++;
+        }
+
+
+        return true;
     }
 }

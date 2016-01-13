@@ -53,6 +53,8 @@ return [
     'created_new_rule_group'             => 'New rule group ":title" stored!',
     'updated_rule_group'                 => 'Successfully updated rule group ":title".',
     'edit_rule_group'                    => 'Edit rule group ":title"',
+    'delete_rule_group'                  => 'Delete rule group ":title"',
+    'deleted_rule_group'                  => 'Deleted rule group ":title"',
     'update_rule_group'                  => 'Update rule group',
     'no_rules_in_group'                  => 'There are no rules in this group',
 

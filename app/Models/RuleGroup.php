@@ -11,6 +11,7 @@ namespace FireflyIII\Models;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -31,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class RuleGroup extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 

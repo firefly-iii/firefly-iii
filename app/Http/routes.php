@@ -249,6 +249,7 @@ Route::group(
 
     Route::post('/rules/groups/store', ['uses' => 'RuleController@storeRuleGroup', 'as' => 'rules.rule-group.store']);
     Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleController@updateRuleGroup', 'as' => 'rules.rule-group.update']);
+    Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleController@destroyRuleGroup', 'as' => 'rules.rule-group.destroy']);
 
     /**
      * Search Controller

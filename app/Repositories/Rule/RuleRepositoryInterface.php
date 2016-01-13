@@ -37,6 +37,19 @@ interface RuleRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function update(RuleGroup $ruleGroup, array $data);
+    public function updateRuleGroup(RuleGroup $ruleGroup, array $data);
+
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return boolean
+     */
+    public function destroyRuleGroup(RuleGroup $ruleGroup);
+
+    /**
+     * @return bool
+     */
+    public function resetRuleGroupOrder();
 
 }

@@ -37,8 +37,6 @@ class ChangesForV370 extends Migration
             // connect rule groups to users
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            // order must be unique for rule group:
-            $table->unique(['user_id', 'order']);
         }
         );
 
@@ -65,8 +63,6 @@ class ChangesForV370 extends Migration
             // connect rules to rule groups
             $table->foreign('rule_group_id')->references('id')->on('rule_groups')->onDelete('cascade');
 
-            // order must be unique for rules:
-            $table->unique(['user_id', 'order']);
         }
         );
 

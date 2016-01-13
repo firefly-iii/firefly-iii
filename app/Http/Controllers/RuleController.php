@@ -124,7 +124,7 @@ class RuleController extends Controller
             'active'      => intval($request->input('active')) == 1,
         ];
 
-        $repository->update($ruleGroup, $data);
+        $repository->updateRuleGroup($ruleGroup, $data);
 
         Session::flash('success', trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
@@ -139,6 +139,43 @@ class RuleController extends Controller
         // redirect to previous URL.
         return redirect(Session::get('rules.rule-group.edit.url'));
 
+    }
+
+    /**
+     * @param RuleGroup $budget
+     *
+     * @return \Illuminate\View\View
+     */
+    public function deleteRuleGroup(RuleGroup $ruleGroup)
+    {
+        $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
+
+        // put previous url in session
+        Session::put('rules.rule-group.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'rules');
+        Session::flash('gaEventAction', 'delete-rule-group');
+
+        return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle'));
+    }
+
+    /**
+     * @param RuleGroup               $ruleGroup
+     * @param RuleRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleRepositoryInterface $repository)
+    {
+
+        $title = $ruleGroup->title;
+        $repository->destroyRuleGroup($ruleGroup);
+
+
+        Session::flash('success', trans('firefly.deleted_rule_group', ['title' => $title]));
+        Preferences::mark();
+
+
+        return redirect(Session::get('rules.rule-group.delete.url'));
     }
 
 

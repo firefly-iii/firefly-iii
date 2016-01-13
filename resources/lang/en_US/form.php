@@ -76,10 +76,12 @@ return [
     'delete_currency'   => 'Delete currency ":name"',
     'delete_journal'    => 'Delete transaction with description ":description"',
     'delete_attachment' => 'Delete attachment ":name"',
+    'delete_rule_group' => 'Delete rule group ":title"',
 
     'attachment_areYouSure' => 'Are you sure you want to delete the attachment named ":name"?',
     'account_areYouSure'    => 'Are you sure you want to delete the account named ":name"?',
     'bill_areYouSure'       => 'Are you sure you want to delete the bill named ":name"?',
+    'ruleGroup_areYouSure'  => 'Are you sure you want to delete the rule group titles ":title"?',
     'budget_areYouSure'     => 'Are you sure you want to delete the budget named ":name"?',
     'category_areYouSure'   => 'Are you sure you want to delete the category named ":name"?',
     'currency_areYouSure'   => 'Are you sure you want to delete the currency named ":name"?',
@@ -89,6 +91,7 @@ return [
 
     'permDeleteWarning'          => 'Deleting stuff from Firely is permanent and cannot be undone.',
     'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
+    'also_delete_rules'          => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
     'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
     'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
     'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',

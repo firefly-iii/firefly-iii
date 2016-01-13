@@ -11,6 +11,7 @@ namespace FireflyIII\Models;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -35,6 +36,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Rule extends Model
 {
+    use SoftDeletes;
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
