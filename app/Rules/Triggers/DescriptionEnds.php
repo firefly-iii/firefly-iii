@@ -1,6 +1,6 @@
 <?php
 /**
- * ToAccountEnds.php
+ * DescriptionEnds.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -14,11 +14,11 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class ToAccountEnds
+ * Class DescriptionEnds
  *
  * @package FireflyIII\Rules\Triggers
  */
-class ToAccountEnds implements TriggerInterface
+class DescriptionEnds implements TriggerInterface
 {
     /** @var RuleTrigger */
     protected $trigger;
@@ -44,29 +44,29 @@ class ToAccountEnds implements TriggerInterface
      */
     public function triggered()
     {
-        $toAccountName       = strtolower($this->journal->destination_account->name);
-        $toAccountNameLength = strlen($toAccountName);
-        $search              = strtolower($this->trigger->trigger_value);
-        $searchLength        = strlen($search);
+        $description       = strtolower($this->journal->description);
+        $descriptionLength = strlen($description);
+        $search            = strtolower($this->trigger->trigger_value);
+        $searchLength      = strlen($search);
 
         // if the string to search for is longer than the account name,
         // shorten the search string.
-        if ($searchLength > $toAccountNameLength) {
-            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $toAccountName . '" (' . $toAccountNameLength . '). ');
-            $search       = substr($search, ($toAccountNameLength * -1));
+        if ($searchLength > $descriptionLength) {
+            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $description . '" (' . $descriptionLength . '). ');
+            $search       = substr($search, ($descriptionLength * -1));
             $searchLength = strlen($search);
             Log::debug('Search string is now "' . $search . '" (' . $searchLength . ') instead.');
         }
 
 
-        $part = substr($toAccountName, $searchLength * -1);
+        $part = substr($description, $searchLength * -1);
 
         if ($part == $search) {
-            Log::debug('"' . $toAccountName . '" ends with "' . $search . '". Return true.');
+            Log::debug('"' . $description . '" ends with "' . $search . '". Return true.');
 
             return true;
         }
-        Log::debug('"' . $toAccountName . '" does not end with "' . $search . '". Return false.');
+        Log::debug('"' . $description . '" does not end with "' . $search . '". Return false.');
 
         return false;
 
