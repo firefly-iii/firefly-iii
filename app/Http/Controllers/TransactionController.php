@@ -316,12 +316,7 @@ class TransactionController extends Controller
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
-        // rescan journal, UpdateJournalConnection
-        event(new TransactionJournalUpdated($journal));
-
-        if ($journal->isTransfer() && intval($request->get('piggy_bank_id')) > 0) {
-            event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
-        }
+        event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
         Preferences::mark();

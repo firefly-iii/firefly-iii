@@ -42,12 +42,12 @@ class ConnectJournalToPiggyBank
         $piggyBank = Auth::user()->piggybanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
 
         if (is_null($piggyBank)) {
-            return false;
+            return true;
         }
         // update piggy bank rep for date of transaction journal.
         $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
         if (is_null($repetition)) {
-            return false;
+            return true;
         }
         bcscale(2);
 

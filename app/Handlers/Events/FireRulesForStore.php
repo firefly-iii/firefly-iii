@@ -11,7 +11,9 @@ namespace FireflyIII\Handlers\Events;
 
 
 use FireflyIII\Events\TransactionJournalStored;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Auth;
 use Log;
@@ -44,15 +46,24 @@ class FireRulesForStore
     public function handle(TransactionJournalStored $event)
     {
         // get all the user's rule groups, with the rules, order by 'order'.
-//        /** @var User $user */
-//        $user = Auth::user();
-//
-//        $groups = $user->ruleGroups()->with('rules')->orderBy('order','ASC')->get();
-//
-//        /** @var RuleGroup $group */
-//        foreach($groups as $group) {
-//
-//        }
+        /** @var User $user */
+        $user   = Auth::user();
+        $groups = $user->ruleGroups()->with('rules')->hasTrigger('user_action','store-journal')->orderBy('order', 'ASC')->get();
+        //
+        /** @var RuleGroup $group */
+        foreach ($groups as $group) {
+            $rules = $group->rules;
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                $processor = new Processor($rule, $event->journal);
+
+                // get some return out of this?
+                $processor->handle();
+
+            }
+        }
         Log::debug('FireRulesForStore!');
+        echo 'handle';
+        exit;
     }
 }
