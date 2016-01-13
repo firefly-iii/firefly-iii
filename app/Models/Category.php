@@ -42,7 +42,6 @@ class Category extends Model
         unset($search['name']);
         foreach ($search as $name => $value) {
             $query->where($name, $value);
-
         }
         $set = $query->get(['categories.*']);
         /** @var Category $category */

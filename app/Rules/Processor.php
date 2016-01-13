@@ -1,6 +1,6 @@
 <?php
 /**
- * TriggerProcessor.php
+ * Processor.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
@@ -10,18 +10,20 @@
 namespace FireflyIII\Rules;
 
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Support\Domain;
 use Log;
 
 /**
- * Class TriggerProcessor
+ * Class Processor
  *
  * @package FireflyIII\Rules
  */
-class TriggerProcessor
+class Processor
 {
     /** @var  Rule */
     protected $rule;
@@ -29,16 +31,21 @@ class TriggerProcessor
     /** @var  TransactionJournal */
     protected $journal;
 
+    /** @var array */
     private $triggerTypes = [];
 
+    /** @var array */
+    private $actionTypes = [];
+
     /**
-     * TriggerProcessor constructor.
+     * Processor constructor.
      */
     public function __construct(Rule $rule, TransactionJournal $journal)
     {
         $this->rule         = $rule;
         $this->journal      = $journal;
         $this->triggerTypes = Domain::getRuleTriggers();
+        $this->actionTypes  = Domain::getRuleActions();
     }
 
     public function handle()
@@ -47,6 +54,7 @@ class TriggerProcessor
         $triggered = $this->triggered();
         if ($triggered) {
             Log::debug('Rule #' . $this->rule->id . ' was triggered. Now process each action.');
+            $this->actions();
         }
 
     }
@@ -80,6 +88,31 @@ class TriggerProcessor
 
         return ($hitTriggers == $foundTriggers);
 
+    }
+
+    /**
+     * @return bool
+     */
+    protected function actions()
+    {
+        /**
+         * @var int        $index
+         * @var RuleAction $action
+         */
+        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $index => $action) {
+            $type  = $action->action_type;
+            $class = $this->actionTypes[$type];
+            Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');
+            if (!class_exists($class)) {
+                abort(500, 'Could not instantiate class for rule action type "' . $type . '" (' . $class . ').');
+            }
+            /** @var ActionInterface $actionClass */
+            $actionClass = new $class($action, $this->journal);
+            $actionClass->act();
+
+        }
+
+        return true;
     }
 
     /**

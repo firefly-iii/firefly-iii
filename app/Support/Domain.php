@@ -34,4 +34,12 @@ class Domain
     {
         return Config::get('firefly.rule-triggers');
     }
+
+    /**
+     * @return array
+     */
+    public static function getRuleActions()
+    {
+        return Config::get('firefly.rule-actions');
+    }
 }

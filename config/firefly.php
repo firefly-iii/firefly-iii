@@ -189,9 +189,9 @@ return [
         'description_is'        => 'FireflyIII\Rules\Triggers',
     ],
     'rule-actions'  => [
-        'set_category'        => 'FireflyIII\Rules\Actions',
+        'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
         'clear_category'      => 'FireflyIII\Rules\Actions',
-        'set_budget'          => 'FireflyIII\Rules\Actions',
+        'set_budget'          => 'FireflyIII\Rules\Actions\SetBudget',
         'clear_budget'        => 'FireflyIII\Rules\Actions',
         'add_tag'             => 'FireflyIII\Rules\Actions',
         'remove_tag'          => 'FireflyIII\Rules\Actions',
