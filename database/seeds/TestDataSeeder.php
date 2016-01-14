@@ -215,7 +215,7 @@ class TestDataSeeder extends Seeder
         $rule = new Rule;
         $rule->user()->associate($this->user);
         $rule->ruleGroup()->associate(RuleGroup::find(1));
-        $rule->order           = 2;
+        $rule->order           = 3;
         $rule->active          = 1;
         $rule->stop_processing = 0;
         $rule->title           = 'Move savings';

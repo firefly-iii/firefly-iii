@@ -63,14 +63,25 @@
                                     <tr>
                                         <td>
                                             <div class="btn-group btn-group-xs">
+                                                {% if rule.order > 1 %}
                                                 <a title="{{ 'rule_priority_up'|_ }}" href="{{ route('rules.rule.up', rule.id) }}" class="btn btn-default"><span
-                                                            class="fa fa-arrow-up"></span></a>
+                                                            class="fa fa-fw fa-arrow-up"></span></a>
+                                                    {% else %}
+                                                        <a href="#" class="btn btn-default"><span
+                                                                    class="fa fa-fw"></span></a>
+                                                {% endif %}
+                                                {% if rule.order < ruleGroup.rules.count %}
                                                 <a title="{{ 'rule_priority_down'|_ }}" href="{{ route('rules.rule.down', rule.id) }}"
-                                                   class="btn btn-default"><span class="fa fa-arrow-down"></span></a>
+                                                   class="btn btn-default"><span class="fa fa-fw fa-arrow-down"></span>
+                                                </a>
+                                                {% else %}
+                                                    <a href="#" class="btn btn-default"><span
+                                                                class="fa fa-fw"></span></a>
+                                                {% endif %}
                                                 <a title="{{ 'edit'|_ }}" href="{{ route('rules.rule.edit', rule.id) }}" class="btn btn-default"><span
-                                                            class="fa fa-pencil"></span></a>
+                                                            class="fa fa-fw fa-pencil"></span></a>
                                                 <a title="{{ 'delete'|_ }}" href="{{ route('rules.rule.delete', rule.id) }}" class="btn btn-danger"><span
-                                                            class="fa fa-trash"></span></a>
+                                                            class="fa fa-fw fa-trash"></span></a>
                                             </div>
 
                                         </td>
