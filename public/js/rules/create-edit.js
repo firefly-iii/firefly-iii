@@ -30,7 +30,7 @@ function addNewTrigger() {
 
 function addNewAction() {
     "use strict";
-    triggerCount++;
+    actionCount++;
 
     $.getJSON('json/action', {count: actionCount}).success(function (data) {
         //console.log(data.html);

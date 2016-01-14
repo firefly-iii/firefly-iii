@@ -62,6 +62,8 @@ return [
     'save_rules_by_moving'      => 'Save these rule(s) by moving them to another rule group:',
     'make_new_rule'             => 'Make new rule in rule group ":title"',
     'rule_help_stop_processing' => 'When you check this box, later rules in this group will not be executed.',
+    'stored_new_rule'           => 'Stored new rule with title ":title"',
+    'deleted_rule'              => 'Deleted rule with title ":title"',
 
     'trigger'                            => 'Trigger',
     'trigger_value'                      => 'Trigger on value',

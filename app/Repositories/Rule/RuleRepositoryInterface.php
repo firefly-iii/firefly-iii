@@ -10,7 +10,9 @@
 namespace FireflyIII\Repositories\Rule;
 
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use Illuminate\Support\Collection;
 
 /**
@@ -46,9 +48,16 @@ interface RuleRepositoryInterface
      * @param RuleGroup $ruleGroup
      * @param RuleGroup $moveTo
      *
-     * @return boolean
+     * @return bool
      */
     public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
+
+    /**
+     * @param Rule $rule
+     *
+     * @return bool
+     */
+    public function destroyRule(Rule $rule);
 
     /**
      * @param Rule $rule
@@ -102,5 +111,42 @@ interface RuleRepositoryInterface
      * @return Collection
      */
     public function getRuleGroups();
+
+    /**
+     * @param array $data
+     *
+     * @return Rule
+     */
+    public function storeRule(array $data);
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup);
+
+
+    /**
+     * @param Rule $rule
+     * @param string $action
+     * @param string $value
+     * @param bool $stopProcessing
+     * @param int $order
+     *
+     * @return RuleTrigger
+     */
+    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order);
+
+    /**
+     * @param Rule $rule
+     * @param string $action
+     * @param string $value
+     * @param bool $stopProcessing
+     * @param int $order
+     *
+     * @return RuleAction
+     */
+    public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order);
 
 }

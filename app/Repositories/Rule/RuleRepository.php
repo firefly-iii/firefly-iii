@@ -11,10 +11,10 @@ namespace FireflyIII\Repositories\Rule;
 
 use Auth;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class RuleRepository
@@ -80,6 +80,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $ids
+     *
      * @return bool
      */
     public function reorderRuleTriggers(Rule $rule, array $ids)
@@ -101,6 +102,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $ids
+     *
      * @return bool
      */
     public function reorderRuleActions(Rule $rule, array $ids)
@@ -172,6 +174,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     /**
      * @param Rule $rule
+     *
      * @return bool
      */
     public function moveRuleUp(Rule $rule)
@@ -192,6 +195,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     /**
      * @param Rule $rule
+     *
      * @return bool
      */
     public function moveRuleDown(Rule $rule)
@@ -234,6 +238,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
     public function moveRuleGroupUp(RuleGroup $ruleGroup)
@@ -254,6 +259,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
     public function moveRuleGroupDown(RuleGroup $ruleGroup)
@@ -278,5 +284,129 @@ class RuleRepository implements RuleRepositoryInterface
     public function getRuleGroups()
     {
         return Auth::user()->ruleGroups()->orderBy('order', 'ASC')->get();
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Rule
+     */
+    public function storeRule(array $data)
+    {
+        /** @var RuleGroup $ruleGroup */
+        $ruleGroup = Auth::user()->ruleGroups()->find($data['rule_group_id']);
+
+        // get max order:
+        $order = $this->getHighestOrderInRuleGroup($ruleGroup);
+
+        // start by creating a new rule:
+        $rule = new Rule;
+        $rule->user()->associate(Auth::user());
+
+        $rule->rule_group_id   = $data['rule_group_id'];
+        $rule->order           = ($order + 1);
+        $rule->active          = 1;
+        $rule->stop_processing = intval($data['stop_processing']) == 1;
+        $rule->title           = $data['title'];
+        $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
+
+        $rule->save();
+
+        // start storing triggers:
+        $order          = 1;
+        $stopProcessing = false;
+        $this->storeTrigger($rule, 'user_action', $data['trigger'], $stopProcessing, $order);
+        foreach ($data['rule-triggers'] as $index => $trigger) {
+            $value          = $data['rule-trigger-values'][$index];
+            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+            $this->storeTrigger($rule, $trigger, $value, $stopProcessing, $order);
+            $order++;
+        }
+
+        // same for actions.
+        $order = 1;
+        foreach ($data['rule-actions'] as $index => $action) {
+            $value          = $data['rule-action-values'][$index];
+            $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
+            $this->storeAction($rule, $action, $value, $stopProcessing, $order);
+        }
+
+        return $rule;
+    }
+
+    /**
+     * @param Rule   $rule
+     * @param string $action
+     * @param string $value
+     * @param bool   $stopProcessing
+     * @param int    $order
+     *
+     * @return RuleTrigger
+     */
+    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order)
+    {
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = $order;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = $stopProcessing;
+        $ruleTrigger->trigger_type    = $action;
+        $ruleTrigger->trigger_value   = $value;
+        $ruleTrigger->save();
+
+        return $ruleTrigger;
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return bool
+     */
+    public function destroyRule(Rule $rule)
+    {
+        foreach ($rule->ruleTriggers as $trigger) {
+            $trigger->delete();
+        }
+        foreach ($rule->ruleActions as $action) {
+            $action->delete();
+        }
+        $rule->delete();
+
+        return true;
+    }
+
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
+    {
+        return intval($ruleGroup->rules()->max('order'));
+    }
+
+    /**
+     * @param Rule   $rule
+     * @param string $action
+     * @param string $value
+     * @param bool   $stopProcessing
+     * @param int    $order
+     *
+     * @return RuleAction
+     */
+    public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order)
+    {
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = $order;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = $stopProcessing;
+        $ruleAction->action_type     = $action;
+        $ruleAction->action_value    = $value;
+        $ruleAction->save();
+
+
+        return $ruleAction;
     }
 }
