@@ -53,6 +53,7 @@ return [
     'csv_config'                  => 'Configuratiebestand',
     'specifix'                    => 'Bank- or of bestandsspecifieke opties',
     'csv_import_account'          => 'Standaard rekening voor importeren',
+    'csv_delimiter'          	  => 'CSV scheidingsteken',
     'attachments[]'               => 'Bijlagen',
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

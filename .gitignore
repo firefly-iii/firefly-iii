@@ -32,5 +32,10 @@ addNewLines.php
 .env.backup
 .env.local
 
+# Eclipse project files
+.buildpath
+.project
+.settings/
+
 tests/_output/*
 tests/_output/*

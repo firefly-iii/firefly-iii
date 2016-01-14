@@ -16,7 +16,9 @@ class Data
 
     /** @var string */
     protected $csvFileContent;
-
+    /** @var  string */
+    protected $delimiter;
+    
     /** @var string */
     protected $csvFileLocation;
     /** @var  string */
@@ -38,6 +40,7 @@ class Data
 
     /** @var int */
     protected $importAccount = 0;
+    
 
     /**
      *
@@ -52,6 +55,7 @@ class Data
         $this->sessionMapped();
         $this->sessionSpecifix();
         $this->sessionImportAccount();
+        $this->sessionDelimiter();
     }
 
     protected function sessionHasHeaders()
@@ -110,6 +114,13 @@ class Data
         }
     }
 
+    protected function sessionDelimiter()
+    {
+    	if (Session::has('csv-delimiter')) {
+    		$this->delimiter = Session::get('csv-delimiter');
+    	}
+    }
+    
     /**
      * @return string
      */
@@ -199,6 +210,7 @@ class Data
 
         if (is_null($this->reader)) {
             $this->reader = Reader::createFromString($this->getCsvFileContent());
+            $this->reader->setDelimiter($this->delimiter);
         }
 
         return $this->reader;
@@ -279,5 +291,22 @@ class Data
         $this->specifix = $specifix;
     }
 
-
+    /**
+     * @return string
+     */
+    public function getDelimiter()
+    {
+    	return $this->delimiter;
+    }
+    
+    /**
+     * @param string $delimiter
+     */
+    public function setDelimiter($delimiter)
+    {
+    	Session::put('csv-delimiter', $delimiter);
+    	$this->delimiter = $delimiter;
+    }
+    
+    
 }
