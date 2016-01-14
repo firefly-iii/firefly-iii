@@ -70,4 +70,16 @@ interface RuleRepositoryInterface
      */
     public function moveRuleDown(Rule $rule);
 
+    /**
+     * @param RuleGroup $ruleGroup
+     * @return bool
+     */
+    public function moveRuleGroupUp(RuleGroup $ruleGroup);
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @return bool
+     */
+    public function moveRuleGroupDown(RuleGroup $ruleGroup);
+
 }

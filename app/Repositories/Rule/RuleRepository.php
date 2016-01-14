@@ -175,4 +175,44 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
     }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @return bool
+     */
+    public function moveRuleGroupUp(RuleGroup $ruleGroup)
+    {
+        $order = $ruleGroup->order;
+
+        // find the rule with order-1 and give it order+1
+        $other = Auth::user()->ruleGroups()->where('order', ($order - 1))->first();
+        if ($other) {
+            $other->order = ($other->order + 1);
+            $other->save();
+        }
+
+        $ruleGroup->order = ($ruleGroup->order - 1);
+        $ruleGroup->save();
+        $this->resetRuleGroupOrder();
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @return bool
+     */
+    public function moveRuleGroupDown(RuleGroup $ruleGroup)
+    {
+        $order = $ruleGroup->order;
+
+        // find the rule with order+1 and give it order-1
+        $other = Auth::user()->ruleGroups()->where('order', ($order + 1))->first();
+        if ($other) {
+            $other->order = ($other->order - 1);
+            $other->save();
+        }
+
+        $ruleGroup->order = ($ruleGroup->order + 1);
+        $ruleGroup->save();
+        $this->resetRuleGroupOrder();
+    }
 }

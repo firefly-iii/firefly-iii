@@ -184,8 +184,8 @@ class RuleController extends Controller
      */
     public function index()
     {
-        $ruleGroups = Auth::user()->ruleGroups()->with(['rules' => function($query) {
-            $query->orderBy('order','ASC');
+        $ruleGroups = Auth::user()->ruleGroups()->orderBy('order','ASC')    ->with(['rules' => function ($query) {
+            $query->orderBy('order', 'ASC');
 
         }])->get();
 
@@ -214,6 +214,32 @@ class RuleController extends Controller
     public function downRule(RuleRepositoryInterface $repository, Rule $rule)
     {
         $repository->moveRuleDown($rule);
+
+        return redirect(route('rules.index'));
+
+    }
+
+    /**
+     * @param RuleRepositoryInterface $repository
+     * @param RuleGroup               $ruleGroup
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function upRuleGroup(RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
+    {
+        $repository->moveRuleGroupUp($ruleGroup);
+
+        return redirect(route('rules.index'));
+
+    }
+
+    /**
+     * @param RuleRepositoryInterface $repository
+     * @param RuleGroup               $ruleGroup
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function downRuleGroup(RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
+    {
+        $repository->moveRuleGroupDown($ruleGroup);
 
         return redirect(route('rules.index'));
 
