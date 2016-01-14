@@ -269,7 +269,7 @@ class ExpandedForm
             $title   = null;
 
             foreach ($fields as $field) {
-                if (isset($entry->$field)) {
+                if (isset($entry->$field) && is_null($title)) {
                     $title = $entry->$field;
                 }
             }

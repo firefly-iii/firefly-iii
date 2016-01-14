@@ -11,6 +11,7 @@ namespace FireflyIII\Repositories\Rule;
 
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use Illuminate\Support\Collection;
 
 /**
  * Interface RuleRepositoryInterface
@@ -43,10 +44,11 @@ interface RuleRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
+     * @param RuleGroup $moveTo
      *
      * @return boolean
      */
-    public function destroyRuleGroup(RuleGroup $ruleGroup);
+    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
 
     /**
      * @return bool
@@ -81,5 +83,10 @@ interface RuleRepositoryInterface
      * @return bool
      */
     public function moveRuleGroupDown(RuleGroup $ruleGroup);
+
+    /**
+     * @return Collection
+     */
+    public function getRuleGroups();
 
 }

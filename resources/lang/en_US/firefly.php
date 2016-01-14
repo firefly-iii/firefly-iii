@@ -59,6 +59,7 @@ return [
     'no_rules_in_group'                  => 'There are no rules in this group',
     'move_rule_group_up'                 => 'Move rule group up',
     'move_rule_group_down'               => 'Move rule group down',
+    'save_rules_by_moving'               => 'Save these rule(s) by moving them to another rule group:',
 
     // actions and triggers
     'rule_trigger_user_action'           => 'User action is ":trigger_value"',

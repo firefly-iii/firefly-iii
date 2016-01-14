@@ -12,6 +12,7 @@ namespace FireflyIII\Repositories\Rule;
 use Auth;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -77,19 +78,31 @@ class RuleRepository implements RuleRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
+     * @param RuleGroup $moveTo
      *
      * @return boolean
      */
-    public function destroyRuleGroup(RuleGroup $ruleGroup)
+    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null)
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
-            $rule->delete();
+
+            if (is_null($moveTo)) {
+
+                $rule->delete();
+            } else {
+                // move
+                $rule->ruleGroup()->associate($moveTo);
+                $rule->save();
+            }
         }
 
         $ruleGroup->delete();
 
         $this->resetRuleGroupOrder();
+        if (!is_null($moveTo)) {
+            $this->resetRulesInGroupOrder($moveTo);
+        }
 
         return true;
     }
@@ -214,5 +227,13 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order + 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getRuleGroups()
+    {
+        return Auth::user()->ruleGroups()->orderBy('order', 'ASC')->get();
     }
 }

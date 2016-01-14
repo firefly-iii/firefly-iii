@@ -27,6 +27,18 @@
                         {% endif %}
                     </p>
 
+                    {% if ruleGroup.rules|length > 0 %}
+                        <p class="text-success">
+                            {{ 'save_rules_by_moving'|_ }}
+                        </p>
+
+                        <p>
+                            {{ Form.select('move_rules_before_delete', ruleGroupList, null, {class: 'form-control'}) }}
+                        </p>
+                    {% else %}
+                        <input type="hidden" name="move_rules_before_delete" value="0"/>
+                    {% endif %}
+
                 </div>
                 <div class="box-footer">
                     <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>

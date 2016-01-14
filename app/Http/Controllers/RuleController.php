@@ -10,6 +10,7 @@
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use ExpandedForm;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\Rule;
@@ -146,16 +147,19 @@ class RuleController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function deleteRuleGroup(RuleGroup $ruleGroup)
+    public function deleteRuleGroup(RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
+
+        $ruleGroupList = Expandedform::makeSelectList($repository->getRuleGroups(), true);
+        unset($ruleGroupList[$ruleGroup->id]);
 
         // put previous url in session
         Session::put('rules.rule-group.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'delete-rule-group');
 
-        return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle'));
+        return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle', 'ruleGroupList'));
     }
 
     /**
@@ -168,7 +172,9 @@ class RuleController extends Controller
     {
 
         $title = $ruleGroup->title;
-        $repository->destroyRuleGroup($ruleGroup);
+        $moveTo   = Auth::user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
+
+        $repository->destroyRuleGroup($ruleGroup, $moveTo);
 
 
         Session::flash('success', trans('firefly.deleted_rule_group', ['title' => $title]));
