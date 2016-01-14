@@ -186,6 +186,9 @@ Route::group(
     Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
 
+    Route::get('/json/trigger/{RuleTrigger?}', ['uses' => 'JsonController@trigger', 'as' => 'json.trigger']);
+    Route::get('/json/action/{RuleAction?}', ['uses' => 'JsonController@action', 'as' => 'json.action']);
+
     /**
      * New user Controller
      */

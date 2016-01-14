@@ -61,12 +61,31 @@ class RuleController extends Controller
 
     /**
      * @param RuleGroup $ruleGroup
+     *
+     * @return View
+     */
+    public function storeRule(RuleGroup $ruleGroup)
+    {
+        echo '<pre>';
+        var_dump(Input::all());exit();
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
      * @return View
      */
     public function createRule(RuleGroup $ruleGroup)
     {
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
+
+        // mandatory field: rule triggers on update-journal or store-journal.
+        $journalTriggers = [
+            'store-journal'  => trans('firefly.rule_trigger_store_journal'),
+            'update-journal' => trans('firefly.rule_trigger_update_journal')
+        ];
+
 
         // put previous url in session if not redirect from store (not "create another").
         if (Session::get('rules.rule.create.fromStore') !== true) {
@@ -76,7 +95,7 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
-        return view('rules.rule.create', compact('subTitleIcon','ruleGroup', 'subTitle'));
+        return view('rules.rule.create', compact('subTitleIcon', 'ruleGroup', 'subTitle', 'journalTriggers'));
     }
 
     /**
@@ -208,6 +227,7 @@ class RuleController extends Controller
     /**
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function reorderRuleTriggers(RuleRepositoryInterface $repository, Rule $rule)
@@ -224,6 +244,7 @@ class RuleController extends Controller
     /**
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function reorderRuleActions(RuleRepositoryInterface $repository, Rule $rule)
@@ -268,6 +289,7 @@ class RuleController extends Controller
     /**
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function upRule(RuleRepositoryInterface $repository, Rule $rule)
@@ -281,6 +303,7 @@ class RuleController extends Controller
     /**
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function downRule(RuleRepositoryInterface $repository, Rule $rule)
@@ -294,6 +317,7 @@ class RuleController extends Controller
     /**
      * @param RuleRepositoryInterface $repository
      * @param RuleGroup               $ruleGroup
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function upRuleGroup(RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
@@ -307,6 +331,7 @@ class RuleController extends Controller
     /**
      * @param RuleRepositoryInterface $repository
      * @param RuleGroup               $ruleGroup
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function downRuleGroup(RuleRepositoryInterface $repository, RuleGroup $ruleGroup)

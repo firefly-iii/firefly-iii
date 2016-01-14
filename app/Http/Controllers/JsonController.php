@@ -2,13 +2,17 @@
 
 use Amount;
 use Carbon\Carbon;
+use Config;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Input;
 use Preferences;
 use Response;
 use Session;
@@ -36,6 +40,49 @@ class JsonController extends Controller
         Preferences::set('tour', false);
 
         return Response::json('true');
+    }
+
+    /**
+     * @param RuleTrigger|null $trigger
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function trigger(RuleTrigger $trigger = null)
+    {
+        $count    = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
+        $keys     = array_keys(Config::get('firefly.rule-triggers'));
+        $triggers = [];
+        foreach ($keys as $key) {
+            if ($key != 'user_action') {
+                $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
+            }
+        }
+
+        $view = view('rules.partials.trigger', compact('triggers', 'trigger', 'count'))->render();
+
+
+        return Response::json(['html' => $view]);
+    }
+
+
+    /**
+     * @param RuleAction|null $action
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function action(RuleAction $action = null)
+    {
+        $count   = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
+        $keys    = array_keys(Config::get('firefly.rule-actions'));
+        $actions = [];
+        foreach ($keys as $key) {
+            $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
+        }
+
+        $view = view('rules.partials.action', compact('actions', 'action', 'count'))->render();
+
+
+        return Response::json(['html' => $view]);
     }
 
     /**

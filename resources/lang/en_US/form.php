@@ -67,6 +67,7 @@ return [
     'filename'                    => 'File name',
     'mime'                        => 'Mime type',
     'size'                        => 'Size',
+    'trigger'                     => 'Trigger',
     'stop_processing'             => 'Stop processing',
 
 

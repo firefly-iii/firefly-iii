@@ -1,4 +1,11 @@
 /* global comboChart,token, billID */
+/*
+ * index.js
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 // Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
@@ -13,7 +20,6 @@ var fixHelper = function (e, tr) {
 
 $(function () {
         "use strict";
-        console.log("Hello");
         $('.rule-triggers').sortable({
                 helper: fixHelper,
                 stop: sortStop,

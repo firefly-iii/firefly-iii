@@ -1,0 +1,22 @@
+<tr data-count="{{ count }}">
+    <td style="width:40px;">
+        <a href="#" class="btn btn-danger btn-sm remove-trigger"><i class="fa fa-trash"></i></a>
+    </td>
+    <td style="width:30%;">
+        <select name="rule-trigger[{{ count }}]" class="form-control">
+            {% for key,name in triggers %}
+                <option name="{{ key }}" label="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <input type="text" name="rule-trigger-value[{{ count }}]" class="form-control">
+    </td>
+    <td style="width:20%;">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="rule-trigger-stop[{{ count }}]" value="1"/>
+            </label>
+        </div>
+    </td>
+</tr>

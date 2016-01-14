@@ -15,6 +15,7 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('title') }}
+                    {{ ExpandedForm.select('trigger',journalTriggers) }}
                     {{ ExpandedForm.checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
                 </div>
             </div>
@@ -40,8 +41,23 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'rule_triggers'|_ }}</h3>
                 </div>
-                <div class="box-body">
-                    Here
+                <div class="box-body rule-trigger-box">
+                    <table class="table table-condensed table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="2">{{ 'trigger'|_ }}</th>
+                            <th>{{ 'trigger_value'|_ }}</th>
+                            <th>{{ 'stop_processing_other_triggers'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody class="rule-trigger-tbody">
+                        </tbody>
+
+                    </table>
+                    <p>
+                        <br/>
+                        <a href="#" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -55,7 +71,22 @@
                     <h3 class="box-title">{{ 'rule_actions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    Here
+                    <table class="table table-condensed table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="2">{{ 'action'|_ }}</th>
+                            <th>{{ 'action_value'|_ }}</th>
+                            <th>{{ 'stop_executing_other_actions'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody class="rule-action-tbody">
+                        </tbody>
+
+                    </table>
+                    <p>
+                        <br/>
+                        <a href="#" class="btn btn-default add_rule_action">{{ 'add_rule_action'|_ }}</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -82,4 +113,8 @@
     {{ Form.close|raw }}
 
 
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/rules/create-edit.js"></script>
+    <script type="text/javascript" src="js/rules/edit.js"></script>
 {% endblock %}
