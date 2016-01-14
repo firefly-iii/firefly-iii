@@ -10,8 +10,10 @@
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests;
+use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -64,10 +66,11 @@ class RuleController extends Controller
      *
      * @return View
      */
-    public function storeRule(RuleGroup $ruleGroup)
+    public function storeRule(RuleFormRequest $request, RuleGroup $ruleGroup)
     {
         echo '<pre>';
-        var_dump(Input::all());exit();
+        var_dump(Input::all());
+        exit();
     }
 
     /**
@@ -77,6 +80,51 @@ class RuleController extends Controller
      */
     public function createRule(RuleGroup $ruleGroup)
     {
+        // count for possible present previous entered triggers/actions.
+        $triggerCount = 0;
+        $actionCount  = 0;
+
+        // collection of those triggers/actions.
+        $oldTriggers = [];
+        $oldActions  = [];
+
+        // array of valid values for triggers.
+        $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
+        $possibleTriggers = [];
+        foreach ($ruleTriggers as $key) {
+            if ($key != 'user_action') {
+                $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
+            }
+        }
+        unset($key, $ruleTriggers);
+
+        // has old input?
+        if (Input::old()) {
+            // process old triggers.
+            foreach (Input::old('rule-trigger') as $index => $entry) {
+                $count = ($index + 1);
+                $triggerCount++;
+                $oldTrigger    = $entry;
+                $oldValue      = Input::old('rule-trigger-value')[$index];
+                $oldChecked    = isset(Input::old('rule-action-value')[$index]) ? true : false;
+                $oldTriggers[] = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => $oldTrigger,
+                        'oldValue'   => $oldValue,
+                        'oldChecked' => $oldChecked,
+                        'triggers'   => $possibleTriggers,
+                        'count'      => $count
+                    ]
+                )->render();
+            }
+//            echo '<pre>';
+//            var_dump(Input::old());
+//            var_dump($oldTriggers);
+//            exit;
+        }
+
+
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
@@ -95,7 +143,7 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
-        return view('rules.rule.create', compact('subTitleIcon', 'ruleGroup', 'subTitle', 'journalTriggers'));
+        return view('rules.rule.create', compact('subTitleIcon','oldTriggers', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle', 'journalTriggers'));
     }
 
     /**

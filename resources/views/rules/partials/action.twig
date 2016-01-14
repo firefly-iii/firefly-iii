@@ -3,9 +3,14 @@
         <a href="#" class="btn btn-danger btn-sm remove-action"><i class="fa fa-trash"></i></a>
     </td>
     <td style="width:30%;">
+        {% if errors.has('XXX') %}
+            <span class="form-control-feedback"><i class="fa fa-fw fa-remove"></i></span>
+            <p class="text-danger">{{ errors.first('xxxx') }}</p>
+        {% endif %}
+
         <select name="rule-action[{{ count }}]" class="form-control">
             {% for key,name in actions %}
-                <option name="{{ key }}" label="{{ name }}">{{ name }}</option>
+                <option value="{{ key }}" label="{{ name }}">{{ name }}</option>
             {% endfor %}
         </select>
     </td>
