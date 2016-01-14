@@ -11,7 +11,10 @@
 $(function () {
     "use strict";
     console.log("edit");
-    addNewTrigger();
+    if (triggerCount == 0) {
+        addNewTrigger();
+    }
+
     addNewAction();
     $('.add_rule_trigger').click(function () {
         addNewTrigger();

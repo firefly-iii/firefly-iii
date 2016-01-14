@@ -42,9 +42,6 @@
                     <h3 class="box-title">{{ 'rule_triggers'|_ }}</h3>
                 </div>
                 <!-- display any error -->
-                {% if errors.has('rule-trigger.1') %}
-                    {{ errors.first('rule-trigger.1') }}
-                {% endif %}
                 <div class="box-body rule-trigger-box">
                     <table class="table table-condensed table-bordered table-striped">
                         <thead>
@@ -128,5 +125,5 @@
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
     </script>
-    <script type="text/javascript" src="js/rules/edit.js"></script>
+    <script type="text/javascript" src="js/rules/create.js"></script>
 {% endblock %}

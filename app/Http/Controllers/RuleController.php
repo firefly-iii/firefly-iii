@@ -101,8 +101,9 @@ class RuleController extends Controller
         // has old input?
         if (Input::old()) {
             // process old triggers.
+            $newIndex = 0;
             foreach (Input::old('rule-trigger') as $index => $entry) {
-                $count = ($index + 1);
+                $count = ($newIndex + 1);
                 $triggerCount++;
                 $oldTrigger    = $entry;
                 $oldValue      = Input::old('rule-trigger-value')[$index];
@@ -117,6 +118,7 @@ class RuleController extends Controller
                         'count'      => $count
                     ]
                 )->render();
+                $newIndex++;
             }
 //            echo '<pre>';
 //            var_dump(Input::old());

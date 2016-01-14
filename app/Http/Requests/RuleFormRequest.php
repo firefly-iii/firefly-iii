@@ -49,7 +49,10 @@ class RuleFormRequest extends Request
             'description'     => 'between:1,5000',
             'stop_processing' => 'boolean',
             'trigger'         => 'required|in:store-journal,update-journal',
-            'rule-trigger.*'  => 'required|in:' . join(',', $validTriggers)
+            'rule-trigger.*'  => 'required|in:' . join(',', $validTriggers),
+            'rule-trigger-value.*'  => 'required|min:1'
+
+            
         ];
     }
 }
