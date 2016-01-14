@@ -18,6 +18,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Input;
 use Preferences;
+use Response;
 use Session;
 use URL;
 use View;
@@ -168,11 +169,11 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleRepositoryInterface $repository)
+    public function destroyRuleGroup(RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
 
-        $title = $ruleGroup->title;
-        $moveTo   = Auth::user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
+        $title  = $ruleGroup->title;
+        $moveTo = Auth::user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
 
         $repository->destroyRuleGroup($ruleGroup, $moveTo);
 
@@ -184,16 +185,61 @@ class RuleController extends Controller
         return redirect(Session::get('rules.rule-group.delete.url'));
     }
 
+    /**
+     * @param RuleRepositoryInterface $repository
+     * @param Rule                    $rule
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reorderRuleTriggers(RuleRepositoryInterface $repository, Rule $rule)
+    {
+        $ids = Input::get('triggers');
+        if (is_array($ids)) {
+            $repository->reorderRuleTriggers($rule, $ids);
+        }
+
+        return Response::json(true);
+
+    }
+
+    /**
+     * @param RuleRepositoryInterface $repository
+     * @param Rule                    $rule
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reorderRuleActions(RuleRepositoryInterface $repository, Rule $rule)
+    {
+        $ids = Input::get('actions');
+        if (is_array($ids)) {
+            $repository->reorderRuleActions($rule, $ids);
+        }
+
+        return Response::json(true);
+
+    }
+
 
     /**
      * @return View
      */
     public function index()
     {
-        $ruleGroups = Auth::user()->ruleGroups()->orderBy('order','ASC')    ->with(['rules' => function ($query) {
-            $query->orderBy('order', 'ASC');
+        $ruleGroups = Auth::user()
+                          ->ruleGroups()
+                          ->orderBy('order', 'ASC')
+                          ->with(
+                              [
+                                  'rules'              => function ($query) {
+                                      $query->orderBy('order', 'ASC');
 
-        }])->get();
+                                  },
+                                  'rules.ruleTriggers' => function ($query) {
+                                      $query->orderBy('order', 'ASC');
+                                  },
+                                  'rules.ruleActions'  => function ($query) {
+                                      $query->orderBy('order', 'ASC');
+                                  },
+                              ]
+                          )->get();
 
         return view('rules.index', compact('ruleGroups'));
     }

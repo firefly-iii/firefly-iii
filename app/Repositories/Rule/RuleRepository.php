@@ -12,6 +12,7 @@ namespace FireflyIII\Repositories\Rule;
 use Auth;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -74,6 +75,48 @@ class RuleRepository implements RuleRepositoryInterface
         $this->resetRuleGroupOrder();
 
         return $ruleGroup;
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $ids
+     * @return bool
+     */
+    public function reorderRuleTriggers(Rule $rule, array $ids)
+    {
+        $order = 1;
+        foreach ($ids as $triggerId) {
+            /** @var RuleTrigger $trigger */
+            $trigger = $rule->ruleTriggers()->find($triggerId);
+            if (!is_null($trigger)) {
+                $trigger->order = $order;
+                $trigger->save();
+                $order++;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $ids
+     * @return bool
+     */
+    public function reorderRuleActions(Rule $rule, array $ids)
+    {
+        $order = 1;
+        foreach ($ids as $actionId) {
+            /** @var RuleTrigger $trigger */
+            $action = $rule->ruleActions()->find($actionId);
+            if (!is_null($action)) {
+                $action->order = $order;
+                $action->save();
+                $order++;
+            }
+        }
+
+        return true;
     }
 
     /**

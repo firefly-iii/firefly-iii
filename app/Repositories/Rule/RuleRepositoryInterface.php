@@ -51,6 +51,20 @@ interface RuleRepositoryInterface
     public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
 
     /**
+     * @param Rule $rule
+     * @param array $ids
+     * @return bool
+     */
+    public function reorderRuleTriggers(Rule $rule, array $ids);
+
+    /**
+     * @param Rule $rule
+     * @param array $ids
+     * @return bool
+     */
+    public function reorderRuleActions(Rule $rule, array $ids);
+
+    /**
      * @return bool
      */
     public function resetRuleGroupOrder();

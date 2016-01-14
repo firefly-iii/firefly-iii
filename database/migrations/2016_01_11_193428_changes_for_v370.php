@@ -80,11 +80,6 @@ class ChangesForV370 extends Migration
             $table->string('trigger_type', 50);
             $table->string('trigger_value', 255)->nullable();
 
-
-
-            // order must be unique for rule triggers:
-            $table->unique(['rule_id', 'order']);
-
             // connect rule triggers to rules
             $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
         }
@@ -103,15 +98,9 @@ class ChangesForV370 extends Migration
             $table->string('action_type', 50);
             $table->string('action_value', 255)->nullable();
 
-
-
-
-
             // connect rule actions to rules
             $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
 
-            // order must be unique for rule triggers:
-            $table->unique(['rule_id', 'order']);
         }
         );
 

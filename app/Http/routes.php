@@ -242,6 +242,10 @@ Route::group(
     Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@editRule', 'as' => 'rules.rule.edit']);
     Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@deleteRule', 'as' => 'rules.rule.delete']);
 
+    Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
+    Route::post('/rules/rules/action/reorder/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
+
+
     // rule groups:
     Route::get('/rules/groups/create', ['uses' => 'RuleController@createRuleGroup', 'as' => 'rules.rule-group.create']);
     Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleController@editRuleGroup', 'as' => 'rules.rule-group.edit']);
