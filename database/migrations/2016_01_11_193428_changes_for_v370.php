@@ -31,7 +31,7 @@ class ChangesForV370 extends Migration
             $table->integer('user_id')->unsigned();
             $table->unsignedSmallInteger('order');
             $table->string('title', 255);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->unsignedTinyInteger('active')->default(1);
 
             // connect rule groups to users
@@ -54,7 +54,7 @@ class ChangesForV370 extends Migration
             $table->unsignedTinyInteger('stop_processing')->default(0);
 
             $table->string('title', 255);
-            $table->text('description');
+            $table->text('description')->nullable();
 
 
             // connect rules to users
@@ -78,7 +78,7 @@ class ChangesForV370 extends Migration
             $table->unsignedTinyInteger('stop_processing')->default(0);
 
             $table->string('trigger_type', 50);
-            $table->string('trigger_value', 255);
+            $table->string('trigger_value', 255)->nullable();
 
 
 
@@ -101,7 +101,7 @@ class ChangesForV370 extends Migration
             $table->unsignedTinyInteger('stop_processing')->default(0);
 
             $table->string('action_type', 50);
-            $table->string('action_value', 255);
+            $table->string('action_value', 255)->nullable();
 
 
 

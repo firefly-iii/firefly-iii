@@ -41,7 +41,7 @@ class TestDataSeeder extends Seeder
 
     public function createRules()
     {
-        // basic rules group. user should always have one
+        // three rule groups to get started.
         $ruleGroup = new RuleGroup;
         $ruleGroup->user()->associate($this->user);
         $ruleGroup->order       = 1;
@@ -49,19 +49,36 @@ class TestDataSeeder extends Seeder
         $ruleGroup->title       = 'Default rules';
         $ruleGroup->description = 'All your rules not in a particular group.';
         $ruleGroup->save();
+        unset($ruleGroup);
+
+        $ruleGroup = new RuleGroup;
+        $ruleGroup->user()->associate($this->user);
+        $ruleGroup->order       = 2;
+        $ruleGroup->active      = 1;
+        $ruleGroup->title       = 'Empty rule group';
+        $ruleGroup->description = 'Intentionally has no rules.';
+        $ruleGroup->save();
+        unset($ruleGroup);
 
 
-        // a normal rule: saves transactions where description contains "groceries"
-        // and from account is "MyBank Checking Account"
-        // send it to Groceries/Groceries
+        $ruleGroup = new RuleGroup;
+        $ruleGroup->user()->associate($this->user);
+        $ruleGroup->order       = 3;
+        $ruleGroup->active      = 1;
+        $ruleGroup->title       = 'Rules for bills';
+        $ruleGroup->description = 'All rules for bills and recurring costs.';
+        $ruleGroup->save();
+        unset($ruleGroup);
+
+        // move groceries to correct budget/category
         $rule = new Rule;
         $rule->user()->associate($this->user);
-        $rule->ruleGroup()->associate($ruleGroup);
+        $rule->ruleGroup()->associate(RuleGroup::find(1));
         $rule->order           = 1;
         $rule->active          = 1;
         $rule->stop_processing = 0;
-        $rule->title           = 'A strange rule for testing.';
-        $rule->description     = 'This rule triggers on transactions with the description "David Bowie" and puts them in the category "Blackstar".';
+        $rule->title           = 'Move groceries';
+        $rule->description     = 'Move groceries to correct category and budget.';
 
         $rule->save();
 
@@ -108,8 +125,9 @@ class TestDataSeeder extends Seeder
         $ruleAction->active          = 1;
         $ruleAction->stop_processing = 0;
         $ruleAction->action_type     = 'set_category';
-        $ruleAction->action_value    = 'Automated Groceries';
+        $ruleAction->action_value    = 'Groceries';
         $ruleAction->save();
+        unset($ruleAction);
 
         // actions for this rule. one, set budget
         $ruleAction = new RuleAction;
@@ -120,6 +138,306 @@ class TestDataSeeder extends Seeder
         $ruleAction->action_type     = 'set_budget';
         $ruleAction->action_value    = 'Groceries';
         $ruleAction->save();
+        unset($ruleAction);
+
+
+        // move "gas" to "Car" and "Car"
+        $rule = new Rule;
+        $rule->user()->associate($this->user);
+        $rule->ruleGroup()->associate(RuleGroup::find(1));
+        $rule->order           = 2;
+        $rule->active          = 1;
+        $rule->stop_processing = 0;
+        $rule->title           = 'Move gas';
+        $rule->description     = null;
+
+        $rule->save();
+
+        // initial trigger for this rule:
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 1;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'user_action';
+        $ruleTrigger->trigger_value   = 'store-journal';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // content trigger for this rule.
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 2;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'description_contains';
+        $ruleTrigger->trigger_value   = 'gas';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // another
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 3;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'from_account_is';
+        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // actions for this rule. one, set category
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 1;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_category';
+        $ruleAction->action_value    = 'Car';
+        $ruleAction->save();
+        unset($ruleAction);
+
+        // actions for this rule. one, set budget
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 2;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_budget';
+        $ruleAction->action_value    = 'Car';
+        $ruleAction->save();
+        unset($ruleAction);
+
+        // move savings to money management
+        $rule = new Rule;
+        $rule->user()->associate($this->user);
+        $rule->ruleGroup()->associate(RuleGroup::find(1));
+        $rule->order           = 2;
+        $rule->active          = 1;
+        $rule->stop_processing = 0;
+        $rule->title           = 'Move savings';
+        $rule->description     = null;
+
+        $rule->save();
+
+        // initial trigger for this rule:
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 1;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'user_action';
+        $ruleTrigger->trigger_value   = 'store-journal';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // is transfer
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 2;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'transaction_type';
+        $ruleTrigger->trigger_value   = 'Transfer';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // content trigger for this rule.
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 3;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'description_is';
+        $ruleTrigger->trigger_value   = 'Save money';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // another
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 4;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'from_account_is';
+        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // another
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 5;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'to_account_is';
+        $ruleTrigger->trigger_value   = 'Savings';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // actions for this rule. one, set category
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 1;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_category';
+        $ruleAction->action_value    = 'Money Management';
+        $ruleAction->save();
+        unset($ruleAction);
+
+        // move TV bill to "Bills" and "House"
+        $rule = new Rule;
+        $rule->user()->associate($this->user);
+        $rule->ruleGroup()->associate(RuleGroup::find(3));
+        $rule->order           = 1;
+        $rule->active          = 1;
+        $rule->stop_processing = 0;
+        $rule->title           = 'TV Bill';
+        $rule->description     = null;
+
+        $rule->save();
+
+        // initial trigger for this rule:
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 1;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'user_action';
+        $ruleTrigger->trigger_value   = 'store-journal';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // content trigger for this rule.
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 2;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'description_contains';
+        $ruleTrigger->trigger_value   = 'tv bill';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // another
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 3;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'from_account_is';
+        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // actions for this rule. one, set category
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 1;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_category';
+        $ruleAction->action_value    = 'House';
+        $ruleAction->save();
+        unset($ruleAction);
+
+        // actions for this rule. one, set budget
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 2;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_budget';
+        $ruleAction->action_value    = 'Bills';
+        $ruleAction->save();
+        unset($ruleAction);
+
+        // move rent to bills, rent.
+        $rule = new Rule;
+        $rule->user()->associate($this->user);
+        $rule->ruleGroup()->associate(RuleGroup::find(3));
+        $rule->order           = 2;
+        $rule->active          = 1;
+        $rule->stop_processing = 0;
+        $rule->title           = 'Rent';
+        $rule->description     = null;
+
+        $rule->save();
+
+        // initial trigger for this rule:
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 1;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'user_action';
+        $ruleTrigger->trigger_value   = 'store-journal';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // content trigger for this rule.
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 2;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'description_contains';
+        $ruleTrigger->trigger_value   = 'rent';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // another
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = 3;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->trigger_type    = 'from_account_is';
+        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+
+        $ruleTrigger->save();
+        unset($ruleTrigger);
+
+        // actions for this rule. one, set category
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 1;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_category';
+        $ruleAction->action_value    = 'House';
+        $ruleAction->save();
+        unset($ruleAction);
+
+        // actions for this rule. one, set budget
+        $ruleAction = new RuleAction;
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = 2;
+        $ruleAction->active          = 1;
+        $ruleAction->stop_processing = 0;
+        $ruleAction->action_type     = 'set_budget';
+        $ruleAction->action_value    = 'Bills';
+        $ruleAction->save();
+        unset($ruleAction);
+
+
+        // a normal rule: saves transactions where description contains "groceries"
+        // and from account is "MyBank Checking Account"
+        // send it to Groceries/Groceries
 
 
         //$ruleAction
@@ -244,7 +562,7 @@ class TestDataSeeder extends Seeder
             [
                 'accountRole'          => 'ccAsset',
                 'ccMonthlyPaymentDate' => '2015-05-27',
-                'ccType'               => 'monthlyFull'
+                'ccType'               => 'monthlyFull',
             ],
             [
                 'accountRole' => 'savingAsset',
@@ -369,21 +687,21 @@ class TestDataSeeder extends Seeder
             [
                 'piggy_bank_id' => $camera->id,
                 'date'          => '2015-05-01',
-                'amount'        => '245'
+                'amount'        => '245',
             ]
         );
         PiggyBankEvent::create(
             [
                 'piggy_bank_id' => $camera->id,
                 'date'          => '2015-06-01',
-                'amount'        => '245'
+                'amount'        => '245',
             ]
         );
         PiggyBankEvent::create(
             [
                 'piggy_bank_id' => $camera->id,
                 'date'          => '2015-07-01',
-                'amount'        => '245'
+                'amount'        => '245',
             ]
         );
 
@@ -408,21 +726,21 @@ class TestDataSeeder extends Seeder
             [
                 'piggy_bank_id' => $phone->id,
                 'date'          => '2015-05-01',
-                'amount'        => '111'
+                'amount'        => '111',
             ]
         );
         PiggyBankEvent::create(
             [
                 'piggy_bank_id' => $phone->id,
                 'date'          => '2015-06-01',
-                'amount'        => '111'
+                'amount'        => '111',
             ]
         );
         PiggyBankEvent::create(
             [
                 'piggy_bank_id' => $phone->id,
                 'date'          => '2015-07-01',
-                'amount'        => '111'
+                'amount'        => '111',
             ]
         );
 
@@ -446,21 +764,21 @@ class TestDataSeeder extends Seeder
             [
                 'piggy_bank_id' => $couch->id,
                 'date'          => '2015-05-01',
-                'amount'        => '40'
+                'amount'        => '40',
             ]
         );
         PiggyBankEvent::create(
             [
                 'piggy_bank_id' => $couch->id,
                 'date'          => '2015-06-01',
-                'amount'        => '40'
+                'amount'        => '40',
             ]
         );
         PiggyBankEvent::create(
             [
                 'piggy_bank_id' => $couch->id,
                 'date'          => '2015-07-01',
-                'amount'        => '40'
+                'amount'        => '40',
             ]
         );
 
@@ -914,7 +1232,7 @@ class TestDataSeeder extends Seeder
                 'startdate'   => $start->format('Y-m-d'),
                 'amount'      => $amount,
                 'repeats'     => 0,
-                'repeat_freq' => 'monthly'
+                'repeat_freq' => 'monthly',
             ]
         );
     }
