@@ -14,8 +14,11 @@ $(function () {
     if (triggerCount == 0) {
         addNewTrigger();
     }
+    if (actionCount == 0) {
+        addNewAction();
+    }
 
-    addNewAction();
+
     $('.add_rule_trigger').click(function () {
         addNewTrigger();
 

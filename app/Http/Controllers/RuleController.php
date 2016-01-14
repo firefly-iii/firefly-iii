@@ -98,6 +98,15 @@ class RuleController extends Controller
         }
         unset($key, $ruleTriggers);
 
+        // array of valid values for actions
+        $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+        $possibleActions = [];
+        foreach ($ruleActions as $key) {
+            $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
+        }
+        unset($key, $ruleActions);
+
+
         // has old input?
         if (Input::old()) {
             // process old triggers.
@@ -107,7 +116,7 @@ class RuleController extends Controller
                 $triggerCount++;
                 $oldTrigger    = $entry;
                 $oldValue      = Input::old('rule-trigger-value')[$index];
-                $oldChecked    = isset(Input::old('rule-action-value')[$index]) ? true : false;
+                $oldChecked    = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
                 $oldTriggers[] = view(
                     'rules.partials.trigger',
                     [
@@ -120,12 +129,28 @@ class RuleController extends Controller
                 )->render();
                 $newIndex++;
             }
-//            echo '<pre>';
-//            var_dump(Input::old());
-//            var_dump($oldTriggers);
-//            exit;
-        }
 
+            // process old actions
+            $newIndex = 0;
+            foreach (Input::old('rule-action') as $index => $entry) {
+                $count = ($newIndex + 1);
+                $actionCount++;
+                $oldAction    = $entry;
+                $oldValue     = Input::old('rule-action-value')[$index];
+                $oldChecked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
+                $oldActions[] = view(
+                    'rules.partials.action',
+                    [
+                        'oldTrigger' => $oldAction,
+                        'oldValue'   => $oldValue,
+                        'oldChecked' => $oldChecked,
+                        'actions'    => $possibleActions,
+                        'count'      => $count
+                    ]
+                )->render();
+                $newIndex++;
+            }
+        }
 
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
@@ -143,9 +168,11 @@ class RuleController extends Controller
         }
         Session::forget('rules.rule.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'create-rule-group');
+        Session::flash('gaEventAction', 'create-rule');
 
-        return view('rules.rule.create', compact('subTitleIcon','oldTriggers', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle', 'journalTriggers'));
+        return view(
+            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle', 'journalTriggers')
+        );
     }
 
     /**

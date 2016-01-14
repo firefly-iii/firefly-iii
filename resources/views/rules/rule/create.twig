@@ -84,7 +84,9 @@
                         </tr>
                         </thead>
                         <tbody class="rule-action-tbody">
-
+                        {% for action in oldActions %}
+                            {{ action|raw }}
+                        {% endfor %}
                         </tbody>
 
                     </table>

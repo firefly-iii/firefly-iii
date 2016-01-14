@@ -170,7 +170,7 @@ return [
         'end_date'        => 'FireflyIII\Support\Binder\Date'
     ],
 
-    'rule-triggers' => [
+    'rule-triggers'     => [
         'user_action'           => 'FireflyIII\Rules\Triggers\UserAction',
         'from_account_starts'   => 'FireflyIII\Rules\Triggers\FromAccountStarts',
         'from_account_ends'     => 'FireflyIII\Rules\Triggers\FromAccountEnds',
@@ -189,7 +189,7 @@ return [
         'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
         'description_is'        => 'FireflyIII\Rules\Triggers\DescriptionIs',
     ],
-    'rule-actions'  => [
+    'rule-actions'      => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
         'clear_category'      => 'FireflyIII\Rules\Actions\ClearCategory',
         'set_budget'          => 'FireflyIII\Rules\Actions\SetBudget',
@@ -201,5 +201,15 @@ return [
         'append_description'  => 'FireflyIII\Rules\Actions\AppendDescription',
         'prepend_description' => 'FireflyIII\Rules\Actions\PrependDescription',
     ],
+    // all rule actions that require text input:
+    'rule-actions-text' => [
+        'set_category',
+        'set_budget',
+        'add_tag',
+        'remove_tag',
+        'set_description',
+        'append_description',
+        'prepend_description',
+    ]
 
 ];
