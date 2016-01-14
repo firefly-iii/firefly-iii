@@ -52,11 +52,31 @@ class RuleController extends Controller
         if (Session::get('rules.rule-group.create.fromStore') !== true) {
             Session::put('rules.rule-group.create.url', URL::previous());
         }
-        Session::forget('accounts.create.fromStore');
+        Session::forget('rules.rule-group.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
         return view('rules.rule-group.create', compact('subTitleIcon', 'what', 'subTitle'));
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @return View
+     */
+    public function createRule(RuleGroup $ruleGroup)
+    {
+        $subTitleIcon = 'fa-clone';
+        $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
+
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('rules.rule.create.fromStore') !== true) {
+            Session::put('rules.rule.create.url', URL::previous());
+        }
+        Session::forget('rules.rule.create.fromStore');
+        Session::flash('gaEventCategory', 'rules');
+        Session::flash('gaEventAction', 'create-rule-group');
+
+        return view('rules.rule.create', compact('subTitleIcon','ruleGroup', 'subTitle'));
     }
 
     /**

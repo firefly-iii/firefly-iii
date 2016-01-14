@@ -105,16 +105,26 @@
 
                                         </td>
                                         <td>{{ rule.title }}
+                                            {% if rule.stop_processing %}
+                                                <i class="fa fa-stop-circle-o"></i>
+                                            {% endif %}
+
                                             {% if rule.description != "" %}
                                                 <small><br/>{{ rule.description }}</small>
                                             {% endif %}
+
                                         </td>
                                         <td>
                                             {% if rule.ruleTriggers.count > 0 %}
                                                 <ul class="small rule-triggers" data-id="{{ rule.id }}">
                                                     {% for trigger in rule.ruleTriggers %}
                                                         {% if trigger.trigger_type != "user_action" %}
-                                                            <li data-id="{{ trigger.id }}">{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}</li>
+                                                            <li data-id="{{ trigger.id }}">{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}
+
+                                                                {% if trigger.stop_processing %}
+                                                                    <i class="fa fa-stop-circle-o"></i>
+                                                                {% endif %}
+                                                            </li>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </ul>
@@ -124,7 +134,11 @@
                                             {% if rule.ruleActions.count > 0 %}
                                                 <ul class="small rule-actions" data-id="{{ rule.id }}">
                                                     {% for action in rule.ruleActions %}
-                                                        <li data-id="{{ action.id }}">{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}</li>
+                                                        <li data-id="{{ action.id }}">{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}
+                                                            {% if action.stop_processing %}
+                                                                <i class="fa fa-stop-circle-o"></i>
+                                                            {% endif %}
+                                                        </li>
                                                     {% endfor %}
                                                 </ul>
                                             {% endif %}
@@ -140,7 +154,7 @@
                         {% endif %}
                         <p>
                             <br/>
-                            <a href="{{ route('rules.rule.create') }}" class="btn btn-success">{{ 'new_rule'|_ }}</a>
+                            <a href="{{ route('rules.rule.create', ruleGroup.id) }}" class="btn btn-success">{{ 'new_rule'|_ }}</a>
                         </p>
                     </div>
                 </div>

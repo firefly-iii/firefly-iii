@@ -60,6 +60,8 @@ return [
     'move_rule_group_up'                 => 'Move rule group up',
     'move_rule_group_down'               => 'Move rule group down',
     'save_rules_by_moving'               => 'Save these rule(s) by moving them to another rule group:',
+    'make_new_rule'                      => 'Make new rule in rule group ":title"',
+    'rule_help_stop_processing'          => 'When you check this box, later rules in this group will not be executed.',
 
     // actions and triggers
     'rule_trigger_user_action'           => 'User action is ":trigger_value"',

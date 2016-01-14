@@ -67,6 +67,7 @@ return [
     'filename'                    => 'File name',
     'mime'                        => 'Mime type',
     'size'                        => 'Size',
+    'stop_processing'             => 'Stop processing',
 
 
     'delete_account'    => 'Delete account ":name"',
