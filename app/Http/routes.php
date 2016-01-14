@@ -247,6 +247,10 @@ Route::group(
     Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleController@editRuleGroup', 'as' => 'rules.rule-group.edit']);
     Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleController@deleteRuleGroup', 'as' => 'rules.rule-group.delete']);
 
+    Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleController@upRuleGroup', 'as' => 'rules.rule-group.up']);
+    Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleController@downRuleGroup', 'as' => 'rules.rule-group.down']);
+
+
     Route::post('/rules/groups/store', ['uses' => 'RuleController@storeRuleGroup', 'as' => 'rules.rule-group.store']);
     Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleController@updateRuleGroup', 'as' => 'rules.rule-group.update']);
     Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleController@destroyRuleGroup', 'as' => 'rules.rule-group.destroy']);
