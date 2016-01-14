@@ -184,16 +184,38 @@ class RuleController extends Controller
      */
     public function index()
     {
-        $ruleGroups = Auth::user()->ruleGroups()->with('rules')->get();
+        $ruleGroups = Auth::user()->ruleGroups()->with(['rules' => function($query) {
+            $query->orderBy('order','ASC');
+
+        }])->get();
 
         return view('rules.index', compact('ruleGroups'));
     }
 
+
     /**
-     * @param Rule $rule
+     * @param RuleRepositoryInterface $repository
+     * @param Rule                    $rule
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function upRule(Rule $rule)
+    public function upRule(RuleRepositoryInterface $repository, Rule $rule)
     {
+        $repository->moveRuleUp($rule);
+
+        return redirect(route('rules.index'));
+
+    }
+
+    /**
+     * @param RuleRepositoryInterface $repository
+     * @param Rule                    $rule
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function downRule(RuleRepositoryInterface $repository, Rule $rule)
+    {
+        $repository->moveRuleDown($rule);
+
+        return redirect(route('rules.index'));
 
     }
 

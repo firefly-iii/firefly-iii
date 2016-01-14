@@ -12,6 +12,7 @@ namespace FireflyIII\Repositories\Rule;
 use Auth;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use Log;
 
 /**
  * Class RuleRepository
@@ -111,5 +112,67 @@ class RuleRepository implements RuleRepositoryInterface
 
 
         return true;
+    }
+
+    /**
+     * @param Rule $rule
+     * @return bool
+     */
+    public function moveRuleUp(Rule $rule)
+    {
+        $order = $rule->order;
+
+        // find the rule with order-1 and give it order+1
+        $other = $rule->ruleGroup->rules()->where('order', ($order - 1))->first();
+        if ($other) {
+            $other->order = ($other->order + 1);
+            $other->save();
+        }
+
+        $rule->order = ($rule->order - 1);
+        $rule->save();
+        $this->resetRulesInGroupOrder($rule->ruleGroup);
+    }
+
+    /**
+     * @param Rule $rule
+     * @return bool
+     */
+    public function moveRuleDown(Rule $rule)
+    {
+        $order = $rule->order;
+
+        // find the rule with order+1 and give it order-1
+        $other = $rule->ruleGroup->rules()->where('order', ($order + 1))->first();
+        if ($other) {
+            $other->order = $other->order - 1;
+            $other->save();
+        }
+
+
+        $rule->order = ($rule->order + 1);
+        $rule->save();
+        $this->resetRulesInGroupOrder($rule->ruleGroup);
+    }
+
+    /**
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
+    {
+        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $ruleGroup->rules()
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get();
+        $count = 1;
+        /** @var Rule $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            $count++;
+        }
+
     }
 }

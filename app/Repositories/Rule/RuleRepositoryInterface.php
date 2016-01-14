@@ -9,6 +9,7 @@
 
 namespace FireflyIII\Repositories\Rule;
 
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 
 /**
@@ -51,5 +52,22 @@ interface RuleRepositoryInterface
      * @return bool
      */
     public function resetRuleGroupOrder();
+
+    /**
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
+
+    /**
+     * @param Rule $rule
+     * @return bool
+     */
+    public function moveRuleUp(Rule $rule);
+
+    /**
+     * @param Rule $rule
+     * @return bool
+     */
+    public function moveRuleDown(Rule $rule);
 
 }
