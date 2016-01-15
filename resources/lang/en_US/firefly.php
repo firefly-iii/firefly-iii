@@ -40,7 +40,7 @@ return [
 
     // rules
     'rules'                     => 'Rules',
-    'rules_explanation'         => 'Here is going to be text',
+    'rules_explanation'         => 'Here you can manage rules. Rules are triggered when a transaction is created or updated. Then, if the transaction has certain properties (called "triggers") Firefly will execute the "actions". Combined, you can make Firefly respond in a certain way to new transactions.',
     'rule_name'                 => 'Name of rule',
     'rule_triggers'             => 'Rule triggers when',
     'rule_actions'              => 'Rule will',
