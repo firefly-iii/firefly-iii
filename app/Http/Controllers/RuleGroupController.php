@@ -6,7 +6,6 @@ use Auth;
 use ExpandedForm;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Input;
 use Preferences;
@@ -52,8 +51,8 @@ class RuleGroupController extends Controller
 
 
     /**
-     * @param RuleGroupFormRequest    $request
-     * @param RuleRepositoryInterface $repository
+     * @param RuleGroupFormRequest         $request
+     * @param RuleGroupRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -103,9 +102,9 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param RuleGroupFormRequest    $request
-     * @param RuleRepositoryInterface $repository
-     * @param RuleGroup               $ruleGroup
+     * @param RuleGroupFormRequest         $request
+     * @param RuleGroupRepositoryInterface $repository
+     * @param RuleGroup                    $ruleGroup
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -135,8 +134,8 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param RuleRepositoryInterface $repository
-     * @param RuleGroup               $ruleGroup
+     * @param RuleGroupRepositoryInterface $repository
+     * @param RuleGroup                    $ruleGroup
      *
      * @return View
      */
@@ -156,8 +155,9 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param RuleGroup               $ruleGroup
-     * @param RuleRepositoryInterface $repository
+     * @param RuleGroupRepositoryInterface $repository
+     *
+     * @param RuleGroup                    $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -179,8 +179,8 @@ class RuleGroupController extends Controller
 
 
     /**
-     * @param RuleRepositoryInterface $repository
-     * @param RuleGroup               $ruleGroup
+     * @param RuleGroupRepositoryInterface $repository
+     * @param RuleGroup                    $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -193,8 +193,8 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param RuleRepositoryInterface $repository
-     * @param RuleGroup               $ruleGroup
+     * @param RuleGroupRepositoryInterface $repository
+     * @param RuleGroup                    $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

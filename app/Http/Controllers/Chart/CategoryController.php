@@ -121,12 +121,12 @@ class CategoryController extends Controller
         $outside = $repository->sumSpentNoCategory(new Collection, $start, $end);
 
         // this is a "fake" entry for the "no category" entry.
-        $entry = new stdClass();
-        $entry->name = trans('firefly.no_category');
+        $entry        = new stdClass();
+        $entry->name  = trans('firefly.no_category');
         $entry->spent = $outside;
         $set->push($entry);
 
-        $set = $set->sortBy('spent');
+        $set  = $set->sortBy('spent');
         $data = $this->generator->frontpage($set);
         $cache->store($data);
 

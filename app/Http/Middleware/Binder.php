@@ -5,6 +5,11 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use FireflyIII\Support\Domain;
 
+/**
+ * Class Binder
+ *
+ * @package FireflyIII\Http\Middleware
+ */
 class Binder
 {
     protected $binders = [];

@@ -156,7 +156,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param ARI   $repository
+     * @param ARI                          $repository
      * @param PiggyBankRepositoryInterface $piggyRepository
      *
      * @return View

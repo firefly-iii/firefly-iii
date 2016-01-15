@@ -10,11 +10,8 @@
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Config;
-use ExpandedForm;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\RuleFormRequest;
-use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
@@ -284,14 +281,19 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger',
-                                               'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
+        return view(
+            'rules.rule.edit', compact(
+            'rule', 'subTitle', 'primaryTrigger',
+            'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'
+        )
+        );
     }
 
     /**
      * @param RuleRepositoryInterface $repository
      * @param RuleFormRequest         $request
      * @param Rule                    $rule
+     *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function updateRule(RuleRepositoryInterface $repository, RuleFormRequest $request, Rule $rule)
@@ -328,10 +330,10 @@ class RuleController extends Controller
     }
 
     /**
-     * @param RuleRepositoryInterface $repository
-     * @param Rule                    $rule
+     * @param Rule $rule
      *
      * @return View
+     * @internal param RuleRepositoryInterface $repository
      */
     public function deleteRule(Rule $rule)
     {
@@ -344,8 +346,6 @@ class RuleController extends Controller
 
         return view('rules.rule.delete', compact('rule', 'subTitle'));
     }
-
-
 
 
     /**
