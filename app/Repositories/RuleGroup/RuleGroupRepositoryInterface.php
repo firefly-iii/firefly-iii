@@ -6,6 +6,11 @@ namespace FireflyIII\Repositories\RuleGroup;
 use FireflyIII\Models\RuleGroup;
 use Illuminate\Support\Collection;
 
+/**
+ * Interface RuleGroupRepositoryInterface
+ *
+ * @package FireflyIII\Repositories\RuleGroup
+ */
 interface RuleGroupRepositoryInterface
 {
     /**
@@ -14,8 +19,7 @@ interface RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
-
+    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
 
 
     /**
@@ -26,19 +30,21 @@ interface RuleGroupRepositoryInterface
     /**
      * @return Collection
      */
-    public function getRuleGroups();
+    public function get();
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
-    public function moveRuleGroupUp(RuleGroup $ruleGroup);
+    public function moveUp(RuleGroup $ruleGroup);
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
-    public function moveRuleGroupDown(RuleGroup $ruleGroup);
+    public function moveDown(RuleGroup $ruleGroup);
 
     /**
      * @return bool
@@ -55,8 +61,7 @@ interface RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function storeRuleGroup(array $data);
-
+    public function store(array $data);
 
     /**
      * @param RuleGroup $ruleGroup
@@ -64,7 +69,7 @@ interface RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function updateRuleGroup(RuleGroup $ruleGroup, array $data);
+    public function update(RuleGroup $ruleGroup, array $data);
 
 
 }

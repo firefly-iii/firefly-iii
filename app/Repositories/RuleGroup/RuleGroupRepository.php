@@ -16,7 +16,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return boolean
      */
-    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null)
+    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null)
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
@@ -55,7 +55,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @return Collection
      */
-    public function getRuleGroups()
+    public function get()
     {
         return Auth::user()->ruleGroups()->orderBy('order', 'ASC')->get();
     }
@@ -66,7 +66,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function moveRuleGroupUp(RuleGroup $ruleGroup)
+    public function moveUp(RuleGroup $ruleGroup)
     {
         $order = $ruleGroup->order;
 
@@ -87,7 +87,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function moveRuleGroupDown(RuleGroup $ruleGroup)
+    public function moveDown(RuleGroup $ruleGroup)
     {
         $order = $ruleGroup->order;
 
@@ -126,6 +126,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
@@ -153,7 +154,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function storeRuleGroup(array $data)
+    public function store(array $data)
     {
         $order = $this->getHighestOrderRuleGroup();
 
@@ -180,7 +181,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function updateRuleGroup(RuleGroup $ruleGroup, array $data)
+    public function update(RuleGroup $ruleGroup, array $data)
     {
         // update the account:
         $ruleGroup->title       = $data['title'];
