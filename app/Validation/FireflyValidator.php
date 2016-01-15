@@ -49,7 +49,7 @@ class FireflyValidator extends Validator
         // check if rule-value matches the thing.
         if (is_array($this->data['rule-trigger'])) {
             foreach ($this->data['rule-trigger'] as $index => $name) {
-                $value = $this->data['rule-trigger-value'][$index] ?? false;
+                $value = isset($this->data['rule-trigger-value'][$index]) ? $this->data['rule-trigger-value'][$index] : false;
                 switch ($name) {
                     default:
                         return true;
@@ -78,7 +78,7 @@ class FireflyValidator extends Validator
         // check if rule-action-value matches the thing.
         if (is_array($this->data['rule-action'])) {
             foreach ($this->data['rule-action'] as $index => $name) {
-                $value = $this->data['rule-action-value'][$index] ?? false;
+                $value = isset($this->data['rule-action-value'][$index]) ? $this->data['rule-action-value'][$index] : false;
                 switch ($name) {
                     default:
                         return true;
