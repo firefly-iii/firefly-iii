@@ -16,7 +16,9 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Input;
 use Preferences;
@@ -84,7 +86,7 @@ class RuleController extends Controller
             'rule-actions'        => $request->get('rule-action'),
             'rule-action-values'  => $request->get('rule-action-value'),
             'rule-action-stop'    => $request->get('rule-action-stop'),
-            'stop_processing'     => $request->get('stop_processing')
+            'stop_processing'     => $request->get('stop_processing'),
         ];
 
         $rule = $repository->storeRule($data);
@@ -134,7 +136,7 @@ class RuleController extends Controller
                         'oldTrigger' => $oldTrigger,
                         'oldValue'   => $oldValue,
                         'oldChecked' => $oldChecked,
-                        'count'      => $count
+                        'count'      => $count,
                     ]
                 )->render();
                 $newIndex++;
@@ -154,8 +156,7 @@ class RuleController extends Controller
                         'oldTrigger' => $oldAction,
                         'oldValue'   => $oldValue,
                         'oldChecked' => $oldChecked,
-                        'actions'    => $possibleActions,
-                        'count'      => $count
+                        'count'      => $count,
                     ]
                 )->render();
                 $newIndex++;
@@ -208,7 +209,8 @@ class RuleController extends Controller
         return redirect(Session::get('rules.rule-group.create.url'));
     }
 
-    public function editRule(Rule $rule) {
+    public function editRule(Rule $rule)
+    {
 
         // count for current rule's triggers/actions.
         $triggerCount = 0;
@@ -217,25 +219,6 @@ class RuleController extends Controller
         // collection of those triggers/actions.
         $triggers = [];
         $actions  = [];
-
-        // array of valid values for triggers (for form).
-        $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
-        $possibleTriggers = [];
-        foreach ($ruleTriggers as $key) {
-            if ($key != 'user_action') {
-                $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
-            }
-        }
-        unset($key, $ruleTriggers);
-
-        // array of valid values for actions
-        $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
-        $possibleActions = [];
-        foreach ($ruleActions as $key) {
-            $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
-        }
-        unset($key, $ruleActions);
-
 
         // has old input?
         if (Input::old()) {
@@ -253,8 +236,7 @@ class RuleController extends Controller
                         'oldTrigger' => $oldTrigger,
                         'oldValue'   => $oldValue,
                         'oldChecked' => $oldChecked,
-                        'triggers'   => $possibleTriggers,
-                        'count'      => $count
+                        'count'      => $count,
                     ]
                 )->render();
                 $newIndex++;
@@ -274,16 +256,68 @@ class RuleController extends Controller
                         'oldTrigger' => $oldAction,
                         'oldValue'   => $oldValue,
                         'oldChecked' => $oldChecked,
-                        'actions'    => $possibleActions,
-                        'count'      => $count
+                        'count'      => $count,
+                    ]
+                )->render();
+                $newIndex++;
+            }
+        } else {
+            // get current triggers
+            $newIndex = 0;
+            /**
+             * @var int         $index
+             * @var RuleTrigger $entry
+             */
+            foreach ($rule->ruleTriggers as $index => $entry) {
+                if ($entry->trigger_type != 'user_action') {
+                    $count = ($newIndex + 1);
+                    $triggerCount++;
+                    $oldTrigger    = $entry->trigger_type;
+                    $oldValue      = $entry->trigger_value;
+                    $oldChecked    = $entry->stop_processing;
+                    $oldTriggers[] = view(
+                        'rules.partials.trigger',
+                        [
+                            'oldTrigger' => $oldTrigger,
+                            'oldValue'   => $oldValue,
+                            'oldChecked' => $oldChecked,
+                            'count'      => $count,
+                        ]
+                    )->render();
+                }
+                $newIndex++;
+            }
+
+            // get current actions
+            $newIndex = 0;
+            /**
+             * @var int $index
+             * @var RuleAction $entry
+             */
+            foreach ($rule->ruleActions as $index => $entry) {
+                $count = ($newIndex + 1);
+                $actionCount++;
+                $oldAction    = $entry->action_type;
+                $oldValue     = $entry->action_value;
+                $oldChecked   = $entry->stop_processing;
+                $oldActions[] = view(
+                    'rules.partials.action',
+                    [
+                        'oldTrigger' => $oldAction,
+                        'oldValue'   => $oldValue,
+                        'oldChecked' => $oldChecked,
+                        'count'      => $count,
                     ]
                 )->render();
                 $newIndex++;
             }
         }
 
+        // get rule trigger for update / store-journal:
+        $primaryTrigger = $rule->ruleTriggers()->where('trigger_type','user_action')->first()->trigger_value;
 
-        $subTitle = trans('firefly.edit_rule_group', ['title' => $rule->title]);
+
+        $subTitle = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('rules.rule.edit.fromUpdate') !== true) {
@@ -293,7 +327,8 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle'));
+        return view('rules.rule.edit', compact('rule', 'subTitle','primaryTrigger',
+                                               'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
     }
 
 

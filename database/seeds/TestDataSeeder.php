@@ -370,9 +370,9 @@ class TestDataSeeder extends Seeder
         $rule->ruleGroup()->associate(RuleGroup::find(3));
         $rule->order           = 2;
         $rule->active          = 1;
-        $rule->stop_processing = 0;
+        $rule->stop_processing = 1;
         $rule->title           = 'Rent';
-        $rule->description     = null;
+        $rule->description     = 'Do something with rent.';
 
         $rule->save();
 
@@ -383,7 +383,7 @@ class TestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'user_action';
-        $ruleTrigger->trigger_value   = 'store-journal';
+        $ruleTrigger->trigger_value   = 'update-journal';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -405,7 +405,7 @@ class TestDataSeeder extends Seeder
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = 3;
         $ruleTrigger->active          = 1;
-        $ruleTrigger->stop_processing = 0;
+        $ruleTrigger->stop_processing = 1;
         $ruleTrigger->trigger_type    = 'from_account_is';
         $ruleTrigger->trigger_value   = 'MyBank Checking Account';
 
@@ -428,7 +428,7 @@ class TestDataSeeder extends Seeder
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = 2;
         $ruleAction->active          = 1;
-        $ruleAction->stop_processing = 0;
+        $ruleAction->stop_processing = 1;
         $ruleAction->action_type     = 'set_budget';
         $ruleAction->action_value    = 'Bills';
         $ruleAction->save();
