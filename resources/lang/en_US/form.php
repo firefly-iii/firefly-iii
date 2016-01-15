@@ -53,7 +53,7 @@ return [
     'csv_config'                  => 'CSV import configuration',
     'specifix'                    => 'Bank- or file specific fixes',
     'csv_import_account'          => 'Default import account',
-    'csv_delimiter'          	  => 'CSV field delimiter',    
+    'csv_delimiter'               => 'CSV field delimiter',
     'attachments[]'               => 'Attachments',
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',
@@ -70,6 +70,10 @@ return [
     'size'                        => 'Size',
     'trigger'                     => 'Trigger',
     'stop_processing'             => 'Stop processing',
+
+    'csv_comma'     => 'A comma (,)',
+    'csv_semicolon' => 'A semicolon (;)',
+    'csv_tab'       => 'A tab (invisible)',
 
 
     'delete_account'    => 'Delete account ":name"',
