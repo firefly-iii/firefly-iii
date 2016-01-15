@@ -548,10 +548,12 @@ class RuleController extends Controller
     {
         $ruleGroups = Auth::user()
                           ->ruleGroups()
+                          ->orderBy('active', 'DESC')
                           ->orderBy('order', 'ASC')
                           ->with(
                               [
                                   'rules'              => function ($query) {
+                                      $query->orderBy('active', 'DESC');
                                       $query->orderBy('order', 'ASC');
 
                                   },

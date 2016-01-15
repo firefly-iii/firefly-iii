@@ -28,7 +28,13 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ ruleGroup.title }}</h3>
+                        <h3 class="box-title">
+                            {% if ruleGroup.active %}
+                                {{ ruleGroup.title }}
+                            {% else %}
+                                <s>{{ ruleGroup.title }}</s> (inactive)
+                            {% endif %}
+                        </h3>
 
                         <!-- ACTIONS MENU -->
                         <div class="box-tools pull-right">
@@ -104,13 +110,22 @@
                                             </div>
 
                                         </td>
-                                        <td>{{ rule.title }}
+                                        <td>
+                                            {% if rule.active %}
+                                                {{ rule.title }}
+                                            {% else %}
+                                                <s>{{ rule.title }}</s> (inactive)
+                                            {% endif %}
                                             {% if rule.stop_processing %}
                                                 <i class="fa fa-stop-circle-o"></i>
                                             {% endif %}
 
                                             {% if rule.description != "" %}
-                                                <small><br/>{{ rule.description }}</small>
+                                                <small
+                                                        {% if not rule.active %}
+                                                            class="text-muted"
+                                                        {% endif %}
+                                                ><br/>{{ rule.description }}</small>
                                             {% endif %}
 
                                         </td>
@@ -119,7 +134,11 @@
                                                 <ul class="small rule-triggers" data-id="{{ rule.id }}">
                                                     {% for trigger in rule.ruleTriggers %}
                                                         {% if trigger.trigger_type != "user_action" %}
-                                                            <li data-id="{{ trigger.id }}">{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}
+                                                            <li
+                                                                    {% if not rule.active %}
+                                                                        class="text-muted"
+                                                                    {% endif %}
+                                                                    data-id="{{ trigger.id }}">{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}
 
                                                                 {% if trigger.stop_processing %}
                                                                     <i class="fa fa-stop-circle-o"></i>
@@ -134,7 +153,11 @@
                                             {% if rule.ruleActions.count > 0 %}
                                                 <ul class="small rule-actions" data-id="{{ rule.id }}">
                                                     {% for action in rule.ruleActions %}
-                                                        <li data-id="{{ action.id }}">{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}
+                                                        <li
+                                                                {% if not rule.active %}
+                                                                    class="text-muted"
+                                                                {% endif %}
+                                                                data-id="{{ action.id }}">{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}
                                                             {% if action.stop_processing %}
                                                                 <i class="fa fa-stop-circle-o"></i>
                                                             {% endif %}
@@ -154,7 +177,8 @@
                         {% endif %}
                         <p>
                             <br/>
-                            <a href="{{ route('rules.rule.create', ruleGroup.id) }}" class="btn btn-success">{{ 'new_rule'|_ }}</a>
+                            <a href="{{ route('rules.rule.create', ruleGroup.id) }}"
+                               class="btn btn-success">{{ 'new_rule'|_ }}</a>
                         </p>
                     </div>
                 </div>
