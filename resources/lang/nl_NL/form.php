@@ -53,7 +53,7 @@ return [
     'csv_config'                  => 'Configuratiebestand',
     'specifix'                    => 'Bank- or of bestandsspecifieke opties',
     'csv_import_account'          => 'Standaard rekening voor importeren',
-    'csv_delimiter'          	  => 'CSV scheidingsteken',
+    'csv_delimiter'               => 'CSV scheidingsteken',
     'attachments[]'               => 'Bijlagen',
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',
@@ -70,6 +70,10 @@ return [
     'size'                        => 'Grootte',
     'trigger'                     => 'Trigger',
     'stop_processing'             => 'Stop met verwerken',
+
+    'csv_comma'     => 'Een komma (,)',
+    'csv_semicolon' => 'Een puntkomma (;)',
+    'csv_tab'       => 'Een tab (onzichtbaar)',
 
 
     'delete_account'    => 'Verwijder rekening ":name"',
