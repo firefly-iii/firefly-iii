@@ -331,6 +331,8 @@ class CsvController extends Controller
      *
      * STEP SIX
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) it's 6, but it's allright.
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function saveMapping()
@@ -374,6 +376,9 @@ class CsvController extends Controller
      * and sends you onwards.
      *
      * STEP TWO
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // need the length.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly 5, its ok
      *
      * @param Request $request
      *

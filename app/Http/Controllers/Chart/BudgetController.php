@@ -46,6 +46,8 @@ class BudgetController extends Controller
      * @param Collection                $accounts
      * @param Collection                $budgets
      *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function multiYear(BudgetRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)

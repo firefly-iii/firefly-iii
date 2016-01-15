@@ -381,17 +381,16 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // cant remove it
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its as simple as I can get it.
      *
      * @return bool
      */
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters)
     {
         $exclude = isset($parameters[0]) ? $parameters[0] : null;
-        $query   = DB::table('piggy_banks');
-        $query->whereNull('piggy_banks.deleted_at');
-        $query->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id');
-        $query->where('accounts.user_id', Auth::user()->id);
+        $query   = DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
+                     ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', Auth::user()->id);
         if (!is_null($exclude)) {
             $query->where('piggy_banks.id', '!=', $exclude);
         }
@@ -406,7 +405,6 @@ class FireflyValidator extends Validator
         }
 
         return true;
-
     }
 
     /**

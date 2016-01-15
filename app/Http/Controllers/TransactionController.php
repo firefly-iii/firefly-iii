@@ -345,10 +345,6 @@ class TransactionController extends Controller
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
 
-        if ($journal->isOpeningBalance()) {
-            return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
-        }
-
         $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);
 

@@ -575,6 +575,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // it's a query.
+     *
      * @return array
      */
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
