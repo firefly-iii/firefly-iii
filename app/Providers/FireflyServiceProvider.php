@@ -54,7 +54,6 @@ class FireflyServiceProvider extends ServiceProvider
     public function register()
     {
 
-
         $this->app->bind(
             'preferences', function () {
             return new Preferences;

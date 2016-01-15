@@ -43,6 +43,8 @@ class CategoryController extends Controller
      * @param SCRI     $repository
      * @param Category $category
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function all(SCRI $repository, Category $category)
@@ -66,7 +68,6 @@ class CategoryController extends Controller
         }
         $spentArray  = $repository->spentPerDay($category, $start, $end);
         $earnedArray = $repository->earnedPerDay($category, $start, $end);
-
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
@@ -161,23 +162,8 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        /**
-         *  category
-         *   year:
-         *    spent: x
-         *    earned: x
-         *   year
-         *    spent: x
-         *    earned: x
-         */
         $entries = new Collection;
-        // go by category, not by year.
-
-        // given a set of categories and accounts, it should not be difficult to get
-        // the exact array of data we need.
-
-        // then get the data for "no category".
-        $set = $repository->listMultiYear($categories, $accounts, $start, $end);
+        $set     = $repository->listMultiYear($categories, $accounts, $start, $end);
 
         /** @var Category $category */
         foreach ($categories as $category) {

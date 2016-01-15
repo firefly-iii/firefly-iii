@@ -79,8 +79,8 @@ class CsvController extends Controller
         if ($this->data->hasHeaders()) {
             $headers = $firstRow;
         }
-
-        foreach (Config::get('csv.roles') as $name => $role) {
+        $keys = array_keys(Config::get('csv.roles'));
+        foreach ($keys as $name) {
             $availableRoles[$name] = trans('firefly.csv_column_' . $name);//$role['name'];
         }
         ksort($availableRoles);
@@ -105,7 +105,7 @@ class CsvController extends Controller
         }
         $data = [
             'date-format' => Session::get('csv-date-format'),
-            'has-headers' => Session::get('csv-has-headers')
+            'has-headers' => Session::get('csv-has-headers'),
         ];
         if (Session::has('csv-map')) {
             $data['map'] = Session::get('csv-map');
@@ -174,7 +174,7 @@ class CsvController extends Controller
         $delimiters = [
             ','   => trans('form.csv_comma'),
             ';'   => trans('form.csv_semicolon'),
-            'tab' => trans('form.csv_tab')
+            'tab' => trans('form.csv_tab'),
         ];
 
         // get a list of asset accounts:

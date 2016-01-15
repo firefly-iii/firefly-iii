@@ -58,9 +58,7 @@ class TransactionController extends Controller
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
-
-        // piggy bank list:
-        $piggyBanks = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+        $piggyBanks  = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
             $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
@@ -161,7 +159,7 @@ class TransactionController extends Controller
             'date'          => $journal->date->format('Y-m-d'),
             'category'      => '',
             'budget_id'     => 0,
-            'piggy_bank_id' => 0
+            'piggy_bank_id' => 0,
         ];
         // get tags:
         $preFilled['tags'] = join(',', $journal->tags->pluck('tag')->toArray());

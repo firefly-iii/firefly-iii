@@ -44,29 +44,29 @@ class FromAccountEnds implements TriggerInterface
      */
     public function triggered()
     {
-        $fromAccountName       = strtolower($this->journal->source_account->name);
-        $fromAccountNameLength = strlen($fromAccountName);
-        $search                = strtolower($this->trigger->trigger_value);
-        $searchLength          = strlen($search);
+        $name         = strtolower($this->journal->source_account->name);
+        $nameLength   = strlen($name);
+        $search       = strtolower($this->trigger->trigger_value);
+        $searchLength = strlen($search);
 
         // if the string to search for is longer than the account name,
         // shorten the search string.
-        if ($searchLength > $fromAccountNameLength) {
-            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $fromAccountName . '" (' . $fromAccountNameLength . '). ');
-            $search       = substr($search, ($fromAccountNameLength * -1));
+        if ($searchLength > $nameLength) {
+            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $name . '" (' . $nameLength . '). ');
+            $search       = substr($search, ($nameLength * -1));
             $searchLength = strlen($search);
             Log::debug('Search string is now "' . $search . '" (' . $searchLength . ') instead.');
         }
 
 
-        $part = substr($fromAccountName, $searchLength * -1);
+        $part = substr($name, $searchLength * -1);
 
         if ($part == $search) {
-            Log::debug('"' . $fromAccountName . '" ends with "' . $search . '". Return true.');
+            Log::debug('"' . $name . '" ends with "' . $search . '". Return true.');
 
             return true;
         }
-        Log::debug('"' . $fromAccountName . '" does not end with "' . $search . '". Return false.');
+        Log::debug('"' . $name . '" does not end with "' . $search . '". Return false.');
 
         return false;
 

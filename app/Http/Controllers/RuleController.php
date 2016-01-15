@@ -134,28 +134,20 @@ class RuleController extends Controller
     {
         // has old input?
         if (Input::old()) {
-            // process old triggers.
             $oldTriggers  = $this->getPreviousTriggers();
             $triggerCount = count($oldTriggers);
-
-            // process old actions
-            $oldActions  = $this->getPreviousActions();
-            $actionCount = count($oldActions);
+            $oldActions   = $this->getPreviousActions();
+            $actionCount  = count($oldActions);
         } else {
-            // get current triggers
             $oldTriggers  = $this->getCurrentTriggers($rule);
             $triggerCount = count($oldTriggers);
-
-            // get current actions
-            $oldActions  = $this->getCurrentActions($rule);
-            $actionCount = count($oldActions);
+            $oldActions   = $this->getCurrentActions($rule);
+            $actionCount  = count($oldActions);
         }
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
-
-
-        $subTitle = trans('firefly.edit_rule', ['title' => $rule->title]);
+        $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('rules.rule.edit.fromUpdate') !== true) {

@@ -89,17 +89,12 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     {
         // language:
         $format  = trans('config.month_and_day');
-        $data    = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
+        $data    = ['count' => 0, 'labels' => [], 'datasets' => [],];
         $current = clone $start;
         while ($current <= $end) {
             $data['labels'][] = $current->formatLocalized($format);
             $current->addDay();
         }
-
 
         foreach ($accounts as $account) {
             $set      = [
@@ -148,8 +143,8 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             'datasets' => [
                 [
                     'label' => $account->name,
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         $range    = Steam::balanceInRange($account, $start, $end);

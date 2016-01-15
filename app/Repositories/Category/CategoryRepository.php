@@ -76,22 +76,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end)
     {
-        /*
-         * select categories.id, DATE_FORMAT(transaction_journals.date,"%Y") as dateFormatted, transaction_types.type, SUM(amount) as sum from categories
 
-left join category_transaction_journal ON category_transaction_journal.category_id = categories.id
-left join transaction_journals ON transaction_journals.id = category_transaction_journal.transaction_journal_id
-left join transaction_types ON transaction_types.id = transaction_journals.transaction_type_id
-left join transactions ON transactions.transaction_journal_id = transaction_journals.id
-
-
-where
-categories.user_id =1
-and transaction_types.type in ("Withdrawal","Deposit")
-and transactions.account_id IN (2,4,6,10,11,610,725,879,1248)
-
-group by categories.id, transaction_types.type, dateFormatted
-         */
         $set = Auth::user()->categories()
                    ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
@@ -100,6 +85,8 @@ group by categories.id, transaction_types.type, dateFormatted
                    ->whereIn('transaction_types.type', [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL])
                    ->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
                    ->whereIn('categories.id', $categories->pluck('id')->toArray())
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                    ->groupBy('categories.id')
                    ->groupBy('transaction_types.type')
                    ->groupBy('dateFormatted')
@@ -108,7 +95,7 @@ group by categories.id, transaction_types.type, dateFormatted
                            'categories.*',
                            DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
                            'transaction_types.type',
-                           DB::Raw('SUM(`amount`) as `sum`')
+                           DB::Raw('SUM(`amount`) as `sum`'),
                        ]
                    );
 
@@ -158,7 +145,7 @@ group by categories.id, transaction_types.type, dateFormatted
                               [
                                   'categories.*',
                                   DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
-                                  DB::Raw('SUM(`t_dest`.`amount`) AS `earned`')
+                                  DB::Raw('SUM(`t_dest`.`amount`) AS `earned`'),
                               ]
                           );
 
@@ -212,7 +199,7 @@ group by categories.id, transaction_types.type, dateFormatted
             [
                 'categories.*',
                 DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
-                DB::Raw('SUM(`t_src`.`amount`) AS `spent`')
+                DB::Raw('SUM(`t_src`.`amount`) AS `spent`'),
             ]
         );
 
@@ -286,7 +273,7 @@ group by categories.id, transaction_types.type, dateFormatted
 
         $single = $query->first(
             [
-                DB::Raw('SUM(`transactions`.`amount`) as `sum`')
+                DB::Raw('SUM(`transactions`.`amount`) as `sum`'),
             ]
         );
         if (!is_null($single)) {
