@@ -48,7 +48,7 @@ class RuleController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function storeRule(RuleFormRequest $request, RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function store(RuleFormRequest $request, RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
 
 
@@ -88,7 +88,7 @@ class RuleController extends Controller
      *
      * @return View
      */
-    public function createRule(RuleGroup $ruleGroup)
+    public function create(RuleGroup $ruleGroup)
     {
         // count for possible present previous entered triggers/actions.
         $triggerCount = 0;
@@ -162,7 +162,7 @@ class RuleController extends Controller
      *
      * @return View
      */
-    public function editRule(Rule $rule)
+    public function edit(Rule $rule)
     {
 
         // count for current rule's triggers/actions.
@@ -296,7 +296,7 @@ class RuleController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function updateRule(RuleRepositoryInterface $repository, RuleFormRequest $request, Rule $rule)
+    public function update(RuleRepositoryInterface $repository, RuleFormRequest $request, Rule $rule)
     {
 
         // process the rule itself:
@@ -335,7 +335,7 @@ class RuleController extends Controller
      * @return View
      * @internal param RuleRepositoryInterface $repository
      */
-    public function deleteRule(Rule $rule)
+    public function delete(Rule $rule)
     {
         $subTitle = trans('firefly.delete_rule', ['title' => $rule->title]);
 
@@ -354,7 +354,7 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroyRule(RuleRepositoryInterface $repository, Rule $rule)
+    public function destroy(RuleRepositoryInterface $repository, Rule $rule)
     {
 
         $title = $rule->title;
@@ -437,7 +437,7 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function upRule(RuleRepositoryInterface $repository, Rule $rule)
+    public function up(RuleRepositoryInterface $repository, Rule $rule)
     {
         $repository->moveRuleUp($rule);
 
@@ -451,7 +451,7 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function downRule(RuleRepositoryInterface $repository, Rule $rule)
+    public function down(RuleRepositoryInterface $repository, Rule $rule)
     {
         $repository->moveRuleDown($rule);
 

@@ -240,18 +240,18 @@ Route::group(
     Route::get('/rules', ['uses' => 'RuleController@index', 'as' => 'rules.index']);
 
     // rules GET:
-    Route::get('/rules/create/{ruleGroup}', ['uses' => 'RuleController@createRule', 'as' => 'rules.rule.create']);
-    Route::get('/rules/rules/up/{rule}', ['uses' => 'RuleController@upRule', 'as' => 'rules.rule.up']);
-    Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@downRule', 'as' => 'rules.rule.down']);
-    Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@editRule', 'as' => 'rules.rule.edit']);
-    Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@deleteRule', 'as' => 'rules.rule.delete']);
+    Route::get('/rules/create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rules.rule.create']);
+    Route::get('/rules/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
+    Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
+    Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
+    Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
 
     // rules POST:
     Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
     Route::post('/rules/rules/action/reorder/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
-    Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@storeRule', 'as' => 'rules.rule.store']);
-    Route::post('/rules/update/{rule}', ['uses' => 'RuleController@updateRule', 'as' => 'rules.rule.update']);
-    Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroyRule', 'as' => 'rules.rule.destroy']);
+    Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rules.rule.store']);
+    Route::post('/rules/update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rules.rule.update']);
+    Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rules.rule.destroy']);
 
 
     // rule groups GET
