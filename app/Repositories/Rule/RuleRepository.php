@@ -409,4 +409,47 @@ class RuleRepository implements RuleRepositoryInterface
 
         return $ruleAction;
     }
+
+    /**
+     * @param Rule  $rule
+     * @param array $data
+     * @return Rule
+     */
+    public function updateRule(Rule $rule, array $data)
+    {
+        // update rule:
+        $rule->active          = $data['active'];
+        $rule->stop_processing = $data['stop_processing'];
+        $rule->title           = $data['title'];
+        $rule->description     = $data['description'];
+        $rule->save();
+
+        // delete triggers:
+        $rule->ruleTriggers()->delete();
+
+        // delete actions:
+        $rule->ruleActions()->delete();
+
+        // recreate triggers:
+        $order          = 1;
+        $stopProcessing = false;
+        $this->storeTrigger($rule, 'user_action', $data['trigger'], $stopProcessing, $order);
+        foreach ($data['rule-triggers'] as $index => $trigger) {
+            $value          = $data['rule-trigger-values'][$index];
+            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+            $this->storeTrigger($rule, $trigger, $value, $stopProcessing, $order);
+            $order++;
+        }
+
+        // recreate actions:
+        $order = 1;
+        foreach ($data['rule-actions'] as $index => $action) {
+            $value          = $data['rule-action-values'][$index];
+            $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
+            $this->storeAction($rule, $action, $value, $stopProcessing, $order);
+        }
+
+
+        return $rule;
+    }
 }

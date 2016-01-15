@@ -10,10 +10,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
+use Log;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -45,22 +47,29 @@ class FireflyValidator extends Validator
      */
     public function validateRuleTriggerValue($attribute, $value, $parameters)
     {
+        // get the index from a string like "rule-trigger-value.2".
+        $parts = explode('.', $attribute);
+        $index = $parts[count($parts) - 1];
+
         // loop all rule-triggers.
         // check if rule-value matches the thing.
         if (is_array($this->data['rule-trigger'])) {
-            foreach ($this->data['rule-trigger'] as $index => $name) {
-                $value = isset($this->data['rule-trigger-value'][$index]) ? $this->data['rule-trigger-value'][$index] : false;
-                switch ($name) {
-                    default:
-                        return true;
-                    case 'amount_less':
-                        return is_numeric($value);
-                        break;
-                    case 'transaction_type':
-                        echo 'Implement me!';
-                        exit;
-                        break;
-                }
+            $name  = isset($this->data['rule-trigger'][$index]) ? $this->data['rule-trigger'][$index] : 'invalid';
+            $value = isset($this->data['rule-trigger-value'][$index]) ? $this->data['rule-trigger-value'][$index] : false;
+            switch ($name) {
+                default:
+                    return true;
+                case 'amount_less':
+                    return is_numeric($value);
+                    break;
+                case 'transaction_type':
+                    $count = TransactionType::where('type', $value)->count();
+
+                    return $count === 1;
+                    break;
+                case 'invalid':
+                    return false;
+                    break;
             }
         }
     }
@@ -74,27 +83,35 @@ class FireflyValidator extends Validator
      */
     public function validateRuleActionValue($attribute, $value, $parameters)
     {
+        // get the index from a string like "rule-action-value.2".
+        $parts = explode('.', $attribute);
+        $index = $parts[count($parts) - 1];
         // loop all rule-actions.
         // check if rule-action-value matches the thing.
-        if (is_array($this->data['rule-action'])) {
-            foreach ($this->data['rule-action'] as $index => $name) {
-                $value = isset($this->data['rule-action-value'][$index]) ? $this->data['rule-action-value'][$index] : false;
-                switch ($name) {
-                    default:
-                        return true;
-                    case 'set_budget':
-                        /** @var BudgetRepositoryInterface $repository */
-                        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-                        $budgets    = $repository->getBudgets();
-                        // count budgets, should have at least one
-                        $count = $budgets->filter(
-                            function (Budget $budget) use ($value) {
-                                return $budget->name == $value;
-                            }
-                        )->count();
 
-                        return ($count === 1);
-                }
+        if (is_array($this->data['rule-action'])) {
+            $name  = isset($this->data['rule-action'][$index]) ? $this->data['rule-action'][$index] : 'invalid';
+            $value = isset($this->data['rule-action-value'][$index]) ? $this->data['rule-action-value'][$index] : false;
+            switch ($name) {
+                default:
+                    Log::debug(' (' . $attribute . ') (index:' . $index . ') Name is "' . $name . '" so no action is taken.');
+
+                    return true;
+                case 'set_budget':
+                    /** @var BudgetRepositoryInterface $repository */
+                    $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+                    $budgets    = $repository->getBudgets();
+                    // count budgets, should have at least one
+                    $count = $budgets->filter(
+                        function (Budget $budget) use ($value) {
+                            return $budget->name == $value;
+                        }
+                    )->count();
+
+                    return ($count === 1);
+                case 'invalid':
+                    return false;
+
             }
         }
 

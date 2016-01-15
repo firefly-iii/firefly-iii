@@ -217,8 +217,8 @@ class RuleController extends Controller
         $actionCount  = 0;
 
         // collection of those triggers/actions.
-        $triggers = [];
-        $actions  = [];
+        $oldTriggers = [];
+        $oldActions  = [];
 
         // has old input?
         if (Input::old()) {
@@ -284,14 +284,15 @@ class RuleController extends Controller
                             'count'      => $count,
                         ]
                     )->render();
+                    $newIndex++;
                 }
-                $newIndex++;
+
             }
 
             // get current actions
             $newIndex = 0;
             /**
-             * @var int $index
+             * @var int        $index
              * @var RuleAction $entry
              */
             foreach ($rule->ruleActions as $index => $entry) {
@@ -314,7 +315,7 @@ class RuleController extends Controller
         }
 
         // get rule trigger for update / store-journal:
-        $primaryTrigger = $rule->ruleTriggers()->where('trigger_type','user_action')->first()->trigger_value;
+        $primaryTrigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
 
 
         $subTitle = trans('firefly.edit_rule', ['title' => $rule->title]);
@@ -327,8 +328,47 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle','primaryTrigger',
+        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger',
                                                'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
+    }
+
+    /**
+     * @param RuleRepositoryInterface $repository
+     * @param RuleFormRequest         $request
+     * @param Rule                    $rule
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function updateRule(RuleRepositoryInterface $repository, RuleFormRequest $request, Rule $rule)
+    {
+
+        // process the rule itself:
+        $data = [
+            'title'               => $request->get('title'),
+            'active'              => intval($request->get('active')) == 1,
+            'trigger'             => $request->get('trigger'),
+            'description'         => $request->get('description'),
+            'rule-triggers'       => $request->get('rule-trigger'),
+            'rule-trigger-values' => $request->get('rule-trigger-value'),
+            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
+            'rule-actions'        => $request->get('rule-action'),
+            'rule-action-values'  => $request->get('rule-action-value'),
+            'rule-action-stop'    => $request->get('rule-action-stop'),
+            'stop_processing'     => intval($request->get('stop_processing')) == 1,
+        ];
+        $repository->updateRule($rule, $data);
+
+        Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
+        Preferences::mark();
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('rules.rule.edit.fromUpdate', true);
+
+            return redirect(route('rules.rule.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return redirect(Session::get('rules.rule.edit.url'));
     }
 
 

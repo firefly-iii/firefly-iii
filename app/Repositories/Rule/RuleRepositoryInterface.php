@@ -60,14 +60,14 @@ interface RuleRepositoryInterface
     public function destroyRule(Rule $rule);
 
     /**
-     * @param Rule $rule
+     * @param Rule  $rule
      * @param array $ids
      * @return bool
      */
     public function reorderRuleTriggers(Rule $rule, array $ids);
 
     /**
-     * @param Rule $rule
+     * @param Rule  $rule
      * @param array $ids
      * @return bool
      */
@@ -88,6 +88,13 @@ interface RuleRepositoryInterface
      * @return bool
      */
     public function moveRuleUp(Rule $rule);
+
+    /**
+     * @param Rule  $rule
+     * @param array $data
+     * @return Rule
+     */
+    public function updateRule(Rule $rule, array $data);
 
     /**
      * @param Rule $rule
@@ -128,22 +135,22 @@ interface RuleRepositoryInterface
 
 
     /**
-     * @param Rule $rule
+     * @param Rule   $rule
      * @param string $action
      * @param string $value
-     * @param bool $stopProcessing
-     * @param int $order
+     * @param bool   $stopProcessing
+     * @param int    $order
      *
      * @return RuleTrigger
      */
     public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order);
 
     /**
-     * @param Rule $rule
+     * @param Rule   $rule
      * @param string $action
      * @param string $value
-     * @param bool $stopProcessing
-     * @param int $order
+     * @param bool   $stopProcessing
+     * @param int    $order
      *
      * @return RuleAction
      */

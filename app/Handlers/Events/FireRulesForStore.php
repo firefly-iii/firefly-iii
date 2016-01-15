@@ -49,7 +49,7 @@ class FireRulesForStore
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
         $user   = Auth::user();
-        $groups = $user->ruleGroups()->orderBy('order', 'ASC')->get();
+        $groups = $user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get();
         //
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
@@ -58,16 +58,17 @@ class FireRulesForStore
                            ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                            ->where('rule_triggers.trigger_type', 'user_action')
                            ->where('rule_triggers.trigger_value', 'store-journal')
+                           ->where('rules.active', 1)
                            ->get(['rules.*']);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title. ')');
+                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
                 $processor = new Processor($rule, $event->journal);
 
                 // get some return out of this?
                 $processor->handle();
 
-                if($rule->stop_processing) {
+                if ($rule->stop_processing) {
                     break;
                 }
 

@@ -62,7 +62,6 @@ class RuleFormRequest extends Request
         for ($i = 0; $i < 10; $i++) {
             $rules['rule-action-value.' . $i] = 'required_if:rule-action.' . $i . ',' . $contextActions . '|ruleActionValue';
         }
-
         return $rules;
     }
 }
