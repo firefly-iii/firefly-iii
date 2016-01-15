@@ -63,6 +63,8 @@
 
                         {{ ExpandedForm.select('csv_import_account', accounts, 0, {helpText: 'csv_import_account_help'|_} ) }}
 
+						{{ ExpandedForm.select('csv_delimiter', { ',': ', (comma)', 'tab': '(tab)', ';': '; (semicolon)'}, 0, {helpText: 'csv_delimiter_help'|_} ) }}
+						
                         {{ ExpandedForm.multiCheckbox('specifix', specifix) }}
 
 
