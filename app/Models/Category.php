@@ -112,6 +112,11 @@ class Category extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @param Category $value
+     *
+     * @return Category
+     */
     public static function routeBinder(Category $value)
     {
         if (Auth::check()) {

@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection|BudgetLimit[]        $budgetlimits
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
+ * @property string $dateFormatted
+ * @property string $budgeted
  */
 class Budget extends Model
 {
@@ -125,6 +127,11 @@ class Budget extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @param Budget $value
+     *
+     * @return Budget
+     */
     public static function routeBinder(Budget $value)
     {
         if (Auth::check()) {

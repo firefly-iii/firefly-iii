@@ -25,7 +25,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function countJournals(Category $category)
     {
-        return $category->transactionJournals()->count();
+        return $category->transactionjournals()->count();
 
     }
 
@@ -39,7 +39,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function countJournalsInRange(Category $category, Carbon $start, Carbon $end)
     {
-        return $category->transactionJournals()->before($end)->after($start)->count();
+        return $category->transactionjournals()->before($end)->after($start)->count();
     }
 
     /**

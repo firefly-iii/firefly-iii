@@ -8,18 +8,18 @@ use Twig_SimpleFunction;
 
 /**
  * Class Rule
+ *
  * @package FireflyIII\Support\Twig
  */
 class Rule extends Twig_Extension
 {
-    /**
-     *
-     */
-    public function getFunctions()
-    {
-        $functions = [];
 
-        $functions[] = new Twig_SimpleFunction(
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function allJournalTriggers()
+    {
+        return new Twig_SimpleFunction(
             'allJournalTriggers', function () {
             return [
                 'store-journal'  => trans('firefly.rule_trigger_store_journal'),
@@ -27,8 +27,14 @@ class Rule extends Twig_Extension
             ];
         }
         );
+    }
 
-        $functions[] = new Twig_SimpleFunction(
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function allRuleTriggers()
+    {
+        return new Twig_SimpleFunction(
             'allRuleTriggers', function () {
             $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
             $possibleTriggers = [];
@@ -44,7 +50,15 @@ class Rule extends Twig_Extension
 
         );
 
-        $functions[] = new Twig_SimpleFunction('allRuleActions', function () {
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function allActionTriggers()
+    {
+        return new Twig_SimpleFunction(
+            'allRuleActions', function () {
             // array of valid values for actions
             $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
             $possibleActions = [];
@@ -54,9 +68,21 @@ class Rule extends Twig_Extension
             unset($key, $ruleActions);
 
             return $possibleActions;
-        });
+        }
+        );
+    }
 
-        return $functions;
+    /**
+     * @return array
+     */
+    public function getFunctions()
+    {
+        return [
+            $this->allJournalTriggers(),
+            $this->allRuleTriggers(),
+            $this->allActionTriggers(),
+        ];
+
     }
 
     /**

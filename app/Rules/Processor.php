@@ -39,6 +39,9 @@ class Processor
 
     /**
      * Processor constructor.
+     *
+     * @param Rule               $rule
+     * @param TransactionJournal $journal
      */
     public function __construct(Rule $rule, TransactionJournal $journal)
     {

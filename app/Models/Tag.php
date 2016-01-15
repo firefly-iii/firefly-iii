@@ -170,6 +170,11 @@ class Tag extends Model
     }
 
 
+    /**
+     * @param Tag $value
+     *
+     * @return Tag
+     */
     public static function routeBinder(Tag $value)
     {
         if (Auth::check()) {

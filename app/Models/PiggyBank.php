@@ -122,6 +122,11 @@ class PiggyBank extends Model
         $this->attributes['targetamount'] = strval(round($value, 2));
     }
 
+    /**
+     * @param PiggyBank $value
+     *
+     * @return PiggyBank
+     */
     public static function routeBinder(PiggyBank $value)
     {
         if (Auth::check()) {

@@ -47,6 +47,11 @@ class LimitRepetition extends Model
     }
 
 
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
     public static function routeBinder($value)
     {
         if (Auth::check()) {

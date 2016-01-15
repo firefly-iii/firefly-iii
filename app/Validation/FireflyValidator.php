@@ -40,12 +40,10 @@ class FireflyValidator extends Validator
 
     /**
      * @param $attribute
-     * @param $value
-     * @param $parameters
      *
      * @return bool
      */
-    public function validateRuleTriggerValue($attribute, $value, $parameters)
+    public function validateRuleTriggerValue($attribute)
     {
         // get the index from a string like "rule-trigger-value.2".
         $parts = explode('.', $attribute);
@@ -76,12 +74,10 @@ class FireflyValidator extends Validator
 
     /**
      * @param $attribute
-     * @param $value
-     * @param $parameters
      *
      * @return bool
      */
-    public function validateRuleActionValue($attribute, $value, $parameters)
+    public function validateRuleActionValue($attribute)
     {
         // get the index from a string like "rule-action-value.2".
         $parts = explode('.', $attribute);

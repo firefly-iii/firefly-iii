@@ -44,6 +44,8 @@ class TransactionCurrency extends Model
 
     /**
      * @param TransactionCurrency $currency
+     *
+     * @return TransactionCurrency
      */
     public static function routeBinder(TransactionCurrency $currency)
     {

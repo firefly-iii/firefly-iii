@@ -8,6 +8,11 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use Illuminate\Support\Collection;
 
+/**
+ * Class RuleGroupRepository
+ *
+ * @package FireflyIII\Repositories\RuleGroup
+ */
 class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
     /**

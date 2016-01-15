@@ -136,7 +136,7 @@ class Amount
     {
         $currency = $transaction->transactionJournal->transactionCurrency;
 
-        return $this->formatAnything($currency, $transaction->amount);
+        return $this->formatAnything($currency, $transaction->amount, $coloured);
     }
 
     /**

@@ -19,7 +19,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @package FireflyIII\Support\Binder
  */
 class CategoryList implements BinderInterface
-
 {
 
     /**

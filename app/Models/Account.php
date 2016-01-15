@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
-
+use Illuminate\Database\Query\Builder;
 
 /**
  * FireflyIII\Models\Account
@@ -30,8 +30,8 @@ use Watson\Validating\ValidatingTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  * @property-read \FireflyIII\User                                                          $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
+ * @method static Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
  * @property string                                                                         $startBalance
  * @property string                                                                         $endBalance
  */
@@ -293,6 +293,11 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @param Account $value
+     *
+     * @return Account
+     */
     public static function routeBinder(Account $value)
     {
 
