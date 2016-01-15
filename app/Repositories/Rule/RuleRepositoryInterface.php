@@ -23,41 +23,18 @@ use Illuminate\Support\Collection;
 interface RuleRepositoryInterface
 {
     /**
-     * @param array $data
-     *
-     * @return RuleGroup
-     */
-    public function storeRuleGroup(array $data);
-
-    /**
-     * @return int
-     */
-    public function getHighestOrderRuleGroup();
-
-
-    /**
-     * @param RuleGroup $ruleGroup
-     * @param array     $data
-     *
-     * @return RuleGroup
-     */
-    public function updateRuleGroup(RuleGroup $ruleGroup, array $data);
-
-
-    /**
-     * @param RuleGroup $ruleGroup
-     * @param RuleGroup $moveTo
-     *
-     * @return bool
-     */
-    public function destroyRuleGroup(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
-
-    /**
      * @param Rule $rule
      *
      * @return bool
      */
     public function destroyRule(Rule $rule);
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup);
 
     /**
      * @param Rule  $rule
@@ -74,11 +51,7 @@ interface RuleRepositoryInterface
     public function reorderRuleActions(Rule $rule, array $ids);
 
     /**
-     * @return bool
-     */
-    public function resetRuleGroupOrder();
-
-    /**
+     * @param RuleGroup $ruleGroup
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
@@ -103,36 +76,11 @@ interface RuleRepositoryInterface
     public function moveRuleDown(Rule $rule);
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @return bool
-     */
-    public function moveRuleGroupUp(RuleGroup $ruleGroup);
-
-    /**
-     * @param RuleGroup $ruleGroup
-     * @return bool
-     */
-    public function moveRuleGroupDown(RuleGroup $ruleGroup);
-
-    /**
-     * @return Collection
-     */
-    public function getRuleGroups();
-
-    /**
      * @param array $data
      *
      * @return Rule
      */
     public function storeRule(array $data);
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return int
-     */
-    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup);
-
 
     /**
      * @param Rule   $rule
