@@ -235,6 +235,94 @@ class RuleController extends Controller
         return redirect(Session::get('rules.rule-group.create.url'));
     }
 
+    public function editRule(Rule $rule) {
+
+        // count for current rule's triggers/actions.
+        $triggerCount = 0;
+        $actionCount  = 0;
+
+        // collection of those triggers/actions.
+        $triggers = [];
+        $actions  = [];
+
+        // array of valid values for triggers (for form).
+        $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
+        $possibleTriggers = [];
+        foreach ($ruleTriggers as $key) {
+            if ($key != 'user_action') {
+                $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
+            }
+        }
+        unset($key, $ruleTriggers);
+
+        // array of valid values for actions
+        $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+        $possibleActions = [];
+        foreach ($ruleActions as $key) {
+            $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
+        }
+        unset($key, $ruleActions);
+
+
+        // has old input?
+        if (Input::old()) {
+            // process old triggers.
+            $newIndex = 0;
+            foreach (Input::old('rule-trigger') as $index => $entry) {
+                $count = ($newIndex + 1);
+                $triggerCount++;
+                $oldTrigger    = $entry;
+                $oldValue      = Input::old('rule-trigger-value')[$index];
+                $oldChecked    = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
+                $oldTriggers[] = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => $oldTrigger,
+                        'oldValue'   => $oldValue,
+                        'oldChecked' => $oldChecked,
+                        'triggers'   => $possibleTriggers,
+                        'count'      => $count
+                    ]
+                )->render();
+                $newIndex++;
+            }
+
+            // process old actions
+            $newIndex = 0;
+            foreach (Input::old('rule-action') as $index => $entry) {
+                $count = ($newIndex + 1);
+                $actionCount++;
+                $oldAction    = $entry;
+                $oldValue     = Input::old('rule-action-value')[$index];
+                $oldChecked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
+                $oldActions[] = view(
+                    'rules.partials.action',
+                    [
+                        'oldTrigger' => $oldAction,
+                        'oldValue'   => $oldValue,
+                        'oldChecked' => $oldChecked,
+                        'actions'    => $possibleActions,
+                        'count'      => $count
+                    ]
+                )->render();
+                $newIndex++;
+            }
+        }
+
+
+        $subTitle = trans('firefly.edit_rule_group', ['title' => $rule->title]);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('rules.rule.edit.fromUpdate') !== true) {
+            Session::put('rules.rule.edit.url', URL::previous());
+        }
+        Session::forget('rules.rule.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'rules');
+        Session::flash('gaEventAction', 'edit-rule');
+
+        return view('rules.rule.edit', compact('rule', 'subTitle'));
+    }
+
 
     /**
      * @param RuleGroup $ruleGroup
