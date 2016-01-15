@@ -514,12 +514,11 @@ class TransactionJournal extends Model
 
     /**
      * @param $value
-     * @param $route
      *
      * @return mixed
      * @throws NotFoundHttpException
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder($value)
     {
         if (Auth::check()) {
             $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
