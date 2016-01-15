@@ -54,7 +54,7 @@ class RuleController extends Controller
 
         // process the rule itself:
         $data = [
-            'rule_group_id'       => intval($request->get('rule_group_id')),
+            'rule_group_id'       => $ruleGroup->id,
             'title'               => $request->get('title'),
             'trigger'             => $request->get('trigger'),
             'description'         => $request->get('description'),
