@@ -170,6 +170,13 @@ class CsvController extends Controller
             $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
         }
 
+        // get a list of delimiters:
+        $delimiters = [
+            ','   => trans('form.csv_comma'),
+            ';'   => trans('form.csv_semicolon'),
+            'tab' => trans('form.csv_tab')
+        ];
+
         // get a list of asset accounts:
         $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
 
