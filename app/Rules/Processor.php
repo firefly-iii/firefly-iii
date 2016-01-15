@@ -87,6 +87,9 @@ class Processor
             if ($triggerClass->triggered()) {
                 $hitTriggers++;
             }
+            if ($trigger->stop_processing) {
+                break;
+            }
 
         }
         Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
@@ -114,6 +117,9 @@ class Processor
             /** @var ActionInterface $actionClass */
             $actionClass = new $class($action, $this->journal);
             $actionClass->act();
+            if ($action->stop_processing) {
+                break;
+            }
 
         }
 
