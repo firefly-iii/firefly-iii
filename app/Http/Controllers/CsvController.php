@@ -375,6 +375,9 @@ class CsvController extends Controller
      *
      * STEP TWO
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // need the length.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly 5, its ok
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse

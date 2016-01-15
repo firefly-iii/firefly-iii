@@ -365,6 +365,8 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's complex but nothing can be done.
+     *
      * @return bool
      */
     protected function matchAll(TransactionJournal $journal, Tag $tag)

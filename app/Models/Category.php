@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property boolean                              $encrypted
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
+ * @property string                               $dateFormatted
  */
 class Category extends Model
 {

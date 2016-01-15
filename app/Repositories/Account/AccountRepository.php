@@ -111,7 +111,7 @@ class AccountRepository implements AccountRepositoryInterface
                            'accounts.*',
                            'ccType.data as ccType',
                            'accountRole.data as accountRole',
-                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
+                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`'),
                        ]
                    );
 
@@ -377,6 +377,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // need the complexity.
+     *
      * @return Account
      */
     public function update(Account $account, array $data)
@@ -390,15 +392,10 @@ class AccountRepository implements AccountRepositoryInterface
 
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
-
-        // if has openingbalance?
         if ($data['openingBalance'] != 0) {
-            // if opening balance, do an update:
             if ($openingBalance) {
-                // update existing opening balance.
                 $this->updateInitialBalance($account, $openingBalance, $data);
             } else {
-                // create new opening balance.
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
                 $opposingData = [
                     'user'           => $data['user'],
@@ -480,7 +477,7 @@ class AccountRepository implements AccountRepositoryInterface
                     [
                         'account_id' => $account->id,
                         'name'       => $field,
-                        'data'       => $data[$field]
+                        'data'       => $data[$field],
                     ]
                 );
                 $metaData->save();
@@ -509,7 +506,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
-                'encrypted'               => true
+                'encrypted'               => true,
             ]
         );
 
@@ -547,21 +544,21 @@ class AccountRepository implements AccountRepositoryInterface
         foreach ($validFields as $field) {
             $entry = $account->accountMeta()->where('name', $field)->first();
 
-            // update if new data is present:
-            if ($entry && isset($data[$field])) {
-                $entry->data = $data[$field];
-                $entry->save();
-            }
-            // no entry but data present?
-            if (!$entry && isset($data[$field])) {
-                $metaData = new AccountMeta(
-                    [
-                        'account_id' => $account->id,
-                        'name'       => $field,
-                        'data'       => $data[$field]
-                    ]
-                );
-                $metaData->save();
+            if (isset($data[$field])) {
+                // update if new data is present:
+                if (!is_null($entry)) {
+                    $entry->data = $data[$field];
+                    $entry->save();
+                } else {
+                    $metaData = new AccountMeta(
+                        [
+                            'account_id' => $account->id,
+                            'name'       => $field,
+                            'data'       => $data[$field],
+                        ]
+                    );
+                    $metaData->save();
+                }
             }
         }
 
