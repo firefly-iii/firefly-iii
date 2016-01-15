@@ -21,15 +21,7 @@ class PiggyBankEvent extends Model
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
     protected $hidden   = ['amount_encrypted'];
-
-    /**
-     * @return array
-     */
-    /** @noinspection PhpMissingParentCallCommonInspection */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date'];
-    }
+    protected $dates    = ['created_at', 'updated_at', 'date'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

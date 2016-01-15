@@ -23,7 +23,7 @@ class Preference extends Model
 
     protected $fillable = ['user_id', 'data', 'name'];
     protected $hidden   = ['data_encrypted', 'name_encrypted'];
-
+protected $dates = ['created_at', 'updated_at'];
     /**
      * @param $value
      *
@@ -37,14 +37,6 @@ class Preference extends Model
         $data = Crypt::decrypt($this->data_encrypted);
 
         return json_decode($data);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at'];
     }
 
     /**

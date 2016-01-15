@@ -41,8 +41,9 @@ class Tag extends Model
             'date'        => 'date',
             'latitude'    => 'numeric|min:-90|max:90',
             'longitude'   => 'numeric|min:-90|max:90',
-            'tagMode'     => 'required|in:nothing,balancingAct,advancePayment'
+            'tagMode'     => 'required|in:nothing,balancingAct,advancePayment',
         ];
+    protected $dates    = ['created_at', 'updated_at', 'date'];
 
     /**
      * @param array $fields
@@ -74,15 +75,6 @@ class Tag extends Model
 
         return $tag;
 
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date'];
     }
 
     /**

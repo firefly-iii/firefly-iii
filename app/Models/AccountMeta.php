@@ -24,9 +24,10 @@ class AccountMeta extends Model
                         = [
             'account_id' => 'required|exists:accounts,id',
             'name'       => 'required|between:1,100',
-            'data'       => 'required'
+            'data'       => 'required',
         ];
     protected $table    = 'account_meta';
+    protected $dates    = ['created_at', 'updated_at'];
 
     /**
      *
@@ -46,14 +47,6 @@ class AccountMeta extends Model
     public function getDataAttribute($value)
     {
         return json_decode($value);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at'];
     }
 
     /**

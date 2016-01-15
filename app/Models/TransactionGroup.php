@@ -22,13 +22,7 @@ class TransactionGroup extends Model
 {
     use SoftDeletes;
 
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
-    }
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
