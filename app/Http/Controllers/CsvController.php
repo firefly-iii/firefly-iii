@@ -162,6 +162,7 @@ class CsvController extends Controller
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
         Session::forget('csv-specifix');
+        SessioN::forget('csv-delimiter');
 
         // get list of supported specifix
         $specifix = [];
