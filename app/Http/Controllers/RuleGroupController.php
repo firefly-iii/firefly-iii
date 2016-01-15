@@ -33,7 +33,7 @@ class RuleGroupController extends Controller
     /**
      * @return View
      */
-    public function createRuleGroup()
+    public function create()
     {
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule_group');
@@ -56,7 +56,7 @@ class RuleGroupController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function storeRuleGroup(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository)
+    public function store(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository)
     {
         $data = [
             'title'       => $request->input('title'),
@@ -85,7 +85,7 @@ class RuleGroupController extends Controller
      *
      * @return View
      */
-    public function editRuleGroup(RuleGroup $ruleGroup)
+    public function edit(RuleGroup $ruleGroup)
     {
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
@@ -108,7 +108,7 @@ class RuleGroupController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function updateRuleGroup(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function update(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         $data = [
             'title'       => $request->input('title'),
@@ -139,7 +139,7 @@ class RuleGroupController extends Controller
      *
      * @return View
      */
-    public function deleteRuleGroup(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function delete(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
@@ -161,7 +161,7 @@ class RuleGroupController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroyRuleGroup(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function destroy(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
 
         $title  = $ruleGroup->title;
@@ -184,7 +184,7 @@ class RuleGroupController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function upRuleGroup(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function up(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         $repository->moveRuleGroupUp($ruleGroup);
 
@@ -198,7 +198,7 @@ class RuleGroupController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function downRuleGroup(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function down(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         $repository->moveRuleGroupDown($ruleGroup);
 

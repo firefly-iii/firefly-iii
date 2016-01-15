@@ -255,16 +255,16 @@ Route::group(
 
 
     // rule groups GET
-    Route::get('/rules/groups/create', ['uses' => 'RuleGroupController@createRuleGroup', 'as' => 'rules.rule-group.create']);
-    Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@editRuleGroup', 'as' => 'rules.rule-group.edit']);
-    Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@deleteRuleGroup', 'as' => 'rules.rule-group.delete']);
-    Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@upRuleGroup', 'as' => 'rules.rule-group.up']);
-    Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@downRuleGroup', 'as' => 'rules.rule-group.down']);
+    Route::get('/rules/groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
+    Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
+    Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
+    Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
+    Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
 
     // rule groups POST
-    Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@storeRuleGroup', 'as' => 'rules.rule-group.store']);
-    Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@updateRuleGroup', 'as' => 'rules.rule-group.update']);
-    Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroyRuleGroup', 'as' => 'rules.rule-group.destroy']);
+    Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
+    Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
+    Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
 
     /**
      * Search Controller
