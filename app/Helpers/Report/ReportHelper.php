@@ -18,8 +18,8 @@ use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
@@ -45,10 +45,13 @@ class ReportHelper implements ReportHelperInterface
     protected $tagRepository;
 
     /**
+     * ReportHelper constructor.
+     *
      * @codeCoverageIgnore
      *
-     * @param ReportQueryInterface $query
-     *
+     * @param ReportQueryInterface      $query
+     * @param BudgetRepositoryInterface $budgetRepository
+     * @param TagRepositoryInterface    $tagRepository
      */
     public function __construct(ReportQueryInterface $query, BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
     {
