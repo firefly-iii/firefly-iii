@@ -9,7 +9,6 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Tag
@@ -31,18 +30,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class Tag extends Model
 {
-    use ValidatingTrait;
-
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
-    protected $rules
-                        = [
-            'tag'         => 'required|min:1',
-            'description' => 'min:1',
-            'date'        => 'date',
-            'latitude'    => 'numeric|min:-90|max:90',
-            'longitude'   => 'numeric|min:-90|max:90',
-            'tagMode'     => 'required|in:nothing,balancingAct,advancePayment',
-        ];
     protected $dates    = ['created_at', 'updated_at', 'date'];
 
     /**

@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\AccountMeta
@@ -18,14 +17,7 @@ use Watson\Validating\ValidatingTrait;
 class AccountMeta extends Model
 {
 
-    use ValidatingTrait;
     protected $fillable = ['account_id', 'name', 'data'];
-    protected $rules
-                        = [
-            'account_id' => 'required|exists:accounts,id',
-            'name'       => 'required|between:1,100',
-            'data'       => 'required',
-        ];
     protected $table    = 'account_meta';
     protected $dates    = ['created_at', 'updated_at'];
 
