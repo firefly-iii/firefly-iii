@@ -2,6 +2,7 @@
 return [
     'specifix'        => [
         'RabobankDescription',
+        'AbnAmroDescription',
         'Dummy'
     ],
     'post_processors' => [
