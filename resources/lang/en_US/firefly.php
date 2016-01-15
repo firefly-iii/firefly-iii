@@ -64,6 +64,7 @@ return [
     'rule_help_stop_processing' => 'When you check this box, later rules in this group will not be executed.',
     'stored_new_rule'           => 'Stored new rule with title ":title"',
     'deleted_rule'              => 'Deleted rule with title ":title"',
+    'store_new_rule'            => 'Store new rule',
 
     'trigger'                            => 'Trigger',
     'trigger_value'                      => 'Trigger on value',
