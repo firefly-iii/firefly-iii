@@ -70,7 +70,7 @@ class TransactionJournal extends Model
             'description'             => 'required|between:1,1024',
             'completed'               => 'required|boolean',
             'date'                    => 'required|date',
-            'encrypted'               => 'required|boolean'
+            'encrypted'               => 'required|boolean',
         ];
 
     /**
@@ -522,7 +522,11 @@ class TransactionJournal extends Model
     public static function routeBinder($value, $route)
     {
         if (Auth::check()) {
-            $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
+            $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
+            $object     = TransactionJournal::where('transaction_journals.id', $value)
+                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                            ->whereIn('transaction_types.type', $validTypes)
+                                            ->where('user_id', Auth::user()->id)->first(['transaction_journals.*']);
             if ($object) {
                 return $object;
             }
