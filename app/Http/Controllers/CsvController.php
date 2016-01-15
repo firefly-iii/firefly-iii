@@ -394,15 +394,16 @@ class CsvController extends Controller
         $settings['specifix']       = Input::get('specifix');
         $settings['import-account'] = intval(Input::get('csv_import_account'));
         $settings['delimiter']      = Input::get('csv_delimiter', ',');
-        
+
         // A tab character cannot be used itself as option value in HTML
         // See http://stackoverflow.com/questions/6064135/valid-characters-in-option-value
-        if( $settings[ 'delimiter' ] == 'tab' )
-            $settings[ 'delimiter' ] = "\t";
-        
-        $settings['map']            = [];
-        $settings['mapped']         = [];
-        $settings['roles']          = [];
+        if ($settings['delimiter'] == 'tab') {
+            $settings['delimiter'] = "\t";
+        }
+
+        $settings['map']    = [];
+        $settings['mapped'] = [];
+        $settings['roles']  = [];
 
         if ($request->hasFile('csv_config')) { // Process config file if present.
             $data = file_get_contents($request->file('csv_config')->getRealPath());
@@ -421,7 +422,7 @@ class CsvController extends Controller
         $this->data->setSpecifix($settings['specifix']);
         $this->data->setImportAccount($settings['import-account']);
         $this->data->setDelimiter($settings['delimiter']);
-        
+
         return redirect(route('csv.column-roles'));
 
     }
