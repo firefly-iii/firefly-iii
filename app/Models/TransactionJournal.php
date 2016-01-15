@@ -60,6 +60,7 @@ class TransactionJournal extends Model
     protected $fillable
                       = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
     protected $hidden = ['encrypted'];
+    protected $dates  = ['created_at', 'updated_at', 'date', 'deleted_at'];
 
     /**
      * @codeCoverageIgnore
@@ -144,15 +145,6 @@ class TransactionJournal extends Model
     public function transactions()
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date', 'deleted_at'];
     }
 
     /**
