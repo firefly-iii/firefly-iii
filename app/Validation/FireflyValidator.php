@@ -32,6 +32,8 @@ class FireflyValidator extends Validator
      * @param array               $rules
      * @param array               $messages
      * @param array               $customAttributes
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // inherited from Laravel.
      */
     public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -52,8 +54,8 @@ class FireflyValidator extends Validator
         // loop all rule-triggers.
         // check if rule-value matches the thing.
         if (is_array($this->data['rule-trigger'])) {
-            $name  = isset($this->data['rule-trigger'][$index]) ? $this->data['rule-trigger'][$index] : 'invalid';
-            $value = isset($this->data['rule-trigger-value'][$index]) ? $this->data['rule-trigger-value'][$index] : false;
+            $name  = $this->getRuleTriggerName($index);
+            $value = $this->getRuleTriggerValue($index);
             switch ($name) {
                 default:
                     return true;
@@ -405,6 +407,27 @@ class FireflyValidator extends Validator
 
         return true;
 
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getRuleTriggerName($index)
+    {
+        return isset($this->data['rule-trigger'][$index]) ? $this->data['rule-trigger'][$index] : 'invalid';
+
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getRuleTriggerValue($index)
+    {
+        return isset($this->data['rule-trigger-value'][$index]) ? $this->data['rule-trigger-value'][$index] : '';
     }
 }
 

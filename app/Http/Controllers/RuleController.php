@@ -337,6 +337,8 @@ class RuleController extends Controller
 
     /**
      * @param Rule $rule
+     *
+     * @return array
      */
     private function getCurrentActions(Rule $rule)
     {

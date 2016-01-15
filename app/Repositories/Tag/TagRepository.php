@@ -27,6 +27,8 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     *
      * @return boolean
      */
     public function connect(TransactionJournal $journal, Tag $tag)

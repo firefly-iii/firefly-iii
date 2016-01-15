@@ -55,8 +55,6 @@ class CategoryController extends Controller
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = new Carbon;
         $entries = new Collection;
-
-
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -71,26 +69,19 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-
-            // get the sum from $spentArray and $earnedArray:
-            $spent  = $this->getSumOfRange($start, $currentEnd, $spentArray);
-            $earned = $this->getSumOfRange($start, $currentEnd, $earnedArray);
-
-            $date = Navigation::periodShow($start, $range);
+            $spent      = $this->getSumOfRange($start, $currentEnd, $spentArray);
+            $earned     = $this->getSumOfRange($start, $currentEnd, $earnedArray);
+            $date       = Navigation::periodShow($start, $range);
             $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
         }
-        // limit the set to the last 40:
         $entries = $entries->reverse();
         $entries = $entries->slice(0, 48);
         $entries = $entries->reverse();
-
-        $data = $this->generator->all($entries);
+        $data    = $this->generator->all($entries);
         $cache->store($data);
 
         return Response::json($data);
-
-
     }
 
 
