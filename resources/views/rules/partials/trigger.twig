@@ -9,7 +9,7 @@
         {% endif %}
 
         <select name="rule-trigger[{{ count }}]" class="form-control">
-            {% for key,name in triggers %}
+            {% for key,name in allRuleTriggers() %}
                 <option value="{{ key }}" label="{{ name }}"
                         {% if key == oldTrigger %}
                             selected

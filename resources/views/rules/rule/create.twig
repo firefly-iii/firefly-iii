@@ -15,7 +15,7 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('title') }}
-                    {{ ExpandedForm.select('trigger',journalTriggers) }}
+                    {{ ExpandedForm.select('trigger',allJournalTriggers()) }}
                     {{ ExpandedForm.checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
                 </div>
             </div>
