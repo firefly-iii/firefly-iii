@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\TransactionJournal
@@ -55,23 +54,12 @@ use Watson\Validating\ValidatingTrait;
  */
 class TransactionJournal extends Model
 {
-    use SoftDeletes, ValidatingTrait;
+    use SoftDeletes;
 
 
     protected $fillable
                       = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
     protected $hidden = ['encrypted'];
-    protected $rules
-                      = [
-            'user_id'                 => 'required|exists:users,id',
-            'transaction_type_id'     => 'required|exists:transaction_types,id',
-            'bill_id'                 => 'exists:bills,id',
-            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'description'             => 'required|between:1,1024',
-            'completed'               => 'required|boolean',
-            'date'                    => 'required|date',
-            'encrypted'               => 'required|boolean',
-        ];
 
     /**
      * @codeCoverageIgnore
@@ -141,72 +129,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @param Tag $tag
-     * @param     $amount
-     *
-     * @return string
-     */
-    protected function amountByTagAdvancePayment(Tag $tag, $amount)
-    {
-        if ($this->isWithdrawal()) {
-            $others = $tag->transactionJournals()->transactionTypes([TransactionType::DEPOSIT])->get();
-            foreach ($others as $other) {
-                $amount = bcsub($amount, $other->amount_positive);
-            }
-
-            return $amount;
-        }
-        if ($this->isDeposit()) {
-            return '0';
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param $tag
-     * @param $amount
-     *
-     * @return string
-     */
-    protected function amountByTagBalancingAct($tag, $amount)
-    {
-        if ($this->isWithdrawal()) {
-            $transfer = $tag->transactionJournals()->transactionTypes([TransactionType::TRANSFER])->first();
-            if ($transfer) {
-                $amount = bcsub($amount, $transfer->amount_positive);
-
-                return $amount;
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
-     * Assuming the journal has only one tag. Parameter amount is used as fallback.
-     *
-     * @param Tag    $tag
-     * @param string $amount
-     *
-     * @return string
-     */
-    protected function amountByTag(Tag $tag, $amount)
-    {
-        if ($tag->tagMode == 'advancePayment') {
-            return $this->amountByTagAdvancePayment($tag, $amount);
-        }
-
-        if ($tag->tagMode == 'balancingAct') {
-            return $this->amountByTagBalancingAct($tag, $amount);
-
-        }
-
-        return $amount;
-
-    }
-
-    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -214,27 +136,6 @@ class TransactionJournal extends Model
     {
         return $this->belongsToMany('FireflyIII\Models\Tag');
     }
-
-    /**
-     * @param string $amount
-     *
-     * @return string
-     */
-    public function amountByTags($amount)
-    {
-        $firstBalancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
-        if ($firstBalancingAct) {
-            return $this->amountByTag($firstBalancingAct, $amount);
-        }
-
-        $firstAdvancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
-        if ($firstAdvancePayment) {
-            return $this->amountByTag($firstAdvancePayment, $amount);
-        }
-
-        return $amount;
-    }
-
 
     /**
      * @codeCoverageIgnore
