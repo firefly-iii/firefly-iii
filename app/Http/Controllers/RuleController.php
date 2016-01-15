@@ -118,25 +118,6 @@ class RuleController extends Controller
         $oldTriggers = [];
         $oldActions  = [];
 
-        // array of valid values for triggers.
-        $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
-        $possibleTriggers = [];
-        foreach ($ruleTriggers as $key) {
-            if ($key != 'user_action') {
-                $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
-            }
-        }
-        unset($key, $ruleTriggers);
-
-        // array of valid values for actions
-        $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
-        $possibleActions = [];
-        foreach ($ruleActions as $key) {
-            $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
-        }
-        unset($key, $ruleActions);
-
-
         // has old input?
         if (Input::old()) {
             // process old triggers.
@@ -153,7 +134,6 @@ class RuleController extends Controller
                         'oldTrigger' => $oldTrigger,
                         'oldValue'   => $oldValue,
                         'oldChecked' => $oldChecked,
-                        'triggers'   => $possibleTriggers,
                         'count'      => $count
                     ]
                 )->render();
@@ -185,13 +165,6 @@ class RuleController extends Controller
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
-        // mandatory field: rule triggers on update-journal or store-journal.
-        $journalTriggers = [
-            'store-journal'  => trans('firefly.rule_trigger_store_journal'),
-            'update-journal' => trans('firefly.rule_trigger_update_journal')
-        ];
-
-
         // put previous url in session if not redirect from store (not "create another").
         if (Session::get('rules.rule.create.fromStore') !== true) {
             Session::put('rules.rule.create.url', URL::previous());
@@ -201,7 +174,7 @@ class RuleController extends Controller
         Session::flash('gaEventAction', 'create-rule');
 
         return view(
-            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle', 'journalTriggers')
+            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
         );
     }
 
