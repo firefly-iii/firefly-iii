@@ -89,7 +89,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                    ->get(
                        [
                            DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                           DB::Raw('SUM(`transactions`.`amount`) as `monthlyAmount`')
+                           DB::Raw('SUM(`transactions`.`amount`) as `monthlyAmount`'),
                        ]
                    );
 
@@ -316,7 +316,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                        [
                            'budgets.*',
                            DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`')
+                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
                        ]
                    );
 
@@ -559,7 +559,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                        [
                            'budgets.*',
                            DB::Raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
-                           DB::Raw('SUM(`limit_repetitions`.`amount`) as `budgeted`')
+                           DB::Raw('SUM(`limit_repetitions`.`amount`) as `budgeted`'),
                        ]
                    );
 
@@ -603,7 +603,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                        [
                            'budgets.*',
                            DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
-                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`')
+                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
                        ]
                    );
 
@@ -720,7 +720,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                           ->get(
                               [
                                   't_from.account_id', 'budget_transaction_journal.budget_id',
-                                  DB::Raw('SUM(`t_from`.`amount`) AS `spent`')
+                                  DB::Raw('SUM(`t_from`.`amount`) AS `spent`'),
                               ]
                           );
 

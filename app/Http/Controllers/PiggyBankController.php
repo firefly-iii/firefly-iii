@@ -186,7 +186,7 @@ class PiggyBankController extends Controller
                     'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
                     'sumOfSaved'        => $piggyBank->savedSoFar,
                     'sumOfTargets'      => round($piggyBank->targetamount, 2),
-                    'leftToSave'        => $piggyBank->leftToSave
+                    'leftToSave'        => $piggyBank->leftToSave,
                 ];
             } else {
                 $accounts[$account->id]['sumOfSaved']   = bcadd($accounts[$account->id]['sumOfSaved'], $piggyBank->savedSoFar);

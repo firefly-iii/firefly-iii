@@ -8,6 +8,7 @@
  */
 
 namespace FireflyIII\Handlers\Events;
+
 use FireflyIII\Events\TransactionJournalUpdated;
 use Log;
 

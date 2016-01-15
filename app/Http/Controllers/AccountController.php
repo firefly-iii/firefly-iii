@@ -133,7 +133,7 @@ class AccountController extends Controller
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
             'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
             'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => round($account->virtual_balance, 2)
+            'virtualBalance'       => round($account->virtual_balance, 2),
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'accounts');

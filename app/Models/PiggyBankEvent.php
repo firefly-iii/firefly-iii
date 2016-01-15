@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\Model;
 class PiggyBankEvent extends Model
 {
 
+    protected $dates    = ['created_at', 'updated_at', 'date'];
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
     protected $hidden   = ['amount_encrypted'];
-    protected $dates    = ['created_at', 'updated_at', 'date'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -22,7 +22,7 @@ class BudgetLimit extends Model
 {
 
     protected $hidden = ['amount_encrypted'];
-    protected $dates = ['created_at', 'updated_at', 'startdate'];
+    protected $dates  = ['created_at', 'updated_at', 'startdate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

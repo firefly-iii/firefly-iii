@@ -64,7 +64,7 @@ class Data
     protected function sessionHasHeaders()
     {
         if (Session::has('csv-has-headers')) {
-            $this->hasHeaders = (bool) Session::get('csv-has-headers');
+            $this->hasHeaders = (bool)Session::get('csv-has-headers');
         }
     }
 
@@ -78,42 +78,42 @@ class Data
     protected function sessionDateFormat()
     {
         if (Session::has('csv-date-format')) {
-            $this->dateFormat = (string) Session::get('csv-date-format');
+            $this->dateFormat = (string)Session::get('csv-date-format');
         }
     }
 
     protected function sessionCsvFileLocation()
     {
         if (Session::has('csv-file')) {
-            $this->csvFileLocation = (string) Session::get('csv-file');
+            $this->csvFileLocation = (string)Session::get('csv-file');
         }
     }
 
     protected function sessionMap()
     {
         if (Session::has('csv-map')) {
-            $this->map = (array) Session::get('csv-map');
+            $this->map = (array)Session::get('csv-map');
         }
     }
 
     protected function sessionRoles()
     {
         if (Session::has('csv-roles')) {
-            $this->roles = (array) Session::get('csv-roles');
+            $this->roles = (array)Session::get('csv-roles');
         }
     }
 
     protected function sessionMapped()
     {
         if (Session::has('csv-mapped')) {
-            $this->mapped = (array) Session::get('csv-mapped');
+            $this->mapped = (array)Session::get('csv-mapped');
         }
     }
 
     protected function sessionSpecifix()
     {
         if (Session::has('csv-specifix')) {
-            $this->specifix = (array) Session::get('csv-specifix');
+            $this->specifix = (array)Session::get('csv-specifix');
         }
     }
 
@@ -135,7 +135,7 @@ class Data
 
     /**
      *
-     * @param mixed $dateFormat            
+     * @param mixed $dateFormat
      */
     public function setDateFormat($dateFormat)
     {
@@ -145,7 +145,7 @@ class Data
 
     /**
      *
-     * @param int $importAccount            
+     * @param int $importAccount
      */
     public function setImportAccount($importAccount)
     {
@@ -164,7 +164,7 @@ class Data
 
     /**
      *
-     * @param bool $hasHeaders            
+     * @param bool $hasHeaders
      */
     public function setHasHeaders($hasHeaders)
     {
@@ -183,7 +183,7 @@ class Data
 
     /**
      *
-     * @param array $map            
+     * @param array $map
      */
     public function setMap(array $map)
     {
@@ -202,7 +202,7 @@ class Data
 
     /**
      *
-     * @param array $mapped            
+     * @param array $mapped
      */
     public function setMapped(array $mapped)
     {
@@ -219,19 +219,19 @@ class Data
         if (strlen($this->csvFileContent) === 0) {
             $this->loadCsvFile();
         }
-        
+
         if (is_null($this->reader)) {
             $this->reader = Reader::createFromString($this->getCsvFileContent());
             $this->reader->setDelimiter($this->delimiter);
         }
-        
+
         return $this->reader;
     }
 
     protected function loadCsvFile()
     {
-        $file = $this->getCsvFileLocation();
-        $content = file_get_contents($file);
+        $file             = $this->getCsvFileLocation();
+        $content          = file_get_contents($file);
         $contentDecrypted = Crypt::decrypt($content);
         $this->setCsvFileContent($contentDecrypted);
     }
@@ -247,7 +247,7 @@ class Data
 
     /**
      *
-     * @param string $csvFileLocation            
+     * @param string $csvFileLocation
      */
     public function setCsvFileLocation($csvFileLocation)
     {
@@ -266,7 +266,7 @@ class Data
 
     /**
      *
-     * @param string $csvFileContent            
+     * @param string $csvFileContent
      */
     public function setCsvFileContent($csvFileContent)
     {
@@ -284,7 +284,7 @@ class Data
 
     /**
      *
-     * @param array $roles            
+     * @param array $roles
      */
     public function setRoles(array $roles)
     {
@@ -303,7 +303,7 @@ class Data
 
     /**
      *
-     * @param array $specifix            
+     * @param array $specifix
      */
     public function setSpecifix($specifix)
     {
@@ -322,7 +322,7 @@ class Data
 
     /**
      *
-     * @param string $delimiter            
+     * @param string $delimiter
      */
     public function setDelimiter($delimiter)
     {

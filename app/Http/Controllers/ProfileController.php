@@ -126,7 +126,7 @@ class ProfileController extends Controller
                 'email'        => $email,
                 'password'     => 'deleted',
                 'blocked'      => 1,
-                'blocked_code' => 'deleted'
+                'blocked_code' => 'deleted',
             ]
         );
 

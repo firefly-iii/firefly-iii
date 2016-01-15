@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
 class AccountMeta extends Model
 {
 
+    protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['account_id', 'name', 'data'];
     protected $table    = 'account_meta';
-    protected $dates    = ['created_at', 'updated_at'];
 
     /**
      *

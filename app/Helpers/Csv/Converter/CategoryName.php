@@ -24,7 +24,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
             $category = Category::firstOrCreateEncrypted(
                 [
                     'name'    => $this->value,
-                    'user_id' => Auth::user()->id
+                    'user_id' => Auth::user()->id,
                 ]
             );
         }

@@ -27,12 +27,12 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),
-                    'data'  => []
+                    'data'  => [],
                 ],
                 [
                     'label' => trans('firefly.expenses'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
 
@@ -60,12 +60,12 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),
-                    'data'  => []
+                    'data'  => [],
                 ],
                 [
                     'label' => trans('firefly.expenses'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         $data['datasets'][0]['data'][] = round($income, 2);
@@ -92,12 +92,12 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),
-                    'data'  => []
+                    'data'  => [],
                 ],
                 [
                     'label' => trans('firefly.expenses'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
 
@@ -126,12 +126,12 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.income'),
-                    'data'  => []
+                    'data'  => [],
                 ],
                 [
                     'label' => trans('firefly.expenses'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         $data['datasets'][0]['data'][] = round($income, 2);

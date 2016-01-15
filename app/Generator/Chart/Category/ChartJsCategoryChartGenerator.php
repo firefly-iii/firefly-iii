@@ -28,12 +28,12 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.spent'),
-                    'data'  => []
+                    'data'  => [],
                 ],
                 [
                     'label' => trans('firefly.earned'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
 
@@ -95,8 +95,8 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.spent'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         foreach ($entries as $entry) {

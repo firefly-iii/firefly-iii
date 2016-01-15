@@ -61,7 +61,7 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'transaction_journals.bill_id',
-                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')
+                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`'),
                        ]
                    );
 
@@ -476,7 +476,7 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'bills.*',
-                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`')
+                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
                        ]
                    )->sortBy('name');
 
