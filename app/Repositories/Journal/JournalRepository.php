@@ -323,6 +323,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array           $data
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function storeAccounts(TransactionType $type, array $data)
     {

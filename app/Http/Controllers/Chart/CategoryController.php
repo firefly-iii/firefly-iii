@@ -313,6 +313,10 @@ class CategoryController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // it's long but ok.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
@@ -337,18 +341,15 @@ class CategoryController extends Controller
         $entries    = new Collection;
 
         while ($start < $end) { // filter the set:
-            $row = [clone $start];
-            // get possibly relevant entries from the big $set
-            $currentSet = $set->filter(
+            $row        = [clone $start];
+            $currentSet = $set->filter( // get possibly relevant entries from the big $set
                 function (Category $category) use ($start) {
                     return $category->dateFormatted == $start->format("Y-m");
                 }
             );
-            // check for each category if its in the current set.
             /** @var Category $category */
-            foreach ($categories as $category) {
-                // if its in there, use the value.
-                $entry = $currentSet->filter(
+            foreach ($categories as $category) { // check for each category if its in the current set.
+                $entry = $currentSet->filter( // if its in there, use the value.
                     function (Category $cat) use ($category) {
                         return ($cat->id == $category->id);
                     }
@@ -359,7 +360,6 @@ class CategoryController extends Controller
                     $row[] = 0;
                 }
             }
-
             $entries->push($row);
             $start->addMonth();
         }

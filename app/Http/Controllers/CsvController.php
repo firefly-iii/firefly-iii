@@ -331,6 +331,8 @@ class CsvController extends Controller
      *
      * STEP SIX
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) it's 6, but it's allright.
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function saveMapping()
