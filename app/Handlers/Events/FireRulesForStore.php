@@ -67,6 +67,10 @@ class FireRulesForStore
                 // get some return out of this?
                 $processor->handle();
 
+                if($rule->stop_processing) {
+                    break;
+                }
+
             }
         }
 //        echo 'Done processing rules. See log.';
