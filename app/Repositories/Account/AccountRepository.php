@@ -80,6 +80,7 @@ class AccountRepository implements AccountRepositoryInterface
                 return strtolower($account->name);
             }
         );
+
         return $result;
     }
 
@@ -113,6 +114,7 @@ class AccountRepository implements AccountRepositoryInterface
                            DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
                        ]
                    );
+
         return $set;
     }
 
@@ -143,6 +145,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $result = $query->get(['accounts.*']);
+
         return $result;
     }
 
@@ -173,6 +176,7 @@ class AccountRepository implements AccountRepositoryInterface
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+
         return $set;
     }
 

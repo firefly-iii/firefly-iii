@@ -146,6 +146,7 @@ class BillRepository implements BillRepositoryInterface
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
                     ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
+
         return $set;
     }
 
@@ -460,6 +461,7 @@ class BillRepository implements BillRepositoryInterface
                 $amount = bcadd($amount, $paid->sum_amount);
             }
         }
+
         return $amount;
     }
 
@@ -515,6 +517,7 @@ class BillRepository implements BillRepositoryInterface
                 $amount = bcadd($amount, $bill->expectedAmount);
             }
         }
+
         return $amount;
     }
 

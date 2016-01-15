@@ -14,7 +14,6 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
-use Illuminate\Support\Collection;
 
 /**
  * Class RuleRepository
@@ -48,6 +47,7 @@ class RuleRepository implements RuleRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
@@ -98,7 +98,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function moveRuleUp(Rule $rule)
+    public function moveUp(Rule $rule)
     {
         $order = $rule->order;
 
@@ -119,7 +119,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function moveRuleDown(Rule $rule)
+    public function moveDown(Rule $rule)
     {
         $order = $rule->order;
 
@@ -142,7 +142,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return Rule
      */
-    public function storeRule(array $data)
+    public function store(array $data)
     {
         /** @var RuleGroup $ruleGroup */
         $ruleGroup = Auth::user()->ruleGroups()->find($data['rule_group_id']);
@@ -213,7 +213,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function destroyRule(Rule $rule)
+    public function destroy(Rule $rule)
     {
         foreach ($rule->ruleTriggers as $trigger) {
             $trigger->delete();
@@ -264,9 +264,10 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $data
+     *
      * @return Rule
      */
-    public function updateRule(Rule $rule, array $data)
+    public function update(Rule $rule, array $data)
     {
         // update rule:
         $rule->active          = $data['active'];

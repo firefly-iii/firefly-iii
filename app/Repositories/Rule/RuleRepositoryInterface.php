@@ -13,7 +13,6 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
-use Illuminate\Support\Collection;
 
 /**
  * Interface RuleRepositoryInterface
@@ -27,7 +26,7 @@ interface RuleRepositoryInterface
      *
      * @return bool
      */
-    public function destroyRule(Rule $rule);
+    public function destroy(Rule $rule);
 
     /**
      * @param RuleGroup $ruleGroup
@@ -39,6 +38,7 @@ interface RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $ids
+     *
      * @return bool
      */
     public function reorderRuleTriggers(Rule $rule, array $ids);
@@ -46,41 +46,46 @@ interface RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $ids
+     *
      * @return bool
      */
     public function reorderRuleActions(Rule $rule, array $ids);
 
     /**
      * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
 
     /**
      * @param Rule $rule
+     *
      * @return bool
      */
-    public function moveRuleUp(Rule $rule);
+    public function moveUp(Rule $rule);
 
     /**
      * @param Rule  $rule
      * @param array $data
+     *
      * @return Rule
      */
-    public function updateRule(Rule $rule, array $data);
+    public function update(Rule $rule, array $data);
 
     /**
      * @param Rule $rule
+     *
      * @return bool
      */
-    public function moveRuleDown(Rule $rule);
+    public function moveDown(Rule $rule);
 
     /**
      * @param array $data
      *
      * @return Rule
      */
-    public function storeRule(array $data);
+    public function store(array $data);
 
     /**
      * @param Rule   $rule

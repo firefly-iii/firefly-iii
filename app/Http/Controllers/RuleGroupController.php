@@ -64,7 +64,7 @@ class RuleGroupController extends Controller
             'user'        => Auth::user()->id,
         ];
 
-        $ruleGroup = $repository->storeRuleGroup($data);
+        $ruleGroup = $repository->store($data);
 
         Session::flash('success', trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
@@ -116,7 +116,7 @@ class RuleGroupController extends Controller
             'active'      => intval($request->input('active')) == 1,
         ];
 
-        $repository->updateRuleGroup($ruleGroup, $data);
+        $repository->update($ruleGroup, $data);
 
         Session::flash('success', trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
@@ -143,7 +143,7 @@ class RuleGroupController extends Controller
     {
         $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
-        $ruleGroupList = Expandedform::makeSelectList($repository->getRuleGroups(), true);
+        $ruleGroupList = Expandedform::makeSelectList($repository->get(), true);
         unset($ruleGroupList[$ruleGroup->id]);
 
         // put previous url in session
@@ -167,7 +167,7 @@ class RuleGroupController extends Controller
         $title  = $ruleGroup->title;
         $moveTo = Auth::user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
 
-        $repository->destroyRuleGroup($ruleGroup, $moveTo);
+        $repository->destroy($ruleGroup, $moveTo);
 
 
         Session::flash('success', trans('firefly.deleted_rule_group', ['title' => $title]));
@@ -186,7 +186,7 @@ class RuleGroupController extends Controller
      */
     public function up(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
-        $repository->moveRuleGroupUp($ruleGroup);
+        $repository->moveUp($ruleGroup);
 
         return redirect(route('rules.index'));
 
@@ -200,7 +200,7 @@ class RuleGroupController extends Controller
      */
     public function down(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
-        $repository->moveRuleGroupDown($ruleGroup);
+        $repository->moveDown($ruleGroup);
 
         return redirect(route('rules.index'));
 

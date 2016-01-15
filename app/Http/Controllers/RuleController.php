@@ -67,7 +67,7 @@ class RuleController extends Controller
             'stop_processing'     => $request->get('stop_processing'),
         ];
 
-        $rule = $repository->storeRule($data);
+        $rule = $repository->store($data);
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
         Preferences::mark();
 
@@ -313,7 +313,7 @@ class RuleController extends Controller
             'rule-action-stop'    => $request->get('rule-action-stop'),
             'stop_processing'     => intval($request->get('stop_processing')) == 1,
         ];
-        $repository->updateRule($rule, $data);
+        $repository->update($rule, $data);
 
         Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
         Preferences::mark();
@@ -358,7 +358,7 @@ class RuleController extends Controller
     {
 
         $title = $rule->title;
-        $repository->destroyRule($rule);
+        $repository->destroy($rule);
 
         Session::flash('success', trans('firefly.deleted_rule', ['title' => $title]));
         Preferences::mark();
@@ -439,7 +439,7 @@ class RuleController extends Controller
      */
     public function up(RuleRepositoryInterface $repository, Rule $rule)
     {
-        $repository->moveRuleUp($rule);
+        $repository->moveUp($rule);
 
         return redirect(route('rules.index'));
 
@@ -453,7 +453,7 @@ class RuleController extends Controller
      */
     public function down(RuleRepositoryInterface $repository, Rule $rule)
     {
-        $repository->moveRuleDown($rule);
+        $repository->moveDown($rule);
 
         return redirect(route('rules.index'));
 
