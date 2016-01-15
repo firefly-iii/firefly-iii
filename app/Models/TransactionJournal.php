@@ -211,21 +211,6 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
-     * @param Account         $account
-     */
-    public function scopeAccountIs(EloquentBuilder $query, Account $account)
-    {
-        if (!isset($this->joinedTransactions)) {
-            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->joinedTransactions = true;
-        }
-        $query->where('transactions.account_id', $account->id);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
      * @param Carbon          $date
      *
      * @return EloquentBuilder
@@ -246,19 +231,6 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
-     * @param Carbon          $date
-     *
-     * @return EloquentBuilder
-     */
-    public function scopeOnDate(EloquentBuilder $query, Carbon $date)
-    {
-        return $query->where('date', '=', $date->format('Y-m-d'));
     }
 
     /**
