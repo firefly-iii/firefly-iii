@@ -184,7 +184,7 @@ class CsvController extends Controller
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts', 'delimiters'));
     }
 
     /**
