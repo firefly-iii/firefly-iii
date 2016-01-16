@@ -156,7 +156,8 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         ];
         // get labels from one of the budgets (assuming there's at least one):
         $first = $entries->first();
-        foreach ($first['budgeted'] as $year => $noInterest) {
+        $keys  = array_keys($first['budgeted']);
+        foreach ($keys as $year) {
             $data['labels'][] = strval($year);
         }
 

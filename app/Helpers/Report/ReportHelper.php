@@ -342,12 +342,6 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        // /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        // $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-
-        // /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        // $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
-
         $balance = new Balance;
 
         // build a balance header:

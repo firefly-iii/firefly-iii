@@ -10,7 +10,6 @@
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;

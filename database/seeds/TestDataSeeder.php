@@ -23,6 +23,8 @@ use Illuminate\Database\Seeder;
 /**
  *
  * Class TestDataSeeder
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class TestDataSeeder extends Seeder
 {
@@ -39,6 +41,9 @@ class TestDataSeeder extends Seeder
 
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function createRules()
     {
         // three rule groups to get started.
@@ -433,26 +438,10 @@ class TestDataSeeder extends Seeder
         $ruleAction->action_value    = 'Bills';
         $ruleAction->save();
         unset($ruleAction);
-
-
-        // a normal rule: saves transactions where description contains "groceries"
-        // and from account is "MyBank Checking Account"
-        // send it to Groceries/Groceries
-
-
-        //$ruleAction
-
-        // TODO a rule that triggers on something, just like the previous one, but it has "stop_processing" set to 1.
-        // TODO a rule that triggers on that same thing, but it will not file, because the previous rule made FF skip it.
-
-        // TODO rule with specific actions.
-        // TODO rule with actions and one action has stop_processing and other actions are not processed. Somewhere in test?
-
-
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function run()
     {
@@ -545,6 +534,9 @@ class TestDataSeeder extends Seeder
 
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     protected function createAssetAccounts()
     {
         $assets    = ['MyBank Checking Account', 'Savings', 'Shared', 'Creditcard', 'Emergencies', 'STE'];
@@ -663,6 +655,9 @@ class TestDataSeeder extends Seeder
         );
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     protected function createPiggybanks()
     {
         $account = $this->findAccount('Savings');
@@ -819,6 +814,8 @@ class TestDataSeeder extends Seeder
      * @param        $description
      * @param Carbon $date
      * @param        $amount
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return TransactionJournal
      */
@@ -1056,6 +1053,7 @@ class TestDataSeeder extends Seeder
 
     /**
      * @param Carbon $date
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function createGroceries(Carbon $date)
     {
@@ -1113,6 +1111,7 @@ class TestDataSeeder extends Seeder
 
     /**
      * @param Carbon $date
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function createDrinksAndOthers(Carbon $date)
     {
@@ -1331,6 +1330,12 @@ class TestDataSeeder extends Seeder
         return null;
     }
 
+    /**
+     * @param $date
+     *
+     * @return static
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     protected function createCar($date)
     {
         // twice:
