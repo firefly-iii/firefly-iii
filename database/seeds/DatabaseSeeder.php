@@ -23,14 +23,14 @@ class DatabaseSeeder extends Seeder
         $this->call('PermissionSeeder');
 
         // set up basic test data (as little as possible):
-        if (App::environment() == 'testing') {
+        if (App::environment() == 'testing' && gethostname() != 'lightning') {
             $this->call('TestDataSeeder');
         }
 
         // this one is reserved for more extensive testing.
-        //if (App::environment() == 'testing' || App::environment() == 'homestead' || gethostname() == 'lightning') {
-        //$this->call('VisualTestDataSeeder');
-        //}
+        if (App::environment() == 'testing' || gethostname() == 'lightning') {
+            $this->call('VisualTestDataSeeder');
+        }
     }
 
 }
