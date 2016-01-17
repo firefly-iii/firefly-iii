@@ -9,6 +9,7 @@
 
 namespace FireflyIII\Console;
 
+use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands
         = [
+            UpgradeFireflyInstructions::class
         ];
 
     /**
