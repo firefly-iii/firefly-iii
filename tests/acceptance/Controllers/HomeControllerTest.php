@@ -17,6 +17,7 @@ class HomeControllerTest extends TestCase
         $args = [
             'start' => '2012-01-01',
             'end'   => '2012-04-01',
+            '_token' => Session::token(),
         ];
 
         // if date range is > 50, should have flash.
@@ -24,5 +25,20 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
         $this->assertSessionHas('warning', '91 days of data may take a while to load.');
     }
+
+    public function testFlush()
+    {
+        $this->be($this->user());
+        $response = $this->call('GET', '/flush');
+        $this->assertEquals(302, $response->status());
+    }
+
+    public function testIndex()
+    {
+        $this->be($this->user());
+        $response = $this->call('GET', '/');
+        $this->assertEquals(200, $response->status());
+    }
+
 
 }

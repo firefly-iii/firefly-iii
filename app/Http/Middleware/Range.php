@@ -73,6 +73,10 @@ class Range
                     Session::put('first', Carbon::now()->startOfYear());
                 }
             }
+
+            // check "sum of everything".
+
+
             $current = Carbon::now()->formatLocalized('%B %Y');
             $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
             $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');
