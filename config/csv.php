@@ -177,6 +177,12 @@ return [
             'converter' => 'Amount',
             'field'     => 'amount',
         ],
+        'amount-comma-separated' => [
+            'name'      => 'Amount (comma as decimal separator)',
+            'mappable'  => false,
+            'converter' => 'AmountComma',
+            'field'     => 'amount',
+        ],
         'sepa-ct-id'        => [
             'name'      => 'SEPA Credit Transfer end-to-end ID',
             'mappable'  => false,

@@ -26,8 +26,6 @@ class AbnAmroDescription
      */
     public function fix()
     {
-        $this->handleAmount();
-        
         // Try to parse the description in known formats.
         $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
         
@@ -55,10 +53,6 @@ class AbnAmroDescription
         $this->row = $row;
     }
     
-    protected function handleAmount() {
-        $this->data['amount'] = floatval(str_replace(',', '.', $this->row[6]));
-    }
-
     /**
      * Parses the current description in SEPA format
      * @return boolean true if the description is SEPA format, false otherwise
