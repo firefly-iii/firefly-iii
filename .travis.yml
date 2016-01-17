@@ -10,8 +10,7 @@ install:
   - composer install
   - php artisan env
   - mv -v .env.testing .env
-  - touch storage/database.sqlite
-  - php artisan migrate --env=testing
+  - touch storage/database/testing.sqlite
   - php artisan migrate --seed --env=testing
 
 script:
