@@ -27,10 +27,16 @@ class AbnAmroDescription
     public function fix()
     {
         $this->handleAmount();
-        $this->parseSepaDescription();
-
+        
+        // Try to parse the description in known formats.
+        $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
+        
+        // If the description could not be parsed, specify an unknown opposing account, as an opposing account is required
+        if( !$parsed ) {
+            $this->data[ "opposing-account-name" ] = trans('unknown');
+        }
+        
         return $this->data;
-
     }
 
     /**
@@ -87,97 +93,89 @@ class AbnAmroDescription
             }
             
             // Add the type to the description
-            $this->data['description'] .= ' (' . $type . ')';
+            if( $type ) 
+                $this->data['description'] .= ' (' . $type . ')';
             
             return true;
         }
         
         return false;
     }
+
+    /**
+     * Parses the current description in TRTP format
+     * @return boolean true if the description is TRTP format, false otherwise
+     */
+    protected function parseTRTPDescription()
+    {
+        // See if the current description is formatted in TRTP format
+        if( preg_match_all( "!\/([A-Z]{3,4})\/([^/]*)!", $this->data[ "description" ], $matches, PREG_SET_ORDER ) ) {
+            Log::debug('AbnAmroSpecifix: Description is structured as TRTP format.');
     
-/***
- * 
-def ParseDescription(desc):
-	values = None
-	### SEPA PLAIN:    SEPA iDEAL                       IBAN: NL12RABO0121212212        BIC: RABONL2U                    Naam: Silver Ocean B.V.         Omschrijving: 1232138 1232131233 412321 iBOOD.com iBOOD.com B.V. Kenmerk: 12-12-2014 21:03 002000 0213123238
-	sepa = re.findall(r"(?P<SEPA>^SEPA.{28})", desc, re.I)
-	if (sepa):
-		values = {}
-		value = sepa[0]
-		values["TRTP"] = value.strip()
-		values["EREF"] = ""
-		values["REMI"] = ""
-		sepa = re.findall(r"(?P<NAME>[A-Za-z]+(?=:\s)):\s(?P<VALUE>[A-Za-z 0-9.-]+(?=\s))", desc, re.I) 
-		for line in sepa:
-			key = line[0]
-			if key.upper() == 'OMSCHRIJVING':
-				key = 'REMI'
-			if key.upper() == 'KENMERK':
-				key = 'EREF'
-			if key.upper() == 'NAAM':
-				key = 'NAME'
-			value = line[1]
-			values[key] = value.strip()
-			# print (values)
-			# continue
-		if len(values["REMI"]) > 19:
-				values["REMI"] = values["REMI"][0:18] + values["REMI"][19:]
-		if values["REMI"] == "":
-			values["REMI"] = values["TRTP"]
+            foreach( $matches as $match ) {
+                $key = $match[1];
+                $value = trim($match[2]);
+                
+                switch( strtoupper($key) ) {
+                    case 'TRTP':
+                        $type = $value;
+                        break;
+                    case 'NAME':
+                        $this->data['opposing-account-name'] = $value;
+                        break;
+                    case 'REMI':
+                        $this->data['description'] = $value;
+                        break;
+                    case 'IBAN':
+                        $this->data['opposing-account-iban'] = $value;
+                        break;
+                    default:
+                        // Ignore the rest
+                }
+            }
+            
+            // Add the type to the description
+            if( $type )
+                $this->data['description'] .= ' (' . $type . ')';
+    
+            return true;
+        }
+    
+        return false;
+    }
 
-	### TRTP ENCODED: /TRTP/SEPA OVERBOEKING/IBAN/NL23ABNA0000000000/BIC/ABNANL2A/NAME/baasd dsdsT CJ/REMI/Nullijn/EREF/NOTPROVIDED
-	trtp = re.findall(r"\/(?P<NAME>[A-Z]{3,4})\/(?P<VALUE>.*?(?:(?=\/[A-Z]{3,4}\/)|$))",desc, re.I)
-	if (trtp):
-		values = {}
-		values["EREF"] = ""
-		values["REMI"] = ""
-		for line in trtp:
-			key = line[0]
-			value = line[1]
-			values[key] = value.strip()
-			# print (values)
-			# continue
-		if values["REMI"] == "":
-			values["REMI"] = values["TRTP"]
-			
-	### BEA: BEA   NR:00AJ01   31.01.01/19.54 Van HarenSchoenen132 UDE,PAS333			
-	trtp = re.findall(r"(?P<TRTP>[BG]EA) +(?P<EREF>NR:[a-zA-Z:0-9]+) +(?P<DATE>[0-9.\/]+) +(?P<NAAM>[^,]*)", desc, re.I)
-	if (trtp):
-		values = {}
-		values["TRTP"] = str(trtp[0][0]).strip()
-		values["NAME"] = str(trtp[0][3]).strip()
-		values["EREF"] = str(trtp[0][1]).strip()
-		values["DATE"] = str(trtp[0][2]).strip()
-		values["REMI"] = values["TRTP"] + " " + values["NAME"]
-		# print (values)
-		# continue
-		
-	### OLD:  12.21.22.222                    BNP aaaaaaa aaaaaa SCH          BETALINGSKENM.  2323233232323323 MAAND* APRIL 01                 REF* 1212121-42-41    
-	trtp = re.findall(r"^ ?(?P<IBAN>[0-9.]{12,15})\W+(?P<NAAM>.{32})", desc, re.I)
-	if (trtp):
-		values = {}
-		values["TRTP"] = "OLD"
-		values["IBAN"] = str(trtp[0][0]).strip()
-		values["NAME"] = str(trtp[0][1]).strip()
-		values["EREF"] = ""
-		values["REMI"] = values["TRTP"] + " " + values["NAME"]
-		# print (values)
-		# continue
-	### ABN AMRO Bank N.V.               Prive pakket                3,25
-	abn = re.findall(r"^ABN AMRO.{24} (?P<DESC>.*)", desc, re.I)
-	if (abn):
-		values = {}
-		values["TRTP"] = "ABN AMBRO"
-		values["NAME"] = "ABN AMBRO"
-		values["EREF"] = str(abn[0]).strip()
-		values["REMI"] = values["EREF"]
-		# print (values)
-		# continue
-	if (values == None):
-		# print ("Unkown: ### %s ###" % ( desc ))
-		return None
-	return values * 
- * 
- */
-
+    /**
+     * Parses the current description in GEA/BEA format
+     * @return boolean true if the description is GEA/BEAformat, false otherwise
+     */
+    protected function parseGEABEADescription()
+    {
+        // See if the current description is formatted in GEA/BEA format
+        if( preg_match( "/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/", $this->data[ "description" ], $matches ) ) {
+            Log::debug('AbnAmroSpecifix: Description is structured as GEA or BEA format.');
+    
+            $this->data[ "opposing-account-name" ] = $matches[4];
+            $this->data[ "description" ] = $matches[4] . " (" . $matches[1] . ")";
+        }
+    
+        return false;
+    }
+    
+    /**
+     * Parses the current description with costs from ABN AMRO itself
+     * @return boolean true if the description is GEA/BEAformat, false otherwise
+     */
+    protected function parseABNAMRODescription()
+    {
+        // See if the current description is formatted in ABN AMRO format
+        if( preg_match( "/ABN AMRO.{24} (.*)/", $this->data[ "description" ], $matches ) ) {
+            Log::debug('AbnAmroSpecifix: Description is structured as costs from ABN AMRO itself.');
+    
+            $this->data[ "opposing-account-name" ] = "ABN AMRO";
+            $this->data[ "description" ] = $matches[1];
+        }
+    
+        return false;
+    }
+    
 }
