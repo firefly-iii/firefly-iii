@@ -59,8 +59,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         // move .env file over?
         if (!file_exists($copy)) {
-            touch($original);
-            Artisan::call('migrate', ['--seed' => true]);
+
+            // maybe original does?
+            if (!file_exists($original)) {
+                touch($original);
+                Artisan::call('migrate', ['--seed' => true]);
+            }
+            
             copy($original, $copy);
         } else {
             if (file_exists($copy)) {
