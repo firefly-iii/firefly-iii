@@ -1,5 +1,6 @@
 <?php
 use Carbon\Carbon;
+use FireflyIII\User;
 
 /**
  * Class TestCase
@@ -26,6 +27,23 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $app;
     }
+
+    /**
+     * @return User
+     */
+    public function user()
+    {
+        return User::find(1);
+    }
+
+    /**
+     * @return User
+     */
+    public function emptyUser()
+    {
+        return User::find(2);
+    }
+
 
     /**
      * Sets up the fixture, for example, opens a network connection.
