@@ -29,9 +29,10 @@ class AbnAmroDescription
         // Try to parse the description in known formats.
         $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
         
-        // If the description could not be parsed, specify an unknown opposing account, as an opposing account is required
+        // If the description could not be parsed, specify an unknown opposing 
+        // account, as an opposing account is required
         if( !$parsed ) {
-            $this->data[ "opposing-account-name" ] = trans('unknown');
+            $this->data[ "opposing-account-name" ] = trans('firefly.unknown');
         }
         
         return $this->data;
