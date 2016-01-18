@@ -150,6 +150,8 @@ class AbnAmroDescription
     
             $this->data[ "opposing-account-name" ] = $matches[4];
             $this->data[ "description" ] = $matches[4] . " (" . $matches[1] . ")";
+            
+            return true;
         }
     
         return false;
@@ -167,6 +169,8 @@ class AbnAmroDescription
     
             $this->data[ "opposing-account-name" ] = "ABN AMRO";
             $this->data[ "description" ] = $matches[1];
+            
+            return true;
         }
     
         return false;
