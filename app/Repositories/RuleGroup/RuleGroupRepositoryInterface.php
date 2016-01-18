@@ -52,6 +52,8 @@ interface RuleGroupRepositoryInterface
     public function resetRuleGroupOrder();
 
     /**
+     * @param RuleGroup $ruleGroup
+     *
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup);

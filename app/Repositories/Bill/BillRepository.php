@@ -61,7 +61,7 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'transaction_journals.bill_id',
-                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')
+                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`'),
                        ]
                    );
 
@@ -476,7 +476,7 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'bills.*',
-                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`')
+                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
                        ]
                    )->sortBy('name');
 
@@ -540,8 +540,7 @@ class BillRepository implements BillRepositoryInterface
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
             if ($creditCard->balance == 0) {
-                // find a transfer TO the credit card which should account for
-                // anything paid. If not, the CC is not yet used.
+                // find a transfer TO the credit card which should account for anything paid. If not, the CC is not yet used.
                 $set = TransactionJournal::whereIn(
                     'transaction_journals.id', function (Builder $q) use ($creditCard, $start, $end) {
                     $q->select('transaction_journals.id')

@@ -25,14 +25,7 @@ class TransactionCurrency extends Model
 
 
     protected $fillable = ['name', 'code', 'symbol'];
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
-    }
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -44,6 +37,8 @@ class TransactionCurrency extends Model
 
     /**
      * @param TransactionCurrency $currency
+     *
+     * @return TransactionCurrency
      */
     public static function routeBinder(TransactionCurrency $currency)
     {

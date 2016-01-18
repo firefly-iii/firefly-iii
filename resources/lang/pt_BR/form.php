@@ -53,6 +53,7 @@ return [
     'csv_config'                  => 'Importar CSV de configuração',
     'specifix'                    => 'Bank- or file specific fixes',
     'csv_import_account'          => 'Default import account',
+    'csv_delimiter'               => 'CSV field delimiter',
     'attachments[]'               => 'Anexos',
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',
@@ -67,6 +68,12 @@ return [
     'filename'                    => 'Nome do arquivo',
     'mime'                        => 'Mime type',
     'size'                        => 'Tamanho',
+    'trigger'                     => 'Trigger',
+    'stop_processing'             => 'Stop processing',
+
+    'csv_comma'     => 'A comma (,)',
+    'csv_semicolon' => 'A semicolon (;)',
+    'csv_tab'       => 'A tab (invisible)',
 
 
     'delete_account'    => 'Apagar conta ":name"',
@@ -76,10 +83,14 @@ return [
     'delete_currency'   => 'Delete currency ":name"',
     'delete_journal'    => 'Delete transaction with description ":description"',
     'delete_attachment' => 'Apagar anexo ":name"',
+    'delete_rule'       => 'Delete rule ":title"',
+    'delete_rule_group' => 'Delete rule group ":title"',
 
     'attachment_areYouSure' => 'Are you sure you want to delete the attachment named ":name"?',
     'account_areYouSure'    => 'Are you sure you want to delete the account named ":name"?',
     'bill_areYouSure'       => 'Você tem certeza que quer apagar a fatura ":name"?',
+    'rule_areYouSure'       => 'Are you sure you want to delete the rule titled ":title"?',
+    'ruleGroup_areYouSure'  => 'Are you sure you want to delete the rule group titled ":title"?',
     'budget_areYouSure'     => 'Are you sure you want to delete the budget named ":name"?',
     'category_areYouSure'   => 'Are you sure you want to delete the category named ":name"?',
     'currency_areYouSure'   => 'Are you sure you want to delete the currency named ":name"?',
@@ -89,6 +100,7 @@ return [
 
     'permDeleteWarning'          => 'Deleting stuff from Firely is permanent and cannot be undone.',
     'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
+    'also_delete_rules'          => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
     'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
     'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
     'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',

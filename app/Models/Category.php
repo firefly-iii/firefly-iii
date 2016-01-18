@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property boolean                              $encrypted
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
+ * @property string                               $dateFormatted
  */
 class Category extends Model
 {
@@ -28,6 +29,7 @@ class Category extends Model
 
     protected $fillable = ['user_id', 'name'];
     protected $hidden   = ['encrypted'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param array $fields
@@ -55,15 +57,6 @@ class Category extends Model
 
         return $category;
 
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
@@ -112,6 +105,11 @@ class Category extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @param Category $value
+     *
+     * @return Category
+     */
     public static function routeBinder(Category $value)
     {
         if (Auth::check()) {

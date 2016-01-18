@@ -28,6 +28,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property boolean                              $match_encrypted
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
+ * @property Carbon                               $nextExpectedMatch
+ * @property Carbon                               $lastFoundMatch
  */
 class Bill extends Model
 {
@@ -36,15 +38,7 @@ class Bill extends Model
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date'];
-    }
+    protected $dates  = ['created_at', 'updated_at', 'date'];
 
     /**
      * @param $value
@@ -127,6 +121,11 @@ class Bill extends Model
     }
 
 
+    /**
+     * @param Bill $value
+     *
+     * @return Bill
+     */
     public static function routeBinder(Bill $value)
     {
         if (Auth::check()) {

@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Account                          $account
  * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
  * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property string $reminder
+ * @property string                                $reminder
  */
 class PiggyBank extends Model
 {
@@ -36,6 +36,7 @@ class PiggyBank extends Model
     protected $fillable
                       = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'remind_me', 'reminder_skip'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
+    protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -70,14 +71,6 @@ class PiggyBank extends Model
     public function piggyBankRepetitions()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
     }
 
     /**
@@ -122,6 +115,11 @@ class PiggyBank extends Model
         $this->attributes['targetamount'] = strval(round($value, 2));
     }
 
+    /**
+     * @param PiggyBank $value
+     *
+     * @return PiggyBank
+     */
     public static function routeBinder(PiggyBank $value)
     {
         if (Auth::check()) {

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 class AccountType extends Model
 {
 
+    protected $dates = ['created_at', 'updated_at'];
+
     //
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -24,14 +26,5 @@ class AccountType extends Model
     public function accounts()
     {
         return $this->hasMany('FireflyIII\Models\Account');
-    }
-
-    /**
-     * @return array
-     */
-    /** @noinspection PhpMissingParentCallCommonInspection */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at'];
     }
 }

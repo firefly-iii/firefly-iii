@@ -133,7 +133,7 @@ class AccountController extends Controller
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
             'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
             'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => round($account->virtual_balance, 2)
+            'virtualBalance'       => round($account->virtual_balance, 2),
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'accounts');
@@ -251,12 +251,10 @@ class AccountController extends Controller
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+            'openingBalanceCurrency' => intval($request->input('amount_currency_id_openingBalance')),
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
-
-
         $repository->update($account, $accountData);
 
         Session::flash('success', 'Account "' . $account->name . '" updated.');

@@ -46,7 +46,7 @@ class RuleGroupController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
-        return view('rules.rule-group.create', compact('subTitleIcon', 'what', 'subTitle'));
+        return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
     }
 
 

@@ -35,7 +35,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
                 'color'     => 'rgba(0, 141, 76, 0.7)',
                 'highlight' => 'rgba(0, 141, 76, 0.9)',
                 'label'     => trans('firefly.paid'),
-            ]
+            ],
         ];
 
         return $data;

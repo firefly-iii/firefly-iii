@@ -39,6 +39,9 @@ class Processor
 
     /**
      * Processor constructor.
+     *
+     * @param Rule               $rule
+     * @param TransactionJournal $journal
      */
     public function __construct(Rule $rule, TransactionJournal $journal)
     {
@@ -69,7 +72,7 @@ class Processor
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
-        foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $index => $trigger) {
+        foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $trigger) {
             $foundTriggers++;
             $type = $trigger->trigger_type;
 
@@ -107,7 +110,7 @@ class Processor
          * @var int        $index
          * @var RuleAction $action
          */
-        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $index => $action) {
+        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
             $type  = $action->action_type;
             $class = $this->actionTypes[$type];
             Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');

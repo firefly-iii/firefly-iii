@@ -29,19 +29,19 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'FireflyIII\Events\TransactionJournalUpdated'   => [
+            'FireflyIII\Events\TransactionJournalUpdated' => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterUpdate',
 
                 'FireflyIII\Handlers\Events\UpdateJournalConnection',
                 'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
-            'FireflyIII\Events\TransactionJournalStored' => [
+            'FireflyIII\Events\TransactionJournalStored'  => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
 
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
                 'FireflyIII\Handlers\Events\FireRulesForStore',
-            ]
+            ],
         ];
 
 

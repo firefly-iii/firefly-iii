@@ -79,8 +79,8 @@ class CsvController extends Controller
         if ($this->data->hasHeaders()) {
             $headers = $firstRow;
         }
-
-        foreach (Config::get('csv.roles') as $name => $role) {
+        $keys = array_keys(Config::get('csv.roles'));
+        foreach ($keys as $name) {
             $availableRoles[$name] = trans('firefly.csv_column_' . $name);//$role['name'];
         }
         ksort($availableRoles);
@@ -105,7 +105,7 @@ class CsvController extends Controller
         }
         $data = [
             'date-format' => Session::get('csv-date-format'),
-            'has-headers' => Session::get('csv-has-headers')
+            'has-headers' => Session::get('csv-has-headers'),
         ];
         if (Session::has('csv-map')) {
             $data['map'] = Session::get('csv-map');
@@ -162,12 +162,20 @@ class CsvController extends Controller
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
         Session::forget('csv-specifix');
+        SessioN::forget('csv-delimiter');
 
         // get list of supported specifix
         $specifix = [];
         foreach (Config::get('csv.specifix') as $entry) {
             $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
         }
+
+        // get a list of delimiters:
+        $delimiters = [
+            ','   => trans('form.csv_comma'),
+            ';'   => trans('form.csv_semicolon'),
+            'tab' => trans('form.csv_tab'),
+        ];
 
         // get a list of asset accounts:
         $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
@@ -176,7 +184,7 @@ class CsvController extends Controller
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts', 'delimiters'));
     }
 
     /**
@@ -323,6 +331,8 @@ class CsvController extends Controller
      *
      * STEP SIX
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) it's 6, but it's allright.
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function saveMapping()
@@ -367,6 +377,9 @@ class CsvController extends Controller
      *
      * STEP TWO
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // need the length.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly 5, its ok
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -385,9 +398,17 @@ class CsvController extends Controller
         $settings['has-headers']    = intval(Input::get('has_headers')) === 1;
         $settings['specifix']       = Input::get('specifix');
         $settings['import-account'] = intval(Input::get('csv_import_account'));
-        $settings['map']            = [];
-        $settings['mapped']         = [];
-        $settings['roles']          = [];
+        $settings['delimiter']      = Input::get('csv_delimiter', ',');
+
+        // A tab character cannot be used itself as option value in HTML
+        // See http://stackoverflow.com/questions/6064135/valid-characters-in-option-value
+        if ($settings['delimiter'] == 'tab') {
+            $settings['delimiter'] = "\t";
+        }
+
+        $settings['map']    = [];
+        $settings['mapped'] = [];
+        $settings['roles']  = [];
 
         if ($request->hasFile('csv_config')) { // Process config file if present.
             $data = file_get_contents($request->file('csv_config')->getRealPath());
@@ -405,6 +426,7 @@ class CsvController extends Controller
         $this->data->setRoles($settings['roles']);
         $this->data->setSpecifix($settings['specifix']);
         $this->data->setImportAccount($settings['import-account']);
+        $this->data->setDelimiter($settings['delimiter']);
 
         return redirect(route('csv.column-roles'));
 

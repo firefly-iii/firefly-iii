@@ -19,9 +19,12 @@ use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -35,16 +38,26 @@ class ReportHelper implements ReportHelperInterface
     /** @var ReportQueryInterface */
     protected $query;
 
+    /** @var  BudgetRepositoryInterface */
+    protected $budgetRepository;
+
+    /** @var  TagRepositoryInterface */
+    protected $tagRepository;
+
     /**
+     * ReportHelper constructor.
+     *
      * @codeCoverageIgnore
      *
-     * @param ReportQueryInterface $query
-     *
+     * @param ReportQueryInterface      $query
+     * @param BudgetRepositoryInterface $budgetRepository
+     * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(ReportQueryInterface $query)
+    public function __construct(ReportQueryInterface $query, BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
     {
-        $this->query = $query;
-
+        $this->query            = $query;
+        $this->budgetRepository = $budgetRepository;
+        $this->tagRepository    = $tagRepository;
     }
 
     /**
@@ -329,105 +342,24 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-
-        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
-
         $balance = new Balance;
 
         // build a balance header:
         $header    = new BalanceHeader;
-        $budgets   = $repository->getBudgetsAndLimitsInRange($start, $end);
-        $spentData = $repository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end);
+        $budgets   = $this->budgetRepository->getBudgetsAndLimitsInRange($start, $end);
+        $spentData = $this->budgetRepository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end);
         foreach ($accounts as $account) {
             $header->addAccount($account);
         }
 
         /** @var BudgetModel $budget */
         foreach ($budgets as $budget) {
-            $line = new BalanceLine;
-            $line->setBudget($budget);
-
-            // loop accounts:
-            foreach ($accounts as $account) {
-                $balanceEntry = new BalanceEntry;
-                $balanceEntry->setAccount($account);
-
-                // get spent:
-                $entry = $spentData->filter(
-                    function (TransactionJournal $model) use ($budget, $account) {
-                        return $model->account_id == $account->id && $model->budget_id == $budget->id;
-                    }
-                );
-                $spent = 0;
-                if (!is_null($entry->first())) {
-                    $spent = $entry->first()->spent;
-                }
-                $balanceEntry->setSpent($spent);
-                $line->addBalanceEntry($balanceEntry);
-            }
-            // add line to balance:
-            $balance->addBalanceLine($line);
+            $balance->addBalanceLine($this->createBalanceLine($budget, $accounts, $spentData));
         }
 
-        // then a new line for without budget.
-        // and one for the tags:
-        // and one for "left unbalanced".
-        $empty    = new BalanceLine;
-        $tags     = new BalanceLine;
-        $diffLine = new BalanceLine;
-        $tagsLeft = $tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
-
-        $tags->setRole(BalanceLine::ROLE_TAGROLE);
-        $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
-
-        foreach ($accounts as $account) {
-            $entry = $spentData->filter(
-                function (TransactionJournal $model) use ($account) {
-                    return $model->account_id == $account->id && is_null($model->budget_id);
-                }
-            );
-            $spent = 0;
-            if (!is_null($entry->first())) {
-                $spent = $entry->first()->spent;
-            }
-            $leftEntry = $tagsLeft->filter(
-                function (Tag $tag) use ($account) {
-                    return $tag->account_id == $account->id;
-                }
-            );
-            $left      = 0;
-            if (!is_null($leftEntry->first())) {
-                $left = $leftEntry->first()->sum;
-            }
-            bcscale(2);
-            $diff = bcadd($spent, $left);
-
-            // budget
-            $budgetEntry = new BalanceEntry;
-            $budgetEntry->setAccount($account);
-            $budgetEntry->setSpent($spent);
-            $empty->addBalanceEntry($budgetEntry);
-
-            // balanced by tags
-            $tagEntry = new BalanceEntry;
-            $tagEntry->setAccount($account);
-            $tagEntry->setLeft($left);
-            $tags->addBalanceEntry($tagEntry);
-
-            // difference:
-            $diffEntry = new BalanceEntry;
-            $diffEntry->setAccount($account);
-            $diffEntry->setSpent($diff);
-            $diffLine->addBalanceEntry($diffEntry);
-
-        }
-
-        $balance->addBalanceLine($empty);
-        $balance->addBalanceLine($tags);
-        $balance->addBalanceLine($diffLine);
+        $balance->addBalanceLine($this->createEmptyBalanceLine($accounts, $spentData));
+        $balance->addBalanceLine($this->createTagsBalanceLine($accounts, $start, $end));
+        $balance->addBalanceLine($this->createDifferenceBalanceLine($accounts, $spentData, $start, $end));
 
         $balance->setBalanceHeader($header);
 
@@ -510,5 +442,158 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Collection $spentData
+     *
+     * @return BalanceLine
+     */
+    private function createBalanceLine(BudgetModel $budget, Collection $accounts, Collection $spentData)
+    {
+        $line = new BalanceLine;
+        $line->setBudget($budget);
+
+        // loop accounts:
+        foreach ($accounts as $account) {
+            $balanceEntry = new BalanceEntry;
+            $balanceEntry->setAccount($account);
+
+            // get spent:
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($budget, $account) {
+                    return $model->account_id == $account->id && $model->budget_id == $budget->id;
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+            $balanceEntry->setSpent($spent);
+            $line->addBalanceEntry($balanceEntry);
+        }
+
+        return $line;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $spentData
+     *
+     * @return BalanceLine
+     */
+    private function createEmptyBalanceLine(Collection $accounts, Collection $spentData)
+    {
+        $empty = new BalanceLine;
+
+        foreach ($accounts as $account) {
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($account) {
+                    return $model->account_id == $account->id && is_null($model->budget_id);
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+
+            // budget
+            $budgetEntry = new BalanceEntry;
+            $budgetEntry->setAccount($account);
+            $budgetEntry->setSpent($spent);
+            $empty->addBalanceEntry($budgetEntry);
+
+        }
+
+        return $empty;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return BalanceLine
+     */
+    private function createTagsBalanceLine(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $tags     = new BalanceLine;
+        $tagsLeft = $this->tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
+
+        $tags->setRole(BalanceLine::ROLE_TAGROLE);
+
+        foreach ($accounts as $account) {
+            $leftEntry = $tagsLeft->filter(
+                function (Tag $tag) use ($account) {
+                    return $tag->account_id == $account->id;
+                }
+            );
+            $left      = 0;
+            if (!is_null($leftEntry->first())) {
+                $left = $leftEntry->first()->sum;
+            }
+            bcscale(2);
+
+            // balanced by tags
+            $tagEntry = new BalanceEntry;
+            $tagEntry->setAccount($account);
+            $tagEntry->setLeft($left);
+            $tags->addBalanceEntry($tagEntry);
+
+        }
+
+        return $tags;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $spentData
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * @return BalanceLine
+     */
+    private function createDifferenceBalanceLine(Collection $accounts, Collection $spentData, Carbon $start, Carbon $end)
+    {
+        $diff     = new BalanceLine;
+        $tagsLeft = $this->tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
+
+        $diff->setRole(BalanceLine::ROLE_DIFFROLE);
+
+        foreach ($accounts as $account) {
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($account) {
+                    return $model->account_id == $account->id && is_null($model->budget_id);
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+            $leftEntry = $tagsLeft->filter(
+                function (Tag $tag) use ($account) {
+                    return $tag->account_id == $account->id;
+                }
+            );
+            $left      = 0;
+            if (!is_null($leftEntry->first())) {
+                $left = $leftEntry->first()->sum;
+            }
+            bcscale(2);
+            $diffValue = bcadd($spent, $left);
+
+            // difference:
+            $diffEntry = new BalanceEntry;
+            $diffEntry->setAccount($account);
+            $diffEntry->setSpent($diffValue);
+            $diff->addBalanceEntry($diffEntry);
+
+        }
+
+        return $diff;
     }
 }

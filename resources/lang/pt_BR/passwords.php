@@ -17,6 +17,6 @@ return [
     "token"    => "Este token de redefinição de senha é inválido.",
     "sent"     => "Nós te enviamos um email com um link para trocar a senha!",
     "reset"    => "Sua senha foi redefinida!",
-    'blocked'  => 'Nice try though.'
+    'blocked'  => 'Nice try though.',
 
 ];

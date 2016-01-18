@@ -11,8 +11,8 @@ use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
-use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Support\Twig\Rule;
+use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Twig;
@@ -53,7 +53,6 @@ class FireflyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
 
         $this->app->bind(
             'preferences', function () {

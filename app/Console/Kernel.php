@@ -9,6 +9,7 @@
 
 namespace FireflyIII\Console;
 
+use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,14 +25,19 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-    ];
+    protected $commands
+        = [
+            UpgradeFireflyInstructions::class
+        ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
     protected function schedule(Schedule $schedule)
     {

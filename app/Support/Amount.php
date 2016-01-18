@@ -29,9 +29,9 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, $amount, $coloured = true)
     {
-        $locale = setlocale(LC_MONETARY, 0);
-        $a      = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result = $a->formatCurrency($amount, $format->code);
+        $locale    = setlocale(LC_MONETARY, 0);
+        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $result    = $formatter->formatCurrency($amount, $format->code);
 
         if ($coloured === true) {
             if ($amount == 0) {
@@ -136,7 +136,7 @@ class Amount
     {
         $currency = $transaction->transactionJournal->transactionCurrency;
 
-        return $this->formatAnything($currency, $transaction->amount);
+        return $this->formatAnything($currency, $transaction->amount, $coloured);
     }
 
     /**

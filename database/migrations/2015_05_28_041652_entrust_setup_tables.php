@@ -4,6 +4,9 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class EntrustSetupTables
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 class EntrustSetupTables extends Migration
 {

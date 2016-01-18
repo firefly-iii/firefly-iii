@@ -1,5 +1,4 @@
 <?php
-
 namespace FireflyIII\Helpers\Csv;
 
 use Crypt;
@@ -17,19 +16,27 @@ class Data
     /** @var string */
     protected $csvFileContent;
 
+    /** @var  string */
+    protected $delimiter;
+
     /** @var string */
     protected $csvFileLocation;
+
     /** @var  string */
     protected $dateFormat;
+
     /** @var  bool */
     protected $hasHeaders;
 
     /** @var  array */
     protected $map = [];
+
     /** @var  array */
     protected $mapped = [];
+
     /** @var  Reader */
     protected $reader;
+
     /** @var  array */
     protected $roles = [];
 
@@ -40,7 +47,6 @@ class Data
     protected $importAccount = 0;
 
     /**
-     *
      */
     public function __construct()
     {
@@ -52,6 +58,7 @@ class Data
         $this->sessionMapped();
         $this->sessionSpecifix();
         $this->sessionImportAccount();
+        $this->sessionDelimiter();
     }
 
     protected function sessionHasHeaders()
@@ -110,7 +117,15 @@ class Data
         }
     }
 
+    protected function sessionDelimiter()
+    {
+        if (Session::has('csv-delimiter')) {
+            $this->delimiter = Session::get('csv-delimiter');
+        }
+    }
+
     /**
+     *
      * @return string
      */
     public function getDateFormat()
@@ -119,6 +134,7 @@ class Data
     }
 
     /**
+     *
      * @param mixed $dateFormat
      */
     public function setDateFormat($dateFormat)
@@ -128,6 +144,7 @@ class Data
     }
 
     /**
+     *
      * @param int $importAccount
      */
     public function setImportAccount($importAccount)
@@ -137,6 +154,7 @@ class Data
     }
 
     /**
+     *
      * @return bool
      */
     public function hasHeaders()
@@ -145,6 +163,7 @@ class Data
     }
 
     /**
+     *
      * @param bool $hasHeaders
      */
     public function setHasHeaders($hasHeaders)
@@ -154,6 +173,7 @@ class Data
     }
 
     /**
+     *
      * @return array
      */
     public function getMap()
@@ -162,6 +182,7 @@ class Data
     }
 
     /**
+     *
      * @param array $map
      */
     public function setMap(array $map)
@@ -171,6 +192,7 @@ class Data
     }
 
     /**
+     *
      * @return array
      */
     public function getMapped()
@@ -179,6 +201,7 @@ class Data
     }
 
     /**
+     *
      * @param array $mapped
      */
     public function setMapped(array $mapped)
@@ -188,17 +211,18 @@ class Data
     }
 
     /**
+     *
      * @return Reader
      */
     public function getReader()
     {
-
         if (strlen($this->csvFileContent) === 0) {
             $this->loadCsvFile();
         }
 
         if (is_null($this->reader)) {
             $this->reader = Reader::createFromString($this->getCsvFileContent());
+            $this->reader->setDelimiter($this->delimiter);
         }
 
         return $this->reader;
@@ -213,6 +237,7 @@ class Data
     }
 
     /**
+     *
      * @return string
      */
     public function getCsvFileLocation()
@@ -221,6 +246,7 @@ class Data
     }
 
     /**
+     *
      * @param string $csvFileLocation
      */
     public function setCsvFileLocation($csvFileLocation)
@@ -230,6 +256,7 @@ class Data
     }
 
     /**
+     *
      * @return string
      */
     public function getCsvFileContent()
@@ -238,6 +265,7 @@ class Data
     }
 
     /**
+     *
      * @param string $csvFileContent
      */
     public function setCsvFileContent($csvFileContent)
@@ -246,6 +274,7 @@ class Data
     }
 
     /**
+     *
      * @return array
      */
     public function getRoles()
@@ -254,6 +283,7 @@ class Data
     }
 
     /**
+     *
      * @param array $roles
      */
     public function setRoles(array $roles)
@@ -263,6 +293,7 @@ class Data
     }
 
     /**
+     *
      * @return array
      */
     public function getSpecifix()
@@ -271,6 +302,7 @@ class Data
     }
 
     /**
+     *
      * @param array $specifix
      */
     public function setSpecifix($specifix)
@@ -279,5 +311,22 @@ class Data
         $this->specifix = $specifix;
     }
 
+    /**
+     *
+     * @return string
+     */
+    public function getDelimiter()
+    {
+        return $this->delimiter;
+    }
 
+    /**
+     *
+     * @param string $delimiter
+     */
+    public function setDelimiter($delimiter)
+    {
+        Session::put('csv-delimiter', $delimiter);
+        $this->delimiter = $delimiter;
+    }
 }

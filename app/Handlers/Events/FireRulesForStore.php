@@ -45,7 +45,6 @@ class FireRulesForStore
      */
     public function handle(TransactionJournalStored $event)
     {
-        Log::debug('Before event (in handle). From account name is: ' . $event->journal->source_account->name);
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
         $user   = Auth::user();
@@ -74,7 +73,7 @@ class FireRulesForStore
 
             }
         }
-//        echo 'Done processing rules. See log.';
-//        exit;
+        //        echo 'Done processing rules. See log.';
+        //        exit;
     }
 }

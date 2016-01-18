@@ -31,8 +31,8 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
             'datasets' => [
                 [
                     'label' => 'Diff',
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         $sum  = '0';

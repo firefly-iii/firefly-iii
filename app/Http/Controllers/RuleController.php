@@ -10,7 +10,6 @@
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
@@ -54,7 +53,7 @@ class RuleController extends Controller
 
         // process the rule itself:
         $data = [
-            'rule_group_id'       => intval($request->get('rule_group_id')),
+            'rule_group_id'       => $ruleGroup->id,
             'title'               => $request->get('title'),
             'trigger'             => $request->get('trigger'),
             'description'         => $request->get('description'),
@@ -101,44 +100,12 @@ class RuleController extends Controller
         // has old input?
         if (Input::old()) {
             // process old triggers.
-            $newIndex = 0;
-            foreach (Input::old('rule-trigger') as $index => $entry) {
-                $count = ($newIndex + 1);
-                $triggerCount++;
-                $oldTrigger    = $entry;
-                $oldValue      = Input::old('rule-trigger-value')[$index];
-                $oldChecked    = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
-                $oldTriggers[] = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $oldTrigger,
-                        'oldValue'   => $oldValue,
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
+            $oldTriggers  = $this->getPreviousTriggers();
+            $triggerCount = count($oldTriggers);
 
             // process old actions
-            $newIndex = 0;
-            foreach (Input::old('rule-action') as $index => $entry) {
-                $count = ($newIndex + 1);
-                $actionCount++;
-                $oldAction    = $entry;
-                $oldValue     = Input::old('rule-action-value')[$index];
-                $oldChecked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
-                $oldActions[] = view(
-                    'rules.partials.action',
-                    [
-                        'oldTrigger' => $oldAction,
-                        'oldValue'   => $oldValue,
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
+            $oldActions  = $this->getPreviousActions();
+            $actionCount = count($oldActions);
         }
 
         $subTitleIcon = 'fa-clone';
@@ -164,114 +131,22 @@ class RuleController extends Controller
      */
     public function edit(Rule $rule)
     {
-
-        // count for current rule's triggers/actions.
-        $triggerCount = 0;
-        $actionCount  = 0;
-
-        // collection of those triggers/actions.
-        $oldTriggers = [];
-        $oldActions  = [];
-
         // has old input?
         if (Input::old()) {
-            // process old triggers.
-            $newIndex = 0;
-            foreach (Input::old('rule-trigger') as $index => $entry) {
-                $count = ($newIndex + 1);
-                $triggerCount++;
-                $oldTrigger    = $entry;
-                $oldValue      = Input::old('rule-trigger-value')[$index];
-                $oldChecked    = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
-                $oldTriggers[] = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $oldTrigger,
-                        'oldValue'   => $oldValue,
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
-
-            // process old actions
-            $newIndex = 0;
-            foreach (Input::old('rule-action') as $index => $entry) {
-                $count = ($newIndex + 1);
-                $actionCount++;
-                $oldAction    = $entry;
-                $oldValue     = Input::old('rule-action-value')[$index];
-                $oldChecked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
-                $oldActions[] = view(
-                    'rules.partials.action',
-                    [
-                        'oldTrigger' => $oldAction,
-                        'oldValue'   => $oldValue,
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
+            $oldTriggers  = $this->getPreviousTriggers();
+            $triggerCount = count($oldTriggers);
+            $oldActions   = $this->getPreviousActions();
+            $actionCount  = count($oldActions);
         } else {
-            // get current triggers
-            $newIndex = 0;
-            /**
-             * @var int         $index
-             * @var RuleTrigger $entry
-             */
-            foreach ($rule->ruleTriggers as $index => $entry) {
-                if ($entry->trigger_type != 'user_action') {
-                    $count = ($newIndex + 1);
-                    $triggerCount++;
-                    $oldTrigger    = $entry->trigger_type;
-                    $oldValue      = $entry->trigger_value;
-                    $oldChecked    = $entry->stop_processing;
-                    $oldTriggers[] = view(
-                        'rules.partials.trigger',
-                        [
-                            'oldTrigger' => $oldTrigger,
-                            'oldValue'   => $oldValue,
-                            'oldChecked' => $oldChecked,
-                            'count'      => $count,
-                        ]
-                    )->render();
-                    $newIndex++;
-                }
-
-            }
-
-            // get current actions
-            $newIndex = 0;
-            /**
-             * @var int        $index
-             * @var RuleAction $entry
-             */
-            foreach ($rule->ruleActions as $index => $entry) {
-                $count = ($newIndex + 1);
-                $actionCount++;
-                $oldAction    = $entry->action_type;
-                $oldValue     = $entry->action_value;
-                $oldChecked   = $entry->stop_processing;
-                $oldActions[] = view(
-                    'rules.partials.action',
-                    [
-                        'oldTrigger' => $oldAction,
-                        'oldValue'   => $oldValue,
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
+            $oldTriggers  = $this->getCurrentTriggers($rule);
+            $triggerCount = count($oldTriggers);
+            $oldActions   = $this->getCurrentActions($rule);
+            $actionCount  = count($oldActions);
         }
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
-
-
-        $subTitle = trans('firefly.edit_rule', ['title' => $rule->title]);
+        $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('rules.rule.edit.fromUpdate') !== true) {
@@ -283,9 +158,9 @@ class RuleController extends Controller
 
         return view(
             'rules.rule.edit', compact(
-            'rule', 'subTitle', 'primaryTrigger',
-            'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'
-        )
+                                 'rule', 'subTitle', 'primaryTrigger',
+                                 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'
+                             )
         );
     }
 
@@ -457,6 +332,114 @@ class RuleController extends Controller
 
         return redirect(route('rules.index'));
 
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return array
+     */
+    private function getCurrentActions(Rule $rule)
+    {
+        $index   = 0;
+        $actions = [];
+
+        /** @var RuleAction $entry */
+        foreach ($rule->ruleActions as $entry) {
+            $count     = ($index + 1);
+            $actions[] = view(
+                'rules.partials.action',
+                [
+                    'oldTrigger' => $entry->action_type,
+                    'oldValue'   => $entry->action_value,
+                    'oldChecked' => $entry->stop_processing,
+                    'count'      => $count,
+                ]
+            )->render();
+            $index++;
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return array
+     */
+    private function getCurrentTriggers(Rule $rule)
+    {
+        $index    = 0;
+        $triggers = [];
+
+        /** @var RuleTrigger $entry */
+        foreach ($rule->ruleTriggers as $entry) {
+            if ($entry->trigger_type != 'user_action') {
+                $count      = ($index + 1);
+                $triggers[] = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => $entry->trigger_type,
+                        'oldValue'   => $entry->trigger_value,
+                        'oldChecked' => $entry->stop_processing,
+                        'count'      => $count,
+                    ]
+                )->render();
+                $index++;
+            }
+        }
+
+        return $triggers;
+    }
+
+    /**
+     * @return array
+     */
+    private function getPreviousActions()
+    {
+        $newIndex = 0;
+        $actions  = [];
+        foreach (Input::old('rule-action') as $index => $entry) {
+            $count     = ($newIndex + 1);
+            $checked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
+            $actions[] = view(
+                'rules.partials.action',
+                [
+                    'oldTrigger' => $entry,
+                    'oldValue'   => Input::old('rule-action-value')[$index],
+                    'oldChecked' => $checked,
+                    'count'      => $count,
+                ]
+            )->render();
+            $newIndex++;
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @return array
+     */
+    private function getPreviousTriggers()
+    {
+        $newIndex = 0;
+        $triggers = [];
+        foreach (Input::old('rule-trigger') as $index => $entry) {
+            $count      = ($newIndex + 1);
+            $oldChecked = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
+            $triggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => $entry,
+                    'oldValue'   => Input::old('rule-trigger-value')[$index],
+                    'oldChecked' => $oldChecked,
+                    'count'      => $count,
+                ]
+            )->render();
+            $newIndex++;
+        }
+
+        return $triggers;
     }
 
 

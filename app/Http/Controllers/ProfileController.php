@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\User;
@@ -126,7 +125,7 @@ class ProfileController extends Controller
                 'email'        => $email,
                 'password'     => 'deleted',
                 'blocked'      => 1,
-                'blocked_code' => 'deleted'
+                'blocked_code' => 'deleted',
             ]
         );
 

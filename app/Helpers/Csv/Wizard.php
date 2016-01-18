@@ -63,7 +63,8 @@ class Wizard implements WizardInterface
 
 
         if (is_array($map)) {
-            foreach ($map as $index => $field) {
+            $keys = array_keys($map);
+            foreach ($keys as $index) {
                 if (isset($roles[$index])) {
                     $name = $roles[$index];
                     if ($configRoles[$name]['mappable']) {

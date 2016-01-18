@@ -59,9 +59,12 @@
 
                         {{ ExpandedForm.file('csv',{helpText: 'csv_csv_file_help'|_}) }}
 
+                        {{ ExpandedForm.select('csv_delimiter', delimiters, 0, {helpText: 'csv_delimiter_help'|_} ) }}
+
                         {{ ExpandedForm.file('csv_config',{helpText: 'csv_csv_config_file_help'|_}) }}
 
                         {{ ExpandedForm.select('csv_import_account', accounts, 0, {helpText: 'csv_import_account_help'|_} ) }}
+
 
                         {{ ExpandedForm.multiCheckbox('specifix', specifix) }}
 

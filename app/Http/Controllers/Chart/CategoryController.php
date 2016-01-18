@@ -43,6 +43,8 @@ class CategoryController extends Controller
      * @param SCRI     $repository
      * @param Category $category
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function all(SCRI $repository, Category $category)
@@ -53,8 +55,6 @@ class CategoryController extends Controller
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = new Carbon;
         $entries = new Collection;
-
-
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -67,29 +67,21 @@ class CategoryController extends Controller
         $spentArray  = $repository->spentPerDay($category, $start, $end);
         $earnedArray = $repository->earnedPerDay($category, $start, $end);
 
-
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-
-            // get the sum from $spentArray and $earnedArray:
-            $spent  = $this->getSumOfRange($start, $currentEnd, $spentArray);
-            $earned = $this->getSumOfRange($start, $currentEnd, $earnedArray);
-
-            $date = Navigation::periodShow($start, $range);
+            $spent      = $this->getSumOfRange($start, $currentEnd, $spentArray);
+            $earned     = $this->getSumOfRange($start, $currentEnd, $earnedArray);
+            $date       = Navigation::periodShow($start, $range);
             $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
         }
-        // limit the set to the last 40:
         $entries = $entries->reverse();
         $entries = $entries->slice(0, 48);
         $entries = $entries->reverse();
-
-        $data = $this->generator->all($entries);
+        $data    = $this->generator->all($entries);
         $cache->store($data);
 
         return Response::json($data);
-
-
     }
 
 
@@ -161,23 +153,8 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        /**
-         *  category
-         *   year:
-         *    spent: x
-         *    earned: x
-         *   year
-         *    spent: x
-         *    earned: x
-         */
         $entries = new Collection;
-        // go by category, not by year.
-
-        // given a set of categories and accounts, it should not be difficult to get
-        // the exact array of data we need.
-
-        // then get the data for "no category".
-        $set = $repository->listMultiYear($categories, $accounts, $start, $end);
+        $set     = $repository->listMultiYear($categories, $accounts, $start, $end);
 
         /** @var Category $category */
         foreach ($categories as $category) {
@@ -336,6 +313,10 @@ class CategoryController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // it's long but ok.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
@@ -360,18 +341,15 @@ class CategoryController extends Controller
         $entries    = new Collection;
 
         while ($start < $end) { // filter the set:
-            $row = [clone $start];
-            // get possibly relevant entries from the big $set
-            $currentSet = $set->filter(
+            $row        = [clone $start];
+            $currentSet = $set->filter( // get possibly relevant entries from the big $set
                 function (Category $category) use ($start) {
                     return $category->dateFormatted == $start->format("Y-m");
                 }
             );
-            // check for each category if its in the current set.
             /** @var Category $category */
-            foreach ($categories as $category) {
-                // if its in there, use the value.
-                $entry = $currentSet->filter(
+            foreach ($categories as $category) { // check for each category if its in the current set.
+                $entry = $currentSet->filter( // if its in there, use the value.
                     function (Category $cat) use ($category) {
                         return ($cat->id == $category->id);
                     }
@@ -382,7 +360,6 @@ class CategoryController extends Controller
                     $row[] = 0;
                 }
             }
-
             $entries->push($row);
             $start->addMonth();
         }
@@ -402,6 +379,9 @@ class CategoryController extends Controller
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
+     * @SuppressWarnings(PHPMD.ExcessuveMethodLength) // need the length
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -427,18 +407,15 @@ class CategoryController extends Controller
         $entries    = new Collection;
 
         while ($start < $end) { // filter the set:
-            $row = [clone $start];
-            // get possibly relevant entries from the big $set
-            $currentSet = $set->filter(
+            $row        = [clone $start];
+            $currentSet = $set->filter(// get possibly relevant entries from the big $set
                 function (Category $category) use ($start) {
                     return $category->dateFormatted == $start->format("Y-m");
                 }
             );
-            // check for each category if its in the current set.
             /** @var Category $category */
-            foreach ($categories as $category) {
-                // if its in there, use the value.
-                $entry = $currentSet->filter(
+            foreach ($categories as $category) {// check for each category if its in the current set.
+                $entry = $currentSet->filter(// if its in there, use the value.
                     function (Category $cat) use ($category) {
                         return ($cat->id == $category->id);
                     }

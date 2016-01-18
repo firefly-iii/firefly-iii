@@ -196,14 +196,14 @@ class JournalRepository implements JournalRepositoryInterface
             [
                 'account_id'             => $fromAccount->id,
                 'transaction_journal_id' => $journal->id,
-                'amount'                 => $data['amount'] * -1
+                'amount'                 => $data['amount'] * -1,
             ]
         );
         Transaction::create( // second transaction.
             [
                 'account_id'             => $toAccount->id,
                 'transaction_journal_id' => $journal->id,
-                'amount'                 => $data['amount']
+                'amount'                 => $data['amount'],
             ]
         );
         $journal->completed = 1;
@@ -323,6 +323,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array           $data
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function storeAccounts(TransactionType $type, array $data)
     {

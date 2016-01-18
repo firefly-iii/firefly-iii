@@ -175,6 +175,11 @@ class Attachment extends Model
         $this->attributes['notes'] = Crypt::encrypt($value);
     }
 
+    /**
+     * @param Attachment $value
+     *
+     * @return Attachment
+     */
     public static function routeBinder(Attachment $value)
     {
         if (Auth::check()) {

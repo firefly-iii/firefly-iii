@@ -282,6 +282,7 @@ return [
     'csv_specifix_RabobankDescription'       => 'Vink dit aan als je Rabobank bestanden importeert.',
     'csv_specifix_Dummy'                     => 'Dit vinkje doet niks (dummy).',
     'csv_import_account_help'                => 'Als jouw CSV bestand geen referenties bevat naar jouw rekening(en), geef dan hier aan om welke rekening het gaat.',
+    'csv_delimiter_help'                     => 'Kies het veldscheidingsteken dat in het invoerbestand is gebruikt. Bij twijfel is de komma de veiligste optie.',
     'csv_date_parse_error'                   => 'Firefly kan van ":value" geen datum maken, gegeven het formaat ":format". Weet je zeker dat je CSV goed is?',
 
     // create new stuff:

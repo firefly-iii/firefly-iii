@@ -9,6 +9,7 @@
 
 namespace FireflyIII\Support\Binder;
 
+use Auth;
 use Carbon\Carbon;
 use Exception;
 use Log;

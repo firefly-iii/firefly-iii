@@ -5,10 +5,10 @@ use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
-
 
 /**
  * FireflyIII\Models\Account
@@ -30,8 +30,8 @@ use Watson\Validating\ValidatingTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  * @property-read \FireflyIII\User                                                          $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
+ * @method static Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
  * @property string                                                                         $startBalance
  * @property string                                                                         $endBalance
  */
@@ -41,12 +41,13 @@ class Account extends Model
 
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $rules
                         = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'name'            => 'required',
-            'active'          => 'required|boolean'
+            'active'          => 'required|boolean',
         ];
 
     /**
@@ -124,15 +125,6 @@ class Account extends Model
     public function accountType()
     {
         return $this->belongsTo('FireflyIII\Models\AccountType');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
@@ -293,6 +285,11 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @param Account $value
+     *
+     * @return Account
+     */
     public static function routeBinder(Account $value)
     {
 

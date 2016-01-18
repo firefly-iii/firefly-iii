@@ -282,6 +282,7 @@ return [
     'csv_specifix_RabobankDescription'       => 'Select this when you\'re importing Rabobank CSV export files.',
     'csv_specifix_Dummy'                     => 'Checking this has no effect whatsoever.',
     'csv_import_account_help'                => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'csv_delimiter_help'                     => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'csv_date_parse_error'                   => 'Could not parse a valid date from ":value", using the format ":format". Are you sure your CSV is correct?',
 
     // create new stuff:

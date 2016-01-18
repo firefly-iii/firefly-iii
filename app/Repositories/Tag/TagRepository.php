@@ -27,6 +27,8 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     *
      * @return boolean
      */
     public function connect(TransactionJournal $journal, Tag $tag)
@@ -129,7 +131,7 @@ class TagRepository implements TagRepositoryInterface
                    ->get(
                        [
                            't_to.account_id',
-                           DB::Raw('SUM(`t_to`.`amount`) as `sum`')
+                           DB::Raw('SUM(`t_to`.`amount`) as `sum`'),
                        ]
                    );
 
@@ -316,6 +318,8 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @return boolean
      */
     protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag)
@@ -330,13 +334,11 @@ class TagRepository implements TagRepositoryInterface
         $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
         $deposits    = $tag->transactionjournals()->where('transaction_type_id', $deposit->id)->count();
 
-        // advance payments cannot accept transfers:
-        if ($journal->transaction_type_id == $transfer->id) {
+        if ($journal->transaction_type_id == $transfer->id) { // advance payments cannot accept transfers:
             return false;
         }
 
-        // the first transaction to be attached to this
-        // tag is attached just like that:
+        // the first transaction to be attached to this tag is attached just like that:
         if ($withdrawals < 1 && $deposits < 1) {
             $journal->tags()->save($tag);
             $journal->save();
@@ -362,6 +364,8 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param TransactionJournal $journal
      * @param Tag                $tag
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's complex but nothing can be done.
      *
      * @return bool
      */
