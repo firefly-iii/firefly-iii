@@ -28,7 +28,7 @@ class AbnAmroDescription
     {
         // Try to parse the description in known formats.
         $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
-        
+
         // If the description could not be parsed, specify an unknown opposing 
         // account, as an opposing account is required
         if( !$parsed ) {
@@ -66,7 +66,7 @@ class AbnAmroDescription
             $type = trim($matches[1]);
             
             // SEPA plain descriptions contain several key-value pairs, split by a colon
-            preg_match_all( "/([A-Za-z]+(?=:\s)):\s([A-Za-z 0-9.-]+(?=\s))/", $this->data[ "description" ], $matches, PREG_SET_ORDER );
+            preg_match_all( "/([A-Za-z]+(?=:\s)):\s([A-Za-z 0-9._#-]+(?=\s))/", $this->data[ "description" ], $matches, PREG_SET_ORDER );
             
             foreach( $matches as $match ) {
                 $key = $match[1];
