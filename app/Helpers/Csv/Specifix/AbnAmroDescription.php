@@ -87,10 +87,6 @@ class AbnAmroDescription
                 }
             }
             
-            // Add the type to the description
-            if( $type ) 
-                $this->data['description'] .= ' (' . $type . ')';
-            
             return true;
         }
         
@@ -129,10 +125,6 @@ class AbnAmroDescription
                 }
             }
             
-            // Add the type to the description
-            if( $type )
-                $this->data['description'] .= ' (' . $type . ')';
-    
             return true;
         }
     
@@ -150,7 +142,7 @@ class AbnAmroDescription
             Log::debug('AbnAmroSpecifix: Description is structured as GEA or BEA format.');
     
             $this->data[ "opposing-account-name" ] = $matches[4];
-            $this->data[ "description" ] = $matches[4] . " (" . $matches[1] . ")";
+            $this->data[ "description" ] = $matches[4];
             
             return true;
         }
