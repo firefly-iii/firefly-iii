@@ -13,12 +13,9 @@
         </div>
     {% endif %}
 
-
-
     <div class="register-box-body">
         <p class="login-box-msg">Reset your password</p>
-
-        <form method="POST" action="/password/reset">
+        <form method="POST" action="{{ url('/password/reset') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="token" value="{{ token }}">
 
