@@ -63,22 +63,6 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     }
 
     /**
-     * @param $array
-     * @param $entryId
-     *
-     * @return string
-     */
-    protected function isInArray($array, $entryId)
-    {
-        if (isset($array[$entryId])) {
-            return $array[$entryId];
-        }
-
-        return '0';
-    }
-
-
-    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -178,5 +162,20 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
 
         return array_unique($ids);
 
+    }
+
+    /**
+     * @param $array
+     * @param $entryId
+     *
+     * @return string
+     */
+    protected function isInArray($array, $entryId)
+    {
+        if (isset($array[$entryId])) {
+            return $array[$entryId];
+        }
+
+        return '0';
     }
 }

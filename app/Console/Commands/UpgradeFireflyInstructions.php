@@ -13,18 +13,17 @@ use Illuminate\Console\Command;
 class UpgradeFireflyInstructions extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly:upgrade-instructions';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Command description';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly:upgrade-instructions';
 
     /**
      * Create a new command instance.

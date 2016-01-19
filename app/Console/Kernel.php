@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands
         = [
-            UpgradeFireflyInstructions::class
+            UpgradeFireflyInstructions::class,
         ];
 
     /**

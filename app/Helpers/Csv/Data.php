@@ -15,36 +15,26 @@ class Data
 
     /** @var string */
     protected $csvFileContent;
-
-    /** @var  string */
-    protected $delimiter;
-
     /** @var string */
     protected $csvFileLocation;
-
     /** @var  string */
     protected $dateFormat;
-
+    /** @var  string */
+    protected $delimiter;
     /** @var  bool */
     protected $hasHeaders;
-
-    /** @var  array */
-    protected $map = [];
-
-    /** @var  array */
-    protected $mapped = [];
-
-    /** @var  Reader */
-    protected $reader;
-
-    /** @var  array */
-    protected $roles = [];
-
-    /** @var  array */
-    protected $specifix = [];
-
     /** @var int */
     protected $importAccount = 0;
+    /** @var  array */
+    protected $map = [];
+    /** @var  array */
+    protected $mapped = [];
+    /** @var  Reader */
+    protected $reader;
+    /** @var  array */
+    protected $roles = [];
+    /** @var  array */
+    protected $specifix = [];
 
     /**
      */
@@ -61,67 +51,41 @@ class Data
         $this->sessionDelimiter();
     }
 
-    protected function sessionHasHeaders()
+    /**
+     *
+     * @return string
+     */
+    public function getCsvFileContent()
     {
-        if (Session::has('csv-has-headers')) {
-            $this->hasHeaders = (bool)Session::get('csv-has-headers');
-        }
+        return $this->csvFileContent;
     }
 
-    protected function sessionImportAccount()
+    /**
+     *
+     * @param string $csvFileContent
+     */
+    public function setCsvFileContent($csvFileContent)
     {
-        if (Session::has('csv-import-account')) {
-            $this->importAccount = intval(Session::get('csv-import-account'));
-        }
+        $this->csvFileContent = $csvFileContent;
     }
 
-    protected function sessionDateFormat()
+    /**
+     *
+     * @return string
+     */
+    public function getCsvFileLocation()
     {
-        if (Session::has('csv-date-format')) {
-            $this->dateFormat = (string)Session::get('csv-date-format');
-        }
+        return $this->csvFileLocation;
     }
 
-    protected function sessionCsvFileLocation()
+    /**
+     *
+     * @param string $csvFileLocation
+     */
+    public function setCsvFileLocation($csvFileLocation)
     {
-        if (Session::has('csv-file')) {
-            $this->csvFileLocation = (string)Session::get('csv-file');
-        }
-    }
-
-    protected function sessionMap()
-    {
-        if (Session::has('csv-map')) {
-            $this->map = (array)Session::get('csv-map');
-        }
-    }
-
-    protected function sessionRoles()
-    {
-        if (Session::has('csv-roles')) {
-            $this->roles = (array)Session::get('csv-roles');
-        }
-    }
-
-    protected function sessionMapped()
-    {
-        if (Session::has('csv-mapped')) {
-            $this->mapped = (array)Session::get('csv-mapped');
-        }
-    }
-
-    protected function sessionSpecifix()
-    {
-        if (Session::has('csv-specifix')) {
-            $this->specifix = (array)Session::get('csv-specifix');
-        }
-    }
-
-    protected function sessionDelimiter()
-    {
-        if (Session::has('csv-delimiter')) {
-            $this->delimiter = Session::get('csv-delimiter');
-        }
+        Session::put('csv-file', $csvFileLocation);
+        $this->csvFileLocation = $csvFileLocation;
     }
 
     /**
@@ -145,31 +109,21 @@ class Data
 
     /**
      *
-     * @param int $importAccount
+     * @return string
      */
-    public function setImportAccount($importAccount)
+    public function getDelimiter()
     {
-        Session::put('csv-import-account', $importAccount);
-        $this->importAccount = $importAccount;
+        return $this->delimiter;
     }
 
     /**
      *
-     * @return bool
+     * @param string $delimiter
      */
-    public function hasHeaders()
+    public function setDelimiter($delimiter)
     {
-        return $this->hasHeaders;
-    }
-
-    /**
-     *
-     * @param bool $hasHeaders
-     */
-    public function setHasHeaders($hasHeaders)
-    {
-        Session::put('csv-has-headers', $hasHeaders);
-        $this->hasHeaders = $hasHeaders;
+        Session::put('csv-delimiter', $delimiter);
+        $this->delimiter = $delimiter;
     }
 
     /**
@@ -228,51 +182,6 @@ class Data
         return $this->reader;
     }
 
-    protected function loadCsvFile()
-    {
-        $file             = $this->getCsvFileLocation();
-        $content          = file_get_contents($file);
-        $contentDecrypted = Crypt::decrypt($content);
-        $this->setCsvFileContent($contentDecrypted);
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getCsvFileLocation()
-    {
-        return $this->csvFileLocation;
-    }
-
-    /**
-     *
-     * @param string $csvFileLocation
-     */
-    public function setCsvFileLocation($csvFileLocation)
-    {
-        Session::put('csv-file', $csvFileLocation);
-        $this->csvFileLocation = $csvFileLocation;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getCsvFileContent()
-    {
-        return $this->csvFileContent;
-    }
-
-    /**
-     *
-     * @param string $csvFileContent
-     */
-    public function setCsvFileContent($csvFileContent)
-    {
-        $this->csvFileContent = $csvFileContent;
-    }
-
     /**
      *
      * @return array
@@ -313,20 +222,101 @@ class Data
 
     /**
      *
-     * @return string
+     * @return bool
      */
-    public function getDelimiter()
+    public function hasHeaders()
     {
-        return $this->delimiter;
+        return $this->hasHeaders;
     }
 
     /**
      *
-     * @param string $delimiter
+     * @param bool $hasHeaders
      */
-    public function setDelimiter($delimiter)
+    public function setHasHeaders($hasHeaders)
     {
-        Session::put('csv-delimiter', $delimiter);
-        $this->delimiter = $delimiter;
+        Session::put('csv-has-headers', $hasHeaders);
+        $this->hasHeaders = $hasHeaders;
+    }
+
+    /**
+     *
+     * @param int $importAccount
+     */
+    public function setImportAccount($importAccount)
+    {
+        Session::put('csv-import-account', $importAccount);
+        $this->importAccount = $importAccount;
+    }
+
+    protected function loadCsvFile()
+    {
+        $file             = $this->getCsvFileLocation();
+        $content          = file_get_contents($file);
+        $contentDecrypted = Crypt::decrypt($content);
+        $this->setCsvFileContent($contentDecrypted);
+    }
+
+    protected function sessionCsvFileLocation()
+    {
+        if (Session::has('csv-file')) {
+            $this->csvFileLocation = (string)Session::get('csv-file');
+        }
+    }
+
+    protected function sessionDateFormat()
+    {
+        if (Session::has('csv-date-format')) {
+            $this->dateFormat = (string)Session::get('csv-date-format');
+        }
+    }
+
+    protected function sessionDelimiter()
+    {
+        if (Session::has('csv-delimiter')) {
+            $this->delimiter = Session::get('csv-delimiter');
+        }
+    }
+
+    protected function sessionHasHeaders()
+    {
+        if (Session::has('csv-has-headers')) {
+            $this->hasHeaders = (bool)Session::get('csv-has-headers');
+        }
+    }
+
+    protected function sessionImportAccount()
+    {
+        if (Session::has('csv-import-account')) {
+            $this->importAccount = intval(Session::get('csv-import-account'));
+        }
+    }
+
+    protected function sessionMap()
+    {
+        if (Session::has('csv-map')) {
+            $this->map = (array)Session::get('csv-map');
+        }
+    }
+
+    protected function sessionMapped()
+    {
+        if (Session::has('csv-mapped')) {
+            $this->mapped = (array)Session::get('csv-mapped');
+        }
+    }
+
+    protected function sessionRoles()
+    {
+        if (Session::has('csv-roles')) {
+            $this->roles = (array)Session::get('csv-roles');
+        }
+    }
+
+    protected function sessionSpecifix()
+    {
+        if (Session::has('csv-specifix')) {
+            $this->specifix = (array)Session::get('csv-specifix');
+        }
     }
 }

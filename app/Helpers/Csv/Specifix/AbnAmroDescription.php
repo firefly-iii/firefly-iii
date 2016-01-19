@@ -55,7 +55,49 @@ class AbnAmroDescription
     }
 
     /**
+     * Parses the current description with costs from ABN AMRO itself
+     *
+     * @return boolean true if the description is GEA/BEA-format, false otherwise
+     */
+    protected function parseABNAMRODescription()
+    {
+        // See if the current description is formatted in ABN AMRO format
+        if (preg_match('/ABN AMRO.{24} (.*)/', $this->data['description'], $matches)) {
+            Log::debug('AbnAmroSpecifix: Description is structured as costs from ABN AMRO itself.');
+
+            $this->data['opposing-account-name'] = "ABN AMRO";
+            $this->data['description']           = $matches[1];
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Parses the current description in GEA/BEA format
+     *
+     * @return boolean true if the description is GEA/BEAformat, false otherwise
+     */
+    protected function parseGEABEADescription()
+    {
+        // See if the current description is formatted in GEA/BEA format
+        if (preg_match('/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/', $this->data['description'], $matches)) {
+            Log::debug('AbnAmroSpecifix: Description is structured as GEA or BEA format.');
+
+            // description and opposing account will be the same.
+            $this->data['opposing-account-name'] = $matches[4];
+            $this->data['description']           = $matches[4];
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Parses the current description in SEPA format
+     *
      * @return boolean true if the description is SEPA format, false otherwise
      */
     protected function parseSepaDescription()
@@ -94,6 +136,7 @@ class AbnAmroDescription
 
     /**
      * Parses the current description in TRTP format
+     *
      * @return boolean true if the description is TRTP format, false otherwise
      */
     protected function parseTRTPDescription()
@@ -108,9 +151,9 @@ class AbnAmroDescription
 
                 switch (strtoupper($key)) {
                     // is not being used.
-//                    case 'TRTP':
-//                        $type = $value;
-//                        break;
+                    //                    case 'TRTP':
+                    //                        $type = $value;
+                    //                        break;
                     case 'NAME':
                         $this->data['opposing-account-name'] = $value;
                         break;
@@ -124,45 +167,6 @@ class AbnAmroDescription
                         // Ignore the rest
                 }
             }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Parses the current description in GEA/BEA format
-     * @return boolean true if the description is GEA/BEAformat, false otherwise
-     */
-    protected function parseGEABEADescription()
-    {
-        // See if the current description is formatted in GEA/BEA format
-        if (preg_match('/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as GEA or BEA format.');
-
-            // description and opposing account will be the same.
-            $this->data['opposing-account-name'] = $matches[4];
-            $this->data['description']           = $matches[4];
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Parses the current description with costs from ABN AMRO itself
-     * @return boolean true if the description is GEA/BEA-format, false otherwise
-     */
-    protected function parseABNAMRODescription()
-    {
-        // See if the current description is formatted in ABN AMRO format
-        if (preg_match('/ABN AMRO.{24} (.*)/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as costs from ABN AMRO itself.');
-
-            $this->data['opposing-account-name'] = "ABN AMRO";
-            $this->data['description']           = $matches[1];
 
             return true;
         }

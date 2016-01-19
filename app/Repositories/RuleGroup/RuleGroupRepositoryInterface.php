@@ -21,6 +21,10 @@ interface RuleGroupRepositoryInterface
      */
     public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
 
+    /**
+     * @return Collection
+     */
+    public function get();
 
     /**
      * @return int
@@ -28,9 +32,11 @@ interface RuleGroupRepositoryInterface
     public function getHighestOrderRuleGroup();
 
     /**
-     * @return Collection
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
      */
-    public function get();
+    public function moveDown(RuleGroup $ruleGroup);
 
     /**
      * @param RuleGroup $ruleGroup
@@ -38,13 +44,6 @@ interface RuleGroupRepositoryInterface
      * @return bool
      */
     public function moveUp(RuleGroup $ruleGroup);
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function moveDown(RuleGroup $ruleGroup);
 
     /**
      * @return bool

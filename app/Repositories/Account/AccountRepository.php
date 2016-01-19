@@ -62,6 +62,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @deprecated
+     *
+     * @param $accountId
+     *
+     * @return Account
+     */
+    public function find($accountId)
+    {
+        return Auth::user()->accounts()->findOrNew($accountId);
+    }
+
+    /**
      * @param array $types
      *
      * @return Collection
@@ -83,7 +95,6 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $result;
     }
-
 
     /**
      * This method returns the users credit cards, along with some basic information about the
@@ -467,29 +478,6 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
-     */
-    protected function storeMetadata(Account $account, array $data)
-    {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        foreach ($validFields as $field) {
-            if (isset($data[$field])) {
-                $metaData = new AccountMeta(
-                    [
-                        'account_id' => $account->id,
-                        'name'       => $field,
-                        'data'       => $data[$field],
-                    ]
-                );
-                $metaData->save();
-            }
-
-
-        }
-    }
-
-    /**
-     * @param Account $account
      * @param Account $opposing
      * @param array   $data
      *
@@ -536,33 +524,24 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param array   $data
-     *
      */
-    protected function updateMetadata(Account $account, array $data)
+    protected function storeMetadata(Account $account, array $data)
     {
         $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-
         foreach ($validFields as $field) {
-            $entry = $account->accountMeta()->where('name', $field)->first();
-
             if (isset($data[$field])) {
-                // update if new data is present:
-                if (!is_null($entry)) {
-                    $entry->data = $data[$field];
-                    $entry->save();
-                } else {
-                    $metaData = new AccountMeta(
-                        [
-                            'account_id' => $account->id,
-                            'name'       => $field,
-                            'data'       => $data[$field],
-                        ]
-                    );
-                    $metaData->save();
-                }
+                $metaData = new AccountMeta(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field],
+                    ]
+                );
+                $metaData->save();
             }
-        }
 
+
+        }
     }
 
     /**
@@ -592,14 +571,34 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @deprecated
+     * @param Account $account
+     * @param array   $data
      *
-     * @param $accountId
-     *
-     * @return Account
      */
-    public function find($accountId)
+    protected function updateMetadata(Account $account, array $data)
     {
-        return Auth::user()->accounts()->findOrNew($accountId);
+        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
+
+        foreach ($validFields as $field) {
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            if (isset($data[$field])) {
+                // update if new data is present:
+                if (!is_null($entry)) {
+                    $entry->data = $data[$field];
+                    $entry->save();
+                } else {
+                    $metaData = new AccountMeta(
+                        [
+                            'account_id' => $account->id,
+                            'name'       => $field,
+                            'data'       => $data[$field],
+                        ]
+                    );
+                    $metaData->save();
+                }
+            }
+        }
+
     }
 }
