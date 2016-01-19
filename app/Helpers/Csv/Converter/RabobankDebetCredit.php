@@ -13,7 +13,7 @@ class RabobankDebetCredit extends BasicConverter implements ConverterInterface
 
 
     /**
-     * @return mixed
+     * @return int
      */
     public function convert()
     {

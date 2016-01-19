@@ -3,7 +3,6 @@
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\Tag;
 use Illuminate\Support\Collection;
 
@@ -16,7 +15,7 @@ class TagsSpace extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return Bill
+     * @return Collection
      */
     public function convert()
     {

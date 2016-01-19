@@ -2,8 +2,6 @@
 
 namespace FireflyIII\Helpers\Csv\Converter;
 
-use FireflyIII\Models\Account;
-
 /**
  * Class AmountComma
  * 
@@ -15,7 +13,7 @@ class AmountComma extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return Account|null
+     * @return float|int
      */
     public function convert()
     {

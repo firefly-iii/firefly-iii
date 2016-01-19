@@ -17,7 +17,7 @@ class Date extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return static
+     * @return Carbon
      * @throws FireflyException
      */
     public function convert()

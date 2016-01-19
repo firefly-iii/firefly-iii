@@ -2,8 +2,6 @@
 
 namespace FireflyIII\Helpers\Csv\Converter;
 
-use FireflyIII\Models\Account;
-
 /**
  * Class Amount
  *
@@ -13,7 +11,7 @@ class Ignore extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return Account|null
+     * @return null
      */
     public function convert()
     {
