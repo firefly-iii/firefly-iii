@@ -28,7 +28,17 @@ class AccountControllerTest extends TestCase
 
     public function testDestroy()
     {
-        $this->markTestIncomplete();
+        $this->be($this->user());
+
+        $args = [
+            '_token' => Session::token(),
+        ];
+
+        $this->session(['accounts.delete.url' => 'http://localhost']);
+
+        $response = $this->call('POST', '/accounts/destroy/6', $args);
+        $this->assertSessionHas('success');
+        $this->assertEquals(302, $response->status());
     }
 
     public function testEdit()
@@ -54,6 +64,20 @@ class AccountControllerTest extends TestCase
 
     public function testStore()
     {
+        $this->be($this->user());
+        $this->session(['accounts.create.url' => 'http://localhost']);
+        $args = [
+            '_token'                            => Session::token(),
+            'name'                              => 'Some kind of test account.',
+            'what'                              => 'asset',
+            'amount_currency_id_virtualBalance' => 1,
+            'amount_currency_id_openingBalance' => 1,
+        ];
+
+        $response = $this->call('POST', '/accounts/store', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
+
         $this->markTestIncomplete();
     }
 
