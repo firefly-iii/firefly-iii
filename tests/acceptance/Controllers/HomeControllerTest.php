@@ -9,14 +9,17 @@
  */
 class HomeControllerTest extends TestCase
 {
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::dateRange
+     */
     public function testDateRange()
     {
 
         $this->be($this->user());
 
         $args = [
-            'start' => '2012-01-01',
-            'end'   => '2012-04-01',
+            'start'  => '2012-01-01',
+            'end'    => '2012-04-01',
             '_token' => Session::token(),
         ];
 
@@ -26,6 +29,9 @@ class HomeControllerTest extends TestCase
         $this->assertSessionHas('warning', '91 days of data may take a while to load.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::flush
+     */
     public function testFlush()
     {
         $this->be($this->user());
@@ -33,12 +39,13 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(302, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::index
+     */
     public function testIndex()
     {
         $this->be($this->user());
         $response = $this->call('GET', '/');
         $this->assertEquals(200, $response->status());
     }
-
-
 }

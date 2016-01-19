@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Http\Controllers;
 
-
 use Crypt;
 use File;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;

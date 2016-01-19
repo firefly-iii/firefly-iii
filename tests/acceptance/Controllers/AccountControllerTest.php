@@ -12,6 +12,9 @@
  */
 class AccountControllerTest extends TestCase
 {
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::create
+     */
     public function testCreate()
     {
         $this->be($this->user());
@@ -19,6 +22,9 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::delete
+     */
     public function testDelete()
     {
         $this->be($this->user());
@@ -26,6 +32,9 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::destroy
+     */
     public function testDestroy()
     {
         $this->be($this->user());
@@ -41,6 +50,9 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(302, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::edit
+     */
     public function testEdit()
     {
         $this->be($this->user());
@@ -48,6 +60,9 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::index
+     */
     public function testIndex()
     {
         $this->be($this->user());
@@ -55,6 +70,9 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::show
+     */
     public function testShow()
     {
         $this->be($this->user());
@@ -62,6 +80,9 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::store
+     */
     public function testStore()
     {
         $this->be($this->user());
@@ -81,9 +102,15 @@ class AccountControllerTest extends TestCase
         $this->markTestIncomplete();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::update
+     * @todo   Implement testUpdate().
+     */
     public function testUpdate()
     {
-        $this->markTestIncomplete();
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
-
 }
