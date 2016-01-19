@@ -45,19 +45,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the application registration form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showRegistrationForm()
-    {
-        $host = Rq::getHttpHost();
-
-        return view('auth.register', compact('host'));
-    }
-
-
-    /**
      * Handle a login request to the application.
      *
      * @param  \Illuminate\Http\Request $request
@@ -77,6 +64,8 @@ class AuthController extends Controller
         $credentials['blocked'] = 0; // most not be blocked.
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+            Session::flash('isLoggedIn', 'yes');
+
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
@@ -99,79 +88,6 @@ class AuthController extends Controller
         }
 
         return $this->sendFailedLoginResponse($request, $message);
-    }
-
-    /**
-     * Get the failed login response instance.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @param                          $message
-     *
-     * @return \Illuminate\Http\Response
-     */
-    protected function sendFailedLoginResponse(Request $request, $message)
-    {
-        return redirect()->back()
-                         ->withInput($request->only($this->loginUsername(), 'remember'))
-                         ->withErrors(
-                             [
-                                 $this->loginUsername() => $this->getFailedLoginMessage($message),
-                             ]
-                         );
-    }
-
-    /**
-     * Get the failed login message.
-     *
-     * @param $message
-     *
-     * @return string
-     */
-    protected function getFailedLoginMessage($message)
-    {
-        if (strlen($message) > 0) {
-            return $message;
-        }
-
-        return Lang::has('auth.failed')
-            ? Lang::get('auth.failed')
-            : 'These credentials do not match our records.';
-    }
-
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array $data
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make(
-            $data, [
-                     'email'    => 'required|email|max:255|unique:users',
-                     'password' => 'required|confirmed|min:6',
-                 ]
-        );
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array $data
-     *
-     * @return User
-     */
-    protected function create(array $data)
-    {
-        return User::create(
-            [
-                'email'    => $data['email'],
-                'password' => bcrypt($data['password']),
-            ]
-        );
     }
 
     /**
@@ -243,6 +159,35 @@ class AuthController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $host = Rq::getHttpHost();
+
+        return view('auth.register', compact('host'));
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array $data
+     *
+     * @return User
+     */
+    protected function create(array $data)
+    {
+        return User::create(
+            [
+                'email'    => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]
+        );
+    }
+
+    /**
      * @return array
      */
     protected function getBlockedDomains()
@@ -260,6 +205,24 @@ class AuthController extends Controller
     }
 
     /**
+     * Get the failed login message.
+     *
+     * @param $message
+     *
+     * @return string
+     */
+    protected function getFailedLoginMessage($message)
+    {
+        if (strlen($message) > 0) {
+            return $message;
+        }
+
+        return Lang::has('auth.failed')
+            ? Lang::get('auth.failed')
+            : 'These credentials do not match our records.';
+    }
+
+    /**
      * @param $email
      *
      * @return bool
@@ -274,5 +237,42 @@ class AuthController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @param                          $message
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendFailedLoginResponse(Request $request, $message)
+    {
+        return redirect()->back()
+                         ->withInput($request->only($this->loginUsername(), 'remember'))
+                         ->withErrors(
+                             [
+                                 $this->loginUsername() => $this->getFailedLoginMessage($message),
+                             ]
+                         );
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make(
+            $data, [
+                     'email'    => 'required|email|max:255|unique:users',
+                     'password' => 'required|confirmed|min:6',
+                 ]
+        );
     }
 }
