@@ -64,7 +64,6 @@ class AuthController extends Controller
         $credentials['blocked'] = 0; // most not be blocked.
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-            Session::flash('isLoggedIn', 'yes');
 
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
