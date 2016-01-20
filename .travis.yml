@@ -12,6 +12,7 @@ install:
   - mv -v .env.testing .env
   - php artisan env
   - touch storage/upload/at-1.data
+  - touch storage/upload/at-2.data
   - touch storage/database/testing.db
   - php artisan migrate --seed
 

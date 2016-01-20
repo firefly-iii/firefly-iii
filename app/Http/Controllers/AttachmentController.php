@@ -10,6 +10,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Input;
 use Preferences;
+use Request;
 use Response;
 use Session;
 use URL;
@@ -100,17 +101,17 @@ class AttachmentController extends Controller
 
             $quoted = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename=' . $quoted);
-            header('Content-Transfer-Encoding: binary');
-            header('Connection: Keep-Alive');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Pragma: public');
-            header('Content-Length: ' . $attachment->size);
+            Request::header('Content-Description: File Transfer');
+            Request::header('Content-Type: application/octet-stream');
+            Request::header('Content-Disposition: attachment; filename=' . $quoted);
+            Request::header('Content-Transfer-Encoding: binary');
+            Request::header('Connection: Keep-Alive');
+            Request::header('Expires: 0');
+            Request::header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            Request::header('Pragma: public');
+            Request::header('Content-Length: ' . $attachment->size);
 
-            echo Crypt::decrypt(file_get_contents($file));
+            return Crypt::decrypt(file_get_contents($file));
 
         } else {
             abort(404);

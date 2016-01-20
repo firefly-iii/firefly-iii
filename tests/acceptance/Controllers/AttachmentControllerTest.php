@@ -15,73 +15,78 @@ class AttachmentControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/attachment/delete/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+
+        $args = [
+            '_token' => Session::token(),
+        ];
+
+        $this->session(['attachments.delete.url' => 'http://localhost']);
+
+        $response = $this->call('POST', '/attachment/destroy/2', $args);
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::download
-     * @todo   Implement testDownload().
      */
     public function testDownload()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/attachment/download/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/attachment/edit/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::preview
-     * @todo   Implement testPreview().
      */
     public function testPreview()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/attachment/preview/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['attachments.edit.url' => 'http://localhost']);
+
+        $args = [
+            'title'       => 'New title',
+            'description' => 'New descr',
+            'notes'       => 'New notes',
+            '_token'      => Session::token(),
+        ];
+        $this->be($this->user());
+
+        $response = $this->call('POST', '/attachment/update/1', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
     }
 }

@@ -3,12 +3,15 @@
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Seeder;
 
@@ -41,6 +44,15 @@ class TestDataSeeder extends Seeder
 
         // create some piggy banks for user #1
         $this->createPiggybanks($user);
+
+        // create some expense accounts for user #1
+        $this->createExpenseAccounts($user);
+
+        // create some revenue accounts for user #1
+        $this->createRevenueAccounts($user);
+
+        // create journal + attachment:
+        $this->createAttachments($user);
     }
 
     /**
@@ -153,12 +165,11 @@ class TestDataSeeder extends Seeder
         Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
     }
 
-
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @param User $user
      */
-    protected function createPiggybanks(User $user)
+    private function createPiggybanks(User $user)
     {
         $account = $this->findAccount($user, 'TestData Savings');
 
@@ -294,20 +305,141 @@ class TestDataSeeder extends Seeder
 
     /**
      * @param User $user
-     * @param $name
+     * @param      $name
      *
      * @return Account|null
      */
-    protected function findAccount(User $user, $name)
+    private function findAccount(User $user, $name)
     {
         /** @var Account $account */
-        foreach (Account::get() as $account) {
-            if ($account->name == $name && $user->id == $account->user_id) {
+        foreach ($user->accounts()->get() as $account) {
+            if ($account->name == $name) {
                 return $account;
                 break;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createExpenseAccounts(User $user)
+    {
+        $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
+                     'coolblue', 'Shell',
+                     'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
+        foreach ($expenses as $name) {
+            // create account:
+            Account::create(
+                [
+                    'user_id'         => $user->id,
+                    'account_type_id' => 4,
+                    'name'            => $name,
+                    'active'          => 1,
+                    'encrypted'       => 1,
+                ]
+            );
+        }
+
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createRevenueAccounts(User $user)
+    {
+        $revenues = ['Job', 'Belastingdienst', 'Bank', 'KPN', 'Google'];
+        foreach ($revenues as $name) {
+            // create account:
+            Account::create(
+                [
+                    'user_id'         => $user->id,
+                    'account_type_id' => 5,
+                    'name'            => $name,
+                    'active'          => 1,
+                    'encrypted'       => 1,
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createAttachments(User $user)
+    {
+
+        $toAccount   = $this->findAccount($user, 'TestData Checking Account');
+        $fromAccount = $this->findAccount($user, 'Job');
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 2,
+                'transaction_currency_id' => 1,
+                'description'             => 'Some journal for attachment',
+                'completed'               => 1,
+                'date'                    => new Carbon,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => -100,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+
+            ]
+        );
+
+        // and now attachments
+        $encrypted  = Crypt::encrypt('I are secret');
+        Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
+                'user_id'         => $user->id,
+                'md5'             => md5('Hallo'),
+                'filename'        => 'empty-file.txt',
+                'title'           => 'Empty file',
+                'description'     => 'This file is empty',
+                'notes'           => 'What notes',
+                'mime'            => 'text/plain',
+                'size'            => strlen($encrypted),
+                'uploaded'        => 1,
+            ]
+        );
+
+
+
+        // and now attachment.
+        Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
+                'user_id'         => $user->id,
+                'md5'             => md5('Ook hallo'),
+                'filename'        => 'empty-file-2.txt',
+                'title'           => 'Empty file 2',
+                'description'     => 'This file is empty too',
+                'notes'           => 'What notes do',
+                'mime'            => 'text/plain',
+                'size'            => strlen($encrypted),
+                'uploaded'        => 1,
+            ]
+        );
+        // echo crypted data to the file.
+        file_put_contents(storage_path('upload/at-1.data'), $encrypted);
+        file_put_contents(storage_path('upload/at-2.data'), $encrypted);
+
     }
 }
