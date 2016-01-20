@@ -12,124 +12,17 @@
  */
 class PasswordControllerTest extends TestCase
 {
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::getBroker
-     * @todo   Implement testGetBroker().
-     */
-    public function testGetBroker()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::getEmail
-     * @todo   Implement testGetEmail().
-     */
-    public function testGetEmail()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::getReset
-     * @todo   Implement testGetReset().
-     */
-    public function testGetReset()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::postEmail
-     * @todo   Implement testPostEmail().
-     */
-    public function testPostEmail()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::postReset
-     * @todo   Implement testPostReset().
-     */
-    public function testPostReset()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::redirectPath
-     * @todo   Implement testRedirectPath().
-     */
-    public function testRedirectPath()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::reset
-     * @todo   Implement testReset().
-     */
-    public function testReset()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
     /**
      * @covers FireflyIII\Http\Controllers\Auth\PasswordController::sendResetLinkEmail
-     * @todo   Implement testSendResetLinkEmail().
      */
     public function testSendResetLinkEmail()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'email'  => 'thegrumpydictator@gmail.com',
+            '_token' => Session::token(),
+        ];
+        $response = $this->call('POST', '/password/email', $args);
+        $this->assertEquals(302, $response->status());
     }
 
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::showLinkRequestForm
-     * @todo   Implement testShowLinkRequestForm().
-     */
-    public function testShowLinkRequestForm()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::showResetForm
-     * @todo   Implement testShowResetForm().
-     */
-    public function testShowResetForm()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
 }

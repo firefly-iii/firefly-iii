@@ -15,61 +15,58 @@ class ChartBudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::budget
-     * @todo   Implement testBudget().
      */
     public function testBudget()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/budget/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
-     * @todo   Implement testBudgetLimit().
      */
     public function testBudgetLimit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/budget/1/1');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
-     * @todo   Implement testFrontpage().
      */
     public function testFrontpage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/budget/frontpage');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::multiYear
-     * @todo   Implement testMultiYear().
      */
     public function testMultiYear()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/budget/multi-year/default/20150101/20160101/1/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
+
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::year
-     * @todo   Implement testYear().
      */
     public function testYear()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/budget/year/default/20150101/201512031/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
+
     }
 }

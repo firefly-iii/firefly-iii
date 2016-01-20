@@ -15,25 +15,23 @@ class ChartBillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BillController::frontpage
-     * @todo   Implement testFrontpage().
      */
     public function testFrontpage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/bill/frontpage');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BillController::single
-     * @todo   Implement testSingle().
      */
     public function testSingle()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/bill/1');
+
+        $this->assertEquals(200, $response->status());
     }
 }

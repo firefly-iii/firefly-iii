@@ -47,7 +47,6 @@ class AuthControllerTest extends TestCase
     public function testLogin()
     {
         $response = $this->call('GET', '/login');
-        $this->assertSessionHas('isLoggedIn', 'yes');
         $this->assertEquals(200, $response->status());
     }
 
@@ -79,7 +78,11 @@ class AuthControllerTest extends TestCase
         ];
         $response = $this->call('POST', '/login', $args);
         $this->assertEquals(302, $response->status());
-        $this->assertSessionHas('isLoggedIn', 'yes');
+
+        $response = $this->call('GET', '/');
+        $this->assertEquals(200, $response->status());
+
+
 
     }
 
@@ -99,50 +102,11 @@ class AuthControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\Auth\AuthController::redirectPath
-     * @todo   Implement testRedirectPath().
-     */
-    public function testRedirectPath()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers FireflyIII\Http\Controllers\Auth\AuthController::register
-     * @todo   Implement testRegister().
      */
     public function testRegister()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\AuthController::showLoginForm
-     * @todo   Implement testShowLoginForm().
-     */
-    public function testShowLoginForm()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\AuthController::showRegistrationForm
-     * @todo   Implement testShowRegistrationForm().
-     */
-    public function testShowRegistrationForm()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $response = $this->call('GET', '/register');
+        $this->assertEquals(200, $response->status());
     }
 }

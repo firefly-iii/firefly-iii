@@ -14,49 +14,45 @@ class ChartAccountControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
-     * @todo   Implement testExpenseAccounts().
      */
     public function testExpenseAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/account/expense');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\AccountController::frontpage
-     * @todo   Implement testFrontpage().
      */
     public function testFrontpage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/account/frontpage');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\AccountController::report
-     * @todo   Implement testReport().
      */
     public function testReport()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/account/report/default/20160101/20160131/1');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\AccountController::single
-     * @todo   Implement testSingle().
      */
     public function testSingle()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/account/1');
+
+        $this->assertEquals(200, $response->status());
     }
 }

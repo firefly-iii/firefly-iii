@@ -1,7 +1,12 @@
 <?php
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\User;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +27,15 @@ class TestDataSeeder extends Seeder
 
         // create asset accounts for user #1.
         $this->createAssetAccounts($user);
+
+        // create a bills for user #1
+        $this->createBills($user);
+
+        // create some budgets for user #1
+        $this->createBudgets($user);
+
+        // create some categories for user #1
+        $this->createCategories($user);
     }
 
     /**
@@ -57,5 +71,80 @@ class TestDataSeeder extends Seeder
             }
         }
 
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createBills(User $user)
+    {
+        Bill::create(
+            [
+                'name'        => 'Rent',
+                'match'       => 'rent,land,lord',
+                'amount_min'  => 795,
+                'amount_max'  => 805,
+                'user_id'     => $user->id,
+                'date'        => '2015-01-01',
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+        Bill::create(
+            [
+                'name'        => 'Health insurance',
+                'match'       => 'zilveren,kruis,health',
+                'amount_min'  => 120,
+                'amount_max'  => 140,
+                'user_id'     => $user->id,
+                'date'        => '2015-01-01',
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+    }
+
+    /**
+     * @param $user
+     */
+    private function createBudgets($user)
+    {
+        $set = [
+            Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]),
+            Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]),
+        ];
+        $current = new Carbon;
+        /** @var Budget $budget */
+        foreach ($set as $budget) {
+
+            // some budget limits:
+            $start  = clone $current;
+            $end    = clone $current;
+            $start->startOfMonth();
+            $end->endOfMonth();
+
+            BudgetLimit::create(
+                [
+                    'budget_id'   => $budget->id,
+                    'startdate'   => $start->format('Y-m-d'),
+                    'amount'      => 500,
+                    'repeats'     => 0,
+                    'repeat_freq' => 'monthly',
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createCategories(User $user)
+    {
+        Category::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
+        Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
     }
 }

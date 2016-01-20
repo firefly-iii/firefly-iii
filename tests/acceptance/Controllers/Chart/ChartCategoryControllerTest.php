@@ -15,85 +15,78 @@ class ChartCategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::all
-     * @todo   Implement testAll().
      */
     public function testAll()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/category/1/all');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::currentPeriod
-     * @todo   Implement testCurrentPeriod().
      */
     public function testCurrentPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/category/1/period');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::earnedInPeriod
-     * @todo   Implement testEarnedInPeriod().
      */
     public function testEarnedInPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/category/earned-in-period/default/20150101/20151231/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
-     * @todo   Implement testFrontpage().
      */
     public function testFrontpage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/category/frontpage');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::multiYear
-     * @todo   Implement testMultiYear().
      */
     public function testMultiYear()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/category/multi-year/default/20150101/20151231/1/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::specificPeriod
-     * @todo   Implement testSpecificPeriod().
      */
     public function testSpecificPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/category/1/period/20150101');
+
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::spentInPeriod
-     * @todo   Implement testSpentInPeriod().
      */
     public function testSpentInPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/category/spent-in-period/default/20150101/20151231/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 }
