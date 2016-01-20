@@ -246,6 +246,8 @@ class Importer
 
             Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
 
+            // here would be the place where preprocessors would fire.
+
             /** @var ConverterInterface $converter */
             $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
             $converter->setData($data); // the complete array so far.
@@ -294,10 +296,12 @@ class Importer
         foreach ($this->getSpecifix() as $className) {
             /** @var SpecifixInterface $specifix */
             $specifix = app('FireflyIII\Helpers\Csv\Specifix\\' . $className);
-            $specifix->setData($this->importData);
-            $specifix->setRow($this->importRow);
-            Log::debug('Now post-process specifix named ' . $className . ':');
-            $this->importData = $specifix->fix();
+            if ($specifix->getProcessorType() == SpecifixInterface::POST_PROCESSOR) {
+                $specifix->setData($this->importData);
+                $specifix->setRow($this->importRow);
+                Log::debug('Now post-process specifix named ' . $className . ':');
+                $this->importData = $specifix->fix();
+            }
         }
 
 
