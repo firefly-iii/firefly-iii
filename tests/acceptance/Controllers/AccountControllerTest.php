@@ -99,18 +99,25 @@ class AccountControllerTest extends TestCase
         $this->assertEquals(302, $response->status());
         $this->assertSessionHas('success');
 
-        $this->markTestIncomplete();
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['accounts.edit.url' => 'http://localhost']);
+        $args = [
+            'id'     => 1,
+            'name'   => 'TestData new name',
+            'active' => 1,
+            '_token' => Session ::token(),
+        ];
+        $this->be($this->user());
+
+        $response = $this->call('POST', '/accounts/update/1', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
+
     }
 }

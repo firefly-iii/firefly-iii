@@ -15,13 +15,11 @@ class ChartPiggyBankControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\PiggyBankController::history
-     * @todo   Implement testHistory().
      */
     public function testHistory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/piggy-bank/1');
+        $this->assertEquals(200, $response->status());
     }
 }

@@ -14,25 +14,23 @@ class ChartReportControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOut
-     * @todo   Implement testYearInOut().
      */
     public function testYearInOut()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/report/in-out/default/20150101/20151231/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOutSummarized
-     * @todo   Implement testYearInOutSummarized().
      */
     public function testYearInOutSummarized()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+//        $this->be($this->user());
+//        $response = $this->call('GET', '/chart/report/in-out-sum/default/20150101/20151231/1');
+//        $this->assertEquals(200, $response->status());
+        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 }
