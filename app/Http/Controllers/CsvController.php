@@ -81,7 +81,7 @@ class CsvController extends Controller
         }
         $keys = array_keys(Config::get('csv.roles'));
         foreach ($keys as $name) {
-            $availableRoles[$name] = trans('firefly.csv_column_' . $name);//$role['name'];
+            $availableRoles[$name] = trans('firefly.csv_column_' . $name);
         }
         ksort($availableRoles);
 
@@ -162,7 +162,7 @@ class CsvController extends Controller
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
         Session::forget('csv-specifix');
-        SessioN::forget('csv-delimiter');
+        Session::forget('csv-delimiter');
 
         // get list of supported specifix
         $specifix = [];
