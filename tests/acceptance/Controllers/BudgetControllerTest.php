@@ -15,145 +15,153 @@ class BudgetControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::amount
-     * @todo   Implement testAmount().
      */
     public function testAmount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'amount' => 1200,
+            '_token' => Session::token(),
+        ];
+        $this->be($this->user());
+
+        $response = $this->call('POST', '/budgets/amount/1', $args);
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::create
-     * @todo   Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets/create');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets/delete/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+
+        $args = [
+            '_token' => Session::token(),
+        ];
+
+        $this->session(['budgets.delete.url' => 'http://localhost']);
+
+        $response = $this->call('POST', '/budgets/destroy/2', $args);
+        $this->assertSessionHas('success');
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets/edit/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::noBudget
-     * @todo   Implement testNoBudget().
      */
     public function testNoBudget()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets/list/noBudget');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
-     * @todo   Implement testPostUpdateIncome().
      */
     public function testPostUpdateIncome()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'amount' => 1200,
+            '_token' => Session::token(),
+        ];
+        $this->be($this->user());
+
+        $response = $this->call('POST', '/budgets/income', $args);
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::show
-     * @todo   Implement testShow().
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets/show/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['budgets.create.url' => 'http://localhost']);
+        $args = [
+            '_token' => Session::token(),
+            'name'   => 'Some kind of test budget.',
+        ];
+
+        $response = $this->call('POST', '/budgets/store', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['budgets.edit.url' => 'http://localhost']);
+        $args = [
+            '_token' => Session::token(),
+            'name'   => 'Some kind of test budget.',
+        ];
+
+        $response = $this->call('POST', '/budgets/update/1', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::updateIncome
-     * @todo   Implement testUpdateIncome().
      */
     public function testUpdateIncome()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/budgets/income');
+        $this->assertEquals(200, $response->status());
     }
 }
