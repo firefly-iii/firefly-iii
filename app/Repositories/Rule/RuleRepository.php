@@ -24,6 +24,99 @@ class RuleRepository implements RuleRepositoryInterface
 {
 
     /**
+     * @param Rule $rule
+     *
+     * @return bool
+     */
+    public function destroy(Rule $rule)
+    {
+        foreach ($rule->ruleTriggers as $trigger) {
+            $trigger->delete();
+        }
+        foreach ($rule->ruleActions as $action) {
+            $action->delete();
+        }
+        $rule->delete();
+
+        return true;
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
+    {
+        return intval($ruleGroup->rules()->max('order'));
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return bool
+     */
+    public function moveDown(Rule $rule)
+    {
+        $order = $rule->order;
+
+        // find the rule with order+1 and give it order-1
+        $other = $rule->ruleGroup->rules()->where('order', ($order + 1))->first();
+        if ($other) {
+            $other->order = $other->order - 1;
+            $other->save();
+        }
+
+
+        $rule->order = ($rule->order + 1);
+        $rule->save();
+        $this->resetRulesInGroupOrder($rule->ruleGroup);
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return bool
+     */
+    public function moveUp(Rule $rule)
+    {
+        $order = $rule->order;
+
+        // find the rule with order-1 and give it order+1
+        $other = $rule->ruleGroup->rules()->where('order', ($order - 1))->first();
+        if ($other) {
+            $other->order = ($other->order + 1);
+            $other->save();
+        }
+
+        $rule->order = ($rule->order - 1);
+        $rule->save();
+        $this->resetRulesInGroupOrder($rule->ruleGroup);
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $ids
+     *
+     * @return bool
+     */
+    public function reorderRuleActions(Rule $rule, array $ids)
+    {
+        $order = 1;
+        foreach ($ids as $actionId) {
+            /** @var RuleTrigger $trigger */
+            $action = $rule->ruleActions()->find($actionId);
+            if (!is_null($action)) {
+                $action->order = $order;
+                $action->save();
+                $order++;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param Rule  $rule
      * @param array $ids
      *
@@ -69,73 +162,6 @@ class RuleRepository implements RuleRepositoryInterface
         return true;
 
     }
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleActions(Rule $rule, array $ids)
-    {
-        $order = 1;
-        foreach ($ids as $actionId) {
-            /** @var RuleTrigger $trigger */
-            $action = $rule->ruleActions()->find($actionId);
-            if (!is_null($action)) {
-                $action->order = $order;
-                $action->save();
-                $order++;
-            }
-        }
-
-        return true;
-    }
-
-
-    /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveUp(Rule $rule)
-    {
-        $order = $rule->order;
-
-        // find the rule with order-1 and give it order+1
-        $other = $rule->ruleGroup->rules()->where('order', ($order - 1))->first();
-        if ($other) {
-            $other->order = ($other->order + 1);
-            $other->save();
-        }
-
-        $rule->order = ($rule->order - 1);
-        $rule->save();
-        $this->resetRulesInGroupOrder($rule->ruleGroup);
-    }
-
-    /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveDown(Rule $rule)
-    {
-        $order = $rule->order;
-
-        // find the rule with order+1 and give it order-1
-        $other = $rule->ruleGroup->rules()->where('order', ($order + 1))->first();
-        if ($other) {
-            $other->order = $other->order - 1;
-            $other->save();
-        }
-
-
-        $rule->order = ($rule->order + 1);
-        $rule->save();
-        $this->resetRulesInGroupOrder($rule->ruleGroup);
-    }
-
 
     /**
      * @param array $data
@@ -192,58 +218,6 @@ class RuleRepository implements RuleRepositoryInterface
      * @param bool   $stopProcessing
      * @param int    $order
      *
-     * @return RuleTrigger
-     */
-    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order)
-    {
-        $ruleTrigger = new RuleTrigger;
-        $ruleTrigger->rule()->associate($rule);
-        $ruleTrigger->order           = $order;
-        $ruleTrigger->active          = 1;
-        $ruleTrigger->stop_processing = $stopProcessing;
-        $ruleTrigger->trigger_type    = $action;
-        $ruleTrigger->trigger_value   = $value;
-        $ruleTrigger->save();
-
-        return $ruleTrigger;
-    }
-
-    /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function destroy(Rule $rule)
-    {
-        foreach ($rule->ruleTriggers as $trigger) {
-            $trigger->delete();
-        }
-        foreach ($rule->ruleActions as $action) {
-            $action->delete();
-        }
-        $rule->delete();
-
-        return true;
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return int
-     */
-    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
-    {
-        return intval($ruleGroup->rules()->max('order'));
-    }
-
-
-    /**
-     * @param Rule   $rule
-     * @param string $action
-     * @param string $value
-     * @param bool   $stopProcessing
-     * @param int    $order
-     *
      * @return RuleAction
      */
     public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order)
@@ -259,6 +233,29 @@ class RuleRepository implements RuleRepositoryInterface
 
 
         return $ruleAction;
+    }
+
+    /**
+     * @param Rule   $rule
+     * @param string $action
+     * @param string $value
+     * @param bool   $stopProcessing
+     * @param int    $order
+     *
+     * @return RuleTrigger
+     */
+    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order)
+    {
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = $order;
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = $stopProcessing;
+        $ruleTrigger->trigger_type    = $action;
+        $ruleTrigger->trigger_value   = $value;
+        $ruleTrigger->save();
+
+        return $ruleTrigger;
     }
 
     /**

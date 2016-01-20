@@ -36,27 +36,11 @@ interface RuleRepositoryInterface
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup);
 
     /**
-     * @param Rule  $rule
-     * @param array $ids
+     * @param Rule $rule
      *
      * @return bool
      */
-    public function reorderRuleTriggers(Rule $rule, array $ids);
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleActions(Rule $rule, array $ids);
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
+    public function moveDown(Rule $rule);
 
     /**
      * @param Rule $rule
@@ -67,18 +51,26 @@ interface RuleRepositoryInterface
 
     /**
      * @param Rule  $rule
-     * @param array $data
-     *
-     * @return Rule
-     */
-    public function update(Rule $rule, array $data);
-
-    /**
-     * @param Rule $rule
+     * @param array $ids
      *
      * @return bool
      */
-    public function moveDown(Rule $rule);
+    public function reorderRuleActions(Rule $rule, array $ids);
+
+    /**
+     * @param Rule  $rule
+     * @param array $ids
+     *
+     * @return bool
+     */
+    public function reorderRuleTriggers(Rule $rule, array $ids);
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
 
     /**
      * @param array $data
@@ -94,9 +86,9 @@ interface RuleRepositoryInterface
      * @param bool   $stopProcessing
      * @param int    $order
      *
-     * @return RuleTrigger
+     * @return RuleAction
      */
-    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order);
+    public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order);
 
     /**
      * @param Rule   $rule
@@ -105,8 +97,16 @@ interface RuleRepositoryInterface
      * @param bool   $stopProcessing
      * @param int    $order
      *
-     * @return RuleAction
+     * @return RuleTrigger
      */
-    public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order);
+    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order);
+
+    /**
+     * @param Rule  $rule
+     * @param array $data
+     *
+     * @return Rule
+     */
+    public function update(Rule $rule, array $data);
 
 }

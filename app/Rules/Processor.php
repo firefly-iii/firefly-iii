@@ -25,17 +25,14 @@ use Log;
  */
 class Processor
 {
-    /** @var  Rule */
-    protected $rule;
-
     /** @var  TransactionJournal */
     protected $journal;
-
-    /** @var array */
-    private $triggerTypes = [];
-
+    /** @var  Rule */
+    protected $rule;
     /** @var array */
     private $actionTypes = [];
+    /** @var array */
+    private $triggerTypes = [];
 
     /**
      * Processor constructor.
@@ -51,6 +48,38 @@ class Processor
         $this->actionTypes  = Domain::getRuleActions();
     }
 
+    /**
+     * @return TransactionJournal
+     */
+    public function getJournal()
+    {
+        return $this->journal;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     */
+    public function setJournal($journal)
+    {
+        $this->journal = $journal;
+    }
+
+    /**
+     * @return Rule
+     */
+    public function getRule()
+    {
+        return $this->rule;
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    public function setRule($rule)
+    {
+        $this->rule = $rule;
+    }
+
     public function handle()
     {
         // get all triggers:
@@ -60,6 +89,34 @@ class Processor
             $this->actions();
         }
 
+    }
+
+    /**
+     * @return bool
+     */
+    protected function actions()
+    {
+        /**
+         * @var int        $index
+         * @var RuleAction $action
+         */
+        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
+            $type  = $action->action_type;
+            $class = $this->actionTypes[$type];
+            Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');
+            if (!class_exists($class)) {
+                abort(500, 'Could not instantiate class for rule action type "' . $type . '" (' . $class . ').');
+            }
+            /** @var ActionInterface $actionClass */
+            $actionClass = new $class($action, $this->journal);
+            $actionClass->act();
+            if ($action->stop_processing) {
+                break;
+            }
+
+        }
+
+        return true;
     }
 
     /**
@@ -99,66 +156,6 @@ class Processor
 
         return ($hitTriggers == $foundTriggers);
 
-    }
-
-    /**
-     * @return bool
-     */
-    protected function actions()
-    {
-        /**
-         * @var int        $index
-         * @var RuleAction $action
-         */
-        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
-            $type  = $action->action_type;
-            $class = $this->actionTypes[$type];
-            Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule action type "' . $type . '" (' . $class . ').');
-            }
-            /** @var ActionInterface $actionClass */
-            $actionClass = new $class($action, $this->journal);
-            $actionClass->act();
-            if ($action->stop_processing) {
-                break;
-            }
-
-        }
-
-        return true;
-    }
-
-    /**
-     * @return Rule
-     */
-    public function getRule()
-    {
-        return $this->rule;
-    }
-
-    /**
-     * @param Rule $rule
-     */
-    public function setRule($rule)
-    {
-        $this->rule = $rule;
-    }
-
-    /**
-     * @return TransactionJournal
-     */
-    public function getJournal()
-    {
-        return $this->journal;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     */
-    public function setJournal($journal)
-    {
-        $this->journal = $journal;
     }
 
 
