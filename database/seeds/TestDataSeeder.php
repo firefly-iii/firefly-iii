@@ -33,7 +33,7 @@ class TestDataSeeder extends Seeder
         // create asset accounts for user #1.
         $this->createAssetAccounts($user);
 
-        // create a bills for user #1
+        // create bills for user #1
         $this->createBills($user);
 
         // create some budgets for user #1

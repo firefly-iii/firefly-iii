@@ -16,14 +16,12 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::create
-     * @todo   Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/bills/create');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
@@ -32,93 +30,117 @@ class BillControllerTest extends TestCase
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/bills/delete/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['bills.delete.url' => 'http://localhost']);
+        $this->be($this->user());
+        $args     = [
+            '_token' => Session::token(),
+        ];
+        $response = $this->call('POST', '/bills/destroy/2', $args);
+        $this->assertSessionHas('success');
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/bills/edit/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/bills');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::rescan
-     * @todo   Implement testRescan().
      */
     public function testRescan()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/bills/rescan/1');
+        $this->assertSessionHas('success');
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::show
-     * @todo   Implement testShow().
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/bills/show/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['bills.create.url' => 'http://localhost']);
+        $args = [
+            'name'                          => 'Some test',
+            'match'                         => 'words',
+            '_token'                        => Session::token(),
+            'amount_min'                    => 10,
+            'amount_max'                    => 100,
+            'amount_currency_id_amount_min' => 1,
+            'amount_currency_id_amount_max' => 1,
+            'date'                          => '20160101',
+            'repeat_freq'                   => 'monthly',
+            'skip'                          => 0,
+        ];
+
+        $this->be($this->user());
+        $response = $this->call('POST', '/bills/store', $args);
+        $this->assertSessionHas('success');
+
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['bills.edit.url' => 'http://localhost']);
+        $args = [
+            'id'                            => 1,
+            'name'                          => 'Some test',
+            'match'                         => 'words',
+            '_token'                        => Session::token(),
+            'amount_min'                    => 10,
+            'amount_max'                    => 100,
+            'amount_currency_id_amount_min' => 1,
+            'amount_currency_id_amount_max' => 1,
+            'date'                          => '20160101',
+            'repeat_freq'                   => 'monthly',
+            'skip'                          => 0,
+        ];
+
+        $this->be($this->user());
+        $response = $this->call('POST', '/bills/update/1', $args);
+        $this->assertSessionHas('success');
+
+        $this->assertEquals(302, $response->status());
     }
 }
