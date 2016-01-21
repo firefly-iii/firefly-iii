@@ -18,21 +18,29 @@ interface BudgetRepositoryInterface
 
 
     /**
+     *
+     * Same as ::spentInPeriod but corrects journals for a set of accounts
+     *
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     */
+    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
      * @return void
      */
     public function cleanupBudgets();
 
     /**
-     * Returns the expenses for this budget grouped per day, with the date
-     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
-     *
      * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
      *
-     * @return Collection
+     * @return boolean
      */
-    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
+    public function destroy(Budget $budget);
 
     /**
      * @param Budget $budget
@@ -42,72 +50,33 @@ interface BudgetRepositoryInterface
     public function firstActivity(Budget $budget);
 
     /**
-     * Returns the expenses for this budget grouped per month, with the date
-     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
-     *
-     * @param Budget $budget
+     * @return Collection
+     */
+    public function getActiveBudgets();
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return Collection
      */
-    public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end);
-
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end);
 
     /**
-     * Returns a list of expenses (in the field "spent", grouped per budget per account.
+     * Get the budgeted amounts for each budgets in each year.
      *
      * @param Collection $budgets
-     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return Collection
      */
-    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
+    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end);
 
     /**
-     * Returns an array with the following key:value pairs:
-     *
-     * yyyy-mm-dd:<amount>
-     *
-     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
-     * from all the users accounts.
-     *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
+     * @return Collection
      */
-    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end);
-
-    /**
-     * Returns an array with the following key:value pairs:
-     *
-     * yyyy-mm-dd:<array>
-     *
-     * That array contains:
-     *
-     * budgetid:<amount>
-     *
-     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
-     * from the given users accounts..
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end);
-
-    /**
-     * @param Budget $budget
-     *
-     * @return boolean
-     */
-    public function destroy(Budget $budget);
+    public function getBudgets();
 
     /**
      * Returns an array with every budget in it and the expenses for each budget
@@ -135,35 +104,6 @@ interface BudgetRepositoryInterface
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
-     * @return Collection
-     */
-    public function getActiveBudgets();
-
-    /**
-     * Get the budgeted amounts for each budgets in each year.
-     *
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end);
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end);
-
-    /**
-     * @return Collection
-     */
-    public function getBudgets();
-
-    /**
      * Returns a list of budgets, budget limits and limit repetitions
      * (doubling any of them in a left join)
      *
@@ -182,6 +122,30 @@ interface BudgetRepositoryInterface
      * @return LimitRepetition|null
      */
     public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
+     * Returns the expenses for this budget grouped per day, with the date
+     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
+
+    /**
+     * Returns the expenses for this budget grouped per month, with the date
+     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end);
 
     /**
      * @param Budget $budget
@@ -223,17 +187,52 @@ interface BudgetRepositoryInterface
     public function getWithoutBudgetSum(Carbon $start, Carbon $end);
 
     /**
+     * Returns an array with the following key:value pairs:
      *
-     * Same as ::spentInPeriod but corrects journals for a set of accounts
+     * yyyy-mm-dd:<array>
      *
-     * @param Budget     $budget
+     * That array contains:
+     *
+     * budgetid:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
+     * from the given users accounts..
+     *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
-     * @return string
+     * @return array
      */
-    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts);
+    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns a list of expenses (in the field "spent", grouped per budget per account.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * Returns an array with the following key:value pairs:
+     *
+     * yyyy-mm-dd:<amount>
+     *
+     * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $budget
+     * from all the users accounts.
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end);
 
     /**
      * @param array $data

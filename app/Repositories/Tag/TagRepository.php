@@ -23,6 +23,48 @@ class TagRepository implements TagRepositoryInterface
 
 
     /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        $set = Auth::user()->tags()
+                   ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                   ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                   ->leftJoin(
+                       'transactions AS t_from', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                   }
+                   )
+                   ->leftJoin(
+                       'transactions AS t_to', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                   }
+                   )
+                   ->where('tags.tagMode', 'balancingAct')
+                   ->where('transaction_types.type', TransactionType::TRANSFER)
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->whereNull('transaction_journals.deleted_at')
+                   ->whereIn('t_from.account_id', $ids)
+                   ->whereIn('t_to.account_id', $ids)
+                   ->groupBy('t_to.account_id')
+                   ->get(
+                       [
+                           't_to.account_id',
+                           DB::Raw('SUM(`t_to`.`amount`) as `sum`'),
+                       ]
+                   );
+
+        return $set;
+    }
+
+    /**
      *
      * @param TransactionJournal $journal
      * @param Tag                $tag
@@ -93,49 +135,6 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $amount;
-    }
-
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end)
-    {
-        $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->tags()
-                   ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                   ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                   ->leftJoin(
-                       'transactions AS t_from', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions AS t_to', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
-                   }
-                   )
-                   ->where('tags.tagMode', 'balancingAct')
-                   ->where('transaction_types.type', TransactionType::TRANSFER)
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->whereIn('t_from.account_id', $ids)
-                   ->whereIn('t_to.account_id', $ids)
-                   ->groupBy('t_to.account_id')
-                   ->get(
-                       [
-                           't_to.account_id',
-                           DB::Raw('SUM(`t_to`.`amount`) as `sum`'),
-                       ]
-                   );
-
-        return $set;
     }
 
     /**
@@ -282,42 +281,6 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @return boolean
-     */
-    protected function connectBalancingAct(TransactionJournal $journal, Tag $tag)
-    {
-        /** @var TransactionType $withdrawal */
-        $withdrawal  = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
-        /** @var TransactionType $transfer */
-        $transfer  = TransactionType::whereType(TransactionType::TRANSFER)->first();
-        $transfers = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
-
-
-        // only if this is the only withdrawal.
-        if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
-            $journal->tags()->save($tag);
-            $journal->save();
-
-            return true;
-        }
-        // and only if this is the only transfer
-        if ($journal->transaction_type_id == $transfer->id && $transfers < 1) {
-            $journal->tags()->save($tag);
-            $journal->save();
-
-            return true;
-        }
-
-        // ignore expense
-        return false;
-
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Tag                $tag
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return boolean
@@ -358,6 +321,42 @@ class TagRepository implements TagRepositoryInterface
 
         // this statement is unreachable.
         return false; // @codeCoverageIgnore
+
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Tag                $tag
+     *
+     * @return boolean
+     */
+    protected function connectBalancingAct(TransactionJournal $journal, Tag $tag)
+    {
+        /** @var TransactionType $withdrawal */
+        $withdrawal  = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+        /** @var TransactionType $transfer */
+        $transfer  = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        $transfers = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
+
+
+        // only if this is the only withdrawal.
+        if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+            $journal->tags()->save($tag);
+            $journal->save();
+
+            return true;
+        }
+        // and only if this is the only transfer
+        if ($journal->transaction_type_id == $transfer->id && $transfers < 1) {
+            $journal->tags()->save($tag);
+            $journal->save();
+
+            return true;
+        }
+
+        // ignore expense
+        return false;
 
     }
 

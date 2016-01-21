@@ -18,6 +18,17 @@ class Amount
 {
 
     /**
+     * @param      $amount
+     * @param bool $coloured
+     *
+     * @return string
+     */
+    public function format($amount, $coloured = true)
+    {
+        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
+    }
+
+    /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
@@ -46,48 +57,6 @@ class Amount
         }
 
         return $result;
-    }
-
-    /**
-     * @param      $amount
-     * @param bool $coloured
-     *
-     * @return string
-     */
-    public function format($amount, $coloured = true)
-    {
-        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrencySymbol()
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty('getCurrencySymbol');
-        if ($cache->has()) {
-            return $cache->get();
-        } else {
-            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'));
-            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
-
-            $cache->store($currency->symbol);
-
-            return $currency->symbol;
-        }
-    }
-
-    /**
-     * @param string $symbol
-     * @param float  $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     */
-    public function formatWithSymbol($symbol, $amount, $coloured = true)
-    {
-        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
 
     /**
@@ -140,6 +109,18 @@ class Amount
     }
 
     /**
+     * @param string $symbol
+     * @param float  $amount
+     * @param bool   $coloured
+     *
+     * @return string
+     */
+    public function formatWithSymbol($symbol, $amount, $coloured = true)
+    {
+        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
+    }
+
+    /**
      * @return Collection
      */
     public function getAllCurrencies()
@@ -170,6 +151,25 @@ class Amount
             $cache->store(env('DEFAULT_CURRENCY', 'EUR'));
 
             return env('DEFAULT_CURRENCY', 'EUR'); // @codeCoverageIgnore
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencySymbol()
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('getCurrencySymbol');
+        if ($cache->has()) {
+            return $cache->get();
+        } else {
+            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'));
+            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
+            $cache->store($currency->symbol);
+
+            return $currency->symbol;
         }
     }
 

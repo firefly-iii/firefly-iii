@@ -369,30 +369,6 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return array
      */
-    protected function storeWithdrawalAccounts(array $data)
-    {
-        $fromAccount = Account::find($data['account_id']);
-
-        if (strlen($data['expense_account']) > 0) {
-            $toType    = AccountType::where('type', 'Expense account')->first();
-            $toAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
-            );
-        } else {
-            $toType    = AccountType::where('type', 'Cash account')->first();
-            $toAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
-            );
-        }
-
-        return [$fromAccount, $toAccount];
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     protected function storeDepositAccounts(array $data)
     {
         $toAccount = Account::find($data['account_id']);
@@ -405,6 +381,30 @@ class JournalRepository implements JournalRepositoryInterface
         } else {
             $toType      = AccountType::where('type', 'Cash account')->first();
             $fromAccount = Account::firstOrCreateEncrypted(
+                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+            );
+        }
+
+        return [$fromAccount, $toAccount];
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function storeWithdrawalAccounts(array $data)
+    {
+        $fromAccount = Account::find($data['account_id']);
+
+        if (strlen($data['expense_account']) > 0) {
+            $toType    = AccountType::where('type', 'Expense account')->first();
+            $toAccount = Account::firstOrCreateEncrypted(
+                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
+            );
+        } else {
+            $toType    = AccountType::where('type', 'Cash account')->first();
+            $toAccount = Account::firstOrCreateEncrypted(
                 ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
             );
         }

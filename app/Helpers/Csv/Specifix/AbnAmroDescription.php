@@ -12,13 +12,21 @@ use Log;
  *
  * @package FireflyIII\Helpers\Csv\Specifix
  */
-class AbnAmroDescription
+class AbnAmroDescription extends Specifix implements SpecifixInterface
 {
     /** @var array */
     protected $data;
 
     /** @var array */
     protected $row;
+
+    /**
+     * AbnAmroDescription constructor.
+     */
+    public function __construct()
+    {
+        $this->setProcessorType(self::POST_PROCESSOR);
+    }
 
 
     /**

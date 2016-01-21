@@ -16,121 +16,124 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::create
-     * @todo   Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories/create');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories/delete/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+
+        $args = [
+            '_token' => Session::token(),
+        ];
+
+        $this->session(['categories.delete.url' => 'http://localhost']);
+
+        $response = $this->call('POST', '/categories/destroy/2', $args);
+        $this->assertSessionHas('success');
+        $this->assertEquals(302, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories/edit/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::noCategory
-     * @todo   Implement testNoCategory().
      */
     public function testNoCategory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories/list/noCategory');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::show
-     * @todo   Implement testShow().
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories/show/1');
+        $this->assertEquals(200, $response->status());
+
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::showWithDate
-     * @todo   Implement testShowWithDate().
      */
     public function testShowWithDate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/categories/show/1/20150101');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['categories.create.url' => 'http://localhost']);
+        $args = [
+            '_token' => Session::token(),
+            'name'   => 'Some kind of test cat.',
+        ];
+
+        $response = $this->call('POST', '/categories/store', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['categories.edit.url' => 'http://localhost']);
+        $args = [
+            '_token' => Session::token(),
+            'name'   => 'Some kind of test category.',
+        ];
+
+        $response = $this->call('POST', '/categories/update/1', $args);
+        $this->assertEquals(302, $response->status());
+        $this->assertSessionHas('success');
     }
 }

@@ -20,91 +20,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
 
     /**
-     * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
-     */
-    public function listCategories()
-    {
-        /** @var Collection $set */
-        $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
-        $set = $set->sortBy(
-            function (Category $category) {
-                return strtolower($category->name);
-            }
-        );
-
-        return $set;
-    }
-
-    /**
-     * Returns a list of transaction journals in the range (all types, all accounts) that have no category
-     * associated to them.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function listNoCategory(Carbon $start, Carbon $end)
-    {
-        return Auth::user()
-                   ->transactionjournals()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereNull('category_transaction_journal.id')
-                   ->before($end)
-                   ->after($start)
-                   ->orderBy('transaction_journals.date', 'DESC')
-                   ->orderBy('transaction_journals.order', 'ASC')
-                   ->orderBy('transaction_journals.id', 'DESC')
-                   ->get(['transaction_journals.*']);
-    }
-
-    /**
-     * This method returns a very special collection for each category:
-     *
-     * category, year, expense/earned, amount
-     *
-     * categories can be duplicated.
-     *
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end)
-    {
-
-        $set = Auth::user()->categories()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
-                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
-                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereIn('transaction_types.type', [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL])
-                   ->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
-                   ->whereIn('categories.id', $categories->pluck('id')->toArray())
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->groupBy('categories.id')
-                   ->groupBy('transaction_types.type')
-                   ->groupBy('dateFormatted')
-                   ->get(
-                       [
-                           'categories.*',
-                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
-                           'transaction_types.type',
-                           DB::Raw('SUM(`amount`) as `sum`'),
-                       ]
-                   );
-
-        return $set;
-
-    }
-
-
-    /**
      * Returns a collection of Categories appended with the amount of money that has been earned
      * in these categories, based on the $accounts involved, in period X, grouped per month.
      * The amount earned in category X in period X is saved in field "earned".
@@ -152,6 +67,90 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $collection;
 
 
+    }
+
+    /**
+     * Returns a list of all the categories belonging to a user.
+     *
+     * @return Collection
+     */
+    public function listCategories()
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $set = $set->sortBy(
+            function (Category $category) {
+                return strtolower($category->name);
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * This method returns a very special collection for each category:
+     *
+     * category, year, expense/earned, amount
+     *
+     * categories can be duplicated.
+     *
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end)
+    {
+
+        $set = Auth::user()->categories()
+                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
+                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereIn('transaction_types.type', [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL])
+                   ->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
+                   ->whereIn('categories.id', $categories->pluck('id')->toArray())
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->groupBy('categories.id')
+                   ->groupBy('transaction_types.type')
+                   ->groupBy('dateFormatted')
+                   ->get(
+                       [
+                           'categories.*',
+                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
+                           'transaction_types.type',
+                           DB::Raw('SUM(`amount`) as `sum`'),
+                       ]
+                   );
+
+        return $set;
+
+    }
+
+    /**
+     * Returns a list of transaction journals in the range (all types, all accounts) that have no category
+     * associated to them.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function listNoCategory(Carbon $start, Carbon $end)
+    {
+        return Auth::user()
+                   ->transactionjournals()
+                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereNull('category_transaction_journal.id')
+                   ->before($end)
+                   ->after($start)
+                   ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.order', 'ASC')
+                   ->orderBy('transaction_journals.id', 'DESC')
+                   ->get(['transaction_journals.*']);
     }
 
     /**
@@ -206,6 +205,20 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $collection;
     }
 
+    /**
+     * Returns the total amount of money related to transactions without any category connected to
+     * it. Returns either the earned amount.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        return $this->sumNoCategory($accounts, $start, $end, Query::EARNED);
+    }
 
     /**
      * Returns the total amount of money related to transactions without any category connected to
@@ -220,21 +233,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end)
     {
         return $this->sumNoCategory($accounts, $start, $end, Query::SPENT);
-    }
-
-    /**
-     * Returns the total amount of money related to transactions without any category connected to
-     * it. Returns either the earned amount.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end)
-    {
-        return $this->sumNoCategory($accounts, $start, $end, Query::EARNED);
     }
 
     /**
