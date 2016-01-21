@@ -255,7 +255,6 @@ class Importer
             $converter->setIndex($index);
             $converter->setMapped($this->mapped);
             $converter->setValue($value);
-            $converter->setRole($role);
             $data[$field] = $converter->convert();
         }
         // move to class vars.
