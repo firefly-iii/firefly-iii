@@ -61,7 +61,8 @@ class TestDataSeeder extends Seeder
     private function createAssetAccounts(User $user)
     {
         $assets    = ['TestData Checking Account', 'TestData Savings', 'TestData Shared', 'TestData Creditcard', 'Emergencies', 'STE'];
-        $ibans     = ['NL47JDYU6179706202', 'NL51WGBP5832453599', 'NL81RCQZ7160379858', 'NL19NRAP2367994221', 'NL40UKBK3619908726', 'NL38SRMN4325934708'];
+        // first two ibans match test-upload.csv
+        $ibans     = ['NL11XOLA6707795988', 'NL96DZCO4665940223', 'NL81RCQZ7160379858', 'NL19NRAP2367994221', 'NL40UKBK3619908726', 'NL38SRMN4325934708'];
         $assetMeta = [
             ['accountRole' => 'defaultAsset'],
             ['accountRole' => 'savingAsset',],

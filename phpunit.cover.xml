@@ -25,6 +25,10 @@
         <whitelist>
             <directory suffix=".php">app/</directory>
         </whitelist>
+        <blacklist>
+            <directory>vendor/</directory>
+            <!-- and other directories,  -->
+        </blacklist>
     </filter>
     <!--
     Code coverage has never been slower.
