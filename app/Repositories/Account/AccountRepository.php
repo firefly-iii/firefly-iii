@@ -554,7 +554,8 @@ class AccountRepository implements AccountRepositoryInterface
     protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
     {
         $journal->date = $data['openingBalanceDate'];
-
+        $journal->save();
+        
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id == $transaction->account_id) {
