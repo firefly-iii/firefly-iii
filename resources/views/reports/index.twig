@@ -103,8 +103,8 @@
                         <li>
                             <a href="{{ route('reports.report',
                             ['default',
-                            startOfYear.format('Ymd'),
-                            endOfYear.format('Ymd'),
+                            'currentYearStart',
+                            'currentYearEnd',
                             accountList
                             ]) }}">{{ 'report_this_year_quick'|_ }}</a>
                         </li>
@@ -112,7 +112,7 @@
                             <a href="{{ route('reports.report',
                             ['default',
                             start.format('Ymd'),
-                            endOfMonth.format('Ymd'),
+                            'currentMonthEnd',
                             accountList
                             ]) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>
