@@ -57,7 +57,7 @@ class CsvController extends Controller
     public function columnRoles()
     {
 
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -97,7 +97,7 @@ class CsvController extends Controller
      */
     public function downloadConfig()
     {
-        $fields = ['csv-date-format', 'csv-has-headers'];
+        $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -196,7 +196,7 @@ class CsvController extends Controller
      */
     public function initialParse()
     {
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -246,7 +246,7 @@ class CsvController extends Controller
     {
 
         // Make sure all fields we need are accounted for.
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -294,7 +294,7 @@ class CsvController extends Controller
         /*
          * Make sure all fields we need are accounted for.
          */
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -340,7 +340,7 @@ class CsvController extends Controller
         /*
          * Make sure all fields we need are accounted for.
          */
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
