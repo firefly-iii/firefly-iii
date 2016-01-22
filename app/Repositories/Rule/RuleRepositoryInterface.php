@@ -81,25 +81,19 @@ interface RuleRepositoryInterface
 
     /**
      * @param Rule   $rule
-     * @param string $action
-     * @param string $value
-     * @param bool   $stopProcessing
-     * @param int    $order
+     * @param array $values
      *
      * @return RuleAction
      */
-    public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order);
+    public function storeAction(Rule $rule, array $values);
 
     /**
      * @param Rule   $rule
-     * @param string $action
-     * @param string $value
-     * @param bool   $stopProcessing
-     * @param int    $order
+     * @param array $values
      *
      * @return RuleTrigger
      */
-    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order);
+    public function storeTrigger(Rule $rule, array $values);
 
     /**
      * @param Rule  $rule

@@ -42,16 +42,6 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return int
-     */
-    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
-    {
-        return intval($ruleGroup->rules()->max('order'));
-    }
-
-    /**
      * @param Rule $rule
      *
      * @return bool
@@ -71,6 +61,31 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order + 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
+    {
+        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $ruleGroup->rules()
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get();
+        $count = 1;
+        /** @var Rule $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            $count++;
+        }
+
+        return true;
+
     }
 
     /**
@@ -139,31 +154,6 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
-    {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $ruleGroup->rules()
-                           ->orderBy('order', 'ASC')
-                           ->orderBy('updated_at', 'DESC')
-                           ->get();
-        $count = 1;
-        /** @var Rule $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-            $count++;
-        }
-
-        return true;
-
-    }
-
-    /**
      * @param array $data
      *
      * @return Rule
@@ -192,10 +182,26 @@ class RuleRepository implements RuleRepositoryInterface
         // start storing triggers:
         $order          = 1;
         $stopProcessing = false;
+
+        $triggerValues = [
+            'action'         => 'user_action',
+            'value'          => $data['trigger'],
+            'stopProcessing' => $stopProcessing,
+            'order'          => $order,
+        ];
+
         $this->storeTrigger($rule, 'user_action', $data['trigger'], $stopProcessing, $order);
         foreach ($data['rule-triggers'] as $index => $trigger) {
             $value          = $data['rule-trigger-values'][$index];
             $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+
+            $triggerValues = [
+                'action'         => $trigger,
+                'value'          => $value,
+                'stopProcessing' => $stopProcessing,
+                'order'          => $order,
+            ];
+
             $this->storeTrigger($rule, $trigger, $value, $stopProcessing, $order);
             $order++;
         }
@@ -205,6 +211,14 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($data['rule-actions'] as $index => $action) {
             $value          = $data['rule-action-values'][$index];
             $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
+
+            $actionValues = [
+                'action'         => $action,
+                'value'          => $value,
+                'stopProcessing' => $stopProcessing,
+                'order'          => $order,
+            ];
+
             $this->storeAction($rule, $action, $value, $stopProcessing, $order);
         }
 
@@ -212,50 +226,54 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param Rule   $rule
-     * @param string $action
-     * @param string $value
-     * @param bool   $stopProcessing
-     * @param int    $order
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
+    {
+        return intval($ruleGroup->rules()->max('order'));
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $values
+     *
+     * @return RuleTrigger
+     */
+    public function storeTrigger(Rule $rule, array $values)
+    {
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = $values['order'];
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = $values['stopProcessing'];
+        $ruleTrigger->trigger_type    = $values['action'];
+        $ruleTrigger->trigger_value   = $values['value'];
+        $ruleTrigger->save();
+
+        return $ruleTrigger;
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $values
      *
      * @return RuleAction
      */
-    public function storeAction(Rule $rule, $action, $value, $stopProcessing, $order)
+    public function storeAction(Rule $rule, array $values)
     {
         $ruleAction = new RuleAction;
         $ruleAction->rule()->associate($rule);
-        $ruleAction->order           = $order;
+        $ruleAction->order           = $values['order'];
         $ruleAction->active          = 1;
-        $ruleAction->stop_processing = $stopProcessing;
-        $ruleAction->action_type     = $action;
-        $ruleAction->action_value    = $value;
+        $ruleAction->stop_processing = $values['stopProcessing'];
+        $ruleAction->action_type     = $values['action'];
+        $ruleAction->action_value    = $values['value'];
         $ruleAction->save();
 
 
         return $ruleAction;
-    }
-
-    /**
-     * @param Rule   $rule
-     * @param string $action
-     * @param string $value
-     * @param bool   $stopProcessing
-     * @param int    $order
-     *
-     * @return RuleTrigger
-     */
-    public function storeTrigger(Rule $rule, $action, $value, $stopProcessing, $order)
-    {
-        $ruleTrigger = new RuleTrigger;
-        $ruleTrigger->rule()->associate($rule);
-        $ruleTrigger->order           = $order;
-        $ruleTrigger->active          = 1;
-        $ruleTrigger->stop_processing = $stopProcessing;
-        $ruleTrigger->trigger_type    = $action;
-        $ruleTrigger->trigger_value   = $value;
-        $ruleTrigger->save();
-
-        return $ruleTrigger;
     }
 
     /**
@@ -282,10 +300,26 @@ class RuleRepository implements RuleRepositoryInterface
         // recreate triggers:
         $order          = 1;
         $stopProcessing = false;
+
+        $triggerValues = [
+            'action'         => 'user_action',
+            'value'          => $data['trigger'],
+            'stopProcessing' => $stopProcessing,
+            'order'          => $order,
+        ];
+
         $this->storeTrigger($rule, 'user_action', $data['trigger'], $stopProcessing, $order);
         foreach ($data['rule-triggers'] as $index => $trigger) {
             $value          = $data['rule-trigger-values'][$index];
             $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+
+            $triggerValues = [
+                'action'         => $trigger,
+                'value'          => $value,
+                'stopProcessing' => $stopProcessing,
+                'order'          => $order,
+            ];
+
             $this->storeTrigger($rule, $trigger, $value, $stopProcessing, $order);
             $order++;
         }
@@ -295,6 +329,14 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($data['rule-actions'] as $index => $action) {
             $value          = $data['rule-action-values'][$index];
             $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
+
+            $actionValues = [
+                'action'         => $action,
+                'value'          => $value,
+                'stopProcessing' => $stopProcessing,
+                'order'          => $order,
+            ];
+
             $this->storeAction($rule, $action, $value, $stopProcessing, $order);
         }
 
