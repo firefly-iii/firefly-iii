@@ -62,6 +62,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::index
+     * @covers FireflyIII\Http\Controllers\AccountController::isInArray
      */
     public function testIndex()
     {

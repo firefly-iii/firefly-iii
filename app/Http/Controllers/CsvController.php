@@ -396,7 +396,7 @@ class CsvController extends Controller
         $settings                   = [];
         $settings['date-format']    = Input::get('date_format');
         $settings['has-headers']    = intval(Input::get('has_headers')) === 1;
-        $settings['specifix']       = Input::get('specifix');
+        $settings['specifix']       = is_array(Input::get('specifix')) ? Input::get('specifix') : [];
         $settings['import-account'] = intval(Input::get('csv_import_account'));
         $settings['delimiter']      = Input::get('csv_delimiter', ',');
 
