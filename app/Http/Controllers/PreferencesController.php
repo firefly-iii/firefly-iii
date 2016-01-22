@@ -39,10 +39,11 @@ class PreferencesController extends Controller
         $budgetMax         = Preferences::get('budgetMaximum', 1000);
         $language          = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
         $budgetMaximum     = $budgetMax->data;
+        $customFiscalYear  = Preferences::get('customFiscalYear', 0)->data;
 
         $showIncomplete = env('SHOW_INCOMPLETE_TRANSLATIONS', 'false') == 'true';
 
-        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'showIncomplete'));
+        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'showIncomplete'));
     }
 
     /**
@@ -69,6 +70,10 @@ class PreferencesController extends Controller
         // budget maximum:
         $budgetMaximum = intval(Input::get('budgetMaximum'));
         Preferences::set('budgetMaximum', $budgetMaximum);
+
+        // custom fiscal year
+        $customFiscalYear = (int) Input::get('customFiscalYear');
+        Preferences::set('customFiscalYear', $customFiscalYear);
 
         // language:
         $lang = Input::get('language');
