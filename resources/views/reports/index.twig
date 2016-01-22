@@ -95,8 +95,8 @@
                         <li>
                             <a href="{{ route('reports.report',
                             ['default',
-                            startOfMonth.format('Ymd'),
-                            endOfMonth.format('Ymd'),
+                            'currentMonthStart',
+                            'currentMonthEnd',
                             accountList
                             ]) }}">{{ 'report_this_month_quick'|_ }}</a>
                         </li>

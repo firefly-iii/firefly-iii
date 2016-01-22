@@ -32,6 +32,14 @@ class Date implements BinderInterface
      */
     public static function routeBinder($value, $route)
     {
+        if($value === 'currentMonthStart') {
+            return Carbon::now()->startOfMonth();
+        }
+        if($value === 'currentMonthEnd') {
+            return Carbon::now()->endOfMonth();
+        }
+
+
         try {
             $date = new Carbon($value);
         } catch (Exception $e) {
