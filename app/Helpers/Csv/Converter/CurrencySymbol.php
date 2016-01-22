@@ -13,7 +13,7 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return mixed|static
+     * @return TransactionCurrency
      */
     public function convert()
     {

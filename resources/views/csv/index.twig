@@ -55,7 +55,7 @@
 
 
                         {{ ExpandedForm.checkbox('has_headers',1,null,{helpText: 'csv_header_help'|_}) }}
-                        {{ ExpandedForm.text('date_format','Ymd',{helpText: 'csv_date_help'|_}) }}
+                        {{ ExpandedForm.text('date_format','Ymd',{helpText: trans('firefly.csv_date_help', {dateExample: phpdate('Ymd')}) }) }}
 
                         {{ ExpandedForm.file('csv',{helpText: 'csv_csv_file_help'|_}) }}
 
@@ -64,7 +64,6 @@
                         {{ ExpandedForm.file('csv_config',{helpText: 'csv_csv_config_file_help'|_}) }}
 
                         {{ ExpandedForm.select('csv_import_account', accounts, 0, {helpText: 'csv_import_account_help'|_} ) }}
-
 
                         {{ ExpandedForm.multiCheckbox('specifix', specifix) }}
 

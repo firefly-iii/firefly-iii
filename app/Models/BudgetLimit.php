@@ -22,6 +22,7 @@ class BudgetLimit extends Model
 {
 
     protected $hidden = ['amount_encrypted'];
+    protected $dates  = ['created_at', 'updated_at', 'startdate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -29,14 +30,6 @@ class BudgetLimit extends Model
     public function budget()
     {
         return $this->belongsTo('FireflyIII\Models\Budget');
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'startdate'];
     }
 
     /**

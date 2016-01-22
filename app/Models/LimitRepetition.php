@@ -21,6 +21,7 @@ class LimitRepetition extends Model
 {
 
     protected $hidden = ['amount_encrypted'];
+    protected $dates  = ['created_at', 'updated_at', 'startdate', 'enddate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -28,14 +29,6 @@ class LimitRepetition extends Model
     public function budgetLimit()
     {
         return $this->belongsTo('FireflyIII\Models\BudgetLimit');
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'startdate', 'enddate'];
     }
 
     /**

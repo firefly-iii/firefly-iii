@@ -37,7 +37,7 @@ class Journal extends Twig_Extension
     {
         $functions = [
             $this->invalidJournal(),
-            $this->relevantTags()
+            $this->relevantTags(),
         ];
 
         return $functions;

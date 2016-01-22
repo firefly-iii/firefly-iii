@@ -46,6 +46,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return true;
     }
 
+    /**
+     * @return Collection
+     */
+    public function get()
+    {
+        return Auth::user()->ruleGroups()->orderBy('order', 'ASC')->get();
+    }
 
     /**
      * @return int
@@ -55,36 +62,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $entry = Auth::user()->ruleGroups()->max('order');
 
         return intval($entry);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get()
-    {
-        return Auth::user()->ruleGroups()->orderBy('order', 'ASC')->get();
-    }
-
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function moveUp(RuleGroup $ruleGroup)
-    {
-        $order = $ruleGroup->order;
-
-        // find the rule with order-1 and give it order+1
-        $other = Auth::user()->ruleGroups()->where('order', ($order - 1))->first();
-        if ($other) {
-            $other->order = ($other->order + 1);
-            $other->save();
-        }
-
-        $ruleGroup->order = ($ruleGroup->order - 1);
-        $ruleGroup->save();
-        $this->resetRuleGroupOrder();
     }
 
     /**
@@ -108,6 +85,26 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $this->resetRuleGroupOrder();
     }
 
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function moveUp(RuleGroup $ruleGroup)
+    {
+        $order = $ruleGroup->order;
+
+        // find the rule with order-1 and give it order+1
+        $other = Auth::user()->ruleGroups()->where('order', ($order - 1))->first();
+        if ($other) {
+            $other->order = ($other->order + 1);
+            $other->save();
+        }
+
+        $ruleGroup->order = ($ruleGroup->order - 1);
+        $ruleGroup->save();
+        $this->resetRuleGroupOrder();
+    }
 
     /**
      * @return bool

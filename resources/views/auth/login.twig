@@ -44,7 +44,7 @@
         {% if Config.get('auth.allow_register') %}
             <a href="{{ URL.to('/register') }}" class="text-center">Register a new account</a><br>
         {% endif %}
-        <a href="{{ URL.to('/password/email') }}">I forgot my password</a>
+        <a href="{{ URL.to('/password/reset') }}">I forgot my password</a>
     </div>
     <!-- /.login-box-body -->
 {% endblock %}

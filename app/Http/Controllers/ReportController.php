@@ -45,14 +45,6 @@ class ReportController extends Controller
     {
         $start        = Session::get('first');
         $months       = $this->helper->listOfMonths($start);
-        $startOfMonth = clone Session::get('start');
-        $endOfMonth   = clone Session::get('start');
-        $startOfYear  = clone Session::get('start');
-        $endOfYear    = clone Session::get('start');
-        $startOfMonth->startOfMonth();
-        $endOfMonth->endOfMonth();
-        $startOfYear->startOfYear();
-        $endOfYear->endOfYear();
 
         // does the user have shared accounts?
         $accounts = $repository->getAccounts(['Default account', 'Asset account']);
@@ -67,8 +59,7 @@ class ReportController extends Controller
 
         return view(
             'reports.index', compact(
-                               'months', 'accounts', 'start', 'accountList',
-                               'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
+                               'months', 'accounts', 'start', 'accountList'
                            )
         );
     }

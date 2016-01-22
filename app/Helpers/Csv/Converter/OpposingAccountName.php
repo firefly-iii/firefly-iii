@@ -6,7 +6,7 @@ use Auth;
 use FireflyIII\Models\Account;
 
 /**
- * Class OpposingName
+ * Class OpposingAccountName
  *
  * @package FireflyIII\Helpers\Csv\Converter
  */

@@ -53,7 +53,7 @@ class AccountFormRequest extends Request
             'ccMonthlyPaymentDate'              => 'date',
             'amount_currency_id_openingBalance' => 'exists:transaction_currencies,id',
             'amount_currency_id_virtualBalance' => 'exists:transaction_currencies,id',
-            'what'                              => 'in:' . $types
+            'what'                              => 'in:' . $types,
         ];
     }
 }

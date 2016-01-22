@@ -33,6 +33,15 @@ interface ReportHelperInterface
     public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Balance
+     */
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts);
+
+    /**
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
@@ -45,15 +54,6 @@ interface ReportHelperInterface
      * @return BillCollection
      */
     public function getBillReport(Carbon $start, Carbon $end, Collection $accounts);
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Balance
-     */
-    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Carbon     $start

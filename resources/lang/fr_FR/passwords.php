@@ -17,6 +17,6 @@ return [
     "token"    => "Le jeton de réinitialisation de mot de passe est invalide.",
     "sent"     => "Nous avons envoyé votre lien de réinitialisation de mot de passe!",
     "reset"    => "Le mot de passe a été réinitialisé!",
-    'blocked'  => 'Nice try though.'
+    'blocked'  => 'Nice try though.',
 
 ];

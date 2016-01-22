@@ -37,6 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Rule extends Model
 {
     use SoftDeletes;
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

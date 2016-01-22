@@ -9,6 +9,7 @@
 
 // Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
+    "use strict";
     var $originals = tr.children();
     var $helper = tr.clone();
     $helper.children().each(function (index) {
@@ -53,16 +54,15 @@ function sortStop(event, ui) {
         var id = trigger.data('id');
         var order = i + 1;
         entries.push(id);
-        //console.log('Entry #' + id + ' will get order ' + order + ' in rule ' + ruleId + '.');
 
     });
     if (parent.hasClass('rule-triggers')) {
         $.post('rules/rules/trigger/reorder/' + ruleId, {_token: token, triggers: entries}).fail(function () {
-            alert('Could not re-order rule triggers. Please refresh the page.')
+            alert('Could not re-order rule triggers. Please refresh the page.');
         });
     } else {
         $.post('rules/rules/action/reorder/' + ruleId, {_token: token, actions: entries}).fail(function () {
-            alert('Could not re-order rule actions. Please refresh the page.')
+            alert('Could not re-order rule actions. Please refresh the page.');
         });
 
     }

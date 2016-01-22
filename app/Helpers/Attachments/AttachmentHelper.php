@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class AttachmentHelper implements AttachmentHelperInterface
 {
 
-    /** @var int */
-    protected $maxUploadSize;
-    /** @var array */
-    protected $allowedMimes;
     /** @var MessageBag */
     public $errors;
     /** @var MessageBag */
     public $messages;
+    /** @var array */
+    protected $allowedMimes;
+    /** @var int */
+    protected $maxUploadSize;
 
     /**
      *
@@ -49,6 +49,22 @@ class AttachmentHelper implements AttachmentHelperInterface
         $path = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
 
         return $path;
+    }
+
+    /**
+     * @return MessageBag
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return MessageBag
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 
     /**
@@ -96,27 +112,6 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param UploadedFile $file
-     * @param Model        $model
-     *
-     * @return bool
-     */
-    protected function validateUpload(UploadedFile $file, Model $model)
-    {
-        if (!$this->validMime($file)) {
-            return false;
-        }
-        if (!$this->validSize($file)) {
-            return false;
-        }
-        if ($this->hasFile($file, $model)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -205,19 +200,24 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * @return MessageBag
+     * @param UploadedFile $file
+     * @param Model        $model
+     *
+     * @return bool
      */
-    public function getErrors()
+    protected function validateUpload(UploadedFile $file, Model $model)
     {
-        return $this->errors;
-    }
+        if (!$this->validMime($file)) {
+            return false;
+        }
+        if (!$this->validSize($file)) {
+            return false;
+        }
+        if ($this->hasFile($file, $model)) {
+            return false;
+        }
 
-    /**
-     * @return MessageBag
-     */
-    public function getMessages()
-    {
-        return $this->messages;
+        return true;
     }
 
 

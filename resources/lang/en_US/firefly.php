@@ -257,6 +257,7 @@ return [
     'csv_column_account-id'                  => 'Asset account  ID (matching Firefly)',
     'csv_column_account-name'                => 'Asset account (name)',
     'csv_column_amount'                      => 'Amount',
+    'csv_column_amount-comma-separated'      => 'Amount (comma as decimal separator)',
     'csv_column_bill-id'                     => 'Bill ID (matching Firefly)',
     'csv_column_bill-name'                   => 'Bill name',
     'csv_column_budget-id'                   => 'Budget ID (matching Firefly)',
@@ -280,9 +281,10 @@ return [
     'csv_column_tags-comma'                  => 'Tags (comma separated)',
     'csv_column_tags-space'                  => 'Tags (space separated)',
     'csv_specifix_RabobankDescription'       => 'Select this when you\'re importing Rabobank CSV export files.',
+    'csv_specifix_AbnAmroDescription'        => 'Select this when you\'re importing ABN AMRO CSV export files.',
     'csv_specifix_Dummy'                     => 'Checking this has no effect whatsoever.',
     'csv_import_account_help'                => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'csv_delimiter_help'	                 => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'csv_delimiter_help'                     => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'csv_date_parse_error'                   => 'Could not parse a valid date from ":value", using the format ":format". Are you sure your CSV is correct?',
 
     // create new stuff:

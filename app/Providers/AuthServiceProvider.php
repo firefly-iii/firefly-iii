@@ -17,14 +17,16 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $policies = [
-        'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
-    ];
+    protected $policies
+        = [
+            'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
+        ];
 
     /**
      * Register any application authentication / authorization services.
      *
-     * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
+     * @param  \Illuminate\Contracts\Auth\Access\Gate $gate
+     *
      * @return void
      */
     public function boot(GateContract $gate)

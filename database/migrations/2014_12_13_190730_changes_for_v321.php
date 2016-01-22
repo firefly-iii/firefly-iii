@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName) // method names are mandated by laravel.
- * @SuppressWarnings("TooManyMethods") // I'm fine with this
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  *
  * Down:
  * 1. Create new Components based on Budgets.

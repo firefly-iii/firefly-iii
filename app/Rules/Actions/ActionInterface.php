@@ -8,6 +8,7 @@
  */
 
 namespace FireflyIII\Rules\Actions;
+
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 
@@ -21,7 +22,7 @@ interface ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param RuleAction         $action
      * @param TransactionJournal $journal
      */
     public function __construct(RuleAction $action, TransactionJournal $journal);

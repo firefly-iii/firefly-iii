@@ -30,16 +30,16 @@ class Domain
     /**
      * @return array
      */
-    public static function getRuleTriggers()
+    public static function getRuleActions()
     {
-        return Config::get('firefly.rule-triggers');
+        return Config::get('firefly.rule-actions');
     }
 
     /**
      * @return array
      */
-    public static function getRuleActions()
+    public static function getRuleTriggers()
     {
-        return Config::get('firefly.rule-actions');
+        return Config::get('firefly.rule-triggers');
     }
 }

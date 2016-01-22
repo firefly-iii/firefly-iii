@@ -293,7 +293,6 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
     {
-
         $journalData = $request->getJournalData();
 
         // if not withdrawal, unset budgetid.
@@ -303,7 +302,6 @@ class TransactionController extends Controller
 
         $journal = $repository->store($journalData);
 
-        // save attachments:
         $att->saveAttachmentsForModel($journal);
 
         // flash errors

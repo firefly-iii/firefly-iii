@@ -9,13 +9,21 @@ use Log;
  *
  * @package FireflyIII\Helpers\Csv\Specifix
  */
-class RabobankDescription
+class RabobankDescription extends Specifix implements SpecifixInterface
 {
     /** @var array */
     protected $data;
 
     /** @var array */
     protected $row;
+
+    /**
+     * RabobankDescription constructor.
+     */
+    public function __construct()
+    {
+        $this->setProcessorType(self::POST_PROCESSOR);
+    }
 
 
     /**

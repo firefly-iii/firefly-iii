@@ -7,7 +7,7 @@ namespace FireflyIII\Helpers\Csv\Specifix;
  *
  * @package FireflyIII\Helpers\Csv\Specifix
  */
-class Dummy
+class Dummy extends Specifix implements SpecifixInterface
 {
     /** @var array */
     protected $data;
@@ -15,6 +15,13 @@ class Dummy
     /** @var array */
     protected $row;
 
+    /**
+     * Dummy constructor.
+     */
+    public function __construct()
+    {
+        $this->setProcessorType(self::POST_PROCESSOR);
+    }
 
     /**
      * @return array

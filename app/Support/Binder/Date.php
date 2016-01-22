@@ -32,13 +32,25 @@ class Date implements BinderInterface
      */
     public static function routeBinder($value, $route)
     {
-        try {
-            $date = new Carbon($value);
-        } catch (Exception $e) {
-            Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
-            throw new NotFoundHttpException;
-        }
+        switch ($value) {
+            default:
+                try {
+                    $date = new Carbon($value);
+                } catch (Exception $e) {
+                    Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
+                    throw new NotFoundHttpException;
+                }
 
-        return $date;
+                return $date;
+            case 'currentMonthStart':
+                return Carbon::now()->startOfMonth();
+            case 'currentMonthEnd':
+                return Carbon::now()->endOfMonth();
+            case 'currentYearStart':
+                return Carbon::now()->startOfYear();
+            case 'currentYearEnd':
+                return Carbon::now()->endOfYear();
+
+        }
     }
 }

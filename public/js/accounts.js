@@ -4,6 +4,7 @@
 // Return a helper with preserved width of cells
 var fixHelper = function(e, tr)
 {
+    "use strict";
     var $originals = tr.children();
     var $helper = tr.clone();
     $helper.children().each(function(index)

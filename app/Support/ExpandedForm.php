@@ -26,25 +26,6 @@ class ExpandedForm
      *
      * @return string
      */
-    public function staticText($name, $value, array $options = [])
-    {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
-        $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
     public function amount($name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
@@ -61,86 +42,6 @@ class ExpandedForm
 
         return $html;
 
-    }
-
-    /**
-     * @param $name
-     * @param $options
-     *
-     * @return mixed
-     */
-    protected function label($name, $options)
-    {
-        if (isset($options['label'])) {
-            return $options['label'];
-        }
-
-        return trans('form.' . $name);
-
-    }
-
-    /**
-     * @param       $name
-     * @param       $label
-     * @param array $options
-     *
-     * @return array
-     */
-    protected function expandOptionArray($name, $label, array $options)
-    {
-        $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_' . $name;
-        $options['autocomplete'] = 'off';
-        $options['placeholder']  = ucfirst($label);
-
-        return $options;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return string
-     */
-    protected function getHolderClasses($name)
-    {
-        /*
-       * Get errors from session:
-       */
-        /** @var MessageBag $errors */
-        $errors  = Session::get('errors');
-        $classes = 'form-group';
-
-        if (!is_null($errors) && $errors->has($name)) {
-            $classes = 'form-group has-error has-feedback';
-        }
-
-        return $classes;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     *
-     * @return mixed
-     */
-    protected function fillFieldValue($name, $value)
-    {
-        if (Session::has('preFilled')) {
-            $preFilled = Session::get('preFilled');
-            $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
-        }
-        // @codeCoverageIgnoreStart
-        try {
-            if (!is_null(Input::old($name))) {
-                $value = Input::old($name);
-            }
-        } catch (RuntimeException $e) {
-            // don't care about session errors.
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        return $value;
     }
 
     /**
@@ -206,6 +107,23 @@ class ExpandedForm
         $html = view('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
+    }
+
+    /**
+     * @param       $name
+     * @param array $options
+     *
+     * @return string
+     */
+    public function file($name, array $options = [])
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $html    = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
+
+        return $html;
+
     }
 
     /**
@@ -373,6 +291,25 @@ class ExpandedForm
      *
      * @return string
      */
+    public function staticText($name, $value, array $options = [])
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
+        $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
     public function tags($name, $value = null, array $options = [])
     {
         $label                = $this->label($name, $options);
@@ -383,23 +320,6 @@ class ExpandedForm
         $html                 = view('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-    }
-
-    /**
-     * @param       $name
-     * @param array $options
-     *
-     * @return string
-     */
-    public function file($name, array $options = [])
-    {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $html    = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
-
-        return $html;
-
     }
 
     /**
@@ -438,6 +358,86 @@ class ExpandedForm
         $html            = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param       $label
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function expandOptionArray($name, $label, array $options)
+    {
+        $options['class']        = 'form-control';
+        $options['id']           = 'ffInput_' . $name;
+        $options['autocomplete'] = 'off';
+        $options['placeholder']  = ucfirst($label);
+
+        return $options;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     *
+     * @return mixed
+     */
+    protected function fillFieldValue($name, $value)
+    {
+        if (Session::has('preFilled')) {
+            $preFilled = Session::get('preFilled');
+            $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
+        }
+        // @codeCoverageIgnoreStart
+        try {
+            if (!is_null(Input::old($name))) {
+                $value = Input::old($name);
+            }
+        } catch (RuntimeException $e) {
+            // don't care about session errors.
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return $value;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return string
+     */
+    protected function getHolderClasses($name)
+    {
+        /*
+       * Get errors from session:
+       */
+        /** @var MessageBag $errors */
+        $errors  = Session::get('errors');
+        $classes = 'form-group';
+
+        if (!is_null($errors) && $errors->has($name)) {
+            $classes = 'form-group has-error has-feedback';
+        }
+
+        return $classes;
+    }
+
+    /**
+     * @param $name
+     * @param $options
+     *
+     * @return mixed
+     */
+    protected function label($name, $options)
+    {
+        if (isset($options['label'])) {
+            return $options['label'];
+        }
+
+        return trans('form.' . $name);
 
     }
 }

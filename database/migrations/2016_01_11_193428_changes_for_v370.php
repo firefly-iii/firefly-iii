@@ -12,6 +12,9 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV370
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 class ChangesForV370 extends Migration
 {

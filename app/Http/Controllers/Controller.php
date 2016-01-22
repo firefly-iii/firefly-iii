@@ -57,7 +57,7 @@ class Controller extends BaseController
             $localeconv      = [
                 'mon_decimal_point' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL)),
                 'mon_thousands_sep' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL)),
-                'frac_digits'       => $numberFormatter->getAttribute(NumberFormatter::MAX_FRACTION_DIGITS)
+                'frac_digits'       => $numberFormatter->getAttribute(NumberFormatter::MAX_FRACTION_DIGITS),
             ];
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);

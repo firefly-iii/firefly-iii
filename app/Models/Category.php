@@ -29,6 +29,7 @@ class Category extends Model
 
     protected $fillable = ['user_id', 'name'];
     protected $hidden   = ['encrypted'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param array $fields
@@ -56,15 +57,6 @@ class Category extends Model
 
         return $category;
 
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**

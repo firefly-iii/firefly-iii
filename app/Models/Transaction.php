@@ -33,8 +33,10 @@ class Transaction extends Model
             'account_id'             => 'required|exists:accounts,id',
             'transaction_journal_id' => 'required|exists:transaction_journals,id',
             'description'            => 'between:1,255',
-            'amount'                 => 'required|numeric'
+            'amount'                 => 'required|numeric',
         ];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+
     use SoftDeletes, ValidatingTrait;
 
     /**
@@ -53,14 +55,6 @@ class Transaction extends Model
     public function getAmountAttribute($value)
     {
         return $value;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
