@@ -1,3 +1,4 @@
+/* global $, addNewTrigger, addNewAction, actionCount, triggerCount */
 /*
  * edit.js
  * Copyright (C) 2016 Sander Dorigo
@@ -11,10 +12,10 @@
 $(function () {
     "use strict";
     console.log("edit");
-    if (triggerCount == 0) {
+    if (triggerCount === 0) {
         addNewTrigger();
     }
-    if (actionCount == 0) {
+    if (actionCount === 0) {
         addNewAction();
     }
 
