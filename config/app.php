@@ -221,7 +221,7 @@ return [
         'ExpandedForm' => 'FireflyIII\Support\Facades\ExpandedForm',
         'Entrust'      => 'Zizaco\Entrust\EntrustFacade',
         'Input'        => 'Illuminate\Support\Facades\Input',
-
+        'Google2FA'    => 'PragmaRX\Google2FA\Vendor\Laravel\Facade',
 
     ],
 
