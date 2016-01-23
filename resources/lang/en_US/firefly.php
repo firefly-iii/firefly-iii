@@ -302,6 +302,15 @@ return [
     'edit_currency'                          => 'Edit currency ":name"',
     'store_currency'                         => 'Store new currency',
     'update_currency'                        => 'Update currency',
+    'new_default_currency'                   => ':name is now the default currency.',
+    'cannot_delete_currency'                 => 'Cannot delete :name because there are still transactions attached to it!',
+    'deleted_currency'                       => 'Currency :name deleted',
+    'created_currency'                       => 'Currency :name created',
+    'updated_currency'                       => 'Currency :name updated',
+    'ask_site_owner'                         => 'Please ask :owner to add, remove or edit currencies.',
+    'currencies_intro'                       => 'Firefly III supports various currencies which you can set and enable here.',
+    'make_default_currency'                  => 'make default',
+    'default_currency'                       => 'default',
 
     // new user:
     'submit'                                 => 'Submit',
