@@ -47,7 +47,7 @@ class SetCategory implements ActionInterface
         $name     = $this->action->action_value;
         $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => Auth::user()->id]);
         Log::debug('Will set category "' . $name . '" (#' . $category->id . ') on journal #' . $this->journal->id . '.');
-        $this->journal->categories()->save($category);
+        $this->journal->categories()->sync([$category->id]);
 
         return true;
     }
