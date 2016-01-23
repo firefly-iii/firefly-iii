@@ -38,14 +38,12 @@ then
             # run it!
             echo "Now running $firstFile"
             phpunit --verbose $firstFile
-            exit $?
         fi
         if [ -f "$secondFile" ]
         then
             # run it!
             echo "Now running $secondFile"
             phpunit --verbose $secondFile
-            exit $?
         fi
 
 

@@ -17,10 +17,13 @@ class ChartReportControllerTest extends TestCase
      */
     public function testYearInOut()
     {
-//        $this->be($this->user());
-//        $response = $this->call('GET', '/chart/report/in-out/default/20150101/20151231/1');
-//        $this->assertEquals(200, $response->status());
-        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
+        $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
+        $repository->shouldReceive('spentPerMonth')->once()->andReturn([]);
+        $repository->shouldReceive('earnedPerMonth')->once()->andReturn([]);
+
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/report/in-out/default/20150101/20151231/1');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
@@ -28,9 +31,12 @@ class ChartReportControllerTest extends TestCase
      */
     public function testYearInOutSummarized()
     {
-//        $this->be($this->user());
-//        $response = $this->call('GET', '/chart/report/in-out-sum/default/20150101/20151231/1');
-//        $this->assertEquals(200, $response->status());
-        $this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
+        $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
+        $repository->shouldReceive('spentPerMonth')->once()->andReturn([]);
+        $repository->shouldReceive('earnedPerMonth')->once()->andReturn([]);
+
+        $this->be($this->user());
+        $response = $this->call('GET', '/chart/report/in-out-sum/default/20150101/20151231/1');
+        $this->assertEquals(200, $response->status());
     }
 }

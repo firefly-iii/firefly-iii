@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Input;
 use Log;
 use Preferences;
+use Request as RequestFacade;
 use Session;
 use View;
 
@@ -57,8 +58,9 @@ class CsvController extends Controller
     public function columnRoles()
     {
 
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account', 'csv-delimiter'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account', 'csv-specifix', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
+            Log::error('Could not recover upload.');
             Session::flash('warning', 'Could not recover upload.');
 
             return redirect(route('csv.index'));
@@ -122,13 +124,18 @@ class CsvController extends Controller
         }
 
         $result = json_encode($data, JSON_PRETTY_PRINT);
-        $name   = 'csv-configuration-' . date('Y-m-d') . '.json';
+        $name   = sprintf('"%s"', addcslashes('csv-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
-        header('Content-disposition: attachment; filename=' . $name);
-        header('Content-type: application/json');
-        echo $result;
+        RequestFacade::header('Content-disposition: attachment; filename=' . $name);
+        RequestFacade::header('Content-Type: application/json');
+        RequestFacade::header('Content-Description: File Transfer');
+        RequestFacade::header('Connection: Keep-Alive');
+        RequestFacade::header('Expires: 0');
+        RequestFacade::header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        RequestFacade::header('Pragma: public');
+        RequestFacade::header('Content-Length: ' . strlen($result));
 
-        return '';
+        return $result;
     }
 
     /**
@@ -136,6 +143,13 @@ class CsvController extends Controller
      */
     public function downloadConfigPage()
     {
+        $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
+
+            return redirect(route('csv.index'));
+        }
+
         $subTitle = trans('firefly.csv_download_config_title');
 
         return view('csv.download-config', compact('subTitle'));
@@ -266,6 +280,8 @@ class CsvController extends Controller
         try {
             $options = $this->wizard->showOptions($this->data->getMap());
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+
             return view('error', ['message' => $e->getMessage()]);
         }
 
