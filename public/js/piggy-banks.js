@@ -72,7 +72,7 @@ function stopSorting() {
         var id = holder.data('id');
         order.push(id);
     });
-    $.post('/piggy-banks/sort', {_token: token, order: order}).success(function () {
+    $.post('piggy-banks/sort', {_token: token, order: order}).success(function () {
         $('.loadSpin').removeClass('fa fa-refresh fa-spin');
     });
 }
