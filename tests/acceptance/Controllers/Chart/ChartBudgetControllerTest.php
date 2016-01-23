@@ -62,8 +62,13 @@ class ChartBudgetControllerTest extends TestCase
     public function testMultiYear()
     {
 
+        $budget                = new Budget;
+        $budget->id            = 1;
+        $budget->dateFormatted = '2015';
+        $budget->budgeted      = 120;
+
         $repository = Mockery::mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('getBudgetedPerYear')->once()->andReturn(new Collection);
+        $repository->shouldReceive('getBudgetedPerYear')->once()->andReturn(new Collection([$budget]));
         $repository->shouldReceive('getBudgetsAndExpensesPerYear')->once()->andReturn([]);
 
         $this->app->instance('FireflyIII\Repositories\Budget\BudgetRepositoryInterface', $repository);
