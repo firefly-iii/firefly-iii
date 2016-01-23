@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -163,6 +163,7 @@ return [
 //        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'TwigBridge\ServiceProvider',
+        'PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider',
 
     ],
 

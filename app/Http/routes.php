@@ -7,6 +7,8 @@ Route::group(
     // Authentication Routes...
     Route::get('/login', 'Auth\AuthController@showLoginForm');
     Route::post('/login', 'Auth\AuthController@login');
+    Route::get('/verify_token', ['uses' => 'Auth\AuthController@showVerifyTokenForm', 'as' => 'verify_token']);
+    Route::post('/verify_token', ['uses' => 'Auth\AuthController@verifyToken', 'as' => 'postVerify_token']);
     Route::get('/logout', 'Auth\AuthController@logout');
 
     // Registration Routes...
@@ -239,9 +241,12 @@ Route::group(
      */
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'profile.change-password']);
+    Route::get('/profile/two-factor-auth', ['uses' => 'ProfileController@twoFactorAuth', 'as' => 'profile.two-factor-auth']);
     Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'profile.delete-account']);
     Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account-post']);
     Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
+    Route::post('/profile/two-factor-auth', ['uses' => 'ProfileController@postTwoFactorAuth', 'as' => 'profile.two-factor-auth-post']);
+    Route::post('/profile/validate-qr-code', ['uses' => 'ProfileController@postValidateQrCode', 'as' => 'profile.validate-qr-code']);
 
     /**
      * Report Controller

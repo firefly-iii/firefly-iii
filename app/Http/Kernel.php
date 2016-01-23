@@ -3,6 +3,7 @@
 namespace FireflyIII\Http;
 
 use FireflyIII\Http\Middleware\Authenticate;
+use FireflyIII\Http\Middleware\TwoFactorAuthenticate;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\Range;
@@ -56,6 +57,7 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
+                TwoFactorAuthenticate::class,
             ],
             'web-auth-range' => [
                 EncryptCookies::class,
@@ -64,6 +66,7 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
+                TwoFactorAuthenticate::class,
                 Range::class,
                 Binder::class,
             ],

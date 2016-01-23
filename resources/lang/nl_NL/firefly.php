@@ -179,6 +179,10 @@ return [
     'password_changed'                       => 'Je wachtwoord is veranderd!',
     'should_change'                          => 'Vul ook echt een ander wachtwoord in.',
     'invalid_password'                       => 'Ongeldig wachtwoord!',
+    'two_factor_auth'                        => 'Tweetrapsverificatie',
+    'two_factor_auth_settings_saved'         => 'Tweetrapsverificatie instellingen opgeslagen',
+    'two_factor_auth_settings'               => 'Tweetrapsverificatie instellen',
+    'enable_two_factor_auth'                 => 'Tweetrapsverificatie inschakelen',
 
 
     // attachments

@@ -7,6 +7,113 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "app/Http/routes.php",
+			"settings":
+			{
+				"buffer_size": 20528,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/PreferencesController.php",
+			"settings":
+			{
+				"buffer_size": 2569,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "{% extends \"./layout/default.twig\" %}\n\n{% block breadcrumbs %}\n    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}\n{% endblock %}\n\n{% block content %}\n    <div class=\"row\">\n        <div class=\"col-lg-6 col-lg-offset-3 col-md-6 col-sm-12\">\n            <div class=\"box box-primary\">\n                <div class=\"box-header with-border\">\n                    <h3 class=\"box-title\">Options</h3>\n                </div>\n                <div class=\"box-body\">\n                    <ul>\n                        <li><a href=\"{{ route('profile.change-password') }}\">{{ 'change_your_password'|_ }}</a></li>\n                        <li><a href=\"{{ route('profile.set-tow-factor-authentication') }}\">{{ 'set_two_factor_authentication'|_ }}</a></li>\n                        <li><a class=\"text-danger\" href=\"{{ route('profile.delete-account') }}\">{{ 'delete_account'|_ }}</a></li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n{% endblock %}\n",
+			"file": "resources/views/profile/index.twig",
+			"file_size": 871,
+			"file_write_time": 130973570727601347,
+			"settings":
+			{
+				"buffer_size": 988,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "resources/views/profile/set-two-factor-authentication.twig",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/CsvController.php",
+			"settings":
+			{
+				"buffer_size": 14501,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/TransactionController.php",
+			"settings":
+			{
+				"buffer_size": 13767,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "resources/views/transactions/index.twig",
+			"settings":
+			{
+				"buffer_size": 792,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "resources/views/list/journals.twig",
+			"settings":
+			{
+				"buffer_size": 6154,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "config/app.php",
+			"settings":
+			{
+				"buffer_size": 9466,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Repositories/Journal/JournalRepository.php",
+			"settings":
+			{
+				"buffer_size": 13484,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Repositories/Journal/JournalRepositoryInterface.php",
+			"settings":
+			{
+				"buffer_size": 2410,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/RuleController.php",
+			"settings":
+			{
+				"buffer_size": 14207,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "resources/views/csv/index.twig",
+			"settings":
+			{
+				"buffer_size": 3961,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -15,12 +122,12 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"last_filter": "",
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 400.0
 	},
 	"console":
 	{
@@ -40,14 +147,24 @@
 	},
 	"expanded_folders":
 	[
-		"/G/xampp2/htdocs/firefly-iii"
+		"/G/xampp2/htdocs/firefly-iii",
+		"/G/xampp2/htdocs/firefly-iii/app",
+		"/G/xampp2/htdocs/firefly-iii/app/Helpers",
+		"/G/xampp2/htdocs/firefly-iii/app/Helpers/Csv",
+		"/G/xampp2/htdocs/firefly-iii/app/Http",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers",
+		"/G/xampp2/htdocs/firefly-iii/resources",
+		"/G/xampp2/htdocs/firefly-iii/resources/views",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/list",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/profile",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/transactions"
 	],
 	"file_history":
 	[
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -61,6 +178,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"what"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -78,14 +196,404 @@
 	"groups":
 	[
 		{
+			"selected": 3,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/Http/routes.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 20528,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3124.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/Http/Controllers/PreferencesController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2569,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "resources/views/profile/index.twig",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 988,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								733,
+								733
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "resources/views/profile/set-two-factor-authentication.twig",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "app/Http/Controllers/CsvController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14501,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 2070.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "app/Http/Controllers/TransactionController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13767,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2700.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "resources/views/transactions/index.twig",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 792,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								67,
+								136
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "resources/views/list/journals.twig",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6154,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 945.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "config/app.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9466,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9453,
+								9453
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 2610.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "app/Repositories/Journal/JournalRepository.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13484,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 900.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "app/Repositories/Journal/JournalRepositoryInterface.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2410,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "app/Http/Controllers/RuleController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "resources/views/csv/index.twig",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3961,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -122,7 +630,7 @@
 	"project": "firefly-iii.sublime-project",
 	"replace":
 	{
-		"height": 0.0
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -131,6 +639,22 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"transactions/index",
+				"resources\\views\\transactions\\index.twig"
+			],
+			[
+				"journals.t",
+				"resources\\views\\list\\journals.twig"
+			],
+			[
+				"journalrepo",
+				"app\\Repositories\\Journal\\JournalRepository.php"
+			],
+			[
+				"routes",
+				"app\\Http\\routes.php"
+			]
 		],
 		"width": 0.0
 	},
@@ -164,7 +688,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 368.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -18,6 +18,8 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property string                                                                                $reset
  * @property boolean                                                                               $blocked
  * @property string                                                                                $blocked_code
+ * @property boolean                                                                               $is_2fa_enabled
+ * @property string                                                                                $secret_key
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[]            $accounts
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]         $attachments
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]                $tags
@@ -45,7 +47,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'is_2fa_enabled', 'secret_key'];
 
 
     /**
@@ -54,6 +56,14 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function is2faEnabled()
+    {
+        return $this->is_2fa_enabled == 1;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

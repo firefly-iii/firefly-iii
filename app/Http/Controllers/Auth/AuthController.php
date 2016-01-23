@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Lang;
+use PragmaRX\Google2FA\Contracts\Google2FA;
 use Log;
 use Mail;
 use Request as Rq;
@@ -40,7 +41,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('guest', ['except' => ['logout', 'showVerifyTokenForm', 'verifyToken']]);
         parent::__construct();
     }
 
@@ -167,6 +168,48 @@ class AuthController extends Controller
         $host = Rq::getHttpHost();
 
         return view('auth.register', compact('host'));
+    }
+
+    /**
+     * Ask the 2FA token.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showVerifyTokenForm()
+    {
+        return view('auth.verify_token');
+    }
+
+    /**
+     * Validate the 2FA token.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyToken(Request $request, Google2FA $google2fa)
+    {
+        $code = $request->get('code');
+
+        $valid = $google2fa->verifyKey(Auth::user()->secret_key, $code);
+
+        if($valid)
+        {
+            
+            Session::set('auth.2fa_passed', true);            
+
+            return redirect()->intended($this->redirectPath());
+        }
+        else
+        {
+            Session::flash('warning', trans('firefly.invalid_code'));
+
+            return redirect()->back()            
+            ->withErrors([
+                'code' => $this->getFailedLoginMessage(),
+            ]);
+
+            //return view('auth.verify_token');
+        }
+
     }
 
     /**
