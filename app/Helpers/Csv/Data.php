@@ -214,7 +214,7 @@ class Data
      *
      * @param array $specifix
      */
-    public function setSpecifix($specifix)
+    public function setSpecifix(array $specifix)
     {
         Session::put('csv-specifix', $specifix);
         $this->specifix = $specifix;

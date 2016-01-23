@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => env('MAIL_USERNAME', null), 'name' => 'Firefly III Mailer'],
+    'from' => ['address' => env('MAIL_FROM', null), 'name' => 'Firefly III Mailer'],
 
     /*
     |--------------------------------------------------------------------------

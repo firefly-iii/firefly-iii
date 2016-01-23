@@ -9,18 +9,18 @@
         <div class="col-lg-12 col-sm-12 col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Currencies</h3>
+                    <h3 class="box-title">{{ 'currencies'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <p class="text-info">
-                        Firefly III supports various currencies which you can set and enable here.
+                        {{ 'currencies_intro'|_ }}
                     </p>
                     {% if currencies|length > 0 %}
                         <table class="table table-hover">
                             <thead>
                             <tr>
                                 <th>&nbsp;</th>
-                                <th colspan="2">Currency</th>
+                                <th colspan="2">{{ 'currency'|_ }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -35,9 +35,9 @@
                                     <td>{{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})</td>
                                     <td>
                                         {% if currency.id == defaultCurrency.id %}
-                                            <span class="label label-success">default</span>
+                                            <span class="label label-success">{{ 'default_currency'|_ }}</span>
                                         {% else %}
-                                            <a class="btn btn-info btn-xs" href="{{ route('currency.default',currency.id) }}">make default</a>
+                                            <a class="btn btn-info btn-xs" href="{{ route('currency.default',currency.id) }}">{{ 'make_default_currency'|_ }}</a>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -47,7 +47,7 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <a class="btn btn-success pull-right" href="{{ route('currency.create') }}">Add another currency</a>
+                    <a class="btn btn-success pull-right" href="{{ route('currency.create') }}">{{ 'create_currency'|_ }}</a>
                 </div>
             </div>
         </div>
