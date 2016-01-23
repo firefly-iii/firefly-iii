@@ -22,11 +22,9 @@ class ChartBudgetControllerTest extends TestCase
     public function testBudget()
     {
 
-        $repository = Mockery::mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $repository->shouldReceive('getExpensesPerMonth')->once()->andReturn(new Collection([new Budget]));
         $repository->shouldReceive('getFirstBudgetLimitDate')->once()->andReturn(new Carbon);
-
-        $this->app->instance('FireflyIII\Repositories\Budget\BudgetRepositoryInterface', $repository);
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/budget/1');
@@ -67,12 +65,9 @@ class ChartBudgetControllerTest extends TestCase
         $budget->dateFormatted = '2015';
         $budget->budgeted      = 120;
 
-        $repository = Mockery::mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $repository->shouldReceive('getBudgetedPerYear')->once()->andReturn(new Collection([$budget]));
         $repository->shouldReceive('getBudgetsAndExpensesPerYear')->once()->andReturn([]);
-
-        $this->app->instance('FireflyIII\Repositories\Budget\BudgetRepositoryInterface', $repository);
-
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/budget/multi-year/default/20150101/20160101/1/1');
@@ -85,10 +80,8 @@ class ChartBudgetControllerTest extends TestCase
      */
     public function testYear()
     {
-        $repository = Mockery::mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $repository->shouldReceive('getBudgetsAndExpensesPerMonth')->once()->andReturn([]);
-
-        $this->app->instance('FireflyIII\Repositories\Budget\BudgetRepositoryInterface', $repository);
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/budget/year/default/20150101/20151231/1');

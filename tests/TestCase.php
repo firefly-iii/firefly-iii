@@ -31,19 +31,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     /**
      * @return User
      */
-    public function user()
-    {
-        return User::find(1);
-    }
-
-    /**
-     * @return User
-     */
     public function emptyUser()
     {
         return User::find(2);
     }
-
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -65,7 +56,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
                 touch($original);
                 Artisan::call('migrate', ['--seed' => true]);
             }
-            
+
             copy($original, $copy);
         } else {
             if (file_exists($copy)) {
@@ -97,6 +88,29 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         //$original = __DIR__.'/../storage/database/testing.db';
         //unlink($original);
 
+    }
+
+    /**
+     * @return User
+     */
+    public function user()
+    {
+        return User::find(1);
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return \Mockery\MockInterface
+     */
+    protected function mock($class)
+    {
+        $object = Mockery::mock($class);
+
+
+        $this->app->instance($class, $object);
+
+        return $object;
     }
 
 

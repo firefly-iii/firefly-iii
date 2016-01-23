@@ -41,10 +41,8 @@ class ChartCategoryControllerTest extends TestCase
      */
     public function testEarnedInPeriod()
     {
-        $repository = Mockery::mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $repository->shouldReceive('earnedForAccountsPerMonth')->once()->andReturn(new Collection);
-
-        $this->app->instance('FireflyIII\Repositories\Category\CategoryRepositoryInterface', $repository);
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/category/earned-in-period/default/20150101/20151231/1');
@@ -56,12 +54,9 @@ class ChartCategoryControllerTest extends TestCase
      */
     public function testFrontpage()
     {
-        $repository = Mockery::mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $repository->shouldReceive('spentForAccountsPerMonth')->once()->andReturn(new Collection);
         $repository->shouldReceive('sumSpentNoCategory')->once()->andReturn('120');
-
-        $this->app->instance('FireflyIII\Repositories\Category\CategoryRepositoryInterface', $repository);
-
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/category/frontpage');
@@ -73,10 +68,8 @@ class ChartCategoryControllerTest extends TestCase
      */
     public function testMultiYear()
     {
-        $repository = Mockery::mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $repository->shouldReceive('listMultiYear')->once()->andReturn(new Collection);
-
-        $this->app->instance('FireflyIII\Repositories\Category\CategoryRepositoryInterface', $repository);
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/category/multi-year/default/20150101/20151231/1/1');
@@ -101,10 +94,8 @@ class ChartCategoryControllerTest extends TestCase
     {
 
 
-        $repository = Mockery::mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $repository->shouldReceive('spentForAccountsPerMonth')->once()->andReturn(new Collection);
-
-        $this->app->instance('FireflyIII\Repositories\Category\CategoryRepositoryInterface', $repository);
 
         $this->be($this->user());
         $response = $this->call('GET', '/chart/category/spent-in-period/default/20150101/20151231/1');
