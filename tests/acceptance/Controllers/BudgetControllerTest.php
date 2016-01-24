@@ -20,7 +20,6 @@ class BudgetControllerTest extends TestCase
     {
         $args = [
             'amount' => 1200,
-            '_token' => Session::token(),
         ];
         $this->be($this->user());
 
@@ -55,13 +54,8 @@ class BudgetControllerTest extends TestCase
     {
         $this->be($this->user());
 
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['budgets.delete.url' => 'http://localhost']);
-
-        $response = $this->call('POST', '/budgets/destroy/2', $args);
+        $response = $this->call('POST', '/budgets/destroy/2');
         $this->assertSessionHas('success');
         $this->assertEquals(302, $response->status());
     }
@@ -103,7 +97,6 @@ class BudgetControllerTest extends TestCase
     {
         $args = [
             'amount' => 1200,
-            '_token' => Session::token(),
         ];
         $this->be($this->user());
 
@@ -129,7 +122,6 @@ class BudgetControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['budgets.create.url' => 'http://localhost']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'Some kind of test budget.',
         ];
 
@@ -146,7 +138,6 @@ class BudgetControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['budgets.edit.url' => 'http://localhost']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'Some kind of test budget.',
         ];
 

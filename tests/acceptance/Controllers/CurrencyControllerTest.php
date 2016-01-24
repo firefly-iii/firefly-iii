@@ -51,15 +51,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['currency.delete.url' => 'http://localhost/currency']);
-
-
         $this->be($this->user());
-        $response = $this->call('POST', '/currency/destroy/3', $args);
+        $response = $this->call('POST', '/currency/destroy/3');
         $this->assertSessionHas('success');
         $this->assertRedirectedToRoute('currency.index');
         $this->assertEquals(302, $response->status());
@@ -94,7 +88,6 @@ class CurrencyControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['currency.create.url' => 'http://localhost/currency']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'New Euro.',
             'symbol' => 'Y',
             'code'   => 'IUY',
@@ -118,7 +111,6 @@ class CurrencyControllerTest extends TestCase
             'name'   => 'New Euro.',
             'symbol' => 'Y',
             'code'   => 'IUY',
-            '_token' => Session::token(),
         ];
         $this->be($this->user());
 

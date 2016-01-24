@@ -42,10 +42,7 @@ class BillControllerTest extends TestCase
     {
         $this->session(['bills.delete.url' => 'http://localhost']);
         $this->be($this->user());
-        $args     = [
-            '_token' => Session::token(),
-        ];
-        $response = $this->call('POST', '/bills/destroy/2', $args);
+        $response = $this->call('POST', '/bills/destroy/2');
         $this->assertSessionHas('success');
         $this->assertEquals(302, $response->status());
     }
@@ -100,7 +97,6 @@ class BillControllerTest extends TestCase
         $args = [
             'name'                          => 'Some test',
             'match'                         => 'words',
-            '_token'                        => Session::token(),
             'amount_min'                    => 10,
             'amount_max'                    => 100,
             'amount_currency_id_amount_min' => 1,
@@ -127,7 +123,6 @@ class BillControllerTest extends TestCase
             'id'                            => 1,
             'name'                          => 'Some test',
             'match'                         => 'words',
-            '_token'                        => Session::token(),
             'amount_min'                    => 10,
             'amount_max'                    => 100,
             'amount_currency_id_amount_min' => 1,

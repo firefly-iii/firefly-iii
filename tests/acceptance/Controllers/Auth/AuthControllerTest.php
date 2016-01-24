@@ -74,7 +74,6 @@ class AuthControllerTest extends TestCase
             'email'    => 'thegrumpydictator@gmail.com',
             'password' => 'james',
             'remember' => 1,
-            '_token'   => Session::token(),
         ];
         $response = $this->call('POST', '/login', $args);
         $this->assertEquals(302, $response->status());
@@ -94,7 +93,6 @@ class AuthControllerTest extends TestCase
             'email'                 => 'thegrumpydictator+test@gmail.com',
             'password'              => 'james123',
             'password_confirmation' => 'james123',
-            '_token'                => Session::token(),
         ];
         $response = $this->call('POST', '/register', $args);
         $this->assertEquals(302, $response->status());

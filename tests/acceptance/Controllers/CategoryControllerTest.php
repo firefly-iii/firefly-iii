@@ -41,13 +41,9 @@ class CategoryControllerTest extends TestCase
     {
         $this->be($this->user());
 
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['categories.delete.url' => 'http://localhost']);
 
-        $response = $this->call('POST', '/categories/destroy/2', $args);
+        $response = $this->call('POST', '/categories/destroy/2');
         $this->assertSessionHas('success');
         $this->assertEquals(302, $response->status());
     }
@@ -84,6 +80,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::show
+     * @covers FireflyIII\Http\Controllers\Controller::getSumOfRange
      */
     public function testShow()
     {
@@ -111,7 +108,6 @@ class CategoryControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['categories.create.url' => 'http://localhost']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'Some kind of test cat.',
         ];
 
@@ -128,7 +124,6 @@ class CategoryControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['categories.edit.url' => 'http://localhost']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'Some kind of test category.',
         ];
 

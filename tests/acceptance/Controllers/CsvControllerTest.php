@@ -112,7 +112,6 @@ class CsvControllerTest extends TestCase
                 6 => 'budget-name',
             ],
             'map'    => [],
-            '_token' => Session::token(),
         ];
 
         // create session data:
@@ -160,7 +159,6 @@ class CsvControllerTest extends TestCase
         $this->be($this->user());
         $this->session($this->getSessionData());
         $postData = [
-            '_token' => Session::token(),
             'mapping'
                      => [0 => ['NL11XOLA6707795988' => '1',],
                          1 => ['NL10TAPT8906262744' => '0', 'NL93UPSZ1261542703' => '0', 'NL86IHAL3264575116' => '0', 'NL63BKBO9993148806' => '0',
@@ -193,7 +191,6 @@ class CsvControllerTest extends TestCase
 
         $file = new UploadedFile(storage_path('build/test-upload.csv'), 'test-file.csv', 'text/plain', 446);
         $args = [
-            '_token'             => Session::token(),
             'date_format'        => 'Ymd',
             'csv_import_account' => 1,
         ];

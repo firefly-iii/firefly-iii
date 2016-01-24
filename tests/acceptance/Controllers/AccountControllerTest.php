@@ -38,14 +38,8 @@ class AccountControllerTest extends TestCase
     public function testDestroy()
     {
         $this->be($this->user());
-
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['accounts.delete.url' => 'http://localhost']);
-
-        $response = $this->call('POST', '/accounts/destroy/6', $args);
+        $response = $this->call('POST', '/accounts/destroy/6');
         $this->assertSessionHas('success');
         $this->assertEquals(302, $response->status());
     }
@@ -89,7 +83,6 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['accounts.create.url' => 'http://localhost']);
         $args = [
-            '_token'                            => Session::token(),
             'name'                              => 'Some kind of test account.',
             'what'                              => 'asset',
             'amount_currency_id_virtualBalance' => 1,
@@ -112,7 +105,6 @@ class AccountControllerTest extends TestCase
             'id'     => 1,
             'name'   => 'TestData new name',
             'active' => 1,
-            '_token' => Session ::token(),
         ];
         $this->be($this->user());
 

@@ -29,14 +29,8 @@ class AttachmentControllerTest extends TestCase
     public function testDestroy()
     {
         $this->be($this->user());
-
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['attachments.delete.url' => 'http://localhost']);
-
-        $response = $this->call('POST', '/attachment/destroy/2', $args);
+        $response = $this->call('POST', '/attachment/destroy/2');
         $this->assertEquals(302, $response->status());
     }
 
@@ -81,7 +75,6 @@ class AttachmentControllerTest extends TestCase
             'title'       => 'New title',
             'description' => 'New descr',
             'notes'       => 'New notes',
-            '_token'      => Session::token(),
         ];
         $this->be($this->user());
 

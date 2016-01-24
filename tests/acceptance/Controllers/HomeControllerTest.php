@@ -20,7 +20,6 @@ class HomeControllerTest extends TestCase
         $args = [
             'start'  => '2012-01-01',
             'end'    => '2012-04-01',
-            '_token' => Session::token(),
         ];
 
         // if date range is > 50, should have flash.
@@ -41,6 +40,7 @@ class HomeControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::index
+     * @covers FireflyIII\Http\Controllers\Controller::__construct
      */
     public function testIndex()
     {
