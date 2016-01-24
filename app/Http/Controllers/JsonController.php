@@ -35,11 +35,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param RuleAction|null $action
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function action(RuleAction $action = null)
+    public function action()
     {
         $count   = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
         $keys    = array_keys(Config::get('firefly.rule-actions'));
@@ -47,8 +45,8 @@ class JsonController extends Controller
         foreach ($keys as $key) {
             $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
         }
+        $view = view('rules.partials.action', compact('actions', 'count'))->render();
 
-        $view = view('rules.partials.action', compact('actions', 'action', 'count'))->render();
 
 
         return Response::json(['html' => $view]);
@@ -301,11 +299,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param RuleTrigger|null $trigger
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function trigger(RuleTrigger $trigger = null)
+    public function trigger()
     {
         $count    = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
         $keys     = array_keys(Config::get('firefly.rule-triggers'));
@@ -316,7 +312,7 @@ class JsonController extends Controller
             }
         }
 
-        $view = view('rules.partials.trigger', compact('triggers', 'trigger', 'count'))->render();
+        $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
 
 
         return Response::json(['html' => $view]);
