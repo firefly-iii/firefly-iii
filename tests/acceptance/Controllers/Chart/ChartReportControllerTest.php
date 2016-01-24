@@ -22,8 +22,8 @@ class ChartReportControllerTest extends TestCase
         $repository->shouldReceive('earnedPerMonth')->once()->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/report/in-out/default/20150101/20151231/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/report/in-out/default/20150101/20151231/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -36,7 +36,7 @@ class ChartReportControllerTest extends TestCase
         $repository->shouldReceive('earnedPerMonth')->once()->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/report/in-out-sum/default/20150101/20151231/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/report/in-out-sum/default/20150101/20151231/1');
+        $this->assertResponseStatus(200);
     }
 }

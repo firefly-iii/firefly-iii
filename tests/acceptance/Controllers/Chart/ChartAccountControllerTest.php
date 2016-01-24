@@ -18,9 +18,9 @@ class ChartAccountControllerTest extends TestCase
     public function testExpenseAccounts()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/account/expense');
+        $this->call('GET', '/chart/account/expense');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -29,9 +29,9 @@ class ChartAccountControllerTest extends TestCase
     public function testFrontpage()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/account/frontpage');
+        $this->call('GET', '/chart/account/frontpage');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -40,9 +40,9 @@ class ChartAccountControllerTest extends TestCase
     public function testReport()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/account/report/default/20160101/20160131/1');
+        $this->call('GET', '/chart/account/report/default/20160101/20160131/1');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -51,8 +51,8 @@ class ChartAccountControllerTest extends TestCase
     public function testSingle()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/account/1');
+        $this->call('GET', '/chart/account/1');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 }

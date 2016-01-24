@@ -20,9 +20,9 @@ class HelpControllerTest extends TestCase
     public function testShow()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/help/index');
+        $this->call('GET', '/help/index');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -31,8 +31,8 @@ class HelpControllerTest extends TestCase
     public function testShowNoRoute()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/help/indxxex');
+        $this->call('GET', '/help/indxxex');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 }

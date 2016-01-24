@@ -20,8 +20,8 @@ class BillControllerTest extends TestCase
     public function testCreate()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/bills/create');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/bills/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -31,8 +31,8 @@ class BillControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/bills/delete/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/bills/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -42,9 +42,9 @@ class BillControllerTest extends TestCase
     {
         $this->session(['bills.delete.url' => 'http://localhost']);
         $this->be($this->user());
-        $response = $this->call('POST', '/bills/destroy/2');
+        $this->call('POST', '/bills/destroy/2');
         $this->assertSessionHas('success');
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -53,8 +53,8 @@ class BillControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/bills/edit/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/bills/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -63,8 +63,8 @@ class BillControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/bills');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/bills');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -73,9 +73,9 @@ class BillControllerTest extends TestCase
     public function testRescan()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/bills/rescan/1');
+        $this->call('GET', '/bills/rescan/1');
         $this->assertSessionHas('success');
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -84,8 +84,8 @@ class BillControllerTest extends TestCase
     public function testShow()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/bills/show/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/bills/show/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -107,10 +107,10 @@ class BillControllerTest extends TestCase
         ];
 
         $this->be($this->user());
-        $response = $this->call('POST', '/bills/store', $args);
+        $this->call('POST', '/bills/store', $args);
         $this->assertSessionHas('success');
 
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -133,9 +133,9 @@ class BillControllerTest extends TestCase
         ];
 
         $this->be($this->user());
-        $response = $this->call('POST', '/bills/update/1', $args);
+        $this->call('POST', '/bills/update/1', $args);
         $this->assertSessionHas('success');
 
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 }

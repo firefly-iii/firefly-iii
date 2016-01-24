@@ -20,8 +20,8 @@ class CurrencyControllerTest extends TestCase
     public function testCreate()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/currency/create');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/currency/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -30,8 +30,8 @@ class CurrencyControllerTest extends TestCase
     public function testDefaultCurrency()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/currency/default/2');
-        $this->assertEquals(302, $response->status());
+        $this->call('GET', '/currency/default/2');
+        $this->assertResponseStatus(302);
         $this->assertRedirectedToRoute('currency.index');
         $this->assertSessionHas('success');
     }
@@ -42,8 +42,8 @@ class CurrencyControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/currency/delete/2');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/currency/delete/2');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -53,10 +53,10 @@ class CurrencyControllerTest extends TestCase
     {
         $this->session(['currency.delete.url' => 'http://localhost/currency']);
         $this->be($this->user());
-        $response = $this->call('POST', '/currency/destroy/3');
+        $this->call('POST', '/currency/destroy/3');
         $this->assertSessionHas('success');
         $this->assertRedirectedToRoute('currency.index');
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -65,8 +65,8 @@ class CurrencyControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/currency/edit/2');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/currency/edit/2');
+        $this->assertResponseStatus(200);
 
     }
 
@@ -76,8 +76,8 @@ class CurrencyControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/currency');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/currency');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -93,8 +93,8 @@ class CurrencyControllerTest extends TestCase
             'code'   => 'IUY',
         ];
 
-        $response = $this->call('POST', '/currency/store', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/currency/store', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
         $this->assertRedirectedToRoute('currency.index');
     }
@@ -114,8 +114,8 @@ class CurrencyControllerTest extends TestCase
         ];
         $this->be($this->user());
 
-        $response = $this->call('POST', '/currency/update/1', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/currency/update/1', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
         $this->assertRedirectedToRoute('currency.index');
 

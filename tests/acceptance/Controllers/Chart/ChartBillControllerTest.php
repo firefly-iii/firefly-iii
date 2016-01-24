@@ -19,9 +19,9 @@ class ChartBillControllerTest extends TestCase
     public function testFrontpage()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/bill/frontpage');
+        $this->call('GET', '/chart/bill/frontpage');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -30,8 +30,8 @@ class ChartBillControllerTest extends TestCase
     public function testSingle()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/bill/1');
+        $this->call('GET', '/chart/bill/1');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 }

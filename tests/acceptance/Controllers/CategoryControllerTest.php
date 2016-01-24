@@ -20,8 +20,8 @@ class CategoryControllerTest extends TestCase
     public function testCreate()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories/create');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -30,8 +30,8 @@ class CategoryControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories/delete/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -43,9 +43,9 @@ class CategoryControllerTest extends TestCase
 
         $this->session(['categories.delete.url' => 'http://localhost']);
 
-        $response = $this->call('POST', '/categories/destroy/2');
+        $this->call('POST', '/categories/destroy/2');
         $this->assertSessionHas('success');
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -54,8 +54,8 @@ class CategoryControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories/edit/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -64,8 +64,8 @@ class CategoryControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -74,8 +74,8 @@ class CategoryControllerTest extends TestCase
     public function testNoCategory()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories/list/noCategory');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories/list/noCategory');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -85,8 +85,8 @@ class CategoryControllerTest extends TestCase
     public function testShow()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories/show/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories/show/1');
+        $this->assertResponseStatus(200);
 
     }
 
@@ -96,8 +96,8 @@ class CategoryControllerTest extends TestCase
     public function testShowWithDate()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/categories/show/1/20150101');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/categories/show/1/20150101');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -111,8 +111,8 @@ class CategoryControllerTest extends TestCase
             'name'   => 'Some kind of test cat.',
         ];
 
-        $response = $this->call('POST', '/categories/store', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/categories/store', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
 
@@ -127,8 +127,8 @@ class CategoryControllerTest extends TestCase
             'name'   => 'Some kind of test category.',
         ];
 
-        $response = $this->call('POST', '/categories/update/1', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/categories/update/1', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
 }

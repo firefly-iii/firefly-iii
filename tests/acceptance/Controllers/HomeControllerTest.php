@@ -23,8 +23,8 @@ class HomeControllerTest extends TestCase
         ];
 
         // if date range is > 50, should have flash.
-        $response = $this->call('POST', '/daterange', $args);
-        $this->assertEquals(200, $response->status());
+        $this->call('POST', '/daterange', $args);
+        $this->assertResponseStatus(200);
         $this->assertSessionHas('warning', '91 days of data may take a while to load.');
     }
 
@@ -34,8 +34,8 @@ class HomeControllerTest extends TestCase
     public function testFlush()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/flush');
-        $this->assertEquals(302, $response->status());
+        $this->call('GET', '/flush');
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -45,7 +45,7 @@ class HomeControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/');
+        $this->assertResponseStatus(200);
     }
 }

@@ -21,8 +21,8 @@ class JsonControllerTest extends TestCase
     public function testAction()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/action');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/action');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -31,8 +31,8 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsPaid()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/box/bills-paid');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/box/bills-paid');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -41,8 +41,8 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsUnpaid()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/box/bills-unpaid');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/box/bills-unpaid');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -51,8 +51,8 @@ class JsonControllerTest extends TestCase
     public function testBoxIn()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/box/in');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/box/in');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -61,8 +61,8 @@ class JsonControllerTest extends TestCase
     public function testBoxOut()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/box/out');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/box/out');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -71,8 +71,8 @@ class JsonControllerTest extends TestCase
     public function testCategories()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/categories');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/categories');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -82,7 +82,7 @@ class JsonControllerTest extends TestCase
     {
         $this->be($this->user());
         $response = $this->call('POST', '/json/end-tour');
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
         $this->assertEquals('"true"', $response->content());
     }
 
@@ -92,8 +92,8 @@ class JsonControllerTest extends TestCase
     public function testExpenseAccounts()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/expense-accounts');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/expense-accounts');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -102,8 +102,8 @@ class JsonControllerTest extends TestCase
     public function testRevenueAccounts()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/revenue-accounts');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/revenue-accounts');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -112,8 +112,8 @@ class JsonControllerTest extends TestCase
     public function testTags()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/tags');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/tags');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -122,8 +122,8 @@ class JsonControllerTest extends TestCase
     public function testTour()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/tour');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/tour');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -138,8 +138,8 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('getJournalsOfType')->with($type)->once()->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/json/transaction-journals/deposit');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/transaction-journals/deposit');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -148,7 +148,7 @@ class JsonControllerTest extends TestCase
     public function testTrigger()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/json/trigger');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/json/trigger');
+        $this->assertResponseStatus(200);
     }
 }
