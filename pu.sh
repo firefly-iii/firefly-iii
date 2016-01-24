@@ -27,6 +27,7 @@ if [ -z "$1" ]
 then
     echo "Running all tests..."
     phpunit
+    result=$?
 fi
 
 # test selective..
@@ -43,12 +44,14 @@ then
             # run it!
             echo "Now running $firstFile"
             phpunit --verbose $firstFile
+            result=$?
         fi
         if [ -f "$secondFile" ]
         then
             # run it!
             echo "Now running $secondFile"
             phpunit --verbose $secondFile
+            result=$?
         fi
 
 
@@ -58,3 +61,5 @@ fi
 
 # restore .env file
 cp .env.local .env
+
+exit ${result}
