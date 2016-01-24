@@ -10,6 +10,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Role;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
@@ -29,6 +30,11 @@ class TestDataSeeder extends Seeder
     {
         $user      = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
         $emptyUser = User::create(['email' => 'thegrumpydictator+empty@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
+
+
+        $admin = Role::where('name', 'owner')->first();
+        $user->attachRole($admin);
+
 
         // create asset accounts for user #1.
         $this->createAssetAccounts($user);
