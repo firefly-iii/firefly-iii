@@ -55,6 +55,7 @@
                     </p>
                     {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
                     {{ ExpandedForm.checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
+                    {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
                 </div>
             </div>
 
