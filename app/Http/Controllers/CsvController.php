@@ -31,7 +31,7 @@ class CsvController extends Controller
     protected $wizard;
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

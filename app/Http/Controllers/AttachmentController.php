@@ -34,26 +34,6 @@ class AttachmentController extends Controller
         View::share('title', trans('firefly.attachments'));
     }
 
-
-    /**
-     * @param Attachment $attachment
-     *
-     * @return \Illuminate\View\View
-     */
-    public function edit(Attachment $attachment)
-    {
-        $subTitleIcon = 'fa-pencil';
-        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
-
-        // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('attachments.edit.fromUpdate') !== true) {
-            Session::put('attachments.edit.url', URL::previous());
-        }
-        Session::forget('attachments.edit.fromUpdate');
-
-        return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
-    }
-
     /**
      * @param Attachment $attachment
      *
@@ -116,6 +96,25 @@ class AttachmentController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(Attachment $attachment)
+    {
+        $subTitleIcon = 'fa-pencil';
+        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('attachments.edit.fromUpdate') !== true) {
+            Session::put('attachments.edit.url', URL::previous());
+        }
+        Session::forget('attachments.edit.fromUpdate');
+
+        return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
 
     /**

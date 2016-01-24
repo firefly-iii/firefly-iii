@@ -6,6 +6,7 @@ use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Input;
+use Log;
 use Preferences;
 use Session;
 use URL;
@@ -171,7 +172,8 @@ class CurrencyController extends Controller
         if (Auth::user()->hasRole('owner')) {
             $currency = $repository->store($data);
             Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
-
+        } else {
+            Log::error('User ' . Auth::user()->id . ' is not admin, but tried to store a currency.');
         }
 
         if (intval(Input::get('create_another')) === 1) {

@@ -23,10 +23,9 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /** @var string|\Symfony\Component\Translation\TranslatorInterface */
-    protected $monthFormat;
-
-    /** @var string|\Symfony\Component\Translation\TranslatorInterface */
     protected $monthAndDayFormat;
+    /** @var string|\Symfony\Component\Translation\TranslatorInterface */
+    protected $monthFormat;
 
     /**
      * Controller constructor.

@@ -81,23 +81,6 @@ class ProfileController extends Controller
     }
 
     /**
-     *
-     * @param string $old
-     * @param string $new1
-     *
-     * @return string|bool
-     */
-    protected function validatePassword($old, $new1)
-    {
-        if ($new1 == $old) {
-            return trans('firefly.should_change');
-        }
-
-        return true;
-
-    }
-
-    /**
      * @param DeleteAccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -130,6 +113,23 @@ class ProfileController extends Controller
         );
 
         return redirect(route('index'));
+    }
+
+    /**
+     *
+     * @param string $old
+     * @param string $new1
+     *
+     * @return string|bool
+     */
+    protected function validatePassword($old, $new1)
+    {
+        if ($new1 == $old) {
+            return trans('firefly.should_change');
+        }
+
+        return true;
+
     }
 
 

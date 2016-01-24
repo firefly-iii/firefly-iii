@@ -145,33 +145,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SCRI                              $repository
-     * @param Category                          $category
-     *
-     * @param                                   $date
-     *
-     * @return \Illuminate\View\View
-     */
-    public function showWithDate(SCRI $repository, Category $category, $date)
-    {
-        $carbon   = new Carbon($date);
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = Navigation::startOfPeriod($carbon, $range);
-        $end      = Navigation::endOfPeriod($carbon, $range);
-        $subTitle = $category->name;
-
-        $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page'));
-
-        $set      = $repository->getJournalsInRange($category, $page, $start, $end);
-        $count    = $repository->countJournalsInRange($category, $start, $end);
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
-        $journals->setPath('categories/show/' . $category->id . '/' . $date);
-
-        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
-    }
-
-    /**
      * @param SCRI     $repository
      * @param Category $category
      *
@@ -230,6 +203,33 @@ class CategoryController extends Controller
         }
 
         return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+    }
+
+    /**
+     * @param SCRI                              $repository
+     * @param Category                          $category
+     *
+     * @param                                   $date
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showWithDate(SCRI $repository, Category $category, $date)
+    {
+        $carbon   = new Carbon($date);
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = Navigation::startOfPeriod($carbon, $range);
+        $end      = Navigation::endOfPeriod($carbon, $range);
+        $subTitle = $category->name;
+
+        $hideCategory = true; // used in list.
+        $page         = intval(Input::get('page'));
+
+        $set      = $repository->getJournalsInRange($category, $page, $start, $end);
+        $count    = $repository->countJournalsInRange($category, $start, $end);
+        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+        $journals->setPath('categories/show/' . $category->id . '/' . $date);
+
+        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
     }
 
     /**
