@@ -21,6 +21,18 @@ use Illuminate\Database\Seeder;
  */
 class TestDataSeeder extends Seeder
 {
+    /** @var  Carbon */
+    public $start;
+
+    /**
+     * TestDataSeeder constructor.
+     */
+    public function __construct()
+    {
+        $this->start = Carbon::create()->subYear()->startOfYear();
+
+    }
+
     /**
      * Run the database seeds.
      *
@@ -59,6 +71,9 @@ class TestDataSeeder extends Seeder
 
         // create journal + attachment:
         $this->createAttachments($user);
+
+        // create opening balance for savings account:
+        $this->openingBalanceSavings($user);
     }
 
     /**
@@ -66,7 +81,7 @@ class TestDataSeeder extends Seeder
      */
     private function createAssetAccounts(User $user)
     {
-        $assets    = ['TestData Checking Account', 'TestData Savings', 'TestData Shared', 'TestData Creditcard', 'Emergencies', 'STE'];
+        $assets = ['TestData Checking Account', 'TestData Savings', 'TestData Shared', 'TestData Creditcard', 'Emergencies', 'STE'];
         // first two ibans match test-upload.csv
         $ibans     = ['NL11XOLA6707795988', 'NL96DZCO4665940223', 'NL81RCQZ7160379858', 'NL19NRAP2367994221', 'NL40UKBK3619908726', 'NL38SRMN4325934708'];
         $assetMeta = [
@@ -94,6 +109,83 @@ class TestDataSeeder extends Seeder
                 AccountMeta::create(['account_id' => $account->id, 'name' => $name, 'data' => $value,]);
             }
         }
+
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createAttachments(User $user)
+    {
+
+        $toAccount   = $this->findAccount($user, 'TestData Checking Account');
+        $fromAccount = $this->findAccount($user, 'Job');
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 2,
+                'transaction_currency_id' => 1,
+                'description'             => 'Some journal for attachment',
+                'completed'               => 1,
+                'date'                    => new Carbon,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => -100,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+
+            ]
+        );
+
+        // and now attachments
+        $encrypted = Crypt::encrypt('I are secret');
+        Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
+                'user_id'         => $user->id,
+                'md5'             => md5('Hallo'),
+                'filename'        => 'empty-file.txt',
+                'title'           => 'Empty file',
+                'description'     => 'This file is empty',
+                'notes'           => 'What notes',
+                'mime'            => 'text/plain',
+                'size'            => strlen($encrypted),
+                'uploaded'        => 1,
+            ]
+        );
+
+
+        // and now attachment.
+        Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
+                'user_id'         => $user->id,
+                'md5'             => md5('Ook hallo'),
+                'filename'        => 'empty-file-2.txt',
+                'title'           => 'Empty file 2',
+                'description'     => 'This file is empty too',
+                'notes'           => 'What notes do',
+                'mime'            => 'text/plain',
+                'size'            => strlen($encrypted),
+                'uploaded'        => 1,
+            ]
+        );
+        // echo crypted data to the file.
+        file_put_contents(storage_path('upload/at-1.data'), $encrypted);
+        file_put_contents(storage_path('upload/at-2.data'), $encrypted);
 
     }
 
@@ -170,6 +262,29 @@ class TestDataSeeder extends Seeder
     {
         Category::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
         Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
+    }
+
+    /**
+     * @param User $user
+     */
+    private function createExpenseAccounts(User $user)
+    {
+        $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
+                     'coolblue', 'Shell',
+                     'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
+        foreach ($expenses as $name) {
+            // create account:
+            Account::create(
+                [
+                    'user_id'         => $user->id,
+                    'account_type_id' => 4,
+                    'name'            => $name,
+                    'active'          => 1,
+                    'encrypted'       => 1,
+                ]
+            );
+        }
+
     }
 
     /**
@@ -312,48 +427,6 @@ class TestDataSeeder extends Seeder
 
     /**
      * @param User $user
-     * @param      $name
-     *
-     * @return Account|null
-     */
-    private function findAccount(User $user, $name)
-    {
-        /** @var Account $account */
-        foreach ($user->accounts()->get() as $account) {
-            if ($account->name == $name) {
-                return $account;
-                break;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param User $user
-     */
-    private function createExpenseAccounts(User $user)
-    {
-        $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
-                     'coolblue', 'Shell',
-                     'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
-        foreach ($expenses as $name) {
-            // create account:
-            Account::create(
-                [
-                    'user_id'         => $user->id,
-                    'account_type_id' => 4,
-                    'name'            => $name,
-                    'active'          => 1,
-                    'encrypted'       => 1,
-                ]
-            );
-        }
-
-    }
-
-    /**
-     * @param User $user
      */
     private function createRevenueAccounts(User $user)
     {
@@ -374,79 +447,70 @@ class TestDataSeeder extends Seeder
 
     /**
      * @param User $user
+     * @param      $name
+     *
+     * @return Account|null
      */
-    private function createAttachments(User $user)
+    private function findAccount(User $user, $name)
     {
+        /** @var Account $account */
+        foreach ($user->accounts()->get() as $account) {
+            if ($account->name == $name) {
+                return $account;
+                break;
+            }
+        }
 
-        $toAccount   = $this->findAccount($user, 'TestData Checking Account');
-        $fromAccount = $this->findAccount($user, 'Job');
+        return null;
+    }
+
+    /**
+     * @param User $user
+     */
+    private function openingBalanceSavings(User $user)
+    {
+        // opposing account for opening balance:
+        $opposing = Account::create(
+            [
+                'user_id'         => $user->id,
+                'account_type_id' => 6,
+                'name'            => 'Opposing for savings',
+                'active'          => 1,
+                'encrypted'       => 1,
+            ]
+        );
+
+        // savings
+        $savings = $this->findAccount($user, 'TestData Savings');
 
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => $user->id,
-                'transaction_type_id'     => 2,
+                'transaction_type_id'     => 4,
                 'transaction_currency_id' => 1,
-                'description'             => 'Some journal for attachment',
+                'description'             => 'Opening balance for savings account',
                 'completed'               => 1,
-                'date'                    => new Carbon,
+                'date'                    => $this->start->format('Y-m-d'),
             ]
         );
+
+        // transactions
         Transaction::create(
             [
-                'account_id'             => $fromAccount->id,
+                'account_id'              => $opposing->id,
                 'transaction_journal_id' => $journal->id,
-                'amount'                 => -100,
-
+                'amount'                  => -10000,
             ]
         );
+
         Transaction::create(
             [
-                'account_id'             => $toAccount->id,
+                'account_id'              => $savings->id,
                 'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
-
+                'amount'                  => 10000,
             ]
         );
 
-        // and now attachments
-        $encrypted  = Crypt::encrypt('I are secret');
-        Attachment::create(
-            [
-                'attachable_id'   => $journal->id,
-                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
-                'user_id'         => $user->id,
-                'md5'             => md5('Hallo'),
-                'filename'        => 'empty-file.txt',
-                'title'           => 'Empty file',
-                'description'     => 'This file is empty',
-                'notes'           => 'What notes',
-                'mime'            => 'text/plain',
-                'size'            => strlen($encrypted),
-                'uploaded'        => 1,
-            ]
-        );
-
-
-
-        // and now attachment.
-        Attachment::create(
-            [
-                'attachable_id'   => $journal->id,
-                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
-                'user_id'         => $user->id,
-                'md5'             => md5('Ook hallo'),
-                'filename'        => 'empty-file-2.txt',
-                'title'           => 'Empty file 2',
-                'description'     => 'This file is empty too',
-                'notes'           => 'What notes do',
-                'mime'            => 'text/plain',
-                'size'            => strlen($encrypted),
-                'uploaded'        => 1,
-            ]
-        );
-        // echo crypted data to the file.
-        file_put_contents(storage_path('upload/at-1.data'), $encrypted);
-        file_put_contents(storage_path('upload/at-2.data'), $encrypted);
 
     }
 }

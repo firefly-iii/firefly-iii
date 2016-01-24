@@ -15,26 +15,22 @@ class PiggyBankControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::add
-     * @todo   Implement testAdd().
      */
     public function testAdd()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks/add/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::create
-     * @todo   Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -43,58 +39,56 @@ class PiggyBankControllerTest extends TestCase
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['piggy-banks.delete.url' => 'http://localhost']);
+        $this->call('POST', '/piggy-banks/destroy/2');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::order
-     * @todo   Implement testOrder().
      */
     public function testOrder()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            1 => 1,
+            2 => 2,
+        ];
+
+        $this->be($this->user());
+        $this->call('POST', '/piggy-banks/sort', $args);
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -103,69 +97,86 @@ class PiggyBankControllerTest extends TestCase
      */
     public function testPostAdd()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'amount' => 100,
+        ];
+
+        $this->be($this->user());
+        $this->call('POST', '/piggy-banks/add/1', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::postRemove
-     * @todo   Implement testPostRemove().
      */
     public function testPostRemove()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'amount' => 100,
+        ];
+
+        $this->be($this->user());
+        $this->call('POST', '/piggy-banks/remove/1', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::remove
-     * @todo   Implement testRemove().
      */
     public function testRemove()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks/remove/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::show
-     * @todo   Implement testShow().
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/piggy-banks/show/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['piggy-banks.create.url' => 'http://localhost/']);
+
+        $args = [
+            'name'         => 'New',
+            'targetamount' => 100,
+            'account_id'   => 2,
+        ];
+
+        $this->call('POST', '/piggy-banks/store', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->session(['piggy-banks.edit.url' => 'http://localhost/']);
+
+        $args = [
+            'name'         => 'Updated',
+            'targetamount' => 100,
+            'account_id'   => 2,
+        ];
+
+        $this->call('POST', '/piggy-banks/update/1', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

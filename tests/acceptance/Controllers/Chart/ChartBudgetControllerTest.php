@@ -29,7 +29,6 @@ class ChartBudgetControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', '/chart/budget/1');
         $this->assertResponseStatus(200);
-        //$this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
     }
 
     /**
