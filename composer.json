@@ -29,7 +29,8 @@
         "league/commonmark": "~0.7",
         "rcrowe/twigbridge": "~0.9",
         "zizaco/entrust": "dev-laravel-5",
-        "league/csv": "^7.1"
+        "league/csv": "^7.1",
+        "barryvdh/laravel-dompdf": "0.6.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",

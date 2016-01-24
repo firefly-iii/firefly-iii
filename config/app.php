@@ -154,6 +154,11 @@ return [
         'FireflyIII\Providers\FireflyServiceProvider',
         'FireflyIII\Providers\TestingServiceProvider',
 
+        /*
+         *  domPDF Service
+         */
+         'Barryvdh\DomPDF\ServiceProvider',
+
 
     ],
 
@@ -211,7 +216,8 @@ return [
         'Steam'        => 'FireflyIII\Support\Facades\Steam',
         'ExpandedForm' => 'FireflyIII\Support\Facades\ExpandedForm',
         'Twig'         => 'TwigBridge\Facade\Twig',
-        'Entrust'      => 'Zizaco\Entrust\EntrustFacade'
+        'Entrust'      => 'Zizaco\Entrust\EntrustFacade',
+        'PDF'	       => 'Barryvdh\DomPDF\Facade'
 
 
     ],
