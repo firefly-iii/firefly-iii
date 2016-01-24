@@ -16,6 +16,14 @@ use Illuminate\Support\Collection;
 class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
     /**
+     * @return int
+     */
+    public function count()
+    {
+        return Auth::user()->ruleGroups()->count();
+    }
+
+    /**
      * @param RuleGroup $ruleGroup
      * @param RuleGroup $moveTo
      *

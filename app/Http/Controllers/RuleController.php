@@ -16,6 +16,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Input;
 use Preferences;
 use Response;
@@ -173,6 +174,10 @@ class RuleController extends Controller
      */
     public function index()
     {
+        $this->createDefaultRuleGroup();
+        $this->createDefaultRule();
+
+
         $ruleGroups = Auth::user()
                           ->ruleGroups()
                           ->orderBy('active', 'DESC')
@@ -324,6 +329,56 @@ class RuleController extends Controller
 
         // redirect to previous URL.
         return redirect(Session::get('rules.rule.edit.url'));
+    }
+
+    private function createDefaultRule()
+    {
+        /** @var RuleRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Rule\RuleRepositoryInterface');
+
+        if ($repository->count() === 0) {
+            $data = [
+                'rule_group_id'       => $repository->getFirstRuleGroup()->id,
+                'stop_processing'     => 0,
+                'title'               => trans('firefly.default_rule_name'),
+                'description'         => trans('firefly.default_rule_description'),
+                'trigger'             => 'store-journal',
+                'rule-trigger-values' => [
+                    trans('firefly.default_rule_trigger_description'),
+                    trans('firefly.default_rule_trigger_from_account'),
+                ],
+                'rule-action-values'  => [
+                    trans('firefly.default_rule_action_prepend'),
+                    trans('firefly.default_rule_action_set_category'),
+                ],
+
+                'rule-triggers' => ['description_is', 'from_account_is'],
+                'rule-actions'  => ['prepend_description', 'set_category'],
+            ];
+
+            $repository->store($data);
+        }
+
+    }
+
+    /**
+     *
+     */
+    private function createDefaultRuleGroup()
+    {
+
+        /** @var RuleGroupRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface');
+
+        if ($repository->count() === 0) {
+            $data = [
+                'user'        => Auth::user()->id,
+                'title'       => trans('firefly.default_rule_group_name'),
+                'description' => trans('firefly.default_rule_group_description'),
+            ];
+
+            $repository->store($data);
+        }
     }
 
     /**

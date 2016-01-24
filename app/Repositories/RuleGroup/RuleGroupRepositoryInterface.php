@@ -14,6 +14,11 @@ use Illuminate\Support\Collection;
 interface RuleGroupRepositoryInterface
 {
     /**
+     * @return int
+     */
+    public function count();
+
+    /**
      * @param RuleGroup $ruleGroup
      * @param RuleGroup $moveTo
      *

@@ -24,6 +24,14 @@ class RuleRepository implements RuleRepositoryInterface
 {
 
     /**
+     * @return int
+     */
+    public function count()
+    {
+        return Auth::user()->rules()->count();
+    }
+
+    /**
      * @param Rule $rule
      *
      * @return bool
@@ -39,6 +47,24 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->delete();
 
         return true;
+    }
+
+    /**
+     * @return RuleGroup
+     */
+    public function getFirstRuleGroup()
+    {
+        return Auth::user()->ruleGroups()->first();
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
+    {
+        return intval($ruleGroup->rules()->max('order'));
     }
 
     /**
@@ -61,31 +87,6 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order + 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
-    {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $ruleGroup->rules()
-                           ->orderBy('order', 'ASC')
-                           ->orderBy('updated_at', 'DESC')
-                           ->get();
-        $count = 1;
-        /** @var Rule $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-            $count++;
-        }
-
-        return true;
-
     }
 
     /**
@@ -154,6 +155,31 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
+    {
+        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $ruleGroup->rules()
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get();
+        $count = 1;
+        /** @var Rule $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            $count++;
+        }
+
+        return true;
+
+    }
+
+    /**
      * @param array $data
      *
      * @return Rule
@@ -168,7 +194,7 @@ class RuleRepository implements RuleRepositoryInterface
 
         // start by creating a new rule:
         $rule = new Rule;
-        $rule->user()->associate(Auth::user());
+        $rule->user()->associate(Auth::user()); // TODO must be $data['user']
 
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
@@ -190,7 +216,7 @@ class RuleRepository implements RuleRepositoryInterface
             'order'          => $order,
         ];
 
-        $this->storeTrigger($rule, 'user_action', $data['trigger'], $stopProcessing, $order);
+        $this->storeTrigger($rule, $triggerValues);
         foreach ($data['rule-triggers'] as $index => $trigger) {
             $value          = $data['rule-trigger-values'][$index];
             $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
@@ -202,7 +228,7 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'          => $order,
             ];
 
-            $this->storeTrigger($rule, $trigger, $value, $stopProcessing, $order);
+            $this->storeTrigger($rule, $triggerValues);
             $order++;
         }
 
@@ -219,40 +245,10 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'          => $order,
             ];
 
-            $this->storeAction($rule, $action, $value, $stopProcessing, $order);
+            $this->storeAction($rule, $actionValues);
         }
 
         return $rule;
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return int
-     */
-    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
-    {
-        return intval($ruleGroup->rules()->max('order'));
-    }
-
-    /**
-     * @param Rule  $rule
-     * @param array $values
-     *
-     * @return RuleTrigger
-     */
-    public function storeTrigger(Rule $rule, array $values)
-    {
-        $ruleTrigger = new RuleTrigger;
-        $ruleTrigger->rule()->associate($rule);
-        $ruleTrigger->order           = $values['order'];
-        $ruleTrigger->active          = 1;
-        $ruleTrigger->stop_processing = $values['stopProcessing'];
-        $ruleTrigger->trigger_type    = $values['action'];
-        $ruleTrigger->trigger_value   = $values['value'];
-        $ruleTrigger->save();
-
-        return $ruleTrigger;
     }
 
     /**
@@ -274,6 +270,26 @@ class RuleRepository implements RuleRepositoryInterface
 
 
         return $ruleAction;
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $values
+     *
+     * @return RuleTrigger
+     */
+    public function storeTrigger(Rule $rule, array $values)
+    {
+        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger->rule()->associate($rule);
+        $ruleTrigger->order           = $values['order'];
+        $ruleTrigger->active          = 1;
+        $ruleTrigger->stop_processing = $values['stopProcessing'];
+        $ruleTrigger->trigger_type    = $values['action'];
+        $ruleTrigger->trigger_value   = $values['value'];
+        $ruleTrigger->save();
+
+        return $ruleTrigger;
     }
 
     /**
@@ -308,7 +324,7 @@ class RuleRepository implements RuleRepositoryInterface
             'order'          => $order,
         ];
 
-        $this->storeTrigger($rule, 'user_action', $data['trigger'], $stopProcessing, $order);
+        $this->storeTrigger($rule, $triggerValues);
         foreach ($data['rule-triggers'] as $index => $trigger) {
             $value          = $data['rule-trigger-values'][$index];
             $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
@@ -320,7 +336,7 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'          => $order,
             ];
 
-            $this->storeTrigger($rule, $trigger, $value, $stopProcessing, $order);
+            $this->storeTrigger($rule, $triggerValues);
             $order++;
         }
 
@@ -337,7 +353,7 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'          => $order,
             ];
 
-            $this->storeAction($rule, $action, $value, $stopProcessing, $order);
+            $this->storeAction($rule, $actionValues);
         }
 
 
