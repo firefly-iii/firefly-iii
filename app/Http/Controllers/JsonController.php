@@ -4,8 +4,6 @@ use Amount;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
-use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
@@ -46,7 +44,6 @@ class JsonController extends Controller
             $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
         }
         $view = view('rules.partials.action', compact('actions', 'count'))->render();
-
 
 
         return Response::json(['html' => $view]);

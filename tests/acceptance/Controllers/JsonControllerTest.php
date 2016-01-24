@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Illuminate\Support\Collection;
 
 
 /**
@@ -16,157 +17,138 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::action
-     * @todo   Implement testAction().
      */
     public function testAction()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/action');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxBillsPaid
-     * @todo   Implement testBoxBillsPaid().
      */
     public function testBoxBillsPaid()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/box/bills-paid');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxBillsUnpaid
-     * @todo   Implement testBoxBillsUnpaid().
      */
     public function testBoxBillsUnpaid()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/box/bills-unpaid');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxIn
-     * @todo   Implement testBoxIn().
      */
     public function testBoxIn()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/box/in');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxOut
-     * @todo   Implement testBoxOut().
      */
     public function testBoxOut()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/box/out');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::categories
-     * @todo   Implement testCategories().
      */
     public function testCategories()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/categories');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::endTour
-     * @todo   Implement testEndTour().
      */
     public function testEndTour()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('POST', '/json/end-tour');
+        $this->assertEquals(200, $response->status());
+        $this->assertEquals('"true"', $response->content());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::expenseAccounts
-     * @todo   Implement testExpenseAccounts().
      */
     public function testExpenseAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/expense-accounts');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::revenueAccounts
-     * @todo   Implement testRevenueAccounts().
      */
     public function testRevenueAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/revenue-accounts');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::tags
-     * @todo   Implement testTags().
      */
     public function testTags()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/tags');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::tour
-     * @todo   Implement testTour().
      */
     public function testTour()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/tour');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::transactionJournals
-     * @todo   Implement testTransactionJournals().
      */
     public function testTransactionJournals()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $type       = factory(FireflyIII\Models\TransactionType::class)->make();
+        $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+
+        $repository->shouldReceive('getTransactionType')->with('deposit')->once()->andReturn($type);
+        $repository->shouldReceive('getJournalsOfType')->with($type)->once()->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/transaction-journals/deposit');
+        $this->assertEquals(200, $response->status());
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::trigger
-     * @todo   Implement testTrigger().
      */
     public function testTrigger()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $response = $this->call('GET', '/json/trigger');
+        $this->assertEquals(200, $response->status());
     }
 }
