@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.open({'route' : 'profile.validate-qr-code', 'class' : 'form-horizontal','id' : 'validate-qr-code'}) }}
+    {{ Form.open({'route' : 'profile.validate-qr-code', 'class' : 'form-horizontal','id' : 'validate-qr-code' }) }}
     
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">
@@ -14,6 +14,8 @@
                     <h3 class="box-title">{{ 'two_factor_auth'|_ }}</h3>
                 </div>
                 <div class="box-body">
+
+                    <p class="text-info">{{ 'validate_qr_code_info'|_ }}</p>
 
                     {% if errors|length > 0 %}
                         <ul>
@@ -30,9 +32,7 @@
                     <div class="form-group">
 
                         <div class="col-sm-offset-2 col-sm-8">
-
-
-                            <p>Scan the following image with your app, or enter the code manually:</p>
+                            
                             <img src="{{ qrcode }}" />
                             <br />
                             {{ secret }}

@@ -3,114 +3,59 @@
 	{
 		"selected_items":
 		[
+			[
+				"secret",
+				"secret_key"
+			],
+			[
+				"has",
+				"has2faDone"
+			],
+			[
+				"is2",
+				"is_2fa_enabled"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "app/Http/routes.php",
+			"file": "resources/views/profile/two-factor-auth.twig",
 			"settings":
 			{
-				"buffer_size": 20528,
+				"buffer_size": 1904,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "app/Http/Controllers/PreferencesController.php",
+			"file": "resources/lang/nl_NL/firefly.php",
 			"settings":
 			{
-				"buffer_size": 2569,
+				"buffer_size": 41705,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "{% extends \"./layout/default.twig\" %}\n\n{% block breadcrumbs %}\n    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}\n{% endblock %}\n\n{% block content %}\n    <div class=\"row\">\n        <div class=\"col-lg-6 col-lg-offset-3 col-md-6 col-sm-12\">\n            <div class=\"box box-primary\">\n                <div class=\"box-header with-border\">\n                    <h3 class=\"box-title\">Options</h3>\n                </div>\n                <div class=\"box-body\">\n                    <ul>\n                        <li><a href=\"{{ route('profile.change-password') }}\">{{ 'change_your_password'|_ }}</a></li>\n                        <li><a href=\"{{ route('profile.set-tow-factor-authentication') }}\">{{ 'set_two_factor_authentication'|_ }}</a></li>\n                        <li><a class=\"text-danger\" href=\"{{ route('profile.delete-account') }}\">{{ 'delete_account'|_ }}</a></li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n{% endblock %}\n",
-			"file": "resources/views/profile/index.twig",
-			"file_size": 871,
-			"file_write_time": 130973570727601347,
+			"file": "resources/lang/en_US/firefly.php",
 			"settings":
 			{
-				"buffer_size": 988,
+				"buffer_size": 41966,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "resources/views/profile/set-two-factor-authentication.twig",
+			"file": "resources/views/profile/validate-qr-code.twig",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 1768,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "app/Http/Controllers/CsvController.php",
+			"file": "resources/views/auth/login.twig",
 			"settings":
 			{
-				"buffer_size": 14501,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/Http/Controllers/TransactionController.php",
-			"settings":
-			{
-				"buffer_size": 13767,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "resources/views/transactions/index.twig",
-			"settings":
-			{
-				"buffer_size": 792,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "resources/views/list/journals.twig",
-			"settings":
-			{
-				"buffer_size": 6154,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "config/app.php",
-			"settings":
-			{
-				"buffer_size": 9466,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/Repositories/Journal/JournalRepository.php",
-			"settings":
-			{
-				"buffer_size": 13484,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/Repositories/Journal/JournalRepositoryInterface.php",
-			"settings":
-			{
-				"buffer_size": 2410,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/Http/Controllers/RuleController.php",
-			"settings":
-			{
-				"buffer_size": 14207,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "resources/views/csv/index.twig",
-			"settings":
-			{
-				"buffer_size": 3961,
+				"buffer_size": 2021,
 				"line_ending": "Windows"
 			}
 		}
@@ -122,7 +67,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 104.0,
 		"last_filter": "",
 		"selected_items":
 		[
@@ -151,26 +96,96 @@
 		"/G/xampp2/htdocs/firefly-iii/app",
 		"/G/xampp2/htdocs/firefly-iii/app/Helpers",
 		"/G/xampp2/htdocs/firefly-iii/app/Helpers/Csv",
-		"/G/xampp2/htdocs/firefly-iii/app/Http",
 		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Middleware",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Requests",
+		"/G/xampp2/htdocs/firefly-iii/database",
 		"/G/xampp2/htdocs/firefly-iii/resources",
+		"/G/xampp2/htdocs/firefly-iii/resources/lang",
+		"/G/xampp2/htdocs/firefly-iii/resources/lang/en_US",
+		"/G/xampp2/htdocs/firefly-iii/resources/lang/nl_NL",
 		"/G/xampp2/htdocs/firefly-iii/resources/views",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/accounts",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/auth",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/layout",
 		"/G/xampp2/htdocs/firefly-iii/resources/views/list",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/new-user",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/preferences",
 		"/G/xampp2/htdocs/firefly-iii/resources/views/profile",
 		"/G/xampp2/htdocs/firefly-iii/resources/views/transactions"
 	],
 	"file_history":
 	[
+		"/G/xampp2/htdocs/firefly-iii/resources/views/layout/guest.twig",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/ProfileController.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/auth/verify_token.twig",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/auth/login.twig",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/Auth/AuthController.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Kernel.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Foundation/Auth/ThrottlesLogins.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesAndRegistersUsers.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Auth/SessionGuard.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Middleware/RedirectIfAuthenticated.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/auth/reset.twig",
+		"/G/xampp2/htdocs/firefly-iii/app/User.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Middleware/TwoFactorAuthenticate.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/routes.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Middleware/Authenticate.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Routing/Redirector.php",
+		"/G/xampp2/htdocs/firefly-iii/public/js/Chart.StackedBar.js",
+		"/G/xampp2/htdocs/firefly-iii/public/js/transactions.js",
+		"/G/xampp2/htdocs/firefly-iii/public/js/charts.js",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Middleware/Binder.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Contracts/Auth/Guard.php",
+		"/G/xampp2/htdocs/firefly-iii/public/js/piggy-banks.js",
+		"/G/xampp2/htdocs/firefly-iii/public/js/accounts.js",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/profile/validate-qr-code.twig",
+		"/G/xampp2/htdocs/firefly-iii/vendor/symfony/http-foundation/Session/Session.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/lang/nl_NL/firefly.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Requests/ProfileFormValidateQrCodeRequest.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Requests/ProfileForm2FARequest.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/breadcrumbs.php",
+		"/G/xampp2/htdocs/firefly-iii/config/app.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Console/Kernel.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Helpers/Csv/Data.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Support/Facades/Session.php",
+		"/G/xampp2/htdocs/firefly-iii/config/session.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/rcrowe/twigbridge/src/Extension/Laravel/Session.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/accounts/edit.twig",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/AccountController.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Requests/ProfileFormRequestBase.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Models/Account.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/transactions/create.twig",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/profile/index.twig",
+		"/G/xampp2/htdocs/firefly-iii/resources/lang/nl_NL/breadcrumbs.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/CsvController.php",
+		"/G/xampp2/htdocs/firefly-iii/database/migrations/2016_01_23_103455_add_2_factor_authentication_support.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/profile/change-password.twig",
+		"/G/xampp2/htdocs/firefly-iii/database/migrations/2016_01_11_193428_changes_for_v370.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Requests/ProfileFormRequest.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/rcrowe/twigbridge/src/Extension/Laravel/Auth.php",
+		"/G/xampp2/htdocs/firefly-iii/vendor/laravel/framework/src/Illuminate/Support/Facades/Auth.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/csv/index.twig",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/RuleController.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Repositories/Journal/JournalRepositoryInterface.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Repositories/Journal/JournalRepository.php",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/list/journals.twig",
+		"/G/xampp2/htdocs/firefly-iii/resources/views/transactions/index.twig",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/TransactionController.php",
+		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers/PreferencesController.php"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 90.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -178,6 +193,34 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"AuthenticatesUsers\nAuthenticatesUsers",
+			"AuthenticatesUsers",
+			"AuthenticatesAndRegistersUsers",
+			"    use AuthenticatesUsers, RegistersUsers {\nAuthenticatesAndRegistersUsers",
+			"AuthenticatesAndRegistersUsers",
+			"logout",
+			"Session::flush()",
+			"logout",
+			"User::create",
+			"middle",
+			"showloginform",
+			"$.post",
+			"$.",
+			"$",
+			"/'",
+			"piggy-banks/sort",
+			"csrf",
+			"Session::put",
+			"session::",
+			"expandedform.checkbox",
+			"profile.change-password",
+			"profile.two-factor-auth",
+			"save",
+			"opsl",
+			"opgeslagen",
+			"profileformrequest",
+			"blocked",
+			"']);\n",
 			"what"
 		],
 		"highlight": true,
@@ -196,94 +239,94 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/Http/routes.php",
+					"file": "resources/views/profile/two-factor-auth.twig",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20528,
+						"buffer_size": 1904,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								628,
+								628
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3124.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/Http/Controllers/PreferencesController.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2569,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 225.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "resources/views/profile/index.twig",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 988,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								733,
-								733
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"syntax": "Packages/PHP-Twig/Syntaxes/HTML (Twig).tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "resources/lang/nl_NL/firefly.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41705,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11543,
+								11543
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2187.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "resources/lang/en_US/firefly.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41966,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12522,
+								12522
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 28.0,
+						"translation.y": 2295.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -291,301 +334,62 @@
 				},
 				{
 					"buffer": 3,
-					"file": "resources/views/profile/set-two-factor-authentication.twig",
+					"file": "resources/views/profile/validate-qr-code.twig",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 1768,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1149,
+								1149
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/PHP-Twig/Syntaxes/HTML (Twig).tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "app/Http/Controllers/CsvController.php",
+					"file": "resources/views/auth/login.twig",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14501,
+						"buffer_size": 2021,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2021,
+								2021
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 2070.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "app/Http/Controllers/TransactionController.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 13767,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"syntax": "Packages/PHP-Twig/Syntaxes/HTML (Twig).tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2700.0,
+						"translation.y": 180.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "resources/views/transactions/index.twig",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 792,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								67,
-								136
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "resources/views/list/journals.twig",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6154,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true,
-							"word_wrap": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 945.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "config/app.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9466,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9453,
-								9453
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 2610.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "app/Repositories/Journal/JournalRepository.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 13484,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 900.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "app/Repositories/Journal/JournalRepositoryInterface.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2410,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 225.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "app/Http/Controllers/RuleController.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14207,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "resources/views/csv/index.twig",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3961,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -597,7 +401,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -640,6 +444,58 @@
 		"selected_items":
 		[
 			[
+				"guest.t",
+				"resources\\views\\layout\\guest.twig"
+			],
+			[
+				"autheucate",
+				"vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Auth\\AuthenticatesUsers.php"
+			],
+			[
+				"twof",
+				"app\\Http\\Middleware\\TwoFactorAuthenticate.php"
+			],
+			[
+				"redirectifau",
+				"app\\Http\\Middleware\\RedirectIfAuthenticated.php"
+			],
+			[
+				"routes",
+				"app\\Http\\routes.php"
+			],
+			[
+				"profilecon",
+				"app\\Http\\Controllers\\ProfileController.php"
+			],
+			[
+				"user",
+				"app\\User.php"
+			],
+			[
+				"kernel",
+				"app\\Http\\Kernel.php"
+			],
+			[
+				"session",
+				"config\\session.php"
+			],
+			[
+				"acccon",
+				"app\\Http\\Controllers\\AccountController.php"
+			],
+			[
+				"app.",
+				"config\\app.php"
+			],
+			[
+				"route",
+				"app\\Http\\routes.php"
+			],
+			[
+				"procon",
+				"app\\Http\\Controllers\\ProfileController.php"
+			],
+			[
 				"transactions/index",
 				"resources\\views\\transactions\\index.twig"
 			],
@@ -650,10 +506,6 @@
 			[
 				"journalrepo",
 				"app\\Repositories\\Journal\\JournalRepository.php"
-			],
-			[
-				"routes",
-				"app\\Http\\routes.php"
 			]
 		],
 		"width": 0.0

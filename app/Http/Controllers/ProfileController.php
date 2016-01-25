@@ -40,7 +40,7 @@ class ProfileController extends Controller
      */
     public function twoFactorAuth()
     {        
-        return view('profile.two-factor-auth')->with('title', trans('firefly.profile'))->with('subTitle', trans('firefly.two_factor_auth'))->with(
+        return view('profile.two-factor-auth')->with('title', trans('firefly.profile'))->with('subTitle', trans('firefly.two_factor_auth_settings'))->with(
             'mainTitleIcon', 'fa-user'
         )->with('is_2fa_enabled', Auth::user()->is_2fa_enabled);
     }
@@ -170,7 +170,7 @@ class ProfileController extends Controller
                 $url = $google2fa->getQRCodeInline("FireflyIII", null, $secret, 150);
 
                 return view('profile.validate-qr-code')->with('title', trans('firefly.profile'))
-                            ->with('subTitle', trans('firefly.validate_qr_code'))
+                            ->with('subTitle', trans('firefly.two_factor_auth_settings'))
                             ->with('mainTitleIcon', 'fa-user')
                             ->with('qrcode', $url)
                             ->with('secret', $secret);
@@ -228,7 +228,7 @@ class ProfileController extends Controller
             $url = $google2fa->getQRCodeInline("FireflyIII", null, Session::get('user.secret_key'), 150);
 
             return view('profile.validate-qr-code')->with('title', trans('firefly.profile'))
-                            ->with('subTitle', trans('firefly.validate_qr_code'))
+                            ->with('subTitle', trans('firefly.enable_two_factor_auth'))
                             ->with('mainTitleIcon', 'fa-user')
                             ->with('qrcode', $url)
                             ->with('secret', Session::get('user.secret_key'));

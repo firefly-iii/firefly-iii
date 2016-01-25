@@ -179,7 +179,12 @@ return [
     'password_changed'                       => 'Password changed!',
     'should_change'                          => 'The idea is to change your password.',
     'invalid_password'                       => 'Invalid password!',
-
+    'two_factor_auth'                        => '2-step verification',
+    'two_factor_auth_settings_saved'         => '2-step verification settings saved',
+    'two_factor_auth_settings'               => '2-step verification settings',
+    'enable_two_factor_auth'                 => 'Enable 2-step verification',
+    'enable_two_factor_auth_info'            => '2-step verification provides improved security for your Firefly III account. If 2-step verification is enabled, you will need to enter your password in addition to a one-time verification code when logging into Firefly III. Verification codes are obtained from authenticator apps installed on your mobile device. Examples of aps are Authy or Google Authenticator. Therefore, if someone wants to access your account, he will not only need your username and password, but also your mobile device.',
+    'validate_qr_code_info'                  => 'Scan the following image with your authenticator app, or enter the token manually. Enter the resulting code in the form below.',
 
     // attachments
     'nr_of_attachments'                      => 'One attachment|:count attachments',
