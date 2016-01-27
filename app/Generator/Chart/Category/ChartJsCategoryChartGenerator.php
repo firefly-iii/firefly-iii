@@ -59,7 +59,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 0,
@@ -170,7 +170,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 0,

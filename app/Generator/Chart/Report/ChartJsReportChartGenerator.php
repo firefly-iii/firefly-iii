@@ -84,7 +84,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
     public function yearInOut(Collection $entries)
     {
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 2,

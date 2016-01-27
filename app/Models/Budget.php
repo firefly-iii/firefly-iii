@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                               $dateFormatted
  * @property string                               $budgeted
  * @property float                                $amount
+ * @property Carbon                               $date
  */
 class Budget extends Model
 {

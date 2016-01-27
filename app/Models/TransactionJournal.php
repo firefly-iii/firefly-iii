@@ -49,6 +49,7 @@ use Watson\Validating\ValidatingTrait;
  * @property float                              $journalAmount
  * @property int                                $account_id
  * @property int                                $budget_id
+ * @property string                             $account_name
  * @method static Builder|TransactionJournal accountIs($account)
  * @method static Builder|TransactionJournal after($date)
  * @method static Builder|TransactionJournal before($date)
@@ -61,12 +62,16 @@ class TransactionJournal extends Model
     use SoftDeletes, ValidatingTrait;
 
 
-    protected $dates  = ['created_at', 'updated_at', 'date', 'deleted_at'];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at'];
+    /** @var array */
     protected $fillable
-                      = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
+        = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
+    /** @var array */
     protected $hidden = ['encrypted'];
+    /** @var array */
     protected $rules
-                      = [
+        = [
             'user_id'                 => 'required|exists:users,id',
             'transaction_type_id'     => 'required|exists:transaction_types,id',
             'bill_id'                 => 'exists:bills,id',
@@ -76,6 +81,9 @@ class TransactionJournal extends Model
             'date'                    => 'required|date',
             'encrypted'               => 'required|boolean',
         ];
+
+    /** @var  bool */
+    private $joinedTransactionTypes;
 
     /**
      * @param $value

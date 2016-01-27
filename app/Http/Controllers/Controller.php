@@ -22,9 +22,9 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var string|\Symfony\Component\Translation\TranslatorInterface */
+    /** @var string */
     protected $monthAndDayFormat;
-    /** @var string|\Symfony\Component\Translation\TranslatorInterface */
+    /** @var string */
     protected $monthFormat;
 
     /**
@@ -40,8 +40,8 @@ class Controller extends BaseController
         if (Auth::check()) {
             $pref                    = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
             $lang                    = $pref->data;
-            $this->monthFormat       = trans('config.month');
-            $this->monthAndDayFormat = trans('config.month_and_day');
+            $this->monthFormat       = (string)trans('config.month');
+            $this->monthAndDayFormat = (string)trans('config.month_and_day');
 
             App::setLocale($lang);
             Carbon::setLocale(substr($lang, 0, 2));

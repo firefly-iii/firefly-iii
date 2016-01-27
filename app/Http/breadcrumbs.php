@@ -355,7 +355,10 @@ Breadcrumbs::register(
     $breadcrumbs->parent('reports.index');
 
     $monthFormat = (string)trans('config.month_and_day');
-    $title       = (string)trans('firefly.report_' . $reportType, ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]);
+    $title       = (string)trans(
+        'firefly.report_' . $reportType,
+        ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]
+    );
 
     $breadcrumbs->push($title, route('reports.report', [$reportType, $start->format('Ymd'), $end->format('Ymd'), $accountIds]));
 }

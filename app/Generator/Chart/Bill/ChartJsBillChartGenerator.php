@@ -49,7 +49,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
      */
     public function single(Bill $bill, Collection $entries)
     {
-        $format       = trans('config.month');
+        $format       = (string)trans('config.month');
         $data         = [
             'count'    => 3,
             'labels'   => [],

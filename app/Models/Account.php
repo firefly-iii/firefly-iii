@@ -42,8 +42,11 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    /** @var array  */
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array  */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    /** @var array  */
     protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
                         = [
@@ -52,6 +55,8 @@ class Account extends Model
             'name'            => 'required',
             'active'          => 'required|boolean',
         ];
+    /** @var  bool */
+    private $joinedAccountTypes;
 
     /**
      * @param array $fields
