@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
+use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -34,14 +35,16 @@ use Watson\Validating\ValidatingTrait;
  * @method static Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
  * @property string                                                                         $startBalance
  * @property string                                                                         $endBalance
+ * @property float                                                                          $difference
+ * @property Carbon                                                                         $lastActivityDate
  */
 class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $rules
                         = [
             'user_id'         => 'required|exists:users,id',
@@ -107,6 +110,22 @@ class Account extends Model
         }
 
         return null;
+    }
+
+    /**
+     * @param Account $value
+     *
+     * @return Account
+     */
+    public static function routeBinder(Account $value)
+    {
+
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
     /**
@@ -283,21 +302,5 @@ class Account extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @param Account $value
-     *
-     * @return Account
-     */
-    public static function routeBinder(Account $value)
-    {
-
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
     }
 }

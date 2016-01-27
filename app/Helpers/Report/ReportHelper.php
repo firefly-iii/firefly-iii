@@ -91,7 +91,7 @@ class ReportHelper implements ReportHelperInterface
                            ->groupBy('accounts.id')
                            ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
 
-        // and for end:
+        // and end:
         $endSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                          ->whereIn('accounts.id', $ids)

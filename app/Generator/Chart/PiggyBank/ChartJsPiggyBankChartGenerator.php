@@ -23,7 +23,7 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
     {
 
         // language:
-        $format = trans('config.month_and_day');
+        $format = (string)trans('config.month_and_day');
 
         $data = [
             'count'    => 1,

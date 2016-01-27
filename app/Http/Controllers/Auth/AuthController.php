@@ -111,7 +111,7 @@ class AuthController extends Controller
 
         // is user email domain blocked?
         if ($this->isBlockedDomain($data['email'])) {
-            $validator->getMessageBag()->add('email', trans('validation.invalid_domain'));
+            $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
             $this->throwValidationException(
                 $request, $validator
             );

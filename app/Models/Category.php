@@ -22,14 +22,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
  * @property string                               $dateFormatted
+ * @property float                                $spent
  */
 class Category extends Model
 {
     use SoftDeletes;
 
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'name'];
     protected $hidden   = ['encrypted'];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param array $fields
@@ -57,6 +58,21 @@ class Category extends Model
 
         return $category;
 
+    }
+
+    /**
+     * @param Category $value
+     *
+     * @return Category
+     */
+    public static function routeBinder(Category $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
     /**
@@ -103,21 +119,6 @@ class Category extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @param Category $value
-     *
-     * @return Category
-     */
-    public static function routeBinder(Category $value)
-    {
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
     }
 
 }

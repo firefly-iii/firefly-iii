@@ -68,7 +68,7 @@ class BudgetController extends Controller
         Session::forget('budgets.create.fromStore');
         Session::flash('gaEventCategory', 'budgets');
         Session::flash('gaEventAction', 'create');
-        $subTitle = trans('firefly.create_new_budget');
+        $subTitle = (string)trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
     }

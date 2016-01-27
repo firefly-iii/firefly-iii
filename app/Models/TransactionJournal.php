@@ -46,6 +46,9 @@ use Watson\Validating\ValidatingTrait;
  * @property-read TransactionType               $transactionType
  * @property-read Collection|TransactionGroup[] $transactiongroups
  * @property-read User                          $user
+ * @property float                              $journalAmount
+ * @property int                                $account_id
+ * @property int                                $budget_id
  * @method static Builder|TransactionJournal accountIs($account)
  * @method static Builder|TransactionJournal after($date)
  * @method static Builder|TransactionJournal before($date)
@@ -58,10 +61,10 @@ class TransactionJournal extends Model
     use SoftDeletes, ValidatingTrait;
 
 
+    protected $dates  = ['created_at', 'updated_at', 'date', 'deleted_at'];
     protected $fillable
                       = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
     protected $hidden = ['encrypted'];
-    protected $dates  = ['created_at', 'updated_at', 'date', 'deleted_at'];
     protected $rules
                       = [
             'user_id'                 => 'required|exists:users,id',
@@ -73,6 +76,36 @@ class TransactionJournal extends Model
             'date'                    => 'required|date',
             'encrypted'               => 'required|boolean',
         ];
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder($value)
+    {
+        if (Auth::check()) {
+            $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
+            $object     = TransactionJournal::where('transaction_journals.id', $value)
+                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                            ->whereIn('transaction_types.type', $validTypes)
+                                            ->where('user_id', Auth::user()->id)->first(['transaction_journals.*']);
+            if ($object) {
+                return $object;
+            }
+        }
+
+        throw new NotFoundHttpException;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function attachments()
+    {
+        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+    }
 
     /**
      * @codeCoverageIgnore
@@ -102,22 +135,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return string
-     */
-    public function getAmountPositiveAttribute()
-    {
-        $amount = '0';
-        /** @var Transaction $t */
-        foreach ($this->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
      * @return float
      */
     public function getAmountAttribute()
@@ -142,36 +159,19 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return string
      */
-    public function tags()
+    public function getAmountPositiveAttribute()
     {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
-    }
+        $amount = '0';
+        /** @var Transaction $t */
+        foreach ($this->transactions as $t) {
+            if ($t->amount > 0) {
+                $amount = $t->amount;
+            }
+        }
 
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('FireflyIII\Models\Transaction');
-    }
-
-    /**
-     * Save the model to the database.
-     *
-     * @param  array $options
-     *
-     * @return bool
-     */
-    public function save(array $options = [])
-    {
-        $count           = $this->tags()->count();
-        $this->tag_count = $count;
-
-        return parent::save($options);
+        return $amount;
     }
 
     /**
@@ -211,12 +211,83 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getTransactionType()
+    {
+        return $this->transactionType->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeposit()
+    {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::DEPOSIT;
+        }
+
+        return $this->transactionType->isDeposit();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOpeningBalance()
+    {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::OPENING_BALANCE;
+        }
+
+        return $this->transactionType->isOpeningBalance();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTransfer()
+    {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::TRANSFER;
+        }
+
+        return $this->transactionType->isTransfer();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithdrawal()
+    {
+        if (!is_null($this->type)) {
+            return $this->type == TransactionType::WITHDRAWAL;
+        }
+
+        return $this->transactionType->isWithdrawal();
+    }
+
+    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
+    }
+
+    /**
+     * Save the model to the database.
+     *
+     * @param  array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        $count           = $this->tags()->count();
+        $this->tag_count = $count;
+
+        return parent::save($options);
     }
 
     /**
@@ -290,11 +361,12 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function attachments()
+    public function tags()
     {
-        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+        return $this->belongsToMany('FireflyIII\Models\Tag');
     }
 
     /**
@@ -326,88 +398,19 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('FireflyIII\Models\Transaction');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @return string
-     */
-    public function getTransactionType()
-    {
-        return $this->transactionType->type;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWithdrawal()
-    {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::WITHDRAWAL;
-        }
-
-        return $this->transactionType->isWithdrawal();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDeposit()
-    {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::DEPOSIT;
-        }
-
-        return $this->transactionType->isDeposit();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTransfer()
-    {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::TRANSFER;
-        }
-
-        return $this->transactionType->isTransfer();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOpeningBalance()
-    {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::OPENING_BALANCE;
-        }
-
-        return $this->transactionType->isOpeningBalance();
-    }
-
-    /**
-     * @param $value
-     *
-     * @return mixed
-     * @throws NotFoundHttpException
-     */
-    public static function routeBinder($value)
-    {
-        if (Auth::check()) {
-            $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
-            $object     = TransactionJournal::where('transaction_journals.id', $value)
-                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                            ->whereIn('transaction_types.type', $validTypes)
-                                            ->where('user_id', Auth::user()->id)->first(['transaction_journals.*']);
-            if ($object) {
-                return $object;
-            }
-        }
-
-        throw new NotFoundHttpException;
     }
 }

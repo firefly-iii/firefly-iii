@@ -16,29 +16,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon           $enddate
  * @property float            $amount
  * @property-read BudgetLimit $budgetLimit
+ * @property int              $budget_id
  */
 class LimitRepetition extends Model
 {
 
-    protected $hidden = ['amount_encrypted'];
     protected $dates  = ['created_at', 'updated_at', 'startdate', 'enddate'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function budgetLimit()
-    {
-        return $this->belongsTo('FireflyIII\Models\BudgetLimit');
-    }
-
-    /**
-     * @param $value
-     */
-    public function setAmountAttribute($value)
-    {
-        $this->attributes['amount'] = strval(round($value, 2));
-    }
-
+    protected $hidden = ['amount_encrypted'];
 
     /**
      * @param $value
@@ -58,6 +42,22 @@ class LimitRepetition extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function budgetLimit()
+    {
+        return $this->belongsTo('FireflyIII\Models\BudgetLimit');
+    }
+
+    /**
+     * @param $value
+     */
+    public function setAmountAttribute($value)
+    {
+        $this->attributes['amount'] = strval(round($value, 2));
     }
 
 }

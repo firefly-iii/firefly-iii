@@ -25,15 +25,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read User                            $user
  * @property string                               $dateFormatted
  * @property string                               $budgeted
+ * @property float                                $amount
  */
 class Budget extends Model
 {
 
     use SoftDeletes;
 
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
 
     /**
      * @param array $fields
@@ -61,6 +62,21 @@ class Budget extends Model
 
         return $budget;
 
+    }
+
+    /**
+     * @param Budget $value
+     *
+     * @return Budget
+     */
+    public static function routeBinder(Budget $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
     /**
@@ -118,21 +134,6 @@ class Budget extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @param Budget $value
-     *
-     * @return Budget
-     */
-    public static function routeBinder(Budget $value)
-    {
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
     }
 
 

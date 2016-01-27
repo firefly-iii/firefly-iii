@@ -72,7 +72,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
     {
         // language:
-        $format  = trans('config.month_and_day');
+        $format  = (string)trans('config.month_and_day');
         $data    = ['count' => 0, 'labels' => [], 'datasets' => [],];
         $current = clone $start;
         while ($current <= $end) {
