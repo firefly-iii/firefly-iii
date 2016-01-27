@@ -18,9 +18,8 @@ class ReportController extends Controller
 
 
     protected $accountHelper;
-
+    protected $balanceHelper;
     protected $budgetHelper;
-
     /** @var ReportHelperInterface */
     protected $helper;
 
@@ -36,6 +35,7 @@ class ReportController extends Controller
         $this->helper        = $helper;
         $this->accountHelper = app('FireflyIII\Helpers\Report\AccountReportHelperInterface');
         $this->budgetHelper  = app('FireflyIII\Helpers\Report\BudgetReportHelperInterface');
+        $this->balanceHelper = app('FireflyIII\Helpers\Report\BalanceReportHelperInterface');
 
         View::share('title', trans('firefly.reports'));
         View::share('mainTitleIcon', 'fa-line-chart');
@@ -61,7 +61,7 @@ class ReportController extends Controller
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
         $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts); // done (+5)
         $categories    = $this->helper->getCategoryReport($start, $end, $accounts); // done (+1) (20)
-        $balance       = $this->helper->getBalanceReport($start, $end, $accounts); // +566
+        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts); // +566
         $bills         = $this->helper->getBillReport($start, $end, $accounts);
 
         // and some id's, joined:
