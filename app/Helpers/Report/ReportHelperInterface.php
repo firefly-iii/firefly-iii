@@ -46,15 +46,6 @@ interface ReportHelperInterface
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return BudgetCollection
-     */
-    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts);
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
      * @return CategoryCollection
      */
     public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts);
