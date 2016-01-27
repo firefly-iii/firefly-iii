@@ -169,6 +169,10 @@ return [
     'pref_6M'                                => 'Six months',
     'pref_languages'                         => 'Languages',
     'pref_languages_help'                    => 'Firefly III supports several languages. Which one do you prefer?',
+    'pref_custom_fiscal_year'                => 'Fiscal year settings',
+    'pref_custom_fiscal_year_label'          => 'Enabled',
+    'pref_custom_fiscal_year_help'           => 'In countries that use a financial year other than January 1 to December 31, you can switch this on and specify start / end days of the fiscal year',
+    'pref_fiscal_year_start_label'           => 'Fiscal year start date',
     'pref_save_settings'                     => 'Save settings',
 
     // profile:

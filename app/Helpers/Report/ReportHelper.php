@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Helpers\FiscalHelper;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
@@ -388,13 +389,14 @@ class ReportHelper implements ReportHelperInterface
         $start  = clone $date;
         $end    = Carbon::now();
         $months = [];
+        $fiscalHelper = new FiscalHelper;
         while ($start <= $end) {
-            $year = $start->year;
+            $year = $fiscalHelper->endOfFiscalYear($start)->year;
 
             if (!isset($months[$year])) {
                 $months[$year] = [
-                    'start'  => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
-                    'end'    => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
+                    'start'  => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
+                    'end'    => $fiscalHelper->endOfFiscalYear($start)->format('Y-m-d'),
                     'months' => [],
                 ];
             }

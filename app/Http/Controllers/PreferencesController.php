@@ -39,10 +39,13 @@ class PreferencesController extends Controller
         $budgetMax         = Preferences::get('budgetMaximum', 1000);
         $language          = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
         $budgetMaximum     = $budgetMax->data;
+        $customFiscalYear  = Preferences::get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart   = date('Y') . '-' . $fiscalYearStartStr;
 
         $showIncomplete = env('SHOW_INCOMPLETE_TRANSLATIONS', 'false') == 'true';
 
-        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'showIncomplete'));
+        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'showIncomplete'));
     }
 
     /**
@@ -69,6 +72,12 @@ class PreferencesController extends Controller
         // budget maximum:
         $budgetMaximum = intval(Input::get('budgetMaximum'));
         Preferences::set('budgetMaximum', $budgetMaximum);
+
+        // custom fiscal year
+        $customFiscalYear = (int) Input::get('customFiscalYear');
+        Preferences::set('customFiscalYear', $customFiscalYear);
+        $fiscalYearStart = date('m-d', strtotime(Input::get('fiscalYearStart')));
+        Preferences::set('fiscalYearStart', $fiscalYearStart);
 
         // language:
         $lang = Input::get('language');
