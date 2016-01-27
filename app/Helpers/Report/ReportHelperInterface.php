@@ -3,7 +3,6 @@
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
@@ -19,19 +18,6 @@ use Illuminate\Support\Collection;
  */
 interface ReportHelperInterface
 {
-
-    /**
-     * This method generates a full report for the given period on all
-     * given accounts
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return AccountCollection
-     */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts);
-
     /**
      * @param Carbon     $start
      * @param Carbon     $end
