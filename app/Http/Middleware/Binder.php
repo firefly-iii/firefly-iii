@@ -40,8 +40,6 @@ class Binder
         }
 
         return $next($request);
-
-        //return $next($request);
     }
 
     /**

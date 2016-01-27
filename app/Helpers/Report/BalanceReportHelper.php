@@ -14,8 +14,8 @@ use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\Budget as BudgetModel;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -41,11 +41,10 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @codeCoverageIgnore
      *
-     * @param ReportQueryInterface      $query
      * @param BudgetRepositoryInterface $budgetRepository
      * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(ReportQueryInterface $query, BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
+    public function __construct(BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
     {
         $this->budgetRepository = $budgetRepository;
         $this->tagRepository    = $tagRepository;

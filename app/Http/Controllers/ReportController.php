@@ -56,12 +56,12 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts); // done (+2)
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
-        $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts); // done (+5)
-        $categories    = $this->helper->getCategoryReport($start, $end, $accounts); // done (+1) (20)
-        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts); // +566
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
+        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
+        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
         $bills         = $this->helper->getBillReport($start, $end, $accounts);
 
         // and some id's, joined:
@@ -99,9 +99,9 @@ class ReportController extends Controller
         // list of users stuff:
         $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
         $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts); // done (+2)
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = [];

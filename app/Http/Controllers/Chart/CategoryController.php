@@ -344,7 +344,7 @@ class CategoryController extends Controller
             $row        = [clone $start];
             $currentSet = $set->filter( // get possibly relevant entries from the big $set
                 function (Category $category) use ($start) {
-                    return $category->dateFormatted == $start->format("Y-m");
+                    return $category->dateFormatted == $start->format('Y-m');
                 }
             );
             /** @var Category $category */
@@ -410,7 +410,7 @@ class CategoryController extends Controller
             $row        = [clone $start];
             $currentSet = $set->filter(// get possibly relevant entries from the big $set
                 function (Category $category) use ($start) {
-                    return $category->dateFormatted == $start->format("Y-m");
+                    return $category->dateFormatted == $start->format('Y-m');
                 }
             );
             /** @var Category $category */

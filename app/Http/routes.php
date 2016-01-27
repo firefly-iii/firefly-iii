@@ -21,7 +21,6 @@ Route::group(
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
 
-    //Route::get('/home', 'HomeController@index');
 }
 );
 
