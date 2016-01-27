@@ -115,6 +115,10 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Report\ReportQueryInterface', 'FireflyIII\Helpers\Report\ReportQuery');
         $this->app->bind('FireflyIII\Helpers\FiscalHelperInterface', 'FireflyIII\Helpers\FiscalHelper');
 
+        // better report helper interfaces:
+        $this->app->bind('FireflyIII\Helpers\Report\AccountReportHelperInterface', 'FireflyIII\Helpers\Report\AccountReportHelper');
+
+
 
     }
 
