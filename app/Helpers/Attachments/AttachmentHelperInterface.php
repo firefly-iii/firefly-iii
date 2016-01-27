@@ -15,11 +15,11 @@ interface AttachmentHelperInterface
 {
 
     /**
-     * @param Model $model
+     * @param Attachment $attachment
      *
-     * @return bool
+     * @return mixed
      */
-    public function saveAttachmentsForModel(Model $model);
+    public function getAttachmentLocation(Attachment $attachment);
 
     /**
      * @return MessageBag
@@ -32,10 +32,10 @@ interface AttachmentHelperInterface
     public function getMessages();
 
     /**
-     * @param Attachment $attachment
+     * @param Model $model
      *
-     * @return mixed
+     * @return bool
      */
-    public function getAttachmentLocation(Attachment $attachment);
+    public function saveAttachmentsForModel(Model $model);
 
 }

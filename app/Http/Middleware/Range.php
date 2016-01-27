@@ -6,11 +6,12 @@ namespace FireflyIII\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Navigation;
 use Preferences;
 use Session;
 use View;
+
 
 /**
  * Class SessionFilter
@@ -41,14 +42,15 @@ class Range
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $theNext
+     * @param Closure                   $theNext
+     * @param  string|null              $guard
      *
      * @return mixed
+     * @internal param Closure $next
      */
-    public function handle(Request $request, Closure $theNext)
+    public function handle($request, Closure $theNext, $guard = null)
     {
-        if ($this->auth->check()) {
-
+        if (!Auth::guard($guard)->guest()) {
             // ignore preference. set the range to be the current month:
             if (!Session::has('start') && !Session::has('end')) {
 
@@ -71,6 +73,10 @@ class Range
                     Session::put('first', Carbon::now()->startOfYear());
                 }
             }
+
+            // check "sum of everything".
+
+
             $current = Carbon::now()->formatLocalized('%B %Y');
             $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
             $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');

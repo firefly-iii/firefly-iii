@@ -1,11 +1,13 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Category
@@ -19,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean                              $encrypted
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
+ * @property string                               $dateFormatted
  */
 class Category extends Model
 {
@@ -26,6 +29,7 @@ class Category extends Model
 
     protected $fillable = ['user_id', 'name'];
     protected $hidden   = ['encrypted'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param array $fields
@@ -40,7 +44,6 @@ class Category extends Model
         unset($search['name']);
         foreach ($search as $name => $value) {
             $query->where($name, $value);
-
         }
         $set = $query->get(['categories.*']);
         /** @var Category $category */
@@ -54,15 +57,6 @@ class Category extends Model
 
         return $category;
 
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
@@ -109,6 +103,21 @@ class Category extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
+    }
+
+    /**
+     * @param Category $value
+     *
+     * @return Category
+     */
+    public static function routeBinder(Category $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
 }

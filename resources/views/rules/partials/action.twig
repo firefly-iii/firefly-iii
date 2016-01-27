@@ -1,0 +1,40 @@
+<tr data-count="{{ count }}">
+    <td style="width:40px;">
+        <a href="#" class="btn btn-danger btn-sm remove-action"><i class="fa fa-trash"></i></a>
+    </td>
+    <td style="width:30%;">
+        {% if errors.has('rule-action.'~count) %}
+            <span class="form-control-feedback"><i class="fa fa-fw fa-remove"></i></span>
+            <p class="text-danger">{{ errors.first('rule-action.'~count) }}</p>
+        {% endif %}
+
+        <select name="rule-action[{{ count }}]" class="form-control">
+            {% for key,name in allRuleActions() %}
+                <option value="{{ key }}" label="{{ name }}"
+                        {% if key == oldTrigger %}
+                            selected
+                        {% endif %}
+                >{{ name }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+
+        <input type="text" value="{{ oldValue }}" name="rule-action-value[{{ count }}]"
+               class="form-control">
+        {% if errors.has(('rule-action-value.'~count)) %}
+            <p class="text-danger">
+                {{ errors.first('rule-action-value.'~count) }}
+            </p>
+        {% endif %}
+    </td>
+    <td style="width:20%;">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="rule-action-stop[{{ count }}]" value="1"
+                       {% if oldChecked %}checked{% endif %}
+                />
+            </label>
+        </div>
+    </td>
+</tr>

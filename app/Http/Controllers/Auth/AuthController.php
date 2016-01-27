@@ -1,7 +1,8 @@
-<?php namespace FireflyIII\Http\Controllers\Auth;
+<?php
+
+namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
-use Config;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -9,12 +10,13 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Lang;
 use Log;
 use Mail;
 use Request as Rq;
 use Session;
-use Twig;
 use Validator;
+
 
 /**
  * Class AuthController
@@ -26,27 +28,20 @@ class AuthController extends Controller
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
-     * Log the user out of the application.
+     * Where to redirect users after login / registration.
      *
-     * @return \Illuminate\Http\Response
+     * @var string
      */
-    public function getLogout()
-    {
-        Auth::logout();
-
-        return redirect('/auth/login');
-    }
+    protected $redirectTo = '/home';
 
     /**
-     * Show the application registration form.
+     * Create a new authentication controller instance.
      *
-     * @return \Illuminate\Http\Response
      */
-    public function getRegister()
+    public function __construct()
     {
-        $host = Rq::getHttpHost();
-
-        return view('auth.register', compact('host'));
+        $this->middleware('guest', ['except' => 'logout']);
+        parent::__construct();
     }
 
     /**
@@ -56,7 +51,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function postLogin(Request $request)
+    public function login(Request $request)
     {
         $this->validate($request, [$this->loginUsername() => 'required', 'password' => 'required',]);
         $throttles = $this->isUsingThrottlesLoginsTrait();
@@ -68,16 +63,19 @@ class AuthController extends Controller
         $credentials            = $this->getCredentials($request);
         $credentials['blocked'] = 0; // most not be blocked.
 
-        if (Auth::attempt($credentials, $request->has('remember'))) {
+        if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
-        $message = $this->getFailedLoginMessage();
+        // check if user is blocked:
+        $message = '';
         /** @var User $foundUser */
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
             // if it exists, show message:
             $code = $foundUser->blocked_code;
+
             if (strlen($code) == 0) {
                 $code = 'general_blocked';
             }
@@ -88,47 +86,17 @@ class AuthController extends Controller
             $this->incrementLoginAttempts($request);
         }
 
-        return redirect($this->loginPath())
-            ->withInput($request->only($this->loginUsername(), 'remember'))
-            ->withErrors([$this->loginUsername() => $message,]);
-    }
-
-
-    public $redirectTo = '/';
-
-    /**
-     * Create a new authentication controller instance.
-     *
-     * @codeCoverageIgnore
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->middleware('guest', ['except' => 'getLogout']);
-    }
-
-    /**
-     * Show the application login form.
-     *
-     * @codeCoverageIgnore
-     * @return \Illuminate\Http\Response
-     *
-     */
-    public function getLogin()
-    {
-        return Twig::render('auth.login');
+        return $this->sendFailedLoginResponse($request, $message);
     }
 
     /**
      * Handle a registration request for the application.
      *
-     * @param  Request $request
+     * @param  \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
-    public function postRegister(Request $request)
+    public function register(Request $request)
     {
         $validator = $this->validator($request->all());
 
@@ -136,10 +104,7 @@ class AuthController extends Controller
             $this->throwValidationException(
                 $request, $validator
             );
-            // @codeCoverageIgnoreStart
         }
-        // @codeCoverageIgnoreEnd
-
 
         $data             = $request->all();
         $data['password'] = bcrypt($data['password']);
@@ -152,7 +117,8 @@ class AuthController extends Controller
             );
         }
 
-        Auth::login($this->create($data));
+
+        Auth::login($this->create($request->all()));
 
         // get the email address
         if (Auth::user() instanceof User) {
@@ -187,8 +153,37 @@ class AuthController extends Controller
         // @codeCoverageIgnoreStart
         abort(500, 'Not a user!');
 
-        return redirect('/');
-        // @codeCoverageIgnoreEnd
+
+        return redirect($this->redirectPath());
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $host = Rq::getHttpHost();
+
+        return view('auth.register', compact('host'));
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array $data
+     *
+     * @return User
+     */
+    protected function create(array $data)
+    {
+        return User::create(
+            [
+                'email'    => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]
+        );
     }
 
     /**
@@ -196,7 +191,7 @@ class AuthController extends Controller
      */
     protected function getBlockedDomains()
     {
-        $set     = Config::get('mail.blocked_domains');
+        $set     = explode(',', env('BLOCKED_DOMAINS', ''));
         $domains = [];
         foreach ($set as $entry) {
             $domain = trim($entry);
@@ -206,6 +201,24 @@ class AuthController extends Controller
         }
 
         return $domains;
+    }
+
+    /**
+     * Get the failed login message.
+     *
+     * @param $message
+     *
+     * @return string
+     */
+    protected function getFailedLoginMessage($message)
+    {
+        if (strlen($message) > 0) {
+            return $message;
+        }
+
+        return Lang::has('auth.failed')
+            ? Lang::get('auth.failed')
+            : 'These credentials do not match our records.';
     }
 
     /**
@@ -226,36 +239,39 @@ class AuthController extends Controller
     }
 
     /**
+     * Get the failed login response instance.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @param                          $message
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendFailedLoginResponse(Request $request, $message)
+    {
+        return redirect()->back()
+                         ->withInput($request->only($this->loginUsername(), 'remember'))
+                         ->withErrors(
+                             [
+                                 $this->loginUsername() => $this->getFailedLoginMessage($message),
+                             ]
+                         );
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array $data
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(array $data)
+    protected function validator(array $data)
     {
         return Validator::make(
             $data, [
                      'email'    => 'required|email|max:255|unique:users',
                      'password' => 'required|confirmed|min:6',
                  ]
-        );
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array $data
-     *
-     * @return User
-     */
-    public function create(array $data)
-    {
-        return User::create(
-            [
-                'email'    => $data['email'],
-                'password' => $data['password'],
-            ]
         );
     }
 }

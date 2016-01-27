@@ -22,8 +22,14 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionTypeSeeder');
         $this->call('PermissionSeeder');
 
-        if (App::environment() == 'testing' || App::environment() == 'homestead' || gethostname() == 'lightning') {
+        // set up basic test data (as little as possible):
+        if (App::environment() == 'testing') {
             $this->call('TestDataSeeder');
+        }
+
+        // this one is reserved for more extensive testing.
+        if (App::environment() == 'local') {
+            $this->call('VisualTestDataSeeder');
         }
     }
 

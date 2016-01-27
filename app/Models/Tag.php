@@ -2,12 +2,13 @@
 
 namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Watson\Validating\ValidatingTrait;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Tag
@@ -29,18 +30,8 @@ use Watson\Validating\ValidatingTrait;
  */
 class Tag extends Model
 {
-    use ValidatingTrait;
-
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
-    protected $rules
-                        = [
-            'tag'         => 'required|min:1',
-            'description' => 'min:1',
-            'date'        => 'date',
-            'latitude'    => 'numeric|min:-90|max:90',
-            'longitude'   => 'numeric|min:-90|max:90',
-            'tagMode'     => 'required|in:nothing,balancingAct,advancePayment'
-        ];
+    protected $dates    = ['created_at', 'updated_at', 'date'];
 
     /**
      * @param array $fields
@@ -72,15 +63,6 @@ class Tag extends Model
 
         return $tag;
 
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date'];
     }
 
     /**
@@ -166,4 +148,22 @@ class Tag extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
+
+
+    /**
+     * @param Tag $value
+     *
+     * @return Tag
+     */
+    public static function routeBinder(Tag $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+
 }

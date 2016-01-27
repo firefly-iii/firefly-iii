@@ -2,6 +2,7 @@
 return [
     'specifix'        => [
         'RabobankDescription',
+        'AbnAmroDescription',
         'Dummy'
     ],
     'post_processors' => [
@@ -174,6 +175,12 @@ return [
             'name'      => 'Amount',
             'mappable'  => false,
             'converter' => 'Amount',
+            'field'     => 'amount',
+        ],
+        'amount-comma-separated' => [
+            'name'      => 'Amount (comma as decimal separator)',
+            'mappable'  => false,
+            'converter' => 'AmountComma',
             'field'     => 'amount',
         ],
         'sepa-ct-id'        => [

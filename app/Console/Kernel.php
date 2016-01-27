@@ -1,17 +1,25 @@
-<?php namespace FireflyIII\Console;
+<?php
+/**
+ * Kernel.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
+namespace FireflyIII\Console;
+
+use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /**
  * Class Kernel
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Console
  */
 class Kernel extends ConsoleKernel
 {
-
     /**
      * The Artisan commands provided by your application.
      *
@@ -19,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands
         = [
+            UpgradeFireflyInstructions::class,
         ];
 
     /**
@@ -26,12 +35,11 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
     protected function schedule(Schedule $schedule)
     {
     }
-
 }

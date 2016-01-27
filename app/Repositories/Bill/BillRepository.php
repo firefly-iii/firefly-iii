@@ -35,6 +35,24 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getActiveBills()
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->bills()
+                   ->where('active', 1)
+                   ->get(
+                       [
+                           'bills.*',
+                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
+                       ]
+                   )->sortBy('name');
+
+        return $set;
+    }
+
+    /**
      * Returns all journals connected to these bills in the given range. Amount paid
      * is stored in "journalAmount" as a negative number.
      *
@@ -61,13 +79,12 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'transaction_journals.bill_id',
-                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')
+                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`'),
                        ]
                    );
 
         return $set;
     }
-
 
     /**
      * @return Collection
@@ -126,6 +143,127 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Get the total amount of money paid for the users active bills in the date range given.
+     * This amount will be negative (they're expenses).
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function getBillsPaidInRange(Carbon $start, Carbon $end)
+    {
+        $amount = '0';
+        $bills  = $this->getActiveBills();
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $ranges = $this->getRanges($bill, $start, $end);
+
+            foreach ($ranges as $range) {
+                $paid   = $bill->transactionjournals()
+                               ->before($range['end'])
+                               ->after($range['start'])
+                               ->leftJoin(
+                                   'transactions', function (JoinClause $join) {
+                                   $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                               }
+                               )
+                               ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                $amount = bcadd($amount, $paid->sum_amount);
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
+     * Get the total amount of money due for the users active bills in the date range given. This amount will be positive.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function getBillsUnpaidInRange(Carbon $start, Carbon $end)
+    {
+        $amount = '0';
+        $bills  = $this->getActiveBills();
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $ranges   = $this->getRanges($bill, $start, $end);
+            $paidBill = '0';
+            foreach ($ranges as $range) {
+                $paid     = $bill->transactionjournals()
+                                 ->before($range['end'])
+                                 ->after($range['start'])
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+                                 }
+                                 )
+                                 ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                $paidBill = bcadd($paid->sum_amount, $paidBill);
+            }
+            if ($paidBill == 0) {
+                $amount = bcadd($amount, $bill->expectedAmount);
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
+     * This method will tell you if you still have a CC bill to pay. Amount will be positive if the amount
+     * has been paid, otherwise it will be negative.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function getCreditCardBill(Carbon $start, Carbon $end)
+    {
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $amount            = '0';
+        $creditCards       = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
+        /** @var Account $creditCard */
+        foreach ($creditCards as $creditCard) {
+            if ($creditCard->balance == 0) {
+                // find a transfer TO the credit card which should account for anything paid. If not, the CC is not yet used.
+                $set = TransactionJournal::whereIn(
+                    'transaction_journals.id', function (Builder $q) use ($creditCard, $start, $end) {
+                    $q->select('transaction_journals.id')
+                      ->from('transactions')
+                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                      ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                      ->where('transactions.account_id', $creditCard->id)
+                      ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
+                      ->where('transaction_journals.user_id', Auth::user()->id)
+                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                      ->where('transaction_types.type', TransactionType::TRANSFER);
+                }
+                )->leftJoin(
+                    'transactions', function (JoinClause $join) {
+                    $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+                }
+                )->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+
+                $amount = bcadd($amount, $set->sum_amount);
+            } else {
+                $amount = bcadd($amount, $creditCard->balance);
+            }
+        }
+
+        return $amount;
+
+    }
+
+    /**
      * This method also returns the amount of the journal in "journalAmount"
      * for easy access.
      *
@@ -146,6 +284,7 @@ class BillRepository implements BillRepositoryInterface
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
                     ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
+
         return $set;
     }
 
@@ -172,8 +311,9 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPossiblyRelatedJournals(Bill $bill)
     {
-        $set = DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
-            ['transaction_journal_id']
+        $set = new Collection(
+            DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)
+              ->get(['transaction_journal_id'])
         );
         $ids = $set->pluck('transaction_journal_id')->toArray();
 
@@ -392,6 +532,22 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * @param float $amount
+     * @param float $min
+     * @param float $max
+     *
+     * @return bool
+     */
+    protected function doAmountMatch($amount, $min, $max)
+    {
+        if ($amount >= $min && $amount <= $max) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param array $matches
      * @param       $description
      *
@@ -411,160 +567,5 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $wordMatch;
-    }
-
-    /**
-     * @param float $amount
-     * @param float $min
-     * @param float $max
-     *
-     * @return bool
-     */
-    protected function doAmountMatch($amount, $min, $max)
-    {
-        if ($amount >= $min && $amount <= $max) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Get the total amount of money paid for the users active bills in the date range given.
-     * This amount will be negative (they're expenses).
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getBillsPaidInRange(Carbon $start, Carbon $end)
-    {
-        $amount = '0';
-        $bills  = $this->getActiveBills();
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $ranges = $this->getRanges($bill, $start, $end);
-
-            foreach ($ranges as $range) {
-                $paid   = $bill->transactionjournals()
-                               ->before($range['end'])
-                               ->after($range['start'])
-                               ->leftJoin(
-                                   'transactions', function (JoinClause $join) {
-                                   $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                               }
-                               )
-                               ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $amount = bcadd($amount, $paid->sum_amount);
-            }
-        }
-        return $amount;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getActiveBills()
-    {
-        /** @var Collection $set */
-        $set = Auth::user()->bills()
-                   ->where('active', 1)
-                   ->get(
-                       [
-                           'bills.*',
-                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`')
-                       ]
-                   )->sortBy('name');
-
-        return $set;
-    }
-
-
-    /**
-     * Get the total amount of money due for the users active bills in the date range given. This amount will be positive.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getBillsUnpaidInRange(Carbon $start, Carbon $end)
-    {
-        $amount = '0';
-        $bills  = $this->getActiveBills();
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $ranges   = $this->getRanges($bill, $start, $end);
-            $paidBill = '0';
-            foreach ($ranges as $range) {
-                $paid     = $bill->transactionjournals()
-                                 ->before($range['end'])
-                                 ->after($range['start'])
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-                                 }
-                                 )
-                                 ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $paidBill = bcadd($paid->sum_amount, $paidBill);
-            }
-            if ($paidBill == 0) {
-                $amount = bcadd($amount, $bill->expectedAmount);
-            }
-        }
-        return $amount;
-    }
-
-    /**
-     * This method will tell you if you still have a CC bill to pay. Amount will be positive if the amount
-     * has been paid, otherwise it will be negative.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getCreditCardBill(Carbon $start, Carbon $end)
-    {
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $amount            = '0';
-        $creditCards       = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
-        /** @var Account $creditCard */
-        foreach ($creditCards as $creditCard) {
-            if ($creditCard->balance == 0) {
-                // find a transfer TO the credit card which should account for
-                // anything paid. If not, the CC is not yet used.
-                $set = TransactionJournal::whereIn(
-                    'transaction_journals.id', function (Builder $q) use ($creditCard, $start, $end) {
-                    $q->select('transaction_journals.id')
-                      ->from('transactions')
-                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                      ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                      ->where('transactions.account_id', $creditCard->id)
-                      ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-                      ->where('transaction_journals.user_id', Auth::user()->id)
-                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                      ->where('transaction_types.type', TransactionType::TRANSFER);
-                }
-                )->leftJoin(
-                    'transactions', function (JoinClause $join) {
-                    $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-                }
-                )->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-
-                $amount = bcadd($amount, $set->sum_amount);
-            } else {
-                $amount = bcadd($amount, $creditCard->balance);
-            }
-        }
-
-        return $amount;
-
     }
 }

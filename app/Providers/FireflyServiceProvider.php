@@ -11,6 +11,7 @@ use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
+use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
@@ -44,6 +45,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Journal);
         Twig::addExtension(new Budget);
         Twig::addExtension(new Translation);
+        Twig::addExtension(new Rule);
     }
 
     /**
@@ -51,7 +53,6 @@ class FireflyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
 
         $this->app->bind(
             'preferences', function () {
@@ -90,6 +91,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface', 'FireflyIII\Repositories\Currency\CurrencyRepository');
         $this->app->bind('FireflyIII\Repositories\Tag\TagRepositoryInterface', 'FireflyIII\Repositories\Tag\TagRepository');
         $this->app->bind('FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface', 'FireflyIII\Repositories\Attachment\AttachmentRepository');
+        $this->app->bind('FireflyIII\Repositories\Rule\RuleRepositoryInterface', 'FireflyIII\Repositories\Rule\RuleRepository');
+        $this->app->bind('FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface', 'FireflyIII\Repositories\RuleGroup\RuleGroupRepository');
         $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
 
         // CSV import

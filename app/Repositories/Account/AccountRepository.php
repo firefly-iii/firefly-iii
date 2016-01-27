@@ -62,6 +62,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @deprecated
+     *
+     * @param $accountId
+     *
+     * @return Account
+     */
+    public function find($accountId)
+    {
+        return Auth::user()->accounts()->findOrNew($accountId);
+    }
+
+    /**
      * @param array $types
      *
      * @return Collection
@@ -80,9 +92,9 @@ class AccountRepository implements AccountRepositoryInterface
                 return strtolower($account->name);
             }
         );
+
         return $result;
     }
-
 
     /**
      * This method returns the users credit cards, along with some basic information about the
@@ -110,9 +122,10 @@ class AccountRepository implements AccountRepositoryInterface
                            'accounts.*',
                            'ccType.data as ccType',
                            'accountRole.data as accountRole',
-                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`')
+                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`'),
                        ]
                    );
+
         return $set;
     }
 
@@ -143,6 +156,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $result = $query->get(['accounts.*']);
+
         return $result;
     }
 
@@ -173,6 +187,7 @@ class AccountRepository implements AccountRepositoryInterface
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+
         return $set;
     }
 
@@ -319,7 +334,8 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal = TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
-            ->accountIs($account)
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
@@ -373,6 +389,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // need the complexity.
+     *
      * @return Account
      */
     public function update(Account $account, array $data)
@@ -386,15 +404,10 @@ class AccountRepository implements AccountRepositoryInterface
 
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
-
-        // if has openingbalance?
         if ($data['openingBalance'] != 0) {
-            // if opening balance, do an update:
             if ($openingBalance) {
-                // update existing opening balance.
                 $this->updateInitialBalance($account, $openingBalance, $data);
             } else {
-                // create new opening balance.
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
                 $opposingData = [
                     'user'           => $data['user'],
@@ -465,29 +478,6 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
-     */
-    protected function storeMetadata(Account $account, array $data)
-    {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        foreach ($validFields as $field) {
-            if (isset($data[$field])) {
-                $metaData = new AccountMeta(
-                    [
-                        'account_id' => $account->id,
-                        'name'       => $field,
-                        'data'       => $data[$field]
-                    ]
-                );
-                $metaData->save();
-            }
-
-
-        }
-    }
-
-    /**
-     * @param Account $account
      * @param Account $opposing
      * @param array   $data
      *
@@ -505,7 +495,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
-                'encrypted'               => true
+                'encrypted'               => true,
             ]
         );
 
@@ -534,33 +524,24 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param array   $data
-     *
      */
-    protected function updateMetadata(Account $account, array $data)
+    protected function storeMetadata(Account $account, array $data)
     {
         $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-
         foreach ($validFields as $field) {
-            $entry = $account->accountMeta()->where('name', $field)->first();
-
-            // update if new data is present:
-            if ($entry && isset($data[$field])) {
-                $entry->data = $data[$field];
-                $entry->save();
-            }
-            // no entry but data present?
-            if (!$entry && isset($data[$field])) {
+            if (isset($data[$field])) {
                 $metaData = new AccountMeta(
                     [
                         'account_id' => $account->id,
                         'name'       => $field,
-                        'data'       => $data[$field]
+                        'data'       => $data[$field],
                     ]
                 );
                 $metaData->save();
             }
-        }
 
+
+        }
     }
 
     /**
@@ -573,7 +554,8 @@ class AccountRepository implements AccountRepositoryInterface
     protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
     {
         $journal->date = $data['openingBalanceDate'];
-
+        $journal->save();
+        
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id == $transaction->account_id) {
@@ -590,14 +572,34 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @deprecated
+     * @param Account $account
+     * @param array   $data
      *
-     * @param $accountId
-     *
-     * @return Account
      */
-    public function find($accountId)
+    protected function updateMetadata(Account $account, array $data)
     {
-        return Auth::user()->accounts()->findOrNew($accountId);
+        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
+
+        foreach ($validFields as $field) {
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            if (isset($data[$field])) {
+                // update if new data is present:
+                if (!is_null($entry)) {
+                    $entry->data = $data[$field];
+                    $entry->save();
+                } else {
+                    $metaData = new AccountMeta(
+                        [
+                            'account_id' => $account->id,
+                            'name'       => $field,
+                            'data'       => $data[$field],
+                        ]
+                    );
+                    $metaData->save();
+                }
+            }
+        }
+
     }
 }

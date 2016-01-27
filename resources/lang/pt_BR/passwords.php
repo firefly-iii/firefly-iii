@@ -1,4 +1,11 @@
 <?php
+/**
+ * passwords.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 return [
 
@@ -17,6 +24,6 @@ return [
     "token"    => "Este token de redefinição de senha é inválido.",
     "sent"     => "Nós te enviamos um email com um link para trocar a senha!",
     "reset"    => "Sua senha foi redefinida!",
-    'blocked'  => 'Nice try though.'
+    'blocked'  => 'Boa tentativa.',
 
 ];

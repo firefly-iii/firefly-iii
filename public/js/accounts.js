@@ -2,12 +2,17 @@
 
 
 // Return a helper with preserved width of cells
-var fixHelper = function (e, ui) {
+var fixHelper = function(e, tr)
+{
     "use strict";
-    ui.children().each(function () {
-        $(this).width($(this).width());
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function(index)
+    {
+        // Set helper cell sizes to match the original sizes
+        $(this).width($originals.eq(index).width());
     });
-    return ui;
+    return $helper;
 };
 
 $(function () {

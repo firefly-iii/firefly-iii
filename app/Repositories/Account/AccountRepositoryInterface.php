@@ -25,6 +25,14 @@ interface AccountRepositoryInterface
     public function countAccounts(array $types);
 
     /**
+     * @param Account $account
+     * @param Account $moveTo
+     *
+     * @return boolean
+     */
+    public function destroy(Account $account, Account $moveTo = null);
+
+    /**
      * @param $accountId
      *
      * @deprecated
@@ -34,27 +42,11 @@ interface AccountRepositoryInterface
     public function find($accountId);
 
     /**
-     * @param Account $account
-     * @param Account $moveTo
-     *
-     * @return boolean
-     */
-    public function destroy(Account $account, Account $moveTo = null);
-
-    /**
      * @param array $types
      *
      * @return Collection
      */
     public function getAccounts(array $types);
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     */
-    public function getFirstTransaction(TransactionJournal $journal, Account $account);
 
     /**
      * This method returns the users credit cards, along with some basic information about the
@@ -70,11 +62,12 @@ interface AccountRepositoryInterface
     public function getCreditCards(Carbon $date);
 
     /**
-     * Get the accounts of a user that have piggy banks connected to them.
+     * @param TransactionJournal $journal
+     * @param Account            $account
      *
-     * @return Collection
+     * @return Transaction
      */
-    public function getPiggyBankAccounts();
+    public function getFirstTransaction(TransactionJournal $journal, Account $account);
 
     /**
      * @param Preference $preference
@@ -101,9 +94,11 @@ interface AccountRepositoryInterface
     public function getJournals(Account $account, $page);
 
     /**
-     * @return string
+     * Get the accounts of a user that have piggy banks connected to them.
+     *
+     * @return Collection
      */
-    public function sumOfEverything();
+    public function getPiggyBankAccounts();
 
     /**
      * Get savings accounts and the balance difference in the period.
@@ -133,6 +128,11 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function store(array $data);
+
+    /**
+     * @return string
+     */
+    public function sumOfEverything();
 
     /**
      * @param Account $account

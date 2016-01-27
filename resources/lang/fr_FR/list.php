@@ -3,15 +3,15 @@
 // all table headers.
 
 return [
-    'name'           => 'Name',
-    'role'           => 'Role',
-    'currentBalance' => 'Current balance',
-    'active'         => 'Is active?',
-    'lastActivity'   => 'Last activity',
-    'balanceDiff'    => 'Balance difference between :start and :end',
+    'name'           => 'Nom',
+    'role'           => 'Rôle',
+    'currentBalance' => 'Solde courant',
+    'active'         => 'Actif ?',
+    'lastActivity'   => 'Activité récente',
+    'balanceDiff'    => 'Difference solde entre :start et :end',
     'matchedOn'      => 'Matched on',
     'matchesOn'      => 'Matched on',
-    'matchingAmount' => 'Amount',
+    'matchingAmount' => 'Montant',
     'lastMatch'      => 'Last match',
     'expectedMatch'  => 'Expected match',
     'automatch'      => 'Auto match?',

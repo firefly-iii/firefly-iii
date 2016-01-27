@@ -11,7 +11,7 @@ return [
     | by the framework. A "local" driver, as well as a variety of cloud
     | based drivers are available for your choosing. Just store away!
     |
-    | Supported: "local", "s3", "rackspace"
+    | Supported: "local", "ftp", "s3", "rackspace"
     |
     */
 
@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'cloud'   => 's3',
+    'cloud' => 's3',
 
     /*
     |--------------------------------------------------------------------------
@@ -41,14 +41,28 @@ return [
     |
     */
 
-    'disks'   => [
+    'disks' => [
 
-        'local'     => [
+        'local' => [
             'driver' => 'local',
-            'root'   => storage_path() . '/app',
+            'root'   => storage_path('app'),
         ],
 
-        's3'        => [
+        'ftp' => [
+            'driver'   => 'ftp',
+            'host'     => 'ftp.example.com',
+            'username' => 'your-username',
+            'password' => 'your-password',
+
+            // Optional FTP Settings...
+            // 'port'     => 21,
+            // 'root'     => '',
+            // 'passive'  => true,
+            // 'ssl'      => true,
+            // 'timeout'  => 30,
+        ],
+
+        's3' => [
             'driver' => 's3',
             'key'    => 'your-key',
             'secret' => 'your-secret',
@@ -63,6 +77,7 @@ return [
             'container' => 'your-container',
             'endpoint'  => 'https://identity.api.rackspacecloud.com/v2.0/',
             'region'    => 'IAD',
+            'url_type'  => 'publicURL',
         ],
 
     ],

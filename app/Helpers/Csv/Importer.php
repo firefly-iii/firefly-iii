@@ -34,6 +34,8 @@ class Importer
     protected $importRow;
     /** @var int */
     protected $imported = 0;
+    /** @var  Collection */
+    protected $journals;
     /** @var array */
     protected $map;
     /** @var  array */
@@ -44,9 +46,6 @@ class Importer
     protected $rows = 0;
     /** @var array */
     protected $specifix = [];
-
-    /** @var  Collection */
-    protected $journals;
 
     /**
      * Used by CsvController.
@@ -69,6 +68,14 @@ class Importer
     }
 
     /**
+     * @return Collection
+     */
+    public function getJournals()
+    {
+        return $this->journals;
+    }
+
+    /**
      * Used by CsvController
      *
      * @return int
@@ -79,13 +86,12 @@ class Importer
     }
 
     /**
-     * @return Collection
+     * @return array
      */
-    public function getJournals()
+    public function getSpecifix()
     {
-        return $this->journals;
+        return is_array($this->specifix) ? $this->specifix : [];
     }
-
 
     /**
      * @throws FireflyException
@@ -118,136 +124,11 @@ class Importer
     }
 
     /**
-     * @param int $index
-     *
-     * @return bool
+     * @param Data $data
      */
-    protected function parseRow($index)
+    public function setData($data)
     {
-        return (($this->data->hasHeaders() && $index >= 1) || !$this->data->hasHeaders());
-    }
-
-    /**
-     * @param $row
-     *
-     * @throws FireflyException
-     * @return string|bool
-     */
-    protected function importRow($row)
-    {
-
-        $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
-        foreach ($row as $index => $value) {
-            $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
-            $class = Config::get('csv.roles.' . $role . '.converter');
-            $field = Config::get('csv.roles.' . $role . '.field');
-
-            Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
-
-            /** @var ConverterInterface $converter */
-            $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
-            $converter->setData($data); // the complete array so far.
-            $converter->setField($field);
-            $converter->setIndex($index);
-            $converter->setMapped($this->mapped);
-            $converter->setValue($value);
-            $converter->setRole($role);
-            $data[$field] = $converter->convert();
-        }
-        // move to class vars.
-        $this->importData = $data;
-        $this->importRow  = $row;
-        unset($data, $row);
-        // post processing and validating.
-        $this->postProcess();
-        $result = $this->validateData();
-
-        if (!($result === true)) {
-            return $result; // return error.
-        }
-        $journal = $this->createTransactionJournal();
-
-        return $journal;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFiller()
-    {
-        $filler = [];
-        foreach (Config::get('csv.roles') as $role) {
-            if (isset($role['field'])) {
-                $fieldName          = $role['field'];
-                $filler[$fieldName] = null;
-            }
-        }
-        // some extra's:
-        $filler['bill-id']                 = null;
-        $filler['opposing-account-object'] = null;
-        $filler['asset-account-object']    = null;
-        $filler['amount-modifier']         = '1';
-
-        return $filler;
-
-    }
-
-    /**
-     * Row denotes the original data.
-     *
-     * @return void
-     */
-    protected function postProcess()
-    {
-        // do bank specific fixes (must be enabled but now all of them.
-
-        foreach ($this->getSpecifix() as $className) {
-            /** @var SpecifixInterface $specifix */
-            $specifix = app('FireflyIII\Helpers\Csv\Specifix\\' . $className);
-            $specifix->setData($this->importData);
-            $specifix->setRow($this->importRow);
-            Log::debug('Now post-process specifix named ' . $className . ':');
-            $this->importData = $specifix->fix();
-        }
-
-
-        $set = Config::get('csv.post_processors');
-        foreach ($set as $className) {
-            /** @var PostProcessorInterface $postProcessor */
-            $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
-            $postProcessor->setData($this->importData);
-            Log::debug('Now post-process processor named ' . $className . ':');
-            $this->importData = $postProcessor->process();
-        }
-
-    }
-
-    /**
-     * @return array
-     */
-    public function getSpecifix()
-    {
-        return is_array($this->specifix) ? $this->specifix : [];
-    }
-
-    /**
-     *
-     * @return bool|string
-     */
-    protected function validateData()
-    {
-        if (is_null($this->importData['date']) && is_null($this->importData['date-rent'])) {
-            return 'No date value for this row.';
-        }
-        if (is_null($this->importData['opposing-account-object'])) {
-            return 'Opposing account is null';
-        }
-
-        if (!($this->importData['asset-account-object'] instanceof Account)) {
-            return 'No asset account to import into.';
-        }
-
-        return true;
+        $this->data = $data;
     }
 
     /**
@@ -310,6 +191,28 @@ class Importer
     }
 
     /**
+     * @return array
+     */
+    protected function getFiller()
+    {
+        $filler = [];
+        foreach (Config::get('csv.roles') as $role) {
+            if (isset($role['field'])) {
+                $fieldName          = $role['field'];
+                $filler[$fieldName] = null;
+            }
+        }
+        // some extra's:
+        $filler['bill-id']                 = null;
+        $filler['opposing-account-object'] = null;
+        $filler['asset-account-object']    = null;
+        $filler['amount-modifier']         = '1';
+
+        return $filler;
+
+    }
+
+    /**
      * @return TransactionType
      */
     protected function getTransactionType()
@@ -324,6 +227,92 @@ class Importer
         }
 
         return $transactionType;
+    }
+
+    /**
+     * @param $row
+     *
+     * @throws FireflyException
+     * @return string|bool
+     */
+    protected function importRow($row)
+    {
+
+        $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
+        foreach ($row as $index => $value) {
+            $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
+            $class = Config::get('csv.roles.' . $role . '.converter');
+            $field = Config::get('csv.roles.' . $role . '.field');
+
+            Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
+
+            // here would be the place where preprocessors would fire.
+
+            /** @var ConverterInterface $converter */
+            $converter = app('FireflyIII\Helpers\Csv\Converter\\' . $class);
+            $converter->setData($data); // the complete array so far.
+            $converter->setField($field);
+            $converter->setIndex($index);
+            $converter->setMapped($this->mapped);
+            $converter->setValue($value);
+            $data[$field] = $converter->convert();
+        }
+        // move to class vars.
+        $this->importData = $data;
+        $this->importRow  = $row;
+        unset($data, $row);
+        // post processing and validating.
+        $this->postProcess();
+        $result = $this->validateData();
+
+        if (!($result === true)) {
+            return $result; // return error.
+        }
+        $journal = $this->createTransactionJournal();
+
+        return $journal;
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return bool
+     */
+    protected function parseRow($index)
+    {
+        return (($this->data->hasHeaders() && $index >= 1) || !$this->data->hasHeaders());
+    }
+
+    /**
+     * Row denotes the original data.
+     *
+     * @return void
+     */
+    protected function postProcess()
+    {
+        // do bank specific fixes (must be enabled but now all of them.
+
+        foreach ($this->getSpecifix() as $className) {
+            /** @var SpecifixInterface $specifix */
+            $specifix = app('FireflyIII\Helpers\Csv\Specifix\\' . $className);
+            if ($specifix->getProcessorType() == SpecifixInterface::POST_PROCESSOR) {
+                $specifix->setData($this->importData);
+                $specifix->setRow($this->importRow);
+                Log::debug('Now post-process specifix named ' . $className . ':');
+                $this->importData = $specifix->fix();
+            }
+        }
+
+
+        $set = Config::get('csv.post_processors');
+        foreach ($set as $className) {
+            /** @var PostProcessorInterface $postProcessor */
+            $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
+            $postProcessor->setData($this->importData);
+            Log::debug('Now post-process processor named ' . $className . ':');
+            $this->importData = $postProcessor->process();
+        }
+
     }
 
     /**
@@ -361,11 +350,23 @@ class Importer
     }
 
     /**
-     * @param Data $data
+     *
+     * @return bool|string
      */
-    public function setData($data)
+    protected function validateData()
     {
-        $this->data = $data;
+        if (is_null($this->importData['date']) && is_null($this->importData['date-rent'])) {
+            return 'No date value for this row.';
+        }
+        if (is_null($this->importData['opposing-account-object'])) {
+            return 'Opposing account is null';
+        }
+
+        if (!($this->importData['asset-account-object'] instanceof Account)) {
+            return 'No asset account to import into.';
+        }
+
+        return true;
     }
 
 }

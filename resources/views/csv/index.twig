@@ -1,0 +1,108 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'csv_index_title'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
+                </div>
+                <div class="box-body">
+                    {{ 'csv_index_text'|_ }}
+                    <p class="text-info">{{ 'csv_index_beta_warning'|_ }}</p>
+                    {% if unsupported|length > 0 %}
+                        <p class="text-danger">{{ 'csv_index_unsupported_warning'|_ }}</p>
+                        <ul>
+                            {% for message in unsupported %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <form class="form-horizontal" action="{{ route('csv.upload') }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'csv_upload_form'|_ }}</h3>
+
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+
+                    </div>
+                    <div class="box-body">
+
+
+                        {{ ExpandedForm.checkbox('has_headers',1,null,{helpText: 'csv_header_help'|_}) }}
+                        {{ ExpandedForm.text('date_format','Ymd',{helpText: trans('firefly.csv_date_help', {dateExample: phpdate('Ymd')}) }) }}
+
+                        {{ ExpandedForm.file('csv',{helpText: 'csv_csv_file_help'|_}) }}
+
+                        {{ ExpandedForm.select('csv_delimiter', delimiters, 0, {helpText: 'csv_delimiter_help'|_} ) }}
+
+                        {{ ExpandedForm.file('csv_config',{helpText: 'csv_csv_config_file_help'|_}) }}
+
+                        {{ ExpandedForm.select('csv_import_account', accounts, 0, {helpText: 'csv_import_account_help'|_} ) }}
+
+                        {{ ExpandedForm.multiCheckbox('specifix', specifix) }}
+
+
+
+                        {% if not uploadPossible %}
+                            <div class="form-group" id="csv_holder">
+                                <div class="col-sm-4">
+                                    &nbsp;
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <pre>{{ path }}</pre>
+                                    <p class="text-danger">
+                                        {{ 'csv_upload_not_writeable'|_ }}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-body">
+                        <button type="submit" class="pull-right btn btn-success">
+                            {{ 'csv_upload_button'|_ }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+{% endblock %}

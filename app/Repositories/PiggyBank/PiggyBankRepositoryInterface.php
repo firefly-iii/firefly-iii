@@ -43,6 +43,11 @@ interface PiggyBankRepositoryInterface
     public function getEvents(PiggyBank $piggyBank);
 
     /**
+     * @return int
+     */
+    public function getMaxOrder();
+
+    /**
      * @return Collection
      */
     public function getPiggyBanks();

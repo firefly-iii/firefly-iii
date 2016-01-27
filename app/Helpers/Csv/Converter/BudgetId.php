@@ -5,7 +5,7 @@ use Auth;
 use FireflyIII\Models\Budget;
 
 /**
- * Class AccountId
+ * Class BudgetId
  *
  * @package FireflyIII\Helpers\Csv\Converter
  */

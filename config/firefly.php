@@ -2,7 +2,7 @@
 
 return [
     'chart'              => 'chartjs',
-    'version'            => '3.6.1',
+    'version'            => '3.7.0',
     'index_periods'      => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'     => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'csv_import_enabled' => true,
@@ -98,7 +98,7 @@ return [
             'Revenue account'     => 'revenue',
             'Cash account'        => 'cash',
         ],
-    'languages' => [
+    'languages'                => [
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portugese (Brazil)', 'complete' => false],
@@ -146,5 +146,70 @@ return [
         'fr_FR' => '%B %e, %Y',
         'pt_BR' => '%B %e, %Y',
     ],
+    'bindables'   => [
+        // models
+        'account'         => 'FireflyIII\Models\Account',
+        'attachment'      => 'FireflyIII\Models\Attachment',
+        'bill'            => 'FireflyIII\Models\Bill',
+        'budget'          => 'FireflyIII\Models\Budget',
+        'category'        => 'FireflyIII\Models\Category',
+        'currency'        => 'FireflyIII\Models\TransactionCurrency',
+        'limitrepetition' => 'FireflyIII\Models\LimitRepetition',
+        'piggyBank'       => 'FireflyIII\Models\PiggyBank',
+        'tj'              => 'FireflyIII\Models\TransactionJournal',
+        'tag'             => 'FireflyIII\Models\Tag',
+        'rule'            => 'FireflyIII\Models\Rule',
+        'ruleGroup'       => 'FireflyIII\Models\RuleGroup',
+        // lists
+        'accountList'     => 'FireflyIII\Support\Binder\AccountList',
+        'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
+        'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
+
+        // others
+        'start_date'      => 'FireflyIII\Support\Binder\Date',
+        'end_date'        => 'FireflyIII\Support\Binder\Date'
+    ],
+
+    'rule-triggers'     => [
+        'user_action'           => 'FireflyIII\Rules\Triggers\UserAction',
+        'from_account_starts'   => 'FireflyIII\Rules\Triggers\FromAccountStarts',
+        'from_account_ends'     => 'FireflyIII\Rules\Triggers\FromAccountEnds',
+        'from_account_is'       => 'FireflyIII\Rules\Triggers\FromAccountIs',
+        'from_account_contains' => 'FireflyIII\Rules\Triggers\FromAccountContains',
+        'to_account_starts'     => 'FireflyIII\Rules\Triggers\ToAccountStarts',
+        'to_account_ends'       => 'FireflyIII\Rules\Triggers\ToAccountEnds',
+        'to_account_is'         => 'FireflyIII\Rules\Triggers\ToAccountIs',
+        'to_account_contains'   => 'FireflyIII\Rules\Triggers\ToAccountContains',
+        'transaction_type'      => 'FireflyIII\Rules\Triggers\TransactionType',
+        'amount_less'           => 'FireflyIII\Rules\Triggers\AmountLess',
+        'amount_exactly'        => 'FireflyIII\Rules\Triggers\AmountExactly',
+        'amount_more'           => 'FireflyIII\Rules\Triggers\AmountMore',
+        'description_starts'    => 'FireflyIII\Rules\Triggers\DescriptionStarts',
+        'description_ends'      => 'FireflyIII\Rules\Triggers\DescriptionEnds',
+        'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
+        'description_is'        => 'FireflyIII\Rules\Triggers\DescriptionIs',
+    ],
+    'rule-actions'      => [
+        'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
+        'clear_category'      => 'FireflyIII\Rules\Actions\ClearCategory',
+        'set_budget'          => 'FireflyIII\Rules\Actions\SetBudget',
+        'clear_budget'        => 'FireflyIII\Rules\Actions\ClearBudget',
+        'add_tag'             => 'FireflyIII\Rules\Actions\AddTag',
+        'remove_tag'          => 'FireflyIII\Rules\Actions\RemoveTag',
+        'remove_all_tags'     => 'FireflyIII\Rules\Actions\RemoveAllTags',
+        'set_description'     => 'FireflyIII\Rules\Actions\SetDescription',
+        'append_description'  => 'FireflyIII\Rules\Actions\AppendDescription',
+        'prepend_description' => 'FireflyIII\Rules\Actions\PrependDescription',
+    ],
+    // all rule actions that require text input:
+    'rule-actions-text' => [
+        'set_category',
+        'set_budget',
+        'add_tag',
+        'remove_tag',
+        'set_description',
+        'append_description',
+        'prepend_description',
+    ]
 
 ];

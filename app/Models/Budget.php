@@ -1,11 +1,13 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Budget
@@ -21,6 +23,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read Collection|BudgetLimit[]        $budgetlimits
  * @property-read Collection|TransactionJournal[] $transactionjournals
  * @property-read User                            $user
+ * @property string                               $dateFormatted
+ * @property string                               $budgeted
  */
 class Budget extends Model
 {
@@ -29,6 +33,7 @@ class Budget extends Model
 
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
 
     /**
      * @param array $fields
@@ -65,14 +70,6 @@ class Budget extends Model
     public function budgetlimits()
     {
         return $this->hasMany('FireflyIII\Models\BudgetLimit');
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
     }
 
     /**
@@ -121,6 +118,21 @@ class Budget extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
+    }
+
+    /**
+     * @param Budget $value
+     *
+     * @return Budget
+     */
+    public static function routeBinder(Budget $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
 

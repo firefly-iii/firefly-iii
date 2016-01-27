@@ -6,6 +6,7 @@ use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Input;
+use Log;
 use Preferences;
 use Session;
 use URL;
@@ -60,7 +61,7 @@ class CurrencyController extends Controller
         Preferences::set('currencyPreference', $currency->code);
         Preferences::mark();
 
-        Session::flash('success', $currency->name . ' is now the default currency.');
+        Session::flash('success', trans('firefly.new_default_currency', ['name' => $currency->name]));
         Cache::forget('FFCURRENCYSYMBOL');
         Cache::forget('FFCURRENCYCODE');
 
@@ -78,7 +79,7 @@ class CurrencyController extends Controller
     {
 
         if ($repository->countJournals($currency) > 0) {
-            Session::flash('error', 'Cannot delete ' . e($currency->name) . ' because there are still transactions attached to it.');
+            Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currency.index'));
         }
@@ -103,12 +104,12 @@ class CurrencyController extends Controller
     public function destroy(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         if ($repository->countJournals($currency) > 0) {
-            Session::flash('error', 'Cannot destroy ' . e($currency->name) . ' because there are still transactions attached to it.');
+            Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currency.index'));
         }
 
-        Session::flash('success', 'Currency "' . e($currency->name) . '" deleted');
+        Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
         if (Auth::user()->hasRole('owner')) {
             $currency->delete();
         }
@@ -151,7 +152,7 @@ class CurrencyController extends Controller
 
 
         if (!Auth::user()->hasRole('owner')) {
-            Session::flash('warning', 'Please ask ' . env('SITE_OWNER') . ' to add, remove or edit currencies.');
+            Session::flash('warning', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
         }
 
 
@@ -170,8 +171,9 @@ class CurrencyController extends Controller
         $data = $request->getCurrencyData();
         if (Auth::user()->hasRole('owner')) {
             $currency = $repository->store($data);
-            Session::flash('success', 'Currency "' . $currency->name . '" created');
-
+            Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
+        } else {
+            Log::error('User ' . Auth::user()->id . ' is not admin, but tried to store a currency.');
         }
 
         if (intval(Input::get('create_another')) === 1) {
@@ -199,7 +201,7 @@ class CurrencyController extends Controller
         if (Auth::user()->hasRole('owner')) {
             $currency = $repository->update($currency, $data);
         }
-        Session::flash('success', 'Currency "' . e($currency->name) . '" updated.');
+        Session::flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
         Preferences::mark();
 
 

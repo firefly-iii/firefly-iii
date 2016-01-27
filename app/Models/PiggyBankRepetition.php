@@ -24,14 +24,7 @@ class PiggyBankRepetition extends Model
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
     protected $hidden   = ['currentamount_encrypted'];
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'startdate', 'targetdate'];
-    }
+    protected $dates    = ['created_at', 'updated_at', 'startdate', 'targetdate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

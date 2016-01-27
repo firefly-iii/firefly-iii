@@ -18,8 +18,6 @@ class BasicConverter
     /** @var  array */
     protected $mapped;
     /** @var string */
-    protected $role;
-    /** @var string */
     protected $value;
 
     /**
@@ -84,22 +82,6 @@ class BasicConverter
     public function setMapped($mapped)
     {
         $this->mapped = $mapped;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * @param string $role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
     }
 
     /**

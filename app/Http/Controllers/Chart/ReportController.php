@@ -41,6 +41,8 @@ class ReportController extends Controller
      * @param Carbon               $end
      * @param Collection           $accounts
      *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function yearInOut(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)

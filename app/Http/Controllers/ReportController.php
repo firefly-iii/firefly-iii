@@ -16,6 +16,7 @@ use View;
 class ReportController extends Controller
 {
 
+
     /** @var ReportHelperInterface */
     protected $helper;
 
@@ -33,83 +34,6 @@ class ReportController extends Controller
         View::share('mainTitleIcon', 'fa-line-chart');
 
     }
-
-    /**
-     * @param ARI $repository
-     *
-     * @return View
-     * @internal param ReportHelperInterface $helper
-     */
-    public function index(ARI $repository)
-    {
-        $start        = Session::get('first');
-        $months       = $this->helper->listOfMonths($start);
-        $startOfMonth = clone Session::get('start');
-        $endOfMonth   = clone Session::get('start');
-        $startOfYear  = clone Session::get('start');
-        $endOfYear    = clone Session::get('start');
-        $startOfMonth->startOfMonth();
-        $endOfMonth->endOfMonth();
-        $startOfYear->startOfYear();
-        $endOfYear->endOfYear();
-
-        // does the user have shared accounts?
-        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
-        // get id's for quick links:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds [] = $account->id;
-        }
-        $accountList = join(',', $accountIds);
-
-
-        return view(
-            'reports.index', compact(
-                               'months', 'accounts', 'start', 'accountList',
-                               'startOfMonth', 'endOfMonth', 'startOfYear', 'endOfYear'
-                           )
-        );
-    }
-
-    /**
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
-     */
-    public function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-
-        Session::flash('gaEventCategory', 'report');
-        Session::flash('gaEventAction', 'year');
-        Session::flash('gaEventLabel', $start->format('Y'));
-
-        // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
-
-        return view(
-            'reports.default.year',
-            compact(
-                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
-                'expenses', 'incomeTopLength', 'expenseTopLength'
-            )
-        );
-    }
-
 
     /**
      * @param            $reportType
@@ -186,6 +110,73 @@ class ReportController extends Controller
                 'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
                 'incomeTopLength', 'expenseTopLength'
             )
+        );
+    }
+
+    /**
+     * @param            $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return View
+     */
+    public function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
+
+        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+
+        Session::flash('gaEventCategory', 'report');
+        Session::flash('gaEventAction', 'year');
+        Session::flash('gaEventLabel', $start->format('Y'));
+
+        // and some id's, joined:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        $accountIds = join(',', $accountIds);
+
+        return view(
+            'reports.default.year',
+            compact(
+                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
+                'expenses', 'incomeTopLength', 'expenseTopLength'
+            )
+        );
+    }
+
+    /**
+     * @param ARI $repository
+     *
+     * @return View
+     * @internal param ReportHelperInterface $helper
+     */
+    public function index(ARI $repository)
+    {
+        $start  = Session::get('first');
+        $months = $this->helper->listOfMonths($start);
+
+        // does the user have shared accounts?
+        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
+        // get id's for quick links:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds [] = $account->id;
+        }
+        $accountList = join(',', $accountIds);
+
+
+        return view(
+            'reports.index', compact(
+                               'months', 'accounts', 'start', 'accountList'
+                           )
         );
     }
 

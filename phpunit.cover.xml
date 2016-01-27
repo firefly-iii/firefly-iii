@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ phpunit.cover.xml
+  ~ Copyright (C) 2016 Sander Dorigo
+  ~
+  ~ This software may be modified and distributed under the terms
+  ~ of the MIT license.  See the LICENSE file for details.
+  -->
+
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="bootstrap/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">app/Http</directory>
+        </whitelist>
+        <blacklist>
+            <directory>vendor/</directory>
+            <directory>app/Console</directory>
+            <directory>app/Events</directory>
+            <directory>app/Exceptions</directory>
+            <directory>app/Generator</directory>
+            <directory>app/Handlers</directory>
+            <directory>app/Helpers</directory>
+
+            <directory>app/Jobs</directory>
+            <directory>app/Listeners</directory>
+            <directory>app/Models</directory>
+            <directory>app/Policies</directory>
+            <directory>app/Providers</directory>
+            <directory>app/Repositories</directory>
+            <directory>app/Rules</directory>
+            <directory>app/Sql</directory>
+            <directory>app/Support</directory>
+            <directory>app/Validation</directory>
+
+            <!-- and other directories,  -->
+        </blacklist>
+    </filter>
+    <!--
+    Code coverage has never been slower.
+    -->
+    <logging>
+        <log type="coverage-clover" target="./storage/build/clover.xml" charset="UTF-8" />
+    </logging>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
+    </php>
+</phpunit>

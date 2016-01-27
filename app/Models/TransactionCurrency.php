@@ -1,9 +1,11 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\TransactionCurrency
@@ -23,14 +25,7 @@ class TransactionCurrency extends Model
 
 
     protected $fillable = ['name', 'code', 'symbol'];
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
-    }
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -38,5 +33,18 @@ class TransactionCurrency extends Model
     public function transactionJournals()
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return TransactionCurrency
+     */
+    public static function routeBinder(TransactionCurrency $currency)
+    {
+        if (Auth::check()) {
+            return $currency;
+        }
+        throw new NotFoundHttpException;
     }
 }

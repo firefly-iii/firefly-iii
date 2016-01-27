@@ -21,6 +21,15 @@ interface AccountChartGenerator
      *
      * @return array
      */
+    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
@@ -31,13 +40,4 @@ interface AccountChartGenerator
      * @return array
      */
     public function single(Account $account, Carbon $start, Carbon $end);
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end);
 }

@@ -60,7 +60,7 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
 
         $preFilled = [
-            'tagMode' => 'nothing'
+            'tagMode' => 'nothing',
         ];
         if (!Input::old('tagMode')) {
             Session::flash('preFilled', $preFilled);

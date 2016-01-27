@@ -3,6 +3,7 @@ languages:
   JavaScript: true
   PHP: true
 exclude_paths:
+- "gulpfile.js"
 - "public/packages/maximebf/php-debugbar/debugbar.js"
 - "public/packages/maximebf/php-debugbar/widgets.js"
 - "public/packages/maximebf/php-debugbar/openhandler.js"

@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'rule_trigger_value'      => 'This value is invalid for the selected trigger.',
+    'rule_action_value'       => 'This value is invalid for the selected action.',
     'invalid_domain'          => 'Due to security constraints, you cannot register from this domain.',
     'file_already_attached'   => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'           => 'Succesfully uploaded file ":name".',

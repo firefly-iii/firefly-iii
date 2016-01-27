@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Input;
 use Log;
 use Preferences;
+use Request as RequestFacade;
 use Session;
 use View;
 
@@ -30,7 +31,7 @@ class CsvController extends Controller
     protected $wizard;
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -57,8 +58,9 @@ class CsvController extends Controller
     public function columnRoles()
     {
 
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account', 'csv-specifix', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
+            Log::error('Could not recover upload.');
             Session::flash('warning', 'Could not recover upload.');
 
             return redirect(route('csv.index'));
@@ -79,9 +81,9 @@ class CsvController extends Controller
         if ($this->data->hasHeaders()) {
             $headers = $firstRow;
         }
-
-        foreach (Config::get('csv.roles') as $name => $role) {
-            $availableRoles[$name] = trans('firefly.csv_column_' . $name);//$role['name'];
+        $keys = array_keys(Config::get('csv.roles'));
+        foreach ($keys as $name) {
+            $availableRoles[$name] = trans('firefly.csv_column_' . $name);
         }
         ksort($availableRoles);
 
@@ -97,7 +99,7 @@ class CsvController extends Controller
      */
     public function downloadConfig()
     {
-        $fields = ['csv-date-format', 'csv-has-headers'];
+        $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -105,7 +107,7 @@ class CsvController extends Controller
         }
         $data = [
             'date-format' => Session::get('csv-date-format'),
-            'has-headers' => Session::get('csv-has-headers')
+            'has-headers' => Session::get('csv-has-headers'),
         ];
         if (Session::has('csv-map')) {
             $data['map'] = Session::get('csv-map');
@@ -122,13 +124,18 @@ class CsvController extends Controller
         }
 
         $result = json_encode($data, JSON_PRETTY_PRINT);
-        $name   = 'csv-configuration-' . date('Y-m-d') . '.json';
+        $name   = sprintf('"%s"', addcslashes('csv-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
-        header('Content-disposition: attachment; filename=' . $name);
-        header('Content-type: application/json');
-        echo $result;
+        RequestFacade::header('Content-disposition: attachment; filename=' . $name);
+        RequestFacade::header('Content-Type: application/json');
+        RequestFacade::header('Content-Description: File Transfer');
+        RequestFacade::header('Connection: Keep-Alive');
+        RequestFacade::header('Expires: 0');
+        RequestFacade::header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        RequestFacade::header('Pragma: public');
+        RequestFacade::header('Content-Length: ' . strlen($result));
 
-        return '';
+        return $result;
     }
 
     /**
@@ -136,6 +143,13 @@ class CsvController extends Controller
      */
     public function downloadConfigPage()
     {
+        $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
+        if (!$this->wizard->sessionHasValues($fields)) {
+            Session::flash('warning', 'Could not recover upload.');
+
+            return redirect(route('csv.index'));
+        }
+
         $subTitle = trans('firefly.csv_download_config_title');
 
         return view('csv.download-config', compact('subTitle'));
@@ -162,12 +176,20 @@ class CsvController extends Controller
         Session::forget('csv-roles');
         Session::forget('csv-mapped');
         Session::forget('csv-specifix');
+        Session::forget('csv-delimiter');
 
         // get list of supported specifix
         $specifix = [];
         foreach (Config::get('csv.specifix') as $entry) {
             $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
         }
+
+        // get a list of delimiters:
+        $delimiters = [
+            ','   => trans('form.csv_comma'),
+            ';'   => trans('form.csv_semicolon'),
+            'tab' => trans('form.csv_tab'),
+        ];
 
         // get a list of asset accounts:
         $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
@@ -176,7 +198,7 @@ class CsvController extends Controller
         $uploadPossible = is_writable(storage_path('upload'));
         $path           = storage_path('upload');
 
-        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts'));
+        return view('csv.index', compact('subTitle', 'uploadPossible', 'path', 'specifix', 'accounts', 'delimiters'));
     }
 
     /**
@@ -188,7 +210,7 @@ class CsvController extends Controller
      */
     public function initialParse()
     {
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -238,7 +260,7 @@ class CsvController extends Controller
     {
 
         // Make sure all fields we need are accounted for.
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -258,6 +280,8 @@ class CsvController extends Controller
         try {
             $options = $this->wizard->showOptions($this->data->getMap());
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+
             return view('error', ['message' => $e->getMessage()]);
         }
 
@@ -286,7 +310,7 @@ class CsvController extends Controller
         /*
          * Make sure all fields we need are accounted for.
          */
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -323,6 +347,8 @@ class CsvController extends Controller
      *
      * STEP SIX
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) it's 6, but it's allright.
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function saveMapping()
@@ -330,7 +356,7 @@ class CsvController extends Controller
         /*
          * Make sure all fields we need are accounted for.
          */
-        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles'];
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Session::flash('warning', 'Could not recover upload.');
 
@@ -367,6 +393,9 @@ class CsvController extends Controller
      *
      * STEP TWO
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // need the length.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly 5, its ok
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -383,11 +412,19 @@ class CsvController extends Controller
         $settings                   = [];
         $settings['date-format']    = Input::get('date_format');
         $settings['has-headers']    = intval(Input::get('has_headers')) === 1;
-        $settings['specifix']       = Input::get('specifix');
+        $settings['specifix']       = is_array(Input::get('specifix')) ? Input::get('specifix') : [];
         $settings['import-account'] = intval(Input::get('csv_import_account'));
-        $settings['map']            = [];
-        $settings['mapped']         = [];
-        $settings['roles']          = [];
+        $settings['delimiter']      = Input::get('csv_delimiter', ',');
+
+        // A tab character cannot be used itself as option value in HTML
+        // See http://stackoverflow.com/questions/6064135/valid-characters-in-option-value
+        if ($settings['delimiter'] == 'tab') {
+            $settings['delimiter'] = "\t";
+        }
+
+        $settings['map']    = [];
+        $settings['mapped'] = [];
+        $settings['roles']  = [];
 
         if ($request->hasFile('csv_config')) { // Process config file if present.
             $data = file_get_contents($request->file('csv_config')->getRealPath());
@@ -405,6 +442,7 @@ class CsvController extends Controller
         $this->data->setRoles($settings['roles']);
         $this->data->setSpecifix($settings['specifix']);
         $this->data->setImportAccount($settings['import-account']);
+        $this->data->setDelimiter($settings['delimiter']);
 
         return redirect(route('csv.column-roles'));
 

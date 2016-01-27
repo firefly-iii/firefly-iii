@@ -2,11 +2,13 @@
 
 namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Attachment
@@ -171,6 +173,22 @@ class Attachment extends Model
     public function setNotesAttribute($value)
     {
         $this->attributes['notes'] = Crypt::encrypt($value);
+    }
+
+    /**
+     * @param Attachment $value
+     *
+     * @return Attachment
+     */
+    public static function routeBinder(Attachment $value)
+    {
+        if (Auth::check()) {
+
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
 }

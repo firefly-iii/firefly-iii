@@ -1,0 +1,199 @@
+{% extends "./layout/default.twig" %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'rules'|_ }}</h3>
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'rules_explanation'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for ruleGroup in ruleGroups %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {% if ruleGroup.active %}
+                                {{ ruleGroup.title }}
+                            {% else %}
+                                <s>{{ ruleGroup.title }}</s> (inactive)
+                            {% endif %}
+                        </h3>
+
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <div class="btn-group">
+                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
+                                            class="fa fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('rules.rule-group.edit',ruleGroup.id) }}"><i
+                                                    class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                    <li><a href="{{ route('rules.rule-group.delete',ruleGroup.id) }}"><i
+                                                    class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a>
+                                        {% if ruleGroup.order > 1 %}
+                                    <li><a href="{{ route('rules.rule-group.up',ruleGroup.id) }}"><i
+                                                    class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a>
+                                        {% endif %}
+                                        {% if ruleGroup.order < ruleGroups|length %}
+                                    <li><a href="{{ route('rules.rule-group.down',ruleGroup.id) }}"><i
+                                                    class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            <em>{{ ruleGroup.description }}</em>
+                        </p>
+
+                        {% if ruleGroup.rules.count > 0 %}
+                            <table class="table table-hover table-striped sortable">
+                                <thead>
+                                <tr>
+                                    <th colspan="2">{{ 'rule_name'|_ }}</th>
+                                    <th>{{ 'rule_triggers'|_ }}</th>
+                                    <th>{{ 'rule_actions'|_ }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for rule in ruleGroup.rules %}
+                                    <tr>
+                                        <td>
+                                            <div class="btn-group btn-group-xs">
+                                                {% if rule.order > 1 %}
+                                                    <a title="{{ 'rule_priority_up'|_ }}"
+                                                       href="{{ route('rules.rule.up', rule.id) }}"
+                                                       class="btn btn-default"><span
+                                                                class="fa fa-fw fa-arrow-up"></span></a>
+                                                {% else %}
+                                                    <a href="#" class="btn btn-default"><span
+                                                                class="fa fa-fw"></span></a>
+                                                {% endif %}
+                                                {% if rule.order < ruleGroup.rules.count %}
+                                                    <a title="{{ 'rule_priority_down'|_ }}"
+                                                       href="{{ route('rules.rule.down', rule.id) }}"
+                                                       class="btn btn-default"><span
+                                                                class="fa fa-fw fa-arrow-down"></span>
+                                                    </a>
+                                                {% else %}
+                                                    <a href="#" class="btn btn-default"><span
+                                                                class="fa fa-fw"></span></a>
+                                                {% endif %}
+                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.rule.edit', rule.id) }}"
+                                                   class="btn btn-default"><span
+                                                            class="fa fa-fw fa-pencil"></span></a>
+                                                <a title="{{ 'delete'|_ }}"
+                                                   href="{{ route('rules.rule.delete', rule.id) }}"
+                                                   class="btn btn-danger"><span
+                                                            class="fa fa-fw fa-trash"></span></a>
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            {% if rule.active %}
+                                                {{ rule.title }}
+                                            {% else %}
+                                                <s>{{ rule.title }}</s> (inactive)
+                                            {% endif %}
+                                            {% if rule.stop_processing %}
+                                                <i class="fa fa-stop-circle-o"></i>
+                                            {% endif %}
+
+                                            {% if rule.description != "" %}
+                                                <small
+                                                        {% if not rule.active %}
+                                                            class="text-muted"
+                                                        {% endif %}
+                                                ><br/>{{ rule.description }}</small>
+                                            {% endif %}
+
+                                        </td>
+                                        <td>
+                                            {% if rule.ruleTriggers.count > 0 %}
+                                                <ul class="small rule-triggers" data-id="{{ rule.id }}">
+                                                    {% for trigger in rule.ruleTriggers %}
+                                                        {% if trigger.trigger_type != "user_action" %}
+                                                            <li
+                                                                    {% if not rule.active %}
+                                                                        class="text-muted"
+                                                                    {% endif %}
+                                                                    data-id="{{ trigger.id }}">{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}
+
+                                                                {% if trigger.stop_processing %}
+                                                                    <i class="fa fa-stop-circle-o"></i>
+                                                                {% endif %}
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if rule.ruleActions.count > 0 %}
+                                                <ul class="small rule-actions" data-id="{{ rule.id }}">
+                                                    {% for action in rule.ruleActions %}
+                                                        <li
+                                                                {% if not rule.active %}
+                                                                    class="text-muted"
+                                                                {% endif %}
+                                                                data-id="{{ action.id }}">{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}
+                                                            {% if action.stop_processing %}
+                                                                <i class="fa fa-stop-circle-o"></i>
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>
+                                <em>{{ 'no_rules_in_group'|_ }}</em>
+                            </p>
+                        {% endif %}
+                        <p>
+                            <br/>
+                            <a href="{{ route('rules.rule.create', ruleGroup.id) }}"
+                               class="btn btn-success">{{ 'new_rule'|_ }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <a href="{{ route('rules.rule-group.create') }}" class="btn btn-success">{{ 'new_rule_group'|_ }}</a>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/rules/index.js"></script>
+{% endblock %}

@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Http\Controllers;
 
-
 use Crypt;
 use File;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -11,6 +10,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Input;
 use Preferences;
+use Request;
 use Response;
 use Session;
 use URL;
@@ -32,26 +32,6 @@ class AttachmentController extends Controller
         parent::__construct();
         View::share('mainTitleIcon', 'fa-paperclip');
         View::share('title', trans('firefly.attachments'));
-    }
-
-
-    /**
-     * @param Attachment $attachment
-     *
-     * @return \Illuminate\View\View
-     */
-    public function edit(Attachment $attachment)
-    {
-        $subTitleIcon = 'fa-pencil';
-        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
-
-        // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('attachments.edit.fromUpdate') !== true) {
-            Session::put('attachments.edit.url', URL::previous());
-        }
-        Session::forget('attachments.edit.fromUpdate');
-
-        return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
 
     /**
@@ -101,21 +81,40 @@ class AttachmentController extends Controller
 
             $quoted = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename=' . $quoted);
-            header('Content-Transfer-Encoding: binary');
-            header('Connection: Keep-Alive');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Pragma: public');
-            header('Content-Length: ' . $attachment->size);
+            Request::header('Content-Description: File Transfer');
+            Request::header('Content-Type: application/octet-stream');
+            Request::header('Content-Disposition: attachment; filename=' . $quoted);
+            Request::header('Content-Transfer-Encoding: binary');
+            Request::header('Connection: Keep-Alive');
+            Request::header('Expires: 0');
+            Request::header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            Request::header('Pragma: public');
+            Request::header('Content-Length: ' . $attachment->size);
 
-            echo Crypt::decrypt(file_get_contents($file));
+            return Crypt::decrypt(file_get_contents($file));
 
         } else {
             abort(404);
         }
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(Attachment $attachment)
+    {
+        $subTitleIcon = 'fa-pencil';
+        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('attachments.edit.fromUpdate') !== true) {
+            Session::put('attachments.edit.url', URL::previous());
+        }
+        Session::forget('attachments.edit.fromUpdate');
+
+        return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
 
     /**

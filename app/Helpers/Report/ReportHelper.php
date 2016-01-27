@@ -19,9 +19,12 @@ use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -32,81 +35,27 @@ use Illuminate\Support\Collection;
 class ReportHelper implements ReportHelperInterface
 {
 
+    /** @var  BudgetRepositoryInterface */
+    protected $budgetRepository;
     /** @var ReportQueryInterface */
     protected $query;
+    /** @var  TagRepositoryInterface */
+    protected $tagRepository;
 
     /**
+     * ReportHelper constructor.
+     *
      * @codeCoverageIgnore
      *
-     * @param ReportQueryInterface $query
-     *
+     * @param ReportQueryInterface      $query
+     * @param BudgetRepositoryInterface $budgetRepository
+     * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(ReportQueryInterface $query)
+    public function __construct(ReportQueryInterface $query, BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
     {
-        $this->query = $query;
-
-    }
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return CategoryCollection
-     */
-    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $object = new CategoryCollection;
-
-        /**
-         * GET CATEGORIES:
-         */
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-
-        $set = $repository->spentForAccountsPerMonth($accounts, $start, $end);
-        foreach ($set as $category) {
-            $object->addCategory($category);
-        }
-
-        return $object;
-    }
-
-    /**
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    public function listOfMonths(Carbon $date)
-    {
-
-        $start  = clone $date;
-        $end    = Carbon::now();
-        $months = [];
-        while ($start <= $end) {
-            $year = $start->year;
-
-            if (!isset($months[$year])) {
-                $months[$year] = [
-                    'start'  => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
-                    'end'    => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
-                    'months' => [],
-                ];
-            }
-
-            $currentEnd = clone $start;
-            $currentEnd->endOfMonth();
-            $months[$year]['months'][] = [
-                'formatted' => $start->formatLocalized('%B %Y'),
-                'start'     => $start->format('Y-m-d'),
-                'end'       => $currentEnd->format('Y-m-d'),
-                'month'     => $start->month,
-                'year'      => $year,
-            ];
-            $start->addMonth();
-        }
-
-        return $months;
+        $this->query            = $query;
+        $this->budgetRepository = $budgetRepository;
+        $this->tagRepository    = $tagRepository;
     }
 
     /**
@@ -198,47 +147,86 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * Get a full report on the users incomes during the period for the given accounts.
-     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return Income
+     * @return Balance
      */
-    public function getIncomeReport($start, $end, Collection $accounts)
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        $object = new Income;
-        $set    = $this->query->income($accounts, $start, $end);
+        $balance = new Balance;
 
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->journalAmount);
-            $object->addOrCreateIncome($entry);
+        // build a balance header:
+        $header    = new BalanceHeader;
+        $budgets   = $this->budgetRepository->getBudgetsAndLimitsInRange($start, $end);
+        $spentData = $this->budgetRepository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end);
+        foreach ($accounts as $account) {
+            $header->addAccount($account);
         }
 
-        return $object;
+        /** @var BudgetModel $budget */
+        foreach ($budgets as $budget) {
+            $balance->addBalanceLine($this->createBalanceLine($budget, $accounts, $spentData));
+        }
+
+        $balance->addBalanceLine($this->createEmptyBalanceLine($accounts, $spentData));
+        $balance->addBalanceLine($this->createTagsBalanceLine($accounts, $start, $end));
+        $balance->addBalanceLine($this->createDifferenceBalanceLine($accounts, $spentData, $start, $end));
+
+        $balance->setBalanceHeader($header);
+
+        return $balance;
     }
 
     /**
-     * Get a full report on the users expenses during the period for a list of accounts.
+     * This method generates a full report for the given period on all
+     * the users bills and their payments.
+     *
+     * Excludes bills which have not had a payment on the mentioned accounts.
      *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return Expense
+     * @return BillCollection
      */
-    public function getExpenseReport($start, $end, Collection $accounts)
+    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        $object = new Expense;
-        $set    = $this->query->expense($accounts, $start, $end);
+        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $bills      = $repository->getBillsForAccounts($accounts);
+        $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
+        $collection = new BillCollection;
 
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer
-            $object->addOrCreateExpense($entry);
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $billLine = new BillLine;
+            $billLine->setBill($bill);
+            $billLine->setActive(intval($bill->active) == 1);
+            $billLine->setMin($bill->amount_min);
+            $billLine->setMax($bill->amount_max);
+
+            // is hit in period?
+            bcscale(2);
+
+            $entry = $journals->filter(
+                function (TransactionJournal $journal) use ($bill) {
+                    return $journal->bill_id == $bill->id;
+                }
+            );
+            if (!is_null($entry->first())) {
+                $billLine->setAmount($entry->first()->journalAmount);
+                $billLine->setHit(true);
+            } else {
+                $billLine->setHit(false);
+            }
+
+            $collection->addBill($billLine);
+
         }
 
-        return $object;
+        return $collection;
     }
 
     /**
@@ -325,163 +313,105 @@ class ReportHelper implements ReportHelperInterface
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return Balance
+     * @return CategoryCollection
      */
-    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $object = new CategoryCollection;
 
-        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        /**
+         * GET CATEGORIES:
+         */
+        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
 
-        $balance = new Balance;
-
-        // build a balance header:
-        $header    = new BalanceHeader;
-        $budgets   = $repository->getBudgetsAndLimitsInRange($start, $end);
-        $spentData = $repository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end);
-        foreach ($accounts as $account) {
-            $header->addAccount($account);
+        $set = $repository->spentForAccountsPerMonth($accounts, $start, $end);
+        foreach ($set as $category) {
+            $object->addCategory($category);
         }
 
-        /** @var BudgetModel $budget */
-        foreach ($budgets as $budget) {
-            $line = new BalanceLine;
-            $line->setBudget($budget);
-
-            // loop accounts:
-            foreach ($accounts as $account) {
-                $balanceEntry = new BalanceEntry;
-                $balanceEntry->setAccount($account);
-
-                // get spent:
-                $entry = $spentData->filter(
-                    function (TransactionJournal $model) use ($budget, $account) {
-                        return $model->account_id == $account->id && $model->budget_id == $budget->id;
-                    }
-                );
-                $spent = 0;
-                if (!is_null($entry->first())) {
-                    $spent = $entry->first()->spent;
-                }
-                $balanceEntry->setSpent($spent);
-                $line->addBalanceEntry($balanceEntry);
-            }
-            // add line to balance:
-            $balance->addBalanceLine($line);
-        }
-
-        // then a new line for without budget.
-        // and one for the tags:
-        // and one for "left unbalanced".
-        $empty    = new BalanceLine;
-        $tags     = new BalanceLine;
-        $diffLine = new BalanceLine;
-        $tagsLeft = $tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
-
-        $tags->setRole(BalanceLine::ROLE_TAGROLE);
-        $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
-
-        foreach ($accounts as $account) {
-            $entry = $spentData->filter(
-                function (TransactionJournal $model) use ($account) {
-                    return $model->account_id == $account->id && is_null($model->budget_id);
-                }
-            );
-            $spent = 0;
-            if (!is_null($entry->first())) {
-                $spent = $entry->first()->spent;
-            }
-            $leftEntry = $tagsLeft->filter(
-                function (Tag $tag) use ($account) {
-                    return $tag->account_id == $account->id;
-                }
-            );
-            $left      = 0;
-            if (!is_null($leftEntry->first())) {
-                $left = $leftEntry->first()->sum;
-            }
-            bcscale(2);
-            $diff = bcadd($spent, $left);
-
-            // budget
-            $budgetEntry = new BalanceEntry;
-            $budgetEntry->setAccount($account);
-            $budgetEntry->setSpent($spent);
-            $empty->addBalanceEntry($budgetEntry);
-
-            // balanced by tags
-            $tagEntry = new BalanceEntry;
-            $tagEntry->setAccount($account);
-            $tagEntry->setLeft($left);
-            $tags->addBalanceEntry($tagEntry);
-
-            // difference:
-            $diffEntry = new BalanceEntry;
-            $diffEntry->setAccount($account);
-            $diffEntry->setSpent($diff);
-            $diffLine->addBalanceEntry($diffEntry);
-
-        }
-
-        $balance->addBalanceLine($empty);
-        $balance->addBalanceLine($tags);
-        $balance->addBalanceLine($diffLine);
-
-        $balance->setBalanceHeader($header);
-
-        return $balance;
+        return $object;
     }
 
     /**
-     * This method generates a full report for the given period on all
-     * the users bills and their payments.
-     *
-     * Excludes bills which have not had a payment on the mentioned accounts.
+     * Get a full report on the users expenses during the period for a list of accounts.
      *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return BillCollection
+     * @return Expense
      */
-    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getExpenseReport($start, $end, Collection $accounts)
     {
-        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
-        $bills      = $repository->getBillsForAccounts($accounts);
-        $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
-        $collection = new BillCollection;
+        $object = new Expense;
+        $set    = $this->query->expense($accounts, $start, $end);
 
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $billLine = new BillLine;
-            $billLine->setBill($bill);
-            $billLine->setActive(intval($bill->active) == 1);
-            $billLine->setMin($bill->amount_min);
-            $billLine->setMax($bill->amount_max);
-
-            // is hit in period?
-            bcscale(2);
-
-            $entry = $journals->filter(
-                function (TransactionJournal $journal) use ($bill) {
-                    return $journal->bill_id == $bill->id;
-                }
-            );
-            if (!is_null($entry->first())) {
-                $billLine->setAmount($entry->first()->journalAmount);
-                $billLine->setHit(true);
-            } else {
-                $billLine->setHit(false);
-            }
-
-            $collection->addBill($billLine);
-
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer
+            $object->addOrCreateExpense($entry);
         }
 
-        return $collection;
+        return $object;
+    }
+
+    /**
+     * Get a full report on the users incomes during the period for the given accounts.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Income
+     */
+    public function getIncomeReport($start, $end, Collection $accounts)
+    {
+        $object = new Income;
+        $set    = $this->query->income($accounts, $start, $end);
+
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->journalAmount);
+            $object->addOrCreateIncome($entry);
+        }
+
+        return $object;
+    }
+
+    /**
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    public function listOfMonths(Carbon $date)
+    {
+
+        $start  = clone $date;
+        $end    = Carbon::now();
+        $months = [];
+        while ($start <= $end) {
+            $year = $start->year;
+
+            if (!isset($months[$year])) {
+                $months[$year] = [
+                    'start'  => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
+                    'end'    => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
+                    'months' => [],
+                ];
+            }
+
+            $currentEnd = clone $start;
+            $currentEnd->endOfMonth();
+            $months[$year]['months'][] = [
+                'formatted' => $start->formatLocalized('%B %Y'),
+                'start'     => $start->format('Y-m-d'),
+                'end'       => $currentEnd->format('Y-m-d'),
+                'month'     => $start->month,
+                'year'      => $year,
+            ];
+            $start->addMonth();
+        }
+
+        return $months;
     }
 
     /**
@@ -510,5 +440,158 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Collection $spentData
+     *
+     * @return BalanceLine
+     */
+    private function createBalanceLine(BudgetModel $budget, Collection $accounts, Collection $spentData)
+    {
+        $line = new BalanceLine;
+        $line->setBudget($budget);
+
+        // loop accounts:
+        foreach ($accounts as $account) {
+            $balanceEntry = new BalanceEntry;
+            $balanceEntry->setAccount($account);
+
+            // get spent:
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($budget, $account) {
+                    return $model->account_id == $account->id && $model->budget_id == $budget->id;
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+            $balanceEntry->setSpent($spent);
+            $line->addBalanceEntry($balanceEntry);
+        }
+
+        return $line;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $spentData
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * @return BalanceLine
+     */
+    private function createDifferenceBalanceLine(Collection $accounts, Collection $spentData, Carbon $start, Carbon $end)
+    {
+        $diff     = new BalanceLine;
+        $tagsLeft = $this->tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
+
+        $diff->setRole(BalanceLine::ROLE_DIFFROLE);
+
+        foreach ($accounts as $account) {
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($account) {
+                    return $model->account_id == $account->id && is_null($model->budget_id);
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+            $leftEntry = $tagsLeft->filter(
+                function (Tag $tag) use ($account) {
+                    return $tag->account_id == $account->id;
+                }
+            );
+            $left      = 0;
+            if (!is_null($leftEntry->first())) {
+                $left = $leftEntry->first()->sum;
+            }
+            bcscale(2);
+            $diffValue = bcadd($spent, $left);
+
+            // difference:
+            $diffEntry = new BalanceEntry;
+            $diffEntry->setAccount($account);
+            $diffEntry->setSpent($diffValue);
+            $diff->addBalanceEntry($diffEntry);
+
+        }
+
+        return $diff;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $spentData
+     *
+     * @return BalanceLine
+     */
+    private function createEmptyBalanceLine(Collection $accounts, Collection $spentData)
+    {
+        $empty = new BalanceLine;
+
+        foreach ($accounts as $account) {
+            $entry = $spentData->filter(
+                function (TransactionJournal $model) use ($account) {
+                    return $model->account_id == $account->id && is_null($model->budget_id);
+                }
+            );
+            $spent = 0;
+            if (!is_null($entry->first())) {
+                $spent = $entry->first()->spent;
+            }
+
+            // budget
+            $budgetEntry = new BalanceEntry;
+            $budgetEntry->setAccount($account);
+            $budgetEntry->setSpent($spent);
+            $empty->addBalanceEntry($budgetEntry);
+
+        }
+
+        return $empty;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return BalanceLine
+     */
+    private function createTagsBalanceLine(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $tags     = new BalanceLine;
+        $tagsLeft = $this->tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
+
+        $tags->setRole(BalanceLine::ROLE_TAGROLE);
+
+        foreach ($accounts as $account) {
+            $leftEntry = $tagsLeft->filter(
+                function (Tag $tag) use ($account) {
+                    return $tag->account_id == $account->id;
+                }
+            );
+            $left      = 0;
+            if (!is_null($leftEntry->first())) {
+                $left = $leftEntry->first()->sum;
+            }
+            bcscale(2);
+
+            // balanced by tags
+            $tagEntry = new BalanceEntry;
+            $tagEntry->setAccount($account);
+            $tagEntry->setLeft($left);
+            $tags->addBalanceEntry($tagEntry);
+
+        }
+
+        return $tags;
     }
 }

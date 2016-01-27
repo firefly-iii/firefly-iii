@@ -12,11 +12,11 @@ return [
     | syntax for each one. Here you may set the default queue driver.
     |
     | Supported: "null", "sync", "database", "beanstalkd",
-    |            "sqs", "iron", "redis"
+    |            "sqs", "redis"
     |
     */
 
-    'default'     => env('QUEUE_DRIVER', 'sync'),
+    'default' => env('QUEUE_DRIVER', 'sync'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,11 +31,11 @@ return [
 
     'connections' => [
 
-        'sync'       => [
+        'sync' => [
             'driver' => 'sync',
         ],
 
-        'database'   => [
+        'database' => [
             'driver' => 'database',
             'table'  => 'jobs',
             'queue'  => 'default',
@@ -49,27 +49,20 @@ return [
             'ttr'    => 60,
         ],
 
-        'sqs'        => [
+        'sqs' => [
             'driver' => 'sqs',
             'key'    => 'your-public-key',
             'secret' => 'your-secret-key',
-            'queue'  => 'your-queue-url',
+            'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
+            'queue'  => 'your-queue-name',
             'region' => 'us-east-1',
         ],
 
-        'iron'       => [
-            'driver'  => 'iron',
-            'host'    => 'mq-aws-us-east-1.iron.io',
-            'token'   => 'your-token',
-            'project' => 'your-project-id',
-            'queue'   => 'your-queue-name',
-            'encrypt' => true,
-        ],
-
-        'redis'      => [
-            'driver' => 'redis',
-            'queue'  => 'default',
-            'expire' => 60,
+        'redis' => [
+            'driver'     => 'redis',
+            'connection' => 'default',
+            'queue'      => 'default',
+            'expire'     => 60,
         ],
 
     ],
@@ -85,8 +78,9 @@ return [
     |
     */
 
-    'failed'      => [
-        'database' => 'mysql', 'table' => 'failed_jobs',
+    'failed' => [
+        'database' => env('DB_CONNECTION', 'mysql'),
+        'table'    => 'failed_jobs',
     ],
 
 ];

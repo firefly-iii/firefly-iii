@@ -63,7 +63,8 @@ class Wizard implements WizardInterface
 
 
         if (is_array($map)) {
-            foreach ($map as $index => $field) {
+            $keys = array_keys($map);
+            foreach ($keys as $index) {
                 if (isset($roles[$index])) {
                     $name = $roles[$index];
                     if ($configRoles[$name]['mappable']) {
@@ -168,17 +169,6 @@ class Wizard implements WizardInterface
     }
 
     /**
-     * @param bool $hasHeaders
-     * @param int  $index
-     *
-     * @return bool
-     */
-    protected function useRow($hasHeaders, $index)
-    {
-        return ($hasHeaders && $index > 1) || !$hasHeaders;
-    }
-
-    /**
      * @param array $array
      *
      * @return array
@@ -190,5 +180,16 @@ class Wizard implements WizardInterface
         }
 
         return $array;
+    }
+
+    /**
+     * @param bool $hasHeaders
+     * @param int  $index
+     *
+     * @return bool
+     */
+    protected function useRow($hasHeaders, $index)
+    {
+        return ($hasHeaders && $index > 1) || !$hasHeaders;
     }
 }

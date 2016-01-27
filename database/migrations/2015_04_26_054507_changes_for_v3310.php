@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName)
- * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  *
  * Class ChangesForV3310
  */

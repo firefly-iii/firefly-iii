@@ -14,16 +14,6 @@ use FireflyIII\Models\Preference;
 class Preferences
 {
     /**
-     * @return string
-     */
-    public function lastActivity()
-    {
-        $preference = $this->get('lastActivity', microtime())->data;
-
-        return md5($preference);
-    }
-
-    /**
      * @param      string $name
      * @param string      $default
      *
@@ -54,6 +44,26 @@ class Preferences
     }
 
     /**
+     * @return string
+     */
+    public function lastActivity()
+    {
+        $preference = $this->get('lastActivity', microtime())->data;
+
+        return md5($preference);
+    }
+
+    /**
+     * @return bool
+     */
+    public function mark()
+    {
+        $this->set('lastActivity', microtime());
+
+        return true;
+    }
+
+    /**
      * @param        $name
      * @param string $value
      *
@@ -79,15 +89,5 @@ class Preferences
 
         return $pref;
 
-    }
-
-    /**
-     * @return bool
-     */
-    public function mark()
-    {
-        $this->set('lastActivity', microtime());
-
-        return true;
     }
 }

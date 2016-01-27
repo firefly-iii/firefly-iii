@@ -63,22 +63,6 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     }
 
     /**
-     * @param $array
-     * @param $entryId
-     *
-     * @return string
-     */
-    protected function isInArray($array, $entryId)
-    {
-        if (isset($array[$entryId])) {
-            return $array[$entryId];
-        }
-
-        return '0';
-    }
-
-
-    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -89,17 +73,12 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
     {
         // language:
         $format  = trans('config.month_and_day');
-        $data    = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
+        $data    = ['count' => 0, 'labels' => [], 'datasets' => [],];
         $current = clone $start;
         while ($current <= $end) {
             $data['labels'][] = $current->formatLocalized($format);
             $current->addDay();
         }
-
 
         foreach ($accounts as $account) {
             $set      = [
@@ -114,10 +93,10 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             ];
             $current  = clone $start;
             $range    = Steam::balanceInRange($account, $start, clone $end);
-            $previous = array_values($range)[0];
+            $previous = round(array_values($range)[0], 2);
             while ($current <= $end) {
                 $format  = $current->format('Y-m-d');
-                $balance = isset($range[$format]) ? $range[$format] : $previous;
+                $balance = isset($range[$format]) ? round($range[$format], 2) : $previous;
 
                 $set['data'][] = $balance;
                 $previous      = $balance;
@@ -148,8 +127,8 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
             'datasets' => [
                 [
                     'label' => $account->name,
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         $range    = Steam::balanceInRange($account, $start, $end);
@@ -183,5 +162,20 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
 
         return array_unique($ids);
 
+    }
+
+    /**
+     * @param $array
+     * @param $entryId
+     *
+     * @return string
+     */
+    protected function isInArray($array, $entryId)
+    {
+        if (isset($array[$entryId])) {
+            return $array[$entryId];
+        }
+
+        return '0';
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Models;
 
+use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -59,6 +61,7 @@ class TransactionJournal extends Model
     protected $fillable
                       = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
     protected $hidden = ['encrypted'];
+    protected $dates  = ['created_at', 'updated_at', 'date', 'deleted_at'];
     protected $rules
                       = [
             'user_id'                 => 'required|exists:users,id',
@@ -68,7 +71,7 @@ class TransactionJournal extends Model
             'description'             => 'required|between:1,1024',
             'completed'               => 'required|boolean',
             'date'                    => 'required|date',
-            'encrypted'               => 'required|boolean'
+            'encrypted'               => 'required|boolean',
         ];
 
     /**
@@ -139,72 +142,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @param Tag $tag
-     * @param     $amount
-     *
-     * @return string
-     */
-    protected function amountByTagAdvancePayment(Tag $tag, $amount)
-    {
-        if ($this->isWithdrawal()) {
-            $others = $tag->transactionJournals()->transactionTypes([TransactionType::DEPOSIT])->get();
-            foreach ($others as $other) {
-                $amount = bcsub($amount, $other->amount_positive);
-            }
-
-            return $amount;
-        }
-        if ($this->isDeposit()) {
-            return '0';
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param $tag
-     * @param $amount
-     *
-     * @return string
-     */
-    protected function amountByTagBalancingAct($tag, $amount)
-    {
-        if ($this->isWithdrawal()) {
-            $transfer = $tag->transactionJournals()->transactionTypes([TransactionType::TRANSFER])->first();
-            if ($transfer) {
-                $amount = bcsub($amount, $transfer->amount_positive);
-
-                return $amount;
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
-     * Assuming the journal has only one tag. Parameter amount is used as fallback.
-     *
-     * @param Tag    $tag
-     * @param string $amount
-     *
-     * @return string
-     */
-    protected function amountByTag(Tag $tag, $amount)
-    {
-        if ($tag->tagMode == 'advancePayment') {
-            return $this->amountByTagAdvancePayment($tag, $amount);
-        }
-
-        if ($tag->tagMode == 'balancingAct') {
-            return $this->amountByTagBalancingAct($tag, $amount);
-
-        }
-
-        return $amount;
-
-    }
-
-    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -214,42 +151,12 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @param string $amount
-     *
-     * @return string
-     */
-    public function amountByTags($amount)
-    {
-        $firstBalancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
-        if ($firstBalancingAct) {
-            return $this->amountByTag($firstBalancingAct, $amount);
-        }
-
-        $firstAdvancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
-        if ($firstAdvancePayment) {
-            return $this->amountByTag($firstAdvancePayment, $amount);
-        }
-
-        return $amount;
-    }
-
-
-    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions()
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date', 'deleted_at'];
     }
 
     /**
@@ -288,15 +195,7 @@ class TransactionJournal extends Model
      */
     public function getDestinationAccountAttribute()
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($this->id);
-        $cache->addProperty('destinationAccount');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $account = $this->transactions()->where('amount', '>', 0)->first()->account;
-        $cache->store($account);
 
         return $account;
     }
@@ -306,15 +205,7 @@ class TransactionJournal extends Model
      */
     public function getSourceAccountAttribute()
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($this->id);
-        $cache->addProperty('sourceAccount');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
         $account = $this->transactions()->where('amount', '<', 0)->first()->account;
-
-        $cache->store($account);
 
         return $account;
     }
@@ -326,21 +217,6 @@ class TransactionJournal extends Model
     public function piggyBankEvents()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
-     * @param Account         $account
-     */
-    public function scopeAccountIs(EloquentBuilder $query, Account $account)
-    {
-        if (!isset($this->joinedTransactions)) {
-            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->joinedTransactions = true;
-        }
-        $query->where('transactions.account_id', $account->id);
     }
 
     /**
@@ -367,19 +243,6 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
-     * @param Carbon          $date
-     *
-     * @return EloquentBuilder
-     */
-    public function scopeOnDate(EloquentBuilder $query, Carbon $date)
-    {
-        return $query->where('date', '=', $date->format('Y-m-d'));
     }
 
     /**
@@ -524,5 +387,27 @@ class TransactionJournal extends Model
         }
 
         return $this->transactionType->isOpeningBalance();
+    }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder($value)
+    {
+        if (Auth::check()) {
+            $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
+            $object     = TransactionJournal::where('transaction_journals.id', $value)
+                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                            ->whereIn('transaction_types.type', $validTypes)
+                                            ->where('user_id', Auth::user()->id)->first(['transaction_journals.*']);
+            if ($object) {
+                return $object;
+            }
+        }
+
+        throw new NotFoundHttpException;
     }
 }

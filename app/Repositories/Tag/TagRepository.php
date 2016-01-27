@@ -23,9 +23,53 @@ class TagRepository implements TagRepositoryInterface
 
 
     /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        $set = Auth::user()->tags()
+                   ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                   ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                   ->leftJoin(
+                       'transactions AS t_from', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                   }
+                   )
+                   ->leftJoin(
+                       'transactions AS t_to', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                   }
+                   )
+                   ->where('tags.tagMode', 'balancingAct')
+                   ->where('transaction_types.type', TransactionType::TRANSFER)
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->whereNull('transaction_journals.deleted_at')
+                   ->whereIn('t_from.account_id', $ids)
+                   ->whereIn('t_to.account_id', $ids)
+                   ->groupBy('t_to.account_id')
+                   ->get(
+                       [
+                           't_to.account_id',
+                           DB::Raw('SUM(`t_to`.`amount`) as `sum`'),
+                       ]
+                   );
+
+        return $set;
+    }
+
+    /**
      *
      * @param TransactionJournal $journal
      * @param Tag                $tag
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      *
      * @return boolean
      */
@@ -91,49 +135,6 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $amount;
-    }
-
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end)
-    {
-        $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->tags()
-                   ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                   ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                   ->leftJoin(
-                       'transactions AS t_from', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions AS t_to', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
-                   }
-                   )
-                   ->where('tags.tagMode', 'balancingAct')
-                   ->where('transaction_types.type', TransactionType::TRANSFER)
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->whereIn('t_from.account_id', $ids)
-                   ->whereIn('t_to.account_id', $ids)
-                   ->groupBy('t_to.account_id')
-                   ->get(
-                       [
-                           't_to.account_id',
-                           DB::Raw('SUM(`t_to`.`amount`) as `sum`')
-                       ]
-                   );
-
-        return $set;
     }
 
     /**
@@ -280,6 +281,53 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * @return boolean
+     */
+    protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag)
+    {
+        /** @var TransactionType $transfer */
+        $transfer = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        /** @var TransactionType $withdrawal */
+        $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        /** @var TransactionType $deposit */
+        $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+
+        $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+        $deposits    = $tag->transactionjournals()->where('transaction_type_id', $deposit->id)->count();
+
+        if ($journal->transaction_type_id == $transfer->id) { // advance payments cannot accept transfers:
+            return false;
+        }
+
+        // the first transaction to be attached to this tag is attached just like that:
+        if ($withdrawals < 1 && $deposits < 1) {
+            $journal->tags()->save($tag);
+            $journal->save();
+
+            return true;
+        }
+
+        // if withdrawal and already has a withdrawal, return false:
+        if ($journal->transaction_type_id == $withdrawal->id && $withdrawals == 1) {
+            return false;
+        }
+
+        // if already has transaction journals, must match ALL asset account id's:
+        if ($deposits > 0 || $withdrawals == 1) {
+            return $this->matchAll($journal, $tag);
+        }
+
+        // this statement is unreachable.
+        return false; // @codeCoverageIgnore
+
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Tag                $tag
+     *
      * @return boolean
      */
     protected function connectBalancingAct(TransactionJournal $journal, Tag $tag)
@@ -316,52 +364,7 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @return boolean
-     */
-    protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag)
-    {
-        /** @var TransactionType $transfer */
-        $transfer = TransactionType::whereType(TransactionType::TRANSFER)->first();
-        /** @var TransactionType $withdrawal */
-        $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        /** @var TransactionType $deposit */
-        $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-
-        $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
-        $deposits    = $tag->transactionjournals()->where('transaction_type_id', $deposit->id)->count();
-
-        // advance payments cannot accept transfers:
-        if ($journal->transaction_type_id == $transfer->id) {
-            return false;
-        }
-
-        // the first transaction to be attached to this
-        // tag is attached just like that:
-        if ($withdrawals < 1 && $deposits < 1) {
-            $journal->tags()->save($tag);
-            $journal->save();
-
-            return true;
-        }
-
-        // if withdrawal and already has a withdrawal, return false:
-        if ($journal->transaction_type_id == $withdrawal->id && $withdrawals == 1) {
-            return false;
-        }
-
-        // if already has transaction journals, must match ALL asset account id's:
-        if ($deposits > 0 || $withdrawals == 1) {
-            return $this->matchAll($journal, $tag);
-        }
-
-        // this statement is unreachable.
-        return false; // @codeCoverageIgnore
-
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Tag                $tag
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's complex but nothing can be done.
      *
      * @return bool
      */

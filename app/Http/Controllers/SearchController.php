@@ -11,6 +11,14 @@ use Input;
 class SearchController extends Controller
 {
     /**
+     * SearchController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
      * Results always come in the form of an array [results, count, fullCount]
      *
      * @param SearchInterface $searcher

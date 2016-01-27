@@ -24,13 +24,7 @@ class TransactionType extends Model
     const TRANSFER        = 'Transfer';
     const OPENING_BALANCE = 'Opening balance';
 
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
-    }
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return bool
@@ -65,6 +59,8 @@ class TransactionType extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

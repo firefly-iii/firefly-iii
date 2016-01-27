@@ -16,15 +16,42 @@ interface BillRepositoryInterface
 {
 
     /**
-     * This method will tell you if you still have a CC bill to pay. Amount will be negative if the amount
-     * has been paid
+     * @param Bill $bill
      *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
+     * @return mixed
      */
-    public function getCreditCardBill(Carbon $start, Carbon $end);
+    public function destroy(Bill $bill);
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBills();
+
+    /**
+     * Returns all journals connected to these bills in the given range. Amount paid
+     * is stored in "journalAmount" as a negative number.
+     *
+     * @param Collection $bills
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end);
+
+    /**
+     * @return Collection
+     */
+    public function getBills();
+
+    /**
+     * Gets the bills which have some kind of relevance to the accounts mentioned.
+     *
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBillsForAccounts(Collection $accounts);
 
     /**
      * Get the total amount of money paid for the users active bills in the date range given.
@@ -47,44 +74,15 @@ interface BillRepositoryInterface
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end);
 
     /**
-     * @return Collection
-     */
-    public function getActiveBills();
-
-
-    /**
-     * @param Bill $bill
+     * This method will tell you if you still have a CC bill to pay. Amount will be negative if the amount
+     * has been paid
      *
-     * @return mixed
-     */
-    public function destroy(Bill $bill);
-
-    /**
-     * Returns all journals connected to these bills in the given range. Amount paid
-     * is stored in "journalAmount" as a negative number.
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @param Collection $bills
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
+     * @return string
      */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end);
-
-
-    /**
-     * @return Collection
-     */
-    public function getBills();
-
-    /**
-     * Gets the bills which have some kind of relevance to the accounts mentioned.
-     *
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getBillsForAccounts(Collection $accounts);
+    public function getCreditCardBill(Carbon $start, Carbon $end);
 
     /**
      * @param Bill $bill
