@@ -52,7 +52,7 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done (+2)
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts); // done (+2)
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
         $budgets       = $this->helper->getBudgetReport($start, $end, $accounts); // done (+5)
@@ -95,7 +95,7 @@ class ReportController extends Controller
         // list of users stuff:
         $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
         $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts); // done (+2)
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts); // done (+2)
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts); // done (+3)
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts); // done (+1)
 
@@ -129,7 +129,7 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
-        $accountReport = $this->helper->getAccountReport($start, $end, $accounts);
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
 
