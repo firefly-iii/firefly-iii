@@ -17,6 +17,7 @@ class ReportController extends Controller
 {
 
 
+    protected $accountHelper;
     /** @var ReportHelperInterface */
     protected $helper;
 
@@ -28,7 +29,9 @@ class ReportController extends Controller
     public function __construct(ReportHelperInterface $helper)
     {
         parent::__construct();
-        $this->helper = $helper;
+
+        $this->helper        = $helper;
+        $this->accountHelper = app('FireflyIII\Helpers\Report\AccountReportHelperInterface');
 
         View::share('title', trans('firefly.reports'));
         View::share('mainTitleIcon', 'fa-line-chart');
