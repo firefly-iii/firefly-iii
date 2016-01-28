@@ -37,7 +37,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * TODO expand with no budget chart.
      *
      * @param BudgetRepositoryInterface $repository
      * @param                           $reportType
@@ -147,7 +146,7 @@ class BudgetController extends Controller
         $last    = Navigation::endOfX($last, $range, $final);
         $entries = new Collection;
         // get all expenses:
-        $set = $repository->getExpensesPerMonth($budget, $first, $last); // TODO
+        $set = $repository->getExpensesPerMonth($budget, $first, $last);
 
         while ($first < $last) {
             $monthFormatted = $first->format('Y-m');
@@ -294,7 +293,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * TODO expand with no budget chart.
      *
      * @param BudgetRepositoryInterface $repository
      * @param                           $reportType

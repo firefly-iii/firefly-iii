@@ -120,8 +120,6 @@ class Processor
     }
 
     /**
-     * TODO stop when stop_processing is present.
-     *
      * @return bool
      */
     protected function triggered()

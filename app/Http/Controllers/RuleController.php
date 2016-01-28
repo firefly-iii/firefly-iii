@@ -250,6 +250,7 @@ class RuleController extends Controller
         $data = [
             'rule_group_id'       => $ruleGroup->id,
             'title'               => $request->get('title'),
+            'user_id'             => Auth::user()->id,
             'trigger'             => $request->get('trigger'),
             'description'         => $request->get('description'),
             'rule-triggers'       => $request->get('rule-trigger'),
