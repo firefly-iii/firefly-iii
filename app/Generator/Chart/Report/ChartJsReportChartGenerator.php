@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Report
  */
-class ChartJsReportChartGenerator implements ReportChartGenerator
+class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
 {
 
     /**
