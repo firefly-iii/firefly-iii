@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="pcsg-generated-ruleset" 
+    xmlns="http://pmd.sf.net/ruleset/1.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+	<description>Created with the PHP Coding Standard Generator. http://edorian.github.com/php-coding-standard-generator/
+	</description>
+	<rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+	    <properties>
+	        <property name="reportLevel" value="5"/>
+	    </properties>
+	</rule>
+	<rule ref="rulesets/codesize.xml/NPathComplexity">
+	    <properties>
+	        <property name="minimum" value="128"/>
+	    </properties>
+	</rule>
+	<rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
+	    <properties>
+	        <property name="minimum" value="40"/>
+	    </properties>
+	</rule>
+	<rule ref="rulesets/codesize.xml/ExcessiveParameterList">
+	    <properties>
+	        <property name="minimum" value="5"/>
+	    </properties>
+	</rule>
+
+	<!-- Import rule set and exclude rules -->
+    <rule ref="rulesets/controversial.xml">
+        <exclude name="CamelCasePropertyName" />
+    </rule>
+
+    
+</ruleset>
