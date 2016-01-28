@@ -4,6 +4,8 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Support\Domain;
+use Illuminate\Http\Request;
+
 
 /**
  * Class Binder
@@ -30,7 +32,7 @@ class Binder
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         foreach ($request->route()->parameters() as $key => $value) {
             if (isset($this->binders[$key])) {

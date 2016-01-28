@@ -17,6 +17,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Input;
 use Preferences;
 use Response;
@@ -177,22 +178,21 @@ class RuleController extends Controller
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
 
-
         $ruleGroups = Auth::user()
                           ->ruleGroups()
                           ->orderBy('active', 'DESC')
                           ->orderBy('order', 'ASC')
                           ->with(
                               [
-                                  'rules'              => function ($query) {
+                                  'rules'              => function (HasMany $query) {
                                       $query->orderBy('active', 'DESC');
                                       $query->orderBy('order', 'ASC');
 
                                   },
-                                  'rules.ruleTriggers' => function ($query) {
+                                  'rules.ruleTriggers' => function (HasMany $query) {
                                       $query->orderBy('order', 'ASC');
                                   },
-                                  'rules.ruleActions'  => function ($query) {
+                                  'rules.ruleActions'  => function (HasMany $query) {
                                       $query->orderBy('order', 'ASC');
                                   },
                               ]
