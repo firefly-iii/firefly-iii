@@ -1,9 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -11,24 +9,24 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property integer                               $id
- * @property Carbon                                $created_at
- * @property Carbon                                $updated_at
- * @property Carbon                                $deleted_at
- * @property integer                               $account_id
- * @property string                                $name
- * @property float                                 $targetamount
- * @property Carbon                                $startdate
- * @property Carbon                                $targetdate
- * @property integer                               $order
- * @property boolean                               $encrypted
- * @property boolean                               $remind_me
- * @property integer                               $reminder_skip
- * @property-read Account                          $account
- * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property string                                $reminder
- * @property PiggyBankRepetition $currentRep
+ * @property integer                                                             $id
+ * @property \Carbon\Carbon                                                      $created_at
+ * @property \Carbon\Carbon                                                      $updated_at
+ * @property \Carbon\Carbon                                                      $deleted_at
+ * @property integer                                                             $account_id
+ * @property string                                                              $name
+ * @property float                                                               $targetamount
+ * @property \Carbon\Carbon                                                      $startdate
+ * @property \Carbon\Carbon                                                      $targetdate
+ * @property integer                                                             $order
+ * @property boolean                                                             $encrypted
+ * @property boolean                                                             $remind_me
+ * @property integer                                                             $reminder_skip
+ * @property-read Account                                                        $account
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankRepetition[] $piggyBankRepetitions
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]      $piggyBankEvents
+ * @property string                                                              $reminder
+ * @property PiggyBankRepetition                                                 $currentRep
  */
 class PiggyBank extends Model
 {

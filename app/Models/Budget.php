@@ -1,10 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -12,21 +9,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Budget
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property Carbon                               $deleted_at
- * @property string                               $name
- * @property integer                              $user_id
- * @property boolean                              $active
- * @property boolean                              $encrypted
- * @property-read Collection|BudgetLimit[]        $budgetlimits
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
- * @property string                               $dateFormatted
- * @property string                               $budgeted
- * @property float                                $amount
- * @property Carbon                               $date
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property \Carbon\Carbon                                                     $deleted_at
+ * @property string                                                             $name
+ * @property integer                                                            $user_id
+ * @property boolean                                                            $active
+ * @property boolean                                                            $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|BudgetLimit[]        $budgetlimits
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property string                                                             $dateFormatted
+ * @property string                                                             $budgeted
+ * @property float                                                              $amount
+ * @property \Carbon\Carbon                                                     $date
  */
 class Budget extends Model
 {

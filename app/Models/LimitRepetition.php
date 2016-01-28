@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -9,11 +8,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * FireflyIII\Models\LimitRepetition
  *
  * @property integer          $id
- * @property Carbon           $created_at
- * @property Carbon           $updated_at
+ * @property \Carbon\Carbon   $created_at
+ * @property \Carbon\Carbon   $updated_at
  * @property integer          $budget_limit_id
- * @property Carbon           $startdate
- * @property Carbon           $enddate
+ * @property \Carbon\Carbon   $startdate
+ * @property \Carbon\Carbon   $enddate
  * @property float            $amount
  * @property-read BudgetLimit $budgetLimit
  * @property int              $budget_id

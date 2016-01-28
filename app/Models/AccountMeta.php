@@ -1,18 +1,17 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * FireflyIII\Models\AccountMeta
  *
- * @property integer      $id
- * @property Carbon       $created_at
- * @property Carbon       $updated_at
- * @property integer      $account_id
- * @property string       $name
- * @property string       $data
- * @property-read Account $account
+ * @property integer        $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer        $account_id
+ * @property string         $name
+ * @property string         $data
+ * @property-read Account   $account
  */
 class AccountMeta extends Model
 {

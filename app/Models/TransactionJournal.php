@@ -4,59 +4,56 @@ use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property integer                            $id
- * @property Carbon                             $created_at
- * @property Carbon                             $updated_at
- * @property Carbon                             $deleted_at
- * @property integer                            $user_id
- * @property integer                            $transaction_type_id
- * @property integer                            $bill_id
- * @property integer                            $transaction_currency_id
- * @property string                             $description
- * @property boolean                            $completed
- * @property Carbon                             $date
- * @property boolean                            $encrypted
- * @property integer                            $order
- * @property integer                            $tag_count
- * @property-read Bill                          $bill
- * @property-read Collection|Budget[]           $budgets
- * @property-read Collection|Category[]         $categories
- * @property-read mixed                         $amount_positive
- * @property-read mixed                         $amount
- * @property-read Collection|Tag[]              $tags
- * @property-read Collection|Transaction[]      $transactions
- * @property-read mixed                         $destination_account
- * @property-read mixed                         $source_account
- * @property-read Collection|PiggyBankEvent[]   $piggyBankEvents
- * @property-read Collection|Attachment[]       $attachments
- * @property-read TransactionCurrency           $transactionCurrency
- * @property-read TransactionType               $transactionType
- * @property-read Collection|TransactionGroup[] $transactiongroups
- * @property-read User                          $user
- * @property float                              $journalAmount
- * @property int                                $account_id
- * @property int                                $budget_id
- * @property string                             $account_name
- * @method static Builder|TransactionJournal accountIs($account)
- * @method static Builder|TransactionJournal after($date)
- * @method static Builder|TransactionJournal before($date)
- * @method static Builder|TransactionJournal onDate($date)
- * @method static Builder|TransactionJournal transactionTypes($types)
- * @method static Builder|TransactionJournal withRelevantData()
- * @property string $type
+ * @property integer                                                          $id
+ * @property \Carbon\Carbon                                                   $created_at
+ * @property \Carbon\Carbon                                                   $updated_at
+ * @property \Carbon\Carbon                                                   $deleted_at
+ * @property integer                                                          $user_id
+ * @property integer                                                          $transaction_type_id
+ * @property integer                                                          $bill_id
+ * @property integer                                                          $transaction_currency_id
+ * @property string                                                           $description
+ * @property boolean                                                          $completed
+ * @property \Carbon\Carbon                                                   $date
+ * @property boolean                                                          $encrypted
+ * @property integer                                                          $order
+ * @property integer                                                          $tag_count
+ * @property-read Bill                                                        $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]           $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|Category[]         $categories
+ * @property-read mixed                                                       $amount_positive
+ * @property-read mixed                                                       $amount
+ * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]              $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]      $transactions
+ * @property-read mixed                                                       $destination_account
+ * @property-read mixed                                                       $source_account
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]   $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]       $attachments
+ * @property-read TransactionCurrency                                         $transactionCurrency
+ * @property-read TransactionType                                             $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[] $transactiongroups
+ * @property-read \FireflyIII\User                                            $user
+ * @property float                                                            $journalAmount
+ * @property int                                                              $account_id
+ * @property int                                                              $budget_id
+ * @property string                                                           $account_name
+ * @method static \Illuminate\Database\Query\Builder|TransactionJournal accountIs($account)
+ * @method static \Illuminate\Database\Query\Builder|TransactionJournal after($date)
+ * @method static \Illuminate\Database\Query\Builder|TransactionJournal before($date)
+ * @method static \Illuminate\Database\Query\Builder|TransactionJournal onDate($date)
+ * @method static \Illuminate\Database\Query\Builder|TransactionJournal transactionTypes($types)
+ * @method static \Illuminate\Database\Query\Builder|TransactionJournal withRelevantData()
+ * @property string                                                           $type
  */
 class TransactionJournal extends Model
 {

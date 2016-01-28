@@ -3,21 +3,20 @@
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 
 /**
  * FireflyIII\Models\PiggyBankRepetition
  *
  * @property integer        $id
- * @property Carbon         $created_at
- * @property Carbon         $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property integer        $piggy_bank_id
- * @property Carbon         $startdate
- * @property Carbon         $targetdate
+ * @property \Carbon\Carbon $startdate
+ * @property \Carbon\Carbon $targetdate
  * @property float          $currentamount
  * @property-read PiggyBank $piggyBank
- * @method static Builder|PiggyBankRepetition onDates($start, $target)
- * @method static Builder|PiggyBankRepetition relevantOnDate($date)
+ * @method static \Illuminate\Database\Query\Builder|PiggyBankRepetition onDates($start, $target)
+ * @method static \Illuminate\Database\Query\Builder|PiggyBankRepetition relevantOnDate($date)
  */
 class PiggyBankRepetition extends Model
 {

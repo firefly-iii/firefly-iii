@@ -1,12 +1,10 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
@@ -31,27 +29,27 @@ use Watson\Validating\ValidatingTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  * @property-read \FireflyIII\User                                                          $user
- * @method static Builder|\FireflyIII\Models\Account accountTypeIn($types)
- * @method static Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
  * @property string                                                                         $startBalance
  * @property string                                                                         $endBalance
  * @property float                                                                          $difference
- * @property Carbon                                                                         $lastActivityDate
- * @property float $piggyBalance
- * @property float $percentage
+ * @property \Carbon\Carbon                                                                 $lastActivityDate
+ * @property float                                                                          $piggyBalance
+ * @property float                                                                          $percentage
  */
 class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    /** @var array  */
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
-    /** @var array  */
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
-    /** @var array  */
-    protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
+    /** @var array */
+    protected $hidden = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
-                        = [
+                      = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'name'            => 'required',

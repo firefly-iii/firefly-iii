@@ -3,31 +3,28 @@
 namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Tag
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property string                               $deleted_at
- * @property integer                              $user_id
- * @property string                               $tag
- * @property string                               $tagMode
- * @property Carbon                               $date
- * @property string                               $description
- * @property float                                $latitude
- * @property float                                $longitude
- * @property integer                              $zoomLevel
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
- * @property int                                  $account_id
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property string                                                             $deleted_at
+ * @property integer                                                            $user_id
+ * @property string                                                             $tag
+ * @property string                                                             $tagMode
+ * @property \Carbon\Carbon                                                     $date
+ * @property string                                                             $description
+ * @property float                                                              $latitude
+ * @property float                                                              $longitude
+ * @property integer                                                            $zoomLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property int                                                                $account_id
  */
 class Tag extends Model
 {

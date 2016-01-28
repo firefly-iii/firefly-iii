@@ -1,10 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -12,19 +9,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Category
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property Carbon                               $deleted_at
- * @property string                               $name
- * @property integer                              $user_id
- * @property boolean                              $encrypted
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
- * @property string                               $dateFormatted
- * @property float                                $spent
- * @property Carbon                               $lastActivity
- * @property string                               $type
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property \Carbon\Carbon                                                     $deleted_at
+ * @property string                                                             $name
+ * @property integer                                                            $user_id
+ * @property boolean                                                            $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property string                                                             $dateFormatted
+ * @property float                                                              $spent
+ * @property \Carbon\Carbon                                                     $lastActivity
+ * @property string                                                             $type
  */
 class Category extends Model
 {

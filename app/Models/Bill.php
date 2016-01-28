@@ -1,35 +1,32 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Bill
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property integer                              $user_id
- * @property string                               $name
- * @property string                               $match
- * @property float                                $amount_min
- * @property float                                $amount_max
- * @property Carbon                               $date
- * @property boolean                              $active
- * @property boolean                              $automatch
- * @property string                               $repeat_freq
- * @property integer                              $skip
- * @property boolean                              $name_encrypted
- * @property boolean                              $match_encrypted
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
- * @property Carbon                               $nextExpectedMatch
- * @property Carbon                               $lastFoundMatch
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property integer                                                            $user_id
+ * @property string                                                             $name
+ * @property string                                                             $match
+ * @property float                                                              $amount_min
+ * @property float                                                              $amount_max
+ * @property \Carbon\Carbon                                                     $date
+ * @property boolean                                                            $active
+ * @property boolean                                                            $automatch
+ * @property string                                                             $repeat_freq
+ * @property integer                                                            $skip
+ * @property boolean                                                            $name_encrypted
+ * @property boolean                                                            $match_encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property \Carbon\Carbon                                                     $nextExpectedMatch
+ * @property \Carbon\Carbon                                                     $lastFoundMatch
  */
 class Bill extends Model
 {

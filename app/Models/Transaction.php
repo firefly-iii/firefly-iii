@@ -4,26 +4,25 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Transaction
  *
  * @property integer                 $id
- * @property Carbon                  $created_at
- * @property Carbon                  $updated_at
- * @property Carbon                  $deleted_at
+ * @property \Carbon\Carbon          $created_at
+ * @property \Carbon\Carbon          $updated_at
+ * @property \Carbon\Carbon          $deleted_at
  * @property integer                 $account_id
  * @property integer                 $transaction_journal_id
  * @property string                  $description
  * @property float                   $amount
  * @property-read Account            $account
  * @property-read TransactionJournal $transactionJournal
- * @method static Builder|Transaction after($date)
- * @method static Builder|Transaction before($date)
- * @property float $before
- * @property float $after
+ * @method static \Illuminate\Database\Query\Builder|Transaction after($date)
+ * @method static \Illuminate\Database\Query\Builder|Transaction before($date)
+ * @property float                   $before
+ * @property float                   $after
  */
 class Transaction extends Model
 {
