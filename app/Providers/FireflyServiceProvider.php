@@ -102,12 +102,18 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
 
         // make charts:
-        $this->app->bind('FireflyIII\Generator\Chart\Account\AccountChartGenerator', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGenerator', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Category\CategoryChartGenerator', 'FireflyIII\Generator\Chart\Category\ChartJsCategoryChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator', 'FireflyIII\Generator\Chart\PiggyBank\ChartJsPiggyBankChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGenerator', 'FireflyIII\Generator\Chart\Report\ChartJsReportChartGenerator');
+        $this->app->bind(
+            'FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator'
+        );
+        $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
+        $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');
+        $this->app->bind(
+            'FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface', 'FireflyIII\Generator\Chart\Category\ChartJsCategoryChartGenerator'
+        );
+        $this->app->bind(
+            'FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface', 'FireflyIII\Generator\Chart\PiggyBank\ChartJsPiggyBankChartGenerator'
+        );
+        $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface', 'FireflyIII\Generator\Chart\Report\ChartJsReportChartGenerator');
 
 
         $this->app->bind('FireflyIII\Helpers\Help\HelpInterface', 'FireflyIII\Helpers\Help\Help');
@@ -119,7 +125,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Report\AccountReportHelperInterface', 'FireflyIII\Helpers\Report\AccountReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\BalanceReportHelperInterface', 'FireflyIII\Helpers\Report\BalanceReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\BudgetReportHelperInterface', 'FireflyIII\Helpers\Report\BudgetReportHelper');
-
 
 
     }

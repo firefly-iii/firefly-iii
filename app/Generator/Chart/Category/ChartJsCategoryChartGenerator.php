@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Category
  */
-class ChartJsCategoryChartGenerator implements CategoryChartGenerator
+class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
 {
 
     /**

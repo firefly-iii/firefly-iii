@@ -1,4 +1,12 @@
 <?php
+/**
+ * BillChartGeneratorInterface.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace FireflyIII\Generator\Chart\Bill;
 
 
@@ -6,11 +14,11 @@ use FireflyIII\Models\Bill;
 use Illuminate\Support\Collection;
 
 /**
- * Interface BillChartGenerator
+ * Interface BillChartGeneratorInterface
  *
  * @package FireflyIII\Generator\Chart\Bill
  */
-interface BillChartGenerator
+interface BillChartGeneratorInterface
 {
 
     /**

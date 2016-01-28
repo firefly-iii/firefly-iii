@@ -1,4 +1,11 @@
 <?php
+/**
+ * ChartJsBillChartGenerator.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 namespace FireflyIII\Generator\Chart\Bill;
 
@@ -11,7 +18,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Bill
  */
-class ChartJsBillChartGenerator implements BillChartGenerator
+class ChartJsBillChartGenerator implements BillChartGeneratorInterface
 {
 
     /**

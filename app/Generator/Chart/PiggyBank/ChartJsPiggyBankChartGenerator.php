@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\PiggyBank
  */
-class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
+class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
 {
 
     /**

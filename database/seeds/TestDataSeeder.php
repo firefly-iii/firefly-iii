@@ -41,7 +41,7 @@ class TestDataSeeder extends Seeder
     public function run()
     {
         $user      = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
-        $emptyUser = User::create(['email' => 'thegrumpydictator+empty@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'thegrumpydictator+empty@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
 
 
         $admin = Role::where('name', 'owner')->first();

@@ -12,7 +12,7 @@ use Steam;
  *
  * @package FireflyIII\Generator\Chart\Account
  */
-class ChartJsAccountChartGenerator implements AccountChartGenerator
+class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
 {
 
     /**

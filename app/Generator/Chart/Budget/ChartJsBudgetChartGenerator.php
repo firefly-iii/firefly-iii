@@ -12,7 +12,7 @@ use Preferences;
  *
  * @package FireflyIII\Generator\Chart\Budget
  */
-class ChartJsBudgetChartGenerator implements BudgetChartGenerator
+class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 {
 
     /**

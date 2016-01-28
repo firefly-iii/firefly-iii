@@ -23,7 +23,7 @@ use stdClass;
  */
 class CategoryController extends Controller
 {
-    /** @var  \FireflyIII\Generator\Chart\Category\CategoryChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -33,7 +33,7 @@ class CategoryController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Category\CategoryChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface');
     }
 
 

@@ -23,7 +23,7 @@ use Session;
 class BudgetController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Budget\BudgetChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -33,7 +33,7 @@ class BudgetController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface');
     }
 
     /**

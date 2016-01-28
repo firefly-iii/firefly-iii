@@ -20,7 +20,7 @@ use Session;
 class AccountController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Account\AccountChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -30,7 +30,7 @@ class AccountController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Account\AccountChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface');
     }
 
 
