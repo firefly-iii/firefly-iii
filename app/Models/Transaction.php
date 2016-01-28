@@ -22,6 +22,8 @@ use Watson\Validating\ValidatingTrait;
  * @property-read TransactionJournal $transactionJournal
  * @method static Builder|Transaction after($date)
  * @method static Builder|Transaction before($date)
+ * @property float $before
+ * @property float $after
  */
 class Transaction extends Model
 {

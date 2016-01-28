@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                               $dateFormatted
  * @property float                                $spent
  * @property Carbon                               $lastActivity
+ * @property string                               $type
  */
 class Category extends Model
 {

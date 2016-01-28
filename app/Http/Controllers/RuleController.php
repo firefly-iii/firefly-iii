@@ -214,7 +214,7 @@ class RuleController extends Controller
             $repository->reorderRuleActions($rule, $ids);
         }
 
-        return Response::json(true);
+        return Response::json('true');
 
     }
 
@@ -231,7 +231,7 @@ class RuleController extends Controller
             $repository->reorderRuleTriggers($rule, $ids);
         }
 
-        return Response::json(true);
+        return Response::json('true');
 
     }
 
@@ -446,21 +446,21 @@ class RuleController extends Controller
     {
         $newIndex = 0;
         $actions  = [];
-        if (is_array(Input::old('rule-action'))) {
-            foreach (Input::old('rule-action') as $index => $entry) {
-                $count     = ($newIndex + 1);
-                $checked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
-                $actions[] = view(
-                    'rules.partials.action',
-                    [
-                        'oldTrigger' => $entry,
-                        'oldValue'   => Input::old('rule-action-value')[$index],
-                        'oldChecked' => $checked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
+        /** @var array $oldActions */
+        $oldActions = is_array(Input::old('rule-action')) ? Input::old('rule-action') : [];
+        foreach ($oldActions as $index => $entry) {
+            $count     = ($newIndex + 1);
+            $checked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
+            $actions[] = view(
+                'rules.partials.action',
+                [
+                    'oldTrigger' => $entry,
+                    'oldValue'   => Input::old('rule-action-value')[$index],
+                    'oldChecked' => $checked,
+                    'count'      => $count,
+                ]
+            )->render();
+            $newIndex++;
         }
 
         return $actions;
@@ -473,21 +473,21 @@ class RuleController extends Controller
     {
         $newIndex = 0;
         $triggers = [];
-        if (is_array(Input::old('rule-trigger'))) {
-            foreach (Input::old('rule-trigger') as $index => $entry) {
-                $count      = ($newIndex + 1);
-                $oldChecked = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
-                $triggers[] = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $entry,
-                        'oldValue'   => Input::old('rule-trigger-value')[$index],
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                $newIndex++;
-            }
+        /** @var array $oldTriggers */
+        $oldTriggers = is_array(Input::old('rule-trigger')) ? Input::old('rule-trigger') : [];
+        foreach ($oldTriggers as $index => $entry) {
+            $count      = ($newIndex + 1);
+            $oldChecked = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
+            $triggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => $entry,
+                    'oldValue'   => Input::old('rule-trigger-value')[$index],
+                    'oldChecked' => $oldChecked,
+                    'count'      => $count,
+                ]
+            )->render();
+            $newIndex++;
         }
 
         return $triggers;

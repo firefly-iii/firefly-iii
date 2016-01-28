@@ -37,6 +37,8 @@ use Watson\Validating\ValidatingTrait;
  * @property string                                                                         $endBalance
  * @property float                                                                          $difference
  * @property Carbon                                                                         $lastActivityDate
+ * @property float $piggyBalance
+ * @property float $percentage
  */
 class Account extends Model
 {

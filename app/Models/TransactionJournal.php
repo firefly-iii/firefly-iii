@@ -56,6 +56,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static Builder|TransactionJournal onDate($date)
  * @method static Builder|TransactionJournal transactionTypes($types)
  * @method static Builder|TransactionJournal withRelevantData()
+ * @property string $type
  */
 class TransactionJournal extends Model
 {

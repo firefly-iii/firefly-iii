@@ -28,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
  * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
  * @property string                                $reminder
+ * @property PiggyBankRepetition $currentRep
  */
 class PiggyBank extends Model
 {
