@@ -488,6 +488,7 @@ return [
     'quick_link_default_report'              => 'Default financial report',
     'report_this_month_quick'                => 'Current month, all accounts',
     'report_this_year_quick'                 => 'Current year, all accounts',
+    'report_this_fiscal_year_quick'          => 'Current fiscal year, all accounts',
     'report_all_time_quick'                  => 'All-time, all accounts',
     'reports_can_bookmark'                   => 'Remember that reports can be bookmarked.',
     'incomeVsExpenses'                       => 'Income vs. expenses',
