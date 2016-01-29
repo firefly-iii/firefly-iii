@@ -61,6 +61,11 @@
                             <div class="col-sm-9">
                                 {% for year, data in months %}
                                     <a href="#" class="date-select" data-start="{{ data.start }}" data-end="{{ data.end }}">{{ year }}</a>
+                                    {% if customFiscalYear == 1 %}
+                                        <br/>
+                                        <a href="#" class="date-select" data-start="{{ data.fiscal_start }}" data-end="{{ data.fiscal_end }}">{{ year }}
+                                            ({{ 'fiscal_year'|_|lower }})</a>
+                                    {% endif %}
                                     <ul class="list-inline">
                                         {% for month in data.months %}
                                             <li>
@@ -109,14 +114,14 @@
                             ]) }}">{{ 'report_this_year_quick'|_ }}</a>
                         </li>
                         {% if customFiscalYear == 1 %}
-                        <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
-                            'currentFiscalYearStart',
-                            'currentFiscalYearEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
-                        </li>
+                            <li>
+                                <a href="{{ route('reports.report',
+                                ['default',
+                                'currentFiscalYearStart',
+                                'currentFiscalYearEnd',
+                                accountList
+                                ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                            </li>
                         {% endif %}
                         <li>
                             <a href="{{ route('reports.report',
