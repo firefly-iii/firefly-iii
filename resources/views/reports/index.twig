@@ -111,6 +111,14 @@
                         <li>
                             <a href="{{ route('reports.report',
                             ['default',
+                            'currentFiscalYearStart',
+                            'currentFiscalYearEnd',
+                            accountList
+                            ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('reports.report',
+                            ['default',
                             start.format('Ymd'),
                             'currentMonthEnd',
                             accountList
