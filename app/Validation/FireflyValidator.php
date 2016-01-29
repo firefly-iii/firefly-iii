@@ -152,17 +152,16 @@ class FireflyValidator extends Validator
                     return true;
                 case 'amount_less':
                     return is_numeric($value);
-                    break;
                 case 'transaction_type':
                     $count = TransactionType::where('type', $value)->count();
 
                     return $count === 1;
-                    break;
                 case 'invalid':
                     return false;
-                    break;
             }
         }
+
+        return false;
     }
 
     /**
