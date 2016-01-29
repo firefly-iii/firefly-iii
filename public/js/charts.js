@@ -136,8 +136,6 @@ var defaultStackedColumnOptions = {
  */
 function lineChart(URL, container, options) {
     "use strict";
-    options = options || defaultLineOptions;
-
     $.getJSON(URL).success(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
@@ -154,7 +152,7 @@ function lineChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Line(newData, options);
+        new Chart(ctx).Line(newData, defaultLineOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -171,7 +169,6 @@ function lineChart(URL, container, options) {
  */
 function areaChart(URL, container, options) {
     "use strict";
-    options = options || defaultAreaOptions;
 
     $.getJSON(URL).success(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
@@ -189,7 +186,7 @@ function areaChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Line(newData, options);
+        new Chart(ctx).Line(newData, defaultAreaOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -206,7 +203,6 @@ function areaChart(URL, container, options) {
  */
 function columnChart(URL, container, options) {
     "use strict";
-    options = options || defaultColumnOptions;
 
     $.getJSON(URL).success(function (data) {
 
@@ -225,7 +221,7 @@ function columnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Bar(newData, options);
+        new Chart(ctx).Bar(newData, defaultColumnOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -241,7 +237,6 @@ function columnChart(URL, container, options) {
  */
 function stackedColumnChart(URL, container, options) {
     "use strict";
-    options = options || defaultStackedColumnOptions;
 
     $.getJSON(URL).success(function (data) {
 
@@ -260,7 +255,7 @@ function stackedColumnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).StackedBar(newData, options);
+        new Chart(ctx).StackedBar(newData, defaultStackedColumnOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -274,26 +269,13 @@ function stackedColumnChart(URL, container, options) {
  * @param container
  * @param options
  */
-function comboChart(URL, container, options) {
-    "use strict";
-    columnChart(URL, container, options);
-
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
 function pieChart(URL, container, options) {
     "use strict";
 
-    options = options || defaultPieOptions;
     $.getJSON(URL).success(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
-        new Chart(ctx).Pie(data, options);
+        new Chart(ctx).Pie(data, defaultPieOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
