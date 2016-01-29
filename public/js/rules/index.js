@@ -20,23 +20,24 @@ var fixHelper = function (e, tr) {
 };
 
 $(function () {
-        "use strict";
-        $('.rule-triggers').sortable({
-                helper: fixHelper,
-                stop: sortStop,
-                cursor: "move"
+      "use strict";
+      $('.rule-triggers').sortable(
+          {
+              helper: fixHelper,
+              stop: sortStop,
+              cursor: "move",
+          }
+      );
 
-            }
-        );
+      $('.rule-actions').sortable(
+          {
+              helper: fixHelper,
+              stop: sortStop,
+              cursor: "move"
 
-        $('.rule-actions').sortable({
-                helper: fixHelper,
-                stop: sortStop,
-                cursor: "move"
-
-            }
-        );
-    }
+          }
+      );
+  }
 );
 
 
