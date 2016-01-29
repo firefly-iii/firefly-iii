@@ -84,6 +84,87 @@ class CategoryController extends Controller
         return Response::json($data);
     }
 
+    /**
+     * @param SCRI     $repository
+     * @param Category $category
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function currentPeriod(SCRI $repository, Category $category)
+    {
+        $start = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $data  = $this->makePeriodChart($repository, $category, $start, $end);
+
+        return Response::json($data);
+    }
+
+    /**
+     * Returns a chart of what has been earned in this period in each category
+     * grouped by month.
+     *
+     * @param CRI                         $repository
+     * @param                             $reportType
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // it's long but ok.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $cache = new CacheProperties; // chart properties for cache:
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($reportType);
+        $cache->addProperty($accounts);
+        $cache->addProperty('category');
+        $cache->addProperty('earned-in-period');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        $set        = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
+        $categories = $set->unique('id')->sortBy(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
+        $entries    = new Collection;
+
+        while ($start < $end) { // filter the set:
+            $row        = [clone $start];
+            $currentSet = $set->filter( // get possibly relevant entries from the big $set
+                function (Category $category) use ($start) {
+                    return $category->dateFormatted == $start->format('Y-m');
+                }
+            );
+            /** @var Category $category */
+            foreach ($categories as $category) { // check for each category if its in the current set.
+                $entry = $currentSet->filter( // if its in there, use the value.
+                    function (Category $cat) use ($category) {
+                        return ($cat->id == $category->id);
+                    }
+                )->first();
+                if (!is_null($entry)) {
+                    $row[] = round($entry->earned, 2);
+                } else {
+                    $row[] = 0;
+                }
+            }
+            $entries->push($row);
+            $start->addMonth();
+        }
+        $data = $this->generator->earnedInPeriod($categories, $entries);
+        $cache->store($data);
+
+        return $data;
+
+    }
 
     /**
      * Show this month's category overview.
@@ -211,49 +292,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SCRI     $repository
-     * @param Category $category
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function currentPeriod(SCRI $repository, Category $category)
-    {
-        $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($category->id);
-        $cache->addProperty('category');
-        $cache->addProperty('current-period');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-        $entries = new Collection;
-
-        // get amount earned in period, grouped by day.
-        // get amount spent in period, grouped by day.
-        $spentArray  = $repository->spentPerDay($category, $start, $end);
-        $earnedArray = $repository->earnedPerDay($category, $start, $end);
-
-        while ($start <= $end) {
-            $str    = $start->format('Y-m-d');
-            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
-            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
-            $date   = Navigation::periodShow($start, '1D');
-            $entries->push([clone $start, $date, $spent, $earned]);
-            $start->addDay();
-        }
-
-        $data = $this->generator->period($entries);
-        $cache->store($data);
-
-        return Response::json($data);
-    }
-
-    /**
      * @param SCRI                        $repository
      * @param Category                    $category
      *
@@ -267,106 +305,10 @@ class CategoryController extends Controller
         $range  = Preferences::get('viewRange', '1M')->data;
         $start  = Navigation::startOfPeriod($carbon, $range);
         $end    = Navigation::endOfPeriod($carbon, $range);
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($category->id);
-        $cache->addProperty('category');
-        $cache->addProperty('specificPeriod');
-        $cache->addProperty($date);
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-        $entries = new Collection;
-
-        // get amount earned in period, grouped by day.
-        $spentArray  = $repository->spentPerDay($category, $start, $end);
-        $earnedArray = $repository->earnedPerDay($category, $start, $end);
-        // get amount spent in period, grouped by day.
-
-        while ($start <= $end) {
-            $str    = $start->format('Y-m-d');
-            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
-            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
-            $date   = Navigation::periodShow($start, '1D');
-            $entries->push([clone $start, $date, $spent, $earned]);
-            $start->addDay();
-        }
-
-        $data = $this->generator->period($entries);
-        $cache->store($data);
+        $data   = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
 
-
-    }
-
-    /**
-     * Returns a chart of what has been earned in this period in each category
-     * grouped by month.
-     *
-     * @param CRI                         $repository
-     * @param                             $reportType
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // it's long but ok.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $cache = new CacheProperties; // chart properties for cache:
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($reportType);
-        $cache->addProperty($accounts);
-        $cache->addProperty('category');
-        $cache->addProperty('earned-in-period');
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        $set        = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
-        $categories = $set->unique('id')->sortBy(
-            function (Category $category) {
-                return $category->name;
-            }
-        );
-        $entries    = new Collection;
-
-        while ($start < $end) { // filter the set:
-            $row        = [clone $start];
-            $currentSet = $set->filter( // get possibly relevant entries from the big $set
-                function (Category $category) use ($start) {
-                    return $category->dateFormatted == $start->format('Y-m');
-                }
-            );
-            /** @var Category $category */
-            foreach ($categories as $category) { // check for each category if its in the current set.
-                $entry = $currentSet->filter( // if its in there, use the value.
-                    function (Category $cat) use ($category) {
-                        return ($cat->id == $category->id);
-                    }
-                )->first();
-                if (!is_null($entry)) {
-                    $row[] = round($entry->earned, 2);
-                } else {
-                    $row[] = 0;
-                }
-            }
-            $entries->push($row);
-            $start->addMonth();
-        }
-        $data = $this->generator->earnedInPeriod($categories, $entries);
-        $cache->store($data);
-
-        return $data;
 
     }
 
@@ -431,6 +373,47 @@ class CategoryController extends Controller
             $start->addMonth();
         }
         $data = $this->generator->spentInPeriod($categories, $entries);
+        $cache->store($data);
+
+        return $data;
+    }
+
+    /**
+     * @param SCRI     $repository
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return array
+     */
+    private function makePeriodChart(SCRI $repository, Category $category, Carbon $start, Carbon $end)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($category->id);
+        $cache->addProperty('specific-period');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $entries = new Collection;
+
+        // get amount earned in period, grouped by day.
+        // get amount spent in period, grouped by day.
+        $spentArray  = $repository->spentPerDay($category, $start, $end);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+
+        while ($start <= $end) {
+            $str    = $start->format('Y-m-d');
+            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
+            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
+            $date   = Navigation::periodShow($start, '1D');
+            $entries->push([clone $start, $date, $spent, $earned]);
+            $start->addDay();
+        }
+
+        $data = $this->generator->period($entries);
         $cache->store($data);
 
         return $data;
