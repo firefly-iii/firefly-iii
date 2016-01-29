@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Category
  */
-class ChartJsCategoryChartGenerator implements CategoryChartGenerator
+class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
 {
 
     /**
@@ -59,7 +59,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 0,
@@ -170,7 +170,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 0,

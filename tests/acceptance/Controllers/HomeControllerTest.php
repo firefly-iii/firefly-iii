@@ -20,12 +20,11 @@ class HomeControllerTest extends TestCase
         $args = [
             'start'  => '2012-01-01',
             'end'    => '2012-04-01',
-            '_token' => Session::token(),
         ];
 
         // if date range is > 50, should have flash.
-        $response = $this->call('POST', '/daterange', $args);
-        $this->assertEquals(200, $response->status());
+        $this->call('POST', '/daterange', $args);
+        $this->assertResponseStatus(200);
         $this->assertSessionHas('warning', '91 days of data may take a while to load.');
     }
 
@@ -35,17 +34,18 @@ class HomeControllerTest extends TestCase
     public function testFlush()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/flush');
-        $this->assertEquals(302, $response->status());
+        $this->call('GET', '/flush');
+        $this->assertResponseStatus(302);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::index
+     * @covers FireflyIII\Http\Controllers\Controller::__construct
      */
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/');
+        $this->assertResponseStatus(200);
     }
 }

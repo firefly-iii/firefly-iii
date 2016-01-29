@@ -18,8 +18,8 @@ class AuthControllerTest extends TestCase
      */
     public function testGetLogin()
     {
-        $response = $this->call('GET', '/login');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/login');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -28,8 +28,8 @@ class AuthControllerTest extends TestCase
     public function testGetLogout()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/logout');
-        $this->assertEquals(302, $response->status());
+        $this->call('GET', '/logout');
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -37,8 +37,8 @@ class AuthControllerTest extends TestCase
      */
     public function testGetRegister()
     {
-        $response = $this->call('GET', '/register');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/register');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -46,8 +46,8 @@ class AuthControllerTest extends TestCase
      */
     public function testLogin()
     {
-        $response = $this->call('GET', '/login');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/login');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -56,11 +56,12 @@ class AuthControllerTest extends TestCase
     public function testLogout()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/logout');
-        $this->assertEquals(302, $response->status());
+        $this->call('GET', '/logout');
+        $this->assertResponseStatus(302);
+
         // index should now redirect:
-        $response = $this->call('GET', '/');
-        $this->assertEquals(302, $response->status());
+        $this->call('GET', '/');
+        $this->assertResponseStatus(302);
 
 
     }
@@ -74,13 +75,12 @@ class AuthControllerTest extends TestCase
             'email'    => 'thegrumpydictator@gmail.com',
             'password' => 'james',
             'remember' => 1,
-            '_token'   => Session::token(),
         ];
-        $response = $this->call('POST', '/login', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/login', $args);
+        $this->assertResponseStatus(302);
 
-        $response = $this->call('GET', '/');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/');
+        $this->assertResponseStatus(200);
 
 
     }
@@ -94,10 +94,9 @@ class AuthControllerTest extends TestCase
             'email'                 => 'thegrumpydictator+test@gmail.com',
             'password'              => 'james123',
             'password_confirmation' => 'james123',
-            '_token'                => Session::token(),
         ];
-        $response = $this->call('POST', '/register', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/register', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('start');
     }
 
@@ -106,7 +105,7 @@ class AuthControllerTest extends TestCase
      */
     public function testRegister()
     {
-        $response = $this->call('GET', '/register');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/register');
+        $this->assertResponseStatus(200);
     }
 }

@@ -73,7 +73,5 @@ class FireRulesForStore
 
             }
         }
-        //        echo 'Done processing rules. See log.';
-        //        exit;
     }
 }

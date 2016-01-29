@@ -23,10 +23,28 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">app/</directory>
+            <directory suffix=".php">app/Http</directory>
         </whitelist>
         <blacklist>
             <directory>vendor/</directory>
+            <directory>app/Console</directory>
+            <directory>app/Events</directory>
+            <directory>app/Exceptions</directory>
+            <directory>app/Generator</directory>
+            <directory>app/Handlers</directory>
+            <directory>app/Helpers</directory>
+
+            <directory>app/Jobs</directory>
+            <directory>app/Listeners</directory>
+            <directory>app/Models</directory>
+            <directory>app/Policies</directory>
+            <directory>app/Providers</directory>
+            <directory>app/Repositories</directory>
+            <directory>app/Rules</directory>
+            <directory>app/Sql</directory>
+            <directory>app/Support</directory>
+            <directory>app/Validation</directory>
+
             <!-- and other directories,  -->
         </blacklist>
     </filter>

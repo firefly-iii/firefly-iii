@@ -19,6 +19,20 @@ use Illuminate\Database\Schema\Blueprint;
 class ChangesForV370 extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('rule_actions');
+        Schema::drop('rule_triggers');
+        Schema::drop('rules');
+        Schema::drop('rule_groups');
+
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -106,20 +120,6 @@ class ChangesForV370 extends Migration
 
         }
         );
-
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('rule_actions');
-        Schema::drop('rule_triggers');
-        Schema::drop('rules');
-        Schema::drop('rule_groups');
 
     }
 }

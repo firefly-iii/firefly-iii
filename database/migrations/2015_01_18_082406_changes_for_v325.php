@@ -19,7 +19,6 @@ class ChangesForV325 extends Migration
      */
     public function down()
     {
-        //
     }
 
     /**
@@ -29,8 +28,6 @@ class ChangesForV325 extends Migration
      */
     public function up()
     {
-        //
-
         // delete an old index:
         try {
             Schema::table(

@@ -12,7 +12,7 @@ use Preferences;
  *
  * @package FireflyIII\Generator\Chart\Budget
  */
-class ChartJsBudgetChartGenerator implements BudgetChartGenerator
+class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 {
 
     /**
@@ -149,7 +149,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
     public function year(Collection $budgets, Collection $entries)
     {
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'labels'   => [],

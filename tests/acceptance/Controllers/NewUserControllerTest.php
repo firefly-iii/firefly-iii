@@ -16,25 +16,39 @@ class NewUserControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\NewUserController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->emptyUser());
+        $this->call('GET', '/');
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('new-user.index');
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\NewUserController::index
+     */
+    public function testIndexGo()
+    {
+        $this->be($this->emptyUser());
+        $this->call('GET', '/new-user');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\NewUserController::submit
-     * @todo   Implement testSubmit().
      */
     public function testSubmit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->emptyUser());
+
+        $args = [
+            'bank_name'    => 'New bank',
+            'bank_balance' => 100,
+        ];
+
+        $this->call('POST', '/new-user/submit', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

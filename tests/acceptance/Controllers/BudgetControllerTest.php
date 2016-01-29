@@ -20,12 +20,11 @@ class BudgetControllerTest extends TestCase
     {
         $args = [
             'amount' => 1200,
-            '_token' => Session::token(),
         ];
         $this->be($this->user());
 
-        $response = $this->call('POST', '/budgets/amount/1', $args);
-        $this->assertEquals(200, $response->status());
+        $this->call('POST', '/budgets/amount/1', $args);
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -34,8 +33,8 @@ class BudgetControllerTest extends TestCase
     public function testCreate()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets/create');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -44,8 +43,8 @@ class BudgetControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets/delete/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -55,15 +54,10 @@ class BudgetControllerTest extends TestCase
     {
         $this->be($this->user());
 
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['budgets.delete.url' => 'http://localhost']);
-
-        $response = $this->call('POST', '/budgets/destroy/2', $args);
+        $this->call('POST', '/budgets/destroy/2');
         $this->assertSessionHas('success');
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -72,8 +66,8 @@ class BudgetControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets/edit/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -82,8 +76,8 @@ class BudgetControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -92,8 +86,8 @@ class BudgetControllerTest extends TestCase
     public function testNoBudget()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets/list/noBudget');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets/list/noBudget');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -103,12 +97,11 @@ class BudgetControllerTest extends TestCase
     {
         $args = [
             'amount' => 1200,
-            '_token' => Session::token(),
         ];
         $this->be($this->user());
 
-        $response = $this->call('POST', '/budgets/income', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/budgets/income', $args);
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -117,8 +110,8 @@ class BudgetControllerTest extends TestCase
     public function testShow()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets/show/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets/show/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -129,12 +122,11 @@ class BudgetControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['budgets.create.url' => 'http://localhost']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'Some kind of test budget.',
         ];
 
-        $response = $this->call('POST', '/budgets/store', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/budgets/store', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
 
@@ -146,12 +138,11 @@ class BudgetControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['budgets.edit.url' => 'http://localhost']);
         $args = [
-            '_token' => Session::token(),
             'name'   => 'Some kind of test budget.',
         ];
 
-        $response = $this->call('POST', '/budgets/update/1', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/budgets/update/1', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
 
@@ -161,7 +152,7 @@ class BudgetControllerTest extends TestCase
     public function testUpdateIncome()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/budgets/income');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/budgets/income');
+        $this->assertResponseStatus(200);
     }
 }

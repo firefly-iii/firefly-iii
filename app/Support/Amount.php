@@ -77,7 +77,7 @@ class Amount
         }
 
         if ($journal->isTransfer() && $coloured) {
-            $txt = '<span class="text-info">' . $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false) . '</span>';;
+            $txt = '<span class="text-info">' . $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false) . '</span>';
             $cache->store($txt);
 
             return $txt;

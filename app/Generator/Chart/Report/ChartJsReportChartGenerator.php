@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Report
  */
-class ChartJsReportChartGenerator implements ReportChartGenerator
+class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
 {
 
     /**
@@ -84,7 +84,7 @@ class ChartJsReportChartGenerator implements ReportChartGenerator
     public function yearInOut(Collection $entries)
     {
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 2,

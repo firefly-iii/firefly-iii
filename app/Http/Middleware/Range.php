@@ -6,6 +6,7 @@ namespace FireflyIII\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Navigation;
 use Preferences;
@@ -48,7 +49,7 @@ class Range
      * @return mixed
      * @internal param Closure $next
      */
-    public function handle($request, Closure $theNext, $guard = null)
+    public function handle(Request $request, Closure $theNext, $guard = null)
     {
         if (!Auth::guard($guard)->guest()) {
             // ignore preference. set the range to be the current month:

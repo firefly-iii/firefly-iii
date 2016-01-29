@@ -18,7 +18,7 @@ use Response;
 class PiggyBankController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -28,7 +28,7 @@ class PiggyBankController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface');
     }
 
     /**

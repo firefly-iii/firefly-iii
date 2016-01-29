@@ -97,23 +97,6 @@ class ProfileController extends Controller
     }
 
     /**
-     *
-     * @param string $old
-     * @param string $new1
-     *
-     * @return string|bool
-     */
-    protected function validatePassword($old, $new1)
-    {
-        if ($new1 == $old) {
-            return trans('firefly.should_change');
-        }
-
-        return true;
-
-    }
-
-    /**
      * @param DeleteAccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -182,6 +165,8 @@ class ProfileController extends Controller
 
                 Auth::user()->save();
 
+                Session::forget('auth.2fa_passed');
+
                 Session::flash('success', trans('firefly.two_factor_auth_settings_saved'));
 
                 return redirect(route('profile'));              
@@ -218,6 +203,10 @@ class ProfileController extends Controller
             Auth::user()->secret_key = Session::get('user.secret_key');
             Auth::user()->save();
 
+            // Set the session flag that indicates the the user has passed 2fa, other wise he will be redirected to the verify_token page.
+            Session::put('auth.2fa_passed', 1);
+
+
             Session::flash('success', trans('firefly.two_factor_auth_settings_saved'));
             return redirect(route('profile'));
         }
@@ -241,5 +230,19 @@ class ProfileController extends Controller
         return redirect(route('profile'));
     }
 
+    /*
+     *
+     * @param string $old
+     * @param string $new1
+     *
+     * @return string|bool
+     */
+    protected function validatePassword($old, $new1)
+    {
+        if ($new1 == $old) {
+            return trans('firefly.should_change');
+        }
 
+        return true;
+    }
 }

@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Component
  *
+ * @property int $transaction_journal_id
  * @package FireflyIII\Models
  */
 class Component extends Model

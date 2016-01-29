@@ -19,10 +19,9 @@ class PasswordControllerTest extends TestCase
     {
         $args = [
             'email'  => 'thegrumpydictator@gmail.com',
-            '_token' => Session::token(),
         ];
-        $response = $this->call('POST', '/password/email', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/password/email', $args);
+        $this->assertResponseStatus(302);
     }
 
 }

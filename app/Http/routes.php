@@ -23,7 +23,6 @@ Route::group(
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
 
-    //Route::get('/home', 'HomeController@index');
 }
 );
 
@@ -204,8 +203,8 @@ Route::group(
     Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
 
-    Route::get('/json/trigger/{RuleTrigger?}', ['uses' => 'JsonController@trigger', 'as' => 'json.trigger']);
-    Route::get('/json/action/{RuleAction?}', ['uses' => 'JsonController@action', 'as' => 'json.action']);
+    Route::get('/json/trigger', ['uses' => 'JsonController@trigger', 'as' => 'json.trigger']);
+    Route::get('/json/action', ['uses' => 'JsonController@action', 'as' => 'json.action']);
 
     /**
      * New user Controller

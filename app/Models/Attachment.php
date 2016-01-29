@@ -3,9 +3,7 @@
 namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
 use Crypt;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -13,23 +11,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Attachment
  *
- * @property integer         $id
- * @property Carbon          $created_at
- * @property Carbon          $updated_at
- * @property string          $deleted_at
- * @property integer         $attachable_id
- * @property string          $attachable_type
- * @property integer         $user_id
- * @property string          $md5
- * @property string          $filename
- * @property string          $title
- * @property string          $description
- * @property string          $notes
- * @property string          $mime
- * @property integer         $size
- * @property boolean         $uploaded
- * @property-read Attachment $attachable
- * @property-read User       $user
+ * @property integer               $id
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
+ * @property string                $deleted_at
+ * @property integer               $attachable_id
+ * @property string                $attachable_type
+ * @property integer               $user_id
+ * @property string                $md5
+ * @property string                $filename
+ * @property string                $title
+ * @property string                $description
+ * @property string                $notes
+ * @property string                $mime
+ * @property integer               $size
+ * @property boolean               $uploaded
+ * @property-read Attachment       $attachable
+ * @property-read \FireflyIII\User $user
  */
 class Attachment extends Model
 {

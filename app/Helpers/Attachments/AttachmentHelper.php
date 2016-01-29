@@ -105,7 +105,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $count = Auth::user()->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
 
         if ($count > 0) {
-            $msg = trans('validation.file_already_attached', ['name' => $name]);
+            $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
 
             return true;
@@ -151,7 +151,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->save();
 
         $name = e($file->getClientOriginalName()); // add message:
-        $msg  = trans('validation.file_attached', ['name' => $name]);
+        $msg  = (string)trans('validation.file_attached', ['name' => $name]);
         $this->messages->add('attachments', $msg);
 
         // return it.
@@ -171,7 +171,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $name = e($file->getClientOriginalName());
 
         if (!in_array($mime, $this->allowedMimes)) {
-            $msg = trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
+            $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
 
             return false;
@@ -190,7 +190,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $size = $file->getSize();
         $name = e($file->getClientOriginalName());
         if ($size > $this->maxUploadSize) {
-            $msg = trans('validation.file_too_large', ['name' => $name]);
+            $msg = (string)trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
 
             return false;

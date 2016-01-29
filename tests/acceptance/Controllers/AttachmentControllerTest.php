@@ -19,8 +19,8 @@ class AttachmentControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/attachment/delete/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/attachment/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -29,15 +29,9 @@ class AttachmentControllerTest extends TestCase
     public function testDestroy()
     {
         $this->be($this->user());
-
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['attachments.delete.url' => 'http://localhost']);
-
-        $response = $this->call('POST', '/attachment/destroy/2', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/attachment/destroy/2');
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -46,8 +40,8 @@ class AttachmentControllerTest extends TestCase
     public function testDownload()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/attachment/download/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/attachment/download/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -56,8 +50,8 @@ class AttachmentControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/attachment/edit/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/attachment/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -66,8 +60,8 @@ class AttachmentControllerTest extends TestCase
     public function testPreview()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/attachment/preview/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/attachment/preview/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -81,12 +75,11 @@ class AttachmentControllerTest extends TestCase
             'title'       => 'New title',
             'description' => 'New descr',
             'notes'       => 'New notes',
-            '_token'      => Session::token(),
         ];
         $this->be($this->user());
 
-        $response = $this->call('POST', '/attachment/update/1', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/attachment/update/1', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
 }

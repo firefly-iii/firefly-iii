@@ -1,17 +1,16 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
  * @property integer                 $id
- * @property Carbon                  $created_at
- * @property Carbon                  $updated_at
+ * @property \Carbon\Carbon          $created_at
+ * @property \Carbon\Carbon          $updated_at
  * @property integer                 $piggy_bank_id
  * @property integer                 $transaction_journal_id
- * @property Carbon                  $date
+ * @property \Carbon\Carbon          $date
  * @property float                   $amount
  * @property PiggyBank               $piggyBank
  * @property-read TransactionJournal $transactionJournal

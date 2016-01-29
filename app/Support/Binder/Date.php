@@ -11,6 +11,7 @@ namespace FireflyIII\Support\Binder;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Helpers\FiscalHelper;
 use Exception;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -32,6 +33,8 @@ class Date implements BinderInterface
      */
     public static function routeBinder($value, $route)
     {
+        $fiscalHelper = new FiscalHelper;
+
         switch ($value) {
             default:
                 try {
@@ -50,6 +53,10 @@ class Date implements BinderInterface
                 return Carbon::now()->startOfYear();
             case 'currentYearEnd':
                 return Carbon::now()->endOfYear();
+            case 'currentFiscalYearStart':
+                return $fiscalHelper->startOfFiscalYear(Carbon::now());
+            case 'currentFiscalYearEnd':
+                return $fiscalHelper->endOfFiscalYear(Carbon::now());
 
         }
     }

@@ -38,12 +38,14 @@ then
             # run it!
             echo "Now running $firstFile"
             phpunit --verbose $firstFile
+            result=$?
         fi
         if [ -f "$secondFile" ]
         then
             # run it!
             echo "Now running $secondFile"
             phpunit --verbose $secondFile
+            result=$?
         fi
 
 
@@ -55,3 +57,5 @@ cp .env.local .env
 
 # restore cover
 cp phpunit.default.xml phpunit.xml
+
+exit ${result}

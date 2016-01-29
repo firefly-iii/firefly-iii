@@ -22,11 +22,21 @@ use FireflyIII\Models\RuleTrigger;
 interface RuleRepositoryInterface
 {
     /**
+     * @return int
+     */
+    public function count();
+
+    /**
      * @param Rule $rule
      *
      * @return bool
      */
     public function destroy(Rule $rule);
+
+    /**
+     * @return RuleGroup
+     */
+    public function getFirstRuleGroup();
 
     /**
      * @param RuleGroup $ruleGroup
@@ -80,7 +90,7 @@ interface RuleRepositoryInterface
     public function store(array $data);
 
     /**
-     * @param Rule   $rule
+     * @param Rule  $rule
      * @param array $values
      *
      * @return RuleAction
@@ -88,7 +98,7 @@ interface RuleRepositoryInterface
     public function storeAction(Rule $rule, array $values);
 
     /**
-     * @param Rule   $rule
+     * @param Rule  $rule
      * @param array $values
      *
      * @return RuleTrigger

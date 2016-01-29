@@ -18,8 +18,8 @@ class AccountControllerTest extends TestCase
     public function testCreate()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/accounts/create/asset');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/accounts/create/asset');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -28,8 +28,8 @@ class AccountControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/accounts/delete/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/accounts/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -38,16 +38,10 @@ class AccountControllerTest extends TestCase
     public function testDestroy()
     {
         $this->be($this->user());
-
-        $args = [
-            '_token' => Session::token(),
-        ];
-
         $this->session(['accounts.delete.url' => 'http://localhost']);
-
-        $response = $this->call('POST', '/accounts/destroy/6', $args);
+        $this->call('POST', '/accounts/destroy/6');
         $this->assertSessionHas('success');
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -56,8 +50,8 @@ class AccountControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/accounts/edit/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/accounts/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -67,8 +61,8 @@ class AccountControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/accounts/asset');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/accounts/asset');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -77,8 +71,8 @@ class AccountControllerTest extends TestCase
     public function testShow()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/accounts/show/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/accounts/show/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -89,15 +83,14 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->session(['accounts.create.url' => 'http://localhost']);
         $args = [
-            '_token'                            => Session::token(),
             'name'                              => 'Some kind of test account.',
             'what'                              => 'asset',
             'amount_currency_id_virtualBalance' => 1,
             'amount_currency_id_openingBalance' => 1,
         ];
 
-        $response = $this->call('POST', '/accounts/store', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/accounts/store', $args);
+        $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
 
     }
@@ -112,12 +105,12 @@ class AccountControllerTest extends TestCase
             'id'     => 1,
             'name'   => 'TestData new name',
             'active' => 1,
-            '_token' => Session ::token(),
         ];
         $this->be($this->user());
 
-        $response = $this->call('POST', '/accounts/update/1', $args);
-        $this->assertEquals(302, $response->status());
+        $this->call('POST', '/accounts/update/1', $args);
+        $this->assertResponseStatus(302);
+
         $this->assertSessionHas('success');
 
     }

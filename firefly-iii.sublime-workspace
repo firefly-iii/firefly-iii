@@ -23,7 +23,15 @@
 			"file": "resources/views/profile/two-factor-auth.twig",
 			"settings":
 			{
-				"buffer_size": 1904,
+				"buffer_size": 1988,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/routes.php",
+			"settings":
+			{
+				"buffer_size": 21145,
 				"line_ending": "Windows"
 			}
 		},
@@ -31,7 +39,7 @@
 			"file": "resources/lang/nl_NL/firefly.php",
 			"settings":
 			{
-				"buffer_size": 41705,
+				"buffer_size": 42425,
 				"line_ending": "Windows"
 			}
 		},
@@ -39,7 +47,7 @@
 			"file": "resources/lang/en_US/firefly.php",
 			"settings":
 			{
-				"buffer_size": 41966,
+				"buffer_size": 43004,
 				"line_ending": "Windows"
 			}
 		},
@@ -47,7 +55,23 @@
 			"file": "resources/views/profile/validate-qr-code.twig",
 			"settings":
 			{
-				"buffer_size": 1768,
+				"buffer_size": 1771,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/ProfileController.php",
+			"settings":
+			{
+				"buffer_size": 7568,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/Auth/AuthController.php",
+			"settings":
+			{
+				"buffer_size": 8554,
 				"line_ending": "Windows"
 			}
 		},
@@ -96,9 +120,6 @@
 		"/G/xampp2/htdocs/firefly-iii/app",
 		"/G/xampp2/htdocs/firefly-iii/app/Helpers",
 		"/G/xampp2/htdocs/firefly-iii/app/Helpers/Csv",
-		"/G/xampp2/htdocs/firefly-iii/app/Http/Controllers",
-		"/G/xampp2/htdocs/firefly-iii/app/Http/Middleware",
-		"/G/xampp2/htdocs/firefly-iii/app/Http/Requests",
 		"/G/xampp2/htdocs/firefly-iii/database",
 		"/G/xampp2/htdocs/firefly-iii/resources",
 		"/G/xampp2/htdocs/firefly-iii/resources/lang",
@@ -193,6 +214,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"form.open",
+			"validate_qr_code",
+			"2-stapsverificatie",
+			"profile",
+			"Tweetraps",
 			"AuthenticatesUsers\nAuthenticatesUsers",
 			"AuthenticatesUsers",
 			"AuthenticatesAndRegistersUsers",
@@ -229,6 +255,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"2-step verification",
+			"2-staps"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -239,7 +267,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 6,
 			"sheets":
 			[
 				{
@@ -248,15 +276,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1904,
+						"buffer_size": 1988,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								628,
-								628
+								185,
+								185
 							]
 						],
 						"settings":
@@ -269,24 +297,54 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "resources/lang/nl_NL/firefly.php",
+					"file": "app/Http/routes.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 41705,
+						"buffer_size": 21145,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11543,
-								11543
+								15972,
+								15996
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3150.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "resources/lang/nl_NL/firefly.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 42425,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12161,
+								12185
 							]
 						],
 						"settings":
@@ -299,24 +357,24 @@
 						"translation.y": 2187.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "resources/lang/en_US/firefly.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 41966,
+						"buffer_size": 43004,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12522,
-								12522
+								12560,
+								12737
 							]
 						],
 						"settings":
@@ -325,28 +383,28 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 28.0,
-						"translation.y": 2295.0,
+						"translation.x": 0.0,
+						"translation.y": 2127.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "resources/views/profile/validate-qr-code.twig",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1768,
+						"buffer_size": 1771,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1149,
-								1149
+								220,
+								196
 							]
 						],
 						"settings":
@@ -363,7 +421,67 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
+					"file": "app/Http/Controllers/ProfileController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7568,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "app/Http/Controllers/Auth/AuthController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8554,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								635,
+								650
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 90.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "resources/views/auth/login.twig",
 					"semi_transient": false,
 					"settings":
@@ -389,7 +507,7 @@
 						"translation.y": 180.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -434,7 +552,7 @@
 	"project": "firefly-iii.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -443,6 +561,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"authcon",
+				"app\\Http\\Controllers\\Auth\\AuthController.php"
+			],
+			[
+				"routes",
+				"app\\Http\\routes.php"
+			],
 			[
 				"guest.t",
 				"resources\\views\\layout\\guest.twig"
@@ -458,10 +584,6 @@
 			[
 				"redirectifau",
 				"app\\Http\\Middleware\\RedirectIfAuthenticated.php"
-			],
-			[
-				"routes",
-				"app\\Http\\routes.php"
 			],
 			[
 				"profilecon",

@@ -27,9 +27,8 @@ class ChartBudgetControllerTest extends TestCase
         $repository->shouldReceive('getFirstBudgetLimitDate')->once()->andReturn(new Carbon);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/budget/1');
-        $this->assertEquals(200, $response->status());
-        //$this->markTestSkipped('Skipped because sqlite does not support DATE_FORMAT.');
+        $this->call('GET', '/chart/budget/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -38,9 +37,9 @@ class ChartBudgetControllerTest extends TestCase
     public function testBudgetLimit()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/budget/1/1');
+        $this->call('GET', '/chart/budget/1/1');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -49,9 +48,9 @@ class ChartBudgetControllerTest extends TestCase
     public function testFrontpage()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/budget/frontpage');
+        $this->call('GET', '/chart/budget/frontpage');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -70,8 +69,8 @@ class ChartBudgetControllerTest extends TestCase
         $repository->shouldReceive('getBudgetsAndExpensesPerYear')->once()->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/budget/multi-year/default/20150101/20160101/1/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/budget/multi-year/default/20150101/20160101/1/1');
+        $this->assertResponseStatus(200);
 
     }
 
@@ -84,8 +83,8 @@ class ChartBudgetControllerTest extends TestCase
         $repository->shouldReceive('getBudgetsAndExpensesPerMonth')->once()->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/budget/year/default/20150101/20151231/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/budget/year/default/20150101/20151231/1');
+        $this->assertResponseStatus(200);
 
     }
 }

@@ -18,7 +18,7 @@ use Response;
 class ReportController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Report\ReportChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -28,7 +28,7 @@ class ReportController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface');
     }
 
 

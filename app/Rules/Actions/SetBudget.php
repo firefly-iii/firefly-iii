@@ -55,7 +55,7 @@ class SetBudget implements ActionInterface
         )->first();
         if (!is_null($budget)) {
             Log::debug('Will set budget "' . $search . '" (#' . $budget->id . ') on journal #' . $this->journal->id . '.');
-            $this->journal->budgets()->save($budget);
+            $this->journal->budgets()->sync([$budget->id]);
         } else {
             Log::debug('Could not find budget "' . $search . '". Failed.');
         }

@@ -2,8 +2,8 @@
 
 $(function () {
       "use strict";
-      if (typeof(comboChart) === 'function' && typeof(billID) !== 'undefined') {
-          comboChart('chart/bill/' + billID, 'bill-overview');
+      if (typeof(columnChart) === 'function' && typeof(billID) !== 'undefined') {
+          columnChart('chart/bill/' + billID, 'bill-overview');
       }
   }
 );

@@ -20,9 +20,9 @@ class ChartCategoryControllerTest extends TestCase
     public function testAll()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/1/all');
+        $this->call('GET', '/chart/category/1/all');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -31,9 +31,9 @@ class ChartCategoryControllerTest extends TestCase
     public function testCurrentPeriod()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/1/period');
+        $this->call('GET', '/chart/category/1/period');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -45,8 +45,8 @@ class ChartCategoryControllerTest extends TestCase
         $repository->shouldReceive('earnedForAccountsPerMonth')->once()->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/earned-in-period/default/20150101/20151231/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/category/earned-in-period/default/20150101/20151231/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -59,8 +59,8 @@ class ChartCategoryControllerTest extends TestCase
         $repository->shouldReceive('sumSpentNoCategory')->once()->andReturn('120');
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/frontpage');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/category/frontpage');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -72,8 +72,8 @@ class ChartCategoryControllerTest extends TestCase
         $repository->shouldReceive('listMultiYear')->once()->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/multi-year/default/20150101/20151231/1/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/category/multi-year/default/20150101/20151231/1/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -82,9 +82,9 @@ class ChartCategoryControllerTest extends TestCase
     public function testSpecificPeriod()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/1/period/20150101');
+        $this->call('GET', '/chart/category/1/period/20150101');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -98,8 +98,8 @@ class ChartCategoryControllerTest extends TestCase
         $repository->shouldReceive('spentForAccountsPerMonth')->once()->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/category/spent-in-period/default/20150101/20151231/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/category/spent-in-period/default/20150101/20151231/1');
+        $this->assertResponseStatus(200);
 
     }
 }

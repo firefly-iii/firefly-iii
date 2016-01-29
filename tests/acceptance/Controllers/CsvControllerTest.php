@@ -24,9 +24,9 @@ class CsvControllerTest extends TestCase
         // create session data:
         $this->session($this->getSessionData());
 
-        $response = $this->call('GET', '/csv/column_roles');
+        $this->call('GET', '/csv/column_roles');
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -36,8 +36,8 @@ class CsvControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->session($this->getSessionData());
-        $response = $this->call('GET', '/csv/download-config');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/csv/download-config');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -47,8 +47,8 @@ class CsvControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->session($this->getSessionData());
-        $response = $this->call('GET', '/csv/download');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/csv/download');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -58,8 +58,8 @@ class CsvControllerTest extends TestCase
     {
 
         $this->be($this->user());
-        $response = $this->call('GET', '/csv');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/csv');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -86,9 +86,9 @@ class CsvControllerTest extends TestCase
         $this->session($this->getSessionData());
 
 
-        $response = $this->call('POST', '/csv/initial_parse', $postData);
+        $this->call('POST', '/csv/initial_parse', $postData);
         // should be redirect
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
 
         // should be redirected to mapping:
         $this->assertRedirectedToRoute('csv.map');
@@ -112,16 +112,15 @@ class CsvControllerTest extends TestCase
                 6 => 'budget-name',
             ],
             'map'    => [],
-            '_token' => Session::token(),
         ];
 
         // create session data:
         $this->session($this->getSessionData());
 
 
-        $response = $this->call('POST', '/csv/initial_parse', $postData);
+        $this->call('POST', '/csv/initial_parse', $postData);
         // should be redirect
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
 
         // should be redirected to download config:
         $this->assertRedirectedToRoute('csv.download-config-page');
@@ -136,8 +135,8 @@ class CsvControllerTest extends TestCase
 
         $this->session($this->getSessionData());
 
-        $response = $this->call('GET', '/csv/map');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/csv/map');
+        $this->assertResponseStatus(200);
 
     }
 
@@ -148,8 +147,8 @@ class CsvControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->session($this->getSessionData());
-        $response = $this->call('GET', '/csv/process');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/csv/process');
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -160,7 +159,6 @@ class CsvControllerTest extends TestCase
         $this->be($this->user());
         $this->session($this->getSessionData());
         $postData = [
-            '_token' => Session::token(),
             'mapping'
                      => [0 => ['NL11XOLA6707795988' => '1',],
                          1 => ['NL10TAPT8906262744' => '0', 'NL93UPSZ1261542703' => '0', 'NL86IHAL3264575116' => '0', 'NL63BKBO9993148806' => '0',
@@ -177,9 +175,9 @@ class CsvControllerTest extends TestCase
                                'NL81LEJP9477634344' => '0', 'NL14JYVJ1041891180' => '0', 'NL57SPBS0788124528' => '0',
                                'NL96DZCO4665940223' => '2',],],];
 
-        $response = $this->call('POST', '/csv/save_mapping', $postData);
+        $this->call('POST', '/csv/save_mapping', $postData);
 
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
         $this->assertRedirectedToRoute('csv.download-config-page');
 
     }
@@ -193,12 +191,11 @@ class CsvControllerTest extends TestCase
 
         $file = new UploadedFile(storage_path('build/test-upload.csv'), 'test-file.csv', 'text/plain', 446);
         $args = [
-            '_token'             => Session::token(),
             'date_format'        => 'Ymd',
             'csv_import_account' => 1,
         ];
 
-        $response = $this->call('POST', '/csv/upload', $args, [], ['csv' => $file]);
+        $this->call('POST', '/csv/upload', $args, [], ['csv' => $file]);
 
         // csv data set:
         //$this->assertSessionHas('csv-file', 'abc');
@@ -211,7 +208,7 @@ class CsvControllerTest extends TestCase
         $this->assertSessionHas('csv-import-account', 1);
         $this->assertSessionHas('csv-delimiter', ',');
 
-        $this->assertEquals(302, $response->status());
+        $this->assertResponseStatus(302);
     }
 
     /**

@@ -87,176 +87,6 @@ class ChangesForV321 extends Migration
 
     }
 
-    public function moveBudgetsBack()
-    {
-        Budget::get()->each(
-            function (Budget $budget) {
-                Component::firstOrCreate(
-                    [
-                        'name'    => $budget->name,
-                        'user_id' => $budget->user_id,
-                        'class'   => 'Budget'
-                    ]
-                );
-            }
-        );
-    }
-
-    public function moveCategoriesBack()
-    {
-        Category::get()->each(
-            function (Category $category) {
-                Component::firstOrCreate(
-                    [
-                        'name'    => $category->name,
-                        'user_id' => $category->user_id,
-                        'class'   => 'Category'
-                    ]
-                );
-            }
-        );
-    }
-
-    public function createComponentId()
-    {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->integer('component_id')->unsigned();
-        }
-        );
-    }
-
-    public function updateComponentInBudgetLimits()
-    {
-        BudgetLimit::get()->each(
-            function (BudgetLimit $bl) {
-                $budgetId = $bl->budget_id;
-                $budget   = Budget::find($budgetId);
-                if ($budget) {
-                    $component = Component::where('class', 'Budget')->where('user_id', $budget->user_id)->where('name', $budget->name)->first();
-                    if ($component) {
-                        $bl->component_id = $component->id;
-                        $bl->save();
-                    }
-                }
-            }
-        );
-    }
-
-    public function createComponentIdForeignKey()
-    {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->foreign('component_id', 'limits_component_id_foreign')->references('id')->on('components')->onDelete('cascade');
-        }
-        );
-    }
-
-    public function dropBudgetIdColumnInBudgetLimits()
-    {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->dropForeign('bid_foreign');
-            $table->dropColumn('budget_id'); // also drop foreign key!
-        }
-        );
-    }
-
-    public function moveBackEntriesForBudgetsInJoinedTable()
-    {
-        $set = DB::table('budget_transaction_journal')->get();
-        foreach ($set as $entry) {
-            $budget = Budget::find($entry->budget_id);
-            if ($budget) {
-                $component = Component::where('class', 'Budget')->where('name', $budget->name)->where('user_id', $budget->user_id)->first();
-                if ($component) {
-                    DB::table('component_transaction_journal')->insert(
-                        [
-                            'component_id'           => $component->id,
-                            'transaction_journal_id' => $entry->transaction_journal_id
-                        ]
-                    );
-                }
-
-            }
-        }
-
-    }
-
-    public function moveBackEntriesForCategoriesInJoinedTable()
-    {
-        $set = DB::table('category_transaction_journal')->get();
-        foreach ($set as $entry) {
-            $category = Category::find($entry->category_id);
-            if ($category) {
-                $component = Component::where('class', 'Category')->where('name', $category->name)->where('user_id', $category->user_id)->first();
-                if ($component) {
-                    DB::table('component_transaction_journal')->insert(
-                        [
-                            'component_id'           => $component->id,
-                            'transaction_journal_id' => $entry->transaction_journal_id
-                        ]
-                    );
-                }
-
-            }
-        }
-
-    }
-
-    public function dropBudgetJournalTable()
-    {
-        Schema::dropIfExists('budget_transaction_journal');
-    }
-
-    public function dropCategoryJournalTable()
-    {
-        Schema::dropIfExists('category_transaction_journal');
-    }
-
-    public function dropBudgetTable()
-    {
-        Schema::dropIfExists('budgets');
-    }
-
-    public function dropCategoryTable()
-    {
-        Schema::dropIfExists('categories');
-    }
-
-    public function renameBudgetLimits()
-    {
-        Schema::rename('budget_limits', 'limits');
-    }
-
-    public function renamePiggyBankEvents()
-    {
-        Schema::rename('piggy_bank_events', 'piggybank_events');
-
-    }
-
-    public function renameBudgetLimitToBudgetInRepetitions()
-    {
-        Schema::table(
-            'limit_repetitions', function (Blueprint $table) {
-            $table->dropForeign('limit_repetitions_budget_limit_id_foreign');
-            $table->renameColumn('budget_limit_id', 'limit_id');
-            $table->foreign('limit_id')->references('id')->on('limits')->onDelete('cascade');
-        }
-        );
-    }
-
-    public function dropFieldsFromCurrencyTable()
-    {
-
-        Schema::table(
-            'transaction_currencies', function (Blueprint $table) {
-            $table->dropColumn('symbol');
-            $table->dropColumn('name');
-        }
-        );
-    }
-
     /**
      * Run the migrations.
      *
@@ -284,7 +114,42 @@ class ChangesForV321 extends Migration
 
     }
 
-    public function createBudgetTable()
+    private function addBudgetIdFieldToBudgetLimits()
+    {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->integer('budget_id', false, true)->nullable()->after('updated_at');
+            $table->foreign('budget_id', 'bid_foreign')->references('id')->on('budgets')->onDelete('cascade');
+        }
+        );
+    }
+
+    private function correctNameForBudgetLimits()
+    {
+        Schema::rename('limits', 'budget_limits');
+    }
+
+    private function correctNameForPiggyBankEvents()
+    {
+        Schema::rename('piggybank_events', 'piggy_bank_events');
+
+    }
+
+    private function createBudgetJournalTable()
+    {
+        Schema::create(
+            'budget_transaction_journal', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('budget_id')->unsigned();
+            $table->integer('transaction_journal_id')->unsigned();
+            $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+            $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+            $table->unique(['budget_id', 'transaction_journal_id'], 'budid_tjid_unique');
+        }
+        );
+    }
+
+    private function createBudgetTable()
     {
         Schema::create(
             'budgets', function (Blueprint $table) {
@@ -301,7 +166,21 @@ class ChangesForV321 extends Migration
 
     }
 
-    public function createCategoryTable()
+    private function createCategoryJournalTable()
+    {
+        Schema::create(
+            'category_transaction_journal', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('category_id')->unsigned();
+            $table->integer('transaction_journal_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+            $table->unique(['category_id', 'transaction_journal_id'], 'catid_tjid_unique');
+        }
+        );
+    }
+
+    private function createCategoryTable()
     {
         Schema::create(
             'categories', function (Blueprint $table) {
@@ -316,52 +195,179 @@ class ChangesForV321 extends Migration
         );
     }
 
-    public function createBudgetJournalTable()
+    private function createComponentId()
     {
-        Schema::create(
-            'budget_transaction_journal', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('budget_id')->unsigned();
-            $table->integer('transaction_journal_id')->unsigned();
-            $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-            $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            $table->unique(['budget_id', 'transaction_journal_id'], 'budid_tjid_unique');
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->integer('component_id')->unsigned();
         }
         );
     }
 
-    public function createCategoryJournalTable()
+    private function createComponentIdForeignKey()
     {
-        Schema::create(
-            'category_transaction_journal', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('category_id')->unsigned();
-            $table->integer('transaction_journal_id')->unsigned();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            $table->unique(['category_id', 'transaction_journal_id'], 'catid_tjid_unique');
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->foreign('component_id', 'limits_component_id_foreign')->references('id')->on('components')->onDelete('cascade');
         }
         );
     }
 
-    public function moveBudgets()
+    private function dropBudgetIdColumnInBudgetLimits()
+    {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropForeign('bid_foreign');
+            $table->dropColumn('budget_id'); // also drop foreign key!
+        }
+        );
+    }
+
+    private function dropBudgetJournalTable()
+    {
+        Schema::dropIfExists('budget_transaction_journal');
+    }
+
+    private function dropBudgetTable()
+    {
+        Schema::dropIfExists('budgets');
+    }
+
+    private function dropCategoryJournalTable()
+    {
+        Schema::dropIfExists('category_transaction_journal');
+    }
+
+    private function dropCategoryTable()
+    {
+        Schema::dropIfExists('categories');
+    }
+
+    private function dropComponentIdFromBudgetLimits()
+    {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropForeign('limits_component_id_foreign');
+            $table->dropColumn('component_id');
+        }
+        );
+    }
+
+    private function dropComponentJournalTable()
+    {
+        Schema::dropIfExists('component_transaction_journal');
+    }
+
+    private function dropComponentRecurringTransactionTable()
+    {
+        Schema::dropIfExists('component_recurring_transaction');
+    }
+
+    private function dropComponentTransactionTable()
+    {
+        Schema::dropIfExists('component_transaction');
+    }
+
+    private function dropFieldsFromCurrencyTable()
+    {
+
+        Schema::table(
+            'transaction_currencies', function (Blueprint $table) {
+            $table->dropColumn('symbol');
+            $table->dropColumn('name');
+        }
+        );
+    }
+
+    private function dropPiggyBankIdFromTransactions()
+    {
+
+        Schema::table(
+            'transactions', function (Blueprint $table) {
+            if (Schema::hasColumn('transactions', 'piggybank_id')) {
+                $table->dropForeign('transactions_piggybank_id_foreign');
+                $table->dropColumn('piggybank_id');
+            }
+        }
+        );
+    }
+
+    private function expandCurrencyTable()
+    {
+        Schema::table(
+            'transaction_currencies', function (Blueprint $table) {
+            $table->string('name', 48)->nullable();
+            $table->string('symbol', 8)->nullable();
+        }
+        );
+        \DB::update('UPDATE `transaction_currencies` SET `symbol` = "&#8364;", `name` = "Euro" WHERE `code` = "EUR";');
+    }
+
+    private function moveBackEntriesForBudgetsInJoinedTable()
+    {
+        $set = DB::table('budget_transaction_journal')->get();
+        /** @var \stdClass $entry */
+        foreach ($set as $entry) {
+            $budget = Budget::find($entry->budget_id);
+            if ($budget) {
+                /** @var \FireflyIII\Models\Component $component */
+                $component = Component::where('class', 'Budget')->where('name', $budget->name)->where('user_id', $budget->user_id)->first();
+                if ($component) {
+                    DB::table('component_transaction_journal')->insert(
+                        [
+                            'component_id'           => $component->id,
+                            'transaction_journal_id' => $entry->transaction_journal_id,
+                        ]
+                    );
+                }
+
+            }
+        }
+
+    }
+
+    private function moveBackEntriesForCategoriesInJoinedTable()
+    {
+        $set = DB::table('category_transaction_journal')->get();
+        /** @var \stdClass $entry */
+        foreach ($set as $entry) {
+            $category = Category::find($entry->category_id);
+            if ($category) {
+                /** @var \FireflyIII\Models\Component $component */
+                $component = Component::where('class', 'Category')->where('name', $category->name)->where('user_id', $category->user_id)->first();
+                if ($component) {
+                    DB::table('component_transaction_journal')->insert(
+                        [
+                            'component_id'           => $component->id,
+                            'transaction_journal_id' => $entry->transaction_journal_id,
+                        ]
+                    );
+                }
+
+            }
+        }
+
+    }
+
+    private function moveBudgets()
     {
         Component::where('class', 'Budget')->get()->each(
             function (Component $c) {
                 $entry  = [
                     'user_id' => $c->user_id,
-                    'name'    => $c->name
+                    'name'    => $c->name,
 
                 ];
                 $budget = Budget::firstOrCreate($entry);
                 Log::debug('Migrated budget #' . $budget->id . ': ' . $budget->name);
                 // create entry in budget_transaction_journal
                 $connections = DB::table('component_transaction_journal')->where('component_id', $c->id)->get();
+                /** @var \stdClass $connection */
                 foreach ($connections as $connection) {
                     DB::table('budget_transaction_journal')->insert(
                         [
                             'budget_id'              => $budget->id,
-                            'transaction_journal_id' => $connection->transaction_journal_id
+                            'transaction_journal_id' => $connection->transaction_journal_id,
                         ]
                     );
                 }
@@ -369,24 +375,40 @@ class ChangesForV321 extends Migration
         );
     }
 
-    public function moveCategories()
+    private function moveBudgetsBack()
+    {
+        Budget::get()->each(
+            function (Budget $budget) {
+                Component::firstOrCreate(
+                    [
+                        'name'    => $budget->name,
+                        'user_id' => $budget->user_id,
+                        'class'   => 'Budget',
+                    ]
+                );
+            }
+        );
+    }
+
+    private function moveCategories()
     {
         Component::where('class', 'Category')->get()->each(
             function (Component $c) {
                 $entry    = [
                     'user_id' => $c->user_id,
-                    'name'    => $c->name
+                    'name'    => $c->name,
 
                 ];
                 $category = Category::firstOrCreate($entry);
                 Log::debug('Migrated category #' . $category->id . ': ' . $category->name);
                 // create entry in category_transaction_journal
                 $connections = DB::table('component_transaction_journal')->where('component_id', $c->id)->get();
+                /** @var \stdClass $connection */
                 foreach ($connections as $connection) {
                     DB::table('category_transaction_journal')->insert(
                         [
                             'category_id'            => $category->id,
-                            'transaction_journal_id' => $connection->transaction_journal_id
+                            'transaction_journal_id' => $connection->transaction_journal_id,
                         ]
                     );
                 }
@@ -394,39 +416,22 @@ class ChangesForV321 extends Migration
         );
     }
 
-    public function correctNameForBudgetLimits()
+    private function moveCategoriesBack()
     {
-        Schema::rename('limits', 'budget_limits');
-    }
-
-    public function correctNameForPiggyBankEvents()
-    {
-        Schema::rename('piggybank_events', 'piggy_bank_events');
-
-    }
-
-    public function renameBudgetToBudgetLimitInRepetitions()
-    {
-        Schema::table(
-            'limit_repetitions', function (Blueprint $table) {
-            $table->dropForeign('limit_repetitions_limit_id_foreign');
-            $table->renameColumn('limit_id', 'budget_limit_id');
-            $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
-        }
+        Category::get()->each(
+            function (Category $category) {
+                Component::firstOrCreate(
+                    [
+                        'name'    => $category->name,
+                        'user_id' => $category->user_id,
+                        'class'   => 'Category',
+                    ]
+                );
+            }
         );
     }
 
-    public function addBudgetIdFieldToBudgetLimits()
-    {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->integer('budget_id', false, true)->nullable()->after('updated_at');
-            $table->foreign('budget_id', 'bid_foreign')->references('id')->on('budgets')->onDelete('cascade');
-        }
-        );
-    }
-
-    public function moveComponentIdToBudgetId()
+    private function moveComponentIdToBudgetId()
     {
         BudgetLimit::get()->each(
             function (BudgetLimit $bl) {
@@ -451,53 +456,54 @@ class ChangesForV321 extends Migration
 
     }
 
-    public function dropComponentJournalTable()
+    private function renameBudgetLimitToBudgetInRepetitions()
     {
-        Schema::dropIfExists('component_transaction_journal');
-    }
-
-    public function dropComponentRecurringTransactionTable()
-    {
-        Schema::dropIfExists('component_recurring_transaction');
-    }
-
-    public function dropComponentTransactionTable()
-    {
-        Schema::dropIfExists('component_transaction');
-    }
-
-    public function dropPiggyBankIdFromTransactions()
-    {
-
         Schema::table(
-            'transactions', function (Blueprint $table) {
-            if (Schema::hasColumn('transactions', 'piggybank_id')) {
-                $table->dropForeign('transactions_piggybank_id_foreign');
-                $table->dropColumn('piggybank_id');
+            'limit_repetitions', function (Blueprint $table) {
+            $table->dropForeign('limit_repetitions_budget_limit_id_foreign');
+            $table->renameColumn('budget_limit_id', 'limit_id');
+            $table->foreign('limit_id')->references('id')->on('limits')->onDelete('cascade');
+        }
+        );
+    }
+
+    private function renameBudgetLimits()
+    {
+        Schema::rename('budget_limits', 'limits');
+    }
+
+    private function renameBudgetToBudgetLimitInRepetitions()
+    {
+        Schema::table(
+            'limit_repetitions', function (Blueprint $table) {
+            $table->dropForeign('limit_repetitions_limit_id_foreign');
+            $table->renameColumn('limit_id', 'budget_limit_id');
+            $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
+        }
+        );
+    }
+
+    private function renamePiggyBankEvents()
+    {
+        Schema::rename('piggy_bank_events', 'piggybank_events');
+
+    }
+
+    private function updateComponentInBudgetLimits()
+    {
+        BudgetLimit::get()->each(
+            function (BudgetLimit $bl) {
+                $budgetId = $bl->budget_id;
+                $budget   = Budget::find($budgetId);
+                if ($budget) {
+                    $component = Component::where('class', 'Budget')->where('user_id', $budget->user_id)->where('name', $budget->name)->first();
+                    if ($component) {
+                        $bl->component_id = $component->id;
+                        $bl->save();
+                    }
+                }
             }
-        }
         );
-    }
-
-    public function dropComponentIdFromBudgetLimits()
-    {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->dropForeign('limits_component_id_foreign');
-            $table->dropColumn('component_id');
-        }
-        );
-    }
-
-    public function expandCurrencyTable()
-    {
-        Schema::table(
-            'transaction_currencies', function (Blueprint $table) {
-            $table->string('name', 48)->nullable();
-            $table->string('symbol', 8)->nullable();
-        }
-        );
-        \DB::update('UPDATE `transaction_currencies` SET `symbol` = "&#8364;", `name` = "Euro" WHERE `code` = "EUR";');
     }
 
 

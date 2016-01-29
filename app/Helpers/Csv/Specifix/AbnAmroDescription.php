@@ -73,7 +73,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
         if (preg_match('/ABN AMRO.{24} (.*)/', $this->data['description'], $matches)) {
             Log::debug('AbnAmroSpecifix: Description is structured as costs from ABN AMRO itself.');
 
-            $this->data['opposing-account-name'] = "ABN AMRO";
+            $this->data['opposing-account-name'] = 'ABN AMRO';
             $this->data['description']           = $matches[1];
 
             return true;
@@ -117,22 +117,24 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
             // SEPA plain descriptions contain several key-value pairs, split by a colon
             preg_match_all('/([A-Za-z]+(?=:\s)):\s([A-Za-z 0-9._#-]+(?=\s))/', $this->data['description'], $matches, PREG_SET_ORDER);
 
-            foreach ($matches as $match) {
-                $key   = $match[1];
-                $value = trim($match[2]);
+            if (is_array($matches)) {
+                foreach ($matches as $match) {
+                    $key   = $match[1];
+                    $value = trim($match[2]);
 
-                switch (strtoupper($key)) {
-                    case 'OMSCHRIJVING':
-                        $this->data['description'] = $value;
-                        break;
-                    case 'NAAM':
-                        $this->data['opposing-account-name'] = $value;
-                        break;
-                    case 'IBAN':
-                        $this->data['opposing-account-iban'] = $value;
-                        break;
-                    default:
-                        // Ignore the rest
+                    switch (strtoupper($key)) {
+                        case 'OMSCHRIJVING':
+                            $this->data['description'] = $value;
+                            break;
+                        case 'NAAM':
+                            $this->data['opposing-account-name'] = $value;
+                            break;
+                        case 'IBAN':
+                            $this->data['opposing-account-iban'] = $value;
+                            break;
+                        default:
+                            // Ignore the rest
+                    }
                 }
             }
 
@@ -153,26 +155,24 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
         if (preg_match_all('!\/([A-Z]{3,4})\/([^/]*)!', $this->data['description'], $matches, PREG_SET_ORDER)) {
             Log::debug('AbnAmroSpecifix: Description is structured as TRTP format.');
 
-            foreach ($matches as $match) {
-                $key   = $match[1];
-                $value = trim($match[2]);
+            if (is_array($matches)) {
+                foreach ($matches as $match) {
+                    $key   = $match[1];
+                    $value = trim($match[2]);
 
-                switch (strtoupper($key)) {
-                    // is not being used.
-                    //                    case 'TRTP':
-                    //                        $type = $value;
-                    //                        break;
-                    case 'NAME':
-                        $this->data['opposing-account-name'] = $value;
-                        break;
-                    case 'REMI':
-                        $this->data['description'] = $value;
-                        break;
-                    case 'IBAN':
-                        $this->data['opposing-account-iban'] = $value;
-                        break;
-                    default:
-                        // Ignore the rest
+                    switch (strtoupper($key)) {
+                        case 'NAME':
+                            $this->data['opposing-account-name'] = $value;
+                            break;
+                        case 'REMI':
+                            $this->data['description'] = $value;
+                            break;
+                        case 'IBAN':
+                            $this->data['opposing-account-iban'] = $value;
+                            break;
+                        default:
+                            // Ignore the rest
+                    }
                 }
             }
 

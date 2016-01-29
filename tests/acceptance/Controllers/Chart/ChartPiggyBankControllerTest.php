@@ -19,7 +19,7 @@ class ChartPiggyBankControllerTest extends TestCase
     public function testHistory()
     {
         $this->be($this->user());
-        $response = $this->call('GET', '/chart/piggy-bank/1');
-        $this->assertEquals(200, $response->status());
+        $this->call('GET', '/chart/piggy-bank/1');
+        $this->assertResponseStatus(200);
     }
 }

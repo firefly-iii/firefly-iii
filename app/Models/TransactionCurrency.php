@@ -1,8 +1,6 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -10,14 +8,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property Carbon                               $deleted_at
- * @property string                               $code
- * @property string                               $name
- * @property string                               $symbol
- * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property \Carbon\Carbon                                                     $deleted_at
+ * @property string                                                             $code
+ * @property string                                                             $name
+ * @property string                                                             $symbol
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
  */
 class TransactionCurrency extends Model
 {

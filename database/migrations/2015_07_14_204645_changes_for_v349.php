@@ -17,7 +17,6 @@ class ChangesForV349 extends Migration
      */
     public function down()
     {
-        //
     }
 
     /**
