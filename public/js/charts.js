@@ -27,16 +27,16 @@ var colourSet = [
 // Settings object that controls default parameters for library methods:
 accounting.settings = {
     currency: {
-        symbol : currencySymbol,   // default currency symbol is '$'
+        symbol: currencySymbol,   // default currency symbol is '$'
         format: "%s %v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-        decimal : mon_decimal_point,  // decimal point separator
+        decimal: mon_decimal_point,  // decimal point separator
         thousand: mon_thousands_sep,  // thousands separator
-        precision : frac_digits   // decimal places
+        precision: frac_digits   // decimal places
     },
     number: {
-        precision : 0,  // default precision on numbers is 0
+        precision: 0,  // default precision on numbers is 0
         thousand: ",",
-        decimal : "."
+        decimal: "."
     }
 };
 
@@ -92,7 +92,7 @@ var defaultLineOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
+    scaleLabel: "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
@@ -107,9 +107,9 @@ var defaultColumnOptions = {
     scaleFontSize: 10,
     responsive: false,
     animation: false,
-    scaleLabel:           "<%= accounting.formatMoney(value) %>",
+    scaleLabel: "<%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate:      "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 };
 
@@ -122,7 +122,7 @@ var defaultStackedColumnOptions = {
     animation: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel:           "<%= accounting.formatMoney(value) %>",
+    scaleLabel: "<%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 
@@ -204,7 +204,18 @@ function areaChart(URL, container, options) {
 function columnChart(URL, container, options) {
     "use strict";
 
+    options = options || {};
+
     $.getJSON(URL).success(function (data) {
+
+        var result = true;
+        if (options.beforeDraw) {
+            result = options.beforeDraw(data, {url: URL, container: container});
+        }
+        if (result === false) {
+            return;
+        }
+        console.log('Will draw columnChart(' + URL + ')');
 
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
@@ -239,6 +250,15 @@ function stackedColumnChart(URL, container, options) {
     "use strict";
 
     $.getJSON(URL).success(function (data) {
+
+        var result = true;
+        if (options.beforeDraw) {
+            result = options.beforeDraw(data, {url: URL, container: container});
+        }
+        if (result === false) {
+            return;
+        }
+
 
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
