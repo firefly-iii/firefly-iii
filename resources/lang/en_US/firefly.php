@@ -197,6 +197,8 @@ return [
     'enable_two_factor_auth'                 => 'Enable 2-step verification',
     'enable_two_factor_auth_info'            => '2-step verification provides improved security for your Firefly III account. If 2-step verification is enabled, you will need to enter your password in addition to a one-time verification code when logging into Firefly III. Verification codes are obtained from authenticator apps installed on your mobile device. Examples of aps are Authy or Google Authenticator. Therefore, if someone wants to access your account, he will not only need your username and password, but also your mobile device.',
     'validate_qr_code_info'                  => 'Scan the following image with your authenticator app, or enter the token manually. Enter the resulting code in the form below.',
+    'two_factor_auth_validation_failed'      => '2-step verification failed. Please scan the image again and enter the token.'
+    'two_factor_auth_failure'                => 'Something went wrong with the 2-step verification. Please try again.',
 
     // attachments
     'nr_of_attachments'                      => 'One attachment|:count attachments',

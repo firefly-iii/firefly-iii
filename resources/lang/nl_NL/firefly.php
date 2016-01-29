@@ -197,6 +197,8 @@ return [
     'enable_two_factor_auth'                 => '2-stapsverificatie inschakelen',
     'enable_two_factor_auth_info'            => 'De 2-stapsverificatie biedt een verbeterde beveiliging van uw Firefly III-account. Schakelt u de 2-stapsverificatie in, dan hebt u uw wachtwoord en een eenmalige verificatiecode nodig om u bij Firefly III aan te melden. De verificatiecodes krijgt u van een app geïnstalleerd op uw mobiele telefoon. Voorbeelden van deze app zijn Authy en Google Authenticator. Mocht iemand toegang tot uw account willen, dan heeft hij naast uw gebruikersnaam en wachtwoord ook uw mobiele telefoon nodig.',
     'validate_qr_code_info'                  => 'Scan onderstaande QR-code met de authenticatie app, of type de tekenreeks handmatig in. Vul de verificatiecode in onderstaand formulier in.',
+    'two_factor_auth_validation_failed'      => 'Het valideren van de 2-stapsverificatie is mislukt. Scan de QR-code opnieuw en voer de verifactiecode in.',
+    'two_factor_auth_failure'                => 'Er is iets mis gegaan bij de 2-stapsverificatie. Probeer het opnieuw.',
 
     // attachments
     'nr_of_attachments'                      => 'Eén bijlage|:count bijlagen',

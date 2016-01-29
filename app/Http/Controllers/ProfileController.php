@@ -203,7 +203,7 @@ class ProfileController extends Controller
             Auth::user()->secret_key = Session::get('user.secret_key');
             Auth::user()->save();
 
-            // Set the session flag that indicates the the user has passed 2fa, other wise he will be redirected to the verify_token page.
+            // Set the session flag that indicates the user has passed 2fa, otherwise he will be redirected to the verify_token page.
             Session::put('auth.2fa_passed', 1);
 
 
@@ -212,7 +212,7 @@ class ProfileController extends Controller
         }
         else
         {
-            Session::flash('warning', trans('firefly.two_factor_auth_settings_failed'));
+            Session::flash('warning', trans('firefly.two_factor_auth_validation_failed'));
 
             $url = $google2fa->getQRCodeInline("FireflyIII", null, Session::get('user.secret_key'), 150);
 
