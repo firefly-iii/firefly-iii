@@ -183,8 +183,8 @@ class ReportHelper implements ReportHelperInterface
 
             if (!isset($months[$year])) {
                 $months[$year] = [
-                    'start-fiscal' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
-                    'end-fiscal'   => $fiscalHelper->endOfFiscalYear($start)->format('Y-m-d'),
+                    'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
+                    'fiscal_end'   => $fiscalHelper->endOfFiscalYear($start)->format('Y-m-d'),
                     'start'        => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
                     'end'          => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
                     'months'       => [],
