@@ -5,6 +5,7 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
+use Preferences;
 use Session;
 use View;
 
@@ -166,8 +167,9 @@ class ReportController extends Controller
      */
     public function index(ARI $repository)
     {
-        $start  = Session::get('first');
-        $months = $this->helper->listOfMonths($start);
+        $start            = Session::get('first');
+        $months           = $this->helper->listOfMonths($start);
+        $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
 
         // does the user have shared accounts?
         $accounts = $repository->getAccounts(['Default account', 'Asset account']);
@@ -180,11 +182,7 @@ class ReportController extends Controller
         $accountList = join(',', $accountIds);
 
 
-        return view(
-            'reports.index', compact(
-                               'months', 'accounts', 'start', 'accountList'
-                           )
-        );
+        return view('reports.index', compact('months', 'accounts', 'start', 'accountList','customFiscalYear'));
     }
 
     /**
