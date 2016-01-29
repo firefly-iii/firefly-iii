@@ -1,22 +1,29 @@
+/*
+ * index.js
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 /* globals $, lineChart, token, piggyBankID */
 
 // Return a helper with preserved width of cells
-var fixHelper = function (e, ui) {
+var fixHelper = function (e, tr) {
     "use strict";
-    ui.children().each(function () {
-        $(this).width($(this).width());
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function (index) {
+        // Set helper cell sizes to match the original sizes
+        $(this).width($originals.eq(index).width());
     });
-    return ui;
+    return $helper;
 };
 
 $(function () {
     "use strict";
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
-
-    if (typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
-        lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
-    }
 
     $('#sortable tbody').sortable(
         {
