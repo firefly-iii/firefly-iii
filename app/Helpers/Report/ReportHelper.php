@@ -8,7 +8,7 @@ use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
-use FireflyIII\Helpers\FiscalHelper;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -172,11 +172,12 @@ class ReportHelper implements ReportHelperInterface
      */
     public function listOfMonths(Carbon $date)
     {
+        /** @var FiscalHelperInterface $fiscalHelper */
+        $fiscalHelper = app('FireflyIII\Helpers\FiscalHelperInterface');
+        $start  = clone $date;
+        $end    = Carbon::now();
+        $months = [];
 
-        $start        = clone $date;
-        $end          = Carbon::now();
-        $months       = [];
-        $fiscalHelper = new FiscalHelper;
         while ($start <= $end) {
             $year = $fiscalHelper->endOfFiscalYear($start)->year;
 
