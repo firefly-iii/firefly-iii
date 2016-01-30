@@ -1,4 +1,6 @@
 <?php
+namespace FireflyIII\Support\Migration;
+
 /**
  * TestData.php
  * Copyright (C) 2016 Sander Dorigo
@@ -6,15 +8,19 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\User;
+use Log;
 
 /**
  * Class TestData
+ *
+ * @package FireflyIII\Support\Migration
  */
 class TestData
 {
@@ -52,6 +58,41 @@ class TestData
             }
         }
 
+    }
+
+    /**
+     * @param User $user
+     */
+    public static function createBills(User $user)
+    {
+        Bill::create(
+            [
+                'name'        => 'Rent',
+                'match'       => 'rent,land,lord',
+                'amount_min'  => 795,
+                'amount_max'  => 805,
+                'user_id'     => $user->id,
+                'date'        => '2015-01-01',
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+        Bill::create(
+            [
+                'name'        => 'Health insurance',
+                'match'       => 'zilveren,kruis,health',
+                'amount_min'  => 120,
+                'amount_max'  => 140,
+                'user_id'     => $user->id,
+                'date'        => '2015-01-01',
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
     }
 
     /**
@@ -203,47 +244,14 @@ class TestData
         /** @var Account $account */
         foreach ($user->accounts()->get() as $account) {
             if ($account->name == $name) {
+                Log::debug('Trying to find "' . $name . '" in "' . $account->name . '", and found it!');
+
                 return $account;
-                break;
             }
+            Log::debug('Trying to find "' . $name . '" in "' . $account->name . '".');
         }
 
         return null;
-    }
-
-    /**
-     * @param User $user
-     */
-    public static function createBills(User $user)
-    {
-        Bill::create(
-            [
-                'name'        => 'Rent',
-                'match'       => 'rent,land,lord',
-                'amount_min'  => 795,
-                'amount_max'  => 805,
-                'user_id'     => $user->id,
-                'date'        => '2015-01-01',
-                'active'      => 1,
-                'automatch'   => 1,
-                'repeat_freq' => 'monthly',
-                'skip'        => 0,
-            ]
-        );
-        Bill::create(
-            [
-                'name'        => 'Health insurance',
-                'match'       => 'zilveren,kruis,health',
-                'amount_min'  => 120,
-                'amount_max'  => 140,
-                'user_id'     => $user->id,
-                'date'        => '2015-01-01',
-                'active'      => 1,
-                'automatch'   => 1,
-                'repeat_freq' => 'monthly',
-                'skip'        => 0,
-            ]
-        );
     }
 
 
