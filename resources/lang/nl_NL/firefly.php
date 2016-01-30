@@ -531,6 +531,7 @@ return [
     'report_include_help'                    => 'Overboekingen naar gedeelde rekeningen tellen als uitgave. Overboekingen van gedeelde rekeningen tellen als inkomsten.',
     'report_preset_ranges'                   => 'Standaardbereik',
     'shared'                                 => 'Gedeeld',
+    'fiscal_year'                            => 'Boekjaar',
 
     // charts:
     'dayOfMonth'                             => 'Dag vd maand',
