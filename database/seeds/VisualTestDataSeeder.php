@@ -1,7 +1,6 @@
 <?php
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -16,8 +15,10 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Migration\TestData;
 use FireflyIII\User;
 use Illuminate\Database\Seeder;
+
 
 /**
  *
@@ -108,7 +109,7 @@ class VisualTestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'from_account_is';
-        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+        $ruleTrigger->trigger_value   = 'TestData Checking Account';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -179,7 +180,7 @@ class VisualTestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'from_account_is';
-        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+        $ruleTrigger->trigger_value   = 'TestData Checking Account';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -261,7 +262,7 @@ class VisualTestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'from_account_is';
-        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+        $ruleTrigger->trigger_value   = 'TestData Checking Account';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -273,7 +274,7 @@ class VisualTestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'to_account_is';
-        $ruleTrigger->trigger_value   = 'Savings';
+        $ruleTrigger->trigger_value   = 'TestData Savings';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -332,7 +333,7 @@ class VisualTestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 0;
         $ruleTrigger->trigger_type    = 'from_account_is';
-        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+        $ruleTrigger->trigger_value   = 'TestData Checking Account';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -402,7 +403,7 @@ class VisualTestDataSeeder extends Seeder
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = 1;
         $ruleTrigger->trigger_type    = 'from_account_is';
-        $ruleTrigger->trigger_value   = 'MyBank Checking Account';
+        $ruleTrigger->trigger_value   = 'TestData Checking Account';
 
         $ruleTrigger->save();
         unset($ruleTrigger);
@@ -527,7 +528,7 @@ class VisualTestDataSeeder extends Seeder
     {
         // twice:
         $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
-        $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
         $toAccount   = TestData::findAccount($this->user, 'Shell');
         $category    = Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $this->user->id]);
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $this->user->id]);
@@ -615,7 +616,7 @@ class VisualTestDataSeeder extends Seeder
             // weekly drink:
             $thisDate = clone $current;
             $thisDate->addDay();
-            $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+            $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
             $toAccount   = TestData::findAccount($this->user, 'Cafe Central');
             $category    = Category::firstOrCreateEncrypted(['name' => 'Drinks', 'user_id' => $this->user->id]);
             $budget      = Budget::firstOrCreateEncrypted(['name' => 'Going out', 'user_id' => $this->user->id]);
@@ -688,7 +689,7 @@ class VisualTestDataSeeder extends Seeder
         $start->startOfMonth();
         $end->endOfMonth();
 
-        $fromAccount  = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $fromAccount  = TestData::findAccount($this->user, 'TestData Checking Account');
         $stores       = ['Albert Heijn', 'PLUS', 'Bakker'];
         $descriptions = ['Groceries', 'Bought some groceries', 'Got groceries'];
         $category     = Category::firstOrCreateEncrypted(['name' => 'Daily groceries', 'user_id' => $this->user->id]);
@@ -750,7 +751,7 @@ class VisualTestDataSeeder extends Seeder
         if ($date >= $today) {
             return null;
         }
-        $toAccount   = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $toAccount   = TestData::findAccount($this->user, 'TestData Checking Account');
         $fromAccount = TestData::findAccount($this->user, 'Job');
         $category    = Category::firstOrCreateEncrypted(['name' => 'Salary', 'user_id' => $this->user->id]);
         // create journal:
@@ -797,7 +798,7 @@ class VisualTestDataSeeder extends Seeder
     protected function createPower($description, Carbon $date, $amount)
     {
         $date        = new Carbon($date->format('Y-m') . '-06'); // paid on 10th
-        $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
         $toAccount   = TestData::findAccount($this->user, 'Greenchoice');
         $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $this->user->id]);
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $this->user->id]);
@@ -852,7 +853,7 @@ class VisualTestDataSeeder extends Seeder
      */
     protected function createRent($description, Carbon $date, $amount)
     {
-        $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
         $toAccount   = TestData::findAccount($this->user, 'Land lord');
         $category    = Category::firstOrCreateEncrypted(['name' => 'Rent', 'user_id' => $this->user->id]);
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $this->user->id]);
@@ -918,8 +919,8 @@ class VisualTestDataSeeder extends Seeder
     protected function createSavings(Carbon $date)
     {
         $date        = new Carbon($date->format('Y-m') . '-24'); // paid on 24th.
-        $toAccount   = TestData::findAccount($this->user, 'Savings');
-        $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $toAccount   = TestData::findAccount($this->user, 'TestData Savings');
+        $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
         $category    = Category::firstOrCreateEncrypted(['name' => 'Money management', 'user_id' => $this->user->id]);
         // create journal:
 
@@ -965,7 +966,7 @@ class VisualTestDataSeeder extends Seeder
     protected function createTV($description, Carbon $date, $amount)
     {
         $date        = new Carbon($date->format('Y-m') . '-15'); // paid on 10th
-        $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
         $toAccount   = TestData::findAccount($this->user, 'XS4All');
         $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $this->user->id]);
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $this->user->id]);
@@ -1043,7 +1044,7 @@ class VisualTestDataSeeder extends Seeder
     protected function createWater($description, Carbon $date, $amount)
     {
         $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
-        $fromAccount = TestData::findAccount($this->user, 'MyBank Checking Account');
+        $fromAccount = TestData::findAccount($this->user, 'TestData Checking Account');
         $toAccount   = TestData::findAccount($this->user, 'Vitens');
         $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $this->user->id]);
         $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $this->user->id]);

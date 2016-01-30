@@ -2,15 +2,14 @@
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Migration\TestData;
 use FireflyIII\User;
 use Illuminate\Database\Seeder;
 
@@ -73,6 +72,7 @@ class TestDataSeeder extends Seeder
         // create opening balance for savings account:
         $this->openingBalanceSavings($user);
     }
+
     /**
      * @param User $user
      */
@@ -149,6 +149,7 @@ class TestDataSeeder extends Seeder
         file_put_contents(storage_path('upload/at-2.data'), $encrypted);
 
     }
+
     /**
      * @param $user
      */
