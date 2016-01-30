@@ -20,7 +20,8 @@ Firefly works on the principle that if you know where you're money is going, you
 #### Some advantages of using Firefly
 
 - Firefly can import any CSV file, so migrating from other systems is easy.
-- Firefly runs on your own server, so you are fully in control of your data.
+- Firefly runs on your own server, so you are fully in control of your data. Remember, there is no such thing as "the cloud", it’s just somebody else’s computer. Would you store your financial records on someone else's computer?
+- Firefly has lots of features without becoming fancy or bloated.
 - If you feel you're missing something you can just ask me and I'll add it!
 
 Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://jc5.github.io/firefly-iii/).
