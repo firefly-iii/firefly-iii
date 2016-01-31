@@ -249,6 +249,9 @@ function columnChart(URL, container, options) {
 function stackedColumnChart(URL, container, options) {
     "use strict";
 
+    options = options || {};
+
+
     $.getJSON(URL).success(function (data) {
 
         var result = true;
