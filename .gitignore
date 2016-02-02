@@ -15,3 +15,5 @@ storage/
 .settings/
 
 .env.local
+firefly-iii.sublime-workspace
+firefly-iii.sublime-project

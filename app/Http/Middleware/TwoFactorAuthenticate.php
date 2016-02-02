@@ -4,13 +4,14 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Session;
 
 /**
- * Class RedirectIfAuthenticated
+ * Class Authenticate
  *
  * @package FireflyIII\Http\Middleware
  */
-class RedirectIfAuthenticated
+class TwoFactorAuthenticate
 {
     /**
      * Handle an incoming request.
@@ -23,12 +24,17 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->check()) {
+        $is2faEnabled = Auth::user()->is2faEnabled();
 
-die('trying to redirect!');
-            return redirect('/');
+        if($is2faEnabled)
+        {            
+            if(!Session::has('auth.2fa_passed'))
+            {
+                return redirect()->guest('verify_token');
+            }
+
         }
-
-        return $next($request);
+        
+        return $next($request);     
     }
 }

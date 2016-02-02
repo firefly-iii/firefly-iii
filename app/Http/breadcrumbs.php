@@ -300,6 +300,13 @@ Breadcrumbs::register(
 }
 );
 Breadcrumbs::register(
+    'profile.two-factor-auth', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('profile');
+    $breadcrumbs->push(trans('firefly.two_factor_auth'), route('profile.two-factor-auth'));
+
+}
+);
+Breadcrumbs::register(
     'profile.delete-account', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('profile');
     $breadcrumbs->push(trans('firefly.delete_account'), route('profile.delete-account'));

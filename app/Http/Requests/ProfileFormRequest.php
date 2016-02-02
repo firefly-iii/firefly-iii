@@ -10,17 +10,8 @@ use Auth;
  * @codeCoverageIgnore
  * @package FireflyIII\Http\Requests
  */
-class ProfileFormRequest extends Request
-{
-    /**
-     * @return bool
-     */
-    public function authorize()
-    {
-        // Only allow logged in users
-        return Auth::check();
-    }
-
+class ProfileFormRequest extends ProfileFormRequestBase
+{    
     /**
      * @return array
      */
