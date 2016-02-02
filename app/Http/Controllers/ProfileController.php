@@ -146,17 +146,7 @@ class ProfileController extends Controller
             {
                 Session::set('user.is_2fa_enabled', 1);
 
-                $secret = $google2fa->generateSecretKey(16, Auth::user()->id);
-                Session::set('user.secret_key', $secret);
-
-
-                $url = $google2fa->getQRCodeInline("FireflyIII", null, $secret, 150);
-
-                return view('profile.validate-qr-code')->with('title', trans('firefly.profile'))
-                            ->with('subTitle', trans('firefly.two_factor_auth_settings'))
-                            ->with('mainTitleIcon', 'fa-user')
-                            ->with('qrcode', $url)
-                            ->with('secret', $secret);
+                return redirect(route('profile.validate-qr-code'));                
                 
             }else{
 
@@ -194,6 +184,7 @@ class ProfileController extends Controller
 
         $code = $request->get('code');
 
+        // Validate the token.
         $valid = $google2fa->verifyKey(Session::get('user.secret_key'), $code);
 
         if($valid)
@@ -228,6 +219,32 @@ class ProfileController extends Controller
         Session::flash('success', trans('firefly.two_factor_auth_settings_saved'));
 
         return redirect(route('profile'));
+    }
+
+    /**
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function validateQrCode(Google2FA $google2fa)
+    {
+        if(!Session::has('user.is_2fa_enabled'))
+        {
+            Session::flash('error', trans('firefly.two_factor_auth_failure'));
+            return redirect(route('profile'));   
+        }
+
+        // Generate the secret key and store it in the session.
+        $secret = $google2fa->generateSecretKey(16, Auth::user()->id);
+        Session::set('user.secret_key', $secret);
+
+        // Generate the QR code, and display it in the view.
+        $url = $google2fa->getQRCodeInline("FireflyIII", "", $secret, 150);
+
+        return view('profile.validate-qr-code')->with('title', trans('firefly.profile'))
+                    ->with('subTitle', trans('firefly.two_factor_auth_settings'))
+                    ->with('mainTitleIcon', 'fa-user')
+                    ->with('qrcode', $url)
+                    ->with('secret', $secret);
     }
 
     /*

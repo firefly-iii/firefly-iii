@@ -12,6 +12,7 @@ use Auth;
  */
 class ProfileFormValidateQrCodeRequest extends ProfileFormRequestBase
 {    
+
     /**
      * @return array
      */
@@ -21,4 +22,16 @@ class ProfileFormValidateQrCodeRequest extends ProfileFormRequestBase
             'code'                => 'required|digits:6',
         ];
     }
+
+    /**
+	 * Get the URL to redirect to on a validation error.
+	 *
+	 * @return string
+	 */
+	protected function getRedirectUrl()
+	{
+		$url = $this->redirector->getUrlGenerator();
+		
+		return $url->current();
+	}
 }

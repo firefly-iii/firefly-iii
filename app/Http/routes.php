@@ -241,11 +241,12 @@ Route::group(
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'profile.change-password']);
     Route::get('/profile/two-factor-auth', ['uses' => 'ProfileController@twoFactorAuth', 'as' => 'profile.two-factor-auth']);
+    Route::get('/profile/validate-qr-code', ['uses' => 'ProfileController@validateQrCode', 'as' => 'profile.validate-qr-code']);
     Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'profile.delete-account']);
     Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account-post']);
     Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
     Route::post('/profile/two-factor-auth', ['uses' => 'ProfileController@postTwoFactorAuth', 'as' => 'profile.two-factor-auth-post']);
-    Route::post('/profile/validate-qr-code', ['uses' => 'ProfileController@postValidateQrCode', 'as' => 'profile.validate-qr-code']);
+    Route::post('/profile/validate-qr-code', ['uses' => 'ProfileController@postValidateQrCode', 'as' => 'profile.validate-qr-code-post']);
 
     /**
      * Report Controller
