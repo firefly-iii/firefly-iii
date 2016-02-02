@@ -9,9 +9,14 @@ use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
 use FireflyIII\Helpers\Csv\Specifix\SpecifixInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Rules\Processor;
+use FireflyIII\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -121,6 +126,11 @@ class Importer
                 Log::debug('---');
             }
         }
+
+        // once all journals have been imported (or not)
+        // fire the rules.
+        $this->fireRules();
+
     }
 
     /**
@@ -184,32 +194,10 @@ class Importer
         $opposing = $this->importData['opposing-account-object'];
 
         Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
-        Log::info('Asset account ****** (#' . $asset->id . ') lost/gained: ' . $this->importData['amount']);
-        Log::info($opposing->accountType->type . ' ****** (#' . $opposing->id . ') lost/gained: ' . bcmul($this->importData['amount'], -1));
+        Log::info('Asset account #' . $asset->id . ' lost/gained: ' . $this->importData['amount']);
+        Log::info($opposing->accountType->type . ' #' . $opposing->id . ' lost/gained: ' . bcmul($this->importData['amount'], -1));
 
         return $journal;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFiller()
-    {
-        $filler = [];
-        foreach (Config::get('csv.roles') as $role) {
-            if (isset($role['field'])) {
-                $fieldName          = $role['field'];
-                $filler[$fieldName] = null;
-            }
-        }
-        // some extra's:
-        $filler['bill-id']                 = null;
-        $filler['opposing-account-object'] = null;
-        $filler['asset-account-object']    = null;
-        $filler['amount-modifier']         = '1';
-
-        return $filler;
-
     }
 
     /**
@@ -367,6 +355,77 @@ class Importer
         }
 
         return true;
+    }
+
+    /**
+     * @param Collection         $groups
+     * @param TransactionJournal $journal
+     */
+    private function fireRule(Collection $groups, TransactionJournal $journal)
+    {
+        /** @var RuleGroup $group */
+        foreach ($groups as $group) {
+
+            /** @var Rule $rule */
+            foreach ($group->rules as $rule) {
+                $processor = new Processor($rule, $journal);
+                $processor->handle();
+                if ($rule->stop_processing) {
+                    break;
+                }
+            }
+        }
+    }
+
+    private function fireRules()
+    {
+        // get all users rules.
+        /** @var User $user */
+        $user   = Auth::user();
+        $groups = $user
+            ->ruleGroups()
+            ->where('rule_groups.active', 1)
+            ->orderBy('order', 'ASC')
+            ->with(
+                [
+                    'rules' => function (HasMany $q) {
+                        $q->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                          ->where('rule_triggers.trigger_type', 'user_action')
+                          ->where('rule_triggers.trigger_value', 'store-journal')
+                          ->where('rules.active', 1)
+                          ->orderBy('rules.order', 'ASC');
+                    },
+                ]
+            )
+            ->get();
+
+        /** @var TransactionJournal $journal */
+        foreach ($this->journals as $journal) {
+            $this->fireRule($groups, $journal);
+        }
+
+    }
+
+    /**
+     * @return array
+     */
+    private function getFiller()
+    {
+        $filler = [];
+        foreach (Config::get('csv.roles') as $role) {
+            if (isset($role['field'])) {
+                $fieldName          = $role['field'];
+                $filler[$fieldName] = null;
+            }
+        }
+        // some extra's:
+        $filler['bill-id']                 = null;
+        $filler['opposing-account-object'] = null;
+        $filler['asset-account-object']    = null;
+        $filler['amount-modifier']         = '1';
+
+        return $filler;
+
     }
 
 }
