@@ -28,9 +28,24 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     public function cleanup()
     {
         $dayAgo = Carbon::create()->subDay();
-        ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
-                 ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
-                 ->delete();
+        $set    = ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
+                           ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
+                           ->get();
+
+        // loop set:
+        /** @var ExportJob $entry */
+        foreach ($set as $entry) {
+            $key   = $entry->key;
+            $len   = strlen($key);
+            $files = scandir(storage_path('export'));
+            /** @var string $file */
+            foreach ($files as $file) {
+                if (substr($file, 0, $len) === $key) {
+                    unlink(storage_path('export') . DIRECTORY_SEPARATOR . $file);
+                }
+            }
+            $entry->delete();
+        }
 
         return true;
     }
