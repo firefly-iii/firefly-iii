@@ -29,6 +29,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[]               $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[]          $ruleGroups
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[]               $rules
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[] $exportjobs
  */
 class User extends Authenticatable
 {
@@ -95,6 +96,14 @@ class User extends Authenticatable
     public function categories()
     {
         return $this->hasMany('FireflyIII\Models\Category');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function exportjobs()
+    {
+        return $this->hasMany('FireflyIII\Models\ExportJob');
     }
 
     /**

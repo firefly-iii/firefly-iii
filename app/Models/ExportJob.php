@@ -1,0 +1,64 @@
+<?php
+/**
+ * ExportJob.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+namespace FireflyIII\Models;
+
+use Auth;
+use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+/**
+ * Class ExportJob
+ *
+ * @package FireflyIII
+ * @property integer               $id
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
+ * @property integer               $user_id
+ * @property string                $key
+ * @property string                $status
+ * @property-read \FireflyIII\User $user
+ */
+class ExportJob extends Model
+{
+    /**
+     * @param $value
+     *
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder($value)
+    {
+        if (Auth::check()) {
+            $model = self::where('key', $value)->where('user_id', Auth::user()->id)->first();
+            if (!is_null($model)) {
+                return $model;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    /**
+     * @param $status
+     */
+    public function change($status)
+    {
+        $this->status = $status;
+        $this->save();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
+    }
+}
