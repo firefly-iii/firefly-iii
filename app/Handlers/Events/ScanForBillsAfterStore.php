@@ -11,7 +11,6 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Support\Events\BillScanner;
-use Log;
 
 /**
  * Class RescanJournal
