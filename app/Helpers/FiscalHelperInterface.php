@@ -14,22 +14,22 @@ interface FiscalHelperInterface
 
     /**
      * This method produces a clone of the Carbon date object passed, checks preferences
-     * and calculates the first day of the fiscal year.
+     * and calculates the last day of the fiscal year.
      *
-     * @param Carbon     $date
-     *
-     * @return Carbon date object
-     */
-    public function startOfFiscalYear(Carbon $date);
-
-    /**
-    * This method produces a clone of the Carbon date object passed, checks preferences
-    * and calculates the last day of the fiscal year.
-     *
-     * @param Carbon     $date
+     * @param Carbon $date
      *
      * @return Carbon date object
      */
     public function endOfFiscalYear(Carbon $date);
+
+    /**
+     * This method produces a clone of the Carbon date object passed, checks preferences
+     * and calculates the first day of the fiscal year.
+     *
+     * @param Carbon $date
+     *
+     * @return Carbon date object
+     */
+    public function startOfFiscalYear(Carbon $date);
 
 }
