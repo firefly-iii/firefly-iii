@@ -487,38 +487,14 @@ class VisualTestDataSeeder extends Seeder
             $this->createCar($current);
 
             // budget limit for this month, on "Groceries".
-            $this->createBudgetLimit($current, 'Groceries', 400);
-            $this->createBudgetLimit($current, 'Bills', 1000);
-            $this->createBudgetLimit($current, 'Car', 100);
+            TestData::createBudgetLimit($current, 'Groceries', 400);
+            TestData::createBudgetLimit($current, 'Bills', 1000);
+            TestData::createBudgetLimit($current, 'Car', 100);
 
             echo 'Created test data for ' . $month . "\n";
             $current->addMonth();
         }
 
-    }
-
-    /**
-     * @param Carbon $current
-     * @param        $name
-     * @param        $amount
-     */
-    protected function createBudgetLimit(Carbon $current, $name, $amount)
-    {
-        $start  = clone $current;
-        $end    = clone $current;
-        $budget = $this->findBudget($name);
-        $start->startOfMonth();
-        $end->endOfMonth();
-
-        BudgetLimit::create(
-            [
-                'budget_id'   => $budget->id,
-                'startdate'   => $start->format('Y-m-d'),
-                'amount'      => $amount,
-                'repeats'     => 0,
-                'repeat_freq' => 'monthly',
-            ]
-        );
     }
 
     /**
@@ -1078,24 +1054,6 @@ class VisualTestDataSeeder extends Seeder
         foreach (Bill::get() as $bill) {
             if ($bill->name == $name && $this->user->id == $bill->user_id) {
                 return $bill;
-                break;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return Budget|null
-     */
-    protected function findBudget($name)
-    {
-        /** @var Budget $budget */
-        foreach (Budget::get() as $budget) {
-            if ($budget->name == $name && $this->user->id == $budget->user_id) {
-                return $budget;
                 break;
             }
         }

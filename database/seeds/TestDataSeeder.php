@@ -3,8 +3,6 @@
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\Transaction;
@@ -54,6 +52,11 @@ class TestDataSeeder extends Seeder
 
         // create some budgets for user #1
         TestData::createBudgets($user);
+
+        // create budget limits for these budgets
+        TestData::createBudgetLimit($user, new Carbon, 'Groceries', 400);
+        TestData::createBudgetLimit($user, new Carbon, 'Bills', 1000);
+        TestData::createBudgetLimit($user, new Carbon, 'Car', 100);
 
         // create some categories for user #1
         $this->createCategories($user);

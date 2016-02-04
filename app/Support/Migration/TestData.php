@@ -14,6 +14,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Rule;
@@ -31,6 +32,7 @@ use Log;
  */
 class TestData
 {
+
     /**
      * @param User $user
      */
@@ -104,12 +106,38 @@ class TestData
     }
 
     /**
+     * @param User   $user
+     * @param Carbon $current
+     * @param        $name
+     * @param        $amount
+     */
+    public static function createBudgetLimit(User $user, Carbon $current, $name, $amount)
+    {
+        $start  = clone $current;
+        $end    = clone $current;
+        $budget = self::findBudget($user, $name);
+        $start->startOfMonth();
+        $end->endOfMonth();
+
+        BudgetLimit::create(
+            [
+                'budget_id'   => $budget->id,
+                'startdate'   => $start->format('Y-m-d'),
+                'amount'      => $amount,
+                'repeats'     => 0,
+                'repeat_freq' => 'monthly',
+            ]
+        );
+    }
+
+    /**
      * @param User $user
      */
     public static function createBudgets(User $user)
     {
         Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
         Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
+        Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
 
         // some empty budgets.
         foreach (['A', 'B', 'C', 'D', "E"] as $letter) {
@@ -373,6 +401,25 @@ class TestData
                 return $account;
             }
             Log::debug('Trying to find "' . $name . '" in "' . $account->name . '".');
+        }
+
+        return null;
+    }
+
+    /**
+     * @param User $user
+     * @param      $name
+     *
+     * @return Budget|null
+     */
+    public static function findBudget(User $user, $name)
+    {
+        /** @var Budget $budget */
+        foreach (Budget::get() as $budget) {
+            if ($budget->name == $name && $user->id == $budget->user_id) {
+                return $budget;
+                break;
+            }
         }
 
         return null;
