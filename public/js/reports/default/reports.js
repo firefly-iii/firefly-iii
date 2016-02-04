@@ -126,7 +126,7 @@ function openModal(e) {
     var target = $(e.target).parent();
     var URL = target.attr('href');
 
-    $.get(URL).success(function (data) {
+    $.get(URL).done(function (data) {
         $('#defaultModal').empty().html(data).modal('show');
 
     }).fail(function () {

@@ -20,7 +20,7 @@ function addNewTrigger() {
     "use strict";
     triggerCount++;
 
-    $.getJSON('json/trigger', {count: triggerCount}).success(function (data) {
+    $.getJSON('json/trigger', {count: triggerCount}).done(function (data) {
         //console.log(data.html);
         $('tbody.rule-trigger-tbody').append(data.html);
     }).fail(function () {
@@ -32,7 +32,7 @@ function addNewAction() {
     "use strict";
     actionCount++;
 
-    $.getJSON('json/action', {count: actionCount}).success(function (data) {
+    $.getJSON('json/action', {count: actionCount}).done(function (data) {
         //console.log(data.html);
         $('tbody.rule-action-tbody').append(data.html);
     }).fail(function () {

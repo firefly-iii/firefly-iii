@@ -5,7 +5,7 @@ $(function () {
     // do chart JS stuff.
     drawChart();
     if (showTour) {
-        $.getJSON('json/tour').success(function (data) {
+        $.getJSON('json/tour').done(function (data) {
             var tour = new Tour(
                 {
                     steps: data.steps,
@@ -70,7 +70,7 @@ function getBoxAmounts() {
     var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];
     for (var x in boxes) {
         var box = boxes[x];
-        $.getJSON('json/box/' + box).success(putData).fail(failData);
+        $.getJSON('json/box/' + box).done(putData).fail(failData);
     }
 }
 
