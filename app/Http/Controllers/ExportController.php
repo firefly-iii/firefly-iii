@@ -88,17 +88,11 @@ class ExportController extends Controller
         $accounts      = $repository->getAccounts(['Default account', 'Asset account']);
         $formats       = array_keys(Config::get('firefly.export_formats'));
         $defaultFormat = Preferences::get('export_format', Config::get('firefly.default_export_format'))->data;
-        //$first         = session('first')->format('Y-m-d');
-        $first = Carbon::create()->startOfYear()->format('Y-m-d');
-        $today = Carbon::create()->format('Y-m-d');
+        $first         = session('first')->format('Y-m-d');
+        $today         = Carbon::create()->format('Y-m-d');
 
         return view('export.index', compact('accounts', 'job', 'formats', 'defaultFormat', 'first', 'today'));
 
-        // select date range
-        // format
-        // select accounts
-        // include attachments
-        // include uploaded CSV files (if any)
     }
 
     /**

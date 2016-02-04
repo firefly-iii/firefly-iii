@@ -45,7 +45,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
             if (file_exists($originalFile)) {
                 Log::debug('Stored 1 attachment');
                 $decrypted = Crypt::decrypt(file_get_contents($originalFile));
-                $newFile   = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Attachment nr. ' . $attachment->id . ' - ' . $attachment->filename;
+                $newFile   = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Attachment nr. ' . $attachment->id . ' - '
+                             . $attachment->filename;
                 file_put_contents($newFile, $decrypted);
                 $this->getFiles()->push($newFile);
             }
