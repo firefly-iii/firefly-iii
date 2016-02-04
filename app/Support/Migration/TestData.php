@@ -9,11 +9,18 @@ namespace FireflyIII\Support\Migration;
  * of the MIT license.  See the LICENSE file for details.
  */
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\Tag;
 use FireflyIII\User;
 use Log;
 
@@ -93,6 +100,21 @@ class TestData
                 'skip'        => 0,
             ]
         );
+
+    }
+
+    /**
+     * @param User $user
+     */
+    public static function createBudgets(User $user)
+    {
+        Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
+        Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
+
+        // some empty budgets.
+        foreach (['A', 'B', 'C', 'D', "E"] as $letter) {
+            Budget::firstOrCreateEncrypted(['name' => 'Empty budget ' . $letter, 'user_id' => $user->id]);
+        }
     }
 
     /**
@@ -231,6 +253,108 @@ class TestData
             ]
         );
 
+    }
+
+    /**
+     * @param User $user
+     */
+    public static function createRules(User $user)
+    {
+        $group = RuleGroup::create(
+            [
+                'user_id'     => $user->id,
+                'order'       => 1,
+                'title'       => trans('firefly.default_rule_group_name'),
+                'description' => trans('firefly.default_rule_group_description'),
+                'active'      => 1,
+            ]
+        );
+        $rule  = Rule::create(
+            [
+                'user_id'         => $user->id,
+                'rule_group_id'   => $group->id,
+                'order'           => 1,
+                'active'          => 1,
+                'stop_processing' => 0,
+                'title'           => trans('firefly.default_rule_name'),
+                'description'     => trans('firefly.default_rule_description'),
+            ]
+        );
+
+        // three triggers:
+        RuleTrigger::create(
+            [
+                'rule_id'         => $rule->id,
+                'order'           => 1,
+                'active'          => 1,
+                'stop_processing' => 0,
+                'trigger_type'    => 'user_action',
+                'trigger_value'   => 'store-journal',
+            ]
+        );
+        RuleTrigger::create(
+            [
+                'rule_id'         => $rule->id,
+                'order'           => 2,
+                'active'          => 1,
+                'stop_processing' => 0,
+                'trigger_type'    => 'description_is',
+                'trigger_value'   => trans('firefly.default_rule_trigger_description'),
+            ]
+        );
+        RuleTrigger::create(
+            [
+                'rule_id'         => $rule->id,
+                'order'           => 3,
+                'active'          => 1,
+                'stop_processing' => 0,
+                'trigger_type'    => 'from_account_is',
+                'trigger_value'   => trans('firefly.default_rule_trigger_from_account'),
+            ]
+        );
+
+        // two actions:
+        RuleAction::create(
+            [
+                'rule_id'      => $rule->id,
+                'order'        => 1,
+                'active'       => 1,
+                'action_type'  => 'prepend_description',
+                'action_value' => trans('firefly.default_rule_action_prepend'),
+            ]
+        );
+        RuleAction::create(
+            [
+                'rule_id'      => $rule->id,
+                'order'        => 1,
+                'active'       => 1,
+                'action_type'  => 'set_category',
+                'action_value' => trans('firefly.default_rule_action_set_category'),
+            ]
+        );
+    }
+
+    /**
+     * @param User        $user
+     * @param Carbon|null $date
+     */
+    public static function createTags(User $user, Carbon $date = null)
+    {
+        $title = 'SomeTag nr. ' . rand(1, 1234);
+        if (!is_null($date)) {
+            $title = 'SomeTag' . $date->month . '.' . $date->year . '.nothing';
+        }
+
+        Tag::create(
+            [
+                'user_id' => $user->id,
+                'tag'     => $title,
+                'tagMode' => 'nothing',
+                'date'    => is_null($date) ? null : $date->format('Y-m-d'),
+
+
+            ]
+        );
     }
 
     /**

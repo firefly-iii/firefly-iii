@@ -445,6 +445,9 @@ class VisualTestDataSeeder extends Seeder
         TestData::createBills($this->user);
         TestData::createPiggybanks($this->user);
 
+        // create some budgets for user
+        TestData::createBudgets($this->user);
+
         $this->createRules();
 
         // preference to only see account #1 on frontpage.
@@ -472,7 +475,7 @@ class VisualTestDataSeeder extends Seeder
             $this->createGroceries($current);
 
             // create tag (each type of tag, for date):
-            $this->createTags($current);
+            TestData::createTags($this->user, $current);
 
             // go out for drinks:
             $this->createDrinksAndOthers($current);
@@ -1001,23 +1004,6 @@ class VisualTestDataSeeder extends Seeder
 
         return $journal;
 
-    }
-
-    /**
-     * @param Carbon $date
-     */
-    protected function createTags(Carbon $date)
-    {
-        Tag::create(
-            [
-                'user_id' => $this->user->id,
-                'tag'     => 'SomeTag' . $date->month . '.' . $date->year . '.nothing',
-                'tagMode' => 'nothing',
-                'date'    => $date->format('Y-m-d'),
-
-
-            ]
-        );
     }
 
     /**

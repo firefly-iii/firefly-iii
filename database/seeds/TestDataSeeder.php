@@ -39,6 +39,7 @@ class TestDataSeeder extends Seeder
     {
         $user = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
         User::create(['email' => 'thegrumpydictator+empty@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'thegrumpydictator+deleteme@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
 
 
         $admin = Role::where('name', 'owner')->first();
@@ -52,7 +53,7 @@ class TestDataSeeder extends Seeder
         TestData::createBills($user);
 
         // create some budgets for user #1
-        $this->createBudgets($user);
+        TestData::createBudgets($user);
 
         // create some categories for user #1
         $this->createCategories($user);
@@ -71,6 +72,12 @@ class TestDataSeeder extends Seeder
 
         // create opening balance for savings account:
         $this->openingBalanceSavings($user);
+
+        // need at least one rule group and one rule:
+        TestData::createRules($user);
+
+        // create a tag:
+        TestData::createTags($user);
     }
 
     /**
@@ -89,7 +96,7 @@ class TestDataSeeder extends Seeder
                 'transaction_currency_id' => 1,
                 'description'             => 'Some journal for attachment',
                 'completed'               => 1,
-                'date'                    => new Carbon,
+                'date'                    => $this->start->format('Y-m-d'),
             ]
         );
         Transaction::create(
@@ -148,37 +155,6 @@ class TestDataSeeder extends Seeder
         file_put_contents(storage_path('upload/at-1.data'), $encrypted);
         file_put_contents(storage_path('upload/at-2.data'), $encrypted);
 
-    }
-
-    /**
-     * @param $user
-     */
-    private function createBudgets($user)
-    {
-        $set     = [
-            Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]),
-            Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]),
-        ];
-        $current = new Carbon;
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-
-            // some budget limits:
-            $start = clone $current;
-            $end   = clone $current;
-            $start->startOfMonth();
-            $end->endOfMonth();
-
-            BudgetLimit::create(
-                [
-                    'budget_id'   => $budget->id,
-                    'startdate'   => $start->format('Y-m-d'),
-                    'amount'      => 500,
-                    'repeats'     => 0,
-                    'repeat_freq' => 'monthly',
-                ]
-            );
-        }
     }
 
     /**
