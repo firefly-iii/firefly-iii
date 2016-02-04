@@ -130,6 +130,11 @@ class Processor
             $zip->addFile($file, $zipName);
         }
         $zip->close();
+
+        // delete the files:
+        foreach ($this->getFiles() as $file) {
+            unlink($file);
+        }
     }
 
     /**
