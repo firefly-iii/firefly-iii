@@ -1,17 +1,6 @@
 /vendor
 /node_modules
-Homestead.yaml
-Homestead.json
 .env
-_ide_helper.php
-_ide_helper_models.php
-.phpstorm.meta.php
 
 storage/
-
-# Eclipse project files
-.buildpath
-.project
-.settings/
-
 .env.local
