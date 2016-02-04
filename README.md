@@ -6,7 +6,6 @@
 [![Build Status](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/build.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/build-status/master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
-[![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
 
 ## About
 
