@@ -26,7 +26,7 @@ class BudgetController extends Controller
 {
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -45,7 +45,7 @@ class BudgetController extends Controller
     public function amount(BudgetRepositoryInterface $repository, Budget $budget)
     {
         $amount          = intval(Input::get('amount'));
-        $date            = Session::get('start', Carbon::now()->startOfMonth());
+        $date            = session('start', Carbon::now()->startOfMonth());
         $limitRepetition = $repository->updateLimitAmount($budget, $date, $amount);
         if ($amount == 0) {
             $limitRepetition = null;
@@ -62,7 +62,7 @@ class BudgetController extends Controller
     public function create()
     {
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('budgets.create.fromStore') !== true) {
+        if (session('budgets.create.fromStore') !== true) {
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
@@ -107,7 +107,7 @@ class BudgetController extends Controller
         Preferences::mark();
 
 
-        return redirect(Session::get('budgets.delete.url'));
+        return redirect(session('budgets.delete.url'));
     }
 
     /**
@@ -120,7 +120,7 @@ class BudgetController extends Controller
         $subTitle = trans('firefly.edit_budget', ['name' => $budget->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('budgets.edit.fromUpdate') !== true) {
+        if (session('budgets.edit.fromUpdate') !== true) {
             Session::put('budgets.edit.url', URL::previous());
         }
         Session::forget('budgets.edit.fromUpdate');
@@ -145,7 +145,7 @@ class BudgetController extends Controller
         $spent             = '0';
         $budgeted          = '0';
         $range             = Preferences::get('viewRange', '1M')->data;
-        $start             = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $start             = Navigation::startOfPeriod(session('start', new Carbon), $range);
         $end               = Navigation::endOfPeriod($start, $range);
         $key               = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $budgetIncomeTotal = Preferences::get($key, 1000)->data;
@@ -187,7 +187,7 @@ class BudgetController extends Controller
     public function noBudget(BudgetRepositoryInterface $repository)
     {
         $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $start    = Navigation::startOfPeriod(session('start', new Carbon), $range);
         $end      = Navigation::endOfPeriod($start, $range);
         $list     = $repository->getWithoutBudget($start, $end);
         $subTitle = trans(
@@ -204,7 +204,7 @@ class BudgetController extends Controller
     public function postUpdateIncome()
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $start = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $start = Navigation::startOfPeriod(session('start', new Carbon), $range);
         $end   = Navigation::endOfPeriod($start, $range);
         $key   = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
 
@@ -282,7 +282,7 @@ class BudgetController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('budgets.create.url'));
+        return redirect(session('budgets.create.url'));
 
     }
 
@@ -313,7 +313,7 @@ class BudgetController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('budgets.edit.url'));
+        return redirect(session('budgets.edit.url'));
 
     }
 
@@ -323,7 +323,7 @@ class BudgetController extends Controller
     public function updateIncome()
     {
         $range  = Preferences::get('viewRange', '1M')->data;
-        $start  = Navigation::startOfPeriod(Session::get('start', new Carbon), $range);
+        $start  = Navigation::startOfPeriod(session('start', new Carbon), $range);
         $end    = Navigation::endOfPeriod($start, $range);
         $key    = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $amount = Preferences::get($key, 1000);

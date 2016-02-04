@@ -387,7 +387,7 @@ class ExpandedForm
     protected function fillFieldValue($name, $value)
     {
         if (Session::has('preFilled')) {
-            $preFilled = Session::get('preFilled');
+            $preFilled = session('preFilled');
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
         // @codeCoverageIgnoreStart
@@ -415,7 +415,7 @@ class ExpandedForm
        * Get errors from session:
        */
         /** @var MessageBag $errors */
-        $errors  = Session::get('errors');
+        $errors  = session('errors');
         $classes = 'form-group';
 
         if (!is_null($errors) && $errors->has($name)) {

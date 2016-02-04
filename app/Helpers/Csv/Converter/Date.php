@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use InvalidArgumentException;
 use Log;
-use Session;
 
 /**
  * Class Date
@@ -22,7 +21,7 @@ class Date extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
-        $format = Session::get('csv-date-format');
+        $format = session('csv-date-format');
         try {
             $date = Carbon::createFromFormat($format, $this->value);
         } catch (InvalidArgumentException $e) {

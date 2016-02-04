@@ -35,7 +35,7 @@ class TagController extends Controller
     public $tagOptions = [];
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -66,7 +66,7 @@ class TagController extends Controller
             Session::flash('preFilled', $preFilled);
         }
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('tags.create.fromStore') !== true) {
+        if (session('tags.create.fromStore') !== true) {
             Session::put('tags.create.url', URL::previous());
         }
         Session::forget('tags.create.fromStore');
@@ -144,7 +144,7 @@ class TagController extends Controller
 
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('tags.edit.fromUpdate') !== true) {
+        if (session('tags.edit.fromUpdate') !== true) {
             Session::put('tags.edit.url', URL::previous());
         }
         Session::forget('tags.edit.fromUpdate');
@@ -264,7 +264,7 @@ class TagController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('tags.create.url'));
+        return redirect(session('tags.create.url'));
 
     }
 
@@ -311,6 +311,6 @@ class TagController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('tags.edit.url'));
+        return redirect(session('tags.edit.url'));
     }
 }

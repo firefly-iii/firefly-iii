@@ -39,7 +39,7 @@ class RuleGroupController extends Controller
         $subTitle     = trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('rules.rule-group.create.fromStore') !== true) {
+        if (session('rules.rule-group.create.fromStore') !== true) {
             Session::put('rules.rule-group.create.url', URL::previous());
         }
         Session::forget('rules.rule-group.create.fromStore');
@@ -90,7 +90,7 @@ class RuleGroupController extends Controller
         Preferences::mark();
 
 
-        return redirect(Session::get('rules.rule-group.delete.url'));
+        return redirect(session('rules.rule-group.delete.url'));
     }
 
     /**
@@ -117,7 +117,7 @@ class RuleGroupController extends Controller
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('rules.rule-group.edit.fromUpdate') !== true) {
+        if (session('rules.rule-group.edit.fromUpdate') !== true) {
             Session::put('rules.rule-group.edit.url', URL::previous());
         }
         Session::forget('rules.rule-group.edit.fromUpdate');
@@ -155,7 +155,7 @@ class RuleGroupController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('rules.rule-group.create.url'));
+        return redirect(session('rules.rule-group.create.url'));
     }
 
     /**
@@ -200,7 +200,7 @@ class RuleGroupController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('rules.rule-group.edit.url'));
+        return redirect(session('rules.rule-group.edit.url'));
 
     }
 

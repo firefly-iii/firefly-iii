@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Session;
 use Steam;
 
 
@@ -225,8 +224,8 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getPiggyBankAccounts()
     {
-        $start      = clone Session::get('start', new Carbon);
-        $end        = clone Session::get('end', new Carbon);
+        $start      = clone session('start', new Carbon);
+        $end        = clone session('end', new Carbon);
         $collection = new Collection(DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']));
         $ids        = $collection->pluck('account_id')->toArray();
         $accounts   = new Collection;
@@ -273,8 +272,8 @@ class AccountRepository implements AccountRepositoryInterface
                         ->where('accounts.active', 1)
                         ->where('account_meta.data', '"savingAsset"')
                         ->get(['accounts.*']);
-        $start    = clone Session::get('start', new Carbon);
-        $end      = clone Session::get('end', new Carbon);
+        $start    = clone session('start', new Carbon);
+        $end      = clone session('end', new Carbon);
 
         bcscale(2);
 

@@ -13,7 +13,6 @@ use FireflyIII\Support\CacheProperties;
 use Input;
 use Preferences;
 use Response;
-use Session;
 
 /**
  * Class JsonController
@@ -24,8 +23,6 @@ class JsonController extends Controller
 {
     /**
      * JsonController constructor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -56,8 +53,8 @@ class JsonController extends Controller
      */
     public function boxBillsPaid(BillRepositoryInterface $repository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
         bcscale(2);
 
         /*
@@ -84,8 +81,8 @@ class JsonController extends Controller
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
         bcscale(2);
-        $start         = Session::get('start', Carbon::now()->startOfMonth());
-        $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $start         = session('start', Carbon::now()->startOfMonth());
+        $end           = session('end', Carbon::now()->endOfMonth());
         $amount        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
         $creditCardDue = $repository->getCreditCardBill($start, $end);
 
@@ -109,8 +106,8 @@ class JsonController extends Controller
      */
     public function boxIn(ReportQueryInterface $reportQuery, ARI $accountRepository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
 
         // works for json too!
         $cache = new CacheProperties;
@@ -138,8 +135,8 @@ class JsonController extends Controller
      */
     public function boxOut(ReportQueryInterface $reportQuery, ARI $accountRepository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
 
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 

@@ -13,7 +13,6 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
-use Session;
 
 /**
  * Class BudgetController
@@ -27,7 +26,7 @@ class BudgetController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -129,7 +128,7 @@ class BudgetController extends Controller
         // dates and times
         $first = $repository->getFirstBudgetLimitDate($budget);
         $range = Preferences::get('viewRange', '1M')->data;
-        $last  = Session::get('end', new Carbon);
+        $last  = session('end', new Carbon);
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -236,8 +235,8 @@ class BudgetController extends Controller
      */
     public function frontpage(BudgetRepositoryInterface $repository, ARI $accountRepository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();

@@ -13,7 +13,6 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
-use Session;
 use stdClass;
 
 /**
@@ -27,7 +26,7 @@ class CategoryController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -92,8 +91,8 @@ class CategoryController extends Controller
      */
     public function currentPeriod(SCRI $repository, Category $category)
     {
-        $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
         $data  = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
@@ -176,8 +175,8 @@ class CategoryController extends Controller
     public function frontpage(CRI $repository)
     {
 
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -395,7 +394,7 @@ class CategoryController extends Controller
         $cache->addProperty($category->id);
         $cache->addProperty('specific-period');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); //
         }
         $entries = new Collection;
 

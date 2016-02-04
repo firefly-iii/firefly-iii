@@ -260,63 +260,63 @@ class Data
     protected function sessionCsvFileLocation()
     {
         if (Session::has('csv-file')) {
-            $this->csvFileLocation = (string)Session::get('csv-file');
+            $this->csvFileLocation = (string)session('csv-file');
         }
     }
 
     protected function sessionDateFormat()
     {
         if (Session::has('csv-date-format')) {
-            $this->dateFormat = (string)Session::get('csv-date-format');
+            $this->dateFormat = (string)session('csv-date-format');
         }
     }
 
     protected function sessionDelimiter()
     {
         if (Session::has('csv-delimiter')) {
-            $this->delimiter = Session::get('csv-delimiter');
+            $this->delimiter = session('csv-delimiter');
         }
     }
 
     protected function sessionHasHeaders()
     {
         if (Session::has('csv-has-headers')) {
-            $this->hasHeaders = (bool)Session::get('csv-has-headers');
+            $this->hasHeaders = (bool)session('csv-has-headers');
         }
     }
 
     protected function sessionImportAccount()
     {
         if (Session::has('csv-import-account')) {
-            $this->importAccount = intval(Session::get('csv-import-account'));
+            $this->importAccount = intval(session('csv-import-account'));
         }
     }
 
     protected function sessionMap()
     {
         if (Session::has('csv-map')) {
-            $this->map = (array)Session::get('csv-map');
+            $this->map = (array)session('csv-map');
         }
     }
 
     protected function sessionMapped()
     {
         if (Session::has('csv-mapped')) {
-            $this->mapped = (array)Session::get('csv-mapped');
+            $this->mapped = (array)session('csv-mapped');
         }
     }
 
     protected function sessionRoles()
     {
         if (Session::has('csv-roles')) {
-            $this->roles = (array)Session::get('csv-roles');
+            $this->roles = (array)session('csv-roles');
         }
     }
 
     protected function sessionSpecifix()
     {
         if (Session::has('csv-specifix')) {
-            $this->specifix = (array)Session::get('csv-specifix');
+            $this->specifix = (array)session('csv-specifix');
         }
     }
 }

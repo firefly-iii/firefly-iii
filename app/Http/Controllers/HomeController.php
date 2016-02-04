@@ -90,8 +90,8 @@ class HomeController extends Controller
         $mainTitleIcon     = 'fa-fire';
         $transactions      = [];
         $frontPage         = Preferences::get('frontPageAccounts', []);
-        $start             = Session::get('start', Carbon::now()->startOfMonth());
-        $end               = Session::get('end', Carbon::now()->endOfMonth());
+        $start             = session('start', Carbon::now()->startOfMonth());
+        $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
         $accounts          = $repository->getFrontpageAccounts($frontPage);
         $savings           = $repository->getSavingsAccounts();

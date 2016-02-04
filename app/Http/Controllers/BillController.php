@@ -20,7 +20,7 @@ class BillController extends Controller
 {
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -39,7 +39,7 @@ class BillController extends Controller
 
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('bills.create.fromStore') !== true) {
+        if (session('bills.create.fromStore') !== true) {
             Session::put('bills.create.url', URL::previous());
         }
         Session::forget('bills.create.fromStore');
@@ -78,7 +78,7 @@ class BillController extends Controller
         Session::flash('success', 'The bill was deleted.');
         Preferences::mark();
 
-        return redirect(Session::get('bills.delete.url'));
+        return redirect(session('bills.delete.url'));
     }
 
     /**
@@ -92,7 +92,7 @@ class BillController extends Controller
         $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('bills.edit.fromUpdate') !== true) {
+        if (session('bills.edit.fromUpdate') !== true) {
             Session::put('bills.edit.url', URL::previous());
         }
         Session::forget('bills.edit.fromUpdate');
@@ -184,7 +184,7 @@ class BillController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('bills.create.url'));
+        return redirect(session('bills.create.url'));
 
     }
 
@@ -211,7 +211,7 @@ class BillController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('bills.edit.url'));
+        return redirect(session('bills.edit.url'));
 
     }
 

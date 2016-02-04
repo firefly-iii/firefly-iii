@@ -65,7 +65,7 @@ class AttachmentController extends Controller
         Session::flash('success', trans('firefly.attachment_deleted', ['name' => $name]));
         Preferences::mark();
 
-        return redirect(Session::get('attachments.delete.url'));
+        return redirect(session('attachments.delete.url'));
     }
 
     /**
@@ -110,7 +110,7 @@ class AttachmentController extends Controller
         $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('attachments.edit.fromUpdate') !== true) {
+        if (session('attachments.edit.fromUpdate') !== true) {
             Session::put('attachments.edit.url', URL::previous());
         }
         Session::forget('attachments.edit.fromUpdate');
@@ -167,7 +167,7 @@ class AttachmentController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('attachments.edit.url'));
+        return redirect(session('attachments.edit.url'));
 
     }
 

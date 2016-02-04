@@ -34,7 +34,7 @@ use View;
 class TransactionController extends Controller
 {
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -66,7 +66,7 @@ class TransactionController extends Controller
 
         $piggies    = ExpandedForm::makeSelectList($piggyBanks);
         $piggies[0] = trans('form.noPiggybank');
-        $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
+        $preFilled  = Session::has('preFilled') ? session('preFilled') : [];
         $respondTo  = ['account_id', 'account_from_id'];
         $subTitle   = trans('form.add_new_' . $what);
 
@@ -76,7 +76,7 @@ class TransactionController extends Controller
         Session::put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('transactions.create.fromStore') !== true) {
+        if (session('transactions.create.fromStore') !== true) {
             Session::put('transactions.create.url', URL::previous());
         }
         Session::forget('transactions.create.fromStore');
@@ -126,7 +126,7 @@ class TransactionController extends Controller
         Preferences::mark();
 
         // redirect to previous URL:
-        return redirect(Session::get('transactions.delete.url'));
+        return redirect(session('transactions.delete.url'));
     }
 
     /**
@@ -196,7 +196,7 @@ class TransactionController extends Controller
         Session::flash('gaEventAction', 'edit-' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('transactions.edit.fromUpdate') !== true) {
+        if (session('transactions.edit.fromUpdate') !== true) {
             Session::put('transactions.edit.url', URL::previous());
         }
         Session::forget('transactions.edit.fromUpdate');
@@ -327,7 +327,7 @@ class TransactionController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('transactions.create.url'));
+        return redirect(session('transactions.create.url'));
 
     }
 
@@ -372,7 +372,7 @@ class TransactionController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('transactions.edit.url'));
+        return redirect(session('transactions.edit.url'));
 
     }
 

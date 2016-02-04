@@ -22,7 +22,7 @@ use View;
 class AccountController extends Controller
 {
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -44,7 +44,7 @@ class AccountController extends Controller
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('accounts.create.fromStore') !== true) {
+        if (session('accounts.create.fromStore') !== true) {
             Session::put('accounts.create.url', URL::previous());
         }
         Session::forget('accounts.create.fromStore');
@@ -94,7 +94,7 @@ class AccountController extends Controller
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
         Preferences::mark();
 
-        return redirect(Session::get('accounts.delete.url'));
+        return redirect(session('accounts.delete.url'));
     }
 
     /**
@@ -112,7 +112,7 @@ class AccountController extends Controller
         $openingBalance = $repository->openingBalanceTransaction($account);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('accounts.edit.fromUpdate') !== true) {
+        if (session('accounts.edit.fromUpdate') !== true) {
             Session::put('accounts.edit.url', URL::previous());
         }
         Session::forget('accounts.edit.fromUpdate');
@@ -154,8 +154,8 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
-        $start        = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end          = clone Session::get('end', Carbon::now()->endOfMonth());
+        $start        = clone session('start', Carbon::now()->startOfMonth());
+        $end          = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -229,7 +229,7 @@ class AccountController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('accounts.create.url'));
+        return redirect(session('accounts.create.url'));
     }
 
     /**
@@ -268,7 +268,7 @@ class AccountController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('accounts.edit.url'));
+        return redirect(session('accounts.edit.url'));
 
     }
 

@@ -31,7 +31,7 @@ class CsvController extends Controller
     protected $wizard;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -106,21 +106,21 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
         $data = [
-            'date-format' => Session::get('csv-date-format'),
-            'has-headers' => Session::get('csv-has-headers'),
+            'date-format' => session('csv-date-format'),
+            'has-headers' => session('csv-has-headers'),
         ];
         if (Session::has('csv-map')) {
-            $data['map'] = Session::get('csv-map');
+            $data['map'] = session('csv-map');
         }
         if (Session::has('csv-roles')) {
-            $data['roles'] = Session::get('csv-roles');
+            $data['roles'] = session('csv-roles');
         }
         if (Session::has('csv-mapped')) {
-            $data['mapped'] = Session::get('csv-mapped');
+            $data['mapped'] = session('csv-mapped');
         }
 
         if (Session::has('csv-specifix')) {
-            $data['specifix'] = Session::get('csv-specifix');
+            $data['specifix'] = session('csv-specifix');
         }
 
         $result = json_encode($data, JSON_PRETTY_PRINT);
