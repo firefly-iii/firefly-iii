@@ -29,8 +29,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     {
         $dayAgo = Carbon::create()->subDay();
         ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
-                 ->where('status', 'never_started')
-            // TODO also delete others.
+                 ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
                  ->delete();
 
         return true;

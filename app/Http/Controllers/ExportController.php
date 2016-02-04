@@ -48,6 +48,8 @@ class ExportController extends Controller
         $name   = 'Export job on ' . $date . '.zip';
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
 
+        $job->change('export_downloaded');
+
 
         return response(file_get_contents($file), 200)
             ->header('Content-Description', 'File Transfer')
