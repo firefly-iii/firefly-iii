@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Category
  */
-class ChartJsCategoryChartGenerator implements CategoryChartGenerator
+class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
 {
 
     /**
@@ -28,12 +28,12 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.spent'),
-                    'data'  => []
+                    'data'  => [],
                 ],
                 [
                     'label' => trans('firefly.earned'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
 
@@ -59,7 +59,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 0,
@@ -95,8 +95,8 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             'datasets' => [
                 [
                     'label' => trans('firefly.spent'),
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         foreach ($entries as $entry) {
@@ -124,7 +124,8 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
         ];
         // get labels from one of the categories (assuming there's at least one):
         $first = $entries->first();
-        foreach ($first['spent'] as $year => $noInterest) {
+        $keys  = array_keys($first['spent']);
+        foreach ($keys as $year) {
             $data['labels'][] = strval($year);
         }
 
@@ -169,7 +170,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     {
 
         // language:
-        $format = trans('config.month');
+        $format = (string)trans('config.month');
 
         $data = [
             'count'    => 0,

@@ -10,6 +10,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -156,7 +157,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param ARI   $repository
+     * @param ARI                          $repository
      * @param PiggyBankRepositoryInterface $piggyRepository
      *
      * @return View
@@ -186,7 +187,7 @@ class PiggyBankController extends Controller
                     'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
                     'sumOfSaved'        => $piggyBank->savedSoFar,
                     'sumOfTargets'      => round($piggyBank->targetamount, 2),
-                    'leftToSave'        => $piggyBank->leftToSave
+                    'leftToSave'        => $piggyBank->leftToSave,
                 ];
             } else {
                 $accounts[$account->id]['sumOfSaved']   = bcadd($accounts[$account->id]['sumOfSaved'], $piggyBank->savedSoFar);
@@ -244,6 +245,7 @@ class PiggyBankController extends Controller
             Session::flash('success', 'Added ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
             Preferences::mark();
         } else {
+            Log::error('Cannot add ' . $amount . ' because max amount is ' . $maxAmount . ' (left on account is ' . $leftOnAccount . ')');
             Session::flash('error', 'Could not add ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         }
 
@@ -322,6 +324,7 @@ class PiggyBankController extends Controller
             'targetamount'  => round($request->get('targetamount'), 2),
             'remind_me'     => false,
             'reminder_skip' => 0,
+            'order'         => $repository->getMaxOrder() + 1,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 

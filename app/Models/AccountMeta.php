@@ -1,31 +1,23 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\AccountMeta
  *
- * @property integer      $id
- * @property Carbon       $created_at
- * @property Carbon       $updated_at
- * @property integer      $account_id
- * @property string       $name
- * @property string       $data
- * @property-read Account $account
+ * @property integer        $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer        $account_id
+ * @property string         $name
+ * @property string         $data
+ * @property-read Account   $account
  */
 class AccountMeta extends Model
 {
 
-    use ValidatingTrait;
+    protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['account_id', 'name', 'data'];
-    protected $rules
-                        = [
-            'account_id' => 'required|exists:accounts,id',
-            'name'       => 'required|between:1,100',
-            'data'       => 'required'
-        ];
     protected $table    = 'account_meta';
 
     /**
@@ -46,14 +38,6 @@ class AccountMeta extends Model
     public function getDataAttribute($value)
     {
         return json_decode($value);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at'];
     }
 
     /**

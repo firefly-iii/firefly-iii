@@ -17,6 +17,13 @@ use View;
  */
 class NewUserController extends Controller
 {
+    /**
+     * NewUserController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
 
     /**

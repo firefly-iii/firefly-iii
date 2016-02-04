@@ -2,6 +2,7 @@
 
 use Amount;
 use Carbon\Carbon;
+use Config;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -9,6 +10,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Input;
 use Preferences;
 use Response;
 use Session;
@@ -20,43 +22,31 @@ use Session;
  */
 class JsonController extends Controller
 {
+    /**
+     * JsonController constructor.
+     *
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function endTour()
+    public function action()
     {
-        Preferences::set('tour', false);
-
-        return Response::json('true');
-    }
-
-    /**
-     *
-     */
-    public function tour()
-    {
-        $pref = Preferences::get('tour', true);
-        if (!$pref) {
-            abort(404);
+        $count   = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
+        $keys    = array_keys(Config::get('firefly.rule-actions'));
+        $actions = [];
+        foreach ($keys as $key) {
+            $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
         }
-        $headers = ['main-content', 'sidebar-toggle', 'account-menu', 'budget-menu', 'report-menu', 'transaction-menu', 'option-menu', 'main-content-end'];
-        $steps   = [];
-        foreach ($headers as $header) {
-            $steps[] = [
-                'element' => '#' . $header,
-                'title'   => trans('help.' . $header . '-title'),
-                'content' => trans('help.' . $header . '-text'),
-            ];
-        }
-        $steps[0]['orphan']    = true;// orphan and backdrop for first element.
-        $steps[0]['backdrop']  = true;
-        $steps[1]['placement'] = 'left';// sidebar position left:
-        $steps[7]['orphan']    = true; // final in the center again.
-        $steps[7]['backdrop']  = true;
-        $template              = view('json.tour')->render();
+        $view = view('rules.partials.action', compact('actions', 'count'))->render();
 
-        return Response::json(['steps' => $steps, 'template' => $template]);
+
+        return Response::json(['html' => $view]);
     }
 
     /**
@@ -189,6 +179,16 @@ class JsonController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function endTour()
+    {
+        Preferences::set('tour', false);
+
+        return Response::json('true');
+    }
+
+    /**
      * Returns a JSON list of all beneficiaries.
      *
      * @param ARI $accountRepository
@@ -244,6 +244,34 @@ class JsonController extends Controller
     }
 
     /**
+     *
+     */
+    public function tour()
+    {
+        $pref = Preferences::get('tour', true);
+        if (!$pref) {
+            abort(404);
+        }
+        $headers = ['main-content', 'sidebar-toggle', 'account-menu', 'budget-menu', 'report-menu', 'transaction-menu', 'option-menu', 'main-content-end'];
+        $steps   = [];
+        foreach ($headers as $header) {
+            $steps[] = [
+                'element' => '#' . $header,
+                'title'   => trans('help.' . $header . '-title'),
+                'content' => trans('help.' . $header . '-text'),
+            ];
+        }
+        $steps[0]['orphan']    = true;// orphan and backdrop for first element.
+        $steps[0]['backdrop']  = true;
+        $steps[1]['placement'] = 'left';// sidebar position left:
+        $steps[7]['orphan']    = true; // final in the center again.
+        $steps[7]['backdrop']  = true;
+        $template              = view('json.tour')->render();
+
+        return Response::json(['steps' => $steps, 'template' => $template]);
+    }
+
+    /**
      * @param JournalRepositoryInterface $repository
      * @param                            $what
      *
@@ -265,6 +293,26 @@ class JsonController extends Controller
         return Response::json($descriptions);
 
 
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function trigger()
+    {
+        $count    = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
+        $keys     = array_keys(Config::get('firefly.rule-triggers'));
+        $triggers = [];
+        foreach ($keys as $key) {
+            if ($key != 'user_action') {
+                $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
+            }
+        }
+
+        $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
+
+
+        return Response::json(['html' => $view]);
     }
 
 }

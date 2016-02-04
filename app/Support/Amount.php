@@ -6,6 +6,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
+use NumberFormatter;
 use Preferences as Prefs;
 
 /**
@@ -15,6 +16,7 @@ use Preferences as Prefs;
  */
 class Amount
 {
+
     /**
      * @param      $amount
      * @param bool $coloured
@@ -23,57 +25,38 @@ class Amount
      */
     public function format($amount, $coloured = true)
     {
-        $currencySymbol = $this->getCurrencySymbol();
-
-        return $this->formatWithSymbol($currencySymbol, $amount, $coloured);
-
-
+        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
 
     /**
-     * @return string
-     */
-    public function getCurrencySymbol()
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty('getCurrencySymbol');
-        if ($cache->has()) {
-            return $cache->get();
-        } else {
-            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'));
-            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
-
-            $cache->store($currency->symbol);
-
-            return $currency->symbol;
-        }
-    }
-
-    /**
-     * @param string $symbol
-     * @param float  $amount
-     * @param bool   $coloured
+     * This method will properly format the given number, in color or "black and white",
+     * as a currency, given two things: the currency required and the current locale.
+     *
+     * @param TransactionCurrency $format
+     * @param                     $amount
+     * @param bool                $coloured
      *
      * @return string
      */
-    public function formatWithSymbol($symbol, $amount, $coloured = true)
+    public function formatAnything(TransactionCurrency $format, $amount, $coloured = true)
     {
-        $amount = floatval($amount);
-        $amount = round($amount, 2);
-        $string = money_format('%!.2n', $amount);
+        $locale    = setlocale(LC_MONETARY, 0);
+        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $result    = $formatter->formatCurrency($amount, $format->code);
 
         if ($coloured === true) {
-            if ($amount === 0.0) {
-                return '<span style="color:#999">' . $symbol . '&nbsp;' . $string . '</span>';
+            if ($amount == 0) {
+                return '<span style="color:#999">' . $result . '</span>';
             }
             if ($amount > 0) {
-                return '<span class="text-success">' . $symbol . '&nbsp;' . $string . '</span>';
+                return '<span class="text-success">' . $result . '</span>';
             }
 
-            return '<span class="text-danger">' . $symbol . '&nbsp;' . $string . '</span>';
+            return '<span class="text-danger">' . $result . '</span>';
+
         }
 
-        return $symbol . '&nbsp;' . $string;
+        return $result;
     }
 
     /**
@@ -93,27 +76,20 @@ class Amount
             return $cache->get(); // @codeCoverageIgnore
         }
 
-
-        if (is_null($journal->symbol)) {
-            $symbol = $journal->transactionCurrency->symbol;
-        } else {
-            $symbol = $journal->symbol;
-        }
-
         if ($journal->isTransfer() && $coloured) {
-            $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $journal->amount_positive, false) . '</span>';
+            $txt = '<span class="text-info">' . $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false) . '</span>';
             $cache->store($txt);
 
             return $txt;
         }
         if ($journal->isTransfer() && !$coloured) {
-            $txt = $this->formatWithSymbol($symbol, $journal->amount_positive, false);
+            $txt = $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false);
             $cache->store($txt);
 
             return $txt;
         }
 
-        $txt = $this->formatWithSymbol($symbol, $journal->amount, $coloured);
+        $txt = $this->formatAnything($journal->transactionCurrency, $journal->amount, $coloured);
         $cache->store($txt);
 
         return $txt;
@@ -127,10 +103,21 @@ class Amount
      */
     public function formatTransaction(Transaction $transaction, $coloured = true)
     {
-        $symbol = $transaction->transactionJournal->transactionCurrency->symbol;
-        $amount = floatval($transaction->amount);
+        $currency = $transaction->transactionJournal->transactionCurrency;
 
-        return $this->formatWithSymbol($symbol, $amount, $coloured);
+        return $this->formatAnything($currency, $transaction->amount, $coloured);
+    }
+
+    /**
+     * @param string $symbol
+     * @param float  $amount
+     * @param bool   $coloured
+     *
+     * @return string
+     */
+    public function formatWithSymbol($symbol, $amount, $coloured = true)
+    {
+        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
 
     /**
@@ -168,7 +155,26 @@ class Amount
     }
 
     /**
-     * @return mixed|static
+     * @return string
+     */
+    public function getCurrencySymbol()
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('getCurrencySymbol');
+        if ($cache->has()) {
+            return $cache->get();
+        } else {
+            $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'));
+            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
+            $cache->store($currency->symbol);
+
+            return $currency->symbol;
+        }
+    }
+
+    /**
+     * @return TransactionCurrency
      */
     public function getDefaultCurrency()
     {

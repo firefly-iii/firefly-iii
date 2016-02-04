@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\PiggyBank
  */
-class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
+class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
 {
 
     /**
@@ -23,7 +23,7 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
     {
 
         // language:
-        $format = trans('config.month_and_day');
+        $format = (string)trans('config.month_and_day');
 
         $data = [
             'count'    => 1,
@@ -31,8 +31,8 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGenerator
             'datasets' => [
                 [
                     'label' => 'Diff',
-                    'data'  => []
-                ]
+                    'data'  => [],
+                ],
             ],
         ];
         $sum  = '0';

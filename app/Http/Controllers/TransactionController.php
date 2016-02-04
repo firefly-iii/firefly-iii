@@ -5,8 +5,8 @@ use Auth;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
-use FireflyIII\Events\JournalCreated;
-use FireflyIII\Events\JournalSaved;
+use FireflyIII\Events\TransactionJournalStored;
+use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
@@ -18,6 +18,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -57,9 +58,7 @@ class TransactionController extends Controller
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
-
-        // piggy bank list:
-        $piggyBanks = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+        $piggyBanks  = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
             $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
@@ -160,7 +159,7 @@ class TransactionController extends Controller
             'date'          => $journal->date->format('Y-m-d'),
             'category'      => '',
             'budget_id'     => 0,
-            'piggy_bank_id' => 0
+            'piggy_bank_id' => 0,
         ];
         // get tags:
         $preFilled['tags'] = join(',', $journal->tags->pluck('tag')->toArray());
@@ -294,7 +293,6 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
     {
-
         $journalData = $request->getJournalData();
 
         // if not withdrawal, unset budgetid.
@@ -304,7 +302,6 @@ class TransactionController extends Controller
 
         $journal = $repository->store($journalData);
 
-        // save attachments:
         $att->saveAttachmentsForModel($journal);
 
         // flash errors
@@ -315,13 +312,9 @@ class TransactionController extends Controller
         if (count($att->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
+        Log::debug('Before event. From account name is: ' . $journal->source_account->name);
 
-        // rescan journal, UpdateJournalConnection
-        event(new JournalSaved($journal));
-
-        if ($journal->isTransfer() && intval($request->get('piggy_bank_id')) > 0) {
-            event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
-        }
+        event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
         Preferences::mark();
@@ -350,10 +343,6 @@ class TransactionController extends Controller
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
 
-        if ($journal->isOpeningBalance()) {
-            return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
-        }
-
         $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);
 
@@ -369,7 +358,7 @@ class TransactionController extends Controller
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
-        event(new JournalSaved($journal));
+        event(new TransactionJournalUpdated($journal));
         // update, get events by date and sort DESC
 
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');

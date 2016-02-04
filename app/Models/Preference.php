@@ -1,26 +1,25 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Crypt;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * FireflyIII\Models\Preference
  *
- * @property integer   $id
- * @property Carbon    $created_at
- * @property Carbon    $updated_at
- * @property integer   $user_id
- * @property string    $name
- * @property string    $name_encrypted
- * @property string    $data
- * @property string    $data_encrypted
- * @property-read User $user
+ * @property integer               $id
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
+ * @property integer               $user_id
+ * @property string                $name
+ * @property string                $name_encrypted
+ * @property string                $data
+ * @property string                $data_encrypted
+ * @property-read \FireflyIII\User $user
  */
 class Preference extends Model
 {
 
+    protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['user_id', 'data', 'name'];
     protected $hidden   = ['data_encrypted', 'name_encrypted'];
 
@@ -37,14 +36,6 @@ class Preference extends Model
         $data = Crypt::decrypt($this->data_encrypted);
 
         return json_decode($data);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at'];
     }
 
     /**

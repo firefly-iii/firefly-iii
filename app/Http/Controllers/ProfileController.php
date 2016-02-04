@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\User;
@@ -15,6 +14,13 @@ use Session;
  */
 class ProfileController extends Controller
 {
+    /**
+     * ProfileController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * @return \Illuminate\View\View
@@ -75,23 +81,6 @@ class ProfileController extends Controller
     }
 
     /**
-     *
-     * @param string $old
-     * @param string $new1
-     *
-     * @return string|bool
-     */
-    protected function validatePassword($old, $new1)
-    {
-        if ($new1 == $old) {
-            return trans('firefly.should_change');
-        }
-
-        return true;
-
-    }
-
-    /**
      * @param DeleteAccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -119,11 +108,28 @@ class ProfileController extends Controller
                 'email'        => $email,
                 'password'     => 'deleted',
                 'blocked'      => 1,
-                'blocked_code' => 'deleted'
+                'blocked_code' => 'deleted',
             ]
         );
 
         return redirect(route('index'));
+    }
+
+    /**
+     *
+     * @param string $old
+     * @param string $new1
+     *
+     * @return string|bool
+     */
+    protected function validatePassword($old, $new1)
+    {
+        if ($new1 == $old) {
+            return trans('firefly.should_change');
+        }
+
+        return true;
+
     }
 
 

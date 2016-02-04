@@ -1,19 +1,17 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * FireflyIII\Models\TransactionType
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property Carbon                               $deleted_at
- * @property string                               $type
- * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property \Carbon\Carbon                                                     $deleted_at
+ * @property string                                                             $type
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
  */
 class TransactionType extends Model
 {
@@ -24,13 +22,7 @@ class TransactionType extends Model
     const TRANSFER        = 'Transfer';
     const OPENING_BALANCE = 'Opening balance';
 
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
-    }
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return bool
@@ -65,6 +57,8 @@ class TransactionType extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

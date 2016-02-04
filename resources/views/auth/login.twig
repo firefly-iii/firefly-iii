@@ -1,0 +1,51 @@
+{% extends "./layout/guest.twig" %}
+
+{% block content %}
+
+    {% if errors.has('email') %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+                    </button>
+                    <strong>Error!</strong> {{ errors.get('email')[0] }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+
+        <form action="{{ URL.to('/login') }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+            <div class="form-group has-feedback">
+                <input type="email" name="email" class="form-control" placeholder="Email"/>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" name="password" class="form-control" placeholder="Password"/>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="remember" value="1"> Remember Me
+                        </label>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+        {% if Config.get('auth.allow_register') %}
+            <a href="{{ URL.to('/register') }}" class="text-center">Register a new account</a><br>
+        {% endif %}
+        <a href="{{ URL.to('/password/reset') }}">I forgot my password</a>
+    </div>
+    <!-- /.login-box-body -->
+{% endblock %}
+

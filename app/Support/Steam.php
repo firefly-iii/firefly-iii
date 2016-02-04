@@ -17,27 +17,6 @@ class Steam
 {
 
     /**
-     * @param array $accounts
-     *
-     * @return array
-     */
-    public function getLastActivities(array $accounts)
-    {
-        $list = [];
-
-        $set = Auth::user()->transactions()
-                   ->whereIn('account_id', $accounts)
-                   ->groupBy('account_id')
-                   ->get(['transactions.account_id', DB::Raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
-
-        foreach ($set as $entry) {
-            $list[intval($entry->account_id)] = new Carbon($entry->max_date);
-        }
-
-        return $list;
-    }
-
-    /**
      *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
@@ -163,7 +142,29 @@ class Steam
         return $result;
     }
 
+    /**
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function getLastActivities(array $accounts)
+    {
+        $list = [];
+
+        $set = Auth::user()->transactions()
+                   ->whereIn('account_id', $accounts)
+                   ->groupBy('account_id')
+                   ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
+
+        foreach ($set as $entry) {
+            $list[intval($entry->account_id)] = new Carbon($entry->max_date);
+        }
+
+        return $list;
+    }
+
     // parse PHP size:
+
     /**
      * @param $string
      *

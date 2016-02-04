@@ -1,24 +1,22 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * FireflyIII\Models\Component
+ * Class Component
  *
+ * @property int $transaction_journal_id
+ * @package FireflyIII\Models
  * @property integer $id
- * @property Carbon  $created_at
- * @property Carbon  $updated_at
- * @property Carbon  $deleted_at
- * @property string  $name
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property string $name
  * @property integer $user_id
- * @property string  $class
+ * @property string $class
  */
 class Component extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = ['user_id', 'name', 'class'];
 
     /**
@@ -28,4 +26,5 @@ class Component extends Model
     {
         return ['created_at', 'updated_at', 'deleted_at'];
     }
+
 }

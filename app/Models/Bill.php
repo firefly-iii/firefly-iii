@@ -1,31 +1,32 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Bill
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property integer                              $user_id
- * @property string                               $name
- * @property string                               $match
- * @property float                                $amount_min
- * @property float                                $amount_max
- * @property Carbon                               $date
- * @property boolean                              $active
- * @property boolean                              $automatch
- * @property string                               $repeat_freq
- * @property integer                              $skip
- * @property boolean                              $name_encrypted
- * @property boolean                              $match_encrypted
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property integer                                                            $user_id
+ * @property string                                                             $name
+ * @property string                                                             $match
+ * @property float                                                              $amount_min
+ * @property float                                                              $amount_max
+ * @property \Carbon\Carbon                                                     $date
+ * @property boolean                                                            $active
+ * @property boolean                                                            $automatch
+ * @property string                                                             $repeat_freq
+ * @property integer                                                            $skip
+ * @property boolean                                                            $name_encrypted
+ * @property boolean                                                            $match_encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property \Carbon\Carbon                                                     $nextExpectedMatch
+ * @property \Carbon\Carbon                                                     $lastFoundMatch
  */
 class Bill extends Model
 {
@@ -34,15 +35,7 @@ class Bill extends Model
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date'];
-    }
+    protected $dates  = ['created_at', 'updated_at', 'date'];
 
     /**
      * @param $value
@@ -122,6 +115,22 @@ class Bill extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
+    }
+
+
+    /**
+     * @param Bill $value
+     *
+     * @return Bill
+     */
+    public static function routeBinder(Bill $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
 

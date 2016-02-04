@@ -19,7 +19,7 @@ use Session;
 class BillController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Bill\BillChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -29,7 +29,7 @@ class BillController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Bill\BillChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface');
     }
 
     /**

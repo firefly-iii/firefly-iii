@@ -2,45 +2,34 @@
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Watson\Validating\ValidatingTrait;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Tag
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property string                               $deleted_at
- * @property integer                              $user_id
- * @property string                               $tag
- * @property string                               $tagMode
- * @property Carbon                               $date
- * @property string                               $description
- * @property float                                $latitude
- * @property float                                $longitude
- * @property integer                              $zoomLevel
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property string                                                             $deleted_at
+ * @property integer                                                            $user_id
+ * @property string                                                             $tag
+ * @property string                                                             $tagMode
+ * @property \Carbon\Carbon                                                     $date
+ * @property string                                                             $description
+ * @property float                                                              $latitude
+ * @property float                                                              $longitude
+ * @property integer                                                            $zoomLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property int                                                                $account_id
  */
 class Tag extends Model
 {
-    use ValidatingTrait;
-
+    protected $dates    = ['created_at', 'updated_at', 'date'];
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
-    protected $rules
-                        = [
-            'tag'         => 'required|min:1',
-            'description' => 'min:1',
-            'date'        => 'date',
-            'latitude'    => 'numeric|min:-90|max:90',
-            'longitude'   => 'numeric|min:-90|max:90',
-            'tagMode'     => 'required|in:nothing,balancingAct,advancePayment'
-        ];
 
     /**
      * @param array $fields
@@ -75,39 +64,18 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'date'];
-    }
-
-    /**
-     * Save the model to the database.
+     * @param Tag $value
      *
-     * @param  array $options
-     *
-     * @return bool
+     * @return Tag
      */
-    public function save(array $options = [])
+    public static function routeBinder(Tag $value)
     {
-        foreach ($this->transactionjournals()->get() as $journal) {
-            $count              = $journal->tags()->count();
-            $journal->tag_count = $count;
-            $journal->save();
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
         }
-
-        return parent::save($options);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactionjournals()
-    {
-        return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
+        throw new NotFoundHttpException;
     }
 
     /**
@@ -139,6 +107,24 @@ class Tag extends Model
     }
 
     /**
+     * Save the model to the database.
+     *
+     * @param  array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        foreach ($this->transactionjournals()->get() as $journal) {
+            $count              = $journal->tags()->count();
+            $journal->tag_count = $count;
+            $journal->save();
+        }
+
+        return parent::save($options);
+    }
+
+    /**
      * @codeCoverageIgnore
      *
      * @param $value
@@ -160,10 +146,21 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactionjournals()
+    {
+        return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
     }
+
+
 }

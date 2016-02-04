@@ -53,6 +53,7 @@ return [
     'csv_config'                  => 'Configuratiebestand',
     'specifix'                    => 'Bank- or of bestandsspecifieke opties',
     'csv_import_account'          => 'Standaard rekening voor importeren',
+    'csv_delimiter'               => 'CSV scheidingsteken',
     'attachments[]'               => 'Bijlagen',
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',
@@ -67,6 +68,12 @@ return [
     'filename'                    => 'Bestandsnaam',
     'mime'                        => 'Bestandstype',
     'size'                        => 'Grootte',
+    'trigger'                     => 'Trigger',
+    'stop_processing'             => 'Stop met verwerken',
+
+    'csv_comma'     => 'Een komma (,)',
+    'csv_semicolon' => 'Een puntkomma (;)',
+    'csv_tab'       => 'Een tab (onzichtbaar)',
 
 
     'delete_account'    => 'Verwijder rekening ":name"',
@@ -76,10 +83,14 @@ return [
     'delete_currency'   => 'Verwijder valuta ":name"',
     'delete_journal'    => 'Verwijder transactie met omschrijving ":description"',
     'delete_attachment' => 'Verwijder bijlage ":name"',
+    'delete_rule'       => 'Verwijder regel ":title"',
+    'delete_rule_group' => 'Verwijder regelgroep ":title"',
 
     'attachment_areYouSure' => 'Weet je zeker dat je de bijlage met naam ":name" wilt verwijderen?',
     'account_areYouSure'    => 'Weet je zeker dat je de rekening met naam ":name" wilt verwijderen?',
     'bill_areYouSure'       => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
+    'rule_areYouSure'       => 'Weet je zeker dat je regel ":title" wilt verwijderen?',
+    'ruleGroup_areYouSure'  => 'Weet je zeker dat je regelgroep ":title" wilt verwijderen?',
     'budget_areYouSure'     => 'Weet je zeker dat je het budget met naam ":name" wilt verwijderen?',
     'category_areYouSure'   => 'Weet je zeker dat je het category met naam ":name" wilt verwijderen?',
     'currency_areYouSure'   => 'Weet je zeker dat je de valuta met naam ":name" wilt verwijderen?',
@@ -89,6 +100,7 @@ return [
 
     'permDeleteWarning'          => 'Dingen verwijderen uit Firefly is permanent en kan niet ongedaan gemaakt worden.',
     'also_delete_transactions'   => 'Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle :count transacties verbonden aan deze rekening worden verwijderd.',
+    'also_delete_rules'          => 'De enige regel in deze regelgroep wordt ook verwijderd.|Alle :count regels in deze regelgroep worden ook verwijderd.',
     'also_delete_piggyBanks'     => 'Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle :count spaarpotjes verbonden aan deze rekening worden verwijderd.',
     'bill_keep_transactions'     => 'De transactie verbonden aan dit contract blijft bewaard.|De :count transacties verbonden aan dit contract blijven bewaard.',
     'budget_keep_transactions'   => 'De transactie verbonden aan dit budget blijft bewaard.|De :count transacties verbonden aan dit budget blijven bewaard.',

@@ -1,4 +1,6 @@
-<?php namespace FireflyIII\Providers;
+<?php
+
+namespace FireflyIII\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
@@ -7,11 +9,9 @@ use Illuminate\Routing\Router;
  * Class RouteServiceProvider
  *
  * @package FireflyIII\Providers
- * @codeCoverageIgnore
  */
 class RouteServiceProvider extends ServiceProvider
 {
-
     /**
      * This namespace is applied to the controller routes in your routes file.
      *
@@ -30,16 +30,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        parent::boot($router);
+        //
 
+        parent::boot($router);
     }
 
     /**
      * Define the routes for the application.
      *
      * @param  \Illuminate\Routing\Router $router
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return void
      */
@@ -52,5 +51,4 @@ class RouteServiceProvider extends ServiceProvider
         }
         );
     }
-
 }

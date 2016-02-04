@@ -1,7 +1,7 @@
 <?php namespace FireflyIII\Handlers\Events;
 
 use Auth;
-use FireflyIII\Events\JournalCreated;
+use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
@@ -26,13 +26,13 @@ class ConnectJournalToPiggyBank
     }
 
     /**
-     * Handle the event when journal is saved.
+     * Connect a new transaction journal to any related piggy banks.
      *
-     * @param  JournalCreated $event
+     * @param  TransactionJournalStored $event
      *
      * @return boolean
      */
-    public function handle(JournalCreated $event)
+    public function handle(TransactionJournalStored $event)
     {
         /** @var TransactionJournal $journal */
         $journal     = $event->journal;
@@ -42,12 +42,12 @@ class ConnectJournalToPiggyBank
         $piggyBank = Auth::user()->piggybanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
 
         if (is_null($piggyBank)) {
-            return false;
+            return true;
         }
         // update piggy bank rep for date of transaction journal.
         $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
         if (is_null($repetition)) {
-            return false;
+            return true;
         }
         bcscale(2);
 

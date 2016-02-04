@@ -19,7 +19,6 @@ class CreateAccountMetaTable extends Migration
      */
     public function down()
     {
-        //
         Schema::drop('account_meta');
     }
 

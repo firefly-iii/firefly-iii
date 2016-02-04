@@ -1,52 +1,62 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Account
  *
- * @property integer                       $id
- * @property Carbon                        $created_at
- * @property Carbon                        $updated_at
- * @property Carbon                        $deleted_at
- * @property integer                       $user_id
- * @property integer                       $account_type_id
- * @property string                        $name
- * @property boolean                       $active
- * @property boolean                       $encrypted
- * @property float                         $virtual_balance
- * @property string                        $iban
- * @property-read Collection|AccountMeta[] $accountMeta
- * @property-read AccountType              $accountType
- * @property-read mixed                    $name_for_editform
- * @property-read Collection|PiggyBank[]   $piggyBanks
- * @property-read Collection|Transaction[] $transactions
- * @property-read User                     $user
- * @method static Builder|Account accountTypeIn($types)
- * @method static Builder|Account hasMetaValue($name, $value)
+ * @property integer                                                                        $id
+ * @property \Carbon\Carbon                                                                 $created_at
+ * @property \Carbon\Carbon                                                                 $updated_at
+ * @property \Carbon\Carbon                                                                 $deleted_at
+ * @property integer                                                                        $user_id
+ * @property integer                                                                        $account_type_id
+ * @property string                                                                         $name
+ * @property boolean                                                                        $active
+ * @property boolean                                                                        $encrypted
+ * @property float                                                                          $virtual_balance
+ * @property string                                                                         $iban
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
+ * @property-read \FireflyIII\Models\AccountType                                            $accountType
+ * @property-read mixed                                                                     $name_for_editform
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \FireflyIII\User                                                          $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
+ * @property string                                                                         $startBalance
+ * @property string                                                                         $endBalance
+ * @property float                                                                          $difference
+ * @property \Carbon\Carbon                                                                 $lastActivityDate
+ * @property float                                                                          $piggyBalance
+ * @property float                                                                          $percentage
  */
 class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
-    protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
+    /** @var array */
+    protected $hidden = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
-                        = [
+                      = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'name'            => 'required',
-            'active'          => 'required|boolean'
+            'active'          => 'required|boolean',
         ];
+    /** @var  bool */
+    private $joinedAccountTypes;
 
     /**
      * @param array $fields
@@ -108,6 +118,22 @@ class Account extends Model
     }
 
     /**
+     * @param Account $value
+     *
+     * @return Account
+     */
+    public static function routeBinder(Account $value)
+    {
+
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -123,15 +149,6 @@ class Account extends Model
     public function accountType()
     {
         return $this->belongsTo('FireflyIII\Models\AccountType');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
@@ -291,5 +308,4 @@ class Account extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

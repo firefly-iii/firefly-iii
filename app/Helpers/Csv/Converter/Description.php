@@ -12,7 +12,7 @@ class Description extends BasicConverter implements ConverterInterface
 
 
     /**
-     * @return mixed
+     * @return string
      */
     public function convert()
     {

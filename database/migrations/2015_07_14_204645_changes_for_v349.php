@@ -5,6 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV349
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class ChangesForV349 extends Migration
 {
@@ -15,7 +17,6 @@ class ChangesForV349 extends Migration
      */
     public function down()
     {
-        //
     }
 
     /**

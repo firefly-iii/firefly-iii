@@ -35,7 +35,7 @@ class ComponentRepository
                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                          ->whereIn('accounts.id', $ids)
                          ->after($start)
-                         ->first([DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
+                         ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
         $amount = $entry->journalAmount;
 
         return $amount;

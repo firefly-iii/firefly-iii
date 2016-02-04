@@ -1,32 +1,36 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Budget
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property Carbon                               $deleted_at
- * @property string                               $name
- * @property integer                              $user_id
- * @property boolean                              $active
- * @property boolean                              $encrypted
- * @property-read Collection|BudgetLimit[]        $budgetlimits
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property \Carbon\Carbon                                                     $deleted_at
+ * @property string                                                             $name
+ * @property integer                                                            $user_id
+ * @property boolean                                                            $active
+ * @property boolean                                                            $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|BudgetLimit[]        $budgetlimits
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property string                                                             $dateFormatted
+ * @property string                                                             $budgeted
+ * @property float                                                              $amount
+ * @property \Carbon\Carbon                                                     $date
  */
 class Budget extends Model
 {
 
     use SoftDeletes;
 
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
 
@@ -59,20 +63,27 @@ class Budget extends Model
     }
 
     /**
+     * @param Budget $value
+     *
+     * @return Budget
+     */
+    public static function routeBinder(Budget $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function budgetlimits()
     {
         return $this->hasMany('FireflyIII\Models\BudgetLimit');
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
     }
 
     /**

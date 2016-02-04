@@ -1,4 +1,11 @@
 <?php
+/**
+ * ChartJsBillChartGenerator.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 namespace FireflyIII\Generator\Chart\Bill;
 
@@ -11,7 +18,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Generator\Chart\Bill
  */
-class ChartJsBillChartGenerator implements BillChartGenerator
+class ChartJsBillChartGenerator implements BillChartGeneratorInterface
 {
 
     /**
@@ -35,7 +42,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
                 'color'     => 'rgba(0, 141, 76, 0.7)',
                 'highlight' => 'rgba(0, 141, 76, 0.9)',
                 'label'     => trans('firefly.paid'),
-            ]
+            ],
         ];
 
         return $data;
@@ -49,7 +56,7 @@ class ChartJsBillChartGenerator implements BillChartGenerator
      */
     public function single(Bill $bill, Collection $entries)
     {
-        $format       = trans('config.month');
+        $format       = (string)trans('config.month');
         $data         = [
             'count'    => 3,
             'labels'   => [],

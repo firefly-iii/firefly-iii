@@ -61,6 +61,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @return int
+     */
+    public function getMaxOrder()
+    {
+        return intval(Auth::user()->piggyBanks()->max('order'));
+    }
+
+    /**
      * @return Collection
      */
     public function getPiggyBanks()

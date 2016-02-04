@@ -1,4 +1,6 @@
-<?php namespace FireflyIII\Providers;
+<?php
+
+namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\BudgetLimit;
@@ -7,11 +9,11 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Log;
+use Navigation;
 
 /**
  * Class EventServiceProvider
@@ -20,23 +22,28 @@ use Log;
  */
 class EventServiceProvider extends ServiceProvider
 {
-
     /**
-     * The event handler mappings for the application.
+     * The event listener mappings for the application.
      *
      * @var array
      */
     protected $listen
         = [
-            'FireflyIII\Events\JournalSaved'   => [
-                'FireflyIII\Handlers\Events\RescanJournal',
+            'FireflyIII\Events\TransactionJournalUpdated' => [
+                'FireflyIII\Handlers\Events\ScanForBillsAfterUpdate',
+
                 'FireflyIII\Handlers\Events\UpdateJournalConnection',
+                'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
-            'FireflyIII\Events\JournalCreated' => [
+            'FireflyIII\Events\TransactionJournalStored'  => [
+                'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
+
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
-            ]
+                'FireflyIII\Handlers\Events\FireRulesForStore',
+            ],
         ];
+
 
     /**
      * Register any other events for your application.
@@ -82,6 +89,7 @@ class EventServiceProvider extends ServiceProvider
         );
 
 
+        //
     }
 
     /**

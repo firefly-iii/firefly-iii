@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class AttachmentHelper implements AttachmentHelperInterface
 {
 
-    /** @var int */
-    protected $maxUploadSize;
-    /** @var array */
-    protected $allowedMimes;
     /** @var MessageBag */
     public $errors;
     /** @var MessageBag */
     public $messages;
+    /** @var array */
+    protected $allowedMimes;
+    /** @var int */
+    protected $maxUploadSize;
 
     /**
      *
@@ -49,6 +49,22 @@ class AttachmentHelper implements AttachmentHelperInterface
         $path = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
 
         return $path;
+    }
+
+    /**
+     * @return MessageBag
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return MessageBag
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 
     /**
@@ -89,34 +105,13 @@ class AttachmentHelper implements AttachmentHelperInterface
         $count = Auth::user()->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
 
         if ($count > 0) {
-            $msg = trans('validation.file_already_attached', ['name' => $name]);
+            $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @param UploadedFile $file
-     * @param Model        $model
-     *
-     * @return bool
-     */
-    protected function validateUpload(UploadedFile $file, Model $model)
-    {
-        if (!$this->validMime($file)) {
-            return false;
-        }
-        if (!$this->validSize($file)) {
-            return false;
-        }
-        if ($this->hasFile($file, $model)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -156,7 +151,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->save();
 
         $name = e($file->getClientOriginalName()); // add message:
-        $msg  = trans('validation.file_attached', ['name' => $name]);
+        $msg  = (string)trans('validation.file_attached', ['name' => $name]);
         $this->messages->add('attachments', $msg);
 
         // return it.
@@ -176,7 +171,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $name = e($file->getClientOriginalName());
 
         if (!in_array($mime, $this->allowedMimes)) {
-            $msg = trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
+            $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
 
             return false;
@@ -195,7 +190,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $size = $file->getSize();
         $name = e($file->getClientOriginalName());
         if ($size > $this->maxUploadSize) {
-            $msg = trans('validation.file_too_large', ['name' => $name]);
+            $msg = (string)trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
 
             return false;
@@ -205,19 +200,24 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * @return MessageBag
+     * @param UploadedFile $file
+     * @param Model        $model
+     *
+     * @return bool
      */
-    public function getErrors()
+    protected function validateUpload(UploadedFile $file, Model $model)
     {
-        return $this->errors;
-    }
+        if (!$this->validMime($file)) {
+            return false;
+        }
+        if (!$this->validSize($file)) {
+            return false;
+        }
+        if ($this->hasFile($file, $model)) {
+            return false;
+        }
 
-    /**
-     * @return MessageBag
-     */
-    public function getMessages()
-    {
-        return $this->messages;
+        return true;
     }
 
 

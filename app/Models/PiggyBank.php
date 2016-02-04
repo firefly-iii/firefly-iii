@@ -1,30 +1,32 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property integer                               $id
- * @property Carbon                                $created_at
- * @property Carbon                                $updated_at
- * @property Carbon                                $deleted_at
- * @property integer                               $account_id
- * @property string                                $name
- * @property float                                 $targetamount
- * @property Carbon                                $startdate
- * @property Carbon                                $targetdate
- * @property integer                               $order
- * @property boolean                               $encrypted
- * @property boolean                               $remind_me
- * @property integer                               $reminder_skip
- * @property-read Account                          $account
- * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
+ * @property integer                                                             $id
+ * @property \Carbon\Carbon                                                      $created_at
+ * @property \Carbon\Carbon                                                      $updated_at
+ * @property \Carbon\Carbon                                                      $deleted_at
+ * @property integer                                                             $account_id
+ * @property string                                                              $name
+ * @property float                                                               $targetamount
+ * @property \Carbon\Carbon                                                      $startdate
+ * @property \Carbon\Carbon                                                      $targetdate
+ * @property integer                                                             $order
+ * @property boolean                                                             $encrypted
+ * @property boolean                                                             $remind_me
+ * @property integer                                                             $reminder_skip
+ * @property-read Account                                                        $account
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankRepetition[] $piggyBankRepetitions
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]      $piggyBankEvents
+ * @property string                                                              $reminder
+ * @property PiggyBankRepetition                                                 $currentRep
  */
 class PiggyBank extends Model
 {
@@ -33,6 +35,7 @@ class PiggyBank extends Model
     protected $fillable
                       = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'remind_me', 'reminder_skip'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
+    protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -67,14 +70,6 @@ class PiggyBank extends Model
     public function piggyBankRepetitions()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
     }
 
     /**
@@ -117,5 +112,20 @@ class PiggyBank extends Model
     public function setTargetamountAttribute($value)
     {
         $this->attributes['targetamount'] = strval(round($value, 2));
+    }
+
+    /**
+     * @param PiggyBank $value
+     *
+     * @return PiggyBank
+     */
+    public static function routeBinder(PiggyBank $value)
+    {
+        if (Auth::check()) {
+            if ($value->account->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 }

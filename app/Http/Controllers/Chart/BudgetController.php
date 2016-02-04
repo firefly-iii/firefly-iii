@@ -23,7 +23,7 @@ use Session;
 class BudgetController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Budget\BudgetChartGenerator */
+    /** @var  \FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -33,11 +33,10 @@ class BudgetController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator');
+        $this->generator = app('FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface');
     }
 
     /**
-     * TODO expand with no budget chart.
      *
      * @param BudgetRepositoryInterface $repository
      * @param                           $reportType
@@ -45,6 +44,8 @@ class BudgetController extends Controller
      * @param Carbon                    $end
      * @param Collection                $accounts
      * @param Collection                $budgets
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -145,7 +146,7 @@ class BudgetController extends Controller
         $last    = Navigation::endOfX($last, $range, $final);
         $entries = new Collection;
         // get all expenses:
-        $set = $repository->getExpensesPerMonth($budget, $first, $last); // TODO
+        $set = $repository->getExpensesPerMonth($budget, $first, $last);
 
         while ($first < $last) {
             $monthFormatted = $first->format('Y-m');
@@ -292,7 +293,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * TODO expand with no budget chart.
      *
      * @param BudgetRepositoryInterface $repository
      * @param                           $reportType

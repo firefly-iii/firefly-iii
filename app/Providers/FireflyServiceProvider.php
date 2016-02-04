@@ -11,6 +11,7 @@ use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
+use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
@@ -44,6 +45,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Journal);
         Twig::addExtension(new Budget);
         Twig::addExtension(new Translation);
+        Twig::addExtension(new Rule);
     }
 
     /**
@@ -51,7 +53,6 @@ class FireflyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
 
         $this->app->bind(
             'preferences', function () {
@@ -90,6 +91,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface', 'FireflyIII\Repositories\Currency\CurrencyRepository');
         $this->app->bind('FireflyIII\Repositories\Tag\TagRepositoryInterface', 'FireflyIII\Repositories\Tag\TagRepository');
         $this->app->bind('FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface', 'FireflyIII\Repositories\Attachment\AttachmentRepository');
+        $this->app->bind('FireflyIII\Repositories\Rule\RuleRepositoryInterface', 'FireflyIII\Repositories\Rule\RuleRepository');
+        $this->app->bind('FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface', 'FireflyIII\Repositories\RuleGroup\RuleGroupRepository');
         $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
 
         // CSV import
@@ -99,17 +102,29 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
 
         // make charts:
-        $this->app->bind('FireflyIII\Generator\Chart\Account\AccountChartGenerator', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGenerator', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Category\CategoryChartGenerator', 'FireflyIII\Generator\Chart\Category\ChartJsCategoryChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator', 'FireflyIII\Generator\Chart\PiggyBank\ChartJsPiggyBankChartGenerator');
-        $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGenerator', 'FireflyIII\Generator\Chart\Report\ChartJsReportChartGenerator');
+        $this->app->bind(
+            'FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator'
+        );
+        $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
+        $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');
+        $this->app->bind(
+            'FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface', 'FireflyIII\Generator\Chart\Category\ChartJsCategoryChartGenerator'
+        );
+        $this->app->bind(
+            'FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface', 'FireflyIII\Generator\Chart\PiggyBank\ChartJsPiggyBankChartGenerator'
+        );
+        $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface', 'FireflyIII\Generator\Chart\Report\ChartJsReportChartGenerator');
 
 
         $this->app->bind('FireflyIII\Helpers\Help\HelpInterface', 'FireflyIII\Helpers\Help\Help');
         $this->app->bind('FireflyIII\Helpers\Report\ReportHelperInterface', 'FireflyIII\Helpers\Report\ReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportQueryInterface', 'FireflyIII\Helpers\Report\ReportQuery');
+        $this->app->bind('FireflyIII\Helpers\FiscalHelperInterface', 'FireflyIII\Helpers\FiscalHelper');
+
+        // better report helper interfaces:
+        $this->app->bind('FireflyIII\Helpers\Report\AccountReportHelperInterface', 'FireflyIII\Helpers\Report\AccountReportHelper');
+        $this->app->bind('FireflyIII\Helpers\Report\BalanceReportHelperInterface', 'FireflyIII\Helpers\Report\BalanceReportHelper');
+        $this->app->bind('FireflyIII\Helpers\Report\BudgetReportHelperInterface', 'FireflyIII\Helpers\Report\BudgetReportHelper');
 
 
     }

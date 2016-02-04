@@ -27,16 +27,16 @@ var colourSet = [
 // Settings object that controls default parameters for library methods:
 accounting.settings = {
     currency: {
-        symbol : currencySymbol,   // default currency symbol is '$'
+        symbol: currencySymbol,   // default currency symbol is '$'
         format: "%s %v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-        decimal : mon_decimal_point,  // decimal point separator
+        decimal: mon_decimal_point,  // decimal point separator
         thousand: mon_thousands_sep,  // thousands separator
-        precision : frac_digits   // decimal places
+        precision: frac_digits   // decimal places
     },
     number: {
-        precision : 0,  // default precision on numbers is 0
+        precision: 0,  // default precision on numbers is 0
         thousand: ",",
-        decimal : "."
+        decimal: "."
     }
 };
 
@@ -92,7 +92,7 @@ var defaultLineOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
+    scaleLabel: "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
@@ -107,9 +107,9 @@ var defaultColumnOptions = {
     scaleFontSize: 10,
     responsive: false,
     animation: false,
-    scaleLabel:           "<%= accounting.formatMoney(value) %>",
+    scaleLabel: "<%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate:      "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 };
 
@@ -122,7 +122,7 @@ var defaultStackedColumnOptions = {
     animation: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel:           "<%= accounting.formatMoney(value) %>",
+    scaleLabel: "<%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 
@@ -136,8 +136,6 @@ var defaultStackedColumnOptions = {
  */
 function lineChart(URL, container, options) {
     "use strict";
-    options = options || defaultLineOptions;
-
     $.getJSON(URL).success(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
@@ -154,7 +152,7 @@ function lineChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Line(newData, options);
+        new Chart(ctx).Line(newData, defaultLineOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -171,7 +169,6 @@ function lineChart(URL, container, options) {
  */
 function areaChart(URL, container, options) {
     "use strict";
-    options = options || defaultAreaOptions;
 
     $.getJSON(URL).success(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
@@ -189,7 +186,7 @@ function areaChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Line(newData, options);
+        new Chart(ctx).Line(newData, defaultAreaOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -206,9 +203,19 @@ function areaChart(URL, container, options) {
  */
 function columnChart(URL, container, options) {
     "use strict";
-    options = options || defaultColumnOptions;
+
+    options = options || {};
 
     $.getJSON(URL).success(function (data) {
+
+        var result = true;
+        if (options.beforeDraw) {
+            result = options.beforeDraw(data, {url: URL, container: container});
+        }
+        if (result === false) {
+            return;
+        }
+        console.log('Will draw columnChart(' + URL + ')');
 
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
@@ -225,7 +232,7 @@ function columnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Bar(newData, options);
+        new Chart(ctx).Bar(newData, defaultColumnOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -241,9 +248,20 @@ function columnChart(URL, container, options) {
  */
 function stackedColumnChart(URL, container, options) {
     "use strict";
-    options = options || defaultStackedColumnOptions;
+
+    options = options || {};
+
 
     $.getJSON(URL).success(function (data) {
+
+        var result = true;
+        if (options.beforeDraw) {
+            result = options.beforeDraw(data, {url: URL, container: container});
+        }
+        if (result === false) {
+            return;
+        }
+
 
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
@@ -260,7 +278,7 @@ function stackedColumnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).StackedBar(newData, options);
+        new Chart(ctx).StackedBar(newData, defaultStackedColumnOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -274,26 +292,13 @@ function stackedColumnChart(URL, container, options) {
  * @param container
  * @param options
  */
-function comboChart(URL, container, options) {
-    "use strict";
-    columnChart(URL, container, options);
-
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
 function pieChart(URL, container, options) {
     "use strict";
 
-    options = options || defaultPieOptions;
     $.getJSON(URL).success(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
-        new Chart(ctx).Pie(data, options);
+        new Chart(ctx).Pie(data, defaultPieOptions);
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');

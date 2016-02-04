@@ -1,4 +1,6 @@
-<?php namespace FireflyIII\Http\Controllers\Auth;
+<?php
+
+namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
@@ -7,15 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Password;
 
+
 /**
  * Class PasswordController
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Http\Controllers\Auth
  */
 class PasswordController extends Controller
 {
-
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -29,13 +30,8 @@ class PasswordController extends Controller
 
     use ResetsPasswords;
 
-
-    protected $redirectPath = '/';
-
     /**
      * Create a new password controller instance.
-     *
-     * @codeCoverageIgnore
      *
      */
     public function __construct()
@@ -52,7 +48,7 @@ class PasswordController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function postEmail(Request $request)
+    public function sendResetLinkEmail(Request $request)
     {
         $this->validate($request, ['email' => 'required|email']);
 
@@ -70,16 +66,13 @@ class PasswordController extends Controller
 
         switch ($response) {
             case Password::RESET_LINK_SENT:
-                return redirect()->back()->with('status', trans($response));
+                return $this->getSendResetLinkEmailSuccessResponse($response);
 
             case Password::INVALID_USER:
             case 'passwords.blocked':
-                return redirect()->back()->withErrors(['email' => trans($response)]);
-
+            default:
+                return $this->getSendResetLinkEmailFailureResponse($response);
         }
-        abort(404);
-
-        return '';
     }
 
 }

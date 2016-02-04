@@ -37,11 +37,6 @@ interface ConverterInterface
     public function setMapped($mapped);
 
     /**
-     * @param string $role
-     */
-    public function setRole($role);
-
-    /**
      * @param string $value
      */
     public function setValue($value);

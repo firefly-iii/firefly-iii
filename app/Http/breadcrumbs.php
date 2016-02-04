@@ -354,10 +354,23 @@ Breadcrumbs::register(
     'reports.report', function (BreadCrumbGenerator $breadcrumbs, Carbon $start, Carbon $end, $reportType, $accountIds) {
     $breadcrumbs->parent('reports.index');
 
-    $monthFormat = trans('config.month_and_day');
-    $title       = trans('firefly.report_' . $reportType, ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]);
+    $monthFormat = (string)trans('config.month_and_day');
+    $title       = (string)trans(
+        'firefly.report_' . $reportType,
+        ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]
+    );
 
     $breadcrumbs->push($title, route('reports.report', [$reportType, $start->format('Ymd'), $end->format('Ymd'), $accountIds]));
+}
+);
+
+/**
+ * Rules
+ */
+Breadcrumbs::register(
+    'rules.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.rules'), route('rules.index'));
 }
 );
 

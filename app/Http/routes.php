@@ -1,280 +1,32 @@
 <?php
-use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+// auth routes, i think
+Route::group(
+    ['middleware' => 'web'], function () {
+
+    // Authentication Routes...
+    Route::get('/login', 'Auth\AuthController@showLoginForm');
+    Route::post('/login', 'Auth\AuthController@login');
+    Route::get('/logout', 'Auth\AuthController@logout');
+
+    // Registration Routes...
+    Route::get('/register', ['uses' => 'Auth\AuthController@showRegistrationForm', 'as' => 'register']);
+    Route::post('/register', 'Auth\AuthController@register');
+
+    Route::get('/password/reset', 'Auth\PasswordController@getReset');
+
+    // Password Reset Routes...
+    Route::get('/password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+    Route::post('/password/email', 'Auth\PasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'Auth\PasswordController@reset');
 
 
-// models
-Route::bind(
-    'account',
-    function ($value) {
-        if (Auth::check()) {
-            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                             ->where('account_types.editable', 1)
-                             ->where('accounts.id', $value)
-                             ->where('user_id', Auth::user()->id)
-                             ->first(['accounts.*']);
-            if ($object) {
-                return $object;
-            }
-        }
-        throw new NotFoundHttpException;
-    }
-);
-// accounts
-Route::bind(
-    'accountList',
-    function ($value) {
-        if (Auth::check()) {
-            $ids = explode(',', $value);
-            /** @var \Illuminate\Support\Collection $object */
-            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                             ->where('account_types.editable', 1)
-                             ->whereIn('accounts.id', $ids)
-                             ->where('user_id', Auth::user()->id)
-                             ->get(['accounts.*']);
-            if ($object->count() > 0) {
-                return $object;
-            }
-        }
-        throw new NotFoundHttpException;
-    }
-);
-// budget list
-Route::bind(
-    'budgetList',
-    function ($value) {
-        if (Auth::check()) {
-            $ids = explode(',', $value);
-            /** @var \Illuminate\Support\Collection $object */
-            $object = Budget::where('active', 1)
-                            ->whereIn('id', $ids)
-                            ->where('user_id', Auth::user()->id)
-                            ->get();
-
-            // add empty budget if applicable.
-            if (in_array('0', $ids)) {
-                $object->push(new Budget);
-            }
-
-            if ($object->count() > 0) {
-                return $object;
-            }
-        }
-        throw new NotFoundHttpException;
-    }
-);
-
-// category list
-Route::bind(
-    'categoryList',
-    function ($value) {
-        if (Auth::check()) {
-            $ids = explode(',', $value);
-            /** @var \Illuminate\Support\Collection $object */
-            $object = Category::whereIn('id', $ids)
-                              ->where('user_id', Auth::user()->id)
-                              ->get();
-
-            // add empty budget if applicable.
-            if (in_array('0', $ids)) {
-                $object->push(new Category);
-            }
-
-            if ($object->count() > 0) {
-                return $object;
-            }
-        }
-        throw new NotFoundHttpException;
-    }
-);
-
-// Date
-Route::bind(
-    'start_date',
-    function ($value) {
-        if (Auth::check()) {
-
-            try {
-                $date = new Carbon($value);
-            } catch (Exception $e) {
-                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
-                throw new NotFoundHttpException;
-            }
-
-            return $date;
-        }
-        throw new NotFoundHttpException;
-    }
-);
-
-// Date
-Route::bind(
-    'end_date',
-    function ($value) {
-        if (Auth::check()) {
-
-            try {
-                $date = new Carbon($value);
-            } catch (Exception $e) {
-                Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
-                throw new NotFoundHttpException;
-            }
-
-            return $date;
-        }
-        throw new NotFoundHttpException;
-    }
-);
-
-Route::bind(
-    'tj', function ($value) {
-    if (Auth::check()) {
-        $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
 }
-);
-
-Route::bind(
-    'attachment', function ($value) {
-    if (Auth::check()) {
-        $object = Attachment::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'currency', function ($value) {
-    if (Auth::check()) {
-        $object = TransactionCurrency::find($value);
-        if ($object) {
-            return $object;
-        }
-    }
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'bill', function ($value) {
-    if (Auth::check()) {
-        $object = Bill::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'budget', function ($value) {
-    if (Auth::check()) {
-        $object = Budget::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'limitrepetition', function ($value) {
-    if (Auth::check()) {
-        $object = LimitRepetition::where('limit_repetitions.id', $value)
-                                 ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                 ->where('budgets.user_id', Auth::user()->id)
-                                 ->first(['limit_repetitions.*']);
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'piggyBank', function ($value) {
-    if (Auth::check()) {
-        $object = PiggyBank::where('piggy_banks.id', $value)
-                           ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                           ->where('accounts.user_id', Auth::user()->id)
-                           ->first(['piggy_banks.*']);
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'category', function ($value) {
-    if (Auth::check()) {
-        $object = Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
-    'tag', function ($value) {
-    if (Auth::check()) {
-        $object = Tag::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-
-    throw new NotFoundHttpException;
-}
-);
-
-
-/**
- * Auth\AuthController
- */
-Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
-
-Route::controllers(
-    [
-        'auth'     => 'Auth\AuthController',
-        'password' => 'Auth\PasswordController',
-    ]
 );
 
 
 Route::group(
-    ['middleware' => ['auth', 'range']], function () {
+    ['middleware' => ['web-auth-range']], function () {
 
     /**
      * Home Controller
@@ -449,6 +201,9 @@ Route::group(
     Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
 
+    Route::get('/json/trigger', ['uses' => 'JsonController@trigger', 'as' => 'json.trigger']);
+    Route::get('/json/action', ['uses' => 'JsonController@action', 'as' => 'json.action']);
+
     /**
      * New user Controller
      */
@@ -494,6 +249,39 @@ Route::group(
     Route::get('/reports/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
 
     /**
+     * Rules Controller
+     */
+    // index
+    Route::get('/rules', ['uses' => 'RuleController@index', 'as' => 'rules.index']);
+
+    // rules GET:
+    Route::get('/rules/create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rules.rule.create']);
+    Route::get('/rules/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
+    Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
+    Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
+    Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
+
+    // rules POST:
+    Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
+    Route::post('/rules/rules/action/reorder/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
+    Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rules.rule.store']);
+    Route::post('/rules/update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rules.rule.update']);
+    Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rules.rule.destroy']);
+
+
+    // rule groups GET
+    Route::get('/rules/groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
+    Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
+    Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
+    Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
+    Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
+
+    // rule groups POST
+    Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
+    Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
+    Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
+
+    /**
      * Search Controller
      */
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
@@ -537,7 +325,7 @@ Route::group(
     /**
      * Auth\Auth Controller
      */
-    Route::get('/logout', ['uses' => 'Auth\AuthController@getLogout', 'as' => 'logout']);
+    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
 
 
 }

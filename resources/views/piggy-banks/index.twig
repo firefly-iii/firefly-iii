@@ -1,0 +1,62 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3></div>
+                <div class="box-body table-responsive no-padding">
+                    {% include 'list/piggy-banks.twig' %}
+                </div>
+                <div class="box-footer">
+                    <a href="{{ route('piggy-banks.create') }}" class="btn btn-success pull-right">{{ 'new_piggy_bank'|_ }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'account_status'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>{{ 'account'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'balance'|_ }}</th>
+                            <th>{{ 'left_for_piggy_banks'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'sum_of_piggy_banks'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'saved_so_far'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'left_to_save'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for id,info in accounts %}
+                            <tr>
+                                <td><a href="{{ route('accounts.show',id) }}" title="{{ info.name }}">{{ info.name }}</a></td>
+                                <td class="hidden-sm hidden-xs">{{ info.balance|formatAmount }}</td>
+                                <td>{{ info.leftForPiggyBanks|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.sumOfTargets|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.sumOfSaved|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.leftToSave|formatAmount }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="js/lib/jquery-ui.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/piggy-banks/index.js"></script>
+{% endblock %}

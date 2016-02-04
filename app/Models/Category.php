@@ -1,29 +1,33 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use Auth;
 use Crypt;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Category
  *
- * @property integer                              $id
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property Carbon                               $deleted_at
- * @property string                               $name
- * @property integer                              $user_id
- * @property boolean                              $encrypted
- * @property-read Collection|TransactionJournal[] $transactionjournals
- * @property-read User                            $user
+ * @property integer                                                            $id
+ * @property \Carbon\Carbon                                                     $created_at
+ * @property \Carbon\Carbon                                                     $updated_at
+ * @property \Carbon\Carbon                                                     $deleted_at
+ * @property string                                                             $name
+ * @property integer                                                            $user_id
+ * @property boolean                                                            $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User                                              $user
+ * @property string                                                             $dateFormatted
+ * @property float                                                              $spent
+ * @property \Carbon\Carbon                                                     $lastActivity
+ * @property string                                                             $type
  */
 class Category extends Model
 {
     use SoftDeletes;
 
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'name'];
     protected $hidden   = ['encrypted'];
 
@@ -40,7 +44,6 @@ class Category extends Model
         unset($search['name']);
         foreach ($search as $name => $value) {
             $query->where($name, $value);
-
         }
         $set = $query->get(['categories.*']);
         /** @var Category $category */
@@ -57,12 +60,18 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return string[]
+     * @param Category $value
+     *
+     * @return Category
      */
-    public function getDates()
+    public static function routeBinder(Category $value)
     {
-        return ['created_at', 'updated_at', 'deleted_at'];
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 
     /**
