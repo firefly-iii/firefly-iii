@@ -3,7 +3,6 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
@@ -457,6 +456,9 @@ class VisualTestDataSeeder extends Seeder
         $start = Carbon::now()->subYears(2)->startOfMonth();
         $end   = Carbon::now()->endOfDay();
 
+        // create journal + attachment:
+        TestData::createAttachments($this->user, $start);
+
 
         $current = clone $start;
         while ($current < $end) {
@@ -487,9 +489,9 @@ class VisualTestDataSeeder extends Seeder
             $this->createCar($current);
 
             // budget limit for this month, on "Groceries".
-            TestData::createBudgetLimit($current, 'Groceries', 400);
-            TestData::createBudgetLimit($current, 'Bills', 1000);
-            TestData::createBudgetLimit($current, 'Car', 100);
+            TestData::createBudgetLimit($this->user, $current, 'Groceries', 400);
+            TestData::createBudgetLimit($this->user, $current, 'Bills', 1000);
+            TestData::createBudgetLimit($this->user, $current, 'Car', 100);
 
             echo 'Created test data for ' . $month . "\n";
             $current->addMonth();
