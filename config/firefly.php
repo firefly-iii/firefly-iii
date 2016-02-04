@@ -8,11 +8,18 @@ return [
     'csv_import_enabled' => true,
     'maxUploadSize'      => 5242880,
     'allowedMimes'       => ['image/png', 'image/jpeg', 'application/pdf'],
+
+    'export_formats'        => [
+        'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
+        //'mt940' => 'FireflyIII\Export\Exporter\MtExporter',
+    ],
+    'default_export_format' => 'csv',
+
     'piggy_bank_periods' => [
         'week'    => 'Week',
         'month'   => 'Month',
         'quarter' => 'Quarter',
-        'year'    => 'Year'
+        'year'    => 'Year',
     ],
     'periods_to_text'    => [
         'weekly'    => 'A week',
@@ -35,10 +42,10 @@ return [
         '1M'     => 'month',
         '3M'     => 'three months',
         '6M'     => 'half year',
-        'custom' => '(custom)'
+        'custom' => '(custom)',
     ],
     'ccTypes'                  => [
-        'monthlyFull' => 'Full payment every month'
+        'monthlyFull' => 'Full payment every month',
     ],
     'range_to_name'            => [
         '1D' => 'one day',
@@ -54,7 +61,7 @@ return [
         '1M'     => 'monthly',
         '3M'     => 'quarterly',
         '6M'     => 'half-year',
-        'custom' => 'monthly'
+        'custom' => 'monthly',
     ],
     'subTitlesByIdentifier'    =>
         [
@@ -160,6 +167,7 @@ return [
         'tag'             => 'FireflyIII\Models\Tag',
         'rule'            => 'FireflyIII\Models\Rule',
         'ruleGroup'       => 'FireflyIII\Models\RuleGroup',
+        'jobKey'          => 'FireflyIII\Models\ExportJob',
         // lists
         'accountList'     => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
@@ -167,7 +175,7 @@ return [
 
         // others
         'start_date'      => 'FireflyIII\Support\Binder\Date',
-        'end_date'        => 'FireflyIII\Support\Binder\Date'
+        'end_date'        => 'FireflyIII\Support\Binder\Date',
     ],
 
     'rule-triggers'     => [
@@ -210,6 +218,6 @@ return [
         'set_description',
         'append_description',
         'prepend_description',
-    ]
+    ],
 
 ];

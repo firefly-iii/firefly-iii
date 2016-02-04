@@ -10,8 +10,10 @@ namespace FireflyIII\Support\Migration;
  */
 
 use Carbon\Carbon;
+use Crypt;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -22,6 +24,8 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Log;
 
@@ -66,6 +70,84 @@ class TestData
                 AccountMeta::create(['account_id' => $account->id, 'name' => $name, 'data' => $value,]);
             }
         }
+
+    }
+
+    /**
+     * @param User   $user
+     * @param Carbon $start
+     */
+    public static function createAttachments(User $user, Carbon $start)
+    {
+
+        $toAccount   = TestData::findAccount($user, 'TestData Checking Account');
+        $fromAccount = TestData::findAccount($user, 'Job');
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 2,
+                'transaction_currency_id' => 1,
+                'description'             => 'Some journal for attachment',
+                'completed'               => 1,
+                'date'                    => $start->format('Y-m-d'),
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => -100,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+
+            ]
+        );
+
+        // and now attachments
+        $encrypted = Crypt::encrypt('I are secret');
+        $one       = Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
+                'user_id'         => $user->id,
+                'md5'             => md5('Hallo'),
+                'filename'        => 'empty-file.txt',
+                'title'           => 'Empty file',
+                'description'     => 'This file is empty',
+                'notes'           => 'What notes',
+                'mime'            => 'text/plain',
+                'size'            => strlen($encrypted),
+                'uploaded'        => 1,
+            ]
+        );
+
+
+        // and now attachment.
+        $two = Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
+                'user_id'         => $user->id,
+                'md5'             => md5('Ook hallo'),
+                'filename'        => 'empty-file-2.txt',
+                'title'           => 'Empty file 2',
+                'description'     => 'This file is empty too',
+                'notes'           => 'What notes do',
+                'mime'            => 'text/plain',
+                'size'            => strlen($encrypted),
+                'uploaded'        => 1,
+            ]
+        );
+        // echo crypted data to the file.
+        file_put_contents(storage_path('upload/at-' . $one->id . '.data'), $encrypted);
+        file_put_contents(storage_path('upload/at-' . $two->id . '.data'), $encrypted);
 
     }
 

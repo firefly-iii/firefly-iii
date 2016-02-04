@@ -1,0 +1,129 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+
+
+    <form method="POST" action="{{ route('export.export') }}" accept-charset="UTF-8" class="form-horizontal" id="export">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <input name="job" type="hidden" value="{{ job.key }}">
+
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'export_data'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div id="export-loading" style="display:none;">
+                            <p class="text-center">
+                                {{ 'export_data_please_wait'|_ }}
+                            </p>
+                            <p class="text-center">
+                                <img src="images/loading-wide.gif" alt="">
+                            </p>
+                            <p class="text-center text-info" id="status-message">
+                                (Please wait for a status message to appear)
+                            </p>
+                        </div>
+                        <div id="export-download" style="display:none;">
+                            <p class="text-center text-info" id="download-holder">
+                                <a id="download-link" class="btn btn-lg btn-success" href="{{ route('export.download', job.key) }}"><i class="fa fa-fw fa-download"></i> Download</a>
+                            </p>
+                        </div>
+                        <div id="export-error" style="display:none;">
+                            <p class="text-center text-danger">
+
+                            </p>
+                        </div>
+                        <div id="form-body">
+                            <p>
+                                {{ 'export_data_intro'|_ }}
+                            </p>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+                                    {{ ExpandedForm.date('start_date', first) }}
+
+                                    {{ ExpandedForm.date('end_date', today) }}
+
+                                    <!-- EXPORT FORMATS -->
+                                    <div class="form-group">
+                                        <label for="exportFormat" class="col-sm-4 control-label">{{ 'export_format'|_ }}</label>
+
+                                        <div class="col-sm-8">
+                                            {% if errors.has('exportFormat') %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ errors.first('exportFormat') }}
+                                                </div>
+                                            {% endif %}
+
+                                            {% for format in formats %}
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="exportFormat" id="exportFormat_{{ format }}" value="{{ format }}"
+                                                               {% if format == defaultFormat %}checked{% endif %}>
+                                                        {{ ('export_format_'~format)|_ }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+
+                                    <!-- ACCOUNTS -->
+
+                                    <div class="form-group">
+
+
+                                        <label for="inputAccounts" class="col-sm-4 control-label">{{ 'export_included_accounts'|_ }}</label>
+                                        <div class="col-sm-8">
+
+                                            {% if errors.has('accounts') %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ errors.first('accounts') }}
+                                                </div>
+                                            {% endif %}
+                                            {% for account in accounts %}
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="account-checkbox" name="accounts[]" value="{{ account.id }}" checked>
+                                                        {{ account.name }}
+                                                        {% if account.getMeta('accountRole') == 'sharedAsset' %}
+                                                            ({{ 'shared'|_|lower }})
+                                                        {% endif %}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    {{ ExpandedForm.checkbox('include_attachments','1', true) }}
+
+                                    {{ ExpandedForm.checkbox('include_config','1', true, {helpText: 'include_config_help'|_}) }}
+
+                                    {{ ExpandedForm.checkbox('include_old_uploads','1', false, {helpText: 'include_old_uploads_help'|_}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ 'do_export'|_ }}" id="do-export-button" class="btn btn-success pull-right"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var jobKey = "{{ job.key }}";
+    </script>
+    <script type="text/javascript" src="js/export/index.js"></script>
+{% endblock %}

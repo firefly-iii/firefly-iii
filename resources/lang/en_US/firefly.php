@@ -38,6 +38,18 @@ return [
     'new_budget'                        => 'New budget',
     'new_bill'                          => 'New bill',
 
+    // export data:
+    'import_and_export'                 => 'Import and export',
+    'export_data'                       => 'Export data',
+    'export_data_intro'                 => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
+    'export_format'                     => 'Export format',
+    'export_format_csv'                 => 'Comma separated values (CSV file)',
+    'export_format_mt940'               => 'MT940 compatible format',
+    'export_included_accounts'          => 'Export transactions from these accounts',
+    'include_config_help'               => 'For easy re-import into Firefly III',
+    'include_old_uploads_help'          => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
+    'do_export'                         => 'Export',
+
     // rules
     'rules'                             => 'Rules',
     'rules_explanation'                 => 'Here you can manage rules. Rules are triggered when a transaction is created or updated. Then, if the transaction has certain properties (called "triggers") Firefly will execute the "actions". Combined, you can make Firefly respond in a certain way to new transactions.',
