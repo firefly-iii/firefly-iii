@@ -531,6 +531,7 @@ return [
     'report_include_help'                    => 'In all cases, transfers to shared accounts count as expenses, and transfers from shared accounts count as income.',
     'report_preset_ranges'                   => 'Pre-set ranges',
     'shared'                                 => 'Shared',
+    'fiscal_year'                            => 'Fiscal year',
 
     // charts:
     'dayOfMonth'                             => 'Dia do mês',

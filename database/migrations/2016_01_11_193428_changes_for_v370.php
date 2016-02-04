@@ -39,6 +39,15 @@ class ChangesForV370 extends Migration
      */
     public function up()
     {
+        // extend transaction journals:
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->date('interest_date')->nullable()->after('date');
+            $table->date('book_date')->nullable()->after('interest_date');
+        }
+        );
+
+
         // new table "rule_groups"
         Schema::create(
             'rule_groups', function (Blueprint $table) {

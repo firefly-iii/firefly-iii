@@ -78,7 +78,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
 
                 $budgetLine->setLeft($left);
-                $budgetLine->setSpent($spent);
+                $budgetLine->setSpent($expenses);
                 $budgetLine->setOverspent($overspent);
                 $budgetLine->setBudgeted($repetition->amount);
 
