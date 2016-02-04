@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * @param array $types
      *
@@ -40,6 +41,15 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function find($accountId);
+
+    /**
+     * Gets all the accounts by ID, for a given set.
+     *
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function get(array $ids);
 
     /**
      * @param array $types

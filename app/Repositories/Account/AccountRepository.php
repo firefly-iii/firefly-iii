@@ -73,6 +73,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Gets all the accounts by ID, for a given set.
+     *
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function get(array $ids)
+    {
+        return Auth::user()->accounts()->whereIn('id', $ids)->get(['accounts.*']);
+    }
+
+    /**
      * @param array $types
      *
      * @return Collection
@@ -464,9 +476,7 @@ class AccountRepository implements AccountRepositoryInterface
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
                 abort(500);
-                // @codeCoverageIgnoreStart
             }
-            // @codeCoverageIgnoreEnd
             $newAccount = $existingAccount;
 
         }
@@ -554,7 +564,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal->date = $data['openingBalanceDate'];
         $journal->save();
-        
+
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id == $transaction->account_id) {
