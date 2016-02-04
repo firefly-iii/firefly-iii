@@ -150,7 +150,6 @@ class AuthController extends Controller
 
             return redirect($this->redirectPath());
         }
-        // @codeCoverageIgnoreStart
         abort(500, 'Not a user!');
 
 

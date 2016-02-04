@@ -8,7 +8,7 @@ use Input;
 /**
  * Class BillFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class CurrencyFormRequest extends Request

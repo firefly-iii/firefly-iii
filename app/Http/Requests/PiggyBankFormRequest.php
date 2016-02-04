@@ -8,7 +8,7 @@ use Input;
 /**
  * Class PiggyBankFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class PiggyBankFormRequest extends Request

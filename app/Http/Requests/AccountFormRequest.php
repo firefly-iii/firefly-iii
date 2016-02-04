@@ -10,7 +10,7 @@ use Input;
 /**
  * Class AccountFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class AccountFormRequest extends Request

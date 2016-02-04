@@ -8,7 +8,7 @@ use Input;
 /**
  * Class TagFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class TagFormRequest extends Request

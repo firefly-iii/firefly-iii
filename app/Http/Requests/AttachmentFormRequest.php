@@ -7,7 +7,7 @@ use Auth;
 /**
  * Class AttachmentFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class AttachmentFormRequest extends Request

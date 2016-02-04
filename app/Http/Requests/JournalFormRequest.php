@@ -11,7 +11,7 @@ use Input;
 /**
  * Class JournalFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class JournalFormRequest extends Request

@@ -9,7 +9,7 @@ use Input;
 /**
  * Class BillFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class BillFormRequest extends Request

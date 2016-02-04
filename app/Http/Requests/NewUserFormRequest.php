@@ -7,7 +7,7 @@ use Auth;
 /**
  * Class NewUserFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class NewUserFormRequest extends Request

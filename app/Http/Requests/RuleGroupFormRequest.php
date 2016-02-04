@@ -16,7 +16,7 @@ use Input;
 /**
  * Class RuleGroupFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class RuleGroupFormRequest extends Request

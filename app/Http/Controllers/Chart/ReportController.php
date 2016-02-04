@@ -22,7 +22,7 @@ class ReportController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -127,6 +127,7 @@ class ReportController extends Controller
      */
     protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
     {
+        bcscale(2);
         $income  = '0';
         $expense = '0';
         $count   = 0;
@@ -156,6 +157,7 @@ class ReportController extends Controller
      */
     protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
     {
+        bcscale(2);
         $income  = '0';
         $expense = '0';
         $count   = 0;

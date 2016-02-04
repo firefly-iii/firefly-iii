@@ -17,7 +17,7 @@ use Input;
 /**
  * Class RuleFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class RuleFormRequest extends Request

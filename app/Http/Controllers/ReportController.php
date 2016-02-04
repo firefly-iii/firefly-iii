@@ -5,6 +5,7 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Session;
 use View;
@@ -25,7 +26,7 @@ class ReportController extends Controller
     protected $helper;
 
     /**
-     * @codeCoverageIgnore
+     *
      *
      * @param ReportHelperInterface $helper
      */
@@ -44,6 +45,32 @@ class ReportController extends Controller
     }
 
     /**
+     * @param ARI $repository
+     *
+     * @return View
+     * @internal param ReportHelperInterface $helper
+     */
+    public function index(ARI $repository)
+    {
+        $start            = session('first');
+        $months           = $this->helper->listOfMonths($start);
+        $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
+
+        // does the user have shared accounts?
+        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
+        // get id's for quick links:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds [] = $account->id;
+        }
+        $accountList = join(',', $accountIds);
+
+
+        return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
+    }
+
+    /**
      * @param            $reportType
      * @param Carbon     $start
      * @param Carbon     $end
@@ -51,7 +78,59 @@ class ReportController extends Controller
      *
      * @return View
      */
-    public function defaultMonth($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // throw an error if necessary.
+        if ($end < $start) {
+
+            return view('error')->with('message', 'End date cannot be before start date, silly!');
+        }
+
+        // lower threshold
+        if ($start < session('first')) {
+            Log::debug('Start is ' . $start . ' but sessionfirst is ' . session('first'));
+            $start = session('first');
+        }
+
+        switch ($reportType) {
+            default:
+            case 'default':
+
+                View::share(
+                    'subTitle', trans(
+                                  'firefly.report_default',
+                                  [
+                                      'start' => $start->formatLocalized($this->monthFormat),
+                                      'end'   => $end->formatLocalized($this->monthFormat),
+                                  ]
+                              )
+                );
+                View::share('subTitleIcon', 'fa-calendar');
+
+                // more than one year date difference means year report.
+                if ($start->diffInMonths($end) > 12) {
+                    return $this->defaultMultiYear($reportType, $start, $end, $accounts);
+                }
+                // more than two months date difference means year report.
+                if ($start->diffInMonths($end) > 1) {
+                    return $this->defaultYear($reportType, $start, $end, $accounts);
+                }
+
+                return $this->defaultMonth($reportType, $start, $end, $accounts);
+        }
+
+
+    }
+
+    /**
+     * @param            $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return View
+     */
+    private function defaultMonth($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
@@ -92,7 +171,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    public function defaultMultiYear($reportType, $start, $end, $accounts)
+    private function defaultMultiYear($reportType, $start, $end, $accounts)
     {
 
         $incomeTopLength  = 8;
@@ -129,7 +208,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    public function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    private function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
@@ -157,82 +236,6 @@ class ReportController extends Controller
                 'expenses', 'incomeTopLength', 'expenseTopLength'
             )
         );
-    }
-
-    /**
-     * @param ARI $repository
-     *
-     * @return View
-     * @internal param ReportHelperInterface $helper
-     */
-    public function index(ARI $repository)
-    {
-        $start            = Session::get('first');
-        $months           = $this->helper->listOfMonths($start);
-        $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
-
-        // does the user have shared accounts?
-        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
-        // get id's for quick links:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds [] = $account->id;
-        }
-        $accountList = join(',', $accountIds);
-
-
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList','customFiscalYear'));
-    }
-
-    /**
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
-     */
-    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        // throw an error if necessary.
-        if ($end < $start) {
-            return view('error')->with('message', 'End date cannot be before start date, silly!');
-        }
-
-        // lower threshold
-        if ($start < Session::get('first')) {
-            $start = Session::get('first');
-        }
-
-        switch ($reportType) {
-            default:
-            case 'default':
-
-                View::share(
-                    'subTitle', trans(
-                                  'firefly.report_default',
-                                  [
-                                      'start' => $start->formatLocalized($this->monthFormat),
-                                      'end'   => $end->formatLocalized($this->monthFormat),
-                                  ]
-                              )
-                );
-                View::share('subTitleIcon', 'fa-calendar');
-
-                // more than one year date difference means year report.
-                if ($start->diffInMonths($end) > 12) {
-                    return $this->defaultMultiYear($reportType, $start, $end, $accounts);
-                }
-                // more than two months date difference means year report.
-                if ($start->diffInMonths($end) > 1) {
-                    return $this->defaultYear($reportType, $start, $end, $accounts);
-                }
-
-                return $this->defaultMonth($reportType, $start, $end, $accounts);
-        }
-
-
     }
 
 

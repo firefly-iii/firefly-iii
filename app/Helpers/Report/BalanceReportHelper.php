@@ -78,7 +78,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $balance->addBalanceLine($this->createEmptyBalanceLine($accounts, $spentData));
         $balance->addBalanceLine($this->createTagsBalanceLine($accounts, $start, $end));
         $balance->addBalanceLine($this->createDifferenceBalanceLine($accounts, $spentData, $start, $end));
-
         $balance->setBalanceHeader($header);
 
         return $balance;

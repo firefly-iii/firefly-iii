@@ -54,8 +54,8 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal transactionTypes($types)
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withRelevantData()
  * @property string                                                           $type
- * @property \Carbon\Carbon $interest_date
- * @property \Carbon\Carbon $book_date
+ * @property \Carbon\Carbon                                                   $interest_date
+ * @property \Carbon\Carbon                                                   $book_date
  */
 class TransactionJournal extends Model
 {

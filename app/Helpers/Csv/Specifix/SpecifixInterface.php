@@ -10,6 +10,7 @@ interface SpecifixInterface
 {
     const PRE_PROCESSOR  = 1;
     const POST_PROCESSOR = 2;
+
     /**
      * Implement bank and locale related fixes.
      */
