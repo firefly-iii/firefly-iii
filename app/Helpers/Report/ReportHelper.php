@@ -88,7 +88,7 @@ class ReportHelper implements ReportHelperInterface
             } else {
                 $billLine->setHit(false);
             }
-            if ($billLine->isHit() && $billLine->isActive()) {
+            if (!(!$billLine->isHit() && !$billLine->isActive())) {
                 $collection->addBill($billLine);
             }
 
