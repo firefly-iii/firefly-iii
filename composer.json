@@ -31,7 +31,8 @@
     "symfony/css-selector": "2.8.*|3.0.*",
     "symfony/dom-crawler": "2.8.*|3.0.*",
     "barryvdh/laravel-debugbar": "@stable",
-    "barryvdh/laravel-ide-helper": "~2.0"
+    "barryvdh/laravel-ide-helper": "~2.0",
+    "johnkary/phpunit-speedtrap": "^1.0"
   },
   "autoload": {
     "classmap": [

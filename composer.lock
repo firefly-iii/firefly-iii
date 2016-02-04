@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "df00127da416acad2a36b6128b82fdd9",
-    "content-hash": "28b178f07a713b4db441e7e1f380916e",
+    "hash": "95c05ea11a9db657dc80a0d441c891c8",
+    "content-hash": "6259b53a188bcdb2ac3fa814b194481f",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -2922,6 +2922,56 @@
                 "test"
             ],
             "time": "2015-05-11 14:41:42"
+        },
+        {
+            "name": "johnkary/phpunit-speedtrap",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johnkary/phpunit-speedtrap.git",
+                "reference": "76a26f8a903a9434608cdad2b41c40cd134ea326"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/76a26f8a903a9434608cdad2b41c40cd134ea326",
+                "reference": "76a26f8a903a9434608cdad2b41c40cd134ea326",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*|~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "JohnKary": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "John Kary",
+                    "email": "john@johnkary.net"
+                }
+            ],
+            "description": "Find slow tests in your PHPUnit test suite",
+            "homepage": "https://github.com/johnkary/phpunit-speedtrap",
+            "keywords": [
+                "phpunit",
+                "profile",
+                "slow"
+            ],
+            "time": "2015-09-13 19:01:00"
         },
         {
             "name": "maximebf/debugbar",
