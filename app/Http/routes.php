@@ -133,6 +133,14 @@ Route::group(
     Route::post('/currency/update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'currency.update']);
     Route::post('/currency/destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'currency.destroy']);
 
+    /**
+     * Export Controller
+     */
+    Route::get('/export', ['uses' => 'ExportController@index', 'as' => 'export.index']);
+    Route::post('/export/submit', ['uses' => 'ExportController@postIndex', 'as' => 'export.export']);
+    Route::get('/export/status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'export.status']);
+    Route::get('/export/download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'export.download']);
+
 
     /**
      * ALL CHART Controllers
