@@ -16,6 +16,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\HelpController::show
+     * @covers FireflyIII\Http\Controllers\HelpController::__construct
      */
     public function testShow()
     {

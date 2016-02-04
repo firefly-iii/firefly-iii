@@ -16,6 +16,7 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::create
+     * @covers FireflyIII\Http\Controllers\BillController::__construct
      */
     public function testCreate()
     {
@@ -26,7 +27,6 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
@@ -90,6 +90,9 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::store
+     * @covers FireflyIII\Http\Requests\BillFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BillFormRequest::getBillData
+     * @covers FireflyIII\Http\Requests\BillFormRequest::rules
      */
     public function testStore()
     {
@@ -115,6 +118,9 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::update
+     * @covers FireflyIII\Http\Requests\BillFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BillFormRequest::getBillData
+     * @covers FireflyIII\Http\Requests\BillFormRequest::rules
      */
     public function testUpdate()
     {

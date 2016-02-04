@@ -15,6 +15,7 @@ class BudgetControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::amount
+     * @covers FireflyIII\Http\Controllers\BudgetController::__construct
      */
     public function testAmount()
     {
@@ -116,13 +117,15 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::store
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::rules
      */
     public function testStore()
     {
         $this->be($this->user());
         $this->session(['budgets.create.url' => 'http://localhost']);
         $args = [
-            'name'   => 'Some kind of test budget.',
+            'name' => 'Some kind of test budget.',
         ];
 
         $this->call('POST', '/budgets/store', $args);
@@ -132,13 +135,16 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::update
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::rules
      */
     public function testUpdate()
     {
         $this->be($this->user());
         $this->session(['budgets.edit.url' => 'http://localhost']);
         $args = [
-            'name'   => 'Some kind of test budget.',
+            'name' => 'Some kind of test budget.',
+            'id'   => 1,
         ];
 
         $this->call('POST', '/budgets/update/1', $args);

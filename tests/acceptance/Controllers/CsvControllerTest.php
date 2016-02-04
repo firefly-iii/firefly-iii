@@ -16,6 +16,7 @@ class CsvControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\CsvController::columnRoles
+     * @covers FireflyIII\Http\Controllers\CsvController::__construct
      */
     public function testColumnRoles()
     {

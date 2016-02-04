@@ -15,6 +15,7 @@ class ChartBillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BillController::frontpage
+     * @covers FireflyIII\Http\Controllers\Chart\BillController::__construct
      */
     public function testFrontpage()
     {

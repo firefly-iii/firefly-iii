@@ -16,6 +16,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::create
+     * @covers FireflyIII\Http\Controllers\CategoryController::__construct
      */
     public function testCreate()
     {
@@ -102,13 +103,15 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::store
+     * @covers FireflyIII\Http\Requests\CategoryFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\CategoryFormRequest::rules
      */
     public function testStore()
     {
         $this->be($this->user());
         $this->session(['categories.create.url' => 'http://localhost']);
         $args = [
-            'name'   => 'Some kind of test cat.',
+            'name' => 'Some kind of test cat.',
         ];
 
         $this->call('POST', '/categories/store', $args);
@@ -118,13 +121,16 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::update
+     * @covers FireflyIII\Http\Requests\CategoryFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\CategoryFormRequest::rules
      */
     public function testUpdate()
     {
         $this->be($this->user());
         $this->session(['categories.edit.url' => 'http://localhost']);
         $args = [
-            'name'   => 'Some kind of test category.',
+            'name' => 'Some kind of test category.',
+            'id'   => 1,
         ];
 
         $this->call('POST', '/categories/update/1', $args);

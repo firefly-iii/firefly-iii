@@ -16,6 +16,7 @@ class NewUserControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\NewUserController::index
+     * @covers FireflyIII\Http\Controllers\NewUserController::__construct
      */
     public function testIndex()
     {
@@ -37,14 +38,18 @@ class NewUserControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\NewUserController::submit
+     * @covers FireflyIII\Http\Requests\NewUserFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\NewUserFormRequest::rules
      */
     public function testSubmit()
     {
         $this->be($this->emptyUser());
 
         $args = [
-            'bank_name'    => 'New bank',
-            'bank_balance' => 100,
+            'bank_name'         => 'New bank',
+            'bank_balance'      => 100,
+            'savings_balance'   => 200,
+            'credit_card_limit' => 1000,
         ];
 
         $this->call('POST', '/new-user/submit', $args);

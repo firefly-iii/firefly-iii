@@ -17,6 +17,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::action
+     * @covers FireflyIII\Http\Controllers\JsonController::__construct
      */
     public function testAction()
     {

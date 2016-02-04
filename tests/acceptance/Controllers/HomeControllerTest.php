@@ -11,6 +11,7 @@ class HomeControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::dateRange
+     * @covers FireflyIII\Http\Controllers\HomeController::__construct
      */
     public function testDateRange()
     {

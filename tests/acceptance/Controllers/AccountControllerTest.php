@@ -14,6 +14,7 @@ class AccountControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::create
+     * @covers FireflyIII\Http\Controllers\AccountController::__construct
      */
     public function testCreate()
     {
@@ -77,6 +78,9 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::store
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::rules
+     *
      */
     public function testStore()
     {
@@ -97,6 +101,8 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::update
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::rules
      */
     public function testUpdate()
     {

@@ -14,14 +14,13 @@
 class SearchControllerTest extends TestCase
 {
     /**
+     * @covers FireflyIII\Http\Controllers\SearchController::__construct
      * @covers FireflyIII\Http\Controllers\SearchController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/search?q=test&search=');
+        $this->assertResponseStatus(200);
     }
 }

@@ -37,6 +37,14 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
+     * @return User
+     */
+    public function toBeDeletedUser()
+    {
+        return User::find(3);
+    }
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */

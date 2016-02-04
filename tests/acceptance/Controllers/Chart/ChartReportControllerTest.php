@@ -14,6 +14,7 @@ class ChartReportControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOut
+     * @covers FireflyIII\Http\Controllers\Chart\ReportController::__construct
      */
     public function testYearInOut()
     {

@@ -15,61 +15,69 @@ class ProfileControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::changePassword
-     * @todo   Implement testChangePassword().
+     * @covers FireflyIII\Http\Controllers\ProfileController::__construct
      */
     public function testChangePassword()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/profile/change-password');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::deleteAccount
-     * @todo   Implement testDeleteAccount().
      */
     public function testDeleteAccount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->be($this->user());
+        $this->call('GET', '/profile/delete-account');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/profile');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
-     * @todo   Implement testPostChangePassword().
+     * @covers FireflyIII\Http\Requests\ProfileFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\ProfileFormRequest::rules
      */
     public function testPostChangePassword()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'current_password'          => 'james',
+            'new_password'              => 'sander',
+            'new_password_confirmation' => 'sander',
+        ];
+        $this->be($this->user());
+        $this->call('POST', '/profile/change-password', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
-     * @todo   Implement testPostDeleteAccount().
+     * @covers FireflyIII\Http\Requests\DeleteAccountFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\DeleteAccountFormRequest::rules
      */
     public function testPostDeleteAccount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'password' => 'james',
+        ];
+
+        $this->be($this->toBeDeletedUser());
+        $this->call('POST', '/profile/delete-account', $args);
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('index');
+        $this->assertNull(DB::table('users')->find(3));
     }
 }

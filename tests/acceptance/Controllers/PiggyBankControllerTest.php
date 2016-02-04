@@ -15,6 +15,7 @@ class PiggyBankControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::add
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::__construct
      */
     public function testAdd()
     {
@@ -35,7 +36,6 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
@@ -93,7 +93,6 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::postAdd
-     * @todo   Implement testPostAdd().
      */
     public function testPostAdd()
     {
@@ -144,6 +143,8 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::store
+     * @covers FireflyIII\Http\Requests\PiggyBankFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\PiggyBankFormRequest::rules
      */
     public function testStore()
     {
@@ -163,6 +164,8 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::update
+     * @covers FireflyIII\Http\Requests\PiggyBankFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\PiggyBankFormRequest::rules
      */
     public function testUpdate()
     {
@@ -173,6 +176,7 @@ class PiggyBankControllerTest extends TestCase
             'name'         => 'Updated',
             'targetamount' => 100,
             'account_id'   => 2,
+            'id'           => 1,
         ];
 
         $this->call('POST', '/piggy-banks/update/1', $args);

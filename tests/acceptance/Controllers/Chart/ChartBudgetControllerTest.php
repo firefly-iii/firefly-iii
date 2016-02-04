@@ -18,6 +18,7 @@ class ChartBudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::budget
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::__construct
      */
     public function testBudget()
     {

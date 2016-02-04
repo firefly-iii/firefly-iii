@@ -15,110 +15,115 @@ class TagControllerTest extends TestCase
 {
 
     /**
+     * @covers FireflyIII\Http\Controllers\TagController::__construct
      * @covers FireflyIII\Http\Controllers\TagController::create
-     * @todo   Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/tags/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/tags/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('POST', '/tags/destroy/1');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/tags/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::hideTagHelp
-     * @todo   Implement testHideTagHelp().
      */
     public function testHideTagHelp()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('POST', '/tags/hideTagHelp/true');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::index
-     * @todo   Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/tags');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::show
-     * @todo   Implement testShow().
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/tags/show/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::store
-     * @todo   Implement testStore().
+     * @covers FireflyIII\Http\Requests\TagFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\TagFormRequest::rules
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'tag' => 'Some new tag',
+            'tagMode' => 'nothing',
+        ];
+
+        $this->session(['tags.create.url' => 'http://localhost']);
+
+        $this->be($this->user());
+        $this->call('POST', '/tags/store', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TagController::update
-     * @todo   Implement testUpdate().
+     * @covers FireflyIII\Http\Requests\TagFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\TagFormRequest::rules
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'tag' => 'Some new tag yay',
+            'id'  => 1,
+            'tagMode' => 'nothing',
+        ];
+
+        $this->session(['tags.edit.url' => 'http://localhost']);
+
+        $this->be($this->user());
+        $this->call('POST', '/tags/update/1', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

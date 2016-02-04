@@ -16,6 +16,7 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CurrencyController::create
+     * @covers FireflyIII\Http\Controllers\CurrencyController::__construct
      */
     public function testCreate()
     {
@@ -82,6 +83,9 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CurrencyController::store
+     * @covers FireflyIII\Http\Requests\CurrencyFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\CurrencyFormRequest::rules
+     * @covers FireflyIII\Http\Requests\CurrencyFormRequest::getCurrencyData
      */
     public function testStore()
     {
@@ -101,6 +105,9 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CurrencyController::update
+     * @covers FireflyIII\Http\Requests\CurrencyFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\CurrencyFormRequest::rules
+     * @covers FireflyIII\Http\Requests\CurrencyFormRequest::getCurrencyData
      */
     public function testUpdate()
     {
