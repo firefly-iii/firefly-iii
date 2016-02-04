@@ -52,12 +52,15 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
-                $spent      = array_sum($totalSpent);
-                $budgetLine = new BudgetLine;
-                $budgetLine->setBudget($budget);
-                $budgetLine->setOverspent($spent);
-                $object->addOverspent($spent);
-                $object->addBudgetLine($budgetLine);
+
+                $spent = array_sum($totalSpent);
+                if ($spent > 0) {
+                    $budgetLine = new BudgetLine;
+                    $budgetLine->setBudget($budget);
+                    $budgetLine->setOverspent($spent);
+                    $object->addOverspent($spent);
+                    $object->addBudgetLine($budgetLine);
+                }
                 continue;
             }
 
