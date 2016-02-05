@@ -27,7 +27,11 @@
                             <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
                         </td>
                         <td>
-                            {{ balanceLine.getBudget.amount|formatAmount }}
+                            {% if(balanceLine.getBudget.amount) %}
+                                {{ balanceLine.getBudget.amount|formatAmount }}
+                            {% else %}
+                                {{ '0'|formatAmount }}
+                            {% endif %}
                         </td>
                     {% else %}
                         <td colspan="2">{{ balanceLine.getTitle }}</td>
