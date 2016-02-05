@@ -170,7 +170,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         $newRuleGroup = new RuleGroup(
             [
-                'user_id'     => $data['user'],
+                'user_id'     => $data['user_id'],
                 'title'       => $data['title'],
                 'description' => $data['description'],
                 'order'       => ($order + 1),
