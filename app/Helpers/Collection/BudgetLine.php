@@ -97,7 +97,7 @@ class BudgetLine
      */
     public function getRepetition(): LimitRepetition
     {
-        return $this->repetition;
+        return $this->repetition ?? new LimitRepetition;
     }
 
     /**
