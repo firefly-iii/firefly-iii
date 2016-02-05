@@ -61,6 +61,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::index
+     * @dataProvider dateRangeProvider
      *
      */
     public function testIndex($range)

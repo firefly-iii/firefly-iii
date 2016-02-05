@@ -59,6 +59,7 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::index
+     * @dataProvider dateRangeProvider
      */
     public function testIndex($range)
     {
@@ -69,6 +70,7 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::rescan
+     * @dataProvider dateRangeProvider
      */
     public function testRescan($range)
     {
@@ -80,6 +82,7 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::show
+     * @dataProvider dateRangeProvider
      */
     public function testShow($range)
     {

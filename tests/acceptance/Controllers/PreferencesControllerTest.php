@@ -27,6 +27,7 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\PreferencesController::postIndex
+     * @dataProvider dateRangeProvider
      */
     public function testPostIndex($range)
     {

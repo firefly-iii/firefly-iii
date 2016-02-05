@@ -16,6 +16,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::amount
      * @covers FireflyIII\Http\Controllers\BudgetController::__construct
+     * @dataProvider dateRangeProvider
      */
     public function testAmount($range)
     {
@@ -73,6 +74,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::index
+     * @dataProvider dateRangeProvider
      */
     public function testIndex($range)
     {
@@ -83,6 +85,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @dataProvider dateRangeProvider
      */
     public function testNoBudget($range)
     {
@@ -93,6 +96,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
+     * @dataProvider dateRangeProvider
      */
     public function testPostUpdateIncome($range)
     {
@@ -107,6 +111,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::show
+     * @dataProvider dateRangeProvider
      */
     public function testShow($range)
     {
@@ -154,6 +159,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::updateIncome
+     * @dataProvider dateRangeProvider
      */
     public function testUpdateIncome($range)
     {

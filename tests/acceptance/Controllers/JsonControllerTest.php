@@ -28,6 +28,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxBillsPaid
+     * @dataProvider dateRangeProvider
      */
     public function testBoxBillsPaid($range)
     {
@@ -38,6 +39,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxBillsUnpaid
+     * @dataProvider dateRangeProvider
      */
     public function testBoxBillsUnpaid($range)
     {
@@ -48,6 +50,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxIn
+     * @dataProvider dateRangeProvider
      */
     public function testBoxIn($range)
     {
@@ -58,6 +61,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxOut
+     * @dataProvider dateRangeProvider
      */
     public function testBoxOut($range)
     {
@@ -68,6 +72,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::categories
+     * @dataProvider dateRangeProvider
      */
     public function testCategories($range)
     {
@@ -129,6 +134,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::transactionJournals
+     * @dataProvider dateRangeProvider
      */
     public function testTransactionJournals($range)
     {

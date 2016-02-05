@@ -20,6 +20,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\ReportController::index
+     * @dataProvider dateRangeProvider
      */
     public function testIndex($range)
     {
@@ -33,6 +34,7 @@ class ReportControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\ReportController::__construct
      * @covers FireflyIII\Http\Controllers\ReportController::report
      * @covers FireflyIII\Http\Controllers\ReportController::defaultMonth
+     * @dataProvider dateRangeProvider
      */
     public function testReportDefaultMonth($range)
     {
@@ -52,6 +54,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\ReportController::report
      * @covers FireflyIII\Http\Controllers\ReportController::defaultYear
+     * @dataProvider dateRangeProvider
      */
     public function testReportDefaultYear($range)
     {
@@ -63,6 +66,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\ReportController::report
      * @covers FireflyIII\Http\Controllers\ReportController::defaultMultiYear
+     * @dataProvider dateRangeProvider
      */
     public function testReportDefaultMultiYear($range)
     {

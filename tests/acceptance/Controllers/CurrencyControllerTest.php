@@ -73,6 +73,7 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CurrencyController::index
+     * @dataProvider dateRangeProvider
      */
     public function testIndex($range)
     {
