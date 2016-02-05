@@ -27,9 +27,7 @@
                             <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
                         </td>
                         <td>
-                            [source]
                             {{ balanceLine.getBudget.amount|formatAmount }}
-                            <!-- { { balanceLine.getRepetition.amount|formatAmount } }  -->
                         </td>
                     {% else %}
                         <td colspan="2">{{ balanceLine.getTitle }}</td>
