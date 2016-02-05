@@ -7,8 +7,6 @@ php:
 
 install:
   - composer selfupdate
-  - composer --version
-  - composer install --no-dev
   - composer update
   - php artisan env
   - mv -v .env.testing .env
