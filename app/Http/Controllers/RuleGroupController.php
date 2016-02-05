@@ -139,7 +139,7 @@ class RuleGroupController extends Controller
         $data = [
             'title'       => $request->input('title'),
             'description' => $request->input('description'),
-            'user'        => Auth::user()->id,
+            'user_id'     => Auth::user()->id,
         ];
 
         $ruleGroup = $repository->store($data);
