@@ -122,7 +122,7 @@ class BalanceLine
      */
     public function leftOfRepetition()
     {
-        $start = isset($this->budget->amount) ? $this->budget->amount : 0;
+        $start = $this->budget->amount ?? 0;
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
             $start += $balanceEntry->getSpent();

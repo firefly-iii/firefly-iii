@@ -56,7 +56,7 @@ class Tag extends Model
         }
         // create it!
         $fields['tagMode']     = 'nothing';
-        $fields['description'] = isset($fields['description']) && !is_null($fields['description']) ? $fields['description'] : '';
+        $fields['description'] = $fields['description'] ?? '';
         $tag                   = Tag::create($fields);
 
         return $tag;

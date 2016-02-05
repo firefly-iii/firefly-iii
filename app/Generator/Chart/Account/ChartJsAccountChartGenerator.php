@@ -137,7 +137,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
 
         while ($end >= $current) {
             $theDate = $current->format('Y-m-d');
-            $balance = isset($range[$theDate]) ? $range[$theDate] : $previous;
+            $balance = $range[$theDate] ?? $previous;
 
             $data['labels'][]              = $current->formatLocalized($format);
             $data['datasets'][0]['data'][] = $balance;

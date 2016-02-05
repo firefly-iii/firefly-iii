@@ -44,7 +44,7 @@ class UpgradeFireflyInstructions extends Command
         //
         $version = Config::get('firefly.version');
         $config  = Config::get('upgrade.text');
-        $text    = isset($config[$version]) ? $config[$version] : null;
+        $text    = $config[$version] ?? null;
 
         $this->line('+------------------------------------------------------------------------------+');
         $this->line('');

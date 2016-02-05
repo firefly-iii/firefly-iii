@@ -405,8 +405,8 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $str    = $start->format('Y-m-d');
-            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
-            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
+            $spent  = $spentArray[$str] ?? 0;
+            $earned = $earnedArray[$str] ?? 0;
             $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();

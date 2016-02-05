@@ -228,7 +228,7 @@ class Importer
 
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
-            $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
+            $role  = $this->roles[$index] ?? '_ignore';
             $class = Config::get('csv.roles.' . $role . '.converter');
             $field = Config::get('csv.roles.' . $role . '.field');
 
