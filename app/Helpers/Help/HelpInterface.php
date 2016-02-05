@@ -11,38 +11,38 @@ interface HelpInterface
 {
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return string
      */
-    public function getFromCache($key);
+    public function getFromCache(string $key);
 
     /**
-     * @param $route
+     * @param string $route
      *
      * @return array
      */
-    public function getFromGithub($route);
+    public function getFromGithub(string $route);
 
     /**
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function hasRoute($route);
+    public function hasRoute(string $route);
 
     /**
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function inCache($route);
+    public function inCache(string $route);
 
     /**
-     * @param       $route
-     * @param array $content
+     * @param string $route
+     * @param array  $content
      *
      * @return void
      */
-    public function putInCache($route, array $content);
+    public function putInCache(string $route, array $content);
 }

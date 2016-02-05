@@ -132,7 +132,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReport($start, $end, Collection $accounts)
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $object = new Expense;
         $set    = $this->query->expense($accounts, $start, $end);
@@ -154,7 +154,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReport($start, $end, Collection $accounts)
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $object = new Income;
         $set    = $this->query->income($accounts, $start, $end);

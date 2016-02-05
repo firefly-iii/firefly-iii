@@ -79,7 +79,7 @@ class Entry
     /**
      * @param string $amount
      */
-    public function setAmount($amount)
+    public function setAmount(string $amount)
     {
         $this->amount = $amount;
     }
@@ -95,7 +95,7 @@ class Entry
     /**
      * @param string $date
      */
-    public function setDate($date)
+    public function setDate(string $date)
     {
         $this->date = $date;
     }
@@ -111,7 +111,7 @@ class Entry
     /**
      * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         $this->description = $description;
     }

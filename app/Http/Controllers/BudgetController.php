@@ -229,7 +229,7 @@ class BudgetController extends Controller
             return view('error', compact('message'));
         }
 
-        $journals = $repository->getJournals($budget, $repetition);
+        $journals = $repository->getJournals($budget, $repetition, 50);
 
         if (is_null($repetition->id)) {
             $start    = $repository->firstActivity($budget);

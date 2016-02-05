@@ -68,11 +68,11 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return ExportJob|null
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         return Auth::user()->exportJobs()->where('key', $key)->first();
     }

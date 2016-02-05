@@ -114,7 +114,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function earnedInPeriod(CRI $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
@@ -215,7 +215,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear($reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function multiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
         /** @var CRI $repository */
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');

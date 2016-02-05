@@ -27,7 +27,7 @@ interface BillChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage($paid, $unpaid);
+    public function frontpage(string $paid, string $unpaid);
 
     /**
      * @param Bill       $bill

@@ -36,87 +36,6 @@ class BudgetController extends Controller
     }
 
     /**
-     *
-     * @param BudgetRepositoryInterface $repository
-     * @param                           $reportType
-     * @param Carbon                    $start
-     * @param Carbon                    $end
-     * @param Collection                $accounts
-     * @param Collection                $budgets
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function multiYear(BudgetRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($reportType);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($accounts);
-        $cache->addProperty($budgets);
-        $cache->addProperty('multiYearBudget');
-
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        /*
-         * Get the budgeted amounts for each budgets in each year.
-         */
-        $budgetedSet   = $repository->getBudgetedPerYear($budgets, $start, $end);
-        $budgetedArray = [];
-        /** @var Budget $entry */
-        foreach ($budgetedSet as $entry) {
-            $budgetedArray[$entry->id][$entry->dateFormatted] = $entry->budgeted;
-        }
-
-        $set     = $repository->getBudgetsAndExpensesPerYear($budgets, $accounts, $start, $end);
-        $entries = new Collection;
-        // go by budget, not by year.
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $entry        = ['name' => '', 'spent' => [], 'budgeted' => []];
-            $id           = $budget->id;
-            $currentStart = clone $start;
-            while ($currentStart < $end) {
-                // fix the date:
-                $currentEnd = clone $currentStart;
-                $currentEnd->endOfYear();
-
-                // save to array:
-                $year          = $currentStart->year;
-                $entry['name'] = $budget->name;
-                $spent         = 0;
-                $budgeted      = 0;
-                if (isset($set[$id]['entries'][$year])) {
-                    $spent = $set[$id]['entries'][$year] * -1;
-                }
-
-                if (isset($budgetedArray[$id][$year])) {
-                    $budgeted = round($budgetedArray[$id][$year], 2);
-                }
-
-                $entry['spent'][$year]    = $spent;
-                $entry['budgeted'][$year] = $budgeted;
-
-                // jump to next year.
-                $currentStart = clone $currentEnd;
-                $currentStart->addDay();
-            }
-            $entries->push($entry);
-        }
-        // generate chart with data:
-        $data = $this->generator->multiYear($entries);
-        $cache->store($data);
-
-        return Response::json($data);
-
-    }
-
-    /**
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
@@ -298,10 +217,91 @@ class BudgetController extends Controller
      * @param Carbon                    $start
      * @param Carbon                    $end
      * @param Collection                $accounts
+     * @param Collection                $budgets
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function year(BudgetRepositoryInterface $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function multiYear(BudgetRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($reportType);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($budgets);
+        $cache->addProperty('multiYearBudget');
+
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /*
+         * Get the budgeted amounts for each budgets in each year.
+         */
+        $budgetedSet   = $repository->getBudgetedPerYear($budgets, $start, $end);
+        $budgetedArray = [];
+        /** @var Budget $entry */
+        foreach ($budgetedSet as $entry) {
+            $budgetedArray[$entry->id][$entry->dateFormatted] = $entry->budgeted;
+        }
+
+        $set     = $repository->getBudgetsAndExpensesPerYear($budgets, $accounts, $start, $end);
+        $entries = new Collection;
+        // go by budget, not by year.
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $entry        = ['name' => '', 'spent' => [], 'budgeted' => []];
+            $id           = $budget->id;
+            $currentStart = clone $start;
+            while ($currentStart < $end) {
+                // fix the date:
+                $currentEnd = clone $currentStart;
+                $currentEnd->endOfYear();
+
+                // save to array:
+                $year          = $currentStart->year;
+                $entry['name'] = $budget->name;
+                $spent         = 0;
+                $budgeted      = 0;
+                if (isset($set[$id]['entries'][$year])) {
+                    $spent = $set[$id]['entries'][$year] * -1;
+                }
+
+                if (isset($budgetedArray[$id][$year])) {
+                    $budgeted = round($budgetedArray[$id][$year], 2);
+                }
+
+                $entry['spent'][$year]    = $spent;
+                $entry['budgeted'][$year] = $budgeted;
+
+                // jump to next year.
+                $currentStart = clone $currentEnd;
+                $currentStart->addDay();
+            }
+            $entries->push($entry);
+        }
+        // generate chart with data:
+        $data = $this->generator->multiYear($entries);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
+     *
+     * @param BudgetRepositoryInterface $repository
+     * @param                           $reportType
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     * @param Collection                $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function year(BudgetRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties();

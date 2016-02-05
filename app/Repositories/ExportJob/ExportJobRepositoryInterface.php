@@ -29,10 +29,10 @@ interface ExportJobRepositoryInterface
     public function create();
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return ExportJob|null
      */
-    public function findByKey($key);
+    public function findByKey(string $key);
 
 }

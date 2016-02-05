@@ -42,9 +42,9 @@ class Category
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addTotal($add)
+    public function addTotal(string $add)
     {
         $add = strval(round($add, 2));
         bcscale(2);

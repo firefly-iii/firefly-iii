@@ -443,7 +443,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50)
+    public function getJournals(Budget $budget, LimitRepetition $repetition, int $take)
     {
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
         $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
@@ -493,7 +493,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return double
+     * @return string
      */
     public function getWithoutBudgetSum(Carbon $start, Carbon $end)
     {
@@ -519,6 +519,9 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                      )
                      ->transactionTypes([TransactionType::WITHDRAWAL])
                      ->first([DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
+        if (is_null($entry->journalAmount)) {
+            return '';
+        }
 
         return $entry->journalAmount;
     }

@@ -136,7 +136,7 @@ class Importer
     /**
      * @param Data $data
      */
-    public function setData($data)
+    public function setData(Data $data)
     {
         $this->data = $data;
     }
@@ -218,12 +218,12 @@ class Importer
     }
 
     /**
-     * @param $row
+     * @param array $row
      *
      * @throws FireflyException
      * @return string|bool
      */
-    protected function importRow($row)
+    protected function importRow(array $row)
     {
 
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
@@ -266,7 +266,7 @@ class Importer
      *
      * @return bool
      */
-    protected function parseRow($index)
+    protected function parseRow(int $index)
     {
         return (($this->data->hasHeaders() && $index >= 1) || !$this->data->hasHeaders());
     }

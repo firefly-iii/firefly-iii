@@ -49,7 +49,7 @@ interface ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReport($start, $end, Collection $accounts);
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * Get a full report on the users incomes during the period for the given accounts.
@@ -60,7 +60,7 @@ interface ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReport($start, $end, Collection $accounts);
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Carbon $date

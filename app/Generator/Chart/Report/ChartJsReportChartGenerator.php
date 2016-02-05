@@ -52,7 +52,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOutSummarized($income, $expense, $count)
+    public function multiYearInOutSummarized(string $income, string $expense, int $count)
     {
         $data                          = [
             'count'    => 2,
@@ -117,7 +117,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function yearInOutSummarized($income, $expense, $count)
+    public function yearInOutSummarized(string $income, string $expense, int $count)
     {
 
         $data                          = [

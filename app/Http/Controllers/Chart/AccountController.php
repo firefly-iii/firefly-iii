@@ -43,7 +43,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties();

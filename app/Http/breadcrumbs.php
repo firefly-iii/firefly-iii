@@ -33,14 +33,14 @@ Breadcrumbs::register(
 
 // accounts
 Breadcrumbs::register(
-    'accounts.index', function (BreadCrumbGenerator $breadcrumbs, $what) {
+    'accounts.index', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
 }
 );
 
 Breadcrumbs::register(
-    'accounts.create', function (BreadCrumbGenerator $breadcrumbs, $what) {
+    'accounts.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push(trans('firefly.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
 }
@@ -384,13 +384,13 @@ Breadcrumbs::register(
 
 // transactions
 Breadcrumbs::register(
-    'transactions.index', function (BreadCrumbGenerator $breadcrumbs, $what) {
+    'transactions.index', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
 }
 );
 Breadcrumbs::register(
-    'transactions.create', function (BreadCrumbGenerator $breadcrumbs, $what) {
+    'transactions.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
 }

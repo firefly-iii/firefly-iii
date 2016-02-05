@@ -159,11 +159,11 @@ class TagController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function hideTagHelp($state)
+    public function hideTagHelp(string $state)
     {
 
-        $state = $state == 'true' ? true : false;
-        Preferences::set('hideTagHelp', $state);
+        $newState = $state == 'true' ? true : false;
+        Preferences::set('hideTagHelp', $newState);
 
         return Response::json([true]);
     }

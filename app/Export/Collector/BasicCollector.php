@@ -46,7 +46,7 @@ class BasicCollector
     /**
      * @param Collection $files
      */
-    public function setFiles($files)
+    public function setFiles(Collection $files)
     {
         $this->files = $files;
     }

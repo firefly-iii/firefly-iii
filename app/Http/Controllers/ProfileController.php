@@ -122,7 +122,7 @@ class ProfileController extends Controller
      *
      * @return string|bool
      */
-    protected function validatePassword($old, $new1)
+    protected function validatePassword(string $old, string $new1)
     {
         if ($new1 == $old) {
             return trans('firefly.should_change');

@@ -63,11 +63,11 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @deprecated
      *
-     * @param $accountId
+     * @param int $accountId
      *
      * @return Account
      */
-    public function find($accountId)
+    public function find(int $accountId)
     {
         return Auth::user()->accounts()->findOrNew($accountId);
     }

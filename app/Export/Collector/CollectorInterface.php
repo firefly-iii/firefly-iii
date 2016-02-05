@@ -8,6 +8,7 @@
  */
 
 namespace FireflyIII\Export\Collector;
+use Illuminate\Support\Collection;
 
 /**
  * Interface CollectorInterface
@@ -16,6 +17,20 @@ namespace FireflyIII\Export\Collector;
  */
 interface CollectorInterface
 {
+    /**
+     * @return bool
+     */
     public function run();
+
+    /**
+     * @return Collection
+     */
+    public function getFiles();
+
+    /**
+     * @param Collection $files
+     *
+     */
+    public function setFiles(Collection $files);
 
 }

@@ -15,11 +15,11 @@ interface PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param           $amount
+     * @param string    $amount
      *
      * @return bool
      */
-    public function createEvent(PiggyBank $piggyBank, $amount);
+    public function createEvent(PiggyBank $piggyBank, string $amount);
 
     /**
      * @param PiggyBank $piggyBank
@@ -68,7 +68,7 @@ interface PiggyBankRepositoryInterface
      *
      * @return void
      */
-    public function setOrder($piggyBankId, $order);
+    public function setOrder(int $piggyBankId, int $order);
 
 
     /**

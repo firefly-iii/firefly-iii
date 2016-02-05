@@ -64,7 +64,7 @@ class Data
      *
      * @param string $csvFileContent
      */
-    public function setCsvFileContent($csvFileContent)
+    public function setCsvFileContent(string $csvFileContent)
     {
         $this->csvFileContent = $csvFileContent;
     }
@@ -82,7 +82,7 @@ class Data
      *
      * @param string $csvFileLocation
      */
-    public function setCsvFileLocation($csvFileLocation)
+    public function setCsvFileLocation(string $csvFileLocation)
     {
         Session::put('csv-file', $csvFileLocation);
         $this->csvFileLocation = $csvFileLocation;
@@ -99,9 +99,9 @@ class Data
 
     /**
      *
-     * @param mixed $dateFormat
+     * @param string $dateFormat
      */
-    public function setDateFormat($dateFormat)
+    public function setDateFormat(string $dateFormat)
     {
         Session::put('csv-date-format', $dateFormat);
         $this->dateFormat = $dateFormat;
@@ -120,7 +120,7 @@ class Data
      *
      * @param string $delimiter
      */
-    public function setDelimiter($delimiter)
+    public function setDelimiter(string $delimiter)
     {
         Session::put('csv-delimiter', $delimiter);
         $this->delimiter = $delimiter;
@@ -233,7 +233,7 @@ class Data
      *
      * @param bool $hasHeaders
      */
-    public function setHasHeaders($hasHeaders)
+    public function setHasHeaders(bool $hasHeaders)
     {
         Session::put('csv-has-headers', $hasHeaders);
         $this->hasHeaders = $hasHeaders;
@@ -243,7 +243,7 @@ class Data
      *
      * @param int $importAccount
      */
-    public function setImportAccount($importAccount)
+    public function setImportAccount(int $importAccount)
     {
         Session::put('csv-import-account', $importAccount);
         $this->importAccount = $importAccount;

@@ -36,7 +36,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create($what = 'asset')
+    public function create(string $what = 'asset')
     {
 
 
@@ -148,7 +148,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(ARI $repository, $what)
+    public function index(ARI $repository, string $what)
     {
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
@@ -275,11 +275,11 @@ class AccountController extends Controller
 
     /**
      * @param array $array
-     * @param       $entryId
+     * @param int   $entryId
      *
      * @return null|mixed
      */
-    protected function isInArray(array $array, $entryId)
+    protected function isInArray(array $array, int $entryId)
     {
         if (isset($array[$entryId])) {
             return $array[$entryId];

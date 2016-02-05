@@ -27,7 +27,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage($paid, $unpaid)
+    public function frontpage(string $paid, string $unpaid)
     {
         bcscale(2);
         $data = [

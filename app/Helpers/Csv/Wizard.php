@@ -26,7 +26,7 @@ class Wizard implements WizardInterface
      *
      * @return array
      */
-    public function getMappableValues($reader, array $map, $hasHeaders)
+    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders)
     {
         $values = [];
         /*
@@ -52,11 +52,11 @@ class Wizard implements WizardInterface
 
     /**
      * @param array $roles
-     * @param mixed $map
+     * @param array $map
      *
      * @return array
      */
-    public function processSelectedMapping(array $roles, $map)
+    public function processSelectedMapping(array $roles, array $map)
     {
         $configRoles = Config::get('csv.roles');
         $maps        = [];
@@ -79,11 +79,11 @@ class Wizard implements WizardInterface
     }
 
     /**
-     * @param mixed $input
+     * @param array $input
      *
      * @return array
      */
-    public function processSelectedRoles($input)
+    public function processSelectedRoles(array $input)
     {
         $roles = [];
 
@@ -150,11 +150,11 @@ class Wizard implements WizardInterface
     }
 
     /**
-     * @param $path
+     * @param string $path
      *
      * @return string
      */
-    public function storeCsvFile($path)
+    public function storeCsvFile(string $path)
     {
         $time             = str_replace(' ', '-', microtime());
         $fileName         = 'csv-upload-' . Auth::user()->id . '-' . $time . '.csv.encrypted';
@@ -188,7 +188,7 @@ class Wizard implements WizardInterface
      *
      * @return bool
      */
-    protected function useRow($hasHeaders, $index)
+    protected function useRow(bool $hasHeaders, int $index)
     {
         return ($hasHeaders && $index > 1) || !$hasHeaders;
     }

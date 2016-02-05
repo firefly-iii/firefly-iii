@@ -41,9 +41,9 @@ class Budget
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addBudgeted($add)
+    public function addBudgeted(string $add)
     {
         $add = strval(round($add, 2));
         bcscale(2);
@@ -51,9 +51,9 @@ class Budget
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addLeft($add)
+    public function addLeft(string $add)
     {
         $add = strval(round($add, 2));
         bcscale(2);
@@ -61,9 +61,9 @@ class Budget
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addOverspent($add)
+    public function addOverspent(string $add)
     {
         $add = strval(round($add, 2));
         bcscale(2);
@@ -71,9 +71,9 @@ class Budget
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addSpent($add)
+    public function addSpent(string $add)
     {
         $add = strval(round($add, 2));
         bcscale(2);
@@ -99,7 +99,7 @@ class Budget
     /**
      * @param string $budgeted
      */
-    public function setBudgeted($budgeted)
+    public function setBudgeted(string $budgeted)
     {
         $this->budgeted = $budgeted;
     }
@@ -115,7 +115,7 @@ class Budget
     /**
      * @param string $left
      */
-    public function setLeft($left)
+    public function setLeft(string $left)
     {
         $this->left = $left;
     }
@@ -131,7 +131,7 @@ class Budget
     /**
      * @param string $overspent
      */
-    public function setOverspent($overspent)
+    public function setOverspent(string $overspent)
     {
         $this->overspent = strval(round($overspent, 2));
     }
@@ -147,7 +147,7 @@ class Budget
     /**
      * @param string $spent
      */
-    public function setSpent($spent)
+    public function setSpent(string $spent)
     {
         $this->spent = strval(round($spent, 2));
     }

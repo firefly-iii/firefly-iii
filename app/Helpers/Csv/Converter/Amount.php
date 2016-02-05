@@ -19,6 +19,6 @@ class Amount extends BasicConverter implements ConverterInterface
             return $this->value;
         }
 
-        return 0;
+        return '0';
     }
 }

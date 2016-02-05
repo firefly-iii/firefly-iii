@@ -19,11 +19,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param           $amount
+     * @param string    $amount
      *
      * @return bool
      */
-    public function createEvent(PiggyBank $piggyBank, $amount)
+    public function createEvent(PiggyBank $piggyBank, string $amount)
     {
         PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
 
@@ -107,7 +107,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return void
      */
-    public function setOrder($piggyBankId, $order)
+    public function setOrder(int $piggyBankId, int $order)
     {
         $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', Auth::user()->id)
                               ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);

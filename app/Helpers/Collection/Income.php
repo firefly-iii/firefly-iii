@@ -20,7 +20,7 @@ class Income
     /** @var Collection */
     protected $incomes;
     /** @var string */
-    protected $total;
+    protected $total = '0';
 
     /**
      *
@@ -54,9 +54,9 @@ class Income
     }
 
     /**
-     * @param $add
+     * @param string $add
      */
-    public function addToTotal($add)
+    public function addToTotal(string $add)
     {
         $add = strval(round($add, 2));
         bcscale(2);

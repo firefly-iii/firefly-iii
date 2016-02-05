@@ -67,197 +67,6 @@ class General extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatFilesize()
-    {
-        return new Twig_SimpleFilter(
-            'filesize', function ($size) {
-            $size = intval($size);
-
-            // less than one GB, more than one MB
-            if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                return round($size / (1024 * 1024), 2) . ' MB';
-            }
-
-            // less than one MB
-            if ($size < (1024 * 1024)) {
-                return round($size / 1024, 2) . ' KB';
-            }
-
-            return $size . ' bytes';
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function mimeIcon()
-    {
-        return new Twig_SimpleFilter(
-            'mimeIcon', function ($string) {
-            switch ($string) {
-                default:
-                    return 'fa-file-o';
-                case 'application/pdf':
-                    return 'fa-file-pdf-o';
-                case 'image/png':
-                case 'image/jpeg':
-                    return 'fa-file-image-o';
-            }
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatAmount()
-    {
-        return new Twig_SimpleFilter(
-            'formatAmount', function ($string) {
-            return app('amount')->format($string);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatTransaction()
-    {
-        return new Twig_SimpleFilter(
-            'formatTransaction', function (Transaction $transaction) {
-            return app('amount')->formatTransaction($transaction);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatAmountPlain()
-    {
-        return new Twig_SimpleFilter(
-            'formatAmountPlain', function ($string) {
-            return app('amount')->format($string, false);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatJournal()
-    {
-        return new Twig_SimpleFilter(
-            'formatJournal', function ($journal) {
-            return app('amount')->formatJournal($journal);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function balance()
-    {
-        return new Twig_SimpleFilter(
-            'balance', function (Account $account = null) {
-            if (is_null($account)) {
-                return 'NULL';
-            }
-            $date = session('end', Carbon::now()->endOfMonth());
-
-            return app('steam')->balance($account, $date);
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function getAccountRole()
-    {
-        return new Twig_SimpleFilter(
-            'getAccountRole', function ($name) {
-            return Config::get('firefly.accountRoles.' . $name);
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function getCurrencyCode()
-    {
-        return new Twig_SimpleFunction(
-            'getCurrencyCode', function () {
-            return app('amount')->getCurrencyCode();
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function getCurrencySymbol()
-    {
-        return new Twig_SimpleFunction(
-            'getCurrencySymbol', function () {
-            return app('amount')->getCurrencySymbol();
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function phpdate()
-    {
-        return new Twig_SimpleFunction(
-            'phpdate', function ($str) {
-            return date($str);
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function env()
-    {
-        return new Twig_SimpleFunction(
-            'env', function ($name, $default) {
-            return env($name, $default);
-        }
-        );
-    }
-
-    /**
-     * Will return "active" when the current route matches the given argument
-     * exactly.
-     *
-     * @return Twig_SimpleFunction
-     */
-    protected function activeRouteStrict()
-    {
-        return new Twig_SimpleFunction(
-            'activeRouteStrict', function () {
-            $args  = func_get_args();
-            $route = $args[0]; // name of the route.
-
-            if (Route::getCurrentRoute()->getName() == $route) {
-                return 'active';
-            }
-
-            return '';
-        }
-        );
-    }
-
-    /**
      * Will return "active" when a part of the route matches the argument.
      * ie. "accounts" will match "accounts.index".
      *
@@ -299,6 +108,199 @@ class General extends Twig_Extension
 
             return '';
         }, ['needs_context' => true]
+        );
+    }
+
+    /**
+     * Will return "active" when the current route matches the given argument
+     * exactly.
+     *
+     * @return Twig_SimpleFunction
+     */
+    protected function activeRouteStrict()
+    {
+        return new Twig_SimpleFunction(
+            'activeRouteStrict', function () {
+            $args  = func_get_args();
+            $route = $args[0]; // name of the route.
+
+            if (Route::getCurrentRoute()->getName() == $route) {
+                return 'active';
+            }
+
+            return '';
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function balance()
+    {
+        return new Twig_SimpleFilter(
+            'balance', function (Account $account = null) {
+            if (is_null($account)) {
+                return 'NULL';
+            }
+            $date = session('end', Carbon::now()->endOfMonth());
+
+            return app('steam')->balance($account, $date);
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function env()
+    {
+        return new Twig_SimpleFunction(
+            'env', function ($name, $default) {
+            return env($name, $default);
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatAmount()
+    {
+        return new Twig_SimpleFilter(
+            'formatAmount', function ($string) {
+            $value = is_null($string) ? '0' : $string;
+
+            return app('amount')->format($value);
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatAmountPlain()
+    {
+        return new Twig_SimpleFilter(
+            'formatAmountPlain', function ($string) {
+            return app('amount')->format($string, false);
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatFilesize()
+    {
+        return new Twig_SimpleFilter(
+            'filesize', function ($size) {
+            $size = intval($size);
+
+            // less than one GB, more than one MB
+            if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+                return round($size / (1024 * 1024), 2) . ' MB';
+            }
+
+            // less than one MB
+            if ($size < (1024 * 1024)) {
+                return round($size / 1024, 2) . ' KB';
+            }
+
+            return $size . ' bytes';
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatJournal()
+    {
+        return new Twig_SimpleFilter(
+            'formatJournal', function ($journal) {
+            return app('amount')->formatJournal($journal);
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatTransaction()
+    {
+        return new Twig_SimpleFilter(
+            'formatTransaction', function (Transaction $transaction) {
+            return app('amount')->formatTransaction($transaction);
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function getAccountRole()
+    {
+        return new Twig_SimpleFilter(
+            'getAccountRole', function ($name) {
+            return Config::get('firefly.accountRoles.' . $name);
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function getCurrencyCode()
+    {
+        return new Twig_SimpleFunction(
+            'getCurrencyCode', function () {
+            return app('amount')->getCurrencyCode();
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function getCurrencySymbol()
+    {
+        return new Twig_SimpleFunction(
+            'getCurrencySymbol', function () {
+            return app('amount')->getCurrencySymbol();
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function mimeIcon()
+    {
+        return new Twig_SimpleFilter(
+            'mimeIcon', function ($string) {
+            switch ($string) {
+                default:
+                    return 'fa-file-o';
+                case 'application/pdf':
+                    return 'fa-file-pdf-o';
+                case 'image/png':
+                case 'image/jpeg':
+                    return 'fa-file-image-o';
+            }
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function phpdate()
+    {
+        return new Twig_SimpleFunction(
+            'phpdate', function ($str) {
+            return date($str);
+        }
         );
     }
 

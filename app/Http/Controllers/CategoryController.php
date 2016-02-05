@@ -213,7 +213,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showWithDate(SCRI $repository, Category $category, $date)
+    public function showWithDate(SCRI $repository, Category $category, string $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;

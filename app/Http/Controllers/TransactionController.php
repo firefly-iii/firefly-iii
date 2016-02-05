@@ -49,7 +49,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create(ARI $repository, $what = TransactionType::DEPOSIT)
+    public function create(ARI $repository, string $what = TransactionType::DEPOSIT)
     {
         $what        = strtolower($what);
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
@@ -211,7 +211,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(JournalRepositoryInterface $repository, $what)
+    public function index(JournalRepositoryInterface $repository, string $what)
     {
         $subTitleIcon = Config::get('firefly.transactionIconsByWhat.' . $what);
         $types        = Config::get('firefly.transactionTypesByWhat.' . $what);

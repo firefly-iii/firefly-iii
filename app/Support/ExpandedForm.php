@@ -26,7 +26,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function amount($name, $value = null, array $options = [])
+    public function amount(string $name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -51,7 +51,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function balance($name, $value = null, array $options = [])
+    public function balance(string $name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -75,7 +75,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function checkbox($name, $value = 1, $checked = null, $options = [])
+    public function checkbox(string $name, $value = 1, $checked = null, $options = [])
     {
         $options['checked'] = $checked === true ? true : null;
         $label              = $this->label($name, $options);
@@ -97,7 +97,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function date($name, $value = null, array $options = [])
+    public function date(string $name, $value = null, array $options = [])
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -115,7 +115,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function file($name, array $options = [])
+    public function file(string $name, array $options = [])
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -133,7 +133,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function integer($name, $value = null, array $options = [])
+    public function integer(string $name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -153,7 +153,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function location($name, $value = null, array $options = [])
+    public function location(string $name, $value = null, array $options = [])
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -174,7 +174,7 @@ class ExpandedForm
      *
      * @return mixed
      */
-    public function makeSelectList(Collection $set, $addEmpty = false)
+    public function makeSelectList(Collection $set, bool $addEmpty = false)
     {
         $selectList = [];
         if ($addEmpty) {
@@ -205,7 +205,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function multiCheckbox($name, array $list = [], $selected = null, array $options = [])
+    public function multiCheckbox(string $name, array $list = [], $selected = null, array $options = [])
     {
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
@@ -226,7 +226,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function multiRadio($name, array $list = [], $selected = null, array $options = [])
+    public function multiRadio(string $name, array $list = [], $selected = null, array $options = [])
     {
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
@@ -271,7 +271,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function select($name, array $list = [], $selected = null, array $options = [])
+    public function select(string $name, array $list = [], $selected = null, array $options = [])
     {
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);

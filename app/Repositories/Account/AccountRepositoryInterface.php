@@ -34,13 +34,13 @@ interface AccountRepositoryInterface
     public function destroy(Account $account, Account $moveTo = null);
 
     /**
-     * @param $accountId
+     * @param int $accountId
      *
      * @deprecated
      *
      * @return Account
      */
-    public function find($accountId);
+    public function find(int $accountId);
 
     /**
      * Gets all the accounts by ID, for a given set.

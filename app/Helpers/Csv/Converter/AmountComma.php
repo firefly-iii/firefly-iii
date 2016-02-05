@@ -23,6 +23,6 @@ class AmountComma extends BasicConverter implements ConverterInterface
             return floatval($value);
         }
 
-        return 0;
+        return '0';
     }
 }

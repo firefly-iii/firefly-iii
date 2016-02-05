@@ -18,12 +18,12 @@ class Amount
 {
 
     /**
-     * @param      $amount
-     * @param bool $coloured
+     * @param string $amount
+     * @param bool   $coloured
      *
      * @return string
      */
-    public function format($amount, $coloured = true)
+    public function format(string $amount, bool $coloured = true)
     {
         return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
@@ -33,16 +33,17 @@ class Amount
      * as a currency, given two things: the currency required and the current locale.
      *
      * @param TransactionCurrency $format
-     * @param                     $amount
+     * @param string              $amount
      * @param bool                $coloured
      *
      * @return string
      */
-    public function formatAnything(TransactionCurrency $format, $amount, $coloured = true)
+    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true)
     {
         $locale    = setlocale(LC_MONETARY, 0);
+        $float     = floatval($amount);
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result    = $formatter->formatCurrency($amount, $format->code);
+        $result    = $formatter->formatCurrency($float, $format->code);
 
         if ($coloured === true) {
             if ($amount == 0) {
@@ -66,7 +67,7 @@ class Amount
      *
      * @return string
      */
-    public function formatJournal(TransactionJournal $journal, $coloured = true)
+    public function formatJournal(TransactionJournal $journal, bool $coloured = true)
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
@@ -101,7 +102,7 @@ class Amount
      *
      * @return string
      */
-    public function formatTransaction(Transaction $transaction, $coloured = true)
+    public function formatTransaction(Transaction $transaction, bool $coloured = true)
     {
         $currency = $transaction->transactionJournal->transactionCurrency;
 
@@ -115,7 +116,7 @@ class Amount
      *
      * @return string
      */
-    public function formatWithSymbol($symbol, $amount, $coloured = true)
+    public function formatWithSymbol(string $symbol, string $amount, $coloured = true)
     {
         return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }

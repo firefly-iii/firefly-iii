@@ -52,14 +52,14 @@ interface JournalRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, $offset, $page);
+    public function getJournalsOfTypes(array $types, int $offset, int $page);
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return TransactionType
      */
-    public function getTransactionType($type);
+    public function getTransactionType(string $type);
 
     /**
      * @param  int   $journalId
@@ -67,7 +67,7 @@ interface JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function getWithDate($journalId, Carbon $date);
+    public function getWithDate(int $journalId, Carbon $date);
 
     /**
      * @param TransactionJournal $journal

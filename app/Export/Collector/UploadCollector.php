@@ -31,6 +31,9 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         parent::__construct($job);
     }
 
+    /**
+     *
+     */
     public function run()
     {
         // grab upload directory.

@@ -29,11 +29,11 @@ class Specifix
     }
 
     /**
-     * @param $processorType
+     * @param int $processorType
      *
      * @return $this
      */
-    public function setProcessorType($processorType)
+    public function setProcessorType(int $processorType)
     {
         $this->processorType = $processorType;
 

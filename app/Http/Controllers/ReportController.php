@@ -78,7 +78,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // throw an error if necessary.
         if ($end < $start) {
@@ -130,7 +130,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    private function defaultMonth($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    private function defaultMonth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
@@ -171,7 +171,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    private function defaultMultiYear($reportType, $start, $end, $accounts)
+    private function defaultMultiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         $incomeTopLength  = 8;
@@ -208,7 +208,7 @@ class ReportController extends Controller
      *
      * @return View
      */
-    private function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    private function defaultYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $incomeTopLength  = 8;
         $expenseTopLength = 8;

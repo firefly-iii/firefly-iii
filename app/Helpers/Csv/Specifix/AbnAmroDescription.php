@@ -49,7 +49,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * @param array $data
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $this->data = $data;
     }
@@ -57,7 +57,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * @param array $row
      */
-    public function setRow($row)
+    public function setRow(array $row)
     {
         $this->row = $row;
     }

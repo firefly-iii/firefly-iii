@@ -25,6 +25,7 @@ class BalanceLine
     /** @var BudgetModel */
     protected $budget;
 
+    /** @var int */
     protected $role = self::ROLE_DEFAULTROLE;
 
     /**
@@ -54,7 +55,7 @@ class BalanceLine
     /**
      * @param Collection $balanceEntries
      */
-    public function setBalanceEntries($balanceEntries)
+    public function setBalanceEntries(Collection $balanceEntries)
     {
         $this->balanceEntries = $balanceEntries;
     }
@@ -70,7 +71,7 @@ class BalanceLine
     /**
      * @param BudgetModel $budget
      */
-    public function setBudget($budget)
+    public function setBudget(BudgetModel $budget)
     {
         $this->budget = $budget;
     }
@@ -86,7 +87,7 @@ class BalanceLine
     /**
      * @param int $role
      */
-    public function setRole($role)
+    public function setRole(int $role)
     {
         $this->role = $role;
     }
@@ -118,14 +119,15 @@ class BalanceLine
      * on the given budget/repetition. If you subtract all those amounts from the budget/repetition's
      * total amount, this is returned:
      *
-     * @return float
+     * @return string
      */
     public function leftOfRepetition()
     {
-        $start = $this->budget->amount ?? 0;
+        bcscale(2);
+        $start = $this->budget->amount ?? '0';
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
-            $start += $balanceEntry->getSpent();
+            $start = bcadd($balanceEntry->getSpent(), $start);
         }
 
         return $start;

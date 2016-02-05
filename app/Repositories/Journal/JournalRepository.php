@@ -90,7 +90,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, $offset, $page)
+    public function getJournalsOfTypes(array $types, int $offset, int $page)
     {
         $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
                         ->orderBy('date', 'DESC')
@@ -106,11 +106,11 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return TransactionType
      */
-    public function getTransactionType($type)
+    public function getTransactionType(string $type)
     {
         return TransactionType::whereType($type)->first();
     }
@@ -121,7 +121,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function getWithDate($journalId, Carbon $date)
+    public function getWithDate(int $journalId, Carbon $date)
     {
         return Auth::user()->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
     }

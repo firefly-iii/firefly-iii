@@ -24,17 +24,17 @@ interface SpecifixInterface
     /**
      * @param array $data
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * @param int $processorType
      *
      * @return $this
      */
-    public function setProcessorType($processorType);
+    public function setProcessorType(int $processorType);
 
     /**
      * @param array $row
      */
-    public function setRow($row);
+    public function setRow(array $row);
 }

@@ -47,7 +47,7 @@ class Balance
     /**
      * @param BalanceHeader $balanceHeader
      */
-    public function setBalanceHeader($balanceHeader)
+    public function setBalanceHeader(BalanceHeader $balanceHeader)
     {
         $this->balanceHeader = $balanceHeader;
     }

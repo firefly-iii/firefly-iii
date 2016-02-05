@@ -38,7 +38,7 @@ class BillLine
     /**
      * @param string $amount
      */
-    public function setAmount($amount)
+    public function setAmount(string $amount)
     {
         $this->amount = $amount;
     }
@@ -54,7 +54,7 @@ class BillLine
     /**
      * @param BillModel $bill
      */
-    public function setBill($bill)
+    public function setBill(BillModel $bill)
     {
         $this->bill = $bill;
     }
@@ -70,7 +70,7 @@ class BillLine
     /**
      * @param string $max
      */
-    public function setMax($max)
+    public function setMax(string $max)
     {
         $this->max = $max;
     }
@@ -86,7 +86,7 @@ class BillLine
     /**
      * @param string $min
      */
-    public function setMin($min)
+    public function setMin(string $min)
     {
         $this->min = $min;
     }
@@ -100,9 +100,9 @@ class BillLine
     }
 
     /**
-     * @param boolean $active
+     * @param bool $active
      */
-    public function setActive($active)
+    public function setActive(bool $active)
     {
         $this->active = $active;
     }
@@ -116,9 +116,9 @@ class BillLine
     }
 
     /**
-     * @param boolean $hit
+     * @param bool $hit
      */
-    public function setHit($hit)
+    public function setHit(bool $hit)
     {
         $this->hit = $hit;
     }

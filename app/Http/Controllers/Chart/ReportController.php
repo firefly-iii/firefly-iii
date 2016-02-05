@@ -45,7 +45,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOut(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOut(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -88,7 +88,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOutSummarized(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOutSummarized(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:

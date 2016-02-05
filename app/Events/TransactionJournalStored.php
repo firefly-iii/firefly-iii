@@ -30,9 +30,9 @@ class TransactionJournalStored extends Event
      * Create a new event instance.
      *
      * @param TransactionJournal $journal
-     * @param                    $piggyBankId
+     * @param int                $piggyBankId
      */
-    public function __construct(TransactionJournal $journal, $piggyBankId)
+    public function __construct(TransactionJournal $journal, int $piggyBankId)
     {
         //
         $this->journal     = $journal;

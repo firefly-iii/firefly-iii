@@ -19,11 +19,11 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $key
+     * @param string $key
      *
      * @return string
      */
-    public function getFromCache($key)
+    public function getFromCache(string $key)
     {
         return Cache::get($key);
     }
@@ -31,11 +31,11 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $route
+     * @param string $route
      *
      * @return array
      */
-    public function getFromGithub($route)
+    public function getFromGithub(string $route)
     {
         $uri        = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/en/' . e($route) . '.md';
         $routeIndex = str_replace('.', '-', $route);
@@ -62,11 +62,11 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function hasRoute($route)
+    public function hasRoute(string $route)
     {
         return Route::has($route);
     }
@@ -74,11 +74,11 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function inCache($route)
+    public function inCache(string $route)
     {
         return Cache::has('help.' . $route . '.title') && Cache::has('help.' . $route . '.text');
     }
@@ -86,12 +86,12 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param       $route
-     * @param array $content
+     * @param string $route
+     * @param array  $content
      *
      * @internal param $title
      */
-    public function putInCache($route, array $content)
+    public function putInCache(string $route, array $content)
     {
         Cache::put('help.' . $route . '.text', $content['text'], 10080); // a week.
         Cache::put('help.' . $route . '.title', $content['title'], 10080);

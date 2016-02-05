@@ -58,9 +58,9 @@ class Expense
     }
 
     /**
-     * @param $add
+     * @param string $add
      */
-    public function addToTotal($add)
+    public function addToTotal(string $add)
     {
         bcscale(2);
 

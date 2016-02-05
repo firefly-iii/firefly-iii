@@ -205,11 +205,11 @@ class AuthController extends Controller
     /**
      * Get the failed login message.
      *
-     * @param $message
+     * @param string $message
      *
      * @return string
      */
-    protected function getFailedLoginMessage($message)
+    protected function getFailedLoginMessage(string $message)
     {
         if (strlen($message) > 0) {
             return $message;
@@ -221,11 +221,11 @@ class AuthController extends Controller
     }
 
     /**
-     * @param $email
+     * @param string $email
      *
      * @return bool
      */
-    protected function isBlockedDomain($email)
+    protected function isBlockedDomain(string $email)
     {
         $parts   = explode('@', $email);
         $blocked = $this->getBlockedDomains();
@@ -241,12 +241,11 @@ class AuthController extends Controller
      * Get the failed login response instance.
      *
      * @param \Illuminate\Http\Request $request
-     *
-     * @param                          $message
+     * @param string                   $message
      *
      * @return \Illuminate\Http\Response
      */
-    protected function sendFailedLoginResponse(Request $request, $message)
+    protected function sendFailedLoginResponse(Request $request, string $message)
     {
         return redirect()->back()
                          ->withInput($request->only($this->loginUsername(), 'remember'))
