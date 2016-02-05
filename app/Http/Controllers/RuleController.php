@@ -341,6 +341,7 @@ class RuleController extends Controller
             $data = [
                 'rule_group_id'       => $repository->getFirstRuleGroup()->id,
                 'stop_processing'     => 0,
+                'user_id'             => Auth::user()->id,
                 'title'               => trans('firefly.default_rule_name'),
                 'description'         => trans('firefly.default_rule_description'),
                 'trigger'             => 'store-journal',
@@ -373,7 +374,7 @@ class RuleController extends Controller
 
         if ($repository->count() === 0) {
             $data = [
-                'user'        => Auth::user()->id,
+                'user_id'        => Auth::user()->id,
                 'title'       => trans('firefly.default_rule_group_name'),
                 'description' => trans('firefly.default_rule_group_description'),
             ];
