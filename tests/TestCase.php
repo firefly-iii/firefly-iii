@@ -1,5 +1,6 @@
 <?php
 use Carbon\Carbon;
+use FireflyIII\Models\Preference;
 use FireflyIII\User;
 
 /**
@@ -13,6 +14,25 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      * @var string
      */
     protected $baseUrl = 'http://localhost';
+
+    /**
+     * @param User   $user
+     * @param string $range
+     */
+    public function changeDateRange(User $user, $range)
+    {
+        $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
+        if (in_array($range, $valid)) {
+            Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
+            Preference::create(
+                [
+                    'user_id' => $user->id,
+                    'name'    => 'viewRange',
+                    'data'    => $range,
+                ]
+            );
+        }
+    }
 
     /**
      * Creates the application.
@@ -29,19 +49,27 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
-     * @return User
+     * @return array
      */
-    public function emptyUser()
+    public function dateRangeProvider()
     {
-        return User::find(2);
+        return [
+            'one day'      => ['1D'],
+            'one week'     => ['1W'],
+            'one month'    => ['1M'],
+            'three months' => ['3M'],
+            'six months'   => ['6M'],
+            'one year'     => ['1Y'],
+            'custom range' => ['custom'],
+        ];
     }
 
     /**
      * @return User
      */
-    public function toBeDeletedUser()
+    public function emptyUser()
     {
-        return User::find(3);
+        return User::find(2);
     }
 
     /**
@@ -73,6 +101,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         }
         // if the database copy does exists, copy back as original.
 
+
         $this->session(
             [
                 'start' => Carbon::now()->startOfMonth(),
@@ -101,9 +130,19 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     /**
      * @return User
      */
+    public function toBeDeletedUser()
+    {
+        return User::find(3);
+    }
+
+    /**
+     * @return User
+     */
     public function user()
     {
-        return User::find(1);
+        $user = User::find(1);
+
+        return $user;
     }
 
     /**

@@ -61,20 +61,24 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::index
+     *
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/categories');
         $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @dataProvider dateRangeProvider
      */
-    public function testNoCategory()
+    public function testNoCategory($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/categories/list/noCategory');
         $this->assertResponseStatus(200);
     }
@@ -82,10 +86,12 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::show
      * @covers FireflyIII\Http\Controllers\Controller::getSumOfRange
+     * @dataProvider dateRangeProvider
      */
-    public function testShow()
+    public function testShow($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/categories/show/1');
         $this->assertResponseStatus(200);
 
@@ -93,10 +99,12 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\CategoryController::showWithDate
+     * @dataProvider dateRangeProvider
      */
-    public function testShowWithDate()
+    public function testShowWithDate($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/categories/show/1/20150101');
         $this->assertResponseStatus(200);
     }

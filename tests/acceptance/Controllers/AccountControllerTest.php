@@ -13,12 +13,14 @@
 class AccountControllerTest extends TestCase
 {
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::create
-     * @covers FireflyIII\Http\Controllers\AccountController::__construct
+     * @covers       FireflyIII\Http\Controllers\AccountController::create
+     * @covers       FireflyIII\Http\Controllers\AccountController::__construct
+     * @dataProvider dateRangeProvider
      */
-    public function testCreate()
+    public function testCreate($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/create/asset');
         $this->assertResponseStatus(200);
     }
@@ -58,20 +60,24 @@ class AccountControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::index
      * @covers FireflyIII\Http\Controllers\AccountController::isInArray
+     * @dataProvider dateRangeProvider
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/asset');
         $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::show
+     * @dataProvider dateRangeProvider
      */
-    public function testShow()
+    public function testShow($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/show/1');
         $this->assertResponseStatus(200);
     }
