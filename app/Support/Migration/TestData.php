@@ -904,21 +904,18 @@ class TestData
      * @param User $user
      * @param      $name
      *
-     * @return Account|null
+     * @return Account
      */
-    public static function findAccount(User $user, string $name)
+    public static function findAccount(User $user, string $name): Account
     {
         /** @var Account $account */
         foreach ($user->accounts()->get() as $account) {
             if ($account->name == $name) {
-                //Log::debug('Trying to find "' . $name . '" in "' . $account->name . '", and found it!');
-
                 return $account;
             }
-            //Log::debug('Trying to find "' . $name . '" in "' . $account->name . '".');
         }
 
-        return null;
+        return new Account;
     }
 
     /**

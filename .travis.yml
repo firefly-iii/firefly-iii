@@ -18,4 +18,4 @@ install:
   - php artisan migrate --seed
 
 script:
-  - phpunit
+  - phpunit --debug
