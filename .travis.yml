@@ -4,6 +4,8 @@ sudo: false
 
 php:
   - 7
+before_script:
+  - phpenv config-rm xdebug.ini
 
 install:
   - composer selfupdate
