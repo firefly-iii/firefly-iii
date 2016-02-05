@@ -32,6 +32,16 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
                 ]
             );
         }
+        // if selected "custom", change the session to a weird custom range:
+        // (20 days):
+        if($range === "custom") {
+            $this->session(
+                [
+                    'start' => Carbon::now(),
+                'end'       => Carbon::now()->subDays(20),
+            ]
+            );
+        }
     }
 
     /**
@@ -120,11 +130,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function tearDown()
     {
         parent::tearDown();
-
-        // delete copy original.
-        //$original = __DIR__.'/../storage/database/testing.db';
-        //unlink($original);
-
     }
 
     /**
