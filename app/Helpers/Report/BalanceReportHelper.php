@@ -142,7 +142,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $model->account_id == $account->id && is_null($model->budget_id);
                 }
             );
-            $spent = 0;
+            $spent = '0';
             if (!is_null($entry->first())) {
                 $spent = $entry->first()->spent;
             }
@@ -151,7 +151,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $tag->account_id == $account->id;
                 }
             );
-            $left      = 0;
+            $left      = '0';
             if (!is_null($leftEntry->first())) {
                 $left = $leftEntry->first()->sum;
             }
@@ -185,7 +185,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $model->account_id == $account->id && is_null($model->budget_id);
                 }
             );
-            $spent = 0;
+            $spent = '0';
             if (!is_null($entry->first())) {
                 $spent = $entry->first()->spent;
             }
@@ -221,7 +221,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $tag->account_id == $account->id;
                 }
             );
-            $left      = 0;
+            $left      = '0';
             if (!is_null($leftEntry->first())) {
                 $left = $leftEntry->first()->sum;
             }

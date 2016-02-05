@@ -330,7 +330,7 @@ class AccountRepository implements AccountRepositoryInterface
         $balance = Steam::balance($account, $date, true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
-            $balance -= $p->currentRelevantRep()->currentamount;
+            $balance = bcsub($p->currentRelevantRep()->currentamount, $balance);
         }
 
         return $balance;

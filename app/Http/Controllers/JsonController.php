@@ -66,7 +66,7 @@ class JsonController extends Controller
         if ($creditCardDue >= 0) {
             $amount = bcadd($amount, $creditCardDue);
         }
-        $amount = $amount * -1;
+        $amount = bcmul($amount,'-1');
 
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
 

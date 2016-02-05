@@ -38,14 +38,14 @@ class JournalFormRequest extends Request
             'account_id'                => intval($this->get('account_id')),
             'account_from_id'           => intval($this->get('account_from_id')),
             'account_to_id'             => intval($this->get('account_to_id')),
-            'expense_account'           => $this->get('expense_account'),
-            'revenue_account'           => $this->get('revenue_account'),
+            'expense_account'           => $this->get('expense_account') ?? '',
+            'revenue_account'           => $this->get('revenue_account') ?? '',
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => Auth::user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
             'date'                      => new Carbon($this->get('date')),
             'budget_id'                 => intval($this->get('budget_id')),
-            'category'                  => $this->get('category'),
+            'category'                  => $this->get('category') ?? '',
             'tags'                      => explode(',', $tags),
         ];
     }

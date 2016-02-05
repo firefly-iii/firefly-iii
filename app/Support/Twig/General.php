@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use Route;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -158,7 +159,7 @@ class General extends Twig_Extension
     protected function env()
     {
         return new Twig_SimpleFunction(
-            'env', function ($name, $default) {
+            'env', function (string $name, string $default) {
             return env($name, $default);
         }
         );
@@ -171,10 +172,9 @@ class General extends Twig_Extension
     protected function formatAmount()
     {
         return new Twig_SimpleFilter(
-            'formatAmount', function ($string) {
-            $value = is_null($string) ? '0' : strval($string);
+            'formatAmount', function (string $string) {
 
-            return app('amount')->format($value);
+            return app('amount')->format($string);
         }, ['is_safe' => ['html']]
         );
     }
@@ -185,10 +185,9 @@ class General extends Twig_Extension
     protected function formatAmountPlain()
     {
         return new Twig_SimpleFilter(
-            'formatAmountPlain', function ($string) {
-            $value = is_null($string) ? '0' : strval($string);
+            'formatAmountPlain', function (string $string) {
 
-            return app('amount')->format($value, false);
+            return app('amount')->format($string, false);
         }, ['is_safe' => ['html']]
         );
     }
@@ -199,8 +198,7 @@ class General extends Twig_Extension
     protected function formatFilesize()
     {
         return new Twig_SimpleFilter(
-            'filesize', function ($size) {
-            $size = intval($size);
+            'filesize', function (int $size) {
 
             // less than one GB, more than one MB
             if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
@@ -223,7 +221,7 @@ class General extends Twig_Extension
     protected function formatJournal()
     {
         return new Twig_SimpleFilter(
-            'formatJournal', function ($journal) {
+            'formatJournal', function (TransactionJournal $journal) {
             return app('amount')->formatJournal($journal);
         }, ['is_safe' => ['html']]
         );
@@ -247,7 +245,7 @@ class General extends Twig_Extension
     protected function getAccountRole()
     {
         return new Twig_SimpleFilter(
-            'getAccountRole', function ($name) {
+            'getAccountRole', function (string $name) {
             return Config::get('firefly.accountRoles.' . $name);
         }
         );
@@ -283,7 +281,7 @@ class General extends Twig_Extension
     protected function mimeIcon()
     {
         return new Twig_SimpleFilter(
-            'mimeIcon', function ($string) {
+            'mimeIcon', function (string $string) {
             switch ($string) {
                 default:
                     return 'fa-file-o';
@@ -303,7 +301,7 @@ class General extends Twig_Extension
     protected function phpdate()
     {
         return new Twig_SimpleFunction(
-            'phpdate', function ($str) {
+            'phpdate', function (string $str) {
             return date($str);
         }
         );

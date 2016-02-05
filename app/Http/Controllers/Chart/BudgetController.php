@@ -185,26 +185,26 @@ class BudgetController extends Controller
                 $currentStart = clone $start;
                 $currentEnd   = clone $end;
                 $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
-                $amount       = 0;
-                $left         = 0;
+                $amount       = '0';
+                $left         = '0';
                 $spent        = $expenses;
-                $overspent    = 0;
+                $overspent    = '0';
             } else {
                 $currentStart = clone $budget->startdate;
                 $currentEnd   = clone $budget->enddate;
                 $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
                 $amount       = $budget->amount;
                 // smaller than 1 means spent MORE than budget allows.
-                $left      = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? 0 : bcadd($budget->amount, $expenses);
-                $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? ($amount * -1) : $expenses;
-                $overspent = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcadd($budget->amount, $expenses) : 0;
+                $left      = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? '0' : bcadd($budget->amount, $expenses);
+                $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcmul($amount, '-1') : $expenses;
+                $overspent = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcadd($budget->amount, $expenses) : '0';
             }
 
             $allEntries->push([$name, $left, $spent, $overspent, $amount, $expenses]);
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
-        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses, 0, 0]);
+        $allEntries->push([trans('firefly.noBudget'), '0', '0', $noBudgetExpenses, '0', '0']);
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
 

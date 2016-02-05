@@ -194,7 +194,7 @@ class TestData
      * @param        $name
      * @param        $amount
      */
-    public static function createBudgetLimit(User $user, Carbon $current, $name, $amount)
+    public static function createBudgetLimit(User $user, Carbon $current, string $name, string $amount)
     {
         $start  = clone $current;
         $end    = clone $current;
@@ -474,7 +474,7 @@ class TestData
      *
      * @return Account|null
      */
-    public static function findAccount(User $user, $name)
+    public static function findAccount(User $user, string $name)
     {
         /** @var Account $account */
         foreach ($user->accounts()->get() as $account) {
@@ -495,7 +495,7 @@ class TestData
      *
      * @return Budget|null
      */
-    public static function findBudget(User $user, $name)
+    public static function findBudget(User $user, string $name)
     {
         /** @var Budget $budget */
         foreach (Budget::get() as $budget) {

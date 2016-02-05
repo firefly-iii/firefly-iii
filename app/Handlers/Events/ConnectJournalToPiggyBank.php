@@ -40,6 +40,7 @@ class ConnectJournalToPiggyBank
         /** @var TransactionJournal $journal */
         $journal     = $event->journal;
         $piggyBankId = $event->piggyBankId;
+        bcscale(2);
 
         /** @var PiggyBank $piggyBank */
         $piggyBank = Auth::user()->piggybanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
@@ -57,7 +58,7 @@ class ConnectJournalToPiggyBank
         $amount = $journal->amount_positive;
         // if piggy account matches source account, the amount is positive
         if ($piggyBank->account_id == $journal->source_account->id) {
-            $amount = $amount * -1;
+            $amount = bcmul($amount,'-1');
         }
 
 

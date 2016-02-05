@@ -39,7 +39,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
                 'label'     => trans('firefly.unpaid'),
             ],
             [
-                'value'     => round($paid * -1, 2), // paid is negative, must be positive.
+                'value'     => round(bcmul($paid, '-1'), 2), // paid is negative, must be positive.
                 'color'     => 'rgba(0, 141, 76, 0.7)',
                 'highlight' => 'rgba(0, 141, 76, 0.9)',
                 'label'     => trans('firefly.paid'),
@@ -57,6 +57,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      */
     public function single(Bill $bill, Collection $entries)
     {
+        bcscale(2);
         $format       = (string)trans('config.month');
         $data         = [
             'count'    => 3,
@@ -74,7 +75,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
             /*
              * journalAmount has been collected in BillRepository::getJournals
              */
-            $actualAmount[] = round(($entry->journalAmount * -1), 2);
+            $actualAmount[] = round(bcmul($entry->journalAmount, '-1'), 2);
         }
 
         $data['datasets'][] = [

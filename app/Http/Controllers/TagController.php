@@ -247,7 +247,7 @@ class TagController extends Controller
         $data = [
             'tag'         => $request->get('tag'),
             'date'        => strlen($date) > 0 ? new Carbon($date) : null,
-            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : '',
+            'description' => $request->get('description') ?? '',
             'latitude'    => $latitude,
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,
@@ -290,11 +290,10 @@ class TagController extends Controller
         }
         $date = $request->get('date') ?? '';
 
-
         $data = [
             'tag'         => $request->get('tag'),
             'date'        => strlen($date) > 0 ? new Carbon($date) : null,
-            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : '',
+            'description' => $request->get('description') ?? '',
             'latitude'    => $latitude,
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,

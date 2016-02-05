@@ -166,6 +166,7 @@ class PiggyBankController extends Controller
     {
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
+        /** @var Carbon $end */
         $end        = session('end', Carbon::now()->endOfMonth());
         bcscale(2);
 

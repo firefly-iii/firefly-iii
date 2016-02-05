@@ -39,11 +39,11 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
 
         foreach ($entries as $entry) {
             $data['labels'][] = $entry[1];
-            $spent            = round($entry[2], 2);
-            $earned           = round($entry[3], 2);
+            $spent            = $entry[2];
+            $earned           = $entry[3];
 
-            $data['datasets'][0]['data'][] = $spent == 0 ? null : $spent * -1;
-            $data['datasets'][1]['data'][] = $earned == 0 ? null : $earned;
+            $data['datasets'][0]['data'][] = bccomp($spent, '0') === 0 ? null : bcmul($spent, '-1');
+            $data['datasets'][1]['data'][] = bccomp($earned, '0') === 0 ? null : $earned;
         }
 
         return $data;
@@ -89,6 +89,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      */
     public function frontpage(Collection $entries)
     {
+        bcscale(2);
         $data = [
             'count'    => 1,
             'labels'   => [],
@@ -102,7 +103,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
         foreach ($entries as $entry) {
             if ($entry->spent != 0) {
                 $data['labels'][]              = $entry->name;
-                $data['datasets'][0]['data'][] = round(($entry->spent * -1), 2);
+                $data['datasets'][0]['data'][] = round(bcmul($entry->spent, '-1'), 2);
             }
         }
 

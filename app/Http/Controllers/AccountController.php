@@ -285,7 +285,7 @@ class AccountController extends Controller
             return $array[$entryId];
         }
 
-        return null;
+        return '';
     }
 
 }
