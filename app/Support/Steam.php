@@ -23,7 +23,7 @@ class Steam
      * @param \Carbon\Carbon             $date
      * @param bool                       $ignoreVirtualBalance
      *
-     * @return float
+     * @return string
      */
     public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false)
     {
@@ -45,11 +45,11 @@ class Steam
         )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount');
 
         if (!$ignoreVirtualBalance) {
-            $balance = bcadd($balance, $account->virtual_balance);
+            $balance = bcadd(strval($balance), $account->virtual_balance);
         }
-        $cache->store(round($balance, 2));
+        $cache->store($balance);
 
-        return round($balance, 2);
+        return $balance;
     }
 
     /**
@@ -177,14 +177,14 @@ class Steam
 
         if (!(strpos($string, 'k') === false)) {
             // has a K in it, remove the K and multiply by 1024.
-            $bytes = bcmul(rtrim($string, 'k'), 1024);
+            $bytes = bcmul(rtrim($string, 'k'), '1024');
 
             return intval($bytes);
         }
 
         if (!(strpos($string, 'm') === false)) {
             // has a M in it, remove the M and multiply by 1048576.
-            $bytes = bcmul(rtrim($string, 'm'), 1048576);
+            $bytes = bcmul(rtrim($string, 'm'),'1048576');
 
             return intval($bytes);
         }

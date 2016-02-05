@@ -253,10 +253,10 @@ class AccountRepository implements AccountRepositoryInterface
             function (Account $account) use ($start, $end) {
                 $account->startBalance = Steam::balance($account, $start, true);
                 $account->endBalance   = Steam::balance($account, $end, true);
-                $account->piggyBalance = 0;
+                $account->piggyBalance = '0';
                 /** @var PiggyBank $piggyBank */
                 foreach ($account->piggyBanks as $piggyBank) {
-                    $account->piggyBalance += $piggyBank->currentRelevantRep()->currentamount;
+                    $account->piggyBalance = bcadd($piggyBank->currentRelevantRep()->currentamount, $account->piggyBalance);
                 }
                 // sum of piggy bank amounts on this account:
                 // diff between endBalance and piggyBalance.

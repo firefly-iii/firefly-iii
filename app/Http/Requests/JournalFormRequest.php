@@ -31,6 +31,7 @@ class JournalFormRequest extends Request
      */
     public function getJournalData()
     {
+        $tags = $this->get('tags') ?? '';
         return [
             'what'                      => $this->get('what'),
             'description'               => $this->get('description'),
@@ -45,7 +46,7 @@ class JournalFormRequest extends Request
             'date'                      => new Carbon($this->get('date')),
             'budget_id'                 => intval($this->get('budget_id')),
             'category'                  => $this->get('category'),
-            'tags'                      => explode(',', $this->get('tags')),
+            'tags'                      => explode(',', $tags),
         ];
     }
 

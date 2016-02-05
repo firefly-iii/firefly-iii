@@ -132,7 +132,7 @@ class BudgetController extends Controller
             /*
              * Sum of expenses on this day:
              */
-            $amount = round(bcadd($amount, $sum), 2);
+            $amount = round(bcadd(strval($amount), $sum), 2);
             $entries->push([clone $start, $amount]);
             $start->addDay();
         }

@@ -108,7 +108,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $model->account_id == $account->id && $model->budget_id == $budget->id;
                 }
             );
-            $spent = 0;
+            $spent = '0';
             if (!is_null($entry->first())) {
                 $spent = $entry->first()->spent;
             }

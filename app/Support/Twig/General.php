@@ -16,6 +16,7 @@ use Twig_SimpleFunction;
  * @codeCoverageIgnore
  *
  * Class TwigSupport
+ * @todo    these functions should be parameterized.
  *
  * @package FireflyIII\Support
  */
@@ -164,13 +165,14 @@ class General extends Twig_Extension
     }
 
     /**
+     *
      * @return Twig_SimpleFilter
      */
     protected function formatAmount()
     {
         return new Twig_SimpleFilter(
             'formatAmount', function ($string) {
-            $value = is_null($string) ? '0' : $string;
+            $value = is_null($string) ? '0' : strval($string);
 
             return app('amount')->format($value);
         }, ['is_safe' => ['html']]
@@ -184,7 +186,9 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'formatAmountPlain', function ($string) {
-            return app('amount')->format($string, false);
+            $value = is_null($string) ? '0' : strval($string);
+
+            return app('amount')->format($value, false);
         }, ['is_safe' => ['html']]
         );
     }

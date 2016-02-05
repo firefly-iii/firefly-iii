@@ -162,16 +162,17 @@ class BillRepository implements BillRepositoryInterface
             $ranges = $this->getRanges($bill, $start, $end);
 
             foreach ($ranges as $range) {
-                $paid   = $bill->transactionjournals()
-                               ->before($range['end'])
-                               ->after($range['start'])
-                               ->leftJoin(
-                                   'transactions', function (JoinClause $join) {
-                                   $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                               }
-                               )
-                               ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $amount = bcadd($amount, $paid->sum_amount);
+                $paid      = $bill->transactionjournals()
+                                  ->before($range['end'])
+                                  ->after($range['start'])
+                                  ->leftJoin(
+                                      'transactions', function (JoinClause $join) {
+                                      $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                  }
+                                  )
+                                  ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                $sumAmount = $paid->sum_amount ?? '0';
+                $amount    = bcadd($amount, $sumAmount);
             }
         }
 
@@ -196,16 +197,17 @@ class BillRepository implements BillRepositoryInterface
             $ranges   = $this->getRanges($bill, $start, $end);
             $paidBill = '0';
             foreach ($ranges as $range) {
-                $paid     = $bill->transactionjournals()
-                                 ->before($range['end'])
-                                 ->after($range['start'])
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-                                 }
-                                 )
-                                 ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $paidBill = bcadd($paid->sum_amount, $paidBill);
+                $paid      = $bill->transactionjournals()
+                                  ->before($range['end'])
+                                  ->after($range['start'])
+                                  ->leftJoin(
+                                      'transactions', function (JoinClause $join) {
+                                      $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+                                  }
+                                  )
+                                  ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                $sumAmount = $paid->sum_amount ?? '0';
+                $paidBill  = bcadd($sumAmount, $paidBill);
             }
             if ($paidBill == 0) {
                 $amount = bcadd($amount, $bill->expectedAmount);

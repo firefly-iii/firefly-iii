@@ -37,7 +37,7 @@ class ComponentRepository
                          ->whereIn('accounts.id', $ids)
                          ->after($start)
                          ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
-        $amount = $entry->journalAmount;
+        $amount = $entry->journalAmount ?? '0';
 
         return $amount;
     }

@@ -58,7 +58,7 @@ class Data
      */
     public function getCsvFileContent()
     {
-        return $this->csvFileContent;
+        return $this->csvFileContent ?? '';
     }
 
     /**
@@ -171,7 +171,7 @@ class Data
      */
     public function getReader()
     {
-        if (strlen($this->csvFileContent) === 0) {
+        if (!is_null($this->csvFileContent) && strlen($this->csvFileContent) === 0) {
             $this->loadCsvFile();
         }
 
