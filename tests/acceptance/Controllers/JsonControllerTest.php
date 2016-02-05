@@ -29,7 +29,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxBillsPaid
      */
-    public function testBoxBillsPaid()
+    public function testBoxBillsPaid($range)
     {
         $this->be($this->user());
         $this->call('GET', '/json/box/bills-paid');
@@ -39,7 +39,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxBillsUnpaid
      */
-    public function testBoxBillsUnpaid()
+    public function testBoxBillsUnpaid($range)
     {
         $this->be($this->user());
         $this->call('GET', '/json/box/bills-unpaid');
@@ -49,7 +49,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxIn
      */
-    public function testBoxIn()
+    public function testBoxIn($range)
     {
         $this->be($this->user());
         $this->call('GET', '/json/box/in');
@@ -59,7 +59,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::boxOut
      */
-    public function testBoxOut()
+    public function testBoxOut($range)
     {
         $this->be($this->user());
         $this->call('GET', '/json/box/out');
@@ -69,7 +69,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::categories
      */
-    public function testCategories()
+    public function testCategories($range)
     {
         $this->be($this->user());
         $this->call('GET', '/json/categories');
@@ -130,7 +130,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::transactionJournals
      */
-    public function testTransactionJournals()
+    public function testTransactionJournals($range)
     {
         $type       = factory(FireflyIII\Models\TransactionType::class)->make();
         $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');

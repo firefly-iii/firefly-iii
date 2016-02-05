@@ -17,7 +17,7 @@ class BudgetControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\BudgetController::amount
      * @covers FireflyIII\Http\Controllers\BudgetController::__construct
      */
-    public function testAmount()
+    public function testAmount($range)
     {
         $args = [
             'amount' => 1200,
@@ -74,7 +74,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::index
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/budgets');
@@ -84,7 +84,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::noBudget
      */
-    public function testNoBudget()
+    public function testNoBudget($range)
     {
         $this->be($this->user());
         $this->call('GET', '/budgets/list/noBudget');
@@ -94,7 +94,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
      */
-    public function testPostUpdateIncome()
+    public function testPostUpdateIncome($range)
     {
         $args = [
             'amount' => 1200,
@@ -108,7 +108,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::show
      */
-    public function testShow()
+    public function testShow($range)
     {
         $this->be($this->user());
         $this->call('GET', '/budgets/show/1');
@@ -155,7 +155,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::updateIncome
      */
-    public function testUpdateIncome()
+    public function testUpdateIncome($range)
     {
         $this->be($this->user());
         $this->call('GET', '/budgets/income');

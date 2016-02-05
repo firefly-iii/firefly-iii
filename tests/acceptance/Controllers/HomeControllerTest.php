@@ -43,7 +43,7 @@ class HomeControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\HomeController::index
      * @covers FireflyIII\Http\Controllers\Controller::__construct
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/');

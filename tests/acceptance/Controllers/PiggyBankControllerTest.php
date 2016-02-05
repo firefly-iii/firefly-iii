@@ -17,7 +17,7 @@ class PiggyBankControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\PiggyBankController::add
      * @covers FireflyIII\Http\Controllers\PiggyBankController::__construct
      */
-    public function testAdd()
+    public function testAdd($range)
     {
         $this->be($this->user());
         $this->call('GET', '/piggy-banks/add/1');
@@ -69,7 +69,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::index
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/piggy-banks');
@@ -134,7 +134,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\PiggyBankController::show
      */
-    public function testShow()
+    public function testShow($range)
     {
         $this->be($this->user());
         $this->call('GET', '/piggy-banks/show/1');

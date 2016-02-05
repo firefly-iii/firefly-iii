@@ -61,7 +61,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::index
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/transactions/deposit');
@@ -85,7 +85,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::show
      */
-    public function testShow()
+    public function testShow($range)
     {
         $this->be($this->user());
         $this->call('GET', '/transaction/show/1');

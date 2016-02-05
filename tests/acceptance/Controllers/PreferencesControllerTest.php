@@ -28,11 +28,11 @@ class PreferencesControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\PreferencesController::postIndex
      */
-    public function testPostIndex()
+    public function testPostIndex($range)
     {
         $args = [
             'frontPageAccounts' => [1],
-            'viewRange'         => '1M',
+            'viewRange'         => $range,
             'budgetMaximum'     => 100,
             'customFiscalYear'  => 1,
             'fiscalYearStart'   => '01-01',

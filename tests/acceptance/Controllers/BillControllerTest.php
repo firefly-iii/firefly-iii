@@ -60,7 +60,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BillController::index
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/bills');
@@ -70,7 +70,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BillController::rescan
      */
-    public function testRescan()
+    public function testRescan($range)
     {
         $this->be($this->user());
         $this->call('GET', '/bills/rescan/1');
@@ -81,7 +81,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\BillController::show
      */
-    public function testShow()
+    public function testShow($range)
     {
         $this->be($this->user());
         $this->call('GET', '/bills/show/1');

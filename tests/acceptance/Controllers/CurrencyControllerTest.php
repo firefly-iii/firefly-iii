@@ -74,7 +74,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\CurrencyController::index
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/currency');

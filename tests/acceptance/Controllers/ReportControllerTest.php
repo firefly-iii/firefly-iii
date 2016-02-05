@@ -21,7 +21,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\ReportController::index
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
         $this->call('GET', '/reports');
@@ -34,7 +34,7 @@ class ReportControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\ReportController::report
      * @covers FireflyIII\Http\Controllers\ReportController::defaultMonth
      */
-    public function testReportDefaultMonth()
+    public function testReportDefaultMonth($range)
     {
         // mock some stuff.
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
@@ -53,7 +53,7 @@ class ReportControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\ReportController::report
      * @covers FireflyIII\Http\Controllers\ReportController::defaultYear
      */
-    public function testReportDefaultYear()
+    public function testReportDefaultYear($range)
     {
         $this->be($this->user());
         $this->call('GET', '/reports/report/default/20160101/20161231/1,2');
@@ -64,7 +64,7 @@ class ReportControllerTest extends TestCase
      * @covers FireflyIII\Http\Controllers\ReportController::report
      * @covers FireflyIII\Http\Controllers\ReportController::defaultMultiYear
      */
-    public function testReportDefaultMultiYear()
+    public function testReportDefaultMultiYear($range)
     {
         $this->be($this->user());
         $this->call('GET', '/reports/report/default/20160101/20171231/1,2');
