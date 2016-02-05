@@ -82,6 +82,20 @@ class Navigation
 
         $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'year', 'yearly'];
 
+        // if the range is custom, the end of the period
+        // is another X days (x is the difference between start)
+        // and end added to $theCurrentEnd
+        if ($repeatFreq == 'custom') {
+            /** @var Carbon $tStart */
+            $tStart = session('start', Carbon::now()->startOfMonth());
+            /** @var Carbon $tEnd */
+            $tEnd       = session('end', Carbon::now()->endOfMonth());
+            $diffInDays = $tStart->diffInDays($tEnd);
+            $currentEnd->addDays($diffInDays);
+
+            return $currentEnd;
+        }
+
         if (!isset($functionMap[$repeatFreq])) {
             throw new FireflyException('Cannot do endOfPeriod for $repeat_freq "' . $repeatFreq . '"');
         }
@@ -152,6 +166,7 @@ class Navigation
         $formatMap = [
             '1D'      => '%e %B %Y',
             'daily'   => '%e %B %Y',
+            'custom'  => '%e %B %Y',
             '1W'      => 'Week %W, %Y',
             'week'    => 'Week %W, %Y',
             'weekly'  => 'Week %W, %Y',
