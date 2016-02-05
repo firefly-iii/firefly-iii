@@ -70,7 +70,7 @@ class Navigation
             '1W'   => 'addWeek', 'week' => 'addWeek', 'weekly' => 'addWeek',
             '1M'   => 'addMonth', 'month' => 'addMonth', 'monthly' => 'addMonth',
             '3M'   => 'addMonths', 'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
-            'year' => 'addYear', 'yearly' => 'addYear',
+            'year' => 'addYear', 'yearly' => 'addYear', '1Y' => 'addYear',
         ];
         $modifierMap = [
             'quarter'   => 3,
@@ -81,6 +81,20 @@ class Navigation
         ];
 
         $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'year', 'yearly'];
+
+        // if the range is custom, the end of the period
+        // is another X days (x is the difference between start)
+        // and end added to $theCurrentEnd
+        if ($repeatFreq == 'custom') {
+            /** @var Carbon $tStart */
+            $tStart = session('start', Carbon::now()->startOfMonth());
+            /** @var Carbon $tEnd */
+            $tEnd       = session('end', Carbon::now()->endOfMonth());
+            $diffInDays = $tStart->diffInDays($tEnd);
+            $currentEnd->addDays($diffInDays);
+
+            return $currentEnd;
+        }
 
         if (!isset($functionMap[$repeatFreq])) {
             throw new FireflyException('Cannot do endOfPeriod for $repeat_freq "' . $repeatFreq . '"');
@@ -152,6 +166,7 @@ class Navigation
         $formatMap = [
             '1D'      => '%e %B %Y',
             'daily'   => '%e %B %Y',
+            'custom'  => '%e %B %Y',
             '1W'      => 'Week %W, %Y',
             'week'    => 'Week %W, %Y',
             'weekly'  => 'Week %W, %Y',
@@ -163,6 +178,7 @@ class Navigation
             '1Y'      => '%Y',
             'year'    => '%Y',
             'yearly'  => '%Y',
+            '6M'      => '%B %Y',
 
         ];
 
@@ -198,6 +214,7 @@ class Navigation
             'quarterly' => 'firstOfQuarter',
             'year'      => 'startOfYear',
             'yearly'    => 'startOfYear',
+            '1Y'        => 'startOfYear',
         ];
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
@@ -214,6 +231,11 @@ class Navigation
 
             return $date;
         }
+        if ($repeatFreq === 'custom') {
+            return $date; // the date is already at the start.
+        }
+
+
         throw new FireflyException('Cannot do startOfPeriod for $repeat_freq "' . $repeatFreq . '"');
     }
 
@@ -239,12 +261,15 @@ class Navigation
             '1M'      => 'subMonths',
             'monthly' => 'subMonths',
             'year'    => 'subYears',
+            '1Y'      => 'subYears',
             'yearly'  => 'subYears',
         ];
         $modifierMap = [
             'quarter'   => 3,
+            '3M'        => 3,
             'quarterly' => 3,
             'half-year' => 6,
+            '6M'        => 6,
         ];
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
@@ -256,6 +281,18 @@ class Navigation
             $subtract = $subtract * $modifierMap[$repeatFreq];
             $date->subMonths($subtract);
 
+            return $date;
+        }
+        // a custom range requires the session start
+        // and session end to calculate the difference in days.
+        // this is then subtracted from $theDate (* $subtract).
+        if($repeatFreq === 'custom') {
+            /** @var Carbon $tStart */
+            $tStart = session('start', Carbon::now()->startOfMonth());
+            /** @var Carbon $tEnd */
+            $tEnd       = session('end', Carbon::now()->endOfMonth());
+            $diffInDays = $tStart->diffInDays($tEnd);
+            $date->subDays($diffInDays * $subtract);
             return $date;
         }
 
