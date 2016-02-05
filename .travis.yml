@@ -8,7 +8,9 @@ php:
 install:
   - composer selfupdate
   - rm composer.lock
-  - composer update
+  - composer update --no-scripts
+  - php artisan clear-compiled
+  - php artisan optimize
   - php artisan env
   - mv -v .env.testing .env
   - php artisan env
