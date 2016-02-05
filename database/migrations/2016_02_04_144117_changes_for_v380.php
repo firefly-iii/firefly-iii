@@ -15,7 +15,8 @@ class ChangesForV380 extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('export_jobs');
+
     }
 
     /**
