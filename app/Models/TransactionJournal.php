@@ -158,7 +158,7 @@ class TransactionJournal extends Model
         $transaction = $this->transactions->sortByDesc('amount')->first();
         $amount      = $transaction->amount;
         if ($this->isWithdrawal()) {
-            $amount = $amount * -1;
+            $amount = bcmul($amount, '-1');
         }
         $cache->store($amount);
 

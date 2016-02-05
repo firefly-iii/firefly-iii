@@ -39,6 +39,8 @@ use Log;
  */
 class TestData
 {
+
+
     /**
      * @param User $user
      */
@@ -99,7 +101,7 @@ class TestData
             [
                 'account_id'             => $fromAccount->id,
                 'transaction_journal_id' => $journal->id,
-                'amount'                 => -100,
+                'amount'                 => '-100',
 
             ]
         );
@@ -230,12 +232,152 @@ class TestData
     }
 
     /**
+     * @param User   $user
+     * @param Carbon $date
+     *
+     * @return static
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public static function createCar(User $user, Carbon $date)
+    {
+        // twice:
+        $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
+        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+        $toAccount   = TestData::findAccount($user, 'Shell');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
+        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
+        $amount      = strval(rand(4000, 5000) / 100);
+        $journal     = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => 'Bought gas',
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => bcmul($amount, '-1'),
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+        $journal->categories()->save($category);
+        $journal->budgets()->save($budget);
+
+        // and again!
+        $date   = new Carbon($date->format('Y-m') . '-20'); // paid on 20th
+        $amount = rand(4000, 5000) / 100;
+
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => 'Gas for car',
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount * -1,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+
+        // and again!
+
+        return $journal;
+    }
+
+    /**
      * @param User $user
      */
     public static function createCategories(User $user)
     {
         Category::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
         Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
+    }
+
+    /**
+     * @param Carbon $date
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public static function createDrinksAndOthers(User $user, Carbon $date)
+    {
+        $start = clone $date;
+        $end   = clone $date;
+        $today = new Carbon;
+        $start->startOfMonth();
+        $end->endOfMonth();
+        $current = clone $start;
+        while ($current < $end && $current < $today) {
+
+            // weekly drink:
+            $thisDate = clone $current;
+            $thisDate->addDay();
+            $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+            $toAccount   = TestData::findAccount($user, 'Cafe Central');
+            $category    = Category::firstOrCreateEncrypted(['name' => 'Drinks', 'user_id' => $user->id]);
+            $budget      = Budget::firstOrCreateEncrypted(['name' => 'Going out', 'user_id' => $user->id]);
+            $amount      = strval(rand(1500, 3600) / 100);
+            $journal     = TransactionJournal::create(
+                [
+                    'user_id'                 => $user->id,
+                    'transaction_type_id'     => 1,
+                    'transaction_currency_id' => 1,
+                    'description'             => 'Going out for drinks',
+                    'completed'               => 1,
+                    'date'                    => $thisDate,
+                ]
+            );
+            Transaction::create(
+                [
+                    'account_id'             => $fromAccount->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => bcmul($amount, '-1'),
+
+                ]
+            );
+            Transaction::create(
+                [
+                    'account_id'             => $toAccount->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => $amount,
+
+                ]
+            );
+            $journal->categories()->save($category);
+            $journal->budgets()->save($budget);
+
+            // shopping at some (online) shop:
+
+
+            $current->addWeek();
+        }
     }
 
     /**
@@ -263,52 +405,60 @@ class TestData
 
     /**
      * @param User   $user
-     * @param string $description
      * @param Carbon $date
-     * @param string $amount
-     *
-     * @return TransactionJournal
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public static function createRent(User $user, string $description, Carbon $date, string $amount): TransactionJournal
+    public static function createGroceries(User $user, Carbon $date)
     {
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $toAccount   = TestData::findAccount($user, 'Land lord');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'Rent', 'user_id' => $user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'bill_id'                 => 1,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount * -1,
+        $start = clone $date;
+        $end   = clone $date;
+        $today = new Carbon;
+        $start->startOfMonth();
+        $end->endOfMonth();
 
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
+        $fromAccount  = TestData::findAccount($user, 'TestData Checking Account');
+        $stores       = ['Albert Heijn', 'PLUS', 'Bakker'];
+        $descriptions = ['Groceries', 'Bought some groceries', 'Got groceries'];
+        $category     = Category::firstOrCreateEncrypted(['name' => 'Daily groceries', 'user_id' => $user->id]);
+        $budget       = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
 
-            ]
-        );
-        $journal->categories()->save($category);
-        $journal->budgets()->save($budget);
+        $current = clone $start;
+        while ($current < $end && $current < $today) {
+            // daily groceries:
+            $amount    = rand(1500, 2500) / 100;
+            $toAccount = TestData::findAccount($user, $stores[rand(0, count($stores) - 1)]);
 
-        return $journal;
+            $journal = TransactionJournal::create(
+                [
+                    'user_id'                 => $user->id,
+                    'transaction_type_id'     => 1,
+                    'transaction_currency_id' => 1,
+                    'description'             => $descriptions[rand(0, count($descriptions) - 1)],
+                    'completed'               => 1,
+                    'date'                    => $current,
+                ]
+            );
+            Transaction::create(
+                [
+                    'account_id'             => $fromAccount->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => $amount * -1,
 
+                ]
+            );
+            Transaction::create(
+                [
+                    'account_id'             => $toAccount->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => $amount,
+
+                ]
+            );
+            $journal->categories()->save($category);
+            $journal->budgets()->save($budget);
+            $current->addDay();
+        }
     }
-
 
     /**
      * @param User   $user
@@ -344,7 +494,7 @@ class TestData
             [
                 'account_id'             => $fromAccount->id,
                 'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount * -1,
+                'amount'                 => bcmul($amount, '-1'),
 
             ]
         );
@@ -501,6 +651,104 @@ class TestData
     }
 
     /**
+     * @param        $description
+     * @param Carbon $date
+     * @param        $amount
+     *
+     * @return TransactionJournal
+     */
+    public static function createPower(User $user, string $description, Carbon $date, string $amount)
+    {
+        $date        = new Carbon($date->format('Y-m') . '-06'); // paid on 10th
+        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+        $toAccount   = TestData::findAccount($user, 'Greenchoice');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $user->id]);
+        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
+        $journal     = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => $description,
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        if ($journal->getErrors()->count() > 0) {
+            echo $journal->getErrors()->first();
+        }
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => bcmul($amount, '-1'),
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+        $journal->categories()->save($category);
+        $journal->budgets()->save($budget);
+
+        return $journal;
+
+    }
+
+    /**
+     * @param User   $user
+     * @param string $description
+     * @param Carbon $date
+     * @param string $amount
+     *
+     * @return TransactionJournal
+     */
+    public static function createRent(User $user, string $description, Carbon $date, string $amount): TransactionJournal
+    {
+        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+        $toAccount   = TestData::findAccount($user, 'Land lord');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'Rent', 'user_id' => $user->id]);
+        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
+        $journal     = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'bill_id'                 => 1,
+                'description'             => $description,
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => bcmul($amount, '-1'),
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+        $journal->categories()->save($category);
+        $journal->budgets()->save($budget);
+
+        return $journal;
+
+    }
+
+    /**
      * @param User $user
      */
     public static function createRevenueAccounts(User $user)
@@ -600,6 +848,99 @@ class TestData
     }
 
     /**
+     * @param Carbon $date
+     *
+     * @return TransactionJournal
+     */
+    public static function createSavings(User $user, Carbon $date): TransactionJournal
+    {
+        $date        = new Carbon($date->format('Y-m') . '-24'); // paid on 24th.
+        $toAccount   = TestData::findAccount($user, 'TestData Savings');
+        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'Money management', 'user_id' => $user->id]);
+        // create journal:
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 3,
+                'transaction_currency_id' => 1,
+                'description'             => 'Save money',
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => -150,
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 150,
+
+            ]
+        );
+        $journal->categories()->save($category);
+
+        return $journal;
+
+    }
+
+    /**
+     * @param User   $user
+     * @param string $description
+     * @param Carbon $date
+     * @param string $amount
+     *
+     * @return static
+     */
+    public static function createTV(User $user, string $description, Carbon $date, string $amount)
+    {
+        $date        = new Carbon($date->format('Y-m') . '-15'); // paid on 10th
+        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+        $toAccount   = TestData::findAccount($user, 'XS4All');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $user->id]);
+        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
+        $journal     = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => $description,
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => bcmul($amount, '-1'),
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+        $journal->categories()->save($category);
+        $journal->budgets()->save($budget);
+
+        return $journal;
+
+    }
+
+    /**
      * @param User        $user
      * @param Carbon|null $date
      */
@@ -636,6 +977,54 @@ class TestData
         $user->attachRole($admin);
 
         return $user;
+    }
+
+    /**
+     * @param User   $user
+     * @param string $description
+     * @param Carbon $date
+     * @param string $amount
+     *
+     * @return static
+     */
+    public static function createWater(User $user, string $description, Carbon $date, string $amount): TransactionJournal
+    {
+        $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
+        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
+        $toAccount   = TestData::findAccount($user, 'Vitens');
+        $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $user->id]);
+        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
+        $journal     = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1,
+                'transaction_currency_id' => 1,
+                'description'             => $description,
+                'completed'               => 1,
+                'date'                    => $date,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $fromAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => bcmul($amount, '-1'),
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $toAccount->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
+
+            ]
+        );
+        $journal->categories()->save($category);
+        $journal->budgets()->save($budget);
+
+        return $journal;
+
     }
 
     /**

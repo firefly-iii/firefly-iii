@@ -133,7 +133,7 @@ class Steam
         $result = [];
         foreach ($balances as $entry) {
             $accountId          = intval($entry->account_id);
-            $balance            = round($entry->aggregate, 2);
+            $balance            = $entry->aggregate;
             $result[$accountId] = $balance;
         }
 

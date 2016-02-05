@@ -64,25 +64,24 @@ class TestDataSeeder extends Seeder
 
             // pay bills:
             TestData::createRent($user, 'Rent for ' . $month, $current, '800');
-            //            $this->createWater('Water bill for ' . $month, $current, 15);
-            //            $this->createTV('TV bill for ' . $month, $current, 60);
-            //            $this->createPower('Power bill for ' . $month, $current, 120);
-
+            TestData::createWater($user, 'Water bill for ' . $month, $current, '15');
+            TestData::createTV($user, 'TV bill for ' . $month, $current, '60');
+            TestData::createPower($user, 'Power bill for ' . $month, $current, '120');
 
             // pay daily groceries:
-            //            $this->createGroceries($current);
+            TestData::createGroceries($user, $current);
 
             // create tag (each type of tag, for date):
-            //            TestData::createTags($this->user, $current);
+            TestData::createTags($user, $current);
 
             // go out for drinks:
-            //            $this->createDrinksAndOthers($current);
+            TestData::createDrinksAndOthers($user, $current);
 
             // save money every month:
-            //            $this->createSavings($current);
+            TestData::createSavings($user, $current);
 
             // buy gas for the car every month:
-            //            $this->createCar($current);
+            TestData::createCar($user, $current);
 
             // create budget limits.
             TestData::createBudgetLimit($user, $current, 'Groceries', '400');
