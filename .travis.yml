@@ -7,7 +7,7 @@ php:
   - 7
 
 install:
-  - composer install
+  - composer install --no-dev
   - composer update
   - php artisan env
   - mv -v .env.testing .env
