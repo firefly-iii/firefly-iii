@@ -70,6 +70,12 @@ return [
     'size'                        => 'Size',
     'trigger'                     => 'Trigger',
     'stop_processing'             => 'Stop processing',
+    'start_date'                  => 'Start of export range',
+    'end_date'                    => 'End of export range',
+    'export_format'               => 'File format',
+    'include_attachments'         => 'Include uploaded attachments',
+    'include_config'              => 'Include configuration file',
+    'include_old_uploads'         => 'Include imported data',
 
     'csv_comma'     => 'A comma (,)',
     'csv_semicolon' => 'A semicolon (;)',

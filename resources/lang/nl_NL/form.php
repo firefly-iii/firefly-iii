@@ -70,6 +70,12 @@ return [
     'size'                        => 'Grootte',
     'trigger'                     => 'Trigger',
     'stop_processing'             => 'Stop met verwerken',
+    'start_date'                  => 'Start van exportbereik',
+    'end_date'                    => 'Einde van exportbereik',
+    'export_format'               => 'Bestandsformaat',
+    'include_attachments'         => 'Sla ook geüploade bijlagen op',
+    'include_config'              => 'Sla ook een configuratiebestand ook',
+    'include_old_uploads'         => 'Sla ook geïmporteerde bestanden op',
 
     'csv_comma'     => 'Een komma (,)',
     'csv_semicolon' => 'Een puntkomma (;)',

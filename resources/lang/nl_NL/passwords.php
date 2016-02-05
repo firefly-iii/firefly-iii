@@ -24,6 +24,6 @@ return [
     "token"    => "Ongeldig token! Sorry",
     "sent"     => "Je krijgt een mailtje met een linkje om je wachtwoord te herstellen!",
     "reset"    => "Je wachtwoord is hersteld!",
-    'blocked'  => 'Leuk geprobeerd wel.',
+    'blocked'  => 'Leuk geprobeerd wel.'
 
 ];
