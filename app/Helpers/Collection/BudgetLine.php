@@ -31,7 +31,7 @@ class BudgetLine
     /**
      * @return BudgetModel
      */
-    public function getBudget()
+    public function getBudget(): BudgetModel
     {
         return $this->budget;
     }
@@ -47,7 +47,7 @@ class BudgetLine
     /**
      * @return string
      */
-    public function getBudgeted()
+    public function getBudgeted(): string
     {
         return $this->budgeted;
     }
@@ -63,7 +63,7 @@ class BudgetLine
     /**
      * @return string
      */
-    public function getLeft()
+    public function getLeft(): string
     {
         return $this->left;
     }
@@ -79,7 +79,7 @@ class BudgetLine
     /**
      * @return string
      */
-    public function getOverspent()
+    public function getOverspent(): string
     {
         return $this->overspent;
     }
@@ -95,7 +95,7 @@ class BudgetLine
     /**
      * @return LimitRepetition
      */
-    public function getRepetition()
+    public function getRepetition(): LimitRepetition
     {
         return $this->repetition;
     }
@@ -111,7 +111,7 @@ class BudgetLine
     /**
      * @return string
      */
-    public function getSpent()
+    public function getSpent(): string
     {
         return $this->spent;
     }

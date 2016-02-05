@@ -32,7 +32,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      *
      * @return BudgetCollection
      */
-    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection
     {
         $object = new BudgetCollection;
         /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
@@ -77,7 +77,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 // 200 en -200 is 0, vergeleken met 0 === 0
                 // 200 en -300 is -100, vergeleken met 0 === -1
 
-                $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : 0;
+                $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
                 $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
                 $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
 
