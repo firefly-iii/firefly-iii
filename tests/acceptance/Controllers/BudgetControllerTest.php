@@ -14,9 +14,11 @@
 class BudgetControllerTest extends TestCase
 {
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::amount
-     * @covers FireflyIII\Http\Controllers\BudgetController::__construct
+     * @covers       FireflyIII\Http\Controllers\BudgetController::amount
+     * @covers       FireflyIII\Http\Controllers\BudgetController::__construct
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testAmount($range)
     {
@@ -74,8 +76,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::index
+     * @covers       FireflyIII\Http\Controllers\BudgetController::index
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -86,8 +90,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @covers       FireflyIII\Http\Controllers\BudgetController::noBudget
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testNoBudget($range)
     {
@@ -98,8 +104,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
+     * @covers       FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testPostUpdateIncome($range)
     {
@@ -114,8 +122,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::show
+     * @covers       FireflyIII\Http\Controllers\BudgetController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShow($range)
     {
@@ -163,8 +173,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::updateIncome
+     * @covers       FireflyIII\Http\Controllers\BudgetController::updateIncome
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testUpdateIncome($range)
     {

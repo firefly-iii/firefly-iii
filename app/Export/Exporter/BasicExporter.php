@@ -28,6 +28,8 @@ class BasicExporter
 
     /**
      * BasicExporter constructor.
+     *
+     * @param ExportJob $job
      */
     public function __construct(ExportJob $job)
     {

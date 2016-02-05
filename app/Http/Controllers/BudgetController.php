@@ -44,7 +44,8 @@ class BudgetController extends Controller
      */
     public function amount(BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $amount          = intval(Input::get('amount'));
+        $amount = intval(Input::get('amount'));
+        /** @var Carbon $date */
         $date            = session('start', Carbon::now()->startOfMonth());
         $limitRepetition = $repository->updateLimitAmount($budget, $date, $amount);
         if ($amount == 0) {
@@ -140,12 +141,14 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository, ARI $accountRepository)
     {
-        $budgets           = $repository->getActiveBudgets();
-        $inactive          = $repository->getInactiveBudgets();
-        $spent             = '0';
-        $budgeted          = '0';
-        $range             = Preferences::get('viewRange', '1M')->data;
-        $start             = Navigation::startOfPeriod(session('start', new Carbon), $range);
+        $budgets  = $repository->getActiveBudgets();
+        $inactive = $repository->getInactiveBudgets();
+        $spent    = '0';
+        $budgeted = '0';
+        $range    = Preferences::get('viewRange', '1M')->data;
+        /** @var Carbon $date */
+        $date              = session('start', new Carbon);
+        $start             = Navigation::startOfPeriod($date, $range);
         $end               = Navigation::endOfPeriod($start, $range);
         $key               = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $budgetIncomeTotal = Preferences::get($key, 1000)->data;
@@ -186,8 +189,10 @@ class BudgetController extends Controller
      */
     public function noBudget(BudgetRepositoryInterface $repository)
     {
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = Navigation::startOfPeriod(session('start', new Carbon), $range);
+        $range = Preferences::get('viewRange', '1M')->data;
+        /** @var Carbon $date */
+        $date     = session('start', new Carbon);
+        $start    = Navigation::startOfPeriod($date, $range);
         $end      = Navigation::endOfPeriod($start, $range);
         $list     = $repository->getWithoutBudget($start, $end);
         $subTitle = trans(
@@ -204,7 +209,9 @@ class BudgetController extends Controller
     public function postUpdateIncome()
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $start = Navigation::startOfPeriod(session('start', new Carbon), $range);
+        /** @var Carbon $date */
+        $date  = session('start', new Carbon);
+        $start = Navigation::startOfPeriod($date, $range);
         $end   = Navigation::endOfPeriod($start, $range);
         $key   = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
 
@@ -322,8 +329,11 @@ class BudgetController extends Controller
      */
     public function updateIncome()
     {
-        $range  = Preferences::get('viewRange', '1M')->data;
-        $start  = Navigation::startOfPeriod(session('start', new Carbon), $range);
+        $range = Preferences::get('viewRange', '1M')->data;
+
+        /** @var Carbon $date */
+        $date   = session('start', new Carbon);
+        $start  = Navigation::startOfPeriod($date, $range);
         $end    = Navigation::endOfPeriod($start, $range);
         $key    = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $amount = Preferences::get($key, 1000);

@@ -29,6 +29,8 @@ class BasicCollector
 
     /**
      * BasicCollector constructor.
+     *
+     * @param ExportJob $job
      */
     public function __construct(ExportJob $job)
     {

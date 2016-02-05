@@ -253,10 +253,10 @@ interface BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param Carbon $date
-     * @param        $amount
+     * @param int       $amount
      *
      * @return mixed
      */
-    public function updateLimitAmount(Budget $budget, Carbon $date, $amount);
+    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount);
 
 }

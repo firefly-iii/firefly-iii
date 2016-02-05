@@ -48,6 +48,7 @@ class PiggyBankController extends Controller
     public function add(ARI $repository, PiggyBank $piggyBank)
     {
         bcscale(2);
+        /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
@@ -229,6 +230,7 @@ class PiggyBankController extends Controller
     {
         bcscale(2);
         $amount        = round(Input::get('amount'), 2);
+        /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;

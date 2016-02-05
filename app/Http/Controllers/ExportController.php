@@ -66,6 +66,8 @@ class ExportController extends Controller
     }
 
     /**
+     * @param ExportJob $job
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getStatus(ExportJob $job)
@@ -74,7 +76,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param ARI  $repository
+     *
+     * @param EJRI $jobs
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -100,7 +104,10 @@ class ExportController extends Controller
      * @param ExportFormRequest $request
      * @param ARI               $repository
      *
+     * @param EJRI              $jobs
+     *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function postIndex(ExportFormRequest $request, ARI $repository, EJRI $jobs)
     {

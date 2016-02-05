@@ -90,7 +90,9 @@ class HomeController extends Controller
         $mainTitleIcon     = 'fa-fire';
         $transactions      = [];
         $frontPage         = Preferences::get('frontPageAccounts', []);
+        /** @var Carbon $start */
         $start             = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
         $accounts          = $repository->getFrontpageAccounts($frontPage);
@@ -105,11 +107,11 @@ class HomeController extends Controller
 
         $sum = $repository->sumOfEverything();
 
-        if ($sum != 0) {
+        if (bccomp($sum, '0') !== 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
                          . ' withdrawal, deposit or transfer was not stored properly. '
-                         . 'Please check your accounts and transactions for errors.'
+                         . 'Please check your accounts and transactions for errors (' . $sum . ').'
             );
         }
 

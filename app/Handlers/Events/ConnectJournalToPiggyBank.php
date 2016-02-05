@@ -58,7 +58,7 @@ class ConnectJournalToPiggyBank
         $amount = $journal->amount_positive;
         // if piggy account matches source account, the amount is positive
         if ($piggyBank->account_id == $journal->source_account->id) {
-            $amount = bcmul($amount,'-1');
+            $amount = bcmul($amount, '-1');
         }
 
 

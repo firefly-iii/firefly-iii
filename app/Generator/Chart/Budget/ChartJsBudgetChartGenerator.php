@@ -85,8 +85,8 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
         foreach ($filtered as $entry) {
             $data['labels'][] = $entry[0];
             $left[]           = round($entry[1], 2);
-            $spent[]          = round(bcmul($entry[2],'-1'), 2); // spent is coming in negative, must be positive
-            $overspent[]      = round(bcmul($entry[3],'-1'), 2); // same
+            $spent[]          = round(bcmul($entry[2], '-1'), 2); // spent is coming in negative, must be positive
+            $overspent[]      = round(bcmul($entry[3], '-1'), 2); // same
         }
 
         $data['datasets'][] = [

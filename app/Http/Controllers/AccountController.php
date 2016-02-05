@@ -154,7 +154,9 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
+        /** @var Carbon $start */
         $start        = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end          = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 

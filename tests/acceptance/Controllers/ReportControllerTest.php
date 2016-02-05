@@ -19,8 +19,10 @@ class ReportControllerTest extends TestCase
 {
 
     /**
-     * @covers FireflyIII\Http\Controllers\ReportController::index
+     * @covers       FireflyIII\Http\Controllers\ReportController::index
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -32,10 +34,12 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\ReportController::__construct
-     * @covers FireflyIII\Http\Controllers\ReportController::report
-     * @covers FireflyIII\Http\Controllers\ReportController::defaultMonth
+     * @covers       FireflyIII\Http\Controllers\ReportController::__construct
+     * @covers       FireflyIII\Http\Controllers\ReportController::report
+     * @covers       FireflyIII\Http\Controllers\ReportController::defaultMonth
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testReportDefaultMonth($range)
     {
@@ -54,9 +58,11 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\ReportController::report
-     * @covers FireflyIII\Http\Controllers\ReportController::defaultYear
+     * @covers       FireflyIII\Http\Controllers\ReportController::report
+     * @covers       FireflyIII\Http\Controllers\ReportController::defaultYear
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testReportDefaultYear($range)
     {
@@ -67,9 +73,11 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\ReportController::report
-     * @covers FireflyIII\Http\Controllers\ReportController::defaultMultiYear
+     * @covers       FireflyIII\Http\Controllers\ReportController::report
+     * @covers       FireflyIII\Http\Controllers\ReportController::defaultMultiYear
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testReportDefaultMultiYear($range)
     {

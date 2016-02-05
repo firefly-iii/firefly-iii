@@ -111,9 +111,9 @@ class Amount
     }
 
     /**
-     * @param string $symbol
-     * @param float  $amount
-     * @param bool   $coloured
+     * @param string       $symbol
+     * @param float|string $amount
+     * @param bool         $coloured
      *
      * @return string
      */

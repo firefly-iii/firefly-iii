@@ -22,6 +22,11 @@ class ConfigurationFile
     /** @var  ExportJob */
     private $job;
 
+    /**
+     * ConfigurationFile constructor.
+     *
+     * @param ExportJob $job
+     */
     public function __construct(ExportJob $job)
     {
         $this->job = $job;

@@ -59,8 +59,10 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\TransactionController::index
+     * @covers       FireflyIII\Http\Controllers\TransactionController::index
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -85,8 +87,10 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\TransactionController::show
+     * @covers       FireflyIII\Http\Controllers\TransactionController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShow($range)
     {

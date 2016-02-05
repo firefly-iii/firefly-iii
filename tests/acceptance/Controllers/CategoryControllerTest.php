@@ -60,9 +60,10 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\CategoryController::index
+     * @covers       FireflyIII\Http\Controllers\CategoryController::index
      * @dataProvider dateRangeProvider
      *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -73,8 +74,10 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @covers       FireflyIII\Http\Controllers\CategoryController::noCategory
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testNoCategory($range)
     {
@@ -85,9 +88,11 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\CategoryController::show
-     * @covers FireflyIII\Http\Controllers\Controller::getSumOfRange
+     * @covers       FireflyIII\Http\Controllers\CategoryController::show
+     * @covers       FireflyIII\Http\Controllers\Controller::getSumOfRange
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShow($range)
     {
@@ -99,8 +104,10 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\CategoryController::showWithDate
+     * @covers       FireflyIII\Http\Controllers\CategoryController::showWithDate
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShowWithDate($range)
     {

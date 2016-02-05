@@ -17,6 +17,8 @@ class PiggyBankControllerTest extends TestCase
      * @covers       FireflyIII\Http\Controllers\PiggyBankController::add
      * @covers       FireflyIII\Http\Controllers\PiggyBankController::__construct
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testAdd($range)
     {
@@ -71,6 +73,8 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers       FireflyIII\Http\Controllers\PiggyBankController::index
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -138,6 +142,8 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers       FireflyIII\Http\Controllers\PiggyBankController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShow($range)
     {

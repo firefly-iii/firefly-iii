@@ -133,7 +133,9 @@ class CategoryController extends Controller
      */
     public function noCategory(CRI $repository)
     {
-        $start    = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end      = session('end', Carbon::now()->startOfMonth());
         $list     = $repository->listNoCategory($start, $end);
         $subTitle = trans(

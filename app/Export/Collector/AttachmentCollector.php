@@ -33,6 +33,9 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         parent::__construct($job);
     }
 
+    /**
+     *
+     */
     public function run()
     {
         // grab all the users attachments:

@@ -323,6 +323,7 @@ class TestData
     }
 
     /**
+     * @param User   $user
      * @param Carbon $date
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
@@ -651,9 +652,10 @@ class TestData
     }
 
     /**
-     * @param        $description
+     * @param User   $user
+     * @param string $description
      * @param Carbon $date
-     * @param        $amount
+     * @param string $amount
      *
      * @return TransactionJournal
      */
@@ -848,6 +850,7 @@ class TestData
     }
 
     /**
+     * @param User   $user
      * @param Carbon $date
      *
      * @return TransactionJournal
@@ -985,7 +988,7 @@ class TestData
      * @param Carbon $date
      * @param string $amount
      *
-     * @return static
+     * @return TransactionJournal|static
      */
     public static function createWater(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {

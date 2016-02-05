@@ -184,7 +184,7 @@ class Steam
 
         if (!(strpos($string, 'm') === false)) {
             // has a M in it, remove the M and multiply by 1048576.
-            $bytes = bcmul(rtrim($string, 'm'),'1048576');
+            $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
             return intval($bytes);
         }

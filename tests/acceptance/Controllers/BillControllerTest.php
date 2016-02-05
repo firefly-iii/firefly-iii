@@ -58,8 +58,10 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BillController::index
+     * @covers       FireflyIII\Http\Controllers\BillController::index
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -70,8 +72,10 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BillController::rescan
+     * @covers       FireflyIII\Http\Controllers\BillController::rescan
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testRescan($range)
     {
@@ -83,8 +87,10 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BillController::show
+     * @covers       FireflyIII\Http\Controllers\BillController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShow($range)
     {

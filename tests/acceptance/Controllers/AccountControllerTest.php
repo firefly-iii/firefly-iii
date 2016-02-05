@@ -16,6 +16,8 @@ class AccountControllerTest extends TestCase
      * @covers       FireflyIII\Http\Controllers\AccountController::create
      * @covers       FireflyIII\Http\Controllers\AccountController::__construct
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testCreate($range)
     {
@@ -58,9 +60,11 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::index
-     * @covers FireflyIII\Http\Controllers\AccountController::isInArray
+     * @covers       FireflyIII\Http\Controllers\AccountController::index
+     * @covers       FireflyIII\Http\Controllers\AccountController::isInArray
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {
@@ -71,8 +75,10 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::show
+     * @covers       FireflyIII\Http\Controllers\AccountController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testShow($range)
     {

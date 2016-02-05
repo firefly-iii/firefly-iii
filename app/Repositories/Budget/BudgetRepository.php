@@ -696,11 +696,11 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * @param Budget $budget
      * @param Carbon $date
-     * @param        $amount
+     * @param int    $amount
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $date, $amount)
+    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount)
     {
         // there should be a budget limit for this startdate:
         /** @var BudgetLimit $limit */

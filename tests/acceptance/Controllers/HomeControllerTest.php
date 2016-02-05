@@ -40,9 +40,11 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\HomeController::index
-     * @covers FireflyIII\Http\Controllers\Controller::__construct
+     * @covers       FireflyIII\Http\Controllers\HomeController::index
+     * @covers       FireflyIII\Http\Controllers\Controller::__construct
      * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
     public function testIndex($range)
     {

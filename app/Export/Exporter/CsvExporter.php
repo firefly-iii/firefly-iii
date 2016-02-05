@@ -30,6 +30,8 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
     /**
      * CsvExporter constructor.
+     *
+     * @param ExportJob $job
      */
     public function __construct(ExportJob $job)
     {
