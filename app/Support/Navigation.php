@@ -70,7 +70,7 @@ class Navigation
             '1W'   => 'addWeek', 'week' => 'addWeek', 'weekly' => 'addWeek',
             '1M'   => 'addMonth', 'month' => 'addMonth', 'monthly' => 'addMonth',
             '3M'   => 'addMonths', 'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
-            'year' => 'addYear', 'yearly' => 'addYear',
+            'year' => 'addYear', 'yearly' => 'addYear', '1Y' => 'addYear',
         ];
         $modifierMap = [
             'quarter'   => 3,
@@ -163,6 +163,7 @@ class Navigation
             '1Y'      => '%Y',
             'year'    => '%Y',
             'yearly'  => '%Y',
+            '6M'      => '%B %Y',
 
         ];
 
@@ -198,6 +199,7 @@ class Navigation
             'quarterly' => 'firstOfQuarter',
             'year'      => 'startOfYear',
             'yearly'    => 'startOfYear',
+            '1Y'        => 'startOfYear',
         ];
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
@@ -214,6 +216,11 @@ class Navigation
 
             return $date;
         }
+        if ($repeatFreq === 'custom') {
+            return $theDate; // the date is already at the start.
+        }
+
+
         throw new FireflyException('Cannot do startOfPeriod for $repeat_freq "' . $repeatFreq . '"');
     }
 
@@ -239,12 +246,15 @@ class Navigation
             '1M'      => 'subMonths',
             'monthly' => 'subMonths',
             'year'    => 'subYears',
+            '1Y'      => 'subYears',
             'yearly'  => 'subYears',
         ];
         $modifierMap = [
             'quarter'   => 3,
+            '3M'        => 3,
             'quarterly' => 3,
             'half-year' => 6,
+            '6M'        => 6,
         ];
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
