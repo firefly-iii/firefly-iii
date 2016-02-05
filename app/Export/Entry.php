@@ -105,12 +105,14 @@ class Entry
         $sourceAccount = $journal->source_account;
         $entry->setFromAccountId($sourceAccount->id);
         $entry->setFromAccountName($sourceAccount->name);
+        $entry->setFromAccountIban($sourceAccount->iban);
         $entry->setFromAccountType($sourceAccount->accountType->type);
 
         /** @var Account $destination */
         $destination = $journal->destination_account;
         $entry->setToAccountId($destination->id);
         $entry->setToAccountName($destination->name);
+        $entry->setToAccountIban($destination->iban);
         $entry->setToAccountType($destination->accountType->type);
 
         return $entry;
