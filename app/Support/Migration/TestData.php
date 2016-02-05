@@ -97,22 +97,7 @@ class TestData
                 'date'                    => $start->format('Y-m-d'),
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => '-100',
-
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
-
-            ]
-        );
+        self::createTransactions($journal, $fromAccount, $toAccount, '100');
 
         // and now attachments
         $encrypted = Crypt::encrypt('I are secret');
@@ -257,22 +242,8 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => bcmul($amount, '-1'),
+        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
 
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
         $journal->categories()->save($category);
         $journal->budgets()->save($budget);
 
@@ -291,22 +262,7 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount * -1,
-
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
+        self::createTransactions($journal, $fromAccount, $toAccount, '100');
 
         // and again!
 
@@ -355,22 +311,8 @@ class TestData
                     'date'                    => $thisDate,
                 ]
             );
-            Transaction::create(
-                [
-                    'account_id'             => $fromAccount->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => bcmul($amount, '-1'),
+            self::createTransactions($journal, $fromAccount, $toAccount, $amount);
 
-                ]
-            );
-            Transaction::create(
-                [
-                    'account_id'             => $toAccount->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => $amount,
-
-                ]
-            );
             $journal->categories()->save($category);
             $journal->budgets()->save($budget);
 
@@ -411,6 +353,7 @@ class TestData
      */
     public static function createGroceries(User $user, Carbon $date)
     {
+        bcscale(2);
         $start = clone $date;
         $end   = clone $date;
         $today = new Carbon;
@@ -426,7 +369,6 @@ class TestData
         $current = clone $start;
         while ($current < $end && $current < $today) {
             // daily groceries:
-            $amount    = rand(1500, 2500) / 100;
             $toAccount = TestData::findAccount($user, $stores[rand(0, count($stores) - 1)]);
 
             $journal = TransactionJournal::create(
@@ -439,24 +381,15 @@ class TestData
                     'date'                    => $current,
                 ]
             );
-            Transaction::create(
-                [
-                    'account_id'             => $fromAccount->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => $amount * -1,
+            if ($journal->id) {
+                $number = (string)round((rand(1500, 2500) / 100), 2);
+                $amount = $number;//'10';//strval((rand(1500, 2500) / 100));
+                self::createTransactions($journal, $fromAccount, $toAccount, $amount);
+                $journal->categories()->save($category);
+                $journal->budgets()->save($budget);
+            }
 
-                ]
-            );
-            Transaction::create(
-                [
-                    'account_id'             => $toAccount->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => $amount,
 
-                ]
-            );
-            $journal->categories()->save($category);
-            $journal->budgets()->save($budget);
             $current->addDay();
         }
     }
@@ -491,22 +424,7 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => bcmul($amount, '-1'),
-
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
+        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
         $journal->categories()->save($category);
 
         return $journal;
@@ -676,25 +594,7 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        if ($journal->getErrors()->count() > 0) {
-            echo $journal->getErrors()->first();
-        }
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => bcmul($amount, '-1'),
-
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
+        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
         $journal->categories()->save($category);
         $journal->budgets()->save($budget);
 
@@ -727,22 +627,8 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => bcmul($amount, '-1'),
+        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
 
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
         $journal->categories()->save($category);
         $journal->budgets()->save($budget);
 
@@ -873,22 +759,7 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -150,
-
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 150,
-
-            ]
-        );
+        self::createTransactions($journal, $fromAccount, $toAccount, '150');
         $journal->categories()->save($category);
 
         return $journal;
@@ -920,22 +791,8 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => bcmul($amount, '-1'),
+        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
 
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
         $journal->categories()->save($category);
         $journal->budgets()->save($budget);
 
@@ -961,6 +818,34 @@ class TestData
                 'tagMode' => 'nothing',
                 'date'    => is_null($date) ? null : $date->format('Y-m-d'),
 
+
+            ]
+        );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Account            $from
+     * @param Account            $to
+     * @param string             $amount
+     */
+    public static function createTransactions(TransactionJournal $journal, Account $from, Account $to, string $amount)
+    {
+        Log::debug('---- Transaction From: ' . bcmul($amount, '-1'));
+        Log::debug('---- Transaction To  : ' . $amount);
+        Transaction::create(
+            [
+                'account_id'             => $from->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => bcmul($amount, '-1'),
+
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $to->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => $amount,
 
             ]
         );
@@ -1007,22 +892,7 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => bcmul($amount, '-1'),
-
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount,
-
-            ]
-        );
+        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
         $journal->categories()->save($category);
         $journal->budgets()->save($budget);
 
@@ -1041,11 +911,11 @@ class TestData
         /** @var Account $account */
         foreach ($user->accounts()->get() as $account) {
             if ($account->name == $name) {
-                Log::debug('Trying to find "' . $name . '" in "' . $account->name . '", and found it!');
+                //Log::debug('Trying to find "' . $name . '" in "' . $account->name . '", and found it!');
 
                 return $account;
             }
-            Log::debug('Trying to find "' . $name . '" in "' . $account->name . '".');
+            //Log::debug('Trying to find "' . $name . '" in "' . $account->name . '".');
         }
 
         return null;
@@ -1100,24 +970,7 @@ class TestData
                 'date'                    => $date->format('Y-m-d'),
             ]
         );
-
-        // transactions
-        Transaction::create(
-            [
-                'account_id'             => $opposing->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -10000,
-            ]
-        );
-
-        Transaction::create(
-            [
-                'account_id'             => $savings->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 10000,
-            ]
-        );
-
+        self::createTransactions($journal, $opposing, $savings, '10000');
 
     }
 
