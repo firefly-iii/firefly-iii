@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Account;
 
 use Carbon\Carbon;

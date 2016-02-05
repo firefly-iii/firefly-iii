@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * JournalCollector.php
  * Copyright (C) 2016 Sander Dorigo

@@ -1,4 +1,6 @@
-<?php namespace FireflyIII\Handlers\Events;
+<?php
+declare(strict_types = 1);
+namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Models\PiggyBankEvent;

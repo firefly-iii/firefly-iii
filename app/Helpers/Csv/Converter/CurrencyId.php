@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use FireflyIII\Models\TransactionCurrency;

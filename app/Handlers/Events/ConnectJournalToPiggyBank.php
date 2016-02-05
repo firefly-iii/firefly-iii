@@ -1,4 +1,7 @@
-<?php namespace FireflyIII\Handlers\Events;
+<?php
+declare(strict_types = 1);
+
+namespace FireflyIII\Handlers\Events;
 
 use Auth;
 use FireflyIII\Events\TransactionJournalStored;

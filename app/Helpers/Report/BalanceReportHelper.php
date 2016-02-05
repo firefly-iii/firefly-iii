@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * BalanceReportHelper.php
  * Copyright (C) 2016 Sander Dorigo

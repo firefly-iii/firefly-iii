@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbGenerator;
 use FireflyIII\Models\Account;
