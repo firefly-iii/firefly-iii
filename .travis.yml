@@ -7,7 +7,7 @@ php:
   - 7
 
 install:
-  - rm composer.lock
+  - composer install
   - composer update
   - php artisan env
   - mv -v .env.testing .env
