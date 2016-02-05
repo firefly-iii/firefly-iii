@@ -78,6 +78,7 @@ class CurrencyControllerTest extends TestCase
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/currency');
         $this->assertResponseStatus(200);
     }

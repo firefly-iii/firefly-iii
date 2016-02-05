@@ -64,6 +64,7 @@ class BillControllerTest extends TestCase
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills');
         $this->assertResponseStatus(200);
     }
@@ -75,6 +76,7 @@ class BillControllerTest extends TestCase
     public function testRescan($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills/rescan/1');
         $this->assertSessionHas('success');
         $this->assertResponseStatus(302);
@@ -87,6 +89,7 @@ class BillControllerTest extends TestCase
     public function testShow($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills/show/1');
         $this->assertResponseStatus(200);
     }

@@ -65,6 +65,7 @@ class TransactionControllerTest extends TestCase
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/transactions/deposit');
         $this->assertResponseStatus(200);
     }
@@ -90,6 +91,7 @@ class TransactionControllerTest extends TestCase
     public function testShow($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/transaction/show/1');
         $this->assertResponseStatus(200);
     }

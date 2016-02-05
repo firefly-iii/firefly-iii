@@ -33,6 +33,7 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsPaid($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/bills-paid');
         $this->assertResponseStatus(200);
     }
@@ -44,6 +45,7 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsUnpaid($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/bills-unpaid');
         $this->assertResponseStatus(200);
     }
@@ -55,6 +57,7 @@ class JsonControllerTest extends TestCase
     public function testBoxIn($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/in');
         $this->assertResponseStatus(200);
     }
@@ -66,6 +69,7 @@ class JsonControllerTest extends TestCase
     public function testBoxOut($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/out');
         $this->assertResponseStatus(200);
     }
@@ -77,6 +81,7 @@ class JsonControllerTest extends TestCase
     public function testCategories($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/categories');
         $this->assertResponseStatus(200);
     }
@@ -145,6 +150,7 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('getJournalsOfType')->with($type)->once()->andReturn(new Collection);
 
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/transaction-journals/deposit');
         $this->assertResponseStatus(200);
     }

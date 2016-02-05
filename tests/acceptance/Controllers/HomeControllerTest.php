@@ -47,6 +47,7 @@ class HomeControllerTest extends TestCase
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/');
         $this->assertResponseStatus(200);
     }

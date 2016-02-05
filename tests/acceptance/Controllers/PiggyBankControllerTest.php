@@ -14,13 +14,14 @@
 class PiggyBankControllerTest extends TestCase
 {
     /**
-     * @covers FireflyIII\Http\Controllers\PiggyBankController::add
-     * @covers FireflyIII\Http\Controllers\PiggyBankController::__construct
+     * @covers       FireflyIII\Http\Controllers\PiggyBankController::add
+     * @covers       FireflyIII\Http\Controllers\PiggyBankController::__construct
      * @dataProvider dateRangeProvider
      */
     public function testAdd($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/piggy-banks/add/1');
         $this->assertResponseStatus(200);
     }
@@ -68,12 +69,13 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\PiggyBankController::index
+     * @covers       FireflyIII\Http\Controllers\PiggyBankController::index
      * @dataProvider dateRangeProvider
      */
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/piggy-banks');
         $this->assertResponseStatus(200);
     }
@@ -134,12 +136,13 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\PiggyBankController::show
+     * @covers       FireflyIII\Http\Controllers\PiggyBankController::show
      * @dataProvider dateRangeProvider
      */
     public function testShow($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/piggy-banks/show/1');
         $this->assertResponseStatus(200);
     }

@@ -25,6 +25,7 @@ class ReportControllerTest extends TestCase
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/reports');
         $this->assertResponseStatus(200);
 
@@ -47,6 +48,7 @@ class ReportControllerTest extends TestCase
 
 
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/reports/report/default/20160101/20160131/1,2');
         $this->assertResponseStatus(200);
     }
@@ -59,6 +61,7 @@ class ReportControllerTest extends TestCase
     public function testReportDefaultYear($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/reports/report/default/20160101/20161231/1,2');
         $this->assertResponseStatus(200);
     }
@@ -71,6 +74,7 @@ class ReportControllerTest extends TestCase
     public function testReportDefaultMultiYear($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/reports/report/default/20160101/20171231/1,2');
         $this->assertResponseStatus(200);
     }

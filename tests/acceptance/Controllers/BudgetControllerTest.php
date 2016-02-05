@@ -24,6 +24,7 @@ class BudgetControllerTest extends TestCase
             'amount' => 1200,
         ];
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
 
         $this->call('POST', '/budgets/amount/1', $args);
         $this->assertResponseStatus(200);
@@ -79,6 +80,7 @@ class BudgetControllerTest extends TestCase
     public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets');
         $this->assertResponseStatus(200);
     }
@@ -90,6 +92,7 @@ class BudgetControllerTest extends TestCase
     public function testNoBudget($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/list/noBudget');
         $this->assertResponseStatus(200);
     }
@@ -104,6 +107,7 @@ class BudgetControllerTest extends TestCase
             'amount' => 1200,
         ];
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
 
         $this->call('POST', '/budgets/income', $args);
         $this->assertResponseStatus(302);
@@ -116,6 +120,7 @@ class BudgetControllerTest extends TestCase
     public function testShow($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/show/1');
         $this->assertResponseStatus(200);
     }
@@ -164,6 +169,7 @@ class BudgetControllerTest extends TestCase
     public function testUpdateIncome($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/income');
         $this->assertResponseStatus(200);
     }
