@@ -7,6 +7,7 @@ php:
   - 7
 
 install:
+  - composer selfupdate
   - composer install --no-dev
   - composer update
   - php artisan env
