@@ -232,7 +232,7 @@ class Navigation
             return $date;
         }
         if ($repeatFreq === 'custom') {
-            return $theDate; // the date is already at the start.
+            return $date; // the date is already at the start.
         }
 
 
@@ -281,6 +281,18 @@ class Navigation
             $subtract = $subtract * $modifierMap[$repeatFreq];
             $date->subMonths($subtract);
 
+            return $date;
+        }
+        // a custom range requires the session start
+        // and session end to calculate the difference in days.
+        // this is then subtracted from $theDate (* $subtract).
+        if($repeatFreq === 'custom') {
+            /** @var Carbon $tStart */
+            $tStart = session('start', Carbon::now()->startOfMonth());
+            /** @var Carbon $tEnd */
+            $tEnd       = session('end', Carbon::now()->endOfMonth());
+            $diffInDays = $tStart->diffInDays($tEnd);
+            $date->subDays($diffInDays * $subtract);
             return $date;
         }
 
