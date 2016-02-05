@@ -38,11 +38,11 @@ class SearchController extends Controller
             $words    = explode(' ', $query);
             $subTitle = trans('firefly.search_results_for', ['query' => $query]);
 
-            $transactions = [];//$searcher->searchTransactions($words);
-            $accounts     = [];//$searcher->searchAccounts($words);
-            $categories   = [];//$searcher->searchCategories($words);
-            $budgets      = [];//$searcher->searchBudgets($words);
-            $tags         = [];//$searcher->searchTags($words);
+            $transactions = $searcher->searchTransactions($words);
+            $accounts     = $searcher->searchAccounts($words);
+            $categories   = $searcher->searchCategories($words);
+            $budgets      = $searcher->searchBudgets($words);
+            $tags         = $searcher->searchTags($words);
             $result       = ['transactions' => $transactions, 'accounts' => $accounts, 'categories' => $categories, 'budgets' => $budgets, 'tags' => $tags];
 
         }
