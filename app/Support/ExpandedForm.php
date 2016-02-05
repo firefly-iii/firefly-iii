@@ -291,7 +291,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function staticText($name, $value, array $options = [])
+    public function staticText(string $name, $value, array $options = [])
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -310,7 +310,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function tags($name, $value = null, array $options = [])
+    public function tags(string $name, $value = null, array $options = [])
     {
         $label                = $this->label($name, $options);
         $options              = $this->expandOptionArray($name, $label, $options);
@@ -329,7 +329,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function text($name, $value = null, array $options = [])
+    public function text(string $name, $value = null, array $options = [])
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -348,7 +348,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function textarea($name, $value = null, array $options = [])
+    public function textarea(string $name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -368,7 +368,7 @@ class ExpandedForm
      *
      * @return array
      */
-    protected function expandOptionArray($name, $label, array $options)
+    protected function expandOptionArray(string $name, $label, array $options)
     {
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
@@ -384,7 +384,7 @@ class ExpandedForm
      *
      * @return mixed
      */
-    protected function fillFieldValue($name, $value)
+    protected function fillFieldValue(string $name, $value)
     {
         if (Session::has('preFilled')) {
             $preFilled = session('preFilled');
@@ -409,7 +409,7 @@ class ExpandedForm
      *
      * @return string
      */
-    protected function getHolderClasses($name)
+    protected function getHolderClasses(string $name)
     {
         /*
        * Get errors from session:
@@ -431,7 +431,7 @@ class ExpandedForm
      *
      * @return mixed
      */
-    protected function label($name, $options)
+    protected function label(string $name, array $options)
     {
         if (isset($options['label'])) {
             return $options['label'];

@@ -22,7 +22,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
+    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip)
     {
         $date = clone $theDate;
         $add  = ($skip + 1);
@@ -61,7 +61,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
+    public function endOfPeriod(Carbon $theCurrentEnd, string $repeatFreq)
     {
         $currentEnd = clone $theCurrentEnd;
 
@@ -120,7 +120,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      */
-    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate = null)
+    public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null)
     {
         $functionMap = [
             '1D'        => 'endOfDay',
@@ -161,7 +161,7 @@ class Navigation
      * @return string
      * @throws FireflyException
      */
-    public function periodShow(Carbon $date, $repeatFrequency)
+    public function periodShow(Carbon $date, string $repeatFrequency)
     {
         $formatMap = [
             '1D'      => '%e %B %Y',
@@ -196,7 +196,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function startOfPeriod(Carbon $theDate, $repeatFreq)
+    public function startOfPeriod(Carbon $theDate, string $repeatFreq)
     {
         $date = clone $theDate;
 
@@ -247,7 +247,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
+    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1)
     {
         $date = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
@@ -286,13 +286,14 @@ class Navigation
         // a custom range requires the session start
         // and session end to calculate the difference in days.
         // this is then subtracted from $theDate (* $subtract).
-        if($repeatFreq === 'custom') {
+        if ($repeatFreq === 'custom') {
             /** @var Carbon $tStart */
             $tStart = session('start', Carbon::now()->startOfMonth());
             /** @var Carbon $tEnd */
             $tEnd       = session('end', Carbon::now()->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
             $date->subDays($diffInDays * $subtract);
+
             return $date;
         }
 
@@ -306,7 +307,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function updateEndDate($range, Carbon $start)
+    public function updateEndDate(string $range, Carbon $start)
     {
         $functionMap = [
             '1D' => 'endOfDay',
@@ -342,7 +343,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function updateStartDate($range, Carbon $start)
+    public function updateStartDate(string $range, Carbon $start)
     {
         $functionMap = [
             '1D' => 'startOfDay',

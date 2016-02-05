@@ -168,7 +168,7 @@ interface BudgetRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Budget $budget, LimitRepetition $repetition, int $take);
+    public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50);
 
     /**
      * @param Carbon $start
