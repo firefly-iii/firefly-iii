@@ -19,7 +19,7 @@
             {% for budgetLine in budgets.getBudgetLines %}
                 <tr>
                     <td>
-                        {% if budgetLine.getBudget %}
+                        {% if budgetLine.getBudget.id %}
                             <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
                         {% else %}
                             <em>{{ 'noBudget'|_ }}</em>

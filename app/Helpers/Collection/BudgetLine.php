@@ -33,7 +33,7 @@ class BudgetLine
      */
     public function getBudget(): BudgetModel
     {
-        return $this->budget;
+        return $this->budget ?? new BudgetModel;
     }
 
     /**
