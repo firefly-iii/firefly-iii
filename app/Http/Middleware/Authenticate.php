@@ -32,10 +32,10 @@ class Authenticate
                 return redirect()->guest('login');
             }
         } else {
-            if (intval(Auth::user()->blocked) === 1) {
-                Auth::guard($this->getGuard())->logout();
-                return redirect()->guest('login');
-            }
+//            if (intval(Auth::user()->blocked) === 1) {
+//                Auth::guard($this->getGuard())->logout();
+//                return redirect()->guest('login');
+//            }
         }
 
         return $next($request);
