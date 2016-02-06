@@ -76,31 +76,7 @@
 
 
                                     <!-- ACCOUNTS -->
-
-                                    <div class="form-group">
-
-
-                                        <label for="inputAccounts" class="col-sm-4 control-label">{{ 'export_included_accounts'|_ }}</label>
-                                        <div class="col-sm-8">
-
-                                            {% if errors.has('accounts') %}
-                                                <div class="alert alert-danger" role="alert">
-                                                    {{ errors.first('accounts') }}
-                                                </div>
-                                            {% endif %}
-                                            {% for account in accounts %}
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" class="account-checkbox" name="accounts[]" value="{{ account.id }}" checked>
-                                                        {{ account.name }}
-                                                        {% if account.getMeta('accountRole') == 'sharedAsset' %}
-                                                            ({{ 'shared'|_|lower }})
-                                                        {% endif %}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
+                                    {{ ExpandedForm.multiCheckbox('accounts',accountList, checked, {' class': 'account-checkbox'}) }}
 
                                     {{ ExpandedForm.checkbox('include_attachments','1', true) }}
 
