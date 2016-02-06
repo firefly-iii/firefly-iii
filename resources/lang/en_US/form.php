@@ -76,6 +76,7 @@ return [
     'include_attachments'         => 'Include uploaded attachments',
     'include_config'              => 'Include configuration file',
     'include_old_uploads'         => 'Include imported data',
+    'accounts'                    => 'Export transactions from these accounts',
 
     'csv_comma'     => 'A comma (,)',
     'csv_semicolon' => 'A semicolon (;)',
