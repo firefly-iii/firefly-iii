@@ -87,8 +87,8 @@ function preSelectDate(e) {
     "use strict";
     var link = $(e.target);
     var picker = $('#inputDateRange').data('daterangepicker');
-    picker.setStartDate(link.data('start'));
-    picker.setEndDate(link.data('end'));
+    picker.setStartDate(moment(link.data('start'), "YYYY-MM-DD"));
+    picker.setEndDate(moment(link.data('end'), "YYYY-MM-DD"));
     return false;
 
 }
