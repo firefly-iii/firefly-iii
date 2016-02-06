@@ -122,7 +122,7 @@ class AccountController extends Controller
         // the opening balance is tricky:
         $openingBalanceAmount = null;
 
-        if ($openingBalance) {
+        if ($openingBalance->id) {
             $transaction          = $repository->getFirstTransaction($openingBalance, $account);
             $openingBalanceAmount = $transaction->amount;
         }

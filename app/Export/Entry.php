@@ -122,7 +122,7 @@ class Entry
     /**
      * @return array
      */
-    public static function getTypes()
+    public static function getTypes(): array
     {
         // key = field name (see top of class)
         // value = field type (see csv.php under 'roles')
@@ -139,7 +139,7 @@ class Entry
             'fromAccountId'   => 'account-id',
             'fromAccountName' => 'account-name',
             'fromAccountIban' => 'account-iban',
-            'fromAccountType' => '_ignore',
+            'fromAccountType' => '_ignore', // no, Firefly cannot import what it exports. I know :D
             'toAccountId'     => 'opposing-id',
             'toAccountName'   => 'opposing-name',
             'toAccountIban'   => 'opposing-iban',
@@ -150,7 +150,7 @@ class Entry
     /**
      * @return string
      */
-    public function getAmount()
+    public function getAmount(): string
     {
         return $this->amount;
     }
