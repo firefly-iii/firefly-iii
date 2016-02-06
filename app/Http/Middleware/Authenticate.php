@@ -33,7 +33,8 @@ class Authenticate
             }
         } else {
             if (intval(Auth::user()->blocked) === 1) {
-                return redirect()->route('logout');
+                Auth::guard($this->getGuard())->logout();
+                return redirect()->guest('login');
             }
         }
 
