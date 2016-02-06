@@ -32,8 +32,8 @@ class Authenticate
                 return redirect()->guest('login');
             }
         } else {
-            if(intval(Auth::user()->blocked) === 1) {
-                return redirect()->action('logout');
+            if (intval(Auth::user()->blocked) === 1) {
+                return redirect()->route('logout');
             }
         }
 
