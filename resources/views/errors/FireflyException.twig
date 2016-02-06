@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofolllow, noarchive, noodp, NoImageIndex, noydir">
+    <title>Firefly III</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <base href="{{ route('index') }}/">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all"/>
+    <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
+    <link href="css/firefly.css" rel="stylesheet" type="text/css"/>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png?v=Lb54KlrQnz">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png?v=Lb54KlrQnz">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png?v=Lb54KlrQnz" sizes="32x32">
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png?v=Lb54KlrQnz" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png?v=Lb54KlrQnz" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png?v=Lb54KlrQnz" sizes="16x16">
+    <link rel="manifest" href="/manifest.json?v=Lb54KlrQnz">
+    <link rel="shortcut icon" href="/favicon.ico?v=Lb54KlrQnz">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png?v=Lb54KlrQnz">
+    <meta name="theme-color" content="#ffffff">
+
+</head>
+<body class="error-page">
+<div class="error-box">
+    <div class="login-logo">
+        <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h3 class="text-info">Whoops! An error occurred.</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <p>
+                Unfortunately, this error was not recoverable. Firefly III broke.
+            </p>
+            <p class="text-danger">
+                {{ exception.getMessage |default('General unknown errror') }}
+            </p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

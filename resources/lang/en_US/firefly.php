@@ -41,6 +41,7 @@ return [
 
     // export data:
     'import_and_export'                 => 'Import and export',
+    'export_data_please_wait'           => 'Please wait...',
     'export_data'                       => 'Export data',
     'export_data_intro'                 => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
     'export_format'                     => 'Export format',
