@@ -28,17 +28,19 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return boolean|null
+     * @return boolean
      */
-    public function destroy(Bill $bill)
+    public function destroy(Bill $bill): bool
     {
-        return $bill->delete();
+        $bill->delete();
+
+        return true;
     }
 
     /**
      * @return Collection
      */
-    public function getActiveBills()
+    public function getActiveBills(): Collection
     {
         /** @var Collection $set */
         $set = Auth::user()->bills()
@@ -63,7 +65,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end)
+    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection
     {
         $ids = $bills->pluck('id')->toArray();
 
@@ -90,7 +92,7 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @return Collection
      */
-    public function getBills()
+    public function getBills(): Collection
     {
         /** @var Collection $set */
         $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
@@ -112,7 +114,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getBillsForAccounts(Collection $accounts)
+    public function getBillsForAccounts(Collection $accounts): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
         $set = Auth::user()->bills()
@@ -152,7 +154,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return string
      */
-    public function getBillsPaidInRange(Carbon $start, Carbon $end)
+    public function getBillsPaidInRange(Carbon $start, Carbon $end): string
     {
         $amount = '0';
         $bills  = $this->getActiveBills();
@@ -187,7 +189,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return string
      */
-    public function getBillsUnpaidInRange(Carbon $start, Carbon $end)
+    public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string
     {
         $amount = '0';
         $bills  = $this->getActiveBills();
@@ -226,7 +228,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return string
      */
-    public function getCreditCardBill(Carbon $start, Carbon $end)
+    public function getCreditCardBill(Carbon $start, Carbon $end): string
     {
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -274,7 +276,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournals(Bill $bill)
+    public function getJournals(Bill $bill): Collection
     {
         $set = $bill->transactionjournals()
                     ->leftJoin(
@@ -302,7 +304,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end)
+    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         return $bill->transactionjournals()->before($end)->after($start)->get();
     }
@@ -312,7 +314,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getPossiblyRelatedJournals(Bill $bill)
+    public function getPossiblyRelatedJournals(Bill $bill): Collection
     {
         $set = new Collection(
             DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)
@@ -339,9 +341,9 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return mixed
+     * @return array
      */
-    public function getRanges(Bill $bill, Carbon $start, Carbon $end)
+    public function getRanges(Bill $bill, Carbon $start, Carbon $end): array
     {
         $startOfBill = $bill->date;
         $startOfBill = Navigation::startOfPeriod($startOfBill, $bill->repeat_freq);
@@ -376,16 +378,16 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return Carbon|null
+     * @return \Carbon\Carbon
      */
-    public function lastFoundMatch(Bill $bill)
+    public function lastFoundMatch(Bill $bill): Carbon
     {
         $last = $bill->transactionjournals()->orderBy('date', 'DESC')->first();
         if ($last) {
             return $last->date;
         }
 
-        return null;
+        return Carbon::now()->addDays(2); // in the future!
     }
 
     /**
@@ -393,10 +395,10 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return \Carbon\Carbon
      */
-    public function nextExpectedMatch(Bill $bill)
+    public function nextExpectedMatch(Bill $bill): Carbon
     {
 
-        $finalDate = null;
+        $finalDate = Carbon::now()->subDays(2);
         if ($bill->active == 0) {
             return $finalDate;
         }
@@ -440,9 +442,9 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill               $bill
      * @param TransactionJournal $journal
      *
-     * @return boolean|null
+     * @return bool
      */
-    public function scan(Bill $bill, TransactionJournal $journal)
+    public function scan(Bill $bill, TransactionJournal $journal): bool
     {
 
         /*
@@ -487,7 +489,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      */
-    public function store(array $data)
+    public function store(array $data): Bill
     {
 
 
@@ -516,7 +518,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      */
-    public function update(Bill $bill, array $data)
+    public function update(Bill $bill, array $data): Bill
     {
 
 
@@ -541,7 +543,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return bool
      */
-    protected function doAmountMatch($amount, $min, $max)
+    protected function doAmountMatch($amount, $min, $max): bool
     {
         if ($amount >= $min && $amount <= $max) {
             return true;
@@ -556,7 +558,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return bool
      */
-    protected function doWordMatch(array $matches, $description)
+    protected function doWordMatch(array $matches, $description): bool
     {
         $wordMatch = false;
         $count     = 0;

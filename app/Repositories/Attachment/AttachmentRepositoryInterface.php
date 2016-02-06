@@ -18,7 +18,7 @@ interface AttachmentRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(Attachment $attachment);
+    public function destroy(Attachment $attachment): bool;
 
     /**
      * @param Attachment $attachment
@@ -26,6 +26,6 @@ interface AttachmentRepositoryInterface
      *
      * @return Attachment
      */
-    public function update(Attachment $attachment, array $attachmentData);
+    public function update(Attachment $attachment, array $attachmentData): Attachment;
 }
 

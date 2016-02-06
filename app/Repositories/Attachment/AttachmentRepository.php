@@ -18,7 +18,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(Attachment $attachment)
+    public function destroy(Attachment $attachment): bool
     {
         /** @var \FireflyIII\Helpers\Attachments\AttachmentHelperInterface $helper */
         $helper = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
@@ -26,6 +26,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $file = $helper->getAttachmentLocation($attachment);
         unlink($file);
         $attachment->delete();
+        return true;
     }
 
     /**
@@ -34,7 +35,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @return Attachment
      */
-    public function update(Attachment $attachment, array $data)
+    public function update(Attachment $attachment, array $data): Attachment
     {
 
         $attachment->title       = $data['title'];

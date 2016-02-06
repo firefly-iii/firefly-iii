@@ -19,14 +19,14 @@ interface BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return mixed
+     * @return bool
      */
-    public function destroy(Bill $bill);
+    public function destroy(Bill $bill): bool;
 
     /**
      * @return Collection
      */
-    public function getActiveBills();
+    public function getActiveBills(): Collection;
 
     /**
      * Returns all journals connected to these bills in the given range. Amount paid
@@ -38,12 +38,12 @@ interface BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end);
+    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection;
 
     /**
      * @return Collection
      */
-    public function getBills();
+    public function getBills(): Collection;
 
     /**
      * Gets the bills which have some kind of relevance to the accounts mentioned.
@@ -52,7 +52,7 @@ interface BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getBillsForAccounts(Collection $accounts);
+    public function getBillsForAccounts(Collection $accounts): Collection;
 
     /**
      * Get the total amount of money paid for the users active bills in the date range given.
@@ -62,7 +62,7 @@ interface BillRepositoryInterface
      *
      * @return string
      */
-    public function getBillsPaidInRange(Carbon $start, Carbon $end);
+    public function getBillsPaidInRange(Carbon $start, Carbon $end): string;
 
     /**
      * Get the total amount of money due for the users active bills in the date range given.
@@ -72,7 +72,7 @@ interface BillRepositoryInterface
      *
      * @return string
      */
-    public function getBillsUnpaidInRange(Carbon $start, Carbon $end);
+    public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
 
     /**
      * This method will tell you if you still have a CC bill to pay. Amount will be negative if the amount
@@ -83,14 +83,14 @@ interface BillRepositoryInterface
      *
      * @return string
      */
-    public function getCreditCardBill(Carbon $start, Carbon $end);
+    public function getCreditCardBill(Carbon $start, Carbon $end): string;
 
     /**
      * @param Bill $bill
      *
      * @return Collection
      */
-    public function getJournals(Bill $bill);
+    public function getJournals(Bill $bill): Collection;
 
     /**
      * Get all journals that were recorded on this bill between these dates.
@@ -101,14 +101,14 @@ interface BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end);
+    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Bill $bill
      *
      * @return Collection
      */
-    public function getPossiblyRelatedJournals(Bill $bill);
+    public function getPossiblyRelatedJournals(Bill $bill): Collection;
 
     /**
      * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
@@ -119,16 +119,16 @@ interface BillRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return mixed
+     * @return array
      */
-    public function getRanges(Bill $bill, Carbon $start, Carbon $end);
+    public function getRanges(Bill $bill, Carbon $start, Carbon $end): array;
 
     /**
      * @param Bill $bill
      *
-     * @return Carbon|null
+     * @return \Carbon\Carbon
      */
-    public function lastFoundMatch(Bill $bill);
+    public function lastFoundMatch(Bill $bill): Carbon;
 
 
     /**
@@ -136,7 +136,7 @@ interface BillRepositoryInterface
      *
      * @return \Carbon\Carbon
      */
-    public function nextExpectedMatch(Bill $bill);
+    public function nextExpectedMatch(Bill $bill): Carbon;
 
     /**
      * @param Bill               $bill
@@ -144,21 +144,21 @@ interface BillRepositoryInterface
      *
      * @return bool
      */
-    public function scan(Bill $bill, TransactionJournal $journal);
+    public function scan(Bill $bill, TransactionJournal $journal): bool;
 
     /**
      * @param array $data
      *
      * @return Bill
      */
-    public function store(array $data);
+    public function store(array $data): Bill;
 
     /**
      * @param Bill  $bill
      * @param array $data
      *
-     * @return mixed
+     * @return Bill
      */
-    public function update(Bill $bill, array $data);
+    public function update(Bill $bill, array $data): Bill;
 
 }
