@@ -29,8 +29,11 @@ class Authenticate
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
-
                 return redirect()->guest('login');
+            }
+        } else {
+            if(intval(Auth::user()->blocked) === 1) {
+                return redirect()->action('logout');
             }
         }
 
