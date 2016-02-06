@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 /**
@@ -66,6 +67,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndex($range)
     {
+        $journals = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+        $journals->shouldReceive('getJournalsOfTypes')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/transactions/deposit');

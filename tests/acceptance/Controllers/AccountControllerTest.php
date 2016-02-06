@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class AccountControllerTest
@@ -82,6 +83,9 @@ class AccountControllerTest extends TestCase
      */
     public function testShow($range)
     {
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('getJournals')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/show/1');

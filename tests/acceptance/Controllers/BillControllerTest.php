@@ -6,6 +6,8 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -94,6 +96,9 @@ class BillControllerTest extends TestCase
      */
     public function testShow($range)
     {
+        $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $repository->shouldReceive('getJournals')->once()->andReturn(new Collection);
+        $repository->shouldReceive('nextExpectedMatch')->once()->andReturn(new Carbon);
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills/show/1');
