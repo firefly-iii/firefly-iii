@@ -25,7 +25,7 @@ class Steam
      *
      * @return string
      */
-    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false)
+    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false): string
     {
 
         // abuse chart properties:

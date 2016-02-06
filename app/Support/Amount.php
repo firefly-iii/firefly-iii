@@ -24,7 +24,7 @@ class Amount
      *
      * @return string
      */
-    public function format(string $amount, bool $coloured = true)
+    public function format(string $amount, bool $coloured = true): string
     {
         return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
@@ -39,7 +39,7 @@ class Amount
      *
      * @return string
      */
-    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true)
+    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
         $locale    = setlocale(LC_MONETARY, 0);
         $float     = floatval($amount);
