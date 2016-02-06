@@ -34,8 +34,8 @@ $(function () {
         var startStr = readCookie('report-start');
         var endStr = readCookie('report-end');
         if (startStr !== null && endStr !== null && startStr.length == 8 && endStr.length == 8) {
-            var startDate = moment(startStr, "YYYYMMDD");
-            var endDate = moment(endStr, "YYYYMMDD");
+            var startDate = moment(startStr, "YYYY-MM-DD");
+            var endDate = moment(endStr, "YYYY-MM-DD");
             var datePicker = $('#inputDateRange').data('daterangepicker');
             datePicker.setStartDate(startDate);
             datePicker.setEndDate(endDate);
@@ -87,8 +87,8 @@ function preSelectDate(e) {
     "use strict";
     var link = $(e.target);
     var picker = $('#inputDateRange').data('daterangepicker');
-    picker.setStartDate(link.data('start'));
-    picker.setEndDate(link.data('end'));
+    picker.setStartDate(moment(link.data('start'), "YYYY-MM-DD"));
+    picker.setEndDate(moment(link.data('end'), "YYYY-MM-DD"));
     return false;
 
 }

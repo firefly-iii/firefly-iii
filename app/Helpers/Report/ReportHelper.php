@@ -178,10 +178,13 @@ class ReportHelper implements ReportHelperInterface
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app('FireflyIII\Helpers\FiscalHelperInterface');
         $start        = clone $date;
-        $end          = Carbon::now();
-        $months       = [];
+        $start->startOfMonth();
+        $end = Carbon::now();
+        $end->endOfMonth();
+        $months = [];
 
         while ($start <= $end) {
+            // current year:
             $year = $fiscalHelper->endOfFiscalYear($start)->year;
 
             if (!isset($months[$year])) {
@@ -196,6 +199,7 @@ class ReportHelper implements ReportHelperInterface
 
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
+
             $months[$year]['months'][] = [
                 'formatted' => $start->formatLocalized('%B %Y'),
                 'start'     => $start->format('Y-m-d'),
@@ -203,7 +207,10 @@ class ReportHelper implements ReportHelperInterface
                 'month'     => $start->month,
                 'year'      => $year,
             ];
-            $start->addMonth();
+
+            // to make the hop to the next month properly:
+            $start = clone $currentEnd;
+            $start->addDay();
         }
 
         return $months;
