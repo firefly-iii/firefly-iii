@@ -131,7 +131,7 @@ class AccountController extends Controller
             'accountRole'          => $account->getMeta('accountRole'),
             'ccType'               => $account->getMeta('ccType'),
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
-            'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
+            'openingBalanceDate'   => $openingBalance->id ? $openingBalance->date->format('Y-m-d') : null,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => round($account->virtual_balance, 2),
         ];
