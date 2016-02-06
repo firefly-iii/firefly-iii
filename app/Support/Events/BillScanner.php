@@ -23,7 +23,7 @@ class BillScanner
     /**
      * @param TransactionJournal $journal
      */
-    static function scan(TransactionJournal $journal)
+    public static function scan(TransactionJournal $journal)
     {
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
