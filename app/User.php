@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
@@ -60,105 +62,105 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function accounts()
+    public function accounts(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Account');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function attachments()
+    public function attachments(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Attachment');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function bills()
+    public function bills(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Bill');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function budgets()
+    public function budgets(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Budget');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function categories()
+    public function categories(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Category');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function exportjobs()
+    public function exportjobs(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\ExportJob');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function piggyBanks()
+    public function piggyBanks(): HasManyThrough
     {
         return $this->hasManyThrough('FireflyIII\Models\PiggyBank', 'FireflyIII\Models\Account');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function preferences()
+    public function preferences(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Preference');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function ruleGroups()
+    public function ruleGroups(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\RuleGroup');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function rules()
+    public function rules(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Rule');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function tags()
+    public function tags(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Tag');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactionjournals()
+    public function transactionjournals(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function transactions()
+    public function transactions(): HasManyThrough
     {
         return $this->hasManyThrough('FireflyIII\Models\Transaction', 'FireflyIII\Models\TransactionJournal');
     }

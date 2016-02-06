@@ -32,7 +32,7 @@ class Date implements BinderInterface
      *
      * @return mixed
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder($value, $route): Carbon
     {
         $fiscalHelper = new FiscalHelper;
 

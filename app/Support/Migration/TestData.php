@@ -43,8 +43,10 @@ class TestData
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
-    public static function createAssetAccounts(User $user)
+    public static function createAssetAccounts(User $user): bool
     {
         $assets = ['TestData Checking Account', 'TestData Savings', 'TestData Shared', 'TestData Creditcard', 'Emergencies', 'STE'];
         // first two ibans match test-upload.csv
@@ -75,13 +77,17 @@ class TestData
             }
         }
 
+        return true;
+
     }
 
     /**
      * @param User   $user
      * @param Carbon $start
+     *
+     * @return TransactionJournal
      */
-    public static function createAttachments(User $user, Carbon $start)
+    public static function createAttachments(User $user, Carbon $start): TransactionJournal
     {
 
         $toAccount   = TestData::findAccount($user, 'TestData Checking Account');
@@ -138,12 +144,15 @@ class TestData
         file_put_contents(storage_path('upload/at-' . $one->id . '.data'), $encrypted);
         file_put_contents(storage_path('upload/at-' . $two->id . '.data'), $encrypted);
 
+        return $journal;
     }
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
-    public static function createBills(User $user)
+    public static function createBills(User $user): bool
     {
         Bill::create(
             [
@@ -174,15 +183,19 @@ class TestData
             ]
         );
 
+        return true;
+
     }
 
     /**
      * @param User   $user
      * @param Carbon $current
-     * @param        $name
-     * @param        $amount
+     * @param string $name
+     * @param string $amount
+     *
+     * @return BudgetLimit
      */
-    public static function createBudgetLimit(User $user, Carbon $current, string $name, string $amount)
+    public static function createBudgetLimit(User $user, Carbon $current, string $name, string $amount): BudgetLimit
     {
         $start  = clone $current;
         $end    = clone $current;
@@ -190,7 +203,7 @@ class TestData
         $start->startOfMonth();
         $end->endOfMonth();
 
-        BudgetLimit::create(
+        $limit = BudgetLimit::create(
             [
                 'budget_id'   => $budget->id,
                 'startdate'   => $start->format('Y-m-d'),
@@ -199,12 +212,16 @@ class TestData
                 'repeat_freq' => 'monthly',
             ]
         );
+
+        return $limit;
     }
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
-    public static function createBudgets(User $user)
+    public static function createBudgets(User $user): bool
     {
         Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
         Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
@@ -214,16 +231,18 @@ class TestData
         foreach (['A', 'B', 'C', 'D', "E"] as $letter) {
             Budget::firstOrCreateEncrypted(['name' => 'Empty budget ' . $letter, 'user_id' => $user->id]);
         }
+
+        return true;
     }
 
     /**
      * @param User   $user
      * @param Carbon $date
      *
-     * @return static
+     * @return TransactionJournal
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public static function createCar(User $user, Carbon $date)
+    public static function createCar(User $user, Carbon $date): TransactionJournal
     {
         // twice:
         $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
@@ -262,7 +281,7 @@ class TestData
                 'date'                    => $date,
             ]
         );
-        self::createTransactions($journal, $fromAccount, $toAccount, '100');
+        self::createTransactions($journal, $fromAccount, $toAccount, strval($amount));
 
         // and again!
 
@@ -271,19 +290,26 @@ class TestData
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
-    public static function createCategories(User $user)
+    public static function createCategories(User $user): bool
     {
         Category::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
         Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
+
+        return true;
     }
 
     /**
      * @param User   $user
      * @param Carbon $date
+     *
+     * @return bool
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public static function createDrinksAndOthers(User $user, Carbon $date)
+    public static function createDrinksAndOthers(User $user, Carbon $date): bool
     {
         $start = clone $date;
         $end   = clone $date;
@@ -321,15 +347,19 @@ class TestData
 
             $current->addWeek();
         }
+
+        return true;
     }
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
-    public static function createExpenseAccounts(User $user)
+    public static function createExpenseAccounts(User $user): bool
     {
         $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
-                     'coolblue', 'Shell',
+                     'Coolblue', 'Shell',
                      'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
         foreach ($expenses as $name) {
             // create account:
@@ -344,14 +374,19 @@ class TestData
             );
         }
 
+        return true;
+
     }
 
     /**
      * @param User   $user
      * @param Carbon $date
+     *
+     * @return bool
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public static function createGroceries(User $user, Carbon $date)
+    public static function createGroceries(User $user, Carbon $date): bool
     {
         bcscale(2);
         $start = clone $date;
@@ -392,6 +427,8 @@ class TestData
 
             $current->addDay();
         }
+
+        return true;
     }
 
     /**
@@ -432,10 +469,13 @@ class TestData
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @param User $user
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public static function createPiggybanks(User $user)
+    public static function createPiggybanks(User $user): bool
     {
         $account = self::findAccount($user, 'TestData Savings');
 
@@ -567,6 +607,7 @@ class TestData
             ]
         );
 
+        return true;
     }
 
     /**
@@ -577,7 +618,7 @@ class TestData
      *
      * @return TransactionJournal
      */
-    public static function createPower(User $user, string $description, Carbon $date, string $amount)
+    public static function createPower(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
         $date        = new Carbon($date->format('Y-m') . '-06'); // paid on 10th
         $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
@@ -638,8 +679,10 @@ class TestData
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
-    public static function createRevenueAccounts(User $user)
+    public static function createRevenueAccounts(User $user): bool
     {
         $revenues = ['Job', 'Belastingdienst', 'Bank', 'KPN', 'Google'];
         foreach ($revenues as $name) {
@@ -654,12 +697,16 @@ class TestData
                 ]
             );
         }
+
+        return true;
     }
 
     /**
      * @param User $user
+     *
+     * @return RuleGroup
      */
-    public static function createRules(User $user)
+    public static function createRules(User $user): RuleGroup
     {
         $group = RuleGroup::create(
             [
@@ -733,6 +780,8 @@ class TestData
                 'action_value' => trans('firefly.default_rule_action_set_category'),
             ]
         );
+
+        return $group;
     }
 
     /**
@@ -772,9 +821,9 @@ class TestData
      * @param Carbon $date
      * @param string $amount
      *
-     * @return static
+     * @return TransactionJournal
      */
-    public static function createTV(User $user, string $description, Carbon $date, string $amount)
+    public static function createTV(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
         $date        = new Carbon($date->format('Y-m') . '-15'); // paid on 10th
         $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
@@ -801,26 +850,27 @@ class TestData
     }
 
     /**
-     * @param User        $user
-     * @param Carbon|null $date
+     * @param User   $user
+     * @param Carbon $date
+     *
+     * @return Tag
      */
-    public static function createTags(User $user, Carbon $date = null)
+    public static function createTags(User $user, Carbon $date): Tag
     {
-        $title = 'SomeTag nr. ' . rand(1, 1234);
-        if (!is_null($date)) {
-            $title = 'SomeTag' . $date->month . '.' . $date->year . '.nothing';
-        }
+        $title = 'SomeTag' . $date->month . '.' . $date->year . '.nothing';
 
-        Tag::create(
+        $tag = Tag::create(
             [
                 'user_id' => $user->id,
                 'tag'     => $title,
                 'tagMode' => 'nothing',
-                'date'    => is_null($date) ? null : $date->format('Y-m-d'),
+                'date'    => $date->format('Y-m-d'),
 
 
             ]
         );
+
+        return $tag;
     }
 
     /**
@@ -828,8 +878,10 @@ class TestData
      * @param Account            $from
      * @param Account            $to
      * @param string             $amount
+     *
+     * @return bool
      */
-    public static function createTransactions(TransactionJournal $journal, Account $from, Account $to, string $amount)
+    public static function createTransactions(TransactionJournal $journal, Account $from, Account $to, string $amount): bool
     {
         Log::debug('---- Transaction From: ' . bcmul($amount, '-1'));
         Log::debug('---- Transaction To  : ' . $amount);
@@ -849,6 +901,8 @@ class TestData
 
             ]
         );
+
+        return true;
     }
 
     /**
@@ -873,7 +927,7 @@ class TestData
      * @param Carbon $date
      * @param string $amount
      *
-     * @return TransactionJournal|static
+     * @return TransactionJournal
      */
     public static function createWater(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
@@ -922,9 +976,9 @@ class TestData
      * @param User $user
      * @param      $name
      *
-     * @return Budget|null
+     * @return Budget
      */
-    public static function findBudget(User $user, string $name)
+    public static function findBudget(User $user, string $name): Budget
     {
         /** @var Budget $budget */
         foreach (Budget::get() as $budget) {
@@ -934,14 +988,16 @@ class TestData
             }
         }
 
-        return null;
+        return new Budget;
     }
 
     /**
      * @param User   $user
      * @param Carbon $date
+     *
+     * @return TransactionJournal
      */
-    public static function openingBalanceSavings(User $user, Carbon $date)
+    public static function openingBalanceSavings(User $user, Carbon $date): TransactionJournal
     {
         // opposing account for opening balance:
         $opposing = Account::create(
@@ -968,6 +1024,7 @@ class TestData
             ]
         );
         self::createTransactions($journal, $opposing, $savings, '10000');
+        return $journal;
 
     }
 

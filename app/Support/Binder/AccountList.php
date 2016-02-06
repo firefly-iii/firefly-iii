@@ -31,7 +31,7 @@ class AccountList implements BinderInterface
      *
      * @return Collection
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder($value, $route): Collection
     {
 
         if (Auth::check()) {
