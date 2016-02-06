@@ -23,7 +23,7 @@ class Search implements SearchInterface
      *
      * @return Collection
      */
-    public function searchAccounts(array $words)
+    public function searchAccounts(array $words): Collection
     {
         return Auth::user()->accounts()->with('accounttype')->where(
             function (EloquentBuilder $q) use ($words) {
@@ -39,7 +39,7 @@ class Search implements SearchInterface
      *
      * @return Collection
      */
-    public function searchBudgets(array $words)
+    public function searchBudgets(array $words): Collection
     {
         /** @var Collection $set */
         $set    = Auth::user()->budgets()->get();
@@ -64,7 +64,7 @@ class Search implements SearchInterface
      *
      * @return Collection
      */
-    public function searchCategories(array $words)
+    public function searchCategories(array $words): Collection
     {
         /** @var Collection $set */
         $set    = Auth::user()->categories()->get();
@@ -90,7 +90,7 @@ class Search implements SearchInterface
      *
      * @return Collection
      */
-    public function searchTags(array $words)
+    public function searchTags(array $words): Collection
     {
         return new Collection;
     }
@@ -100,7 +100,7 @@ class Search implements SearchInterface
      *
      * @return Collection
      */
-    public function searchTransactions(array $words)
+    public function searchTransactions(array $words): Collection
     {
         // decrypted transaction journals:
         $decrypted = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 0)->where(

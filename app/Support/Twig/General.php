@@ -28,7 +28,7 @@ class General extends Twig_Extension
     /**
      * @return array
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             $this->formatAmount(),
@@ -46,7 +46,7 @@ class General extends Twig_Extension
     /**
      * {@inheritDoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             $this->getCurrencyCode(),
@@ -64,7 +64,7 @@ class General extends Twig_Extension
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'FireflyIII\Support\Twig\General';
     }
@@ -75,10 +75,10 @@ class General extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function activeRoutePartial()
+    protected function activeRoutePartial(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartial', function () {
+            'activeRoutePartial', function () : string {
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
             if (!(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
@@ -96,7 +96,7 @@ class General extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function activeRoutePartialWhat()
+    protected function activeRoutePartialWhat(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'activeRoutePartialWhat', function ($context) {
@@ -120,7 +120,7 @@ class General extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function activeRouteStrict()
+    protected function activeRouteStrict(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'activeRouteStrict', function () {
@@ -139,7 +139,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function balance()
+    protected function balance(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'balance', function (Account $account = null) {
@@ -156,7 +156,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function env()
+    protected function env(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'env', function (string $name, string $default) {
@@ -169,7 +169,7 @@ class General extends Twig_Extension
      *
      * @return Twig_SimpleFilter
      */
-    protected function formatAmount()
+    protected function formatAmount(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'formatAmount', function (string $string) {
@@ -182,7 +182,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function formatAmountPlain()
+    protected function formatAmountPlain(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'formatAmountPlain', function (string $string) {
@@ -195,7 +195,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function formatFilesize()
+    protected function formatFilesize(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'filesize', function (int $size) {
@@ -218,7 +218,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function formatJournal()
+    protected function formatJournal(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'formatJournal', function (TransactionJournal $journal) {
@@ -230,7 +230,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function formatTransaction()
+    protected function formatTransaction(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'formatTransaction', function (Transaction $transaction) {
@@ -242,7 +242,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function getAccountRole()
+    protected function getAccountRole(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'getAccountRole', function (string $name) {
@@ -254,7 +254,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function getCurrencyCode()
+    protected function getCurrencyCode(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'getCurrencyCode', function () {
@@ -266,7 +266,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function getCurrencySymbol()
+    protected function getCurrencySymbol(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'getCurrencySymbol', function () {
@@ -278,7 +278,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function mimeIcon()
+    protected function mimeIcon(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
             'mimeIcon', function (string $string) {
