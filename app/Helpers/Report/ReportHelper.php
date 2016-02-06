@@ -80,11 +80,13 @@ class ReportHelper implements ReportHelperInterface
 
             $entry = $journals->filter(
                 function (TransactionJournal $journal) use ($bill) {
-                    return $journal->bill_id == $bill->id;
+                    return $journal->bill_id === $bill->id;
                 }
             );
-            if (!is_null($entry->first())) {
-                $billLine->setAmount($entry->first()->journalAmount);
+            $first = $entry->first();
+            if (!is_null($first)) {
+                $billLine->setTransactionJournalId($first->id);
+                $billLine->setAmount($first->journalAmount);
                 $billLine->setHit(true);
             } else {
                 $billLine->setHit(false);
@@ -92,7 +94,6 @@ class ReportHelper implements ReportHelperInterface
             if (!(!$billLine->isHit() && !$billLine->isActive())) {
                 $collection->addBill($billLine);
             }
-
 
         }
 

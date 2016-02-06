@@ -82,6 +82,7 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'transaction_journals.bill_id',
+                           'transaction_journals.id',
                            DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`'),
                        ]
                    );

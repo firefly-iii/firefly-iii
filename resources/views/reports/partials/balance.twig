@@ -41,6 +41,7 @@
                         <td>
                             {% if balanceEntry.getSpent != 0 %}
                                 <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
+                                <i class="fa fa-fw text-muted fa-info-circle"></i>
                             {% endif %}
                             {% if balanceEntry.getLeft != 0 %}
                                 <span class="text-success">{{ (balanceEntry.getLeft)|formatAmountPlain }}</span>

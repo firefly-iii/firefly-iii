@@ -27,6 +27,9 @@ class BillLine
     /** @var  string */
     protected $min;
 
+    /** @var  int */
+    private $transactionJournalId;
+
     /**
      * @return string
      */
@@ -89,6 +92,22 @@ class BillLine
     public function setMin(string $min)
     {
         $this->min = $min;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransactionJournalId(): int
+    {
+        return $this->transactionJournalId ?? 0;
+    }
+
+    /**
+     * @param int $transactionJournalId
+     */
+    public function setTransactionJournalId(int $transactionJournalId)
+    {
+        $this->transactionJournalId = $transactionJournalId;
     }
 
     /**

@@ -39,12 +39,13 @@
                     </td>
                     <td>
                         {% if budgetLine.getSpent != 0 %}
-                            {{ budgetLine.getSpent|formatAmount }}
+                            {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle"></i>
                         {% endif %}
 
                         {% if budgetLine.getSpent == 0 %}
                             {{ budgetLine.getSpent|formatAmount }}
                         {% endif %}
+
                     </td>
                     <td>
                         {% if(budgetLine.getOverspent == 0) %}
