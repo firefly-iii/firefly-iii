@@ -6,6 +6,8 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 /**
@@ -129,6 +131,12 @@ class BudgetControllerTest extends TestCase
      */
     public function testShow($range)
     {
+        // mock some stuff:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('getJournals')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+        $repository->shouldReceive('firstActivity')->once()->andReturn(new Carbon);
+        $repository->shouldReceive('spentPerDay')->once()->andReturn([]);
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/show/1');
