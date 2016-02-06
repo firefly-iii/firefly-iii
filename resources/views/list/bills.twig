@@ -35,7 +35,7 @@
             <td data-value="{{ entry.amount_max }}">
                 {{ entry.amount_max|formatAmount }}
             </td>
-            {% if entry.lastFoundMatch %}
+            {% if not entry.lastFoundMatch.isFuture %}
                 <td class="hidden-sm hidden-xs" data-value="{{ entry.lastFoundMatch.format('U') }}">
                     {{ entry.lastFoundMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
@@ -45,7 +45,7 @@
                 </td>
             {% endif %}
 
-            {% if entry.nextExpectedMatch %}
+            {% if entry.nextExpectedMatch.isFuture %}
                 <td class="hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('U') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>

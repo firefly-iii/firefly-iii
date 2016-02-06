@@ -47,7 +47,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ budgetLine.getLeft|formatAmount }}
+                        {% if(budgetLine.getOverspent == 0) %}
+                            {{ budgetLine.getLeft|formatAmount }}
+                        {% endif %}
                     </td>
                     <td>
                         {% if budgetLine.getOverspent != 0 %}
