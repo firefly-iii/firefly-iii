@@ -12,6 +12,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use Config;
+use ExpandedForm;
 use FireflyIII\Export\Processor;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ExportFormRequest;
@@ -91,12 +92,14 @@ class ExportController extends Controller
 
         // does the user have shared accounts?
         $accounts      = $repository->getAccounts(['Default account', 'Asset account']);
+        $accountList   = ExpandedForm::makeSelectList($accounts);
+        $checked       = array_keys($accountList);
         $formats       = array_keys(Config::get('firefly.export_formats'));
         $defaultFormat = Preferences::get('export_format', Config::get('firefly.default_export_format'))->data;
         $first         = session('first')->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 
-        return view('export.index', compact('accounts', 'job', 'formats', 'defaultFormat', 'first', 'today'));
+        return view('export.index', compact('job', 'checked', 'accountList', 'formats', 'defaultFormat', 'first', 'today'));
 
     }
 

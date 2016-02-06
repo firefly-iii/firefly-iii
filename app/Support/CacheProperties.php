@@ -54,7 +54,7 @@ class CacheProperties
     /**
      * @return string
      */
-    public function getMd5()
+    public function getMd5(): string
     {
         return $this->md5;
     }
@@ -62,7 +62,7 @@ class CacheProperties
     /**
      * @return bool
      */
-    public function has()
+    public function has(): bool
     {
         if (getenv('APP_ENV') == 'testing') {
             return false;

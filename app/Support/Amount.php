@@ -68,7 +68,7 @@ class Amount
      *
      * @return string
      */
-    public function formatJournal(TransactionJournal $journal, bool $coloured = true)
+    public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
