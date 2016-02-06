@@ -84,7 +84,7 @@ class ReportController extends Controller
     {
         // throw an error if necessary.
         if ($end < $start) {
-            throw new FireflyException('End date cannot be before start date, silly!')
+            throw new FireflyException('End date cannot be before start date, silly!');
         }
 
         // lower threshold
