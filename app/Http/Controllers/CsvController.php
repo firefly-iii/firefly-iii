@@ -278,13 +278,7 @@ class CsvController extends Controller
          *       field id => field identifier.
          * ]
          */
-        try {
-            $options = $this->wizard->showOptions($this->data->getMap());
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-
-            return view('error', ['message' => $e->getMessage()]);
-        }
+        $options = $this->wizard->showOptions($this->data->getMap());
 
         // After these values are prepped, read the actual CSV file
         $reader     = $this->data->getReader();
@@ -321,13 +315,7 @@ class CsvController extends Controller
         Log::debug('Created importer');
         $importer = new Importer;
         $importer->setData($this->data);
-        try {
-            $importer->run();
-        } catch (FireflyException $e) {
-            Log::error('Catch error: ' . $e->getMessage());
-
-            return view('error', ['message' => $e->getMessage()]);
-        }
+        $importer->run();
         Log::debug('Done importing!');
 
         $rows     = $importer->getRows();

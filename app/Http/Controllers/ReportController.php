@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -83,8 +84,7 @@ class ReportController extends Controller
     {
         // throw an error if necessary.
         if ($end < $start) {
-
-            return view('error')->with('message', 'End date cannot be before start date, silly!');
+            throw new FireflyException('End date cannot be before start date, silly!')
         }
 
         // lower threshold

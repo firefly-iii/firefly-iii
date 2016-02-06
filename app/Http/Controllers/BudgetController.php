@@ -3,6 +3,7 @@
 use Amount;
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -224,16 +225,15 @@ class BudgetController extends Controller
     /**
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
-     * @param LimitRepetition           $repetition
+     * @param LimitRepetition|null      $repetition
      *
-     * @return \Illuminate\View\View
+     * @return View
+     * @throws FireflyException
      */
     public function show(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition = null)
     {
         if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
-            $message = 'Invalid selection.';
-
-            return view('error', compact('message'));
+            throw new FireflyException('This budget limit is not part of this budget.');
         }
 
         $journals = $repository->getJournals($budget, $repetition, 50);

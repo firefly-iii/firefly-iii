@@ -12,7 +12,13 @@
     padding: 0;
 }
 
-
+.error-page {
+    background: #d2d6de;
+}
+.error-box {
+    width: 460px;
+    margin: 7% auto;
+}
 
 /* cursors */
 .rule-triggers {cursor:move;}

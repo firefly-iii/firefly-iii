@@ -7,6 +7,7 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
@@ -141,7 +142,7 @@ class TransactionController extends Controller
     {
         // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
-            return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
+            throw new FireflyException('Cannot edit this transaction (#' . $journal->id . '). Edit the account instead!');
         }
 
 
