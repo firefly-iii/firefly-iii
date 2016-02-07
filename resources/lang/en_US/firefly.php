@@ -73,6 +73,7 @@ return [
     'export_status_creating_zip_file'           => 'Creating a zip file...',
     'export_status_created_zip_file'            => 'Created a zip file!',
     'export_status_finished'                    => 'Export has succesfully finished! Yay!',
+    'export_data_please_wait'                   => 'Please wait...',
 
     // rules
     'rules'                                     => 'Rules',

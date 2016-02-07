@@ -13,7 +13,8 @@ namespace FireflyIII\Export\Collector;
 use Auth;
 use Crypt;
 use FireflyIII\Models\ExportJob;
-
+use Illuminate\Contracts\Encryption\DecryptException;
+use Log;
 /**
  * Class UploadCollector
  *
@@ -45,19 +46,23 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         $len      = strlen($expected);
         foreach ($files as $entry) {
             if (substr($entry, 0, $len) === $expected) {
-                // this is an original upload.
-                $parts          = explode('-', str_replace(['.csv.encrypted', $expected], '', $entry));
-                $originalUpload = intval($parts[1]);
-                $date           = date('Y-m-d \a\t H-i-s', $originalUpload);
-                $newFileName    = 'Old CSV import dated ' . $date . '.csv';
-                $content        = Crypt::decrypt(file_get_contents($path . DIRECTORY_SEPARATOR . $entry));
-                $fullPath       = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-' . $newFileName;
+                try {
+                    // this is an original upload.
+                    $parts          = explode('-', str_replace(['.csv.encrypted', $expected], '', $entry));
+                    $originalUpload = intval($parts[1]);
+                    $date           = date('Y-m-d \a\t H-i-s', $originalUpload);
+                    $newFileName    = 'Old CSV import dated ' . $date . '.csv';
+                    $content        = Crypt::decrypt(file_get_contents($path . DIRECTORY_SEPARATOR . $entry));
+                    $fullPath       = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-' . $newFileName;
 
-                // write to file:
-                file_put_contents($fullPath, $content);
+                    // write to file:
+                    file_put_contents($fullPath, $content);
 
-                // add entry to set:
-                $this->getFiles()->push($fullPath);
+                    // add entry to set:
+                    $this->getFiles()->push($fullPath);
+                } catch (DecryptException $e) {
+                    Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped.');
+                }
             }
         }
     }

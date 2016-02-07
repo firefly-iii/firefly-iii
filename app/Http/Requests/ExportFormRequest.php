@@ -35,7 +35,9 @@ class ExportFormRequest extends Request
      */
     public function rules()
     {
-        $first   = session('first')->subDay()->format('Y-m-d');
+        $sessionFirst = clone session('first');
+
+        $first   = $sessionFirst->subDay()->format('Y-m-d');
         $today   = Carbon::create()->addDay()->format('Y-m-d');
         $formats = join(',', array_keys(config('firefly.export_formats')));
 

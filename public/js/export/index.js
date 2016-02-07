@@ -27,6 +27,7 @@ function startExport() {
     console.log('Start export...');
     hideForm();
     showLoading();
+    hideError();
 
     // do export
     callExport();
@@ -34,6 +35,10 @@ function startExport() {
     return false;
 }
 
+function hideError() {
+    "use strict";
+    $('#export-error').hide();
+}
 
 function hideForm() {
     "use strict";

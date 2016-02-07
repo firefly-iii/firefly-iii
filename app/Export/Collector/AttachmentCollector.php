@@ -10,10 +10,13 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export\Collector;
 
+use Amount;
 use Auth;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ExportJob;
+use FireflyIII\Models\TransactionJournal;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
 
 /**
@@ -23,6 +26,9 @@ use Log;
  */
 class AttachmentCollector extends BasicCollector implements CollectorInterface
 {
+    /** @var string */
+    private $explanationString = '';
+
     /**
      * AttachmentCollector constructor.
      *
@@ -48,12 +54,39 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
             $originalFile = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
             if (file_exists($originalFile)) {
                 Log::debug('Stored 1 attachment');
-                $decrypted = Crypt::decrypt(file_get_contents($originalFile));
-                $newFile   = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Attachment nr. ' . $attachment->id . ' - '
-                             . $attachment->filename;
-                file_put_contents($newFile, $decrypted);
-                $this->getFiles()->push($newFile);
+                try {
+                    $decrypted = Crypt::decrypt(file_get_contents($originalFile));
+                    $newFile   = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Attachment nr. ' . $attachment->id . ' - '
+                                 . $attachment->filename;
+                    file_put_contents($newFile, $decrypted);
+                    $this->getFiles()->push($newFile);
+
+                    // explain:
+                    $this->explain($attachment);
+                } catch (DecryptException $e) {
+                    Log::error('Catchable error: could not decrypt attachment #' . $attachment->id);
+                }
+
             }
         }
+
+        // put the explanation string in a file and attach it as well.
+        $explanationFile = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Source of all your attachments explained.txt';
+        file_put_contents($explanationFile, $this->explanationString);
+        $this->getFiles()->push($explanationFile);
+    }
+
+    /**
+     * @param Attachment $attachment
+     */
+    private function explain(Attachment $attachment)
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $attachment->attachable;
+        $string  = 'Attachment #' . $attachment->id . ' is part of ' . strtolower($journal->transactionType->type) . ' #' . $journal->id
+                   . ', with description "' . $journal->description . '". This transaction was for ' . Amount::formatJournal($journal, false) .
+                   ' and occured on ' . $journal->date->formatLocalized(config('config.month_and_day')) . "\n\n";
+        $this->explanationString .= $string;
+
     }
 }

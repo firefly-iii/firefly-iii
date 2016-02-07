@@ -54,7 +54,7 @@ class ReportController extends Controller
     public function index(ARI $repository)
     {
         /** @var Carbon $start */
-        $start            = session('first');
+        $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
 
