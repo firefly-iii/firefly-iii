@@ -76,6 +76,7 @@ return [
     'include_attachments'         => 'Sla ook geüploade bijlagen op',
     'include_config'              => 'Sla ook een configuratiebestand ook',
     'include_old_uploads'         => 'Sla ook geïmporteerde bestanden op',
+    'accounts'                    => 'Exporteer boekingen van deze rekeningen',
 
     'csv_comma'     => 'Een komma (,)',
     'csv_semicolon' => 'Een puntkomma (;)',

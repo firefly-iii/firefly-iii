@@ -37,6 +37,14 @@ return [
     'new_revenue_account'                       => 'Nieuwe debiteur',
     'new_budget'                                => 'Nieuw budget',
     'new_bill'                                  => 'Nieuw contract',
+    'block_account_logout'                      => 'Je bent helaas uitgelogd. Geblokkeerde accounts kunnen deze site niet gebruiken. Heb je een geldig e-mailadres gebruikt toen je je registreerde?',
+    'flash_success'                             => 'Gelukt!',
+    'flash_info'                                => 'Melding',
+    'flash_warning'                             => 'Waarschuwing!',
+    'flash_error'                               => 'Fout!',
+    'flash_info_multiple'                       => 'Er is één melding|Er zijn :count meldingen',
+    'flash_error_multiple'                      => 'Er is één fout|Er zijn :count fouten',
+
 
     // export data:
     'import_and_export'                         => 'Import en export',
