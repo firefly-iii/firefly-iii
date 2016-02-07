@@ -74,6 +74,7 @@ return [
     'export_status_created_zip_file'            => 'Created a zip file!',
     'export_status_finished'                    => 'Export has succesfully finished! Yay!',
     'export_data_please_wait'                   => 'Please wait...',
+    'attachment_explanation'                    => 'The file called \':attachment_name\' (#:attachment_id) was originally uploaded to :type \':description\' (#:journal_id) dated :date for the amount of :amount.',
 
     // rules
     'rules'                                     => 'Rules',
