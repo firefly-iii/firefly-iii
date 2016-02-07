@@ -111,18 +111,6 @@ class Amount
     }
 
     /**
-     * @param string       $symbol
-     * @param float|string $amount
-     * @param bool         $coloured
-     *
-     * @return string
-     */
-    public function formatWithSymbol(string $symbol, string $amount, $coloured = true)
-    {
-        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
-    }
-
-    /**
      * @return Collection
      */
     public function getAllCurrencies()
