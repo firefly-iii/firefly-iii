@@ -48,7 +48,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getEventSummarySet(PiggyBank $piggyBank)
     {
-        return DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        return DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::raw('SUM(`amount`) AS `sum`')]);
     }
 
     /**

@@ -48,7 +48,7 @@ class BillRepository implements BillRepositoryInterface
                    ->get(
                        [
                            'bills.*',
-                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
+                           DB::raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
                        ]
                    )->sortBy('name');
 
@@ -83,7 +83,7 @@ class BillRepository implements BillRepositoryInterface
                        [
                            'transaction_journals.bill_id',
                            'transaction_journals.id',
-                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`'),
+                           DB::raw('SUM(`transactions`.`amount`) as `journalAmount`'),
                        ]
                    );
 
@@ -173,7 +173,7 @@ class BillRepository implements BillRepositoryInterface
                                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
                                   }
                                   )
-                                  ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                                  ->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
                 $sumAmount = $paid->sum_amount ?? '0';
                 $amount    = bcadd($amount, $sumAmount);
             }
@@ -208,7 +208,7 @@ class BillRepository implements BillRepositoryInterface
                                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
                                   }
                                   )
-                                  ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                                  ->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
                 $sumAmount = $paid->sum_amount ?? '0';
                 $paidBill  = bcadd($sumAmount, $paidBill);
             }
@@ -257,7 +257,7 @@ class BillRepository implements BillRepositoryInterface
                     'transactions', function (JoinClause $join) {
                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
                 }
-                )->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                )->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
 
                 $amount = bcadd($amount, $set->sum_amount);
             } else {

@@ -58,7 +58,7 @@ class TagRepository implements TagRepositoryInterface
                    ->get(
                        [
                            't_to.account_id',
-                           DB::Raw('SUM(`t_to`.`amount`) as `sum`'),
+                           DB::raw('SUM(`t_to`.`amount`) as `sum`'),
                        ]
                    );
 

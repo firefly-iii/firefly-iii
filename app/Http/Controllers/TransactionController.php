@@ -137,6 +137,7 @@ class TransactionController extends Controller
      * @param TransactionJournal $journal
      *
      * @return $this
+     * @throws FireflyException
      */
     public function edit(ARI $repository, TransactionJournal $journal)
     {

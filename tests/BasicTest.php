@@ -3,6 +3,8 @@
 /**
  * Class BasicTest
  */
+
+/** @noinspection PhpUndefinedClassInspection */
 class BasicTest extends TestCase
 {
     /**

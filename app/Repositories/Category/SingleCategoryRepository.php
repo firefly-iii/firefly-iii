@@ -72,13 +72,13 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     public function earnedPerDay(Category $category, Carbon $start, Carbon $end)
     {
         /** @var Collection $query */
-        $query = $category->transactionJournals()
+        $query = $category->transactionjournals()
                           ->transactionTypes([TransactionType::DEPOSIT])
                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->where('transactions.amount', '>', 0)
                           ->before($end)
                           ->after($start)
-                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($query->toArray() as $entry) {
@@ -115,7 +115,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     {
         $offset = $page > 0 ? $page * 50 : 0;
 
-        return $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)
+        return $category->transactionjournals()->withRelevantData()->take(50)->offset($offset)
                         ->orderBy('transaction_journals.date', 'DESC')
                         ->orderBy('transaction_journals.order', 'ASC')
                         ->orderBy('transaction_journals.id', 'DESC')
@@ -137,7 +137,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     {
         $offset = $page > 0 ? $page * 50 : 0;
 
-        return $category->transactionJournals()
+        return $category->transactionjournals()
                         ->after($start)
                         ->before($end)
                         ->withRelevantData()->take(50)->offset($offset)
@@ -186,13 +186,13 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     public function spentPerDay(Category $category, Carbon $start, Carbon $end)
     {
         /** @var Collection $query */
-        $query = $category->transactionJournals()
+        $query = $category->transactionjournals()
                           ->transactionTypes([TransactionType::WITHDRAWAL])
                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->where('transactions.amount', '<', 0)
                           ->before($end)
                           ->after($start)
-                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($query->toArray() as $entry) {

@@ -60,7 +60,7 @@ class RuleGroupController extends Controller
     {
         $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
-        $ruleGroupList = Expandedform::makeSelectList($repository->get(), true);
+        $ruleGroupList = ExpandedForm::makeSelectList($repository->get(), true);
         unset($ruleGroupList[$ruleGroup->id]);
 
         // put previous url in session

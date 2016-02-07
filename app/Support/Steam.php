@@ -88,7 +88,7 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
-                                  ->get(['transaction_journals.date', DB::Raw('SUM(`transactions`.`amount`) as `modified`')]);
+                                  ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `modified`')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
             $currentBalance         = bcadd($currentBalance, $entry->modified);
@@ -128,7 +128,7 @@ class Steam
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
-                               ->get(['transactions.account_id', DB::Raw('sum(`transactions`.`amount`) as aggregate')]);
+                               ->get(['transactions.account_id', DB::raw('sum(`transactions`.`amount`) as aggregate')]);
 
         $result = [];
         foreach ($balances as $entry) {

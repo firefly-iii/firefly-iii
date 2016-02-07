@@ -60,8 +60,8 @@ class CategoryRepository implements CategoryRepositoryInterface
                           ->get(
                               [
                                   'categories.*',
-                                  DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
-                                  DB::Raw('SUM(`t_dest`.`amount`) AS `earned`'),
+                                  DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
+                                  DB::raw('SUM(`t_dest`.`amount`) AS `earned`'),
                               ]
                           );
 
@@ -121,9 +121,9 @@ class CategoryRepository implements CategoryRepositoryInterface
                    ->get(
                        [
                            'categories.*',
-                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
+                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
                            'transaction_types.type',
-                           DB::Raw('SUM(`amount`) as `sum`'),
+                           DB::raw('SUM(`amount`) as `sum`'),
                        ]
                    );
 
@@ -198,8 +198,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collection = $query->get(
             [
                 'categories.*',
-                DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
-                DB::Raw('SUM(`t_src`.`amount`) AS `spent`'),
+                DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
+                DB::raw('SUM(`t_src`.`amount`) AS `spent`'),
             ]
         );
 
@@ -272,7 +272,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         $single = $query->first(
             [
-                DB::Raw('SUM(`transactions`.`amount`) as `sum`'),
+                DB::raw('SUM(`transactions`.`amount`) as `sum`'),
             ]
         );
         if (!is_null($single)) {

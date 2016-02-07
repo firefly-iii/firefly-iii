@@ -135,8 +135,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                    ->get(
                        [
                            'budgets.*',
-                           DB::Raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
-                           DB::Raw('SUM(`limit_repetitions`.`amount`) as `budgeted`'),
+                           DB::raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
+                           DB::raw('SUM(`limit_repetitions`.`amount`) as `budgeted`'),
                        ]
                    );
 
@@ -191,8 +191,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                    ->get(
                        [
                            'budgets.*',
-                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
+                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
+                           DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
                        ]
                    );
 
@@ -254,8 +254,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                    ->get(
                        [
                            'budgets.*',
-                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
-                           DB::Raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
+                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
+                           DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
                        ]
                    );
 
@@ -365,7 +365,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                    ->where('transactions.amount', '<', 0)
                    ->groupBy('transaction_journals.date')
                    ->orderBy('transaction_journals.date')
-                   ->get(['transaction_journals.date', DB::Raw('SUM(`transactions`.`amount`) as `dailyAmount`')]);
+                   ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `dailyAmount`')]);
 
         return $set;
     }
@@ -395,8 +395,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                    ->orderBy('transaction_journals.date')
                    ->get(
                        [
-                           DB::Raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                           DB::Raw('SUM(`transactions`.`amount`) as `monthlyAmount`'),
+                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
+                           DB::raw('SUM(`transactions`.`amount`) as `monthlyAmount`'),
                        ]
                    );
 
@@ -447,11 +447,11 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50)
     {
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
-        $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
+        $setQuery   = $budget->transactionjournals()->withRelevantData()->take($take)->offset($offset)
                              ->orderBy('transaction_journals.date', 'DESC')
                              ->orderBy('transaction_journals.order', 'ASC')
                              ->orderBy('transaction_journals.id', 'DESC');
-        $countQuery = $budget->transactionJournals();
+        $countQuery = $budget->transactionjournals();
 
 
         if (!is_null($repetition->id)) {
@@ -519,7 +519,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                      }
                      )
                      ->transactionTypes([TransactionType::WITHDRAWAL])
-                     ->first([DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
+                     ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
         if (is_null($entry->journalAmount)) {
             return '';
         }
@@ -561,7 +561,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                      ->groupBy('dateFormatted')
                      ->get(
                          ['transaction_journals.date as dateFormatted', 'budget_transaction_journal.budget_id',
-                          DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]
+                          DB::raw('SUM(`transactions`.`amount`) AS `sum`')]
                      );
 
         $return = [];
@@ -618,7 +618,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                           ->get(
                               [
                                   't_from.account_id', 'budget_transaction_journal.budget_id',
-                                  DB::Raw('SUM(`t_from`.`amount`) AS `spent`'),
+                                  DB::raw('SUM(`t_from`.`amount`) AS `spent`'),
                               ]
                           );
 
@@ -643,13 +643,13 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function spentPerDay(Budget $budget, Carbon $start, Carbon $end)
     {
         /** @var Collection $query */
-        $query = $budget->transactionJournals()
+        $query = $budget->transactionjournals()
                         ->transactionTypes([TransactionType::WITHDRAWAL])
                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                         ->where('transactions.amount', '<', 0)
                         ->before($end)
                         ->after($start)
-                        ->groupBy('dateFormatted')->get(['transaction_journals.date as dateFormatted', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                        ->groupBy('dateFormatted')->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($query->toArray() as $entry) {

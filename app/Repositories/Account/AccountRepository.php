@@ -134,7 +134,7 @@ class AccountRepository implements AccountRepositoryInterface
                            'accounts.*',
                            'ccType.data as ccType',
                            'accountRole.data as accountRole',
-                           DB::Raw('SUM(`transactions`.`amount`) AS `balance`'),
+                           DB::raw('SUM(`transactions`.`amount`) AS `balance`'),
                        ]
                    );
 
@@ -329,7 +329,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $balance = Steam::balance($account, $date, true);
         /** @var PiggyBank $p */
-        foreach ($account->piggybanks()->get() as $p) {
+        foreach ($account->piggyBanks()->get() as $p) {
             $balance = bcsub($p->currentRelevantRep()->currentamount, $balance);
         }
 
@@ -351,7 +351,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
-        if(is_null($journal)) {
+        if (is_null($journal)) {
             return new TransactionJournal;
         }
 

@@ -54,7 +54,7 @@ class AccountReportHelper implements AccountReportHelperInterface
                            ->whereNull('transactions.deleted_at')
                            ->where('transaction_journals.date', '<=', $yesterday->format('Y-m-d'))
                            ->groupBy('accounts.id')
-                           ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+                           ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
 
         // and end:
         $endSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
@@ -64,7 +64,7 @@ class AccountReportHelper implements AccountReportHelperInterface
                          ->whereNull('transactions.deleted_at')
                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                          ->groupBy('accounts.id')
-                         ->get(['accounts.id', DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+                         ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
 
 
         $accounts->each(

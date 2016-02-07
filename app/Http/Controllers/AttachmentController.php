@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Crypt;
 use File;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
@@ -73,7 +74,8 @@ class AttachmentController extends Controller
      * @param Attachment                $attachment
      * @param AttachmentHelperInterface $helper
      *
-     * @return string
+     * @throws FireflyException
+     *
      */
     public function download(Attachment $attachment, AttachmentHelperInterface $helper)
     {
@@ -95,9 +97,8 @@ class AttachmentController extends Controller
                 ->header('Pragma', 'public')
                 ->header('Content-Length', $attachment->size);
 
-        } else {
-            abort(404);
         }
+        throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
 
     /**

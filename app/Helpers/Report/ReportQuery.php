@@ -50,8 +50,8 @@ class ReportQuery implements ReportQueryInterface
                      ->groupBy('dateFormatted')
                      ->get(
                          [
-                             DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") AS `dateFormatted`'),
-                             DB::Raw('SUM(`t_to`.`amount`) AS `sum`'),
+                             DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") AS `dateFormatted`'),
+                             DB::raw('SUM(`t_to`.`amount`) AS `sum`'),
                          ]
                      );
         $array = [];
@@ -164,8 +164,8 @@ class ReportQuery implements ReportQueryInterface
                      ->groupBy('dateFormatted')
                      ->get(
                          [
-                             DB::Raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") AS `dateFormatted`'),
-                             DB::Raw('SUM(`t_from`.`amount`) AS `sum`'),
+                             DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") AS `dateFormatted`'),
+                             DB::raw('SUM(`t_from`.`amount`) AS `sum`'),
                          ]
                      );
         $array = [];

@@ -73,12 +73,13 @@ class ReportController extends Controller
     }
 
     /**
-     * @param            $reportType
+     * @param string     $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
+     * @throws FireflyException
      */
     public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {

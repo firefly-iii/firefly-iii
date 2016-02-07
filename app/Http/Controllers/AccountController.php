@@ -65,7 +65,7 @@ class AccountController extends Controller
     {
         $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = Expandedform::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
+        $accountList = ExpandedForm::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
         unset($accountList[$account->id]);
 
         // put previous url in session

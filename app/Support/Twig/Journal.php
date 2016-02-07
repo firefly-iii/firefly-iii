@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
