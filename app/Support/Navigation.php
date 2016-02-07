@@ -165,21 +165,21 @@ class Navigation
     public function periodShow(Carbon $date, string $repeatFrequency)
     {
         $formatMap = [
-            '1D'      => '%e %B %Y',
-            'daily'   => '%e %B %Y',
-            'custom'  => '%e %B %Y',
-            '1W'      => 'Week %W, %Y',
-            'week'    => 'Week %W, %Y',
-            'weekly'  => 'Week %W, %Y',
-            '3M'      => '%B %Y',
-            'quarter' => '%B %Y',
-            '1M'      => '%B %Y',
-            'month'   => '%B %Y',
-            'monthly' => '%B %Y',
-            '1Y'      => '%Y',
-            'year'    => '%Y',
-            'yearly'  => '%Y',
-            '6M'      => '%B %Y',
+            '1D'      => trans('config.specific_day'),
+            'daily'   => trans('config.specific_day'),
+            'custom'  => trans('config.specific_day'),
+            '1W'      => trans('config.week_in_year'),
+            'week'    => trans('config.week_in_year'),
+            'weekly'  => trans('config.week_in_year'),
+            '3M'      => trans('config.quarter_of_year'),
+            'quarter' => trans('config.quarter_of_year'),
+            '1M'      => trans('config.month'),
+            'month'   => trans('config.month'),
+            'monthly' => trans('config.month'),
+            '1Y'      => trans('config.year'),
+            'year'    => trans('config.year'),
+            'yearly'  => trans('config.year'),
+            '6M'      => trans('config.half_year'),
 
         ];
 
