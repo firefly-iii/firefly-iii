@@ -6,7 +6,6 @@ use Config;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
-use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -76,7 +75,6 @@ class HomeController extends Controller
      */
     public function index(ARI $repository)
     {
-        Log::debug('You are at index.');
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
         bcscale(2);
@@ -85,13 +83,13 @@ class HomeController extends Controller
             return redirect(route('new-user.index'));
         }
 
-        $title             = 'Firefly';
-        $subTitle          = trans('firefly.welcomeBack');
-        $mainTitleIcon     = 'fa-fire';
-        $transactions      = [];
-        $frontPage         = Preferences::get('frontPageAccounts', []);
+        $title         = 'Firefly';
+        $subTitle      = trans('firefly.welcomeBack');
+        $mainTitleIcon = 'fa-fire';
+        $transactions  = [];
+        $frontPage     = Preferences::get('frontPageAccounts', []);
         /** @var Carbon $start */
-        $start             = session('start', Carbon::now()->startOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;

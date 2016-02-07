@@ -1,61 +1,81 @@
+<!-- SUCCESS MESSAGE (ALWAYS SINGULAR) -->
 {% if Session.has('success') %}
     <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-        <strong>Success!</strong> {{ Session.get('success') }}
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+        <strong>{{ 'flash_success'|_ }}</strong> {{ session('success') }}
     </div>
 {% endif %}
 
+<!-- INFO MESSAGE (CAN BE MULTIPLE) -->
 {% if Session.has('info') %}
-
     <div class="alert alert-info alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
 
-        {% if Session.get('info') is iterable and Session.get('info')|length > 1 %}
-            <strong>{{ Session.get('info')|length }} messages:</strong>
+        <!-- MULTIPLE INFO MESSAGE -->
+        {% if session('info') is iterable and session('info')|length > 1 %}
+            <strong>
+                {{ Lang.choice('firefly.flash_info_multiple', session('info')|length, {count: session('info')|length}) }}:</strong>
             <ul class="list-unstyled">
-                {% for err in Session.get('info') %}
-                    <li>{{ err }}</li>
+                {% for inf in session('info') %}
+                    <li>{{ inf|raw }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
-        {% if Session.get('info') is iterable and Session.get('info')|length == 1 %}
-            <strong>Message:</strong> {{ Session.get('info')[0]|raw }}
+        <!-- SET OF MULTIPLE INFO MESSAGES, BUT THERE IS JUST ONE -->
+        {% if session('info') is iterable and session('info')|length == 1 %}
+            <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')[0]|raw }}
         {% endif %}
-
-        {% if Session.get('info') is not iterable %}
-            <strong>Message:</strong> {{ Session.get('info')|raw }}
+        <!-- SINGLE INFO MESSAGE -->
+        {% if session('info') is not iterable %}
+            <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')|raw }}
         {% endif %}
 
     </div>
 
 {% endif %}
 
+<!-- WARNING MESSAGE (ALWAYS SINGULAR) -->
 {% if Session.has('warning') %}
     <div class="alert alert-warning alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-        <strong>Warning!</strong> {{ Session.get('warning') }}
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+        <strong>{{ 'flash_warning'|_ }}</strong> {{ session('warning') }}
     </div>
 {% endif %}
 
+<!-- ERROR MESSAGE (CAN BE MULTIPLE) -->
 {% if Session.has('error') %}
     <div class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
 
-        {% if Session.get('error') is iterable and Session.get('error')|length > 1 %}
-            <strong>{{ Session.get('error')|length }} errors:</strong>
+        <!-- MULTIPLE ERRORS (BAD) -->
+        {% if session('error') is iterable and session('error')|length > 1 %}
+            <strong>
+                {{ Lang.choice('firefly.flash_error_multiple', session('error')|length, {count: session('error')|length}) }}:
+            </strong>
             <ul class="list-unstyled">
-                {% for err in Session.get('error') %}
+                {% for err in session('error') %}
                     <li>{{ err }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
-        {% if Session.get('error') is iterable and Session.get('error')|length == 1 %}
-            <strong>Error!</strong>
-            {{ Session.get('error')[0]|raw }}
+
+        <!-- SET OF MULTIPLE ERRORS, BUT THERE IS JUST ONE -->
+        {% if session('error') is iterable and session('error')|length == 1 %}
+            <strong>{{ 'flash_error'|_ }}</strong>
+            {{ session('error')[0]|raw }}
         {% endif %}
 
-        {% if Session.get('error') is not iterable %}
-            <strong>Error!</strong> {{ Session.get('error')|raw }}
+        <!-- SINGLE ERROR -->
+        {% if session('error') is not iterable %}
+            <strong>{{ 'flash_error'|_ }}</strong> {{ session('error')|raw }}
         {% endif %}
 
     </div>

@@ -38,6 +38,13 @@ return [
     'new_budget'                                => 'New budget',
     'new_bill'                                  => 'New bill',
     'block_account_logout'                      => 'You have been logged out. Blocked accounts cannot use this site. Did you register with a valid email address?',
+    'flash_success'                             => 'Success!',
+    'flash_info'                                => 'Message',
+    'flash_warning'                             => 'Warning!',
+    'flash_error'                               => 'Error!',
+    'flash_info_multiple'                       => 'There is one message|There are :count messages',
+    'flash_error_multiple'                      => 'There is one error|There are :count errors',
+
 
     // export data:
     'import_and_export'                         => 'Import and export',
