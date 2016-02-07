@@ -6,7 +6,7 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Session;
 /**
  * Class Authenticate
  *
@@ -32,10 +32,12 @@ class Authenticate
                 return redirect()->guest('login');
             }
         } else {
-//            if (intval(Auth::user()->blocked) === 1) {
-//                Auth::guard($this->getGuard())->logout();
-//                return redirect()->guest('login');
-//            }
+            if (intval(Auth::user()->blocked) === 1) {
+                Auth::guard($guard)->logout();
+                Session::flash('logoutMessage', trans('firefly.block_account_logout'));
+
+                return redirect()->guest('login');
+            }
         }
 
         return $next($request);

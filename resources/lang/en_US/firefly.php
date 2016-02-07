@@ -37,6 +37,7 @@ return [
     'new_revenue_account'                       => 'New revenue account',
     'new_budget'                                => 'New budget',
     'new_bill'                                  => 'New bill',
+    'block_account_logout'                      => 'You have been logged out. Blocked accounts cannot use this site. Did you register with a valid email address?',
 
     // export data:
     'import_and_export'                         => 'Import and export',

@@ -75,7 +75,7 @@ class AuthController extends Controller
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
             // if it exists, show message:
-            $code = $foundUser->blocked_code;
+            $code = $foundUser->blocked_code ?? '';
 
             if (strlen($code) == 0) {
                 $code = 'general_blocked';
