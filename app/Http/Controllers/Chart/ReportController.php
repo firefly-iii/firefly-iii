@@ -160,7 +160,7 @@ class ReportController extends Controller
         while ($start < $end) {
 
             $currentIncome  = $this->pluckFromArray($start->year, $earned);
-            $currentExpense = $this->pluckFromArray($start->year, $spent) * -1;
+            $currentExpense = bcmul($this->pluckFromArray($start->year, $spent), '-1');
             $income         = bcadd($income, $currentIncome);
             $expense        = bcadd($expense, $currentExpense);
 
