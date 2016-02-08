@@ -4,15 +4,17 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/SoftwareApplication">
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Hey there,
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Welkome to <a style="color:#337ab7" href="{{ address }}">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!
-
-
+    Welkome to <a style="color:#337ab7" href="{{ address }}">
+        <span itemprop="name">Firefly III</span></a>. Your registration has made it, and this email is here to confirm it. Yay!
+</p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    You can now continue on <span itemprop="url"><a href="{{ address }}">{{ address }}</a></span>, if you weren't there already.
 </p>
 
 
@@ -35,6 +37,9 @@
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Enjoy!
 </p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">James Cole</span></span>
+</p>c
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;color:#aaa;">
     The registration has been created from IP {{ ip }}
@@ -48,13 +53,14 @@
   "description": "Visit Firefly III",
   "potentialAction": {
     "@type": "ViewAction",
-    "target": "https://geld.nder.be/",
+    "target": "{{ address }}",
+    "url": "{{ address }}",
     "name": "Visit Firefly III"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Firefly III",
-    "url": "https://geld.nder.be"
+    "url": "{{ address }}"
   }
 }
 
