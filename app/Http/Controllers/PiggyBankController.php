@@ -168,7 +168,7 @@ class PiggyBankController extends Controller
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
         /** @var Carbon $end */
-        $end        = session('end', Carbon::now()->endOfMonth());
+        $end = session('end', Carbon::now()->endOfMonth());
         bcscale(2);
 
         $accounts = [];
@@ -229,7 +229,7 @@ class PiggyBankController extends Controller
     public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
     {
         bcscale(2);
-        $amount        = round(Input::get('amount'), 2);
+        $amount = round(Input::get('amount'), 2);
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
@@ -274,7 +274,7 @@ class PiggyBankController extends Controller
             $repetition->save();
 
             // create event
-            $repository->createEvent($piggyBank, $amount * -1);
+            $repository->createEvent($piggyBank, bcmul($amount, '-1'));
 
             Session::flash('success', 'Removed ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
             Preferences::mark();
