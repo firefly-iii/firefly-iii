@@ -75,7 +75,9 @@ class AccountReportHelper implements AccountReportHelperInterface
                  * day.
                  */
                 //
-                $currentStart = $startSet->filter(
+                $account->startBalance = '0';
+                $account->endBalance   = '0';
+                $currentStart          = $startSet->filter(
                     function (Account $entry) use ($account) {
                         return $account->id == $entry->id;
                     }
