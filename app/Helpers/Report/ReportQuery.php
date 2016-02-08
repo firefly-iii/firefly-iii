@@ -87,7 +87,7 @@ class ReportQuery implements ReportQueryInterface
                    }
                    )
                    ->leftJoin('accounts', 't_to.account_id', '=', 'accounts.id')
-                   ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                   ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                    ->before($end)
                    ->after($start)
                    ->whereIn('t_from.account_id', $ids)
@@ -122,7 +122,7 @@ class ReportQuery implements ReportQueryInterface
                    }
                    )
                    ->leftJoin('accounts', 't_from.account_id', '=', 'accounts.id')
-                   ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                   ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                    ->before($end)
                    ->after($start)
                    ->whereIn('t_to.account_id', $ids)
