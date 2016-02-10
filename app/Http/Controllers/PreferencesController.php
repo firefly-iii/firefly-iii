@@ -43,12 +43,14 @@ class PreferencesController extends Controller
         $fiscalYearStartStr   = Preferences::get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart      = date('Y') . '-' . $fiscalYearStartStr;
         $twoFactorAuthEnabled = Preferences::get('twoFactorAuthEnabled', 0)->data;
-
-        $showIncomplete = env('SHOW_INCOMPLETE_TRANSLATIONS', 'false') == 'true';
+        $showIncomplete       = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
 
         return view(
             'preferences.index',
-            compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled', 'showIncomplete')
+            compact(
+                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled',
+                'showIncomplete'
+            )
         );
     }
 
