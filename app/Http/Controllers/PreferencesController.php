@@ -32,22 +32,23 @@ class PreferencesController extends Controller
      */
     public function index(ARI $repository)
     {
-        $accounts           = $repository->getAccounts(['Default account', 'Asset account']);
-        $viewRangePref      = Preferences::get('viewRange', '1M');
-        $viewRange          = $viewRangePref->data;
-        $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
-        $budgetMax          = Preferences::get('budgetMaximum', 1000);
-        $language           = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $budgetMaximum      = $budgetMax->data;
-        $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
+        $accounts             = $repository->getAccounts(['Default account', 'Asset account']);
+        $viewRangePref        = Preferences::get('viewRange', '1M');
+        $viewRange            = $viewRangePref->data;
+        $frontPageAccounts    = Preferences::get('frontPageAccounts', []);
+        $budgetMax            = Preferences::get('budgetMaximum', 1000);
+        $language             = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $budgetMaximum        = $budgetMax->data;
+        $customFiscalYear     = Preferences::get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr   = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart      = date('Y') . '-' . $fiscalYearStartStr;
+        $twoFactorAuthEnabled = Preferences::get('twoFactorAuthEnabled', 0)->data;
 
         $showIncomplete = env('SHOW_INCOMPLETE_TRANSLATIONS', 'false') == 'true';
 
         return view(
             'preferences.index',
-            compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'showIncomplete')
+            compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled', 'showIncomplete')
         );
     }
 
@@ -81,6 +82,10 @@ class PreferencesController extends Controller
         Preferences::set('customFiscalYear', $customFiscalYear);
         $fiscalYearStart = date('m-d', strtotime(Input::get('fiscalYearStart')));
         Preferences::set('fiscalYearStart', $fiscalYearStart);
+
+        // two factor auth
+        $twoFactorAuthEnabled = (int)Input::get('twoFactorAuthEnabled');
+        Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
 
         // language:
         $lang = Input::get('language');

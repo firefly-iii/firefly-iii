@@ -209,6 +209,9 @@ return [
     'pref_custom_fiscal_year_label'          => 'Ingeschakeld',
     'pref_custom_fiscal_year_help'           => 'Voor in landen die een boekjaar gebruiken anders dan 1 januari tot 31 december',
     'pref_fiscal_year_start_label'           => 'Start van boekjaar',
+	'pref_two_factor_auth'                   => '2-stapsverificatie',
+    'pref_two_factor_auth_help'              => 'De 2-stapsverificatie biedt een verbeterde beveiliging van uw Firefly III-account. Schakelt u de 2-stapsverificatie in, dan hebt u uw wachtwoord en een eenmalige verificatiecode nodig om u bij Firefly III aan te melden. De verificatiecodes krijgt u van een app geïnstalleerd op uw mobiele telefoon. Voorbeelden van deze app zijn Authy en Google Authenticator. Mocht iemand toegang tot uw account willen, dan heeft hij naast uw gebruikersnaam en wachtwoord ook uw mobiele telefoon nodig.',
+    'pref_enable_two_factor_auth'            => '2-stapsverificatie inschakelen',
     'pref_save_settings'                     => 'Instellingen opslaan',
 
     // profile:
