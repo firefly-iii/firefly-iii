@@ -7,7 +7,7 @@ use FireflyIII\User;
  * Class TestCase
  */
 
-/** @noinspection PhpUndefinedClassInspection */
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**

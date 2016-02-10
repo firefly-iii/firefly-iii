@@ -24,7 +24,7 @@ class ChartBudgetControllerTest extends TestCase
     {
 
         $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('getExpensesPerMonth')->once()->andReturn(new Collection([new Budget]));
+        $repository->shouldReceive('spentPerDay')->once()->andReturn([]);
         $repository->shouldReceive('getFirstBudgetLimitDate')->once()->andReturn(new Carbon);
 
         $this->be($this->user());

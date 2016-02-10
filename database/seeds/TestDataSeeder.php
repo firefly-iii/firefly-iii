@@ -88,7 +88,7 @@ class TestDataSeeder extends Seeder
             TestData::createBudgetLimit($user, $current, 'Bills', '1000');
             TestData::createBudgetLimit($user, $current, 'Car', '100');
 
-            echo 'Created test data for ' . $month . "\n";
+            Log::info('Created test data for ' . $month);
             $current->addMonth();
         }
     }

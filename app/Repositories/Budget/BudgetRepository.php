@@ -607,7 +607,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return array
      */
-    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end)
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end): array
     {
         /** @var Collection $query */
         $query = $budget->transactionjournals()

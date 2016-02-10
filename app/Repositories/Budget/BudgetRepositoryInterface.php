@@ -221,7 +221,7 @@ interface BudgetRepositoryInterface
      *
      * @return array
      */
-    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end);
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end): array;
 
     /**
      * @param array $data
