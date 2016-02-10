@@ -26,7 +26,7 @@ class ChangesForV380 extends Migration
      */
     public function up()
     {
-        // new table "rule_groups"
+        // new table "export_jobs"
         Schema::create(
             'export_jobs', function (Blueprint $table) {
             $table->increments('id');
@@ -40,5 +40,19 @@ class ChangesForV380 extends Migration
 
         }
         );
+
+        // new table for transaction journal meta, "journal_meta"
+        Schema::create('journal_meta', function(Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('transaction_journal_id')->unsigned();
+            $table->string('name');
+            $table->text('data');
+
+            $table->unique(['transaction_journal_id', 'name']);
+
+            // link to transaction journal
+            $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+        });
     }
 }
