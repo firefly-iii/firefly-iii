@@ -31,6 +31,9 @@ use Steam;
 class AccountRepository implements AccountRepositoryInterface
 {
 
+    /** @var array Valied field names of account_meta */
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
+
     /**
      * @param array $types
      *
@@ -541,9 +544,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @return bool
      */
     private function storeMetadata(Account $account, array $data): bool
-    {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        foreach ($validFields as $field) {
+    {        
+        foreach ($this->validFields as $field) {
             if (isset($data[$field])) {
                 $metaData = new AccountMeta(
                     [
@@ -594,9 +596,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     private function updateMetadata(Account $account, array $data): bool
     {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-
-        foreach ($validFields as $field) {
+        foreach ($this->validFields as $field) {
             $entry = $account->accountMeta()->where('name', $field)->first();
 
             if (isset($data[$field])) {
