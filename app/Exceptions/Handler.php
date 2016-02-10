@@ -6,6 +6,10 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Mail\Message;
+use Log;
+use Mail;
+use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -38,6 +42,34 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof FireflyException) {
+
+            // log
+            Log::error($exception->getMessage());
+
+            // mail?
+            try {
+                $email = env('SITE_OWNER');
+
+                $args = [
+                    'errorMessage' => $exception->getMessage(),
+                    'stacktrace'   => $exception->getTraceAsString(),
+                    'file'         => $exception->getFile(),
+                    'line'         => $exception->getLine(),
+                    'code'         => $exception->getCode(),
+                ];
+
+                Mail::send(
+                    ['emails.error-html', 'emails.error'], $args,
+                    function (Message $message) use ($email) {
+                        if ($email != 'mail@example.com') {
+                            $message->to($email, $email)->subject('Caught an error in Firely III.');
+                        }
+                    }
+                );
+            } catch (Swift_TransportException $e) {
+                // could also not mail! :o
+                Log::error($e->getMessage());
+            }
 
             return response()->view('errors.FireflyException', ['exception' => $exception], 500);
         }
