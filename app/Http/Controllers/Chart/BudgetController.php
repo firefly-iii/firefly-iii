@@ -65,20 +65,17 @@ class BudgetController extends Controller
         $last    = Navigation::endOfX($last, $range, $final);
         $entries = new Collection;
         // get all expenses:
-        $set = $repository->getExpensesPerMonth($budget, $first, $last);
+        $spentArray = $repository->spentPerDay($budget, $first, $last);
 
         while ($first < $last) {
-            $monthFormatted = $first->format('Y-m');
 
-            $filtered = $set->filter(
-                function (Budget $obj) use ($monthFormatted) {
-                    return $obj->dateFormatted == $monthFormatted;
-                }
-            );
-            $spent    = is_null($filtered->first()) ? '0' : $filtered->first()->monthlyAmount;
+            // periodspecific dates:
+            $currentStart = Navigation::startOfPeriod($first, $range);
+            $currentEnd   = Navigation::endOfPeriod($first, $range);
+            $spent        = $this->getSumOfRange($currentStart, $currentEnd, $spentArray);
+            $entry        = [$first, ($spent * -1)];
 
-            $entries->push([$first, round(($spent * -1), 2)]);
-
+            $entries->push($entry);
             $first = Navigation::addPeriod($first, $range, 0);
         }
 

@@ -371,39 +371,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * Returns the expenses for this budget grouped per month, with the date
-     * in "dateFormatted" (a string, not a Carbon) and the amount in "dailyAmount".
-     *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end)
-    {
-        $set = Auth::user()->budgets()
-                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
-                   ->leftJoin('transaction_journals', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->where('budgets.id', $budget->id)
-                   ->where('transactions.amount', '<', 0)
-                   ->groupBy('dateFormatted')
-                   ->orderBy('transaction_journals.date')
-                   ->get(
-                       [
-                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                           DB::raw('SUM(`transactions`.`amount`) as `monthlyAmount`'),
-                       ]
-                   );
-
-        return $set;
-    }
-
-    /**
      * @param Budget $budget
      *
      * @return Carbon
