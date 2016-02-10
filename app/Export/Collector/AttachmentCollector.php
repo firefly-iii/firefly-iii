@@ -89,7 +89,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
             'type'            => strtolower($journal->transactionType->type),
             'description'     => $journal->description,
             'journal_id'      => $journal->id,
-            'date'            => $journal->date->formatLocalized(trans('config.month_and_day')),
+            'date'            => $journal->date->formatLocalized(strval(trans('config.month_and_day'))),
             'amount'          => Amount::formatJournal($journal, false),
         ];
         $string  = trans('firefly.attachment_explanation', $args) . "\n";

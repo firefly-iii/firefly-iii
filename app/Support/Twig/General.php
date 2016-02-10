@@ -17,7 +17,6 @@ use Twig_SimpleFunction;
  * @codeCoverageIgnore
  *
  * Class TwigSupport
- * @todo    these functions should be parameterized.
  *
  * @package FireflyIII\Support
  */
@@ -99,7 +98,7 @@ class General extends Twig_Extension
     protected function activeRoutePartialWhat(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartialWhat', function ($context)  : string {
+            'activeRoutePartialWhat', function ($context) : string {
             $args       = func_get_args();
             $route      = $args[1]; // name of the route.
             $what       = $args[2]; // name of the route.

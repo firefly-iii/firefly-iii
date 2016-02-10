@@ -80,7 +80,7 @@ class AuthController extends Controller
             if (strlen($code) == 0) {
                 $code = 'general_blocked';
             }
-            $message = trans('firefly.' . $code . '_error', ['email' => $credentials['email']]);
+            $message = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
         }
 
         if ($throttles) {

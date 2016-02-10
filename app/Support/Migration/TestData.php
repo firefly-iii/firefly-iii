@@ -228,7 +228,7 @@ class TestData
         Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
 
         // some empty budgets.
-        foreach (['A', 'B', 'C', 'D', "E"] as $letter) {
+        foreach (['A', 'B', 'C', 'D', 'E'] as $letter) {
             Budget::firstOrCreateEncrypted(['name' => 'Empty budget ' . $letter, 'user_id' => $user->id]);
         }
 
@@ -984,7 +984,6 @@ class TestData
         foreach (Budget::get() as $budget) {
             if ($budget->name == $name && $user->id == $budget->user_id) {
                 return $budget;
-                break;
             }
         }
 

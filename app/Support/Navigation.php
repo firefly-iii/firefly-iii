@@ -185,7 +185,7 @@ class Navigation
 
 
         if (isset($formatMap[$repeatFrequency])) {
-            return $date->formatLocalized($formatMap[$repeatFrequency]);
+            return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
         throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
     }
