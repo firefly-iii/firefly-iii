@@ -399,7 +399,8 @@ class BillRepository implements BillRepositoryInterface
     public function nextExpectedMatch(Bill $bill): Carbon
     {
 
-        $finalDate = Carbon::now()->subDays(2);
+        $finalDate = Carbon::now();
+        $finalDate->year = 1900;
         if ($bill->active == 0) {
             return $finalDate;
         }

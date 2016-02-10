@@ -45,13 +45,13 @@
                 </td>
             {% endif %}
 
-            {% if entry.nextExpectedMatch.isFuture %}
-                <td class="hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('U') }}">
-                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
-                </td>
-            {% else %}
+            {% if entry.nextExpectedMatch.year == 1900 %}
                 <td class="hidden-sm hidden-xs" data-value="0">
                     <em>{{ 'unknown'|_ }}</em>
+                </td>
+            {% else %}
+                <td class="hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('U') }}">
+                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
 
