@@ -1,4 +1,3 @@
-/* global $, addNewTrigger, addNewAction, actionCount, triggerCount */
 /*
  * edit.js
  * Copyright (C) 2016 Sander Dorigo
@@ -7,11 +6,10 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-// make a line.
-
 $(function () {
     "use strict";
-    console.log("create");
+    console.log("edit");
+
     if (triggerCount === 0) {
         addNewTrigger();
     }
@@ -28,6 +26,19 @@ $(function () {
 
     $('.add_rule_action').click(function () {
         addNewAction();
+
+        return false;
+    });
+
+    $('.remove-trigger').unbind('click').click(function (e) {
+        removeTrigger(e);
+
+        return false;
+    });
+
+    // add action things.
+    $('.remove-action').unbind('click').click(function (e) {
+        removeAction(e);
 
         return false;
     });
