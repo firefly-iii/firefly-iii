@@ -7,8 +7,9 @@
 class BasicTest extends TestCase
 {
     /**
-     * A basic test example.
+     * A basic test example. May take a minute because the test data is being generated.
      *
+     * @slowThreshold 60000
      * @return void
      */
     public function testExample()
