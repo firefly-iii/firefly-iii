@@ -56,6 +56,7 @@ use Watson\Validating\ValidatingTrait;
  * @property string                                                           $type
  * @property \Carbon\Carbon                                                   $interest_date
  * @property \Carbon\Carbon                                                   $book_date
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionjournalmeta
  */
 class TransactionJournal extends Model
 {
@@ -84,6 +85,24 @@ class TransactionJournal extends Model
 
     /** @var  bool */
     private $joinedTransactionTypes;
+
+
+    /**
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public function getMeta($fieldName): string
+    {
+        foreach ($this->transactionjournalmeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return '';
+    }
 
     /**
      * @param $value
@@ -402,6 +421,14 @@ class TransactionJournal extends Model
     public function transactiongroups()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionGroup');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactionjournalmeta(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\TransactionJournalMeta');
     }
 
     /**
