@@ -614,7 +614,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                           ->before($end)
                           ->groupBy('t_from.account_id')
                           ->groupBy('budget_transaction_journal.budget_id')
-                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE])
+                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]) // opening balance is not an expense.
                           ->get(
                               [
                                   't_from.account_id', 'budget_transaction_journal.budget_id',
