@@ -1,13 +1,10 @@
 language: php
 sudo: false
-
-
 php:
   - 7
-before_script:
-  - phpenv config-rm xdebug.ini
 
 install:
+  - phpenv config-rm xdebug.ini
   - composer selfupdate
   - rm composer.lock
   - composer update --no-scripts
