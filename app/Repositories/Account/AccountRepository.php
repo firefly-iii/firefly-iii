@@ -380,9 +380,9 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @return string
      */
-    public function sumOfEverything()
+    public function sumOfEverything(): string
     {
-        return Auth::user()->transactions()->sum('amount');
+        return strval(Auth::user()->transactions()->sum('amount'));
     }
 
     /**
