@@ -3,12 +3,14 @@
 use Artisan;
 use Carbon\Carbon;
 use Config;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
 use Preferences;
 use Session;
 use Steam;
+
 
 /**
  * Class HomeController
@@ -24,6 +26,11 @@ class HomeController extends Controller
     {
         parent::__construct();
     }
+
+    public function displayError() {
+        throw new FireflyException('A very simple test error.');
+    }
+
 
     public function dateRange()
     {

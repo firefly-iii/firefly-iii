@@ -22,6 +22,10 @@ Route::group(
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
 
+    // display error:
+    Route::get('/error', 'HomeController@displayError');
+
+
 }
 );
 
