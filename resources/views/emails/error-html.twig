@@ -12,11 +12,17 @@
     This error occured in file <span style="font-family: monospace;">{{ file }}</span> on line {{ line }} with code {{ code }}.
 </p>
 
-{% if loggedIn %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    The error was encountered by user #{{ user.id }}, <a href="mailto:{{ user.email }}">{{ user.email }}</a>.
+    {% if loggedIn %}
+        The error was encountered by user #{{ user.id }}, <a href="mailto:{{ user.email }}">{{ user.email }}</a>.
+    {% else %}
+        There was no user logged in for this error or no user was detected.
+    {% endif %}
 </p>
-{% endif %}
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+	The IP address related to this error is: {{ ip }}
+</p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     The full stacktrace is below. If you think this is a bug in Firefly III, you

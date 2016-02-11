@@ -4,7 +4,11 @@ This error occured in file "{{ file }}" on line {{ line }} with code {{ code }}.
 
 {% if loggedIn %}
 The error was encountered by user #{{ user.id }}, {{ user.email }}.
+{% else} 
+There was no user logged in for this error or no user was detected.
 {% endif %}
+
+The IP address related to this error is: {{ ip }}
 
 The full stacktrace is below. If you think this is a bug in Firefly III, you
 can forward this message to thegrumpydictator@gmail.com. This can help fix

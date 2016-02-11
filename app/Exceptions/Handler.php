@@ -12,7 +12,6 @@ use Log;
 use Mail;
 use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Auth;
 
 /**
  * Class Handler
@@ -51,15 +50,17 @@ class Handler extends ExceptionHandler
             // mail?
             try {
                 $email = env('SITE_OWNER');
-
+                $user = $request->user();
                 $args = [
                     'errorMessage' => $exception->getMessage(),
                     'stacktrace'   => $exception->getTraceAsString(),
                     'file'         => $exception->getFile(),
                     'line'         => $exception->getLine(),
                     'code'         => $exception->getCode(),
-                    'loggedIn'     => Auth::check(),
-                    'user'         => Auth::user(),
+                    'loggedIn'     => !is_null($user),
+                    'user'         => $user,
+                    'ip'           => $request->ip(),
+
                 ];
 
                 Mail::send(
