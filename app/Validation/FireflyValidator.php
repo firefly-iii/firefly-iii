@@ -8,6 +8,7 @@ use Config;
 use Crypt;
 use DB;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
@@ -196,6 +197,33 @@ class FireflyValidator extends Validator
 
 
         return false;
+    }
+
+    public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
+    {
+        $accountId = $this->data['id'] ?? 0;
+
+        $query = AccountMeta::
+        leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+                            ->where('accounts.user_id', Auth::user()->id)
+                            ->where('account_meta.name', 'accountNumber');
+
+        if (intval($accountId) > 0) {
+            // exclude current account from check.
+            $query->where('account_meta.account_id', '!=', intval($accountId));
+        }
+        $set = $query->get(['account_meta.*']);
+
+        /** @var AccountMeta $entry */
+        foreach ($set as $entry) {
+            if ($entry->data == $value) {
+
+                return false;
+            }
+        }
+
+        return true;
+
     }
 
     /**
