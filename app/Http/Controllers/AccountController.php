@@ -128,6 +128,7 @@ class AccountController extends Controller
         }
 
         $preFilled = [
+            'accountNumber'        => $account->getMeta('accountNumber'),
             'accountRole'          => $account->getMeta('accountRole'),
             'ccType'               => $account->getMeta('ccType'),
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
@@ -211,6 +212,7 @@ class AccountController extends Controller
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
+            'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
@@ -249,6 +251,7 @@ class AccountController extends Controller
             'active'                 => $request->input('active'),
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
+            'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'openingBalance'         => round($request->input('openingBalance'), 2),

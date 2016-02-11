@@ -47,6 +47,7 @@ return [
     'symbol'                      => 'Symbol',
     'code'                        => 'Code',
     'iban'                        => 'IBAN',
+    'accountNumber'               => 'Account number',
     'csv'                         => 'CSV file',
     'has_headers'                 => 'Headers',
     'date_format'                 => 'Date format',
