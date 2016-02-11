@@ -79,7 +79,7 @@ function sortStop(event, ui) {
     });
 
     // do extra animation when done?
-    $.post('/transaction/reorder', {items: submit, date: thisDate, _token: token});
+    $.post('transaction/reorder', {items: submit, date: thisDate, _token: token});
 
     current.animate({backgroundColor: "#5cb85c"}, 200, function () {
         $(this).animate({backgroundColor: originalBG}, 200);
