@@ -16,7 +16,7 @@ class ChangesForV380 extends Migration
     public function down()
     {
         Schema::drop('export_jobs');
-
+        Schema::drop('journal_meta');
     }
 
     /**
@@ -42,7 +42,8 @@ class ChangesForV380 extends Migration
         );
 
         // new table for transaction journal meta, "journal_meta"
-        Schema::create('journal_meta', function(Blueprint $table) {
+        Schema::create(
+            'journal_meta', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->integer('transaction_journal_id')->unsigned();
@@ -53,6 +54,7 @@ class ChangesForV380 extends Migration
 
             // link to transaction journal
             $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-        });
+        }
+        );
     }
 }
