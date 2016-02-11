@@ -31,7 +31,7 @@ use Steam;
 class AccountRepository implements AccountRepositoryInterface
 {
 
-    /** @var array Valied field names of account_meta */
+    /** @var array Valid field names of account_meta */
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
     /**
