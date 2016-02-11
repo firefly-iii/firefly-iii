@@ -334,6 +334,8 @@ return [
     'csv_column_sepa-db'                     => 'SEPA Direct Debet',
     'csv_column_tags-comma'                  => 'Tags (comma separated)',
     'csv_column_tags-space'                  => 'Tags (space separated)',
+    'csv_column_account-number'              => 'Asset account (account number)',
+    'csv_column_opposing-number'             => 'Opposing account (account number)',
     'csv_specifix_RabobankDescription'       => 'Select this when you\'re importing Rabobank CSV export files.',
     'csv_specifix_AbnAmroDescription'        => 'Select this when you\'re importing ABN AMRO CSV export files.',
     'csv_specifix_Dummy'                     => 'Checking this has no effect whatsoever.',
