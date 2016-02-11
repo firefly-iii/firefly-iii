@@ -10,6 +10,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Mail\Message;
 use Log;
 use Mail;
+use Request;
 use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Auth;
@@ -82,7 +83,7 @@ class Handler extends ExceptionHandler
                     'code'         => $exception->getCode(),
                     'loggedIn'     => !is_null($user),
                     'user'         => $user,
-                    'ip'           => $request->ip(),
+                    'ip'           => Request::ip(),
 
                 ];
 
