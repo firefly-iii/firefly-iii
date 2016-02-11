@@ -30,7 +30,8 @@ class AssetAccount implements MapperInterface
         /** @var Account $account */
         foreach ($result as $account) {
             $name = $account->name;
-            if (strlen($account->iban) > 0) {
+            $iban = $account->iban ?? '';
+            if (strlen($iban) > 0) {
                 $name .= ' (' . $account->iban . ')';
             }
             $list[$account->id] = $name;
