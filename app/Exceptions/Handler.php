@@ -44,6 +44,29 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
 
+            $isDebug = env('APP_DEBUG', false);
+
+            return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+
+    /**
+     * Report or log an exception.
+     *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
+     * @param  Exception $exception
+     *
+     * @return void
+     */
+    public function report(Exception $exception)
+    {
+
+        if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
+
             // log
             Log::error($exception->getMessage());
 
@@ -75,26 +98,9 @@ class Handler extends ExceptionHandler
                 // could also not mail! :o
                 Log::error($e->getMessage());
             }
-            $isDebug = env('APP_DEBUG', false);
-
-            return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
+           
         }
 
-        return parent::render($request, $exception);
-    }
-
-
-    /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  Exception $exception
-     *
-     * @return void
-     */
-    public function report(Exception $exception)
-    {
         parent::report($exception);
     }
 }
