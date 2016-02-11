@@ -12,10 +12,25 @@
     padding: 0;
 }
 
-.error-page {
-    background: #d2d6de;
+
+.ff-error-page {
+    width: 1000px;
+    margin: 20px auto 0 auto;
 }
-.error-box {
+.ff-error-page > .headline {
+    float: left;
+    font-size: 100px;
+    font-weight: 300;
+}
+.ff-error-page > .error-content {
+    margin-left: 190px;
+    display: block;
+}
+.ff-error-page > .error-content > h3 {
+    font-weight: 300;
+    font-size: 25px;
+}
+.ff-error-box {
     width: 460px;
     margin: 7% auto;
 }

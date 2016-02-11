@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace FireflyIII\Exceptions;
 
+use ErrorException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -41,7 +42,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof FireflyException) {
+        if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
 
             // log
             Log::error($exception->getMessage());
@@ -70,8 +71,9 @@ class Handler extends ExceptionHandler
                 // could also not mail! :o
                 Log::error($e->getMessage());
             }
+            $isDebug = env('APP_DEBUG', false);
 
-            return response()->view('errors.FireflyException', ['exception' => $exception], 500);
+            return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
         }
 
         return parent::render($request, $exception);

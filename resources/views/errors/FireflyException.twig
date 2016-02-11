@@ -33,8 +33,8 @@
     <meta name="theme-color" content="#ffffff">
 
 </head>
-<body class="error-page">
-<div class="error-box">
+<body class="ff-error-page">
+<div class="ff-error-box">
     <div class="login-logo">
         <a href="{{ route('index') }}"><b>Firefly</b>III</a>
     </div>
@@ -55,7 +55,18 @@
             </p>
         </div>
     </div>
-
 </div>
+
+{% if debug %}
+    <div class="error-stack">
+        <h4>Error</h4>
+        <p>This error occured in file <span style="font-family: monospace;">{{ exception.getFile }}</span> on line {{ exception.getLine }} with
+            code {{ exception.getCode }}.</p>
+        <h4>Stack trace</h4>
+        <div style="font-family: monospace;font-size:11px;">
+            {{ exception.getTraceAsString|nl2br }}
+        </div>
+    </div>
+{% endif %}
 </body>
 </html>
