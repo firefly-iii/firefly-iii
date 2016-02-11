@@ -86,7 +86,7 @@ class CsvController extends Controller
         foreach ($keys as $name) {
             $availableRoles[$name] = trans('firefly.csv_column_' . $name);
         }
-        ksort($availableRoles);
+        asort($availableRoles);
 
         return view('csv.column-roles', compact('availableRoles', 'map', 'roles', 'headers', 'example', 'subTitle'));
     }
