@@ -12,7 +12,7 @@ use Log;
 use Mail;
 use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
+use Auth;
 /**
  * Class Handler
  *
@@ -73,7 +73,7 @@ class Handler extends ExceptionHandler
             // mail?
             try {
                 $email = env('SITE_OWNER');
-                $user = $request->user();
+                $user = Auth::user();
                 $args = [
                     'errorMessage' => $exception->getMessage(),
                     'stacktrace'   => $exception->getTraceAsString(),
