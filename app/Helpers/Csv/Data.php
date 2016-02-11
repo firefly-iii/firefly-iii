@@ -15,13 +15,13 @@ class Data
 {
 
     /** @var string */
-    protected $csvFileContent;
+    protected $csvFileContent = '';
     /** @var string */
-    protected $csvFileLocation;
+    protected $csvFileLocation = '';
     /** @var  string */
-    protected $dateFormat;
+    protected $dateFormat = '';
     /** @var  string */
-    protected $delimiter;
+    protected $delimiter = '';
     /** @var  bool */
     protected $hasHeaders;
     /** @var int */
