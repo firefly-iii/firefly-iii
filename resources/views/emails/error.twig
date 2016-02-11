@@ -2,6 +2,10 @@ Firefly III ran into an error: {{ errorMessage }}.
 
 This error occured in file "{{ file }}" on line {{ line }} with code {{ code }}.
 
+{% if loggedIn %}
+The error was encountered by user #{{ user.id }}, {{ user.email }}.
+{% endif %}
+
 The full stacktrace is below. If you think this is a bug in Firefly III, you
 can forward this message to thegrumpydictator@gmail.com. This can help fix
 the bug you just encountered.

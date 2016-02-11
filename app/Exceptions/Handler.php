@@ -12,6 +12,7 @@ use Log;
 use Mail;
 use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Auth;
 
 /**
  * Class Handler
@@ -57,6 +58,8 @@ class Handler extends ExceptionHandler
                     'file'         => $exception->getFile(),
                     'line'         => $exception->getLine(),
                     'code'         => $exception->getCode(),
+                    'loggedIn'     => Auth::check(),
+                    'user'         => Auth::user(),
                 ];
 
                 Mail::send(
