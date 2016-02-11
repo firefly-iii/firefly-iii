@@ -48,6 +48,7 @@ class AccountFormRequest extends Request
             'iban'                              => 'iban',
             'virtualBalance'                    => 'numeric',
             'openingBalanceDate'                => 'date',
+            'accountNumber'                     => 'between:1,255|uniqueAccountNumberForUser',
             'accountRole'                       => 'in:' . $accountRoles,
             'active'                            => 'boolean',
             'ccType'                            => 'in:' . $ccPaymentTypes,
