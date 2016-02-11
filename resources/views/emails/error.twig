@@ -4,7 +4,7 @@ This error occured in file "{{ file }}" on line {{ line }} with code {{ code }}.
 
 {% if loggedIn %}
 The error was encountered by user #{{ user.id }}, {{ user.email }}.
-{% else} 
+{% else %} 
 There was no user logged in for this error or no user was detected.
 {% endif %}
 
