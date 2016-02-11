@@ -29,6 +29,7 @@
                 <div class="box-body">
                     {{ ExpandedForm.text('iban') }}
                     {{ ExpandedForm.text('accountNumber') }}
+
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
                         {{ ExpandedForm.balance('openingBalance',null, {'currency' : openingBalance ? openingBalance.transactionCurrency : null}) }}
                         {{ ExpandedForm.date('openingBalanceDate') }}

@@ -134,7 +134,6 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function accountMeta()
@@ -171,11 +170,9 @@ class Account extends Model
      *
      * @param string $fieldName
      *
-     * @codeCoverageIgnore
-     *
-     * @return string|null
+     * @return string
      */
-    public function getMeta($fieldName)
+    public function getMeta($fieldName): string
     {
         foreach ($this->accountMeta as $meta) {
             if ($meta->name == $fieldName) {
@@ -183,8 +180,7 @@ class Account extends Model
             }
         }
 
-        return null;
-
+        return '';
     }
 
     /**
