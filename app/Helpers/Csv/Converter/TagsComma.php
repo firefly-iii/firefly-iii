@@ -23,7 +23,7 @@ class TagsComma extends BasicConverter implements ConverterInterface
 
         $strings = explode(',', $this->value);
         foreach ($strings as $string) {
-            $tag = Tag::firstOrCreateEncrypted(
+            $tag = Tag::firstOrCreateEncrypted( // TODO use repository
                 [
                     'tag'     => $string,
                     'tagMode' => 'nothing',

@@ -219,8 +219,9 @@ class CsvController extends Controller
         }
 
         // process given roles and mapping:
+        $inputMap = Input::get('map') ?? [];
         $roles = $this->wizard->processSelectedRoles(Input::get('role'));
-        $maps  = $this->wizard->processSelectedMapping($roles, Input::get('map'));
+        $maps  = $this->wizard->processSelectedMapping($roles, $inputMap);
 
         Session::put('csv-map', $maps);
         Session::put('csv-roles', $roles);

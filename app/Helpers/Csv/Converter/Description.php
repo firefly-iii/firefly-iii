@@ -16,6 +16,8 @@ class Description extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
-        return trim($this->data['description'] . ' ' . $this->value);
+        $description = $this->data['description'] ?? '';
+
+        return trim($description . ' ' . $this->value);
     }
 }

@@ -141,7 +141,7 @@ class Wizard implements WizardInterface
                 /** @var MapperInterface $mapObject */
                 $mapObject = app($class);
             } catch (ReflectionException $e) {
-                throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because class ' . $mapper . ' does not exist.');
+                throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because mapper class ' . $mapper . ' does not exist.');
             }
             $set             = $mapObject->getMap();
             $options[$index] = $set;

@@ -169,7 +169,7 @@ class Importer
 
             // second transaction
             $accountId   = $this->importData['opposing-account-object']->id; // create second transaction:
-            $amount      = bcmul($this->importData['amount'], -1);
+            $amount      = bcmul($this->importData['amount'], '-1');
             $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
             $errors      = $transaction->getErrors()->merge($errors);
         }
@@ -195,7 +195,7 @@ class Importer
 
         Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
         Log::info('Asset account #' . $asset->id . ' lost/gained: ' . $this->importData['amount']);
-        Log::info($opposing->accountType->type . ' #' . $opposing->id . ' lost/gained: ' . bcmul($this->importData['amount'], -1));
+        Log::info($opposing->accountType->type . ' #' . $opposing->id . ' lost/gained: ' . bcmul($this->importData['amount'], '-1'));
 
         return $journal;
     }
@@ -296,7 +296,8 @@ class Importer
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
             $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
-            $postProcessor->setData($this->importData);
+            $array         = $this->importData ?? [];
+            $postProcessor->setData($array);
             Log::debug('Now post-process processor named ' . $className . ':');
             $this->importData = $postProcessor->process();
         }
@@ -343,7 +344,9 @@ class Importer
      */
     protected function validateData()
     {
-        if (is_null($this->importData['date']) && is_null($this->importData['date-rent'])) {
+        $date     = $this->importData['date'] ?? null;
+        $rentDate = $this->importData['date-rent'] ?? null;
+        if (is_null($date) && is_null($rentDate)) {
             return 'No date value for this row.';
         }
         if (is_null($this->importData['opposing-account-object'])) {
