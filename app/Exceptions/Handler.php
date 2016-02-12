@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace FireflyIII\Exceptions;
 
+use Auth;
 use ErrorException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -13,7 +14,7 @@ use Mail;
 use Request;
 use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Auth;
+
 /**
  * Class Handler
  *
@@ -68,14 +69,11 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
 
-            // log
-            Log::error($exception->getMessage());
-
             // mail?
             try {
                 $email = env('SITE_OWNER');
-                $user = Auth::user();
-                $args = [
+                $user  = Auth::user();
+                $args  = [
                     'errorMessage' => $exception->getMessage(),
                     'stacktrace'   => $exception->getTraceAsString(),
                     'file'         => $exception->getFile(),
@@ -99,7 +97,6 @@ class Handler extends ExceptionHandler
                 // could also not mail! :o
                 Log::error($e->getMessage());
             }
-           
         }
 
         parent::report($exception);
