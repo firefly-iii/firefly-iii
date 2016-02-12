@@ -417,8 +417,7 @@ class TestData
                 ]
             );
             if ($journal->id) {
-                $number = (string)round((rand(1500, 2500) / 100), 2);
-                $amount = $number;//'10';//strval((rand(1500, 2500) / 100));
+                $amount = (string)round((rand(1500, 2500) / 100), 2);
                 self::createTransactions($journal, $fromAccount, $toAccount, $amount);
                 $journal->categories()->save($category);
                 $journal->budgets()->save($budget);
