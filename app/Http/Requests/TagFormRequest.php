@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Models\Tag;
 use Input;
 
@@ -45,5 +46,35 @@ class TagFormRequest extends Request
             'zoomLevel'   => 'numeric|min:0|max:80',
             'tagMode'     => 'required|in:nothing,balancingAct,advancePayment',
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function collectTagData() :array
+    {
+        if (Input::get('setTag') == 'true') {
+            $latitude  = $this->get('latitude');
+            $longitude = $this->get('longitude');
+            $zoomLevel = $this->get('zoomLevel');
+        } else {
+            $latitude  = null;
+            $longitude = null;
+            $zoomLevel = null;
+        }
+        $date = $this->get('date') ?? '';
+
+        $data = [
+            'tag'         => $this->get('tag'),
+            'date'        => strlen($date) > 0 ? new Carbon($date) : null,
+            'description' => $this->get('description') ?? '',
+            'latitude'    => $latitude,
+            'longitude'   => $longitude,
+            'zoomLevel'   => $zoomLevel,
+            'tagMode'     => $this->get('tagMode'),
+        ];
+
+
+
     }
 }
