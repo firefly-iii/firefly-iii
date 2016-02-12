@@ -36,7 +36,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
         }
 
         // create it if doesnt exist.
-        $account = Account::firstOrCreateEncrypted( // TODO use repository
+        $account = Account::firstOrCreateEncrypted( // See issue #180
             [
                 'name'            => $this->value,
                 'iban'            => '',

@@ -22,7 +22,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
         if (isset($this->mapped[$this->index][$this->value])) {
             $budget = Auth::user()->budgets()->find($this->mapped[$this->index][$this->value]);
         } else {
-            $budget = Budget::firstOrCreateEncrypted( // TODO use repository
+            $budget = Budget::firstOrCreateEncrypted( // See issue #180
                 [
                     'name'    => $this->value,
                     'user_id' => Auth::user()->id,

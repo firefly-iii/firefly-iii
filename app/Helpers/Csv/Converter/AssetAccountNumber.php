@@ -48,7 +48,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
                     'name'                   => $this->value,
                     'accountType'            => 'asset',
                     'virtualBalance'         => 0,
-                    'virtualBalanceCurrency' => 1, // TODO hard coded.
+                    'virtualBalanceCurrency' => 1, // hard coded.
                     'active'                 => true,
                     'user'                   => Auth::user()->id,
                     'iban'                   => null,
@@ -56,7 +56,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
                     'accountRole'            => null,
                     'openingBalance'         => 0,
                     'openingBalanceDate'     => new Carbon,
-                    'openingBalanceCurrency' => 1, // TODO hard coded.
+                    'openingBalanceCurrency' => 1, // hard coded.
 
                 ];
 
