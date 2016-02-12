@@ -832,8 +832,6 @@ class TestData
      */
     public static function createTransactions(TransactionJournal $journal, Account $from, Account $to, string $amount): bool
     {
-        //        Log::debug('---- Transaction From: ' . bcmul($amount, '-1'));
-        //        Log::debug('---- Transaction To  : ' . $amount);
         Transaction::create(
             [
                 'account_id'             => $from->id,
