@@ -346,20 +346,54 @@ class RuleController extends Controller
         // Create a list of triggers
         $triggers = $this->getTriggerList();
         
+        // We start searching for transactions. For performance reasons, there are limits
+        // to the search: a maximum number of results and a maximum number of transactions
+        // to search in
+        // TODO: Make these values configurable
+        $maxResults = 50;
+        $maxTransactionsToSearchIn = 1000;
+        
         // Find a list of transactions
+        $numTransactionsProcessed = 0;
         $page = 1;
-        $offset = 0;
-        $transactions = $repository->getJournals($offset, $page)->getCollection()->all();
-       
-        // Filter transactions that match the rule
-        $matchingTransactions = array_filter( $transactions, function($transaction) use($triggers) {
-            $processor = new Processor(new Rule, $transaction);
-            return $processor->isTriggeredBy($triggers);  
-        });
+        $reachedEndOfList = false;
+        $matchingTransactions = [];
+        
+        // Try to determine an optimal page size
+        $pagesize = min($maxTransactionsToSearchIn / 2, $maxResults * 2);
+        
+        do {
+            // For now, assume the repository uses a default page size of 50.
+            $offset = $page > 0 ? ($page - 1) * 50 : 0;
+            $transactions = $repository->getJournals($offset, $page, $pagesize)->getCollection()->all();
+            
+            // If no transactions are returned, we reached the end of the list and stop searching
+            if(count($transactions) == 0) {
+                $reachedEndOfList = true;
+            }
+            $numTransactionsProcessed += count($transactions);
+            
+            // Filter transactions that match the rule
+            $matchingTransactions += array_filter( $transactions, function($transaction) use($triggers) {
+                $processor = new Processor(new Rule, $transaction);
+                return $processor->isTriggeredBy($triggers);
+            });
+            
+            // Update counters
+            $page++;
+        } while( !$reachedEndOfList && count($matchingTransactions) < $maxResults && $numTransactionsProcessed < $maxTransactionsToSearchIn );
+        
+        // If the list of matchingTransactions is larger than the maximum number of results
+        // (e.g. if a large percentage of the transactions match), truncate the list
+        $matchingTransactions = array_slice($matchingTransactions, 0, $maxResults);
         
         return view('list.journals-tiny', [ 'transactions' => $matchingTransactions ]);
     }
     
+    /**
+     * Returns a list of triggers as provided in the URL
+     * @return array
+     */
     protected function getTriggerList() {
         $triggers = [];
         $order = 1;

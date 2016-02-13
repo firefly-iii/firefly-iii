@@ -56,6 +56,14 @@ interface JournalRepositoryInterface
     public function getJournalsOfTypes(array $types, int $offset, int $page);
 
     /**
+     * @param int   $offset
+     * @param int   $page
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getJournals(int $offset, int $page);
+    
+    /**
      * @param string $type
      *
      * @return TransactionType
