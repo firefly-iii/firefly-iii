@@ -15,7 +15,11 @@
                     <a href="{{ route('accounts.show',income.id) }}" title="{{ income.name }}">{{ income.name }}</a>
                     {% if income.count > 1 %}
                         <br/>
-                        <small>{{ income.count }} {{ 'transactions'|_|lower }}</small>
+                        <small>
+                            {{ income.count }} {{ 'transactions'|_|lower }}
+                            <i class="fa fa-fw text-muted fa-info-circle"></i>
+                        </small>
+
                     {% endif %}
                 </td>
                 <td>{{ income.amount|formatAmount }}</td>
