@@ -106,6 +106,31 @@ class JournalRepository implements JournalRepositoryInterface
 
         return $journals;
     }
+    
+    /**
+     * Returns a (paginated) list of all journals. Default page_size = 50 
+     * 
+     * @param array $types
+     * @param int   $offset
+     * @param int   $page
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getJournals(int $offset, int $page)
+    {
+        $set      = Auth::user()->transactionJournals()->withRelevantData()->take(50)->offset($offset)
+        ->orderBy('date', 'DESC')
+        ->orderBy('order', 'ASC')
+        ->orderBy('id', 'DESC')
+        ->get(
+            ['transaction_journals.*']
+            );
+        $count    = Auth::user()->transactionJournals()->count();
+        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+    
+        return $journals;
+    }
+    
 
     /**
      * @param string $type

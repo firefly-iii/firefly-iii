@@ -25,6 +25,7 @@ use Response;
 use Session;
 use URL;
 use View;
+use FireflyIII\Rules\Processor;
 
 /**
  * Class RuleController
@@ -332,6 +333,62 @@ class RuleController extends Controller
         // redirect to previous URL.
         return redirect(session('rules.rule.edit.url'));
     }
+    
+    /**
+     * @param JournalRepositoryInterface $repository
+     * 
+     * @return \Illuminate\View\View
+     */
+    public function testTriggers() {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+        
+        // Create a list of triggers
+        $triggers = $this->getTriggerList();
+        
+        // Find a list of transactions
+        $page = 1;
+        $offset = 0;
+        $transactions = $repository->getJournals($offset, $page)->getCollection()->all();
+       
+        // Filter transactions that match the rule
+        $matchingTransactions = array_filter( $transactions, function($transaction) use($triggers) {
+            $processor = new Processor(new Rule, $transaction);
+            return $processor->isTriggeredBy($triggers);  
+        });
+        
+        return view('list.journals-tiny', [ 'transactions' => $matchingTransactions ]);
+    }
+    
+    protected function getTriggerList() {
+        $triggers = [];
+        $order = 1;
+        $data = [
+            'rule-triggers'       => Input::get('rule-trigger'),
+            'rule-trigger-values' => Input::get('rule-trigger-value'),
+            'rule-trigger-stop'   => Input::get('rule-trigger-stop'),
+        ];
+        
+        foreach ($data['rule-triggers'] as $index => $trigger) {
+            $value          = $data['rule-trigger-values'][$index];
+            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+        
+            // Create a new trigger object
+            $ruleTrigger = new RuleTrigger;
+            $ruleTrigger->order           = $order;
+            $ruleTrigger->active          = 1;
+            $ruleTrigger->stop_processing = $stopProcessing;
+            $ruleTrigger->trigger_type    = $trigger;
+            $ruleTrigger->trigger_value   = $value;
+            
+            // Store in list
+            $triggers[] = $ruleTrigger;
+            $order++;
+        }
+        
+        return $triggers;
+    }
+    
 
     private function createDefaultRule()
     {
