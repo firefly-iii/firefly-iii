@@ -46,19 +46,23 @@
                                     <li><a href="{{ route('rules.rule-group.edit',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                     <li><a href="{{ route('rules.rule-group.delete',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a>
+                                                    class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                                    <li><a href="#" class="execute_rulegroup_on_existing_transactions"><i 
+                                    	class="fa fa-fw fa-anchor"></i> {{ 'execute_on_existing_transactions_short'|_ }}</a></li>
+                                                    
                                         {% if ruleGroup.order > 1 %}
                                     <li><a href="{{ route('rules.rule-group.up',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a>
+                                                    class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a></li>
                                         {% endif %}
                                         {% if ruleGroup.order < ruleGroups|length %}
                                     <li><a href="{{ route('rules.rule-group.down',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}
+                                                    class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}</li>
                                         </a>
                                         {% endif %}
-                                    </li>
                                 </ul>
                             </div>
+                            {{ Form.open({'class' : 'rulegroup_existing_transactions', 'url' : route('rules.rule-group.existing_transactions', ruleGroup.id)}) }}
+                            {{ Form.close() | raw }}
                         </div>
 
                     </div>
@@ -105,7 +109,7 @@
 	                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.rule.edit', rule.id) }}"
 	                                                   class="btn btn-default"><span
 	                                                            class="fa fa-fw fa-pencil"></span></a>
-	                                                <button title="{{ 'execute_on_existing'|_ }}"
+	                                                <button title="{{ 'execute_on_existing_transactions_short'|_ }}"
 	                                                   class="btn btn-default"><span
 	                                                            class="fa fa-fw fa-anchor"></span></button>
 	                                                <a title="{{ 'delete'|_ }}"

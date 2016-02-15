@@ -294,7 +294,8 @@ Route::group(
     Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
     Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
     Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
-
+    Route::post('/rules/groups/existing_transactions/{ruleGroup}', ['uses' => 'RuleGroupController@executeOnExistingTransactions', 'as' => 'rules.rule-group.existing_transactions']);
+    
     /**
      * Search Controller
      */

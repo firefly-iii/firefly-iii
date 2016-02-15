@@ -20,6 +20,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Rules\Processor;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Input;
 use Preferences;
@@ -27,7 +28,7 @@ use Response;
 use Session;
 use URL;
 use View;
-use FireflyIII\Rules\Processor;
+use Log;
 
 /**
  * Class RuleController
@@ -406,7 +407,7 @@ class RuleController extends Controller
     }
     
     /**
-     * @param JournalRepositoryInterface $repository
+     * @param Rule $rule
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -447,7 +448,7 @@ class RuleController extends Controller
         } while( !$reachedEndOfList );
     
         // redirect to previous URL.
-        Session::flash('success', trans('firefly.executed_on_existing_transactions', ['title' => $rule->title]));
+        Session::flash('success', trans('firefly.executed_rule_on_existing_transactions', ['title' => $rule->title]));
         return redirect(URL::previous());
     }
     

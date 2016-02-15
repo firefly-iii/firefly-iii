@@ -119,9 +119,13 @@ return [
     'stop_processing_other_triggers'     => 'Reageer niet meer op andere triggers',
     'add_rule_trigger'                   => 'Nieuwe trigger toevoegen',
     'test_rule_triggers'                 => 'Transacties die voldoen aan triggers',
-    'executed_on_existing_transactions'  => 'Regel :title is uitgevoerd op bestaande transacties.',
     'warning_transaction_subset'         => 'In verband met de snelheid, worden in deze lijst maximaal :max_num_transactions transacties weergegeven. Het kan daarom zijn dat transacties ontbreken in deze lijst.',
     'warning_no_matching_transactions'   => 'Er zijn geen transacties gevonden die voldoen aan de triggers in de laatste :num_transactions transacties.',
+
+    'execute_on_existing_transactions'          => 'Uitvoeren op bestaande transacties.',
+    'execute_on_existing_transactions_short'    => 'Bestaande transacties',
+    'executed_rule_on_existing_transactions'    => 'Regel :title is uitgevoerd op bestaande transacties.',
+    'executed_group_on_existing_transactions'   => 'Groep :title is uitgevoerd op bestaande transacties.',
     
     'action'                             => 'Actie',
     'action_value'                       => 'Actie-waarde',
