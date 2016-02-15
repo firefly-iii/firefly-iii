@@ -92,9 +92,9 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $offset, int $page)
+    public function getJournalsOfTypes(array $types, int $offset, int $page, $pagesize = 50)
     {
-        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
+        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take($pagesize)->offset($offset)
                         ->orderBy('date', 'DESC')
                         ->orderBy('order', 'ASC')
                         ->orderBy('id', 'DESC')
@@ -102,36 +102,11 @@ class JournalRepository implements JournalRepositoryInterface
                             ['transaction_journals.*']
                         );
         $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
-
-        return $journals;
-    }
-    
-    /**
-     * Returns a (paginated) list of all journals. Default page_size = 50 
-     * 
-     * @param array $types
-     * @param int   $offset
-     * @param int   $page
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(int $offset, int $page, $pagesize = 50)
-    {
-        $set      = Auth::user()->transactionJournals()->withRelevantData()->take($pagesize)->offset($offset)
-        ->orderBy('date', 'DESC')
-        ->orderBy('order', 'ASC')
-        ->orderBy('id', 'DESC')
-        ->get(
-            ['transaction_journals.*']
-            );
-        $count    = Auth::user()->transactionJournals()->count();
         $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
-    
+
         return $journals;
     }
     
-
     /**
      * @param string $type
      *

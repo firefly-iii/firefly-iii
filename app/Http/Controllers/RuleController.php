@@ -16,6 +16,8 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -361,14 +363,15 @@ class RuleController extends Controller
         
         // Try to determine an optimal page size
         $pagesize = min($maxTransactionsToSearchIn / 2, $maxResults * 2);
+        $transactionTypes = [ TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER ];
         
         do {
             // For now, assume the repository uses a default page size of 50.
             $offset = $page > 0 ? ($page - 1) * 50 : 0;
-            $transactions = $repository->getJournals($offset, $page, $pagesize)->getCollection()->all();
+            $transactions = $repository->getJournalsOfTypes( $transactionTypes,  $offset, $page, $pagesize)->getCollection()->all();
             
-            // If no transactions are returned, we reached the end of the list and stop searching
-            if(count($transactions) == 0) {
+            // If less transactions are returned than the pagesize, we reached the end of the list and stop searching
+            if(count($transactions) < $pagesize) {
                 $reachedEndOfList = true;
             }
             $numTransactionsProcessed += count($transactions);
