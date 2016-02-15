@@ -24,6 +24,12 @@ $(function () {
         return false;
     });
 
+    $('.test_rule_triggers').click(function () {
+        testRuleTriggers();
+
+        return false;
+    });    
+
     $('.add_rule_action').click(function () {
         addNewAction();
 
