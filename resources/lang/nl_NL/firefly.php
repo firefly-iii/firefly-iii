@@ -118,6 +118,11 @@ return [
     'trigger_value'                      => 'Trigger bij waarde',
     'stop_processing_other_triggers'     => 'Reageer niet meer op andere triggers',
     'add_rule_trigger'                   => 'Nieuwe trigger toevoegen',
+    'test_rule_triggers'                 => 'Transacties die voldoen aan triggers',
+    'executed_on_existing_transactions'  => 'Regel :title is uitgevoerd op bestaande transacties.',
+    'warning_transaction_subset'         => 'In verband met de snelheid, worden in deze lijst maximaal :max_num_transactions transacties weergegeven. Het kan daarom zijn dat transacties ontbreken in deze lijst.',
+    'warning_no_matching_transactions'   => 'Er zijn geen transacties gevonden die voldoen aan de triggers in de laatste :num_transactions transacties.',
+    
     'action'                             => 'Actie',
     'action_value'                       => 'Actie-waarde',
     'stop_executing_other_actions'       => 'Voer verdere acties niet uit',

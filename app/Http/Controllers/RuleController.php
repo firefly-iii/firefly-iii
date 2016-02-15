@@ -390,7 +390,19 @@ class RuleController extends Controller
         // (e.g. if a large percentage of the transactions match), truncate the list
         $matchingTransactions = array_slice($matchingTransactions, 0, $maxResults);
         
-        return view('list.journals-tiny', [ 'transactions' => $matchingTransactions ]);
+        // Warn the user if only a subset of transactions is returned
+        if(count( $matchingTransactions ) == $maxResults) {
+            $warning = trans('firefly.warning_transaction_subset', [ 'max_num_transactions' => $maxResults ] );
+        } else if(count($matchingTransactions) == 0){
+            $warning = trans('firefly.warning_no_matching_transactions', [ 'num_transactions' => $maxTransactionsToSearchIn ] );
+        } else {
+            $warning = "";
+        }
+        
+        // Return json response
+        $view = view('list.journals-tiny', [ 'transactions' => $matchingTransactions ])->render();
+        
+        return Response::json(['html' => $view, 'warning' => $warning ]);
     }
     
     /**

@@ -96,8 +96,15 @@ function testRuleTriggers() {
     	var numTriggers = $( ".rule-trigger-body > tr" ).length;
     	
     	// Set title and body
-    	modal.find( ".num_triggers" ).text(numTriggers == 1 ? "1 trigger" : ( numTriggers + " triggers" ));
-    	modal.find( ".modal-body" ).html(data);
+    	modal.find( ".transactions-list" ).html(data.html);
+    	
+    	// Show warning if appropriate
+    	if( data.warning ) {
+    		modal.find( ".transaction-warning .warning-contents" ).text(data.warning);
+    		modal.find( ".transaction-warning" ).show();
+    	} else {
+    		modal.find( ".transaction-warning" ).hide();
+    	}
     	
     	// Show the modal dialog
     	$( "#testTriggerModal" ).modal();
