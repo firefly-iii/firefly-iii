@@ -394,6 +394,52 @@ class RuleController extends Controller
     }
     
     /**
+     * @param JournalRepositoryInterface $repository
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function executeOnExistingTransactions(Rule $rule) {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+    
+        // Loop through all transactions
+        $page = 1;
+        $reachedEndOfList = false;
+    
+        // Try to determine an optimal page size
+        // TODO: Make this pagesize configurable
+        $pagesize = 250;
+        $transactionTypes = [ TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER ];
+        
+        // Create a processor object an reuse the object for performance reasons
+        $processor = new Processor($rule, new TransactionJournal);
+        
+        do {
+            // For now, assume the repository uses a default page size of 50.
+            $offset = $page > 0 ? ($page - 1) * 50 : 0;
+            $journals = $repository->getJournalsOfTypes($transactionTypes, $offset, $page, $pagesize)->getCollection()->all();
+    
+            // If less transactions are returned than the pagesize, we reached the end of the list and stop searching
+            if(count($journals) < $pagesize) {
+                $reachedEndOfList = true;
+            }
+    
+            // Execute the rule on each transaction.
+            foreach($journals as $journal) {
+                $processor->setJournal($journal);
+                $processor->handle();
+            }
+    
+            // Update counters
+            $page++;
+        } while( !$reachedEndOfList );
+    
+        // redirect to previous URL.
+        Session::flash('success', trans('firefly.executed_on_existing_transactions', ['title' => $rule->title]));
+        return redirect(URL::previous());
+    }
+    
+    /**
      * Returns a list of triggers as provided in the URL
      * @return array
      */
@@ -426,7 +472,6 @@ class RuleController extends Controller
         return $triggers;
     }
     
-
     private function createDefaultRule()
     {
         /** @var RuleRepositoryInterface $repository */

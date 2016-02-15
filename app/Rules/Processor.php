@@ -136,7 +136,7 @@ class Processor
         return true;
     }
     
-    protected function triggeredBy(array $triggers) {
+    protected function triggeredBy($triggers) {
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */

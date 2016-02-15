@@ -280,7 +280,8 @@ Route::group(
     Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rules.rule.store']);
     Route::post('/rules/update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rules.rule.update']);
     Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rules.rule.destroy']);
-
+    Route::post('/rules/existing_transactions/{rule}', ['uses' => 'RuleController@executeOnExistingTransactions', 'as' => 'rules.rule.existing_transactions']);
+    
 
     // rule groups GET
     Route::get('/rules/groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
