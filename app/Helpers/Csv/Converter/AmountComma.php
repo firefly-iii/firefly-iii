@@ -20,7 +20,7 @@ class AmountComma extends BasicConverter implements ConverterInterface
         $value = str_replace(',', '.', $this->value);
 
         if (is_numeric($value)) {
-            return floatval($value);
+            return $value;
         }
 
         return '0';

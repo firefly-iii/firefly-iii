@@ -1,41 +1,46 @@
 {
-	"name": "geld.nder.be",
-	"icons": [
-		{
-			"src": "\/android-chrome-36x36.png?v=Lb54KlrQnz",
-			"sizes": "36x36",
-			"type": "image\/png",
-			"density": "0.75"
-		},
-		{
-			"src": "\/android-chrome-48x48.png?v=Lb54KlrQnz",
-			"sizes": "48x48",
-			"type": "image\/png",
-			"density": "1.0"
-		},
-		{
-			"src": "\/android-chrome-72x72.png?v=Lb54KlrQnz",
-			"sizes": "72x72",
-			"type": "image\/png",
-			"density": "1.5"
-		},
-		{
-			"src": "\/android-chrome-96x96.png?v=Lb54KlrQnz",
-			"sizes": "96x96",
-			"type": "image\/png",
-			"density": "2.0"
-		},
-		{
-			"src": "\/android-chrome-144x144.png?v=Lb54KlrQnz",
-			"sizes": "144x144",
-			"type": "image\/png",
-			"density": "3.0"
-		},
-		{
-			"src": "\/android-chrome-192x192.png?v=Lb54KlrQnz",
-			"sizes": "192x192",
-			"type": "image\/png",
-			"density": "4.0"
-		}
-	]
+  "name": "Firefly III",
+  "short_name": "Firefly III",
+
+  "icons": [
+    {
+      "src": "\/android-chrome-36x36.png?v=Lb54KlrQnz",
+      "sizes": "36x36",
+      "type": "image\/png",
+      "density": "0.75"
+    },
+    {
+      "src": "\/android-chrome-48x48.png?v=Lb54KlrQnz",
+      "sizes": "48x48",
+      "type": "image\/png",
+      "density": "1.0"
+    },
+    {
+      "src": "\/android-chrome-72x72.png?v=Lb54KlrQnz",
+      "sizes": "72x72",
+      "type": "image\/png",
+      "density": "1.5"
+    },
+    {
+      "src": "\/android-chrome-96x96.png?v=Lb54KlrQnz",
+      "sizes": "96x96",
+      "type": "image\/png",
+      "density": "2.0"
+    },
+    {
+      "src": "\/android-chrome-144x144.png?v=Lb54KlrQnz",
+      "sizes": "144x144",
+      "type": "image\/png",
+      "density": "3.0"
+    },
+    {
+      "src": "\/android-chrome-192x192.png?v=Lb54KlrQnz",
+      "sizes": "192x192",
+      "type": "image\/png",
+      "density": "4.0"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
 }
