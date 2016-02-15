@@ -4,9 +4,3 @@
 
 storage/
 .env.local
-
-# Eclipse specific files
-.buildpath
-.project
-.settings/
-
