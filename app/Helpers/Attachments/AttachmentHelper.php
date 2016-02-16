@@ -74,7 +74,10 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentsForModel(Model $model)
     {
-        $files = Input::file('attachments');
+	$files = null;
+        if(Input::hasFile('attachments')) {
+            $files = Input::file('attachments');
+    }
 
         if (is_array($files)) {
             foreach ($files as $entry) {
