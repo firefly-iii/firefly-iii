@@ -9,8 +9,9 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
 use Input;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Log;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use TypeError;
 
 /**
  * Class AttachmentHelper
@@ -75,9 +76,9 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentsForModel(Model $model)
     {
-	$files = null;
+        $files = null;
         try {
-            if(Input::hasFile('attachments')) {
+            if (Input::hasFile('attachments')) {
                 $files = Input::file('attachments');
             }
         } catch (TypeError $e) {
