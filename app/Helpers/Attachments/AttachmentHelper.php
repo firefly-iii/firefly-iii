@@ -80,7 +80,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             if(Input::hasFile('attachments')) {
                 $files = Input::file('attachments');
             }
-        } catch (Error $e) {
+        } catch (TypeError $e) {
             // Log it, do nothing else.
             Log::error($e->getMessage());
         }
