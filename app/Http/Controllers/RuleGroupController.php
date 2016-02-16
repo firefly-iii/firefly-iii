@@ -7,12 +7,16 @@ use Auth;
 use ExpandedForm;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Rules\Processor;
 use Input;
 use Preferences;
 use Session;
 use URL;
 use View;
+use Log;
 
 /**
  * Class RuleGroupController
@@ -202,7 +206,79 @@ class RuleGroupController extends Controller
 
         // redirect to previous URL.
         return redirect(session('rules.rule-group.edit.url'));
-
     }
+    
+    /**
+     * @param Rule $rule
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function executeOnExistingTransactions(RuleGroup $ruleGroup) {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+    
+        // Find all rules belonging to this rulegroup
+        $rules = $ruleGroup->rules()
+            ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+            ->where('rule_triggers.trigger_type', 'user_action')
+            ->where('rule_triggers.trigger_value', 'store-journal')
+            ->where('rules.active', 1)
+            ->get(['rules.*']);
+        
+        // Create a list of processors for these rules, so we can reuse
+        // it for performance reasons
+        $processors = array_map( function( $rule ) { 
+            return new Processor( $rule, new TransactionJournal );
+        }, $rules->all());
+        
+        // Loop through all transactions
+        $page = 1;
+        $reachedEndOfList = false;
+    
+        // Try to determine an optimal page size
+        // TODO: Make this pagesize configurable
+        $pagesize = 250;
+        $transactionTypes = [ TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER ];
+    
+        do {
+            // For now, assume the repository uses a default page size of 50.
+            $offset = $page > 0 ? ($page - 1) * 50 : 0;
+            $journals = $repository->getJournalsOfTypes($transactionTypes, $offset, $page, $pagesize)->getCollection()->all();
+    
+            // If less transactions are returned than the pagesize, we reached the end of the list and stop searching
+            if(count($journals) < $pagesize) {
+                $reachedEndOfList = true;
+            }
+    
+            // Execute the rule on each transaction.
+            foreach($journals as $journal) {
+                Log::debug('Processing rulegroup for journal ' . $journal->id . ' (' . $journal->description . ')');
+                
+                /** @var Processor $processor */
+                foreach ($processors as $processor) {
+                    $rule = $processor->getRule();
+                    
+                    Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
+                
+                    $processor->setJournal($journal);
+                    
+                    // TODO: get some return out of this?
+                    $processor->handle();
+                
+                    // Stop processing this group if the rule specifies 'stop_processing'
+                    if ($rule->stop_processing) {
+                        break;
+                    }
+                }
+            }
+    
+            // Update counters
+            $page++;
+        } while( !$reachedEndOfList );
+    
+        // redirect to previous URL.
+        Session::flash('success', trans('firefly.executed_group_on_existing_transactions', ['title' => $rule->title]));
+        return redirect(URL::previous());
+    }    
 
 }

@@ -118,6 +118,15 @@ return [
     'trigger_value'                      => 'Trigger on value',
     'stop_processing_other_triggers'     => 'Stop processing other triggers',
     'add_rule_trigger'                   => 'Add new trigger',
+    'test_rule_triggers'                 => 'See matching transactions',
+    'warning_transaction_subset'         => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
+    'warning_no_matching_transactions'   => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
+    
+    'execute_on_existing_transactions'          => 'Execute on existing transactions',
+    'execute_on_existing_transactions_short'    => 'Existing transactions',
+    'executed_rule_on_existing_transactions'    => 'Executed rule :title on existing transactions',
+    'executed_group_on_existing_transactions'   => 'Executed group :title on existing transactions',
+    
     'action'                             => 'Action',
     'action_value'                       => 'Action value',
     'stop_executing_other_actions'       => 'Stop executing other actions',

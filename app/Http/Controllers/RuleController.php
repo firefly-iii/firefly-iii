@@ -16,8 +16,11 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Rules\Processor;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Input;
 use Preferences;
@@ -25,6 +28,7 @@ use Response;
 use Session;
 use URL;
 use View;
+use Log;
 
 /**
  * Class RuleController
@@ -332,7 +336,155 @@ class RuleController extends Controller
         // redirect to previous URL.
         return redirect(session('rules.rule.edit.url'));
     }
-
+    
+    /**
+     * @param JournalRepositoryInterface $repository
+     * 
+     * @return \Illuminate\View\View
+     */
+    public function testTriggers() {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+        
+        // Create a list of triggers
+        $triggers = $this->getTriggerList();
+        
+        // We start searching for transactions. For performance reasons, there are limits
+        // to the search: a maximum number of results and a maximum number of transactions
+        // to search in
+        // TODO: Make these values configurable
+        $maxResults = 50;
+        $maxTransactionsToSearchIn = 1000;
+        
+        // Find a list of transactions
+        $numTransactionsProcessed = 0;
+        $page = 1;
+        $reachedEndOfList = false;
+        $matchingTransactions = [];
+        
+        // Try to determine an optimal page size
+        $pagesize = min($maxTransactionsToSearchIn / 2, $maxResults * 2);
+        $transactionTypes = [ TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER ];
+        
+        do {
+            // For now, assume the repository uses a default page size of 50.
+            $offset = $page > 0 ? ($page - 1) * 50 : 0;
+            $transactions = $repository->getJournalsOfTypes( $transactionTypes,  $offset, $page, $pagesize)->getCollection()->all();
+            
+            // If less transactions are returned than the pagesize, we reached the end of the list and stop searching
+            if(count($transactions) < $pagesize) {
+                $reachedEndOfList = true;
+            }
+            $numTransactionsProcessed += count($transactions);
+            
+            // Filter transactions that match the rule
+            $matchingTransactions += array_filter( $transactions, function($transaction) use($triggers) {
+                $processor = new Processor(new Rule, $transaction);
+                return $processor->isTriggeredBy($triggers);
+            });
+            
+            // Update counters
+            $page++;
+        } while( !$reachedEndOfList && count($matchingTransactions) < $maxResults && $numTransactionsProcessed < $maxTransactionsToSearchIn );
+        
+        // If the list of matchingTransactions is larger than the maximum number of results
+        // (e.g. if a large percentage of the transactions match), truncate the list
+        $matchingTransactions = array_slice($matchingTransactions, 0, $maxResults);
+        
+        // Warn the user if only a subset of transactions is returned
+        if(count( $matchingTransactions ) == $maxResults) {
+            $warning = trans('firefly.warning_transaction_subset', [ 'max_num_transactions' => $maxResults ] );
+        } else if(count($matchingTransactions) == 0){
+            $warning = trans('firefly.warning_no_matching_transactions', [ 'num_transactions' => $maxTransactionsToSearchIn ] );
+        } else {
+            $warning = "";
+        }
+        
+        // Return json response
+        $view = view('list.journals-tiny', [ 'transactions' => $matchingTransactions ])->render();
+        
+        return Response::json(['html' => $view, 'warning' => $warning ]);
+    }
+    
+    /**
+     * @param Rule $rule
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function executeOnExistingTransactions(Rule $rule) {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+    
+        // Loop through all transactions
+        $page = 1;
+        $reachedEndOfList = false;
+    
+        // Try to determine an optimal page size
+        // TODO: Make this pagesize configurable
+        $pagesize = 250;
+        $transactionTypes = [ TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER ];
+        
+        // Create a processor object an reuse the object for performance reasons
+        $processor = new Processor($rule, new TransactionJournal);
+        
+        do {
+            // For now, assume the repository uses a default page size of 50.
+            $offset = $page > 0 ? ($page - 1) * 50 : 0;
+            $journals = $repository->getJournalsOfTypes($transactionTypes, $offset, $page, $pagesize)->getCollection()->all();
+    
+            // If less transactions are returned than the pagesize, we reached the end of the list and stop searching
+            if(count($journals) < $pagesize) {
+                $reachedEndOfList = true;
+            }
+    
+            // Execute the rule on each transaction.
+            foreach($journals as $journal) {
+                $processor->setJournal($journal);
+                $processor->handle();
+            }
+    
+            // Update counters
+            $page++;
+        } while( !$reachedEndOfList );
+    
+        // redirect to previous URL.
+        Session::flash('success', trans('firefly.executed_rule_on_existing_transactions', ['title' => $rule->title]));
+        return redirect(URL::previous());
+    }
+    
+    /**
+     * Returns a list of triggers as provided in the URL
+     * @return array
+     */
+    protected function getTriggerList() {
+        $triggers = [];
+        $order = 1;
+        $data = [
+            'rule-triggers'       => Input::get('rule-trigger'),
+            'rule-trigger-values' => Input::get('rule-trigger-value'),
+            'rule-trigger-stop'   => Input::get('rule-trigger-stop'),
+        ];
+        
+        foreach ($data['rule-triggers'] as $index => $trigger) {
+            $value          = $data['rule-trigger-values'][$index];
+            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+        
+            // Create a new trigger object
+            $ruleTrigger = new RuleTrigger;
+            $ruleTrigger->order           = $order;
+            $ruleTrigger->active          = 1;
+            $ruleTrigger->stop_processing = $stopProcessing;
+            $ruleTrigger->trigger_type    = $trigger;
+            $ruleTrigger->trigger_value   = $value;
+            
+            // Store in list
+            $triggers[] = $ruleTrigger;
+            $order++;
+        }
+        
+        return $triggers;
+    }
+    
     private function createDefaultRule()
     {
         /** @var RuleRepositoryInterface $repository */

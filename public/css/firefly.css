@@ -38,3 +38,5 @@
 /* cursors */
 .rule-triggers {cursor:move;}
 .rule-actions {cursor:move;}
+
+#testTriggerModal .modal-body { max-height: 500px; overflow-y: scroll; }

@@ -91,6 +91,22 @@ class Processor
         }
 
     }
+    
+    /**
+     * Checks whether the current transaction is triggered by this rule
+     * @return boolean
+     */
+    public function isTriggered() {
+        return $this->triggered();
+    }
+    
+    /**
+     * Checks whether the current transaction is triggered by the list of given triggers
+     * @return boolean
+     */
+    public function isTriggeredBy(array $triggers) {
+        return $this->triggeredBy($triggers);
+    }
 
     /**
      * @return bool
@@ -119,23 +135,19 @@ class Processor
 
         return true;
     }
-
-    /**
-     * @return bool
-     */
-    protected function triggered()
-    {
+    
+    protected function triggeredBy($triggers) {
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
-        foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $trigger) {
+        foreach ($triggers as $trigger) {
             $foundTriggers++;
             $type = $trigger->trigger_type;
-
+        
             if (!isset($this->triggerTypes[$type])) {
                 abort(500, 'No such trigger exists ("' . $type . '").');
             }
-
+        
             $class = $this->triggerTypes[$type];
             Log::debug('Trigger #' . $trigger->id . ' for rule #' . $trigger->rule_id . ' (' . $type . ')');
             if (!class_exists($class)) {
@@ -149,12 +161,20 @@ class Processor
             if ($trigger->stop_processing) {
                 break;
             }
-
+        
         }
         Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
-
+        
         return ($hitTriggers == $foundTriggers);
+        
+    }
 
+    /**
+     * @return bool
+     */
+    protected function triggered()
+    {
+        return $this->triggeredBy($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get());
     }
 
 

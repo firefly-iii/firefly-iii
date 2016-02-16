@@ -37,6 +37,11 @@ $(function () {
 
           }
       );
+      
+      $( ".execute_rulegroup_on_existing_transactions" ).on( "click", function(e) {
+    	  $(e.target).parents( ".box-tools" ).find( ".rulegroup_existing_transactions" ).submit();
+    	  return false;
+      })
   }
 );
 
