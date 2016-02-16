@@ -3,21 +3,19 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 
-use Zizaco\Entrust\EntrustRole;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * FireflyIII\Models\Role
- *
- * @property integer                                                          $id
- * @property string                                                           $name
- * @property string                                                           $display_name
- * @property string                                                           $description
- * @property \Carbon\Carbon                                                   $created_at
- * @property \Carbon\Carbon                                                   $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\User[] $users
- * @property-read \Illuminate\Database\Eloquent\Collection|Permission[]       $perms
- */
-class Role extends EntrustRole
+
+class Role extends Model
 {
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany('FireflyIII\User');
+    }
 
 }

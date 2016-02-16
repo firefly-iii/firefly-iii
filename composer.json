@@ -20,7 +20,6 @@
     "doctrine/dbal": "~2.5",
     "league/commonmark": "~0.7",
     "rcrowe/twigbridge": "~0.9",
-    "zizaco/entrust": "dev-laravel-5",
     "league/csv": "^7.1",
     "laravelcollective/html": "^5.2"
   },

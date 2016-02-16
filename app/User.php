@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 /**
  * Class User
@@ -32,11 +32,10 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[]               $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[]          $ruleGroups
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[]               $rules
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[] $exportjobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[]          $exportjobs
  */
 class User extends Authenticatable
 {
-    use EntrustUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -44,16 +43,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
-
-
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
-
-
     /**
      * The database table used by the model.
      *
@@ -67,6 +62,26 @@ class User extends Authenticatable
     public function accounts(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Account');
+    }
+
+    /**
+     * Alias to eloquent many-to-many relation's attach() method.
+     *
+     * Full credit goes to: https://github.com/Zizaco/entrust
+     *
+     * @param mixed $role
+     */
+    public function attachRole($role)
+    {
+        if (is_object($role)) {
+            $role = $role->getKey();
+        }
+
+        if (is_array($role)) {
+            $role = $role['id'];
+        }
+
+        $this->roles()->attach($role);
     }
 
     /**
@@ -110,6 +125,44 @@ class User extends Authenticatable
     }
 
     /**
+     * Checks if the user has a role by its name.
+     *
+     * Full credit goes to: https://github.com/Zizaco/entrust
+     *
+     * @param string|array $name       Role name or array of role names.
+     * @param bool         $requireAll All roles in the array are required.
+     *
+     * @return bool
+     */
+    public function hasRole($name, $requireAll = false)
+    {
+        if (is_array($name)) {
+            foreach ($name as $roleName) {
+                $hasRole = $this->hasRole($roleName);
+
+                if ($hasRole && !$requireAll) {
+                    return true;
+                } elseif (!$hasRole && $requireAll) {
+                    return false;
+                }
+            }
+
+            // If we've made it this far and $requireAll is FALSE, then NONE of the roles were found
+            // If we've made it this far and $requireAll is TRUE, then ALL of the roles were found.
+            // Return the value of $requireAll;
+            return $requireAll;
+        } else {
+            foreach ($this->roles as $role) {
+                if ($role->name == $name) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return HasManyThrough
      */
     public function piggyBanks(): HasManyThrough
@@ -123,6 +176,14 @@ class User extends Authenticatable
     public function preferences(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Preference');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany('FireflyIII\Models\Role');
     }
 
     /**

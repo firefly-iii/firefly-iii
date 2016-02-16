@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Carbon\Carbon;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
@@ -233,26 +232,7 @@ class TagController extends Controller
      */
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {
-        if (Input::get('setTag') == 'true') {
-            $latitude  = $request->get('latitude');
-            $longitude = $request->get('longitude');
-            $zoomLevel = $request->get('zoomLevel');
-        } else {
-            $latitude  = null;
-            $longitude = null;
-            $zoomLevel = null;
-        }
-        $date = $request->get('date') ?? '';
-
-        $data = [
-            'tag'         => $request->get('tag'),
-            'date'        => strlen($date) > 0 ? new Carbon($date) : null,
-            'description' => $request->get('description') ?? '',
-            'latitude'    => $latitude,
-            'longitude'   => $longitude,
-            'zoomLevel'   => $zoomLevel,
-            'tagMode'     => $request->get('tagMode'),
-        ];
+        $data = $request->collectTagData();
         $repository->store($data);
 
         Session::flash('success', 'The tag has been created!');
@@ -279,28 +259,7 @@ class TagController extends Controller
      */
     public function update(TagFormRequest $request, TagRepositoryInterface $repository, Tag $tag)
     {
-        if (Input::get('setTag') == 'true') {
-            $latitude  = $request->get('latitude');
-            $longitude = $request->get('longitude');
-            $zoomLevel = $request->get('zoomLevel');
-        } else {
-            $latitude  = null;
-            $longitude = null;
-            $zoomLevel = null;
-        }
-        $date = $request->get('date') ?? '';
-
-        $data = [
-            'tag'         => $request->get('tag'),
-            'date'        => strlen($date) > 0 ? new Carbon($date) : null,
-            'description' => $request->get('description') ?? '',
-            'latitude'    => $latitude,
-            'longitude'   => $longitude,
-            'zoomLevel'   => $zoomLevel,
-            'tagMode'     => $request->get('tagMode'),
-        ];
-
-
+        $data = $request->collectTagData();
         $repository->update($tag, $data);
 
         Session::flash('success', 'Tag "' . e($data['tag']) . '" updated.');

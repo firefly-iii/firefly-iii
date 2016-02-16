@@ -333,7 +333,7 @@ class AccountRepository implements AccountRepositoryInterface
         $balance = Steam::balance($account, $date, true);
         /** @var PiggyBank $p */
         foreach ($account->piggyBanks()->get() as $p) {
-            $balance = bcsub($p->currentRelevantRep()->currentamount, $balance);
+            $balance = bcsub($balance, $p->currentRelevantRep()->currentamount);
         }
 
         return $balance;
@@ -544,7 +544,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @return bool
      */
     private function storeMetadata(Account $account, array $data): bool
-    {        
+    {
         foreach ($this->validFields as $field) {
             if (isset($data[$field])) {
                 $metaData = new AccountMeta(

@@ -187,8 +187,8 @@ class PiggyBankController extends Controller
                     'name'              => $account->name,
                     'balance'           => Steam::balance($account, $end, true),
                     'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
-                    'sumOfSaved'        => $piggyBank->savedSoFar,
-                    'sumOfTargets'      => round($piggyBank->targetamount, 2),
+                    'sumOfSaved'        => strval($piggyBank->savedSoFar),
+                    'sumOfTargets'      => strval(round($piggyBank->targetamount, 2)),
                     'leftToSave'        => $piggyBank->leftToSave,
                 ];
             } else {

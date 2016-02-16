@@ -22,7 +22,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
         if (isset($this->mapped[$this->index][$this->value])) {
             $category = Auth::user()->categories()->find($this->mapped[$this->index][$this->value]);
         } else {
-            $category = Category::firstOrCreateEncrypted( // TODO use repository
+            $category = Category::firstOrCreateEncrypted( // See issue #180
                 [
                     'name'    => $this->value,
                     'user_id' => Auth::user()->id,

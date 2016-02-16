@@ -20,15 +20,10 @@ class BudgetName extends BasicConverter implements ConverterInterface
     {
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $budget = Auth::user()->budgets()->find($this->mapped[$this->index][$this->value]);
+            $budget = Auth::user()->budgets()->find($this->mapped[$this->index][$this->value]); // see issue #180
         } else {
-            $budget = Budget::firstOrCreateEncrypted( // TODO use repository
-                [
-                    'name'    => $this->value,
-                    'user_id' => Auth::user()->id,
-                    'active'  => true,
-                ]
-            );
+            $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+            $budget     = $repository->store(['name' => $this->value, 'user' => Auth::user()->id]);
         }
 
         return $budget;

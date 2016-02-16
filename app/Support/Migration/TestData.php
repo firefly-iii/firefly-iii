@@ -30,7 +30,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class TestData
@@ -90,20 +89,16 @@ class TestData
     public static function createAttachments(User $user, Carbon $start): TransactionJournal
     {
 
-        $toAccount   = TestData::findAccount($user, 'TestData Checking Account');
-        $fromAccount = TestData::findAccount($user, 'Job');
-
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 2,
-                'transaction_currency_id' => 1,
-                'description'             => 'Some journal for attachment',
-                'completed'               => 1,
-                'date'                    => $start->format('Y-m-d'),
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, '100');
+        $args    = [
+            'user'             => $user,
+            'description'      => 'Some journal for attachment',
+            'date'             => $start,
+            'from'             => 'Job',
+            'to'               => 'TestData Checking Account',
+            'amount'           => '100',
+            'transaction_type' => 2,
+        ];
+        $journal = self::createJournal($args);
 
         // and now attachments
         $encrypted = Crypt::encrypt('I are secret');
@@ -245,45 +240,24 @@ class TestData
     public static function createCar(User $user, Carbon $date): TransactionJournal
     {
         // twice:
-        $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $toAccount   = TestData::findAccount($user, 'Shell');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
-        $amount      = strval(rand(4000, 5000) / 100);
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'description'             => 'Bought gas',
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
+        $amount = strval(rand(4000, 5000) / 100);
+        $args   = [
+            'user'        => $user,
+            'description' => 'Bought gas',
+            'date'        => new Carbon($date->format('Y-m') . '-10'),// paid on 10th
+            'from'        => 'TestData Checking Account',
+            'to'          => 'Shell',
+            'amount'      => $amount,
+            'category'    => 'Car',
+            'budget'      => 'Car',
+        ];
+        self::createJournal($args);
 
-        $journal->categories()->save($category);
-        $journal->budgets()->save($budget);
-
-        // and again!
-        $date   = new Carbon($date->format('Y-m') . '-20'); // paid on 20th
-        $amount = rand(4000, 5000) / 100;
-
-
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'description'             => 'Gas for car',
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, strval($amount));
-
-        // and again!
+        // again!
+        $args['date']        = new Carbon($date->format('Y-m') . '-20'); // paid on 20th
+        $args['amount']      = strval(rand(4000, 5000) / 100);
+        $args['description'] = 'Gas for car';
+        $journal             = self::createJournal($args);
 
         return $journal;
     }
@@ -322,28 +296,18 @@ class TestData
             // weekly drink:
             $thisDate = clone $current;
             $thisDate->addDay();
-            $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-            $toAccount   = TestData::findAccount($user, 'Cafe Central');
-            $category    = Category::firstOrCreateEncrypted(['name' => 'Drinks', 'user_id' => $user->id]);
-            $budget      = Budget::firstOrCreateEncrypted(['name' => 'Going out', 'user_id' => $user->id]);
-            $amount      = strval(rand(1500, 3600) / 100);
-            $journal     = TransactionJournal::create(
-                [
-                    'user_id'                 => $user->id,
-                    'transaction_type_id'     => 1,
-                    'transaction_currency_id' => 1,
-                    'description'             => 'Going out for drinks',
-                    'completed'               => 1,
-                    'date'                    => $thisDate,
-                ]
-            );
-            self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-
-            $journal->categories()->save($category);
-            $journal->budgets()->save($budget);
-
-            // shopping at some (online) shop:
-
+            $amount = strval(rand(1500, 3600) / 100);
+            $args   = [
+                'user'        => $user,
+                'description' => 'Going out for drinks',
+                'date'        => $thisDate,
+                'from'        => 'TestData Checking Account',
+                'to'          => 'Cafe Central',
+                'amount'      => $amount,
+                'category'    => 'Drinks',
+                'budget'      => 'Going out',
+            ];
+            self::createJournal($args);
 
             $current->addWeek();
         }
@@ -395,36 +359,25 @@ class TestData
         $start->startOfMonth();
         $end->endOfMonth();
 
-        $fromAccount  = TestData::findAccount($user, 'TestData Checking Account');
         $stores       = ['Albert Heijn', 'PLUS', 'Bakker'];
         $descriptions = ['Groceries', 'Bought some groceries', 'Got groceries'];
-        $category     = Category::firstOrCreateEncrypted(['name' => 'Daily groceries', 'user_id' => $user->id]);
-        $budget       = Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
 
         $current = clone $start;
         while ($current < $end && $current < $today) {
             // daily groceries:
-            $toAccount = TestData::findAccount($user, $stores[rand(0, count($stores) - 1)]);
+            $amount = (string)round((rand(1500, 2500) / 100), 2);
 
-            $journal = TransactionJournal::create(
-                [
-                    'user_id'                 => $user->id,
-                    'transaction_type_id'     => 1,
-                    'transaction_currency_id' => 1,
-                    'description'             => $descriptions[rand(0, count($descriptions) - 1)],
-                    'completed'               => 1,
-                    'date'                    => $current,
-                ]
-            );
-            if ($journal->id) {
-                $number = (string)round((rand(1500, 2500) / 100), 2);
-                $amount = $number;//'10';//strval((rand(1500, 2500) / 100));
-                self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-                $journal->categories()->save($category);
-                $journal->budgets()->save($budget);
-            }
-
-
+            $args = [
+                'user'        => $user,
+                'description' => $descriptions[rand(0, count($descriptions) - 1)],
+                'date'        => $current,
+                'from'        => 'TestData Checking Account',
+                'to'          => $stores[rand(0, count($stores) - 1)],
+                'amount'      => $amount,
+                'category'    => 'Daily groceries',
+                'budget'      => 'Groceries',
+            ];
+            self::createJournal($args);
             $current->addDay();
         }
 
@@ -446,26 +399,52 @@ class TestData
         if ($date >= $today) {
             return new TransactionJournal;
         }
-        $toAccount   = TestData::findAccount($user, 'TestData Checking Account');
-        $fromAccount = TestData::findAccount($user, 'Job');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'Salary', 'user_id' => $user->id]);
-        // create journal:
 
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 2,
-                'transaction_currency_id' => 1,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-        $journal->categories()->save($category);
+        // create journal:
+        $args    = [
+            'user'             => $user,
+            'description'      => $description,
+            'date'             => $date,
+            'from'             => 'Job',
+            'to'               => 'TestData Checking Account',
+            'amount'           => $amount,
+            'category'         => 'Salary',
+            'transaction_type' => 2,
+        ];
+        $journal = self::createJournal($args);
 
         return $journal;
 
+    }
+
+    /**
+     * @param array $opt
+     *
+     * @return TransactionJournal
+     */
+    public static function createJournal(array $opt): TransactionJournal
+    {
+        $type = $opt['transaction_type'] ?? 1;
+
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $opt['user']->id,
+                'transaction_type_id'     => $type,
+                'transaction_currency_id' => 1,
+                'description'             => $opt['description'],
+                'completed'               => 1,
+                'date'                    => $opt['date'],
+            ]
+        );
+        self::createTransactions($journal, self::findAccount($opt['user'], $opt['from']), self::findAccount($opt['user'], $opt['to']), $opt['amount']);
+        if (isset($opt['category'])) {
+            $journal->categories()->save(self::findCategory($opt['user'], $opt['category']));
+        }
+        if (isset($opt['budget'])) {
+            $journal->budgets()->save(self::findBudget($opt['user'], $opt['budget']));
+        }
+
+        return $journal;
     }
 
     /**
@@ -620,24 +599,17 @@ class TestData
      */
     public static function createPower(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
-        $date        = new Carbon($date->format('Y-m') . '-06'); // paid on 10th
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $toAccount   = TestData::findAccount($user, 'Greenchoice');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-        $journal->categories()->save($category);
-        $journal->budgets()->save($budget);
+        $args    = [
+            'user'        => $user,
+            'description' => $description,
+            'date'        => new Carbon($date->format('Y-m') . '-06'),// paid on 10th
+            'from'        => 'TestData Checking Account',
+            'to'          => 'Greenchoice',
+            'amount'      => $amount,
+            'category'    => 'House',
+            'budget'      => 'Bills',
+        ];
+        $journal = self::createJournal($args);
 
         return $journal;
 
@@ -653,25 +625,17 @@ class TestData
      */
     public static function createRent(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $toAccount   = TestData::findAccount($user, 'Land lord');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'Rent', 'user_id' => $user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'bill_id'                 => 1,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-
-        $journal->categories()->save($category);
-        $journal->budgets()->save($budget);
+        $args    = [
+            'user'        => $user,
+            'description' => $description,
+            'date'        => $date,
+            'from'        => 'TestData Checking Account',
+            'to'          => 'Land lord',
+            'amount'      => $amount,
+            'category'    => 'Rent',
+            'budget'      => 'Bills',
+        ];
+        $journal = self::createJournal($args);
 
         return $journal;
 
@@ -792,24 +756,17 @@ class TestData
      */
     public static function createSavings(User $user, Carbon $date): TransactionJournal
     {
-        $date        = new Carbon($date->format('Y-m') . '-24'); // paid on 24th.
-        $toAccount   = TestData::findAccount($user, 'TestData Savings');
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'Money management', 'user_id' => $user->id]);
-        // create journal:
-
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 3,
-                'transaction_currency_id' => 1,
-                'description'             => 'Save money',
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, '150');
-        $journal->categories()->save($category);
+        $args    = [
+            'user'             => $user,
+            'description'      => 'Save money',
+            'date'             => new Carbon($date->format('Y-m') . '-24'),// paid on 24th.
+            'from'             => 'TestData Checking Account',
+            'to'               => 'TestData Savings',
+            'amount'           => '150',
+            'category'         => 'Money management',
+            'transaction_type' => 3,
+        ];
+        $journal = self::createJournal($args);
 
         return $journal;
 
@@ -825,25 +782,17 @@ class TestData
      */
     public static function createTV(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
-        $date        = new Carbon($date->format('Y-m') . '-15'); // paid on 10th
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $toAccount   = TestData::findAccount($user, 'XS4All');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-
-        $journal->categories()->save($category);
-        $journal->budgets()->save($budget);
+        $args    = [
+            'user'        => $user,
+            'description' => $description,
+            'date'        => new Carbon($date->format('Y-m') . '-15'),
+            'from'        => 'TestData Checking Account',
+            'to'          => 'XS4All',
+            'amount'      => $amount,
+            'category'    => 'House',
+            'budget'      => 'Bills',
+        ];
+        $journal = self::createJournal($args);
 
         return $journal;
 
@@ -883,8 +832,6 @@ class TestData
      */
     public static function createTransactions(TransactionJournal $journal, Account $from, Account $to, string $amount): bool
     {
-        Log::debug('---- Transaction From: ' . bcmul($amount, '-1'));
-        Log::debug('---- Transaction To  : ' . $amount);
         Transaction::create(
             [
                 'account_id'             => $from->id,
@@ -931,24 +878,17 @@ class TestData
      */
     public static function createWater(User $user, string $description, Carbon $date, string $amount): TransactionJournal
     {
-        $date        = new Carbon($date->format('Y-m') . '-10'); // paid on 10th
-        $fromAccount = TestData::findAccount($user, 'TestData Checking Account');
-        $toAccount   = TestData::findAccount($user, 'Vitens');
-        $category    = Category::firstOrCreateEncrypted(['name' => 'House', 'user_id' => $user->id]);
-        $budget      = Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]);
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1,
-                'transaction_currency_id' => 1,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date,
-            ]
-        );
-        self::createTransactions($journal, $fromAccount, $toAccount, $amount);
-        $journal->categories()->save($category);
-        $journal->budgets()->save($budget);
+        $args    = [
+            'user'        => $user,
+            'description' => $description,
+            'date'        => new Carbon($date->format('Y-m') . '-10'), // paid on 10th
+            'from'        => 'TestData Checking Account',
+            'to'          => 'Vitens',
+            'amount'      => $amount,
+            'category'    => 'House',
+            'budget'      => 'Bills',
+        ];
+        $journal = self::createJournal($args);
 
         return $journal;
 
@@ -987,7 +927,25 @@ class TestData
             }
         }
 
-        return new Budget;
+        return Budget::firstOrCreateEncrypted(['name' => $name, 'user_id' => $user->id]);
+    }
+
+    /**
+     * @param User $user
+     * @param      $name
+     *
+     * @return Category
+     */
+    public static function findCategory(User $user, string $name): Category
+    {
+        /** @var Category $category */
+        foreach (Category::get() as $category) {
+            if ($category->name == $name && $user->id == $category->user_id) {
+                return $category;
+            }
+        }
+
+        return Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => $user->id]);
     }
 
     /**
@@ -1023,6 +981,7 @@ class TestData
             ]
         );
         self::createTransactions($journal, $opposing, $savings, '10000');
+
         return $journal;
 
     }

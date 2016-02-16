@@ -154,9 +154,9 @@ class AssetAccount implements PostProcessorInterface
         $name        = $this->data['asset-account-name'] ?? '';
         $iban        = $this->data['asset-account-iban'] ?? '';
 
-        // create if not exists: // TODO should be through repository.
+        // create if not exists: // See issue #180
         $name    = strlen($name) > 0 ? $name : $iban;
-        $account = Account::firstOrCreateEncrypted( // TODO use repository
+        $account = Account::firstOrCreateEncrypted(
             [
                 'user_id'         => Auth::user()->id,
                 'account_type_id' => $accountType->id,
@@ -211,7 +211,8 @@ class AssetAccount implements PostProcessorInterface
                 return $entry;
             }
         }
-        // create if not exists: // TODO use repository
+        // create if not exists:
+        // See issue #180
         $account = Account::firstOrCreateEncrypted(
             [
                 'user_id'         => Auth::user()->id,
@@ -249,7 +250,7 @@ class AssetAccount implements PostProcessorInterface
             'name'                   => $accountNumber,
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
-            'virtualBalanceCurrency' => 1, // TODO hard coded.
+            'virtualBalanceCurrency' => 1, // hard coded.
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'iban'                   => null,
@@ -257,7 +258,7 @@ class AssetAccount implements PostProcessorInterface
             'accountRole'            => null,
             'openingBalance'         => 0,
             'openingBalanceDate'     => new Carbon,
-            'openingBalanceCurrency' => 1, // TODO hard coded.
+            'openingBalanceCurrency' => 1, // hard coded.
         ];
         $account = $repository->store($accountData);
 

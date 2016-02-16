@@ -199,6 +199,13 @@ class FireflyValidator extends Validator
         return false;
     }
 
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
     public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
         $accountId = $this->data['id'] ?? 0;
