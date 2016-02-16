@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
 use Input;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Log;
 
 /**
  * Class AttachmentHelper
@@ -75,9 +76,14 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentsForModel(Model $model)
     {
 	$files = null;
-        if(Input::hasFile('attachments')) {
-            $files = Input::file('attachments');
-    }
+        try {
+            if(Input::hasFile('attachments')) {
+                $files = Input::file('attachments');
+            }
+        } catch (Error $e) {
+            // Log it, do nothing else.
+            Log::error($e->getMessage());
+        }
 
         if (is_array($files)) {
             foreach ($files as $entry) {
