@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -151,7 +152,7 @@ class AuthController extends Controller
 
             return redirect($this->redirectPath());
         }
-        abort(500, 'Not a user!');
+        throw new FireflyException('The authenticated user object is invalid.');
 
 
         return redirect($this->redirectPath());

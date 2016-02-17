@@ -7,6 +7,7 @@ use Auth;
 use Carbon\Carbon;
 use Config;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -482,7 +483,9 @@ class AccountRepository implements AccountRepositoryInterface
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                abort(500);
+                throw new FireflyException(
+                    'Cannot create a new account. See also the log files. First error is: ' . e($newAccount->getErrors()->first()) . '.'
+                );
             }
             $newAccount = $existingAccount;
 

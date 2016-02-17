@@ -6,6 +6,7 @@ namespace FireflyIII\Repositories\Journal;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -349,14 +350,14 @@ class JournalRepository implements JournalRepositoryInterface
 
         if (is_null($toAccount)) {
             Log::error('"to"-account is null, so we cannot continue!');
-            abort(500, '"to"-account is null, so we cannot continue!');
+            throw new FireflyException('"to"-account is null, so we cannot continue!');
             // @codeCoverageIgnoreStart
         }
         // @codeCoverageIgnoreEnd
 
         if (is_null($fromAccount)) {
             Log::error('"from"-account is null, so we cannot continue!');
-            abort(500, '"from"-account is null, so we cannot continue!');
+            throw new FireflyException('"from"-account is null, so we cannot continue!');
 
             // @codeCoverageIgnoreStart
         }

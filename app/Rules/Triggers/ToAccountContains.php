@@ -21,12 +21,10 @@ use Log;
  */
 class ToAccountContains implements TriggerInterface
 {
-    /** @var RuleTrigger */
-    protected $trigger;
-
     /** @var TransactionJournal */
     protected $journal;
-
+    /** @var RuleTrigger */
+    protected $trigger;
 
     /**
      * TriggerInterface constructor.
@@ -38,6 +36,18 @@ class ToAccountContains implements TriggerInterface
     {
         $this->trigger = $trigger;
         $this->journal = $journal;
+    }
+
+    /**
+     * @{inheritdoc}
+     *
+     * @see TriggerInterface::matchesAnything
+     *
+     * @return bool
+     */
+    public function matchesAnything()
+    {
+        return $this->trigger->trigger_value === "";
     }
 
     /**
@@ -62,4 +72,5 @@ class ToAccountContains implements TriggerInterface
         return false;
 
     }
+
 }

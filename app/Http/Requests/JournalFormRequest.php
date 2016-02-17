@@ -6,6 +6,7 @@ namespace FireflyIII\Http\Requests;
 use Auth;
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 use Input;
 
@@ -32,6 +33,7 @@ class JournalFormRequest extends Request
     public function getJournalData()
     {
         $tags = $this->get('tags') ?? '';
+
         return [
             'what'                      => $this->get('what'),
             'description'               => $this->get('description'),
@@ -86,7 +88,7 @@ class JournalFormRequest extends Request
                 $rules['category']        = 'between:1,255';
                 break;
             default:
-                abort(500, 'Cannot handle ' . $what);
+                throw new FireflyException('Cannot handle transaction type of type ' . e($what) . '.');
                 break;
         }
 

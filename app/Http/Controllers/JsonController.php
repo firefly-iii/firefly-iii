@@ -3,6 +3,7 @@
 use Amount;
 use Carbon\Carbon;
 use Config;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -247,7 +248,7 @@ class JsonController extends Controller
     {
         $pref = Preferences::get('tour', true);
         if (!$pref) {
-            abort(404);
+            throw new FireflyException('Cannot find preference for tour. Exit.');
         }
         $headers = ['main-content', 'sidebar-toggle', 'account-menu', 'budget-menu', 'report-menu', 'transaction-menu', 'option-menu', 'main-content-end'];
         $steps   = [];

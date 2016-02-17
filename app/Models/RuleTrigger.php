@@ -10,6 +10,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Rules\Triggers\TriggerFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +30,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class RuleTrigger extends Model
 {
+    /**
+     * Checks whether this trigger will match all transactions
+     * For example: amount > 0 or description starts with ''
+     */
+    public function matchesAnything()
+    {
+        return TriggerFactory::getTrigger($this, new TransactionJournal)->matchesAnything();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
