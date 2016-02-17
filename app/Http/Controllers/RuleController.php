@@ -18,6 +18,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Rules\TransactionMatcher;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Input;
 use Preferences;
@@ -25,7 +26,7 @@ use Response;
 use Session;
 use URL;
 use View;
-use FireflyIII\Rules\TransactionMatcher;
+use Config;
 
 /**
  * Class RuleController
@@ -348,9 +349,8 @@ class RuleController extends Controller
         // We start searching for transactions. For performance reasons, there are limits
         // to the search: a maximum number of results and a maximum number of transactions
         // to search in
-        // TODO: Make these values configurable
-        $maxResults = 50;
-        $maxTransactionsToSearchIn = 1000;
+        $maxResults = Config::get('firefly.test-triggers.limit');
+        $maxTransactionsToSearchIn = Config::get('firefly.test-triggers.max_transactions_to_analyse');
     
         // Dispatch the actual work to a matched object
         $matchingTransactions = 
