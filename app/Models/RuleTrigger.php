@@ -10,7 +10,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Rules\Triggers\TriggerFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
