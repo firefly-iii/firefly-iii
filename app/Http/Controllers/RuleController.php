@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers;
 use Auth;
 use Config;
 use FireflyIII\Http\Requests\RuleFormRequest;
+use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
@@ -264,12 +265,15 @@ class RuleController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function testTriggers()
+    public function testTriggers(TestRuleFormRequest $request)
     {
-        // Create a list of triggers
-        $triggers = $this->getValidTriggerList();
+        $triggers = [
+            'rule-triggers'       => $request->get('rule-trigger'),
+            'rule-trigger-values' => $request->get('rule-trigger-value'),
+            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
+        ];
 
-        if (count($triggers) == 0) {
+        if (count($triggers['rule-triggers']) == 0) {
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
