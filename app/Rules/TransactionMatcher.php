@@ -99,31 +99,35 @@ class TransactionMatcher
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getTransactionLimit()
+    public function getRange()
     {
         return $this->range;
     }
 
     /**
-     * @return array
+     * @param int $range
      */
-    public function getTransactionTypes()
+    public function setRange($range)
     {
-        return $this->transactionTypes;
+        $this->range = $range;
     }
 
     /**
-     * @param array $transactionTypes
-     *
-     * @return $this
+     * @return int
      */
-    public function setTransactionTypes(array $transactionTypes)
+    public function getLimit()
     {
-        $this->transactionTypes = $transactionTypes;
+        return $this->limit;
+    }
 
-        return $this;
+    /**
+     * @param int $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
     }
 
     /**
@@ -136,26 +140,12 @@ class TransactionMatcher
 
     /**
      * @param array $triggers
-     *
-     * @return $this
      */
     public function setTriggers($triggers)
     {
         $this->triggers = $triggers;
-
-        return $this;
     }
 
-    /**
-     * @param int $limit
-     *
-     * @return $this
-     */
-    public function setTransactionLimit(int $limit)
-    {
-        $this->range = $limit;
 
-        return $this;
-    }
 
 }
