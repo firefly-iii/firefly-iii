@@ -85,7 +85,7 @@ class Processor
          * @var int        $index
          * @var RuleAction $action
          */
-        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
+        foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
             $actionClass = ActionFactory::getAction($action, $this->journal);
             $actionClass->act();
@@ -114,7 +114,8 @@ class Processor
 
             /** @var TriggerInterface $triggerObject */
             $triggerObject = TriggerFactory::getTrigger($trigger);
-            if ($triggerObject->triggered()) {
+            // no need to keep pushing the journal around!
+            if ($triggerObject->triggered($this->journal)) {
                 $hitTriggers++;
             }
             if ($trigger->stop_processing) {
