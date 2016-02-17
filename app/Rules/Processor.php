@@ -15,6 +15,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionInterface;
+use FireflyIII\Rules\Actions\ActionFactory;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Rules\Triggers\TriggerFactory;
 use Log;
