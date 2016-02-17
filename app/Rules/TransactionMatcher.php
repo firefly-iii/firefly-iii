@@ -23,7 +23,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 class TransactionMatcher
 {
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
-    protected $maxTransactionsToSearchIn = 1000;
+    private $range = 1000;
     /** @var array */
     protected $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
@@ -48,7 +48,7 @@ class TransactionMatcher
 
         // The optimal pagesize is somewhere between the maximum number of results to be returned
         // and the maximum number of transactions to consider.
-        $pagesize = min($this->maxTransactionsToSearchIn / 2, $maxResults * 2);
+        $pagesize = min($this->range / 2, $maxResults * 2);
 
         // Variables used within the loop
         $numTransactionsProcessed = 0;
@@ -85,7 +85,7 @@ class TransactionMatcher
             // Check for conditions to finish the loop
             $reachedEndOfList           = (count($transactions) < $pagesize);
             $foundEnoughTransactions    = (count($matchingTransactions) >= $maxResults);
-            $searchedEnoughTransactions = ($numTransactionsProcessed >= $this->maxTransactionsToSearchIn);
+            $searchedEnoughTransactions = ($numTransactionsProcessed >= $this->range);
         } while (!$reachedEndOfList && !$foundEnoughTransactions && !$searchedEnoughTransactions);
 
         // If the list of matchingTransactions is larger than the maximum number of results
@@ -100,7 +100,7 @@ class TransactionMatcher
      */
     public function getTransactionLimit()
     {
-        return $this->maxTransactionsToSearchIn;
+        return $this->range;
     }
 
     /**
@@ -150,7 +150,7 @@ class TransactionMatcher
      */
     public function setTransactionLimit(int $limit)
     {
-        $this->maxTransactionsToSearchIn = $limit;
+        $this->range = $limit;
 
         return $this;
     }
