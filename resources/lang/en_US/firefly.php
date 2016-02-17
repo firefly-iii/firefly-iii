@@ -126,6 +126,10 @@ return [
     'delete_rule'                        => 'Delete rule ":title"',
     'update_rule'                        => 'Update rule',
 
+    'test_rule_triggers'                 => 'See matching transactions',
+    'warning_transaction_subset'         => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
+    'warning_no_matching_transactions'   => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
+    
     // actions and triggers
     'rule_trigger_user_action'           => 'User action is ":trigger_value"',
     'rule_trigger_from_account_starts'   => 'Source account starts with ":trigger_value"',

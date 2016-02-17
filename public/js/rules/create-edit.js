@@ -83,3 +83,32 @@ function removeAction(e) {
         addNewAction();
     }
 }
+
+function testRuleTriggers() {
+	"use strict";
+	
+	// Serialize all trigger data
+	var triggerData = $( ".rule-trigger-tbody" ).find( "input[type=text], input[type=checkbox], select" ).serializeArray();
+	
+	// Find a list of existing transactions that match these triggers
+    $.get('rules/rules/test_triggers', triggerData).done(function (data) {
+    	var modal = $( "#testTriggerModal" );
+    	var numTriggers = $( ".rule-trigger-body > tr" ).length;
+    	
+    	// Set title and body
+    	modal.find( ".transactions-list" ).html(data.html);
+    	
+    	// Show warning if appropriate
+    	if( data.warning ) {
+    		modal.find( ".transaction-warning .warning-contents" ).text(data.warning);
+    		modal.find( ".transaction-warning" ).show();
+    	} else {
+    		modal.find( ".transaction-warning" ).hide();
+    	}
+    	
+    	// Show the modal dialog
+    	$( "#testTriggerModal" ).modal();
+    }).fail(function () {
+        alert('Cannot get transactions for given triggers.');
+    });
+}
