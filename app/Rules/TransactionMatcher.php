@@ -23,7 +23,10 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 class TransactionMatcher
 {
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
-    private $range = 1000;
+    private $range = 200;
+    /** @var int */
+    private $limit = 10;
+
     /** @var array */
     protected $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
