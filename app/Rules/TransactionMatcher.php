@@ -30,16 +30,6 @@ class TransactionMatcher
     protected $triggers = [];
 
     /**
-     * Default constructor
-     *
-     * @param $triggers
-     */
-    public function __construct($triggers)
-    {
-        $this->setTriggers($triggers);
-    }
-
-    /**
      * Find matching transactions for the current set of triggers
      *
      * @param int $maxResults The maximum number of transactions returned

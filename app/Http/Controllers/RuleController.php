@@ -280,6 +280,8 @@ class RuleController extends Controller
         $limit = Config::get('firefly.test-triggers.limit');
         $range = Config::get('firefly.test-triggers.range');
 
+        $matcher = new TransactionMatcher;
+
         // Dispatch the actual work to a matched object
         $matchingTransactions
             = (new TransactionMatcher($triggers))
