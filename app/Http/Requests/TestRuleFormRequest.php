@@ -46,7 +46,7 @@ class TestRuleFormRequest extends Request
 
         $validTriggers = array_keys(Config::get('firefly.rule-triggers'));
         $rules         = [
-            'rule-trigger.*'       => 'required|in:' . join(',', $validTriggers),
+            'rule-trigger.*'       => 'required|min:1|in:' . join(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',
         ];
 
