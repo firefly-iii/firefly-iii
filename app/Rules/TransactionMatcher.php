@@ -28,9 +28,9 @@ class TransactionMatcher
     private $limit = 10;
 
     /** @var array */
-    protected $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+    private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
-    protected $triggers = [];
+    private $triggers = [];
 
     /**
      * Find matching transactions for the current set of triggers
@@ -39,7 +39,7 @@ class TransactionMatcher
      *
      * @return array
      */
-    public function findMatchingTransactions($maxResults = 50)
+    public function findMatchingTransactions()
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
