@@ -48,6 +48,8 @@ class TriggerFactory
      * @param string $triggerType
      * @param string $triggerValue
      *
+     * @param bool   $stopProcessing
+     *
      * @return AbstractTrigger
      * @throws FireflyException
      */

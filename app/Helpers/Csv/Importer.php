@@ -371,8 +371,8 @@ class Importer
 
             /** @var Rule $rule */
             foreach ($group->rules as $rule) {
-                $processor = new Processor($rule, $journal);
-                $processor->handle();
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($journal);
                 if ($rule->stop_processing) {
                     break;
                 }

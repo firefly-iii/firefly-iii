@@ -139,7 +139,8 @@ class RuleController extends Controller
     }
 
     /**
-     * @param Rule $rule
+     * @param RuleRepositoryInterface $repository
+     * @param Rule                    $rule
      *
      * @return View
      */
@@ -174,6 +175,8 @@ class RuleController extends Controller
     }
 
     /**
+     * @param RuleGroupRepositoryInterface $repository
+     *
      * @return View
      */
     public function index(RuleGroupRepositoryInterface $repository)
@@ -263,6 +266,8 @@ class RuleController extends Controller
     }
 
     /**
+     * @param TestRuleFormRequest $request
+     *
      * @return \Illuminate\View\View
      */
     public function testTriggers(TestRuleFormRequest $request)

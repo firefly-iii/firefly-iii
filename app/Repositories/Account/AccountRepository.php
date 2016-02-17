@@ -455,6 +455,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     * @throws FireflyException
      */
     private function storeAccount(array $data): Account
     {

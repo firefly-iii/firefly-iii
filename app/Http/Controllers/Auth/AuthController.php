@@ -97,6 +97,8 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
+     * @throws FireflyException
+     * @throws \Illuminate\Foundation\Validation\ValidationException
      */
     public function register(Request $request)
     {

@@ -27,11 +27,6 @@ class HomeController extends Controller
         parent::__construct();
     }
 
-    public function displayError() {
-        throw new FireflyException('A very simple test error.');
-    }
-
-
     public function dateRange()
     {
         $start = new Carbon(Input::get('start'));
@@ -45,6 +40,11 @@ class HomeController extends Controller
 
         Session::put('start', $start);
         Session::put('end', $end);
+    }
+
+    public function displayError()
+    {
+        throw new FireflyException('A very simple test error.');
     }
 
     /**

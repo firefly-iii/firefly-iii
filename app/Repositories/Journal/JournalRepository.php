@@ -112,6 +112,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param int   $offset
      * @param int   $page
      *
+     * @param int   $pagesize
+     *
      * @return LengthAwarePaginator
      */
     public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50)
@@ -347,7 +349,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array           $data
      *
      * @return array
-     *
+     * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function storeAccounts(TransactionType $type, array $data)

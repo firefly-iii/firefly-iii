@@ -36,9 +36,8 @@ class TransactionMatcher
     /**
      * Find matching transactions for the current set of triggers
      *
-     * @param int $maxResults The maximum number of transactions returned
-     *
      * @return array
+     *
      */
     public function findMatchingTransactions()
     {
