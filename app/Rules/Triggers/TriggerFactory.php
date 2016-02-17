@@ -22,48 +22,55 @@ use FireflyIII\Support\Domain;
 class TriggerFactory
 {
     protected static $triggerTypes = null;
-    
+
     /**
      * Returns the class name to be used for triggers with the given name
+     *
      * @param string $triggerType
+     *
      * @return TriggerInterface
      */
-    public static function getTriggerClass(string $triggerType): string {
+    public static function getTriggerClass(string $triggerType): string
+    {
         $triggerTypes = self::getTriggerTypes();
-        
+
         if (!array_key_exists($triggerType, $triggerTypes)) {
             abort(500, 'No such trigger exists ("' . $triggerType . '").');
         }
-        
+
         $class = $triggerTypes[$triggerType];
         if (!class_exists($class)) {
             abort(500, 'Could not instantiate class for rule trigger type "' . $triggerType . '" (' . $class . ').');
         }
-        
+
         return $class;
     }
-    
+
     /**
      * Returns the trigger for the given type and journal
-     * @param RuleTrigger $trigger
+     *
+     * @param RuleTrigger        $trigger
      * @param TransactionJournal $journal
+     *
      * @return TriggerInterface
      */
-    public static function getTrigger(RuleTrigger $trigger, TransactionJournal $journal): TriggerInterface {
+    public static function getTrigger(RuleTrigger $trigger, TransactionJournal $journal): TriggerInterface
+    {
         $triggerType = $trigger->trigger_type;
-        $class = self::getTriggerClass($triggerType);
-        
+        $class       = self::getTriggerClass($triggerType);
+
         return new $class($trigger, $journal);
     }
-    
+
     /**
      * Returns a map with triggertypes, mapped to the class representing that type
      */
-    protected static function getTriggerTypes() {
-        if( !self::$triggerTypes ) {
+    protected static function getTriggerTypes()
+    {
+        if (!self::$triggerTypes) {
             self::$triggerTypes = Domain::getRuleTriggers();
         }
-        
+
         return self::$triggerTypes;
     }
 }

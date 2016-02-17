@@ -29,14 +29,15 @@ interface TriggerInterface
     public function __construct(RuleTrigger $trigger, TransactionJournal $journal);
 
     /**
-     * @return bool
-     */
-    public function triggered();
-    
-    /**
      * Checks whether this trigger will match all transactions
      * For example: amount > 0 or description starts with ''
+     *
      * @return bool
      */
     public function matchesAnything();
+
+    /**
+     * @return bool
+     */
+    public function triggered();
 }

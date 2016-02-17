@@ -62,13 +62,15 @@ class AmountMore implements TriggerInterface
         return false;
 
     }
-    
+
     /**
      * Checks whether this trigger will match all transactions
      * This happens when the trigger_value is zero
+     *
      * @return bool
      */
-    public function matchesAnything() { 
-        return bccomp('0', $this->trigger->trigger_value) === 0; 
+    public function matchesAnything()
+    {
+        return bccomp('0', $this->trigger->trigger_value) === 0;
     }
 }

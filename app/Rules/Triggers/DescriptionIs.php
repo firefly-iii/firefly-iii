@@ -58,11 +58,15 @@ class DescriptionIs implements TriggerInterface
         return false;
 
     }
-    
+
     /**
      * Checks whether this trigger will match all transactions
+     *
      * @return bool
      */
-    public function matchesAnything() { return false; }
-    
+    public function matchesAnything()
+    {
+        return false;
+    }
+
 }

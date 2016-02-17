@@ -62,11 +62,15 @@ class AmountExactly implements TriggerInterface
         return false;
 
     }
-    
+
     /**
      * Checks whether this trigger will match all transactions
      * For example: amount > 0 or description starts with ''
+     *
      * @return bool
      */
-    public function matchesAnything() { return false; }
+    public function matchesAnything()
+    {
+        return false;
+    }
 }
