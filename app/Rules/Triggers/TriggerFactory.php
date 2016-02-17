@@ -10,6 +10,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules\Triggers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Domain;
@@ -51,13 +52,12 @@ class TriggerFactory
         $triggerTypes = self::getTriggerTypes();
 
         if (!array_key_exists($triggerType, $triggerTypes)) {
-            abort(500, 'No such trigger exists ("' . $triggerType . '").');
+            throw new FireflyException('No such trigger exists ("' . e($triggerType) . '").');
         }
 
-        /** @var TriggerInterface $class */
         $class = $triggerTypes[$triggerType];
         if (!class_exists($class)) {
-            abort(500, 'Could not instantiate class for rule trigger type "' . $triggerType . '" (' . $class . ').');
+            throw new FireflyException('Could not instantiate class for rule trigger type "' . e($triggerType) . '" (' . e($class) . ').');
         }
 
         return $class;
