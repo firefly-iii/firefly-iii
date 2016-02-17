@@ -5,7 +5,6 @@ namespace FireflyIII\Helpers\Csv\Converter;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountName
@@ -27,7 +26,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             return $account;
         }
         // find or create new account:
-        $set         = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->get();
+        $set = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $this->value) {

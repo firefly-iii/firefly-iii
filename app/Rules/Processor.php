@@ -29,13 +29,13 @@ use Log;
 final class Processor
 {
     /** @var  Collection */
-    private $actions;
+    public $actions;
     /** @var  TransactionJournal */
-    private $journal;
+    public $journal;
     /** @var  Rule */
-    private $rule;
+    public $rule;
     /** @var Collection */
-    private $triggers;
+    public $triggers;
 
     /**
      * Processor constructor.
@@ -44,7 +44,7 @@ final class Processor
     private function __construct()
     {
         $this->triggers = new Collection;
-        $this->actions = new Collection;
+        $this->actions  = new Collection;
     }
 
     /**

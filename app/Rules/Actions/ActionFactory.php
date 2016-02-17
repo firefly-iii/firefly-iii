@@ -12,7 +12,6 @@ namespace FireflyIII\Rules\Actions;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Domain;
 
 /**
@@ -27,7 +26,7 @@ class ActionFactory
     /**
      * Returns the action for the given type and journal
      *
-     * @param RuleAction         $action
+     * @param RuleAction $action
      *
      * @return ActionInterface
      */
