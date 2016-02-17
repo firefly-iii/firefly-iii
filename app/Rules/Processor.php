@@ -18,7 +18,6 @@ use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Actions\ActionFactory;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Rules\Triggers\TriggerFactory;
-use FireflyIII\Support\Domain;
 use Log;
 
 /**
@@ -32,10 +31,6 @@ class Processor
     protected $journal;
     /** @var  Rule */
     protected $rule;
-    /** @var array */
-    private $actionTypes = [];
-    /** @var array */
-    private $triggerTypes = [];
 
     /**
      * Processor constructor.
@@ -47,8 +42,6 @@ class Processor
     {
         $this->rule         = $rule;
         $this->journal      = $journal;
-        $this->triggerTypes = Domain::getRuleTriggers();
-        $this->actionTypes  = Domain::getRuleActions();
     }
 
     /**
