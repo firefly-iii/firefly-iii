@@ -21,12 +21,10 @@ use Log;
  */
 class FromAccountIs implements TriggerInterface
 {
-    /** @var RuleTrigger */
-    protected $trigger;
-
     /** @var TransactionJournal */
     protected $journal;
-
+    /** @var RuleTrigger */
+    protected $trigger;
 
     /**
      * TriggerInterface constructor.
@@ -38,6 +36,18 @@ class FromAccountIs implements TriggerInterface
     {
         $this->trigger = $trigger;
         $this->journal = $journal;
+    }
+
+    /**
+     * @{inheritdoc}
+     *
+     * @see TriggerInterface::matchesAnything
+     *
+     * @return bool
+     */
+    public function matchesAnything()
+    {
+        return false;
     }
 
     /**
@@ -57,18 +67,6 @@ class FromAccountIs implements TriggerInterface
 
         return false;
 
-    }
-
-    /**
-     * @{inheritdoc}
-     *
-     * @see TriggerInterface::matchesAnything
-     *
-     * @return bool
-     */
-    public function matchesAnything()
-    {
-        return false;
     }
 
 }

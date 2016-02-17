@@ -21,12 +21,10 @@ use Log;
  */
 class UserAction implements TriggerInterface
 {
-    /** @var RuleTrigger */
-    protected $trigger;
-
     /** @var TransactionJournal */
     protected $journal;
-
+    /** @var RuleTrigger */
+    protected $trigger;
 
     /**
      * TriggerInterface constructor.
@@ -42,18 +40,6 @@ class UserAction implements TriggerInterface
     }
 
     /**
-     * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
-     *
-     * @return bool
-     */
-    public function triggered()
-    {
-        Log::debug('user_action always returns true.');
-
-        return true;
-    }
-
-    /**
      * @{inheritdoc}
      *
      * @see TriggerInterface::matchesAnything
@@ -62,6 +48,18 @@ class UserAction implements TriggerInterface
      */
     public function matchesAnything()
     {
+        return true;
+    }
+
+    /**
+     * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
+     *
+     * @return bool
+     */
+    public function triggered()
+    {
+        Log::debug('user_action always returns true.');
+
         return true;
     }
 

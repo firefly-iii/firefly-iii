@@ -24,6 +24,22 @@ class TriggerFactory
     protected static $triggerTypes = null;
 
     /**
+     * Returns the trigger for the given type and journal
+     *
+     * @param RuleTrigger        $trigger
+     * @param TransactionJournal $journal
+     *
+     * @return TriggerInterface
+     */
+    public static function getTrigger(RuleTrigger $trigger, TransactionJournal $journal): TriggerInterface
+    {
+        $triggerType = $trigger->trigger_type;
+        $class       = self::getTriggerClass($triggerType);
+
+        return new $class($trigger, $journal);
+    }
+
+    /**
      * Returns the class name to be used for triggers with the given name
      *
      * @param string $triggerType
@@ -45,22 +61,6 @@ class TriggerFactory
         }
 
         return $class;
-    }
-
-    /**
-     * Returns the trigger for the given type and journal
-     *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
-     *
-     * @return TriggerInterface
-     */
-    public static function getTrigger(RuleTrigger $trigger, TransactionJournal $journal): TriggerInterface
-    {
-        $triggerType = $trigger->trigger_type;
-        $class       = self::getTriggerClass($triggerType);
-
-        return new $class($trigger, $journal);
     }
 
     /**
