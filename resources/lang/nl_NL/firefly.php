@@ -125,6 +125,11 @@ return [
     'edit_rule'                          => 'Wijzig regel ":title"',
     'update_rule'                        => 'Werk regel bij',
 
+    'test_rule_triggers'                 => 'Transacties die voldoen aan triggers',
+    'warning_transaction_subset'         => 'In verband met de snelheid, worden in deze lijst maximaal :max_num_transactions transacties weergegeven. Het kan daarom zijn dat transacties ontbreken in deze lijst.',
+    'warning_no_matching_transactions'   => 'Er zijn geen transacties gevonden die voldoen aan de triggers in de laatste :num_transactions transacties.',
+    'warning_no_valid_triggers'          => 'Geen geldige triggers opgegeven.',
+    
     // actions and triggers
     'rule_trigger_user_action'           => 'Gebruikersactie is ":trigger_value"',
     'rule_trigger_from_account_starts'   => 'Bronrekeningnaam begint met ":trigger_value"',

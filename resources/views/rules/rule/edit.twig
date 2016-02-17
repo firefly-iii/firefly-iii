@@ -62,11 +62,14 @@
                     <p>
                         <br/>
                         <a href="#" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</a>
+                        <a href="#" class="btn btn-default test_rule_triggers">{{ 'test_rule_triggers'|_ }}</a>
                     </p>
                 </div>
             </div>
         </div>
     </div>
+    
+	{% include '/rules/partials/test-trigger-modal.twig' %}
 
     <!-- RULE ACTIONS -->
     <div class="row">

@@ -219,5 +219,11 @@ return [
         'append_description',
         'prepend_description',
     ],
-
+    'test-triggers' => [
+        // The maximum number of transactions shown when testing a list of triggers
+        'limit' => 50,
+        
+        // The maximum number of transactions to analyse, when testing a list of triggers
+        'max_transactions_to_analyse' => 1000
+    ]
 ];

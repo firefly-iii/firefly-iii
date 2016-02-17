@@ -18,6 +18,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Rules\TransactionMatcher;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Input;
 use Preferences;
@@ -25,6 +26,7 @@ use Response;
 use Session;
 use URL;
 use View;
+use Config;
 
 /**
  * Class RuleController
@@ -333,6 +335,80 @@ class RuleController extends Controller
         return redirect(session('rules.rule.edit.url'));
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function testTriggers() {
+        // Create a list of triggers
+        $triggers = $this->getValidTriggerList();
+        
+        if(count($triggers) == 0) {
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers') ]);
+        }
+    
+        // We start searching for transactions. For performance reasons, there are limits
+        // to the search: a maximum number of results and a maximum number of transactions
+        // to search in
+        $maxResults = Config::get('firefly.test-triggers.limit');
+        $maxTransactionsToSearchIn = Config::get('firefly.test-triggers.max_transactions_to_analyse');
+    
+        // Dispatch the actual work to a matched object
+        $matchingTransactions = 
+            (new TransactionMatcher($triggers))
+                ->setTransactionLimit($maxTransactionsToSearchIn)
+                ->findMatchingTransactions($maxResults);
+    
+        // Warn the user if only a subset of transactions is returned
+        if(count( $matchingTransactions ) == $maxResults) {
+            $warning = trans('firefly.warning_transaction_subset', [ 'max_num_transactions' => $maxResults ] );
+        } else if(count($matchingTransactions) == 0){
+            $warning = trans('firefly.warning_no_matching_transactions', [ 'num_transactions' => $maxTransactionsToSearchIn ] );
+        } else {
+            $warning = "";
+        }
+    
+        // Return json response
+        $view = view('list.journals-tiny', [ 'transactions' => $matchingTransactions ])->render();
+    
+        return Response::json(['html' => $view, 'warning' => $warning ]);
+    }    
+    
+    /**
+     * Returns a list of triggers as provided in the URL.
+     * Only returns triggers that will not match any transaction
+     * @return array
+     */
+    protected function getValidTriggerList() {
+        $triggers = [];
+        $order = 1;
+        $data = [
+            'rule-triggers'       => Input::get('rule-trigger'),
+            'rule-trigger-values' => Input::get('rule-trigger-value'),
+            'rule-trigger-stop'   => Input::get('rule-trigger-stop'),
+        ];
+    
+        foreach ($data['rule-triggers'] as $index => $trigger) {
+            $value          = $data['rule-trigger-values'][$index];
+            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+    
+            // Create a new trigger object
+            $ruleTrigger = new RuleTrigger;
+            $ruleTrigger->order           = $order;
+            $ruleTrigger->active          = 1;
+            $ruleTrigger->stop_processing = $stopProcessing;
+            $ruleTrigger->trigger_type    = $trigger;
+            $ruleTrigger->trigger_value   = $value;
+    
+            // Store in list
+            if( !$ruleTrigger->matchesAnything() ) {
+                $triggers[] = $ruleTrigger;
+                $order++;
+            }
+        }
+    
+        return $triggers;
+    }    
+    
     private function createDefaultRule()
     {
         /** @var RuleRepositoryInterface $repository */

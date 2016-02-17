@@ -88,6 +88,22 @@ class Processor
     }
 
     /**
+     * Checks whether the current transaction is triggered by the current rule
+     * @return boolean
+     */
+    public function isTriggered() {
+        return $this->triggered();
+    }
+    
+    /**
+     * Checks whether the current transaction is triggered by the list of given triggers
+     * @return boolean
+     */
+    public function isTriggeredBy(array $triggers) {
+        return $this->triggeredBy($triggers);
+    }
+    
+    /**
      * @return bool
      */
     protected function actions()
@@ -110,14 +126,15 @@ class Processor
     }
 
     /**
+     * Method to check whether the current transaction would be triggered
+     * by the given list of triggers
      * @return bool
-     */
-    protected function triggered()
-    {
+     */    
+    protected function triggeredBy($triggers) {
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
-        foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $trigger) {
+        foreach ($triggers as $trigger) {
             $foundTriggers++;
             
             /** @var TriggerInterface $triggerClass */
@@ -133,7 +150,15 @@ class Processor
         Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
         return ($hitTriggers == $foundTriggers);
-
+        
+    }
+    /**
+     * Checks whether the current transaction is triggered by the current rule
+     * @return bool
+     */
+    protected function triggered()
+    {
+        return $this->triggeredBy($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get());
     }
 
 
