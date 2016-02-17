@@ -62,11 +62,10 @@ class FireRulesForStore
                            ->get(['rules.*']);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
-                $processor = new Processor($rule, $event->journal);
 
-                // get some return out of this?
-                $processor->handle();
+                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($event->journal);
 
                 if ($rule->stop_processing) {
                     break;

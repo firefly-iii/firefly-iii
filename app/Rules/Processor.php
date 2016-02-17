@@ -18,6 +18,7 @@ use FireflyIII\Rules\Actions\ActionFactory;
 use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Triggers\TriggerFactory;
 use FireflyIII\Rules\Triggers\TriggerInterface;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -27,57 +28,45 @@ use Log;
  */
 class Processor
 {
+    /** @var  Collection */
+    private $actions;
     /** @var  TransactionJournal */
-    protected $journal;
+    private $journal;
     /** @var  Rule */
-    protected $rule;
+    private $rule;
+    /** @var Collection */
+    private $triggers;
 
     /**
      * Processor constructor.
      *
-     * @param Rule               $rule
-     * @param TransactionJournal $journal
      */
-    public function __construct(Rule $rule, TransactionJournal $journal)
+    private function __construct()
     {
-        $this->rule    = $rule;
-        $this->journal = $journal;
-    }
 
-    /**
-     * @return TransactionJournal
-     */
-    public function getJournal()
-    {
-        return $this->journal;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     */
-    public function setJournal($journal)
-    {
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return Rule
-     */
-    public function getRule()
-    {
-        return $this->rule;
     }
 
     /**
      * @param Rule $rule
+     *
+     * @return Processor
      */
-    public function setRule($rule)
+    public static function make(Rule $rule)
     {
-        $this->rule = $rule;
+        $self           = new self;
+        $self->rule     = $rule;
+        $self->triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        $self->actions  = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+
+        return $self;
     }
 
-    public function handle()
+    /**
+     * @param TransactionJournal $journal
+     */
+    public function handleTransactionJournal(TransactionJournal $journal)
     {
+        $this->journal = $journal;
         // get all triggers:
         $triggered = $this->triggered();
         if ($triggered) {
@@ -88,29 +77,9 @@ class Processor
     }
 
     /**
-     * Checks whether the current transaction is triggered by the current rule
-     *
-     * @return boolean
-     */
-    public function isTriggered()
-    {
-        return $this->triggered();
-    }
-
-    /**
-     * Checks whether the current transaction is triggered by the list of given triggers
-     *
-     * @return boolean
-     */
-    public function isTriggeredBy(array $triggers)
-    {
-        return $this->triggeredBy($triggers);
-    }
-
-    /**
      * @return bool
      */
-    protected function actions()
+    private function actions()
     {
         /**
          * @var int        $index
@@ -130,27 +99,17 @@ class Processor
     }
 
     /**
-     * Checks whether the current transaction is triggered by the current rule
-     *
-     * @return bool
-     */
-    protected function triggered()
-    {
-        return $this->triggeredBy($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get());
-    }
-
-    /**
      * Method to check whether the current transaction would be triggered
      * by the given list of triggers
      *
      * @return bool
      */
-    protected function triggeredBy($triggers)
+    private function triggered()
     {
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
+        foreach ($this->triggers as $trigger) {
             $foundTriggers++;
 
             /** @var TriggerInterface $triggerClass */
