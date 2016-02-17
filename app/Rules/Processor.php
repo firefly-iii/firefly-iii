@@ -16,6 +16,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Triggers\TriggerInterface;
+use FireflyIII\Rules\Triggers\TriggerFactory;
 use FireflyIII\Support\Domain;
 use Log;
 
@@ -147,19 +148,9 @@ class Processor
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
             $foundTriggers++;
-            $type = $trigger->trigger_type;
-        
-            if (!isset($this->triggerTypes[$type])) {
-                abort(500, 'No such trigger exists ("' . $type . '").');
-            }
-        
-            $class = $this->triggerTypes[$type];
-            Log::debug('Trigger #' . $trigger->id . ' for rule #' . $trigger->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule trigger type "' . $type . '" (' . $class . ').');
-            }
+            
             /** @var TriggerInterface $triggerClass */
-            $triggerClass = new $class($trigger, $this->journal);
+            $triggerClass = TriggerFactory::getTrigger($trigger, $this->journal);
             if ($triggerClass->triggered()) {
                 $hitTriggers++;
             }
