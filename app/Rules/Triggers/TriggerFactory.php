@@ -38,6 +38,7 @@ class TriggerFactory
             abort(500, 'No such trigger exists ("' . $triggerType . '").');
         }
 
+        /** @var TriggerInterface $class */
         $class = $triggerTypes[$triggerType];
         if (!class_exists($class)) {
             abort(500, 'Could not instantiate class for rule trigger type "' . $triggerType . '" (' . $class . ').');

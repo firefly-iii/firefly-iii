@@ -65,8 +65,9 @@ class DescriptionContains implements TriggerInterface
     }
 
     /**
-     * Checks whether this trigger will match all transactions
-     * This happens when the trigger_value is empty
+     * @{inheritdoc}
+     *
+     * @see TriggerInterface::matchesAnything
      *
      * @return bool
      */

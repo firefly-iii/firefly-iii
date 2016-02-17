@@ -21,12 +21,10 @@ use Log;
  */
 class DescriptionStarts implements TriggerInterface
 {
-    /** @var RuleTrigger */
-    protected $trigger;
-
     /** @var TransactionJournal */
     protected $journal;
-
+    /** @var RuleTrigger */
+    protected $trigger;
 
     /**
      * TriggerInterface constructor.
@@ -38,6 +36,18 @@ class DescriptionStarts implements TriggerInterface
     {
         $this->trigger = $trigger;
         $this->journal = $journal;
+    }
+
+    /**
+     * @{inheritdoc}
+     *
+     * @see TriggerInterface::matchesAnything
+     *
+     * @return bool
+     */
+    public function matchesAnything()
+    {
+        return $this->trigger->trigger_value === "";
     }
 
     /**
@@ -59,17 +69,6 @@ class DescriptionStarts implements TriggerInterface
 
         return false;
 
-    }
-
-    /**
-     * Checks whether this trigger will match all transactions
-     * This happens when the trigger_value is empty
-     *
-     * @return bool
-     */
-    public function matchesAnything()
-    {
-        return $this->trigger->trigger_value === "";
     }
 
 }

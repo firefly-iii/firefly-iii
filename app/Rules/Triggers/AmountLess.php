@@ -64,8 +64,9 @@ class AmountLess implements TriggerInterface
     }
 
     /**
-     * Checks whether this trigger will match all transactions
-     * For example: amount > 0 or description starts with ''
+     * @{inheritdoc}
+     *
+     * @see TriggerInterface::matchesAnything
      *
      * @return bool
      */

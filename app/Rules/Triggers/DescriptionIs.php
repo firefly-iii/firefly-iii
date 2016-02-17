@@ -60,7 +60,9 @@ class DescriptionIs implements TriggerInterface
     }
 
     /**
-     * Checks whether this trigger will match all transactions
+     * @{inheritdoc}
+     *
+     * @see TriggerInterface::matchesAnything
      *
      * @return bool
      */
