@@ -15,8 +15,9 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionInterface;
+use FireflyIII\Rules\Actions\ActionFactory;
 use FireflyIII\Rules\Triggers\TriggerInterface;
-use FireflyIII\Support\Domain;
+use FireflyIII\Rules\Triggers\TriggerFactory;
 use Log;
 
 /**
@@ -30,10 +31,6 @@ class Processor
     protected $journal;
     /** @var  Rule */
     protected $rule;
-    /** @var array */
-    private $actionTypes = [];
-    /** @var array */
-    private $triggerTypes = [];
 
     /**
      * Processor constructor.
@@ -45,8 +42,6 @@ class Processor
     {
         $this->rule         = $rule;
         $this->journal      = $journal;
-        $this->triggerTypes = Domain::getRuleTriggers();
-        $this->actionTypes  = Domain::getRuleActions();
     }
 
     /**
@@ -102,14 +97,8 @@ class Processor
          * @var RuleAction $action
          */
         foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
-            $type  = $action->action_type;
-            $class = $this->actionTypes[$type];
-            Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule action type "' . $type . '" (' . $class . ').');
-            }
             /** @var ActionInterface $actionClass */
-            $actionClass = new $class($action, $this->journal);
+            $actionClass = ActionFactory::getAction($action, $this->journal);
             $actionClass->act();
             if ($action->stop_processing) {
                 break;
@@ -130,19 +119,9 @@ class Processor
         /** @var RuleTrigger $trigger */
         foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $trigger) {
             $foundTriggers++;
-            $type = $trigger->trigger_type;
-
-            if (!isset($this->triggerTypes[$type])) {
-                abort(500, 'No such trigger exists ("' . $type . '").');
-            }
-
-            $class = $this->triggerTypes[$type];
-            Log::debug('Trigger #' . $trigger->id . ' for rule #' . $trigger->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule trigger type "' . $type . '" (' . $class . ').');
-            }
+            
             /** @var TriggerInterface $triggerClass */
-            $triggerClass = new $class($trigger, $this->journal);
+            $triggerClass = TriggerFactory::getTrigger($trigger, $this->journal);
             if ($triggerClass->triggered()) {
                 $hitTriggers++;
             }
