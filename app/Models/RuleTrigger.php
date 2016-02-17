@@ -36,4 +36,12 @@ class RuleTrigger extends Model
     {
         return $this->belongsTo('FireflyIII\Models\Rule');
     }
+    
+    /**
+     * Checks whether this trigger will match all transactions
+     * For example: amount > 0 or description starts with '' 
+     */
+    public function matchesAnything() {
+        return TriggerFactory::getTrigger($this, new TransactionJournal)->matchesAnything();
+    }
 }
