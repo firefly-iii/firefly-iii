@@ -129,33 +129,16 @@ class User extends Authenticatable
      *
      * Full credit goes to: https://github.com/Zizaco/entrust
      *
-     * @param string|array $name       Role name or array of role names.
-     * @param bool         $requireAll All roles in the array are required.
+     * @param string $name
      *
      * @return bool
      */
-    public function hasRole($name, $requireAll = false)
+    public function hasRole(string $name): bool
     {
-        if (is_array($name)) {
-            foreach ($name as $roleName) {
-                $hasRole = $this->hasRole($roleName);
 
-                if ($hasRole && !$requireAll) {
-                    return true;
-                } elseif (!$hasRole && $requireAll) {
-                    return false;
-                }
-            }
-
-            // If we've made it this far and $requireAll is FALSE, then NONE of the roles were found
-            // If we've made it this far and $requireAll is TRUE, then ALL of the roles were found.
-            // Return the value of $requireAll;
-            return $requireAll;
-        } else {
-            foreach ($this->roles as $role) {
-                if ($role->name == $name) {
-                    return true;
-                }
+        foreach ($this->roles as $role) {
+            if ($role->name == $name) {
+                return true;
             }
         }
 
