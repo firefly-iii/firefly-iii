@@ -15,6 +15,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionInterface;
+use FireflyIII\Rules\Actions\ActionFactory;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Rules\Triggers\TriggerFactory;
 use FireflyIII\Support\Domain;
@@ -103,14 +104,8 @@ class Processor
          * @var RuleAction $action
          */
         foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
-            $type  = $action->action_type;
-            $class = $this->actionTypes[$type];
-            Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule action type "' . $type . '" (' . $class . ').');
-            }
             /** @var ActionInterface $actionClass */
-            $actionClass = new $class($action, $this->journal);
+            $actionClass = ActionFactory::getAction($action, $this->journal);
             $actionClass->act();
             if ($action->stop_processing) {
                 break;
