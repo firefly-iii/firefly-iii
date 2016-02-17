@@ -155,9 +155,6 @@ class AuthController extends Controller
             return redirect($this->redirectPath());
         }
         throw new FireflyException('The authenticated user object is invalid.');
-
-
-        return redirect($this->redirectPath());
     }
 
     /**

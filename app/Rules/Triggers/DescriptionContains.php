@@ -19,7 +19,7 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class DescriptionContains extends AbstractTrigger implements TriggerInterface
+final class DescriptionContains extends AbstractTrigger implements TriggerInterface
 {
 
     /**
@@ -41,7 +41,7 @@ class DescriptionContains extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === "";
+            return strval($value) === '';
         }
 
         return true;

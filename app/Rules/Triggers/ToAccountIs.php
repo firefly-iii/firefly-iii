@@ -18,7 +18,7 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class ToAccountIs extends AbstractTrigger implements TriggerInterface
+final class ToAccountIs extends AbstractTrigger implements TriggerInterface
 {
 
     /**

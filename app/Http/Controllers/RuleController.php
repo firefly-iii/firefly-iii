@@ -272,20 +272,8 @@ class RuleController extends Controller
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
-        // build trigger array from response TODO move to function:
-        $triggers = [];
-        $data     = [
-            'rule-triggers'       => $request->get('rule-trigger'),
-            'rule-trigger-values' => $request->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
-        ];
-        foreach ($data['rule-triggers'] as $index => $triggerType) {
-            $triggers[] = [
-                'type'           => $triggerType,
-                'value'          => $data['rule-trigger-values'][$index],
-                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
-            ];
-        }
+        // build trigger array from response
+        $triggers = $this->getValidTriggerList($request);
 
 
         if (count($triggers) == 0) {
@@ -300,20 +288,14 @@ class RuleController extends Controller
         $matcher->setRange($range);
         $matcher->setTriggers($triggers);
         $matchingTransactions = $matcher->findMatchingTransactions();
-        // Dispatch the actual work to a matched object
-        //        $matchingTransactions
-        //            = (new TransactionMatcher($triggers))
-        //            ->setTransactionLimit($range)
-        //            ->findMatchingTransactions($limit);
 
         // Warn the user if only a subset of transactions is returned
+        $warning = '';
         if (count($matchingTransactions) == $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
         } else {
             if (count($matchingTransactions) == 0) {
                 $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
-            } else {
-                $warning = "";
             }
         }
 
@@ -378,38 +360,25 @@ class RuleController extends Controller
     }
 
     /**
-     * Returns a list of triggers as provided in the URL.
-     * Only returns triggers that will not match any transaction
+     * @param TestRuleFormRequest $request
      *
      * @return array
      */
-    protected function getValidTriggerList()
+    protected function getValidTriggerList(TestRuleFormRequest $request): array
     {
+
         $triggers = [];
-        $order    = 1;
         $data     = [
-            'rule-triggers'       => Input::get('rule-trigger'),
-            'rule-trigger-values' => Input::get('rule-trigger-value'),
-            'rule-trigger-stop'   => Input::get('rule-trigger-stop'),
+            'rule-triggers'       => $request->get('rule-trigger'),
+            'rule-trigger-values' => $request->get('rule-trigger-value'),
+            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
         ];
-
-        foreach ($data['rule-triggers'] as $index => $trigger) {
-            $value          = $data['rule-trigger-values'][$index];
-            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
-
-            // Create a new trigger object
-            $ruleTrigger                  = new RuleTrigger;
-            $ruleTrigger->order           = $order;
-            $ruleTrigger->active          = 1;
-            $ruleTrigger->stop_processing = $stopProcessing;
-            $ruleTrigger->trigger_type    = $trigger;
-            $ruleTrigger->trigger_value   = $value;
-
-            // Store in list
-            if (!$ruleTrigger->matchesAnything()) {
-                $triggers[] = $ruleTrigger;
-                $order++;
-            }
+        foreach ($data['rule-triggers'] as $index => $triggerType) {
+            $triggers[] = [
+                'type'           => $triggerType,
+                'value'          => $data['rule-trigger-values'][$index],
+                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+            ];
         }
 
         return $triggers;

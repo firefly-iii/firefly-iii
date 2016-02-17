@@ -19,7 +19,7 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class AmountLess extends AbstractTrigger implements TriggerInterface
+final class AmountLess extends AbstractTrigger implements TriggerInterface
 {
 
     /**

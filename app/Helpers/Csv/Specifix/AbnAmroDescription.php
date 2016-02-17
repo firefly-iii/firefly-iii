@@ -126,7 +126,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
                 foreach ($matches as $match) {
                     $key   = $match[1];
                     $value = trim($match[2]);
-                    Log::debug("SEPA: $key - $value");
+                    Log::debug('SEPA: ' . $key . ' - ' . $value);
                     switch (strtoupper($key)) {
                         case 'OMSCHRIJVING':
                             $newDescription = $value;

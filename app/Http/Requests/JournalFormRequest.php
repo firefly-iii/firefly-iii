@@ -89,7 +89,6 @@ class JournalFormRequest extends Request
                 break;
             default:
                 throw new FireflyException('Cannot handle transaction type of type ' . e($what) . '.');
-                break;
         }
 
         return $rules;

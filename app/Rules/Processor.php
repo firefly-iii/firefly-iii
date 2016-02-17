@@ -26,7 +26,7 @@ use Log;
  *
  * @package FireflyIII\Rules
  */
-class Processor
+final class Processor
 {
     /** @var  Collection */
     private $actions;

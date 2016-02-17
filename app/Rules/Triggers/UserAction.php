@@ -18,7 +18,7 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class UserAction extends AbstractTrigger implements TriggerInterface
+final class UserAction extends AbstractTrigger implements TriggerInterface
 {
 
     /**

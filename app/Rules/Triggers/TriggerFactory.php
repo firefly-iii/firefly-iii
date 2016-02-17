@@ -38,9 +38,6 @@ class TriggerFactory
         $class = self::getTriggerClass($triggerType);
         $obj   = $class::makeFromTriggerValue($trigger->trigger_value);
 
-        // this is a massive HACK. TODO.
-        $obj->databaseObject = $trigger;
-
         return $obj;
     }
 

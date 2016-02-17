@@ -18,7 +18,7 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class ToAccountStarts extends AbstractTrigger implements TriggerInterface
+final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
 {
 
     /**
@@ -40,7 +40,7 @@ class ToAccountStarts extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === "";
+            return strval($value) === '';
         }
 
         return true;

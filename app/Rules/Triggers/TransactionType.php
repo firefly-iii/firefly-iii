@@ -18,7 +18,7 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class TransactionType extends AbstractTrigger implements TriggerInterface
+final class TransactionType extends AbstractTrigger implements TriggerInterface
 {
 
     /**

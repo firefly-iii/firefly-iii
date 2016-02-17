@@ -10,7 +10,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules;
 
-use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -46,15 +45,10 @@ class TransactionMatcher
         $pagesize   = min($this->range / 2, $this->limit * 2);
 
         // Variables used within the loop
-        $numTransactionsProcessed = 0;
-        $page                     = 1;
-        $matchingTransactions     = new Collection();
-
-        // Flags to indicate the end of the loop
-        $reachedEndOfList           = false;
-        $foundEnoughTransactions    = false;
-        $searchedEnoughTransactions = false;
-        $processor                  = Processor::makeFromStringArray($this->triggers);
+        $processed = 0;
+        $page      = 1;
+        $result    = new Collection();
+        $processor = Processor::makeFromStringArray($this->triggers);
 
         // Start a loop to fetch batches of transactions. The loop will finish if:
         //   - all transactions have been fetched from the database
@@ -73,31 +67,23 @@ class TransactionMatcher
             );
 
             // merge:
-            $matchingTransactions = $matchingTransactions->merge($filtered);
-
-//            $matchingTransactions += array_filter(
-//                $set, function ($transaction) {
-//                $processor = new Processor(new Rule, $transaction);
-//
-//                return $processor->isTriggeredBy($this->triggers);
-//            }
-//            );
+            $result = $result->merge($filtered);
 
             // Update counters
             $page++;
-            $numTransactionsProcessed += count($set);
+            $processed += count($set);
 
             // Check for conditions to finish the loop
             $reachedEndOfList           = (count($set) < $pagesize);
-            $foundEnoughTransactions    = (count($matchingTransactions) >= $this->limit);
-            $searchedEnoughTransactions = ($numTransactionsProcessed >= $this->range);
+            $foundEnoughTransactions    = (count($result) >= $this->limit);
+            $searchedEnoughTransactions = ($processed >= $this->range);
         } while (!$reachedEndOfList && !$foundEnoughTransactions && !$searchedEnoughTransactions);
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list
-        $matchingTransactions = $matchingTransactions->slice(0, $this->limit);
+        $result = $result->slice(0, $this->limit);
 
-        return $matchingTransactions;
+        return $result;
     }
 
     /**
