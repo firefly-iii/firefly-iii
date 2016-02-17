@@ -55,7 +55,7 @@ class ToAccountEnds extends AbstractTrigger implements TriggerInterface
     {
         $toAccountName       = strtolower($journal->destination_account->name);
         $toAccountNameLength = strlen($toAccountName);
-        $search              = strtolower($this->trigger->trigger_value);
+        $search              = strtolower($this->triggerValue);
         $searchLength        = strlen($search);
 
         // if the string to search for is longer than the account name,

@@ -28,14 +28,17 @@ class TriggerFactory
      *
      * @param RuleTrigger $trigger
      *
-     * @return TriggerInterface
+     * @return AbstractTrigger
      */
-    public static function getTrigger(RuleTrigger $trigger): TriggerInterface
+    public static function getTrigger(RuleTrigger $trigger)
     {
         $triggerType = $trigger->trigger_type;
-        $class       = self::getTriggerClass($triggerType);
 
-        return new $class($trigger);
+        /** @var AbstractTrigger $class */
+        $class = self::getTriggerClass($triggerType);
+        $obj   = $class::makeFromTriggerValue($trigger->trigger_value);
+
+        return $obj;
     }
 
     /**

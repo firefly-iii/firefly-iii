@@ -55,7 +55,7 @@ class DescriptionEnds extends AbstractTrigger implements TriggerInterface
     {
         $description       = strtolower($journal->description);
         $descriptionLength = strlen($description);
-        $search            = strtolower($this->trigger->trigger_value);
+        $search            = strtolower($this->triggerValue);
         $searchLength      = strlen($search);
 
         // if the string to search for is longer than the description,

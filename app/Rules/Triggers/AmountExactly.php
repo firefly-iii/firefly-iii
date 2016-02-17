@@ -55,7 +55,7 @@ class AmountExactly extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal)
     {
         $amount  = $journal->amount_positive;
-        $compare = $this->trigger->trigger_value;
+        $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare, 4);
         if ($result === 0) {
             // found something

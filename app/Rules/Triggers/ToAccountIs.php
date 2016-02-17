@@ -54,7 +54,7 @@ class ToAccountIs extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal)
     {
         $toAccountName = strtolower($journal->destination_account->name);
-        $search        = strtolower($this->trigger->trigger_value);
+        $search        = strtolower($this->triggerValue);
 
         if ($toAccountName == $search) {
             Log::debug('"' . $toAccountName . '" equals "' . $search . '" exactly. Return true.');

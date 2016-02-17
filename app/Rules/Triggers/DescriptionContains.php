@@ -54,7 +54,7 @@ class DescriptionContains extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal)
     {
-        $search = strtolower($this->trigger->trigger_value);
+        $search = strtolower($this->triggerValue);
         $source = strtolower($journal->description);
 
         $strpos = strpos($source, $search);

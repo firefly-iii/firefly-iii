@@ -71,7 +71,7 @@ class AbstractTrigger
      */
     public static function makeFromTriggerValue(string $triggerValue)
     {
-        $self               = new self;
+        $self               = new static;
         $self->triggerValue = $triggerValue;
 
         return $self;

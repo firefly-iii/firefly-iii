@@ -54,7 +54,7 @@ class DescriptionIs extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal)
     {
         $description = strtolower($journal->description);
-        $search      = strtolower($this->trigger->trigger_value);
+        $search      = strtolower($this->triggerValue);
 
         if ($description == $search) {
             Log::debug('"' . $description . '" equals "' . $search . '" exactly. Return true.');

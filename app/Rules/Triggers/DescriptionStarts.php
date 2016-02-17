@@ -54,7 +54,7 @@ class DescriptionStarts extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal)
     {
         $description = strtolower($journal->description);
-        $search      = strtolower($this->trigger->trigger_value);
+        $search      = strtolower($this->triggerValue);
 
         $part = substr($description, 0, strlen($search));
 
