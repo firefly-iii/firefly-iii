@@ -21,41 +21,19 @@ use Log;
  */
 class ToAccountStarts implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $toAccountName = strtolower($this->journal->destination_account->name);
-        $search        = strtolower($this->trigger->trigger_value);
-
-        $part = substr($toAccountName, 0, strlen($search));
-
-        if ($part == $search) {
-            Log::debug('"' . $toAccountName . '" starts with "' . $search . '". Return true.');
-
-            return true;
-        }
-        Log::debug('"' . $toAccountName . '" does not start with "' . $search . '". Return false.');
-
-        return false;
 
     }
 
@@ -82,5 +60,28 @@ class ToAccountStarts implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $toAccountName = strtolower($journal->destination_account->name);
+        $search        = strtolower($this->trigger->trigger_value);
+
+        $part = substr($toAccountName, 0, strlen($search));
+
+        if ($part == $search) {
+            Log::debug('"' . $toAccountName . '" starts with "' . $search . '". Return true.');
+
+            return true;
+        }
+        Log::debug('"' . $toAccountName . '" does not start with "' . $search . '". Return false.');
+
+        return false;
+
     }
 }

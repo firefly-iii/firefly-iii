@@ -21,21 +21,20 @@ use Log;
  */
 class UserAction implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
+
 
     }
 
@@ -63,9 +62,11 @@ class UserAction implements TriggerInterface
     /**
      * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
      *
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered()
+    public function triggered(TransactionJournal $journal)
     {
         Log::debug('user_action always returns true.');
 

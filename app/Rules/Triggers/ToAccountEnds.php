@@ -21,53 +21,19 @@ use Log;
  */
 class ToAccountEnds implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $toAccountName       = strtolower($this->journal->destination_account->name);
-        $toAccountNameLength = strlen($toAccountName);
-        $search              = strtolower($this->trigger->trigger_value);
-        $searchLength        = strlen($search);
-
-        // if the string to search for is longer than the account name,
-        // shorten the search string.
-        if ($searchLength > $toAccountNameLength) {
-            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $toAccountName . '" (' . $toAccountNameLength . '). ');
-            $search       = substr($search, ($toAccountNameLength * -1));
-            $searchLength = strlen($search);
-            Log::debug('Search string is now "' . $search . '" (' . $searchLength . ') instead.');
-        }
-
-
-        $part = substr($toAccountName, $searchLength * -1);
-
-        if ($part == $search) {
-            Log::debug('"' . $toAccountName . '" ends with "' . $search . '". Return true.');
-
-            return true;
-        }
-        Log::debug('"' . $toAccountName . '" does not end with "' . $search . '". Return false.');
-
-        return false;
 
     }
 
@@ -94,5 +60,40 @@ class ToAccountEnds implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $toAccountName       = strtolower($journal->destination_account->name);
+        $toAccountNameLength = strlen($toAccountName);
+        $search              = strtolower($this->trigger->trigger_value);
+        $searchLength        = strlen($search);
+
+        // if the string to search for is longer than the account name,
+        // shorten the search string.
+        if ($searchLength > $toAccountNameLength) {
+            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $toAccountName . '" (' . $toAccountNameLength . '). ');
+            $search       = substr($search, ($toAccountNameLength * -1));
+            $searchLength = strlen($search);
+            Log::debug('Search string is now "' . $search . '" (' . $searchLength . ') instead.');
+        }
+
+
+        $part = substr($toAccountName, $searchLength * -1);
+
+        if ($part == $search) {
+            Log::debug('"' . $toAccountName . '" ends with "' . $search . '". Return true.');
+
+            return true;
+        }
+        Log::debug('"' . $toAccountName . '" does not end with "' . $search . '". Return false.');
+
+        return false;
+
     }
 }

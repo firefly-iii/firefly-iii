@@ -22,21 +22,20 @@ use Log;
  */
 class DescriptionContains implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
+
     }
 
     /**
@@ -65,12 +64,14 @@ class DescriptionContains implements TriggerInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered()
+    public function triggered(TransactionJournal $journal)
     {
         $search = strtolower($this->trigger->trigger_value);
-        $source = strtolower($this->journal->description);
+        $source = strtolower($journal->description);
 
         $strpos = strpos($source, $search);
         if (!($strpos === false)) {

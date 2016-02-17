@@ -21,39 +21,19 @@ use Log;
  */
 class DescriptionIs implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $description = strtolower($this->journal->description);
-        $search      = strtolower($this->trigger->trigger_value);
-
-        if ($description == $search) {
-            Log::debug('"' . $description . '" equals "' . $search . '" exactly. Return true.');
-
-            return true;
-        }
-        Log::debug('"' . $description . '" does not equal "' . $search . '". Return false.');
-
-        return false;
 
     }
 
@@ -80,5 +60,26 @@ class DescriptionIs implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $description = strtolower($journal->description);
+        $search      = strtolower($this->trigger->trigger_value);
+
+        if ($description == $search) {
+            Log::debug('"' . $description . '" equals "' . $search . '" exactly. Return true.');
+
+            return true;
+        }
+        Log::debug('"' . $description . '" does not equal "' . $search . '". Return false.');
+
+        return false;
+
     }
 }

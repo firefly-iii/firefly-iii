@@ -22,21 +22,20 @@ use Log;
  */
 class AmountMore implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
+
     }
 
     /**
@@ -65,11 +64,13 @@ class AmountMore implements TriggerInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered()
+    public function triggered(TransactionJournal $journal)
     {
-        $amount  = $this->journal->amount_positive;
+        $amount  = $journal->amount_positive;
         $compare = $this->trigger->trigger_value;
         $result  = bccomp($amount, $compare, 4);
         if ($result === 1) {

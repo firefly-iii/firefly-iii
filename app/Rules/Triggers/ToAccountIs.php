@@ -21,39 +21,19 @@ use Log;
  */
 class ToAccountIs implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $toAccountName = strtolower($this->journal->destination_account->name);
-        $search        = strtolower($this->trigger->trigger_value);
-
-        if ($toAccountName == $search) {
-            Log::debug('"' . $toAccountName . '" equals "' . $search . '" exactly. Return true.');
-
-            return true;
-        }
-        Log::debug('"' . $toAccountName . '" does not equal "' . $search . '". Return false.');
-
-        return false;
 
     }
 
@@ -80,5 +60,26 @@ class ToAccountIs implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $toAccountName = strtolower($journal->destination_account->name);
+        $search        = strtolower($this->trigger->trigger_value);
+
+        if ($toAccountName == $search) {
+            Log::debug('"' . $toAccountName . '" equals "' . $search . '" exactly. Return true.');
+
+            return true;
+        }
+        Log::debug('"' . $toAccountName . '" does not equal "' . $search . '". Return false.');
+
+        return false;
+
     }
 }

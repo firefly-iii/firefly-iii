@@ -12,7 +12,6 @@ namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Domain;
 
 /**
@@ -27,17 +26,16 @@ class TriggerFactory
     /**
      * Returns the trigger for the given type and journal
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      *
      * @return TriggerInterface
      */
-    public static function getTrigger(RuleTrigger $trigger, TransactionJournal $journal): TriggerInterface
+    public static function getTrigger(RuleTrigger $trigger): TriggerInterface
     {
         $triggerType = $trigger->trigger_type;
         $class       = self::getTriggerClass($triggerType);
 
-        return new $class($trigger, $journal);
+        return new $class($trigger);
     }
 
     /**
@@ -45,7 +43,8 @@ class TriggerFactory
      *
      * @param string $triggerType
      *
-     * @return TriggerInterface
+     * @return TriggerInterface|string
+     * @throws FireflyException
      */
     public static function getTriggerClass(string $triggerType): string
     {

@@ -21,46 +21,21 @@ use Log;
  */
 class ToAccountContains implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $toAccountName = strtolower($this->journal->destination_account->name);
-        $search        = strtolower($this->trigger->trigger_value);
-        $strpos        = strpos($toAccountName, $search);
-
-        if (!($strpos === false)) {
-            // found something
-            Log::debug('"' . $toAccountName . '" contains the text "' . $search . '". Return true.');
-
-            return true;
-        }
-
-        // found nothing.
-        Log::debug('"' . $toAccountName . '" does not contain the text "' . $search . '". Return false.');
-
-        return false;
 
     }
-
 
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -85,5 +60,30 @@ class ToAccountContains implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $toAccountName = strtolower($journal->destination_account->name);
+        $search        = strtolower($this->trigger->trigger_value);
+        $strpos        = strpos($toAccountName, $search);
+
+        if (!($strpos === false)) {
+            // found something
+            Log::debug('"' . $toAccountName . '" contains the text "' . $search . '". Return true.');
+
+            return true;
+        }
+
+        // found nothing.
+        Log::debug('"' . $toAccountName . '" does not contain the text "' . $search . '". Return false.');
+
+        return false;
+
     }
 }

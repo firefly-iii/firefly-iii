@@ -21,43 +21,19 @@ use Log;
  */
 class FromAccountContains implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $fromAccountName = strtolower($this->journal->source_account->name);
-        $search          = strtolower($this->trigger->trigger_value);
-        $strpos          = strpos($fromAccountName, $search);
-
-        if (!($strpos === false)) {
-            // found something
-            Log::debug('"' . $fromAccountName . '" contains the text "' . $search . '". Return true.');
-
-            return true;
-        }
-
-        // found nothing.
-        Log::debug('"' . $fromAccountName . '" does not contain the text "' . $search . '". Return false.');
-
-        return false;
 
     }
 
@@ -84,5 +60,30 @@ class FromAccountContains implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $fromAccountName = strtolower($journal->source_account->name);
+        $search          = strtolower($this->trigger->trigger_value);
+        $strpos          = strpos($fromAccountName, $search);
+
+        if (!($strpos === false)) {
+            // found something
+            Log::debug('"' . $fromAccountName . '" contains the text "' . $search . '". Return true.');
+
+            return true;
+        }
+
+        // found nothing.
+        Log::debug('"' . $fromAccountName . '" does not contain the text "' . $search . '". Return false.');
+
+        return false;
+
     }
 }

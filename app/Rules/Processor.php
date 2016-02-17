@@ -112,9 +112,9 @@ class Processor
         foreach ($this->triggers as $trigger) {
             $foundTriggers++;
 
-            /** @var TriggerInterface $triggerClass */
-            $triggerClass = TriggerFactory::getTrigger($trigger, $this->journal);
-            if ($triggerClass->triggered()) {
+            /** @var TriggerInterface $triggerObject */
+            $triggerObject = TriggerFactory::getTrigger($trigger);
+            if ($triggerObject->triggered()) {
                 $hitTriggers++;
             }
             if ($trigger->stop_processing) {

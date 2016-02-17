@@ -23,10 +23,9 @@ interface TriggerInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal);
+    public function __construct(RuleTrigger $trigger);
 
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -47,7 +46,9 @@ interface TriggerInterface
     public static function willMatchEverything($value = null);
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered();
+    public function triggered(TransactionJournal $journal);
 }

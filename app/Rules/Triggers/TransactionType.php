@@ -21,39 +21,20 @@ use Log;
  */
 class TransactionType implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
-    }
 
-    /**
-     * @return bool
-     */
-    public function triggered()
-    {
-        $type   = strtolower($this->journal->transactionType->type);
-        $search = strtolower($this->trigger->trigger_value);
-
-        if ($type == $search) {
-            Log::debug('Journal is of type "' . $type . '" which matches with "' . $search . '". Return true');
-
-            return true;
-        }
-        Log::debug('Journal is of type "' . $type . '" which does not match with "' . $search . '". Return false');
-
-        return false;
     }
 
     /**
@@ -79,5 +60,25 @@ class TransactionType implements TriggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function triggered(TransactionJournal $journal)
+    {
+        $type   = strtolower($journal->transactionType->type);
+        $search = strtolower($this->trigger->trigger_value);
+
+        if ($type == $search) {
+            Log::debug('Journal is of type "' . $type . '" which matches with "' . $search . '". Return true');
+
+            return true;
+        }
+        Log::debug('Journal is of type "' . $type . '" which does not match with "' . $search . '". Return false');
+
+        return false;
     }
 }

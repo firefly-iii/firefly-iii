@@ -21,21 +21,20 @@ use Log;
  */
 class FromAccountIs implements TriggerInterface
 {
-    /** @var TransactionJournal */
-    protected $journal;
+
+
     /** @var RuleTrigger */
     protected $trigger;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * @param RuleTrigger $trigger
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public function __construct(RuleTrigger $trigger)
     {
         $this->trigger = $trigger;
-        $this->journal = $journal;
+
     }
 
     /**
@@ -64,11 +63,13 @@ class FromAccountIs implements TriggerInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered()
+    public function triggered(TransactionJournal $journal)
     {
-        $fromAccountName = strtolower($this->journal->source_account->name);
+        $fromAccountName = strtolower($journal->source_account->name);
         $search          = strtolower($this->trigger->trigger_value);
 
         if ($fromAccountName == $search) {
