@@ -339,7 +339,11 @@ class RuleController extends Controller
      */
     public function testTriggers() {
         // Create a list of triggers
-        $triggers = $this->getTriggerList();
+        $triggers = $this->getValidTriggerList();
+        
+        if(count($triggers) == 0) {
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers') ]);
+        }
     
         // We start searching for transactions. For performance reasons, there are limits
         // to the search: a maximum number of results and a maximum number of transactions
@@ -370,10 +374,11 @@ class RuleController extends Controller
     }    
     
     /**
-     * Returns a list of triggers as provided in the URL
+     * Returns a list of triggers as provided in the URL.
+     * Only returns triggers that will not match any transaction
      * @return array
      */
-    protected function getTriggerList() {
+    protected function getValidTriggerList() {
         $triggers = [];
         $order = 1;
         $data = [
@@ -395,8 +400,10 @@ class RuleController extends Controller
             $ruleTrigger->trigger_value   = $value;
     
             // Store in list
-            $triggers[] = $ruleTrigger;
-            $order++;
+            if( !$ruleTrigger->matchesAnything() ) {
+                $triggers[] = $ruleTrigger;
+                $order++;
+            }
         }
     
         return $triggers;

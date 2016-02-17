@@ -129,6 +129,7 @@ return [
     'test_rule_triggers'                 => 'See matching transactions',
     'warning_transaction_subset'         => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
     'warning_no_matching_transactions'   => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
+    'warning_no_valid_triggers'          => 'No valid triggers provided.',
     
     // actions and triggers
     'rule_trigger_user_action'           => 'User action is ":trigger_value"',
