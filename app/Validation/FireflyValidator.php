@@ -14,6 +14,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
@@ -151,18 +152,34 @@ class FireflyValidator extends Validator
         if (is_array($this->data['rule-trigger'])) {
             $name  = $this->getRuleTriggerName($index);
             $value = $this->getRuleTriggerValue($index);
+
+            // break on some easy checks:
             switch ($name) {
-                default:
-                    return true;
                 case 'amount_less':
-                    return is_numeric($value);
+                    $result = is_numeric($value);
+                    if ($result === false) {
+                        return false;
+                    }
+                    break;
                 case 'transaction_type':
                     $count = TransactionType::where('type', $value)->count();
-
-                    return $count === 1;
+                    if (!($count === 1)) {
+                        return false;
+                    }
+                    break;
                 case 'invalid':
                     return false;
             }
+            // still a special case where the trigger is
+            // triggered in such a way that it would trigger ANYTHING. We can check for such things
+            // with function willmatcheverything
+            // we know which class it is so dont bother checking that.
+            $classes = Config::get('firefly.rule-triggers');
+            /** @var TriggerInterface $class */
+            $class = $classes[$name];
+
+            return !($class::willMatchEverything($value));
+
         }
 
         return false;

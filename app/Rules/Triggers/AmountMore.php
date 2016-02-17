@@ -65,18 +65,6 @@ class AmountMore implements TriggerInterface
     }
 
     /**
-     * @{inheritdoc}
-     *
-     * @see TriggerInterface::matchesAnything
-     *
-     * @return bool
-     */
-    public function matchesAnything()
-    {
-        return bccomp('0', $this->trigger->trigger_value) === 0;
-    }
-
-    /**
      * @return bool
      */
     public function triggered()

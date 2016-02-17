@@ -64,18 +64,6 @@ class FromAccountIs implements TriggerInterface
     }
 
     /**
-     * @{inheritdoc}
-     *
-     * @see TriggerInterface::matchesAnything
-     *
-     * @return bool
-     */
-    public function matchesAnything()
-    {
-        return false;
-    }
-
-    /**
      * @return bool
      */
     public function triggered()

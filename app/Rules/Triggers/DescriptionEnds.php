@@ -64,18 +64,6 @@ class DescriptionEnds implements TriggerInterface
     }
 
     /**
-     * @{inheritdoc}
-     *
-     * @see TriggerInterface::matchesAnything
-     *
-     * @return bool
-     */
-    public function matchesAnything()
-    {
-        return $this->trigger->trigger_value === "";
-    }
-
-    /**
      * @return bool
      */
     public function triggered()

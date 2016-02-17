@@ -61,18 +61,6 @@ class UserAction implements TriggerInterface
     }
 
     /**
-     * @{inheritdoc}
-     *
-     * @see TriggerInterface::matchesAnything
-     *
-     * @return bool
-     */
-    public function matchesAnything()
-    {
-        return true;
-    }
-
-    /**
      * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
      *
      * @return bool
