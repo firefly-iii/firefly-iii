@@ -16,8 +16,8 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionFactory;
 use FireflyIII\Rules\Actions\ActionInterface;
+use FireflyIII\Rules\Triggers\AbstractTrigger;
 use FireflyIII\Rules\Triggers\TriggerFactory;
-use FireflyIII\Rules\Triggers\TriggerInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -43,7 +43,8 @@ class Processor
      */
     private function __construct()
     {
-
+        $this->triggers = new Collection;
+        $this->actions = new Collection;
     }
 
     /**
@@ -53,16 +54,55 @@ class Processor
      */
     public static function make(Rule $rule)
     {
-        $self           = new self;
-        $self->rule     = $rule;
-        $self->triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
-        $self->actions  = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+        $self       = new self;
+        $self->rule = $rule;
+
+        $triggerSet = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        /** @var RuleTrigger $trigger */
+        foreach ($triggerSet as $trigger) {
+            $self->triggers->push(TriggerFactory::getTrigger($trigger));
+        }
+        $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
 
         return $self;
     }
 
     /**
+     * @param string $triggerName
+     * @param string $triggerValue
+     *
+     * @return Processor
+     */
+    public static function makeFromString(string $triggerName, string $triggerValue)
+    {
+        $self    = new self;
+        $trigger = TriggerFactory::makeTriggerFromStrings($triggerName, $triggerValue, false);
+        $self->triggers->push($trigger);
+
+        return $self;
+    }
+
+    /**
+     * @param array $triggers
+     *
+     * @return Processor
+     */
+    public static function makeFromStringArray(array $triggers)
+    {
+        $self = new self;
+        foreach ($triggers as $entry) {
+            $trigger = TriggerFactory::makeTriggerFromStrings($entry['type'], $entry['value'], $entry['stopProcessing']);
+            $self->triggers->push($trigger);
+        }
+
+        return $self;
+    }
+
+
+    /**
      * @param TransactionJournal $journal
+     *
+     * @return bool
      */
     public function handleTransactionJournal(TransactionJournal $journal)
     {
@@ -70,9 +110,14 @@ class Processor
         // get all triggers:
         $triggered = $this->triggered();
         if ($triggered) {
-            Log::debug('Rule #' . $this->rule->id . ' was triggered. Now process each action.');
-            $this->actions();
+            if ($this->actions->count() > 0) {
+                $this->actions();
+            }
+
+            return true;
         }
+
+        return false;
 
     }
 
@@ -112,13 +157,11 @@ class Processor
         foreach ($this->triggers as $trigger) {
             $foundTriggers++;
 
-            /** @var TriggerInterface $triggerObject */
-            $triggerObject = TriggerFactory::getTrigger($trigger);
-            // no need to keep pushing the journal around!
-            if ($triggerObject->triggered($this->journal)) {
+            /** @var AbstractTrigger $trigger */
+            if ($trigger->triggered($this->journal)) {
                 $hitTriggers++;
             }
-            if ($trigger->stop_processing) {
+            if ($trigger->stopProcessing) {
                 break;
             }
 

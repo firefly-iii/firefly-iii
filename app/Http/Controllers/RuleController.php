@@ -267,13 +267,23 @@ class RuleController extends Controller
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
-        $triggers = [
+        // build trigger array from response TODO move to function:
+        $triggers = [];
+        $data     = [
             'rule-triggers'       => $request->get('rule-trigger'),
             'rule-trigger-values' => $request->get('rule-trigger-value'),
             'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
         ];
+        foreach ($data['rule-triggers'] as $index => $triggerType) {
+            $triggers[] = [
+                'type'           => $triggerType,
+                'value'          => $data['rule-trigger-values'][$index],
+                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+            ];
+        }
 
-        if (count($triggers['rule-triggers']) == 0) {
+
+        if (count($triggers) == 0) {
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
@@ -281,12 +291,15 @@ class RuleController extends Controller
         $range = Config::get('firefly.test-triggers.range');
 
         $matcher = new TransactionMatcher;
-
+        $matcher->setLimit($limit);
+        $matcher->setRange($range);
+        $matcher->setTriggers($triggers);
+        $matchingTransactions = $matcher->findMatchingTransactions();
         // Dispatch the actual work to a matched object
-        $matchingTransactions
-            = (new TransactionMatcher($triggers))
-            ->setTransactionLimit($range)
-            ->findMatchingTransactions($limit);
+        //        $matchingTransactions
+        //            = (new TransactionMatcher($triggers))
+        //            ->setTransactionLimit($range)
+        //            ->findMatchingTransactions($limit);
 
         // Warn the user if only a subset of transactions is returned
         if (count($matchingTransactions) == $limit) {

@@ -38,7 +38,38 @@ class TriggerFactory
         $class = self::getTriggerClass($triggerType);
         $obj   = $class::makeFromTriggerValue($trigger->trigger_value);
 
+        // this is a massive HACK. TODO.
+        $obj->databaseObject = $trigger;
+
         return $obj;
+    }
+
+    /**
+     * @param string $triggerType
+     * @param string $triggerValue
+     *
+     * @return AbstractTrigger
+     * @throws FireflyException
+     */
+    public static function makeTriggerFromStrings(string $triggerType, string $triggerValue, bool $stopProcessing)
+    {
+        /** @var AbstractTrigger $class */
+        $class = self::getTriggerClass($triggerType);
+        $obj   = $class::makeFromStrings($triggerValue, $stopProcessing);
+
+        return $obj;
+    }
+
+    /**
+     * Returns a map with triggertypes, mapped to the class representing that type
+     */
+    protected static function getTriggerTypes()
+    {
+        if (!self::$triggerTypes) {
+            self::$triggerTypes = Domain::getRuleTriggers();
+        }
+
+        return self::$triggerTypes;
     }
 
     /**
@@ -49,7 +80,7 @@ class TriggerFactory
      * @return TriggerInterface|string
      * @throws FireflyException
      */
-    public static function getTriggerClass(string $triggerType): string
+    private static function getTriggerClass(string $triggerType): string
     {
         $triggerTypes = self::getTriggerTypes();
 
@@ -63,17 +94,5 @@ class TriggerFactory
         }
 
         return $class;
-    }
-
-    /**
-     * Returns a map with triggertypes, mapped to the class representing that type
-     */
-    protected static function getTriggerTypes()
-    {
-        if (!self::$triggerTypes) {
-            self::$triggerTypes = Domain::getRuleTriggers();
-        }
-
-        return self::$triggerTypes;
     }
 }

@@ -21,6 +21,8 @@ use FireflyIII\Models\TransactionJournal;
  */
 class AbstractTrigger
 {
+    /** @var  bool */
+    public $stopProcessing;
     /** @var  string */
     protected $checkValue;
     /** @var  TransactionJournal */
@@ -39,15 +41,30 @@ class AbstractTrigger
     }
 
     /**
+     * @param string $triggerValue
+     * @param bool   $stopProcessing
+     *
+     * @return static
+     */
+    public static function makeFromStrings(string $triggerValue, bool $stopProcessing)
+    {
+        $self                 = new static;
+        $self->triggerValue   = $triggerValue;
+        $self->stopProcessing = $stopProcessing;
+        return $self;
+    }
+
+    /**
      * @param RuleTrigger $trigger
      *
      * @return AbstractTrigger
      */
     public static function makeFromTrigger(RuleTrigger $trigger)
     {
-        $self               = new self;
-        $self->trigger      = $trigger;
-        $self->triggerValue = $trigger->trigger_value;
+        $self                 = new static;
+        $self->trigger        = $trigger;
+        $self->triggerValue   = $trigger->trigger_value;
+        $self->stopProcessing = $trigger->stop_processing;
 
         return $self;
     }
@@ -58,10 +75,11 @@ class AbstractTrigger
      */
     public static function makeFromTriggerAndJournal(RuleTrigger $trigger, TransactionJournal $journal)
     {
-        $self               = new self;
-        $self->trigger      = $trigger;
-        $self->triggerValue = $trigger->trigger_value;
-        $self->journal      = $journal;
+        $self                 = new static;
+        $self->trigger        = $trigger;
+        $self->triggerValue   = $trigger->trigger_value;
+        $self->stopProcessing = $trigger->stop_processing;
+        $self->journal        = $journal;
     }
 
     /**
