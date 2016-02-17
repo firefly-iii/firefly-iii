@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -20,22 +19,8 @@ use Log;
  *
  * @package FireflyIII\Rules\Triggers
  */
-class AmountExactly implements TriggerInterface
+class AmountExactly extends AbstractTrigger implements TriggerInterface
 {
-
-    /** @var RuleTrigger */
-    protected $trigger;
-
-    /**
-     * TriggerInterface constructor.
-     *
-     * @param RuleTrigger $trigger
-     */
-    public function __construct(RuleTrigger $trigger)
-    {
-        $this->trigger = $trigger;
-
-    }
 
     /**
      * A trigger is said to "match anything", or match any given transaction,

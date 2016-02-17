@@ -10,7 +10,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules\Triggers;
 
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -20,12 +19,6 @@ use FireflyIII\Models\TransactionJournal;
  */
 interface TriggerInterface
 {
-//    /**
-//     * TriggerInterface constructor.
-//     *
-//     * @param RuleTrigger $trigger
-//     */
-//    public function __construct(RuleTrigger $trigger);
 
     /**
      * A trigger is said to "match anything", or match any given transaction,
