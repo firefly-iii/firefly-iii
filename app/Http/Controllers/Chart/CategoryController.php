@@ -327,9 +327,9 @@ class CategoryController extends Controller
                 return $category->name;
             }
         );
-
-        $entries = $this->filterCollection($start, $end, $set, $categories);
-        $data    = $this->generator->spentInPeriod($categories, $entries);
+        $entries    = $this->filterCollection($start, $end, $set, $categories);
+        $entries    = $this->invertSelection($entries);
+        $data       = $this->generator->spentInPeriod($categories, $entries);
         $cache->store($data);
 
         return $data;
@@ -362,7 +362,7 @@ class CategoryController extends Controller
                     }
                 )->first();
                 if (!is_null($entry)) {
-                    $row[] = round($entry->earned, 2);
+                    $row[] = $entry->earned ? round($entry->earned, 2) : round($entry->spent, 2);
                 } else {
                     $row[] = 0;
                 }
@@ -372,6 +372,27 @@ class CategoryController extends Controller
         }
 
         return $entries;
+    }
+
+    /**
+     * @param Collection $entries
+     *
+     * @return Collection
+     */
+    private function invertSelection(Collection $entries): Collection
+    {
+        $result = new Collection;
+        foreach ($entries as $entry) {
+            $new   = [$entry[0]];
+            $count = count($entry);
+            for ($i = 1; $i < $count; $i++) {
+                $new[$i] = ($entry[$i] * -1);
+            }
+            $result->push($new);
+        }
+
+        return $result;
+
     }
 
     /**
