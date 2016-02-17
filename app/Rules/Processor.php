@@ -14,10 +14,10 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Actions\ActionFactory;
-use FireflyIII\Rules\Triggers\TriggerInterface;
+use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Triggers\TriggerFactory;
+use FireflyIII\Rules\Triggers\TriggerInterface;
 use Log;
 
 /**
@@ -40,8 +40,8 @@ class Processor
      */
     public function __construct(Rule $rule, TransactionJournal $journal)
     {
-        $this->rule         = $rule;
-        $this->journal      = $journal;
+        $this->rule    = $rule;
+        $this->journal = $journal;
     }
 
     /**
@@ -89,20 +89,24 @@ class Processor
 
     /**
      * Checks whether the current transaction is triggered by the current rule
+     *
      * @return boolean
      */
-    public function isTriggered() {
+    public function isTriggered()
+    {
         return $this->triggered();
     }
-    
+
     /**
      * Checks whether the current transaction is triggered by the list of given triggers
+     *
      * @return boolean
      */
-    public function isTriggeredBy(array $triggers) {
+    public function isTriggeredBy(array $triggers)
+    {
         return $this->triggeredBy($triggers);
     }
-    
+
     /**
      * @return bool
      */
@@ -126,17 +130,29 @@ class Processor
     }
 
     /**
+     * Checks whether the current transaction is triggered by the current rule
+     *
+     * @return bool
+     */
+    protected function triggered()
+    {
+        return $this->triggeredBy($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get());
+    }
+
+    /**
      * Method to check whether the current transaction would be triggered
      * by the given list of triggers
+     *
      * @return bool
-     */    
-    protected function triggeredBy($triggers) {
+     */
+    protected function triggeredBy($triggers)
+    {
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
             $foundTriggers++;
-            
+
             /** @var TriggerInterface $triggerClass */
             $triggerClass = TriggerFactory::getTrigger($trigger, $this->journal);
             if ($triggerClass->triggered()) {
@@ -150,15 +166,7 @@ class Processor
         Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
         return ($hitTriggers == $foundTriggers);
-        
-    }
-    /**
-     * Checks whether the current transaction is triggered by the current rule
-     * @return bool
-     */
-    protected function triggered()
-    {
-        return $this->triggeredBy($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get());
+
     }
 
 
