@@ -72,4 +72,14 @@ class DescriptionEnds implements TriggerInterface
         return false;
 
     }
+    
+    /**
+     * Checks whether this trigger will match all transactions
+     * This happens when the trigger_value is empty
+     * @return bool
+     */
+    public function matchesAnything() {
+        return $this->trigger->trigger_value === "";
+    }
+    
 }

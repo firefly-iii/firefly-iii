@@ -53,4 +53,10 @@ class UserAction implements TriggerInterface
         return true;
     }
 
+    /**
+     * Checks whether this trigger will match all transactions
+     * @return bool
+     */
+    public function matchesAnything() { return true; }
+    
 }
