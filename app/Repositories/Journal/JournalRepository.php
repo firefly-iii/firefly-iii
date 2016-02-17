@@ -77,6 +77,27 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param array $types
+     * @param int   $offset
+     * @param int   $count
+     *
+     * @return Collection
+     */
+    public function getCollectionOfTypes(array $types, int $offset, int $count)
+    {
+        $set = Auth::user()->transactionJournals()->transactionTypes($types)
+                   ->take($count)->offset($offset)
+                   ->orderBy('date', 'DESC')
+                   ->orderBy('order', 'ASC')
+                   ->orderBy('id', 'DESC')
+                   ->get(
+                       ['transaction_journals.*']
+                   );
+
+        return $set;
+    }
+
+    /**
      * @param TransactionType $dbType
      *
      * @return Collection

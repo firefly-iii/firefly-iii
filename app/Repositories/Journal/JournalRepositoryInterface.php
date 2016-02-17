@@ -56,6 +56,15 @@ interface JournalRepositoryInterface
     public function getJournalsOfTypes(array $types, int $offset, int $page);
 
     /**
+     * @param array $types
+     * @param int   $offset
+     * @param int   $count
+     *
+     * @return Collection
+     */
+    public function getCollectionOfTypes(array $types, int $offset, int $count);
+
+    /**
      * @param string $type
      *
      * @return TransactionType
