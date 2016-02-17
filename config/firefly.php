@@ -221,9 +221,9 @@ return [
     ],
     'test-triggers' => [
         // The maximum number of transactions shown when testing a list of triggers
-        'limit' => 50,
+        'limit' => 10,
         
         // The maximum number of transactions to analyse, when testing a list of triggers
-        'range' => 1000
+        'range' => 100
     ]
 ];
