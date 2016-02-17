@@ -11,6 +11,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Rule;
 
 use Auth;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
@@ -66,6 +67,22 @@ class RuleRepository implements RuleRepositoryInterface
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
     {
         return intval($ruleGroup->rules()->max('order'));
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function getPrimaryTrigger(Rule $rule): string
+    {
+        $count = $rule->ruleTriggers()->count();
+        if ($count === 0) {
+            throw new FireflyException('Rules should have more than zero triggers, rule #' . $rule->id . ' has none!');
+        }
+
+        return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
     }
 
     /**

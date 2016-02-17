@@ -22,6 +22,7 @@ use FireflyIII\Models\RuleTrigger;
  */
 interface RuleRepositoryInterface
 {
+
     /**
      * @return int
      */
@@ -45,6 +46,13 @@ interface RuleRepositoryInterface
      * @return int
      */
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup);
+
+    /**
+     * @param Rule $rule
+     *
+     * @return string
+     */
+    public function getPrimaryTrigger(Rule $rule): string;
 
     /**
      * @param Rule $rule

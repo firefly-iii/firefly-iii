@@ -7,6 +7,8 @@ namespace FireflyIII\Repositories\RuleGroup;
 use Auth;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
@@ -71,6 +73,33 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $entry = Auth::user()->ruleGroups()->max('order');
 
         return intval($entry);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getRuleGroupsWithRules(User $user): Collection
+    {
+        return $user->ruleGroups()
+                    ->orderBy('active', 'DESC')
+                    ->orderBy('order', 'ASC')
+                    ->with(
+                        [
+                            'rules'              => function (HasMany $query) {
+                                $query->orderBy('active', 'DESC');
+                                $query->orderBy('order', 'ASC');
+
+                            },
+                            'rules.ruleTriggers' => function (HasMany $query) {
+                                $query->orderBy('order', 'ASC');
+                            },
+                            'rules.ruleActions'  => function (HasMany $query) {
+                                $query->orderBy('order', 'ASC');
+                            },
+                        ]
+                    )->get();
     }
 
     /**
@@ -203,5 +232,4 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         return $ruleGroup;
     }
-
 }
