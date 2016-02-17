@@ -277,24 +277,21 @@ class RuleController extends Controller
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
-        // We start searching for transactions. For performance reasons, there are limits
-        // to the search: a maximum number of results and a maximum number of transactions
-        // to search in
-        $maxResults                = Config::get('firefly.test-triggers.limit');
-        $maxTransactionsToSearchIn = Config::get('firefly.test-triggers.max_transactions_to_analyse');
+        $limit = Config::get('firefly.test-triggers.limit');
+        $range = Config::get('firefly.test-triggers.range');
 
         // Dispatch the actual work to a matched object
         $matchingTransactions
             = (new TransactionMatcher($triggers))
-            ->setTransactionLimit($maxTransactionsToSearchIn)
-            ->findMatchingTransactions($maxResults);
+            ->setTransactionLimit($range)
+            ->findMatchingTransactions($limit);
 
         // Warn the user if only a subset of transactions is returned
-        if (count($matchingTransactions) == $maxResults) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $maxResults]);
+        if (count($matchingTransactions) == $limit) {
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
         } else {
             if (count($matchingTransactions) == 0) {
-                $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $maxTransactionsToSearchIn]);
+                $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
             } else {
                 $warning = "";
             }
