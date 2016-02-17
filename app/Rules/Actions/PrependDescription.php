@@ -22,27 +22,27 @@ class PrependDescription implements ActionInterface
 {
 
     private $action;
-    private $journal;
+
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction         $action
-     * @param TransactionJournal $journal
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
         $this->action  = $action;
-        $this->journal = $journal;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
-        $this->journal->description = $this->action->action_value . $this->journal->description;
-        $this->journal->save();
+        $journal->description = $this->action->action_value . $journal->description;
+        $journal->save();
 
         return true;
     }

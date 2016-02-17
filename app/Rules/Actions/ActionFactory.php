@@ -28,16 +28,15 @@ class ActionFactory
      * Returns the action for the given type and journal
      *
      * @param RuleAction         $action
-     * @param TransactionJournal $journal
      *
      * @return ActionInterface
      */
-    public static function getAction(RuleAction $action, TransactionJournal $journal): ActionInterface
+    public static function getAction(RuleAction $action): ActionInterface
     {
         $actionType = $action->action_type;
         $class      = self::getActionClass($actionType);
 
-        return new $class($action, $journal);
+        return new $class($action);
     }
 
     /**

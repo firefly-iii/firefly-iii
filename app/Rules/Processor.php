@@ -87,8 +87,8 @@ class Processor
          */
         foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
-            $actionClass = ActionFactory::getAction($action, $this->journal);
-            $actionClass->act();
+            $actionClass = ActionFactory::getAction($action);
+            $actionClass->act($this->journal);
             if ($action->stop_processing) {
                 break;
             }

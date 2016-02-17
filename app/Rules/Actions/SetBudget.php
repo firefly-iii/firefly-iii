@@ -26,24 +26,24 @@ class SetBudget implements ActionInterface
 {
 
     private $action;
-    private $journal;
+
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction         $action
-     * @param TransactionJournal $journal
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
         $this->action  = $action;
-        $this->journal = $journal;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
@@ -55,8 +55,8 @@ class SetBudget implements ActionInterface
             }
         )->first();
         if (!is_null($budget)) {
-            Log::debug('Will set budget "' . $search . '" (#' . $budget->id . ') on journal #' . $this->journal->id . '.');
-            $this->journal->budgets()->sync([$budget->id]);
+            Log::debug('Will set budget "' . $search . '" (#' . $budget->id . ') on journal #' . $journal->id . '.');
+            $journal->budgets()->sync([$budget->id]);
         } else {
             Log::debug('Could not find budget "' . $search . '". Failed.');
         }

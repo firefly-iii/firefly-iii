@@ -22,26 +22,26 @@ use FireflyIII\Models\TransactionJournal;
 class RemoveAllTags implements ActionInterface
 {
     private $action;
-    private $journal;
+
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction         $action
-     * @param TransactionJournal $journal
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
         $this->action  = $action;
-        $this->journal = $journal;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
-        $this->journal->tags()->detach();
+        $journal->tags()->detach();
 
         return true;
 

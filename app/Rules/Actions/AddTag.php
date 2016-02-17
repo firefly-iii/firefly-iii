@@ -24,32 +24,32 @@ use FireflyIII\Models\TransactionJournal;
 class AddTag implements ActionInterface
 {
 
+    /** @var RuleAction  */
     private $action;
-    private $journal;
 
     /**
      * TriggerInterface constructor.
      *
      * @param RuleAction         $action
-     * @param TransactionJournal $journal
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
         $this->action  = $action;
-        $this->journal = $journal;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
         // journal has this tag maybe?
         $tag = Tag::firstOrCreateEncrypted(['tag' => $this->action->action_value, 'user_id' => Auth::user()->id]);
 
-        $count = $this->journal->tags()->where('id', $tag->id)->count();
+        $count = $journal->tags()->where('id', $tag->id)->count();
         if ($count == 0) {
-            $this->journal->tags()->save($tag);
+            $journal->tags()->save($tag);
         }
 
         return true;
