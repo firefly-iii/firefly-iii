@@ -371,31 +371,6 @@ class RuleController extends Controller
         return redirect(session('rules.rule.edit.url'));
     }
 
-    /**
-     * @param TestRuleFormRequest $request
-     *
-     * @return array
-     */
-    protected function getValidTriggerList(TestRuleFormRequest $request): array
-    {
-
-        $triggers = [];
-        $data     = [
-            'rule-triggers'       => $request->get('rule-trigger'),
-            'rule-trigger-values' => $request->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
-        ];
-        foreach ($data['rule-triggers'] as $index => $triggerType) {
-            $triggers[] = [
-                'type'           => $triggerType,
-                'value'          => $data['rule-trigger-values'][$index],
-                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
-            ];
-        }
-
-        return $triggers;
-    }
-
     private function createDefaultRule()
     {
         /** @var RuleRepositoryInterface $repository */
@@ -554,6 +529,31 @@ class RuleController extends Controller
                 ]
             )->render();
             $newIndex++;
+        }
+
+        return $triggers;
+    }
+
+    /**
+     * @param TestRuleFormRequest $request
+     *
+     * @return array
+     */
+    private function getValidTriggerList(TestRuleFormRequest $request): array
+    {
+
+        $triggers = [];
+        $data     = [
+            'rule-triggers'       => $request->get('rule-trigger'),
+            'rule-trigger-values' => $request->get('rule-trigger-value'),
+            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
+        ];
+        foreach ($data['rule-triggers'] as $index => $triggerType) {
+            $triggers[] = [
+                'type'           => $triggerType,
+                'value'          => $data['rule-trigger-values'][$index],
+                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+            ];
         }
 
         return $triggers;
