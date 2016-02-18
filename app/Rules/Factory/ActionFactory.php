@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * ActionFactory.php
  * Copyright (C) 2016 Robert Horlings
@@ -8,10 +7,13 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Rules\Actions;
+declare(strict_types = 1);
+
+namespace FireflyIII\Rules\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Support\Domain;
 
 /**

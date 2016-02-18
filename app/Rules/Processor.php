@@ -14,10 +14,10 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Rules\Actions\ActionFactory;
+use FireflyIII\Rules\Factory\ActionFactory;
 use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Triggers\AbstractTrigger;
-use FireflyIII\Rules\Triggers\TriggerFactory;
+use FireflyIII\Rules\Factory\TriggerFactory;
 use Illuminate\Support\Collection;
 use Log;
 

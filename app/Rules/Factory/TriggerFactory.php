@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * TriggerFactory.php
  * Copyright (C) 2016 Robert Horlings
@@ -8,10 +7,14 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Rules\Triggers;
+declare(strict_types = 1);
+
+namespace FireflyIII\Rules\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Rules\Triggers\AbstractTrigger;
+use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Support\Domain;
 
 /**
