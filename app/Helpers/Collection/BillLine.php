@@ -35,7 +35,7 @@ class BillLine
      */
     public function getAmount(): string
     {
-        return $this->amount;
+        return $this->amount ?? '0';
     }
 
     /**
