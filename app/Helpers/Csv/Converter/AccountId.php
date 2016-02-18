@@ -31,6 +31,9 @@ class AccountId extends BasicConverter implements ConverterInterface
 
             if (!is_null($account)) {
                 Log::debug('Found ' . $account->accountType->type . ' named "******" with ID: ' . $this->value . ' (not mapped) ');
+            } else {
+                // new account to prevent TypeErrors.
+                $account = new Account;
             }
         }
 

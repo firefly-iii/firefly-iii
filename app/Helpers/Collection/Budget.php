@@ -83,7 +83,7 @@ class Budget
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function getBudgetLines()
+    public function getBudgetLines(): Collection
     {
         return $this->budgetLines;
     }
@@ -91,7 +91,7 @@ class Budget
     /**
      * @return string
      */
-    public function getBudgeted()
+    public function getBudgeted(): string
     {
         return $this->budgeted;
     }
@@ -107,7 +107,7 @@ class Budget
     /**
      * @return string
      */
-    public function getLeft()
+    public function getLeft(): string
     {
         return $this->left;
     }
@@ -123,7 +123,7 @@ class Budget
     /**
      * @return string
      */
-    public function getOverspent()
+    public function getOverspent(): string
     {
         return $this->overspent;
     }
@@ -139,7 +139,7 @@ class Budget
     /**
      * @return string
      */
-    public function getSpent()
+    public function getSpent(): string
     {
         return $this->spent;
     }

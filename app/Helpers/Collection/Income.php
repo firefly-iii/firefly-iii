@@ -66,7 +66,7 @@ class Income
     /**
      * @return Collection
      */
-    public function getIncomes()
+    public function getIncomes(): Collection
     {
         $set = $this->incomes->sortByDesc(
             function (stdClass $object) {
@@ -80,7 +80,7 @@ class Income
     /**
      * @return string
      */
-    public function getTotal()
+    public function getTotal(): string
     {
         return strval(round($this->total, 2));
     }

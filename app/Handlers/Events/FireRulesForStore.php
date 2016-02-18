@@ -58,10 +58,11 @@ class FireRulesForStore
                 $processor->handleTransactionJournal($event->journal);
 
                 if ($rule->stop_processing) {
-                    break;
+                    return true;
                 }
 
             }
         }
+        return true;
     }
 }

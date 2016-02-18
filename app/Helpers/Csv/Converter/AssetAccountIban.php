@@ -15,10 +15,11 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return Account|null
+     * @return Account
      */
-    public function convert()
+    public function convert(): Account
     {
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = Auth::user()->accounts()->find($this->mapped[$this->index][$this->value]);
@@ -29,7 +30,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             // find or create new account:
             $account = $this->findAccount();
 
-            if (is_null($account)) {
+            if (is_null($account->id)) {
                 // create it if doesn't exist.
 
                 $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
@@ -55,13 +56,13 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             return $account;
         }
 
-        return null;
+        return new Account;
     }
 
     /**
-     * @return Account|null
+     * @return Account
      */
-    protected function findAccount()
+    protected function findAccount(): Account
     {
         $set = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
         /** @var Account $entry */
@@ -72,6 +73,6 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             }
         }
 
-        return null;
+        return new Account;
     }
 }

@@ -25,7 +25,7 @@ class BalanceEntry
     /**
      * @return AccountModel
      */
-    public function getAccount()
+    public function getAccount(): AccountModel
     {
         return $this->account;
     }
@@ -41,7 +41,7 @@ class BalanceEntry
     /**
      * @return string
      */
-    public function getLeft()
+    public function getLeft(): string
     {
         return $this->left;
     }
@@ -57,7 +57,7 @@ class BalanceEntry
     /**
      * @return string
      */
-    public function getSpent()
+    public function getSpent(): string
     {
         return $this->spent;
     }

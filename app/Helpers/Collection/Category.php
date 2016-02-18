@@ -54,7 +54,7 @@ class Category
     /**
      * @return Collection
      */
-    public function getCategories()
+    public function getCategories(): Collection
     {
         $set = $this->categories->sortBy(
             function (CategoryModel $category) {
@@ -69,7 +69,7 @@ class Category
     /**
      * @return string
      */
-    public function getTotal()
+    public function getTotal(): string
     {
         return strval(round($this->total, 2));
     }

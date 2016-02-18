@@ -17,10 +17,10 @@ class AmountComma extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
-        $value = str_replace(',', '.', $this->value);
+        $value = str_replace(',', '.', str_val($this->value));
 
         if (is_numeric($value)) {
-            return $value;
+            return strval($value);
         }
 
         return '0';

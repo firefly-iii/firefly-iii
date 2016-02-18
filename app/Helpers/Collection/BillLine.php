@@ -33,7 +33,7 @@ class BillLine
     /**
      * @return string
      */
-    public function getAmount()
+    public function getAmount(): string
     {
         return $this->amount;
     }
@@ -49,7 +49,7 @@ class BillLine
     /**
      * @return BillModel
      */
-    public function getBill()
+    public function getBill(): BillModel
     {
         return $this->bill;
     }
@@ -65,7 +65,7 @@ class BillLine
     /**
      * @return string
      */
-    public function getMax()
+    public function getMax(): string
     {
         return $this->max;
     }
@@ -81,7 +81,7 @@ class BillLine
     /**
      * @return string
      */
-    public function getMin()
+    public function getMin(): string
     {
         return $this->min;
     }
@@ -113,7 +113,7 @@ class BillLine
     /**
      * @return boolean
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
@@ -129,7 +129,7 @@ class BillLine
     /**
      * @return boolean
      */
-    public function isHit()
+    public function isHit(): bool
     {
         return $this->hit;
     }

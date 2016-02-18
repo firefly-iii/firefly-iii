@@ -11,12 +11,12 @@ class Amount extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return string|int
+     * @return string
      */
-    public function convert()
+    public function convert(): string
     {
         if (is_numeric($this->value)) {
-            return $this->value;
+            return strval($this->value);
         }
 
         return '0';

@@ -37,7 +37,7 @@ class BalanceHeader
     /**
      * @return Collection
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

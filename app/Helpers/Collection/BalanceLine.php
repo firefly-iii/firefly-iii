@@ -34,6 +34,7 @@ class BalanceLine
     public function __construct()
     {
         $this->balanceEntries = new Collection;
+
     }
 
     /**
@@ -47,7 +48,7 @@ class BalanceLine
     /**
      * @return Collection
      */
-    public function getBalanceEntries()
+    public function getBalanceEntries(): Collection
     {
         return $this->balanceEntries;
     }
@@ -63,9 +64,9 @@ class BalanceLine
     /**
      * @return BudgetModel
      */
-    public function getBudget()
+    public function getBudget(): BudgetModel
     {
-        return $this->budget;
+        return $this->budget ?? new BudgetModel;
     }
 
     /**
@@ -79,7 +80,7 @@ class BalanceLine
     /**
      * @return int
      */
-    public function getRole()
+    public function getRole(): int
     {
         return $this->role;
     }
@@ -95,9 +96,9 @@ class BalanceLine
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
-        if ($this->getBudget() instanceof BudgetModel) {
+        if ($this->getBudget() instanceof BudgetModel && !is_null($this->getBudget()->id)) {
             return $this->getBudget()->name;
         }
         if ($this->getRole() == self::ROLE_DEFAULTROLE) {
@@ -121,7 +122,7 @@ class BalanceLine
      *
      * @return string
      */
-    public function leftOfRepetition()
+    public function leftOfRepetition(): string
     {
         bcscale(2);
         $start = $this->budget->amount ?? '0';

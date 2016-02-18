@@ -80,7 +80,7 @@ class Expense
     /**
      * @return Collection
      */
-    public function getExpenses()
+    public function getExpenses(): Collection
     {
         $set = $this->expenses->sortBy(
             function (stdClass $object) {
@@ -94,7 +94,7 @@ class Expense
     /**
      * @return string
      */
-    public function getTotal()
+    public function getTotal(): string
     {
         return strval(round($this->total, 2));
     }
