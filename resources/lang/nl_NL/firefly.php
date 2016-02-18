@@ -127,7 +127,7 @@ return [
     'update_rule'                        => 'Werk regel bij',
 
     'test_rule_triggers'                 => 'Bekijk welke transacties hieraan voldoen',
-    'warning_transaction_subset'         => 'Je ziet hier maximaal :max_num_transactions omdat je anders veel te lang moet wachten',
+    'warning_transaction_subset'         => 'Je ziet hier maximaal :max_num_transactions transacties omdat je anders veel te lang moet wachten',
     'warning_no_matching_transactions'   => 'Niks gevonden in je laatste :num_transactions transacties.',
     'warning_no_valid_triggers'          => 'Geen geldige triggers gevonden.',
     

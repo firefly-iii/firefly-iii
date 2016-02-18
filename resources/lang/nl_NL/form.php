@@ -47,7 +47,7 @@ return [
     'symbol'                      => 'Symbool',
     'code'                        => 'Code',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Account number',
+    'accountNumber'               => 'Rekeningnummer',
     'csv'                         => 'CSV-bestand',
     'has_headers'                 => 'Kolomnamen op de eerste rij?',
     'date_format'                 => 'Datumformaat',
