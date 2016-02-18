@@ -26,7 +26,10 @@ class ActionFactory
     protected static $actionTypes = null;
 
     /**
-     * Returns the action for the given type and journal
+     * This method returns the actual implementation (Rules/Action/[object]) for a given
+     * RuleAction (database object). If for example the database object contains action_type "change_category"
+     * with value "Groceries" this method will return a corresponding SetCategory object preset
+     * to "Groceries". Any transaction journal then fed to this object will have its category changed.
      *
      * @param RuleAction $action
      *
@@ -34,18 +37,19 @@ class ActionFactory
      */
     public static function getAction(RuleAction $action): ActionInterface
     {
-        $actionType = $action->action_type;
-        $class      = self::getActionClass($actionType);
+        $class = self::getActionClass($action->action_type);
 
         return new $class($action);
     }
 
     /**
-     * Returns the class name to be used for actions with the given name
+     * Returns the class name to be used for actions with the given name. This is a lookup function
+     * that will match the given action type (ie. "change_category") to the matching class name
+     * (SetCategory) using the configuration (firefly.php).
      *
      * @param string $actionType
      *
-     * @return ActionInterface|string
+     * @return string
      * @throws FireflyException
      */
     public static function getActionClass(string $actionType): string
