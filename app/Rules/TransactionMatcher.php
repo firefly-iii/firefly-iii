@@ -27,22 +27,38 @@ class TransactionMatcher
     private $limit = 10;
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
     private $range = 200;
+    /** @var  JournalRepositoryInterface */
+    private $repository;
     /** @var array */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
     private $triggers = [];
 
     /**
-     * Find matching transactions for the current set of triggers
+     * TransactionMatcher constructor. Typehint the repository.
+     *
+     * @param JournalRepositoryInterface $repository
+     */
+    public function __construct(JournalRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+
+    }
+
+    /**
+     * This method will search the user's transaction journal (with an upper limit of $range) for
+     * transaction journals matching the given $triggers. This is accomplished by trying to fire these
+     * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
      *
      */
     public function findMatchingTransactions(): Collection
     {
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
-        $pagesize   = min($this->range / 2, $this->limit * 2);
+        if (count($this->triggers) === 0) {
+            return new Collection;
+        }
+        $pagesize = min($this->range / 2, $this->limit * 2);
 
         // Variables used within the loop
         $processed = 0;
@@ -57,7 +73,7 @@ class TransactionMatcher
         do {
             // Fetch a batch of transactions from the database
             $offset = $page > 0 ? ($page - 1) * $pagesize : 0;
-            $set    = $repository->getCollectionOfTypes($this->transactionTypes, $offset, $pagesize);
+            $set    = $this->repository->getCollectionOfTypes($this->transactionTypes, $offset, $pagesize);
 
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(

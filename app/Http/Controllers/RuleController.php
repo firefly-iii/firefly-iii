@@ -295,7 +295,8 @@ class RuleController extends Controller
         $limit = Config::get('firefly.test-triggers.limit');
         $range = Config::get('firefly.test-triggers.range');
 
-        $matcher = new TransactionMatcher;
+        /** @var TransactionMatcher $matcher */
+        $matcher = app('FireflyIII\Rules\TransactionMatcher');
         $matcher->setLimit($limit);
         $matcher->setRange($range);
         $matcher->setTriggers($triggers);
