@@ -48,6 +48,9 @@ final class Processor
     }
 
     /**
+     * This method will make a Processor that will process each transaction journal using the triggers
+     * and actions found in the given Rule.
+     *
      * @param Rule $rule
      *
      * @return Processor
@@ -68,6 +71,10 @@ final class Processor
     }
 
     /**
+     * This method will make a Processor that will process each transaction journal using the given
+     * trigger (singular!). It can only report if the transaction journal was hit by the given trigger
+     * and will not be able to act on it using actions.
+     *
      * @param string $triggerName
      * @param string $triggerValue
      *
@@ -83,6 +90,14 @@ final class Processor
     }
 
     /**
+     * This method will make a Processor that will process each transaction journal using the given
+     * triggers. It can only report if the transaction journal was hit by the given triggers
+     * and will not be able to act on it using actions.
+     *
+     * The given triggers must be in the following format:
+     *
+     * [type => xx, value => yy, stopProcessing => bool], [type => xx, value => yy, stopProcessing => bool],
+     *
      * @param array $triggers
      *
      * @return Processor
@@ -100,6 +115,10 @@ final class Processor
 
 
     /**
+     * This method will scan the given transaction journal and check if it matches the triggers found in the Processor
+     * If so, it will also attempt to run the given actions on the journal. It returns a bool indicating if the transaction journal
+     * matches all of the triggers (regardless of whether the Processor could act on it).
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -168,7 +187,7 @@ final class Processor
         }
         Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
-        return ($hitTriggers == $foundTriggers);
+        return ($hitTriggers == $foundTriggers && $foundTriggers > 0);
 
     }
 
