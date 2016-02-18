@@ -19,7 +19,7 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
      *
      * @return array
      */
-    public function history(Collection $set)
+    public function history(Collection $set): array
     {
 
         // language:

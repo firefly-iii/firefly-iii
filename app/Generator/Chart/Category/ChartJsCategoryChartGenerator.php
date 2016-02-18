@@ -18,7 +18,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function all(Collection $entries)
+    public function all(Collection $entries): array
     {
 
 
@@ -55,7 +55,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function earnedInPeriod(Collection $categories, Collection $entries)
+    public function earnedInPeriod(Collection $categories, Collection $entries): array
     {
 
         // language:
@@ -87,7 +87,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(Collection $entries)
+    public function frontpage(Collection $entries): array
     {
         bcscale(2);
         $data = [
@@ -115,7 +115,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYear(Collection $entries)
+    public function multiYear(Collection $entries): array
     {
         // dataset:
         $data = [
@@ -155,7 +155,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function period(Collection $entries)
+    public function period(Collection $entries): array
     {
         return $this->all($entries);
 
@@ -167,7 +167,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function spentInPeriod(Collection $categories, Collection $entries)
+    public function spentInPeriod(Collection $categories, Collection $entries): array
     {
 
         // language:

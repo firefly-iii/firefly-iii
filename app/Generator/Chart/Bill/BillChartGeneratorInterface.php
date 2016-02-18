@@ -28,7 +28,7 @@ interface BillChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(string $paid, string $unpaid);
+    public function frontpage(string $paid, string $unpaid): array;
 
     /**
      * @param Bill       $bill
@@ -36,6 +36,6 @@ interface BillChartGeneratorInterface
      *
      * @return array
      */
-    public function single(Bill $bill, Collection $entries);
+    public function single(Bill $bill, Collection $entries): array;
 
 }

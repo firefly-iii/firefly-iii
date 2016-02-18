@@ -19,7 +19,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOut(Collection $entries)
+    public function multiYearInOut(Collection $entries): array
     {
         $data = [
             'count'    => 2,
@@ -52,7 +52,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOutSummarized(string $income, string $expense, int $count)
+    public function multiYearInOutSummarized(string $income, string $expense, int $count): array
     {
         $data                          = [
             'count'    => 2,
@@ -81,7 +81,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function yearInOut(Collection $entries)
+    public function yearInOut(Collection $entries): array
     {
         // language:
         $format = (string)trans('config.month');
@@ -117,7 +117,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function yearInOutSummarized(string $income, string $expense, int $count)
+    public function yearInOutSummarized(string $income, string $expense, int $count): array
     {
 
         $data                          = [

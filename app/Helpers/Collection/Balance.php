@@ -39,7 +39,7 @@ class Balance
     /**
      * @return BalanceHeader
      */
-    public function getBalanceHeader()
+    public function getBalanceHeader(): BalanceHeader
     {
         return $this->balanceHeader;
     }
@@ -53,9 +53,9 @@ class Balance
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    public function getBalanceLines()
+    public function getBalanceLines(): Collection
     {
         return $this->balanceLines;
     }

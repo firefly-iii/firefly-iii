@@ -21,27 +21,18 @@ use FireflyIII\Support\Events\BillScanner;
  */
 class ScanForBillsAfterUpdate
 {
-
-    /**
-     * Create the event handler.
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Scan a transaction journal for possibly related bills after it has been updated.
      *
      * @param  TransactionJournalUpdated $event
      *
-     * @return void
+     * @return bool
      */
-    public function handle(TransactionJournalUpdated $event)
+    public function handle(TransactionJournalUpdated $event): bool
     {
         $journal = $event->journal;
         BillScanner::scan($journal);
+        return true;
     }
 
 }

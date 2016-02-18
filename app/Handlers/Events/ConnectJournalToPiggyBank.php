@@ -18,24 +18,13 @@ class ConnectJournalToPiggyBank
 {
 
     /**
-     * Create the event handler.
-     *
-     * @codeCoverageIgnore
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Connect a new transaction journal to any related piggy banks.
      *
      * @param  TransactionJournalStored $event
      *
-     * @return boolean
+     * @return bool
      */
-    public function handle(TransactionJournalStored $event)
+    public function handle(TransactionJournalStored $event): bool
     {
         /** @var TransactionJournal $journal */
         $journal     = $event->journal;

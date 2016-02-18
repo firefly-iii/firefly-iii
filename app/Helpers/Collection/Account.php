@@ -23,9 +23,9 @@ class Account
     protected $start;
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }
@@ -41,7 +41,7 @@ class Account
     /**
      * @return string
      */
-    public function getDifference()
+    public function getDifference(): string
     {
         return $this->difference;
     }
@@ -57,7 +57,7 @@ class Account
     /**
      * @return string
      */
-    public function getEnd()
+    public function getEnd(): string
     {
         return $this->end;
     }
@@ -73,7 +73,7 @@ class Account
     /**
      * @return string
      */
-    public function getStart()
+    public function getStart(): string
     {
         return $this->start;
     }

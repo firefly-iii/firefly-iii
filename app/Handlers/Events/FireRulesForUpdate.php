@@ -26,22 +26,13 @@ use Log;
 class FireRulesForUpdate
 {
     /**
-     * Create the event handler.
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      *
      * @param  TransactionJournalUpdated $event
      *
-     * @return void
+     * @return bool
      */
-    public function handle(TransactionJournalUpdated $event)
+    public function handle(TransactionJournalUpdated $event): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
@@ -71,5 +62,6 @@ class FireRulesForUpdate
 
             }
         }
+        return true;
     }
 }

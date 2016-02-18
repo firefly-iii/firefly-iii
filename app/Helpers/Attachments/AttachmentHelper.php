@@ -46,7 +46,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return string
      */
-    public function getAttachmentLocation(Attachment $attachment)
+    public function getAttachmentLocation(Attachment $attachment): string
     {
         $path = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
 
@@ -56,7 +56,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * @return MessageBag
      */
-    public function getErrors()
+    public function getErrors(): MessageBag
     {
         return $this->errors;
     }
@@ -64,7 +64,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * @return MessageBag
      */
-    public function getMessages()
+    public function getMessages(): MessageBag
     {
         return $this->messages;
     }
@@ -74,7 +74,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model)
+    public function saveAttachmentsForModel(Model $model): bool
     {
         $files = null;
         try {
@@ -107,7 +107,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function hasFile(UploadedFile $file, Model $model)
+    protected function hasFile(UploadedFile $file, Model $model): bool
     {
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
@@ -125,16 +125,17 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     *
      * @param UploadedFile $file
      * @param Model        $model
      *
-     * @return bool|Attachment
+     * @return Attachment
      */
-    protected function processFile(UploadedFile $file, Model $model)
+    protected function processFile(UploadedFile $file, Model $model): Attachment
     {
         $validation = $this->validateUpload($file, $model);
         if ($validation === false) {
-            return false;
+            return new Attachment;
         }
 
         $attachment = new Attachment; // create Attachment object.
@@ -175,7 +176,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function validMime(UploadedFile $file)
+    protected function validMime(UploadedFile $file): bool
     {
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
@@ -195,7 +196,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function validSize(UploadedFile $file)
+    protected function validSize(UploadedFile $file): bool
     {
         $size = $file->getSize();
         $name = e($file->getClientOriginalName());
@@ -215,7 +216,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function validateUpload(UploadedFile $file, Model $model)
+    protected function validateUpload(UploadedFile $file, Model $model): bool
     {
         if (!$this->validMime($file)) {
             return false;

@@ -21,7 +21,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function budget(Collection $entries, $dateFormat = 'month')
+    public function budget(Collection $entries, $dateFormat = 'month'): array
     {
         // language:
         $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
@@ -56,7 +56,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function budgetLimit(Collection $entries)
+    public function budgetLimit(Collection $entries): array
     {
         return $this->budget($entries, 'monthAndDay');
     }
@@ -66,7 +66,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(Collection $entries)
+    public function frontpage(Collection $entries): array
     {
         bcscale(2);
         $data      = [
@@ -112,7 +112,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYear(Collection $entries)
+    public function multiYear(Collection $entries): array
     {
         // dataset:
         $data = [
@@ -147,7 +147,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function year(Collection $budgets, Collection $entries)
+    public function year(Collection $budgets, Collection $entries): array
     {
         // language:
         $format = (string)trans('config.month');

@@ -26,25 +26,15 @@ use Log;
  */
 class FireRulesForStore
 {
-    /**
-     * Create the event handler.
-     *
-     * @codeCoverageIgnore
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Connect a new transaction journal to any related piggy banks.
      *
      * @param  TransactionJournalStored $event
      *
-     * @return boolean
+     * @return bool
      */
-    public function handle(TransactionJournalStored $event)
+    public function handle(TransactionJournalStored $event): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */

@@ -28,7 +28,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(string $paid, string $unpaid)
+    public function frontpage(string $paid, string $unpaid): array
     {
         bcscale(2);
         $data = [
@@ -55,7 +55,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      *
      * @return array
      */
-    public function single(Bill $bill, Collection $entries)
+    public function single(Bill $bill, Collection $entries): array
     {
         bcscale(2);
         $format       = (string)trans('config.month');
