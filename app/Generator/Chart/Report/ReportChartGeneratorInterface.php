@@ -41,6 +41,13 @@ interface ReportChartGeneratorInterface
      *
      * @return array
      */
+    public function netWorth(Collection $entries) : array;
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
     public function yearInOut(Collection $entries): array;
 
     /**

@@ -103,6 +103,7 @@ class Steam
     }
 
     /**
+     * This method always ignores the virtual balance.
      *
      * @param array          $ids
      * @param \Carbon\Carbon $date

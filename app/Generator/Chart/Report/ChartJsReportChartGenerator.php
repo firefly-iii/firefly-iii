@@ -81,6 +81,32 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
+    public function netWorth(Collection $entries) : array
+    {
+        $format = (string)trans('config.month_and_day');
+        $data   = [
+            'count'    => 1,
+            'labels'   => [],
+            'datasets' => [
+                [
+                    'label' => trans('firefly.net-worth'),
+                    'data'  => [],
+                ],
+            ],
+        ];
+        foreach ($entries as $entry) {
+            $data['labels'][] = trim($entry['date']->formatLocalized($format));
+            $data['datasets'][0]['data'][] = floatval($entry['net-worth']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
     public function yearInOut(Collection $entries): array
     {
         // language:

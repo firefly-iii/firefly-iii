@@ -10,6 +10,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
+use Steam;
 
 /**
  * Class ReportController
@@ -30,6 +31,53 @@ class ReportController extends Controller
         parent::__construct();
         // create chart generator:
         $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface');
+    }
+
+    /**
+     * This chart, by default, is shown on the multi-year and year report pages,
+     * which means that giving it a 2 week "period" should be enough granularity.
+     *
+     * @param ReportQueryInterface $query
+     * @param string               $reportType
+     * @param Carbon               $start
+     * @param Carbon               $end
+     * @param Collection           $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function netWorth(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        bcscale(2);
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('netWorth');
+        $cache->addProperty($start);
+        $cache->addProperty($reportType);
+        $cache->addProperty($accounts);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+        $ids     = $accounts->pluck('id')->toArray();
+        $current = clone $start;
+        $entries = new Collection;
+        while ($current < $end) {
+            $balances = Steam::balancesById($ids, $current);
+            $sum      = $this->array_sum($balances);
+            $entries->push(
+                [
+                    'date'      => clone $current,
+                    'net-worth' => $sum,
+                ]
+            );
+
+            $current->addDays(7);
+        }
+        $data = $this->generator->netWorth($entries);
+
+        //$cache->store($data);
+
+        return Response::json($data);
     }
 
 
@@ -249,5 +297,21 @@ class ReportController extends Controller
         $data = $this->generator->yearInOutSummarized($income, $expense, $count);
 
         return $data;
+    }
+
+    /**
+     * @param $array
+     *
+     * @return string
+     */
+    private function array_sum($array) : string
+    {
+        bcscale(2);
+        $sum = '0';
+        foreach ($array as $entry) {
+            $sum = bcadd($sum, $entry);
+        }
+
+        return $sum;
     }
 }
