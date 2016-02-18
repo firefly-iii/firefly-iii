@@ -35,10 +35,10 @@ class TransactionMatcher
     /**
      * Find matching transactions for the current set of triggers
      *
-     * @return array
+     * @return Collection
      *
      */
-    public function findMatchingTransactions()
+    public function findMatchingTransactions(): Collection
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
@@ -89,49 +89,62 @@ class TransactionMatcher
     /**
      * @return int
      */
-    public function getLimit()
+    public function getLimit(): int
     {
         return $this->limit;
     }
 
     /**
      * @param int $limit
+     *
+     * @return TransactionMatcher
      */
-    public function setLimit($limit)
+    public function setLimit($limit): TransactionMatcher
     {
         $this->limit = $limit;
+
+        return $this;
     }
 
     /**
      * @return int
      */
-    public function getRange()
+    public function getRange(): int
     {
         return $this->range;
     }
 
     /**
      * @param int $range
+     *
+     * @return TransactionMatcher
      */
-    public function setRange($range)
+    public function setRange($range): TransactionMatcher
     {
         $this->range = $range;
+
+        return $this;
+
     }
 
     /**
      * @return array
      */
-    public function getTriggers()
+    public function getTriggers(): array
     {
         return $this->triggers;
     }
 
     /**
      * @param array $triggers
+     *
+     * @return TransactionMatcher
      */
-    public function setTriggers($triggers)
+    public function setTriggers($triggers): TransactionMatcher
     {
         $this->triggers = $triggers;
+
+        return $this;
     }
 
 
