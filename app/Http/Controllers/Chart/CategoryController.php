@@ -375,6 +375,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Not the most elegant solution but it works.
+     *
      * @param Collection $entries
      *
      * @return Collection

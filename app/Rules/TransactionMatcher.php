@@ -74,10 +74,10 @@ class TransactionMatcher
             $processed += count($set);
 
             // Check for conditions to finish the loop
-            $reachedEndOfList           = (count($set) < $pagesize);
-            $foundEnoughTransactions    = (count($result) >= $this->limit);
-            $searchedEnoughTransactions = ($processed >= $this->range);
-        } while (!$reachedEndOfList && !$foundEnoughTransactions && !$searchedEnoughTransactions);
+            $reachedEndOfList = $set->count() < $pagesize;
+            $foundEnough      = $result->count() >= $this->limit;
+            $searchedEnough   = ($processed >= $this->range);
+        } while (!$reachedEndOfList && !$foundEnough && !$searchedEnough);
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list
