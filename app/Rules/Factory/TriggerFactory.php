@@ -24,10 +24,14 @@ use FireflyIII\Support\Domain;
  */
 class TriggerFactory
 {
-    protected static $triggerTypes = null;
+    protected static $triggerTypes = [];
 
     /**
-     * Returns the trigger for the given type and journal
+     * Returns the trigger for the given type and journal. This method returns the actual implementation
+     * (Rules/Triggers/[object]) for a given RuleTrigger (database object). If for example the database object
+     * contains trigger_type "description_is" with value "Rent" this method will return a corresponding
+     * DescriptionIs object preset to "Rent". Any transaction journal then fed to this object will
+     * be triggered if its description actually is "Rent".
      *
      * @param RuleTrigger $trigger
      *
@@ -45,11 +49,17 @@ class TriggerFactory
     }
 
     /**
+     * This method is equal to TriggerFactory::getTrigger but accepts a textual representation of the trigger type
+     * (for example "description_is"), the trigger value ("Rent") and whether or not Firefly III should stop processing
+     * other triggers (if present) after this trigger.
+     *
+     * This method is used when the RuleTriggers from TriggerFactory::getTrigger do not exist (yet).
+     *
      * @param string $triggerType
      * @param string $triggerValue
-     *
      * @param bool   $stopProcessing
      *
+     * @see TriggerFactory::getTrigger
      * @return AbstractTrigger
      * @throws FireflyException
      */
@@ -63,11 +73,13 @@ class TriggerFactory
     }
 
     /**
-     * Returns a map with triggertypes, mapped to the class representing that type
+     * Returns a map with trigger types, mapped to the class representing that type.
+     *
+     * @return array
      */
-    protected static function getTriggerTypes()
+    protected static function getTriggerTypes(): array
     {
-        if (!self::$triggerTypes) {
+        if (count(self::$triggerTypes) === 0) {
             self::$triggerTypes = Domain::getRuleTriggers();
         }
 
@@ -75,7 +87,9 @@ class TriggerFactory
     }
 
     /**
-     * Returns the class name to be used for triggers with the given name
+     * Returns the class name to be used for triggers with the given name. This is a lookup function
+     * that will match the given trigger type (ie. "from_account_ends") to the matching class name
+     * (FromAccountEnds) using the configuration (firefly.php).
      *
      * @param string $triggerType
      *

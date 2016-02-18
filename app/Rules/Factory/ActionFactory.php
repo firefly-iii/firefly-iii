@@ -23,10 +23,10 @@ use FireflyIII\Support\Domain;
  */
 class ActionFactory
 {
-    protected static $actionTypes = null;
+    protected static $actionTypes = [];
 
     /**
-     * This method returns the actual implementation (Rules/Action/[object]) for a given
+     * This method returns the actual implementation (Rules/Actions/[object]) for a given
      * RuleAction (database object). If for example the database object contains action_type "change_category"
      * with value "Groceries" this method will return a corresponding SetCategory object preset
      * to "Groceries". Any transaction journal then fed to this object will have its category changed.
@@ -70,10 +70,12 @@ class ActionFactory
 
     /**
      * Returns a map with actiontypes, mapped to the class representing that type
+     *
+     * @return array
      */
-    protected static function getActionTypes()
+    protected static function getActionTypes(): array
     {
-        if (!self::$actionTypes) {
+        if (count(self::$actionTypes) === 0) {
             self::$actionTypes = Domain::getRuleActions();
         }
 
