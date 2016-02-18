@@ -46,6 +46,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Create a new rule. It will be stored under the given $ruleGroup.
+     *
      * @param RuleGroup $ruleGroup
      *
      * @return View
@@ -88,6 +90,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Delete a given rule.
+     *
      * @param Rule $rule
      *
      * @return View
@@ -106,6 +110,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Actually destroy the given rule.
+     *
      * @param Rule                    $rule
      * @param RuleRepositoryInterface $repository
      *
@@ -266,6 +272,13 @@ class RuleController extends Controller
     }
 
     /**
+     * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
+     * using the URL parameters (GET), and are usually put there using a Javascript thing.
+     *
+     * This method will parse and validate those rules and create a "TransactionMatcher" which will attempt
+     * to find transaction journals matching the users input. A maximum range of transactions to try (range) and
+     * a maximum number of transactions to return (limit) are set as well.
+     *
      * @param TestRuleFormRequest $request
      *
      * @return \Illuminate\View\View
@@ -274,7 +287,6 @@ class RuleController extends Controller
     {
         // build trigger array from response
         $triggers = $this->getValidTriggerList($request);
-
 
         if (count($triggers) == 0) {
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
