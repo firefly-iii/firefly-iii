@@ -44,6 +44,7 @@ return [
     'flash_error'                               => 'Fout!',
     'flash_info_multiple'                       => 'Er is één melding|Er zijn :count meldingen',
     'flash_error_multiple'                      => 'Er is één fout|Er zijn :count fouten',
+    'net_worth'                                 => 'Kapitaal',
 
 
     // export data:
