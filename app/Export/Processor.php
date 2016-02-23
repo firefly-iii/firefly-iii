@@ -88,7 +88,7 @@ class Processor
     public function collectJournals()
     {
         $args             = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
-        $journalCollector = app('FireflyIII\Export\JournalCollector', $args);
+        $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
         $this->journals   = $journalCollector->collect();
         Log::debug(
             'Collected ' .

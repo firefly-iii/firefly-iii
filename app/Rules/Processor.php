@@ -141,6 +141,14 @@ final class Processor
     }
 
     /**
+     * 
+     * @return \FireflyIII\Models\Rule
+     */
+    public function getRule() {
+        return $this->rule;    
+    }
+    
+    /**
      * @return bool
      */
     private function actions()
