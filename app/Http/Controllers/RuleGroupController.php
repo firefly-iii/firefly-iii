@@ -183,8 +183,9 @@ class RuleGroupController extends Controller
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');
         $today           = Carbon::create()->format('Y-m-d');
+        $subTitle        = (string)trans('firefly.execute_on_existing_transactions');
 
-        return view('rules.rule-group.select-transactions', compact('checkedAccounts', 'accountList', 'first', 'today', 'ruleGroup'));
+        return view('rules.rule-group.select-transactions', compact('checkedAccounts', 'accountList', 'first', 'today', 'ruleGroup', 'subTitle'));
     }
 
     /**
