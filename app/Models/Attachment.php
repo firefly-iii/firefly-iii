@@ -37,6 +37,22 @@ class Attachment extends Model
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
 
     /**
+     * @param Attachment $value
+     *
+     * @return Attachment
+     */
+    public static function routeBinder(Attachment $value)
+    {
+        if (Auth::check()) {
+
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    /**
      * Get all of the owning imageable models.
      */
     public function attachable()
@@ -45,14 +61,30 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Returns the expected filename for this attachment.
+     *
+     * @return string
      */
-    public function user()
+    public function fileName(): string
     {
-        return $this->belongsTo('FireflyIII\User');
+        return sprintf('at-%s.data', strval($this->id));
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
+     * @return null|string
+     */
+    public function getDescriptionAttribute($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Crypt::decrypt($value);
+    }
 
     /**
      * @codeCoverageIgnore
@@ -68,14 +100,6 @@ class Attachment extends Model
         }
 
         return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param string $value
-     */
-    public function setFilenameAttribute($value)
-    {
-        $this->attributes['filename'] = Crypt::encrypt($value);
     }
 
     /**
@@ -95,11 +119,19 @@ class Attachment extends Model
     }
 
     /**
-     * @param string $value
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
+     * @return null|string
      */
-    public function setMimeAttribute($value)
+    public function getNotesAttribute($value)
     {
-        $this->attributes['mime'] = Crypt::encrypt($value);
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Crypt::decrypt($value);
     }
 
     /**
@@ -121,49 +153,25 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setTitleAttribute($value)
-    {
-        $this->attributes['title'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return null|string
-     */
-    public function getDescriptionAttribute($value)
-    {
-        if (is_null($value)) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param string $value
-     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = Crypt::encrypt($value);
     }
 
     /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return null|string
+     * @param string $value
      */
-    public function getNotesAttribute($value)
+    public function setFilenameAttribute($value)
     {
-        if (is_null($value)) {
-            return null;
-        }
+        $this->attributes['filename'] = Crypt::encrypt($value);
+    }
 
-        return Crypt::decrypt($value);
+    /**
+     * @param string $value
+     */
+    public function setMimeAttribute($value)
+    {
+        $this->attributes['mime'] = Crypt::encrypt($value);
     }
 
     /**
@@ -175,19 +183,20 @@ class Attachment extends Model
     }
 
     /**
-     * @param Attachment $value
-     *
-     * @return Attachment
+     * @param string $value
      */
-    public static function routeBinder(Attachment $value)
+    public function setTitleAttribute($value)
     {
-        if (Auth::check()) {
+        $this->attributes['title'] = Crypt::encrypt($value);
+    }
 
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
     }
 
 }
