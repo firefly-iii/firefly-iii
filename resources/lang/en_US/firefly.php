@@ -543,6 +543,7 @@ return [
 
     // reports:
     'report_default'                         => 'Default financial report for :start until :end',
+    'report_audit'                           => 'Transaction history overview for :start until :end',
     'quick_link_reports'                     => 'Quick links',
     'quick_link_default_report'              => 'Default financial report',
     'report_this_month_quick'                => 'Current month, all accounts',
@@ -585,6 +586,7 @@ return [
     'categories_spent_in_year'               => 'Categories (by spendings)',
     'report_type'                            => 'Report type',
     'report_type_default'                    => 'Default financial report',
+    'report_type_audit'                      => 'Transaction history overview (audit)',
     'report_included_accounts'               => 'Included accounts',
     'report_date_range'                      => 'Date range',
     'report_include_help'                    => 'In all cases, transfers to shared accounts count as expenses, and transfers from shared accounts count as income.',

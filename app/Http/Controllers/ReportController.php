@@ -96,6 +96,7 @@ class ReportController extends Controller
 
         switch ($reportType) {
             default:
+                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
             case 'default':
 
                 View::share(
@@ -119,6 +120,21 @@ class ReportController extends Controller
                 }
 
                 return $this->defaultMonth($reportType, $start, $end, $accounts);
+            case 'audit':
+
+                View::share(
+                    'subTitle', trans(
+                                  'firefly.report_audit',
+                                  [
+                                      'start' => $start->formatLocalized($this->monthFormat),
+                                      'end'   => $end->formatLocalized($this->monthFormat),
+                                  ]
+                              )
+                );
+                View::share('subTitleIcon', 'fa-calendar');
+
+                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
+                break;
         }
 
 
