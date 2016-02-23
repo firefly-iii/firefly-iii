@@ -42,8 +42,8 @@ class ExportFormRequest extends Request
         $formats = join(',', array_keys(config('firefly.export_formats')));
 
         return [
-            'start_date'          => 'required|date|after:' . $first,
-            'end_date'            => 'required|date|before:' . $today,
+            'export_start_range'  => 'required|date|after:' . $first,
+            'export_end_range'    => 'required|date|before:' . $today,
             'accounts'            => 'required',
             'job'                 => 'required|belongsToUser:export_jobs,key',
             'accounts.*'          => 'required|exists:accounts,id|belongsToUser:accounts',

@@ -119,8 +119,8 @@ class ExportController extends Controller
         $job      = $jobs->findByKey($request->get('job'));
         $settings = [
             'accounts'           => $repository->get($request->get('accounts')),
-            'startDate'          => new Carbon($request->get('start_date')),
-            'endDate'            => new Carbon($request->get('end_date')),
+            'startDate'          => new Carbon($request->get('export_start_range')),
+            'endDate'            => new Carbon($request->get('export_end_range')),
             'exportFormat'       => $request->get('exportFormat'),
             'includeAttachments' => intval($request->get('include_attachments')) === 1,
             'includeConfig'      => intval($request->get('include_config')) === 1,
