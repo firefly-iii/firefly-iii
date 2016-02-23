@@ -474,6 +474,13 @@ Breadcrumbs::register(
 }
 );
 
+Breadcrumbs::register(
+    'rules.rule-group.select_transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]), route('rules.rule-group.select_transactions', [$ruleGroup]));
+}
+);
+
 
 /**
  * SEARCH
