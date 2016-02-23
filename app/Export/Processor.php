@@ -12,12 +12,12 @@ namespace FireflyIII\Export;
 
 use Auth;
 use Config;
-use ErrorException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 use ZipArchive;
 
 /**
@@ -130,33 +130,30 @@ class Processor
     public function createZipFile()
     {
         $zip      = new ZipArchive;
-        $filename = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '.zip';
-        Log::debug('Will create zip file at ' . $filename);
+        $file     = $this->job->key . '.zip';
+        $fullPath = storage_path('export') . '/' . $file;
+        Log::debug('Will create zip file at ' . $fullPath);
 
-        if ($zip->open($filename, ZipArchive::CREATE) !== true) {
+        if ($zip->open($fullPath, ZipArchive::CREATE) !== true) {
             throw new FireflyException('Cannot store zip file.');
         }
         // for each file in the collection, add it to the zip file.
-        $search = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-';
-        /** @var string $file */
-        foreach ($this->getFiles() as $file) {
-            Log::debug('Will add "' . $file . '" to zip file.');
-            $zipName = str_replace($search, '', $file);
-            $result  = $zip->addFile($file, $zipName);
+        $disk = Storage::disk('export');
+        foreach ($this->getFiles() as $entry) {
+            // is part of this job?
+            $zipFileName = str_replace($this->job->key . '-', '', $entry);
+            $result      = $zip->addFromString($zipFileName, $disk->get($entry));
             if (!$result) {
-                Log::error('Could not add "' . $file . '" into zip file as "' . $zipName . '".');
+                Log::error('Could not add "' . $entry . '" into zip file as "' . $zipFileName . '".');
             }
         }
+
         $zip->close();
 
         // delete the files:
         foreach ($this->getFiles() as $file) {
             Log::debug('Will now delete file "' . $file . '".');
-            try {
-                unlink($file);
-            } catch (ErrorException $e) {
-                Log::error('Cannot unlink file "' . $file . '" because: ' . $e->getMessage());
-            }
+            $disk->delete($file);
         }
         Log::debug('Done!');
     }
