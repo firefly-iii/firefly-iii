@@ -217,9 +217,10 @@ class CsvController extends Controller
         }
 
         // process given roles and mapping:
-        $inputMap = Input::get('map') ?? [];
-        $roles    = $this->wizard->processSelectedRoles(Input::get('role'));
-        $maps     = $this->wizard->processSelectedMapping($roles, $inputMap);
+        $inputMap   = Input::get('map') ?? [];
+        $inputRoles = Input::get('role') ?? [];
+        $roles      = $this->wizard->processSelectedRoles($inputRoles);
+        $maps       = $this->wizard->processSelectedMapping($roles, $inputMap);
 
         Session::put('csv-map', $maps);
         Session::put('csv-roles', $roles);
@@ -312,7 +313,8 @@ class CsvController extends Controller
         }
 
         Log::debug('Created importer');
-        $importer = new Importer;
+        /** @var Importer $importer */
+        $importer = app('FireflyIII\Helpers\Csv\Importer');
         $importer->setData($this->data);
         $importer->run();
         Log::debug('Done importing!');

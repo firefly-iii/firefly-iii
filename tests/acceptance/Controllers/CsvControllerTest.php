@@ -22,8 +22,21 @@ class CsvControllerTest extends TestCase
     {
         $this->be($this->user());
 
-        // create session data:
-        $this->session($this->getSessionData());
+        // mock wizard
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account', 'csv-specifix', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
+
+        // mock Data and Reader
+        $reader = $this->mock('League\Csv\Reader');
+        $data   = $this->mock('FireflyIII\Helpers\Csv\Data');
+        $data->shouldReceive('getReader')->times(2)->andReturn($reader);
+        $reader->shouldReceive('fetchOne')->withNoArgs()->once()->andReturn([1, 2, 3, 4]);
+        $reader->shouldReceive('fetchOne')->with(1)->once()->andReturn([1, 2, 3, 4]);
+
+        $data->shouldReceive('getRoles')->once()->andReturn([]);
+        $data->shouldReceive('getMap')->once()->andReturn([]);
+        $data->shouldReceive('hasHeaders')->once()->andReturn([]);
 
         $this->call('GET', '/csv/column_roles');
 
@@ -36,7 +49,11 @@ class CsvControllerTest extends TestCase
     public function testDownloadConfig()
     {
         $this->be($this->user());
-        $this->session($this->getSessionData());
+
+        $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
+
         $this->call('GET', '/csv/download-config');
         $this->assertResponseStatus(200);
     }
@@ -47,7 +64,11 @@ class CsvControllerTest extends TestCase
     public function testDownloadConfigPage()
     {
         $this->be($this->user());
-        $this->session($this->getSessionData());
+
+        $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
+
         $this->call('GET', '/csv/download');
         $this->assertResponseStatus(200);
     }
@@ -69,25 +90,15 @@ class CsvControllerTest extends TestCase
     public function testInitialParse()
     {
         $this->be($this->user());
-        // post data:
-        $postData = [
-            'role' => [
-                0 => 'account-iban',
-                1 => 'opposing-iban',
-                2 => 'description',
-                3 => 'date-transaction',
-                4 => 'amount',
-                5 => 'category-name',
-                6 => 'budget-name',
-            ],
-            'map'  => [0 => 1, 1 => 1],
-        ];
 
-        // create session data:
-        $this->session($this->getSessionData());
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
 
+        $wizard->shouldReceive('processSelectedRoles')->once()->with([])->andReturn([1, 2, 3]);
+        $wizard->shouldReceive('processSelectedMapping')->once()->with([1, 2, 3], [])->andReturn([1, 2, 3]);
 
-        $this->call('POST', '/csv/initial_parse', $postData);
+        $this->call('POST', '/csv/initial_parse');
         // should be redirect
         $this->assertResponseStatus(302);
 
@@ -101,25 +112,15 @@ class CsvControllerTest extends TestCase
     public function testInitialParseNoMap()
     {
         $this->be($this->user());
-        // post data:
-        $postData = [
-            'role'   => [
-                0 => 'account-iban',
-                1 => 'opposing-iban',
-                2 => 'description',
-                3 => 'date-transaction',
-                4 => 'amount',
-                5 => 'category-name',
-                6 => 'budget-name',
-            ],
-            'map'    => [],
-        ];
 
-        // create session data:
-        $this->session($this->getSessionData());
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
 
+        $wizard->shouldReceive('processSelectedRoles')->once()->with([])->andReturn([1, 2, 3]);
+        $wizard->shouldReceive('processSelectedMapping')->once()->with([1, 2, 3], [])->andReturn([]);
 
-        $this->call('POST', '/csv/initial_parse', $postData);
+        $this->call('POST', '/csv/initial_parse');
         // should be redirect
         $this->assertResponseStatus(302);
 
@@ -134,7 +135,23 @@ class CsvControllerTest extends TestCase
     {
         $this->be($this->user());
 
-        $this->session($this->getSessionData());
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
+
+        $wizard->shouldReceive('showOptions')->once()->with([])->andReturn([]);
+
+        // mock Data and Reader
+        $reader = $this->mock('League\Csv\Reader');
+        $data   = $this->mock('FireflyIII\Helpers\Csv\Data');
+        $data->shouldReceive('getReader')->once()->andReturn($reader);
+        $data->shouldReceive('getMap')->times(3)->andReturn([]);
+        $data->shouldReceive('hasHeaders')->once()->andReturn(true);
+
+        $wizard->shouldReceive('getMappableValues')->with($reader, [], true)->andReturn([]);
+
+        $data->shouldReceive('getMapped')->once()->andReturn([]);
+
 
         $this->call('GET', '/csv/map');
         $this->assertResponseStatus(200);
@@ -147,10 +164,29 @@ class CsvControllerTest extends TestCase
     public function testProcess()
     {
         $this->be($this->user());
-        $this->session($this->getSessionData());
+        //$this->session($this->getSessionData());
+
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
+
+        // mock
+        $data = $this->mock('FireflyIII\Helpers\Csv\Data');
+
+        // mock
+        $importer = $this->mock('FireflyIII\Helpers\Csv\Importer');
+        $importer->shouldReceive('setData')->once()->with($data);
+        $importer->shouldReceive('run')->once()->withNoArgs();
+
+        $importer->shouldReceive('getRows')->once()->withNoArgs();
+        $importer->shouldReceive('getErrors')->once()->withNoArgs();
+        $importer->shouldReceive('getImported')->once()->withNoArgs();
+        $importer->shouldReceive('getJournals')->once()->withNoArgs();
+
         $this->call('GET', '/csv/process');
         $this->assertResponseStatus(200);
     }
+
 
     /**
      * @covers FireflyIII\Http\Controllers\CsvController::saveMapping
@@ -158,25 +194,12 @@ class CsvControllerTest extends TestCase
     public function testSaveMapping()
     {
         $this->be($this->user());
-        $this->session($this->getSessionData());
-        $postData = [
-            'mapping'
-                     => [0 => ['NL11XOLA6707795988' => '1',],
-                         1 => ['NL10TAPT8906262744' => '0', 'NL93UPSZ1261542703' => '0', 'NL86IHAL3264575116' => '0', 'NL63BKBO9993148806' => '0',
-                               'NL22EZVA6611573534' => '0', 'NL40KZVR5107424627' => '0', 'NL29RHEE6437366575' => '0', 'NL63IEPJ7437420074' => '0',
-                               'NL62HQWJ8837203470' => '0', 'NL89FPEA1494900858' => '0', 'NL76MDMU3222445567' => '0', 'NL07TDQA3309954056' => '0',
-                               'NL35MKIY9736938778' => '0', 'NL56DNGY5455310496' => '0', 'NL17LKFR7594179781' => '0', 'NL76UJQI9524250446' => '0',
-                               'NL45YTPP6157249080' => '0', 'NL46TFVH5548690248' => '0', 'NL79XZWN0846248670' => '0', 'NL52MKIO8325583045' => '0',
-                               'NL47YVJU4419567422' => '0', 'NL04TNIP4218080631' => '0', 'NL68SOAC3516744723' => '0', 'NL53YVTS7223912863' => '0',
-                               'NL40QRBS9553175317' => '0', 'NL54TZNZ2922111989' => '0', 'NL04BAGX3284775110' => '0', 'NL49LULH7261231215' => '0',
-                               'NL11YHMI8046080217' => '0', 'NL89BXNF2470379032' => '0', 'NL74SHGG7300113478' => '0', 'NL48ZPLO1718215436' => '0',
-                               'NL13BJMO5341591615' => '0', 'NL59PKVU0116767154' => '0', 'NL72BQRL1220175315' => '0', 'NL53QHDG0329036955' => '0',
-                               'NL48BLDJ9721843563' => '0', 'NL48BHXI9733658006' => '0', 'NL33VPSU8067103542' => '0', 'NL62UDLY8957139303' => '0',
-                               'NL28EDMD2653501341' => '0', 'NL92QMZD6854625548' => '0', 'NL37VSLJ0853659915' => '0', 'NL95NQHS4363870109' => '0',
-                               'NL81LEJP9477634344' => '0', 'NL14JYVJ1041891180' => '0', 'NL57SPBS0788124528' => '0',
-                               'NL96DZCO4665940223' => '2',],],];
 
-        $this->call('POST', '/csv/save_mapping', $postData);
+        $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('sessionHasValues')->once()->with($fields)->andReturn(true);
+
+        $this->call('POST', '/csv/save_mapping', ['mapping' => []]);
 
         $this->assertResponseStatus(302);
         $this->assertRedirectedToRoute('csv.download-config-page');
@@ -190,63 +213,27 @@ class CsvControllerTest extends TestCase
     {
         $this->be($this->user());
 
-        $file = new UploadedFile(storage_path('build/test-upload.csv'), 'test-file.csv', 'text/plain', 446);
-        $args = [
-            'date_format'        => 'Ymd',
-            'csv_import_account' => 1,
-        ];
+        $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');
+        $wizard->shouldReceive('storeCsvFile')->andReturn('');
 
-        $this->call('POST', '/csv/upload', $args, [], ['csv' => $file]);
+
+        // mock Data and Reader
+        $data = $this->mock('FireflyIII\Helpers\Csv\Data');
+        $data->shouldReceive('setCsvFileLocation')->once()->with('');
+        $data->shouldReceive('setDateFormat')->once()->with('Ymd');
+        $data->shouldReceive('setHasHeaders')->once()->with('');
+        $data->shouldReceive('setMap')->once()->with([]);
+        $data->shouldReceive('setMapped')->once()->with([]);
+        $data->shouldReceive('setRoles')->once()->with([]);
+        $data->shouldReceive('setSpecifix')->once()->with([]);
+        $data->shouldReceive('setImportAccount')->once()->with(0);
+        $data->shouldReceive('setDelimiter')->once()->with(',');
+
+
+        $file = new UploadedFile(storage_path('build/test-upload.csv'), 'test-file.csv', 'text/plain', 446);
+        $this->call('POST', '/csv/upload', ['date_format' => 'Ymd'], [], ['csv' => $file]);
 
         // csv data set:
-        //$this->assertSessionHas('csv-file', 'abc');
-        $this->assertSessionHas('csv-date-format', 'Ymd');
-        $this->assertSessionHas('csv-has-headers', false);
-        $this->assertSessionHas('csv-map', []);
-        $this->assertSessionHas('csv-mapped', []);
-        $this->assertSessionHas('csv-roles', []);
-        $this->assertSessionHas('csv-specifix', []);
-        $this->assertSessionHas('csv-import-account', 1);
-        $this->assertSessionHas('csv-delimiter', ',');
-
         $this->assertResponseStatus(302);
-    }
-
-    /**
-     * @return string
-     */
-    protected function createUploadedFile()
-    {
-        $original = storage_path('build/test-upload.csv');
-        $time     = '12345';
-        $fileName = 'csv-upload-' . $this->user()->id . '-' . $time . '.csv.encrypted';
-        $fullPath = storage_path('build') . DIRECTORY_SEPARATOR . $fileName;
-
-        if (!file_exists($fullPath)) {
-            $content          = file_get_contents($original);
-            $contentEncrypted = Crypt::encrypt($content);
-            file_put_contents($fullPath, $contentEncrypted);
-        }
-
-        return $fullPath;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSessionData()
-    {
-        return [
-            'csv-file'           => $this->createUploadedFile(),
-            'csv-date-format'    => 'Ymd',
-            'csv-has-headers'    => false,
-            'csv-import-account' => 1,
-            'csv-delimiter'      => ',',
-            'csv-specifix'       => ['Dummy'],
-            'csv-roles'          => [0 => 'account-iban', 1 => 'opposing-iban', 2 => 'description', 3 => 'date-transaction', 4 => 'amount',
-                                     5 => 'category-name', 6 => 'budget-name',],
-            'csv-map'            => [0 => 'account-iban', 1 => 'opposing-iban',],
-            'csv-mapped'         => [0 => ['NL11XOLA6707795988' => '1',], 1 => ['NL96DZCO4665940223' => '2',]],
-        ];
     }
 }
