@@ -11,6 +11,8 @@ use League\Csv\Reader;
 use Log;
 use ReflectionException;
 use Session;
+use SplFileObject;
+use Storage;
 
 /**
  * Class Wizard
@@ -159,12 +161,13 @@ class Wizard implements WizardInterface
     {
         $time             = str_replace(' ', '-', microtime());
         $fileName         = 'csv-upload-' . Auth::user()->id . '-' . $time . '.csv.encrypted';
-        $fullPath         = storage_path('upload') . DIRECTORY_SEPARATOR . $fileName;
-        $content          = file_get_contents($path);
+        $disk             = Storage::disk('upload');
+        $file             = new SplFileObject($path, 'r');
+        $content          = $file->fread($file->getSize());
         $contentEncrypted = Crypt::encrypt($content);
-        file_put_contents($fullPath, $contentEncrypted);
+        $disk->put($fileName, $contentEncrypted);
 
-        return $fullPath;
+        return $fileName;
 
 
     }
