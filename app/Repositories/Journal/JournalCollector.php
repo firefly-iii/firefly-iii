@@ -8,7 +8,7 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Export;
+namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
 use FireflyIII\User;
