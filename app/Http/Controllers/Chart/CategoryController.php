@@ -7,6 +7,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
@@ -153,7 +154,7 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(CRI $repository)
+    public function frontpage(CRI $repository, ARI $accountRepository)
     {
 
         $start = session('start', Carbon::now()->startOfMonth());
@@ -170,8 +171,9 @@ class CategoryController extends Controller
         }
 
         // get data for categories (and "no category"):
-        $set     = $repository->spentForAccountsPerMonth(new Collection, $start, $end);
-        $outside = $repository->sumSpentNoCategory(new Collection, $start, $end);
+        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $set      = $repository->spentForAccountsPerMonth($accounts, $start, $end);
+        $outside  = $repository->sumSpentNoCategory($accounts, $start, $end);
 
         // this is a "fake" entry for the "no category" entry.
         $entry        = new stdClass();

@@ -14,6 +14,7 @@ use FireflyIII\Export\Entry;
 use FireflyIII\Models\ExportJob;
 use League\Csv\Writer;
 use SplFileObject;
+use Storage;
 
 /**
  * Class CsvExporter
@@ -25,9 +26,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     /** @var  string */
     private $fileName;
 
-    /** @var  resource */
-    private $handler;
-
     /**
      * CsvExporter constructor.
      *
@@ -36,6 +34,7 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     public function __construct(ExportJob $job)
     {
         parent::__construct($job);
+
     }
 
     /**
@@ -54,9 +53,11 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         // create temporary file:
         $this->tempFile();
 
+        // necessary for CSV writer:
+        $fullPath = storage_path('export') . DIRECTORY_SEPARATOR . $this->fileName;
+
         // create CSV writer:
-        $writer = Writer::createFromPath(new SplFileObject($this->fileName, 'a+'), 'w');
-        //the $writer object open mode will be 'w'!!
+        $writer = Writer::createFromPath(new SplFileObject($fullPath, 'a+'), 'w');
 
         // all rows:
         $rows = [];
@@ -76,8 +77,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
     private function tempFile()
     {
-        $fileName       = $this->job->key . '-records.csv';
-        $this->fileName = storage_path('export') . DIRECTORY_SEPARATOR . $fileName;
-        $this->handler  = fopen($this->fileName, 'w');
+        $this->fileName = $this->job->key . '-records.csv';
     }
 }

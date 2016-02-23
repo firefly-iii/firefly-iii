@@ -44,6 +44,7 @@ return [
     'flash_error'                               => 'Error!',
     'flash_info_multiple'                       => 'There is one message|There are :count messages',
     'flash_error_multiple'                      => 'There is one error|There are :count errors',
+    'net_worth'                                 => 'Net worth',
 
 
     // export data:
@@ -57,6 +58,7 @@ return [
     'include_config_help'                       => 'For easy re-import into Firefly III',
     'include_old_uploads_help'                  => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
     'do_export'                                 => 'Export',
+    'export_status_never_started'               => 'The export has not started yet',
     'export_status_make_exporter'               => 'Creating exporter thing...',
     'export_status_collecting_journals'         => 'Collecting your transactions...',
     'export_status_collected_journals'          => 'Collected your transactions!',
@@ -114,23 +116,23 @@ return [
     'default_rule_action_prepend'               => 'Bought the world from ',
     'default_rule_action_set_category'          => 'Large expenses',
 
-    'trigger'                            => 'Trigger',
-    'trigger_value'                      => 'Trigger on value',
-    'stop_processing_other_triggers'     => 'Stop processing other triggers',
-    'add_rule_trigger'                   => 'Add new trigger',
-    'action'                             => 'Action',
-    'action_value'                       => 'Action value',
-    'stop_executing_other_actions'       => 'Stop executing other actions',
-    'add_rule_action'                    => 'Add new action',
-    'edit_rule'                          => 'Edit rule ":title"',
-    'delete_rule'                        => 'Delete rule ":title"',
-    'update_rule'                        => 'Update rule',
+    'trigger'                        => 'Trigger',
+    'trigger_value'                  => 'Trigger on value',
+    'stop_processing_other_triggers' => 'Stop processing other triggers',
+    'add_rule_trigger'               => 'Add new trigger',
+    'action'                         => 'Action',
+    'action_value'                   => 'Action value',
+    'stop_executing_other_actions'   => 'Stop executing other actions',
+    'add_rule_action'                => 'Add new action',
+    'edit_rule'                      => 'Edit rule ":title"',
+    'delete_rule'                    => 'Delete rule ":title"',
+    'update_rule'                    => 'Update rule',
 
     'test_rule_triggers'                 => 'See matching transactions',
     'warning_transaction_subset'         => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
     'warning_no_matching_transactions'   => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'          => 'No valid triggers provided.',
-    
+
     // actions and triggers
     'rule_trigger_user_action'           => 'User action is ":trigger_value"',
     'rule_trigger_from_account_starts'   => 'Source account starts with ":trigger_value"',

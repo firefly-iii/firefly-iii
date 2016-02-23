@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
 use Input;
 use Log;
+use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use TypeError;
 
@@ -30,6 +31,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     /** @var int */
     protected $maxUploadSize;
 
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    protected $uploadDisk;
+
     /**
      *
      */
@@ -39,6 +43,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->allowedMimes  = Config::get('firefly.allowedMimes');
         $this->errors        = new MessageBag;
         $this->messages      = new MessageBag;
+        $this->uploadDisk    = Storage::disk('upload');
     }
 
     /**
@@ -148,15 +153,13 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->uploaded = 0;
         $attachment->save();
 
-        $path      = $file->getRealPath(); // encrypt and move file to storage.
-        $content   = file_get_contents($path);
+        $fileObject = $file->openFile('r');
+        $fileObject->rewind();
+        $content   = $fileObject->fread($file->getSize());
         $encrypted = Crypt::encrypt($content);
 
         // store it:
-        $upload = $this->getAttachmentLocation($attachment);
-        if (is_writable(dirname($upload))) {
-            file_put_contents($upload, $encrypted);
-        }
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
 
         $attachment->uploaded = 1; // update attachment
         $attachment->save();

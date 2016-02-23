@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
+use Auth;
 use FireflyIII\Models\Attachment;
+use Illuminate\Support\Collection;
 
 /**
  * Class AttachmentRepository
@@ -26,7 +28,16 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $file = $helper->getAttachmentLocation($attachment);
         unlink($file);
         $attachment->delete();
+
         return true;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return Auth::user()->attachments()->get();
     }
 
     /**

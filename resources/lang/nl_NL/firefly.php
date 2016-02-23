@@ -44,6 +44,7 @@ return [
     'flash_error'                               => 'Fout!',
     'flash_info_multiple'                       => 'Er is één melding|Er zijn :count meldingen',
     'flash_error_multiple'                      => 'Er is één fout|Er zijn :count fouten',
+    'net_worth'                                 => 'Kapitaal',
 
 
     // export data:
@@ -74,7 +75,7 @@ return [
     'export_status_created_zip_file'            => 'Zipbestand gemaakt!',
     'export_status_finished'                    => 'Klaar met exportbestand! Hoera!',
     'export_data_please_wait'                   => 'Een ogenblik geduld...',
-    'attachment_explanation'                    => 'Het bestand \':attachment_name\' (#:attachment_id) werd oorspronkelijk geüpload naar :type (Engels) \':description\' (#:journal_id), met datum :datum en bedrag :bedrag.',
+    'attachment_explanation'                    => 'Het bestand \':attachment_name\' (#:attachment_id) werd oorspronkelijk geüpload naar (Engels) :type \':description\' (#:journal_id), met datum :date en bedrag :amount.',
 
     // rules
     'rules'                                     => 'Regels',

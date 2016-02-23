@@ -63,8 +63,8 @@ class Amount
 
     /**
      *
-     * @param TransactionJournal $journal
-     * @param bool               $coloured
+     * @param \FireflyIII\Models\TransactionJournal $journal
+     * @param bool                                  $coloured
      *
      * @return string
      */
