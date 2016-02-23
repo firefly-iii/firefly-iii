@@ -5,12 +5,15 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Jobs\Job;
 use FireflyIII\User;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Rules\Processor;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log;
 
-class ExecuteRuleGroupOnExistingTransaction extends Job implements ShouldQueue
+class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
@@ -50,8 +53,6 @@ class ExecuteRuleGroupOnExistingTransaction extends Job implements ShouldQueue
         
         // Execute the rules for each transaction
         foreach($journals as $journal) {
-            Log::debug('Processing rulegroup for journal ' . $journal->id . ' (' . $journal->description . ')');
-
             /** @var Processor $processor */
             foreach ($processors as $processor) {
                 $processor->handleTransactionJournal($journal);
