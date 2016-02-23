@@ -2,6 +2,7 @@
 
 use FireflyIII\Helpers\Help\HelpInterface;
 use Log;
+use Preferences;
 use Response;
 
 /**
@@ -46,7 +47,8 @@ class HelpController extends Controller
 
             return Response::json($content);
         }
-        $content = $help->getFromGithub($route);
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $content  = $help->getFromGithub($language, $route);
 
         $help->putInCache($route, $content);
 

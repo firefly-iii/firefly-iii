@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use Input;
 use Log;
 use Preferences;
-use Request as RequestFacade;
 use Session;
 use View;
 
@@ -127,16 +126,15 @@ class CsvController extends Controller
         $result = json_encode($data, JSON_PRETTY_PRINT);
         $name   = sprintf('"%s"', addcslashes('csv-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
-        RequestFacade::header('Content-disposition: attachment; filename=' . $name);
-        RequestFacade::header('Content-Type: application/json');
-        RequestFacade::header('Content-Description: File Transfer');
-        RequestFacade::header('Connection: Keep-Alive');
-        RequestFacade::header('Expires: 0');
-        RequestFacade::header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        RequestFacade::header('Pragma: public');
-        RequestFacade::header('Content-Length: ' . strlen($result));
-
-        return $result;
+        return response($result, 200)
+            ->header('Content-disposition', 'attachment; filename=' . $name)
+            ->header('Content-Type', 'application/json')
+            ->header('Content-Description', 'File Transfer')
+            ->header('Connection', 'Keep-Alive')
+            ->header('Expires', '0')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'public')
+            ->header('Content-Length', strlen($result));
     }
 
     /**
@@ -220,8 +218,8 @@ class CsvController extends Controller
 
         // process given roles and mapping:
         $inputMap = Input::get('map') ?? [];
-        $roles = $this->wizard->processSelectedRoles(Input::get('role'));
-        $maps  = $this->wizard->processSelectedMapping($roles, $inputMap);
+        $roles    = $this->wizard->processSelectedRoles(Input::get('role'));
+        $maps     = $this->wizard->processSelectedMapping($roles, $inputMap);
 
         Session::put('csv-map', $maps);
         Session::put('csv-roles', $roles);
@@ -398,7 +396,7 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
 
-        $fullPath                   = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
+        $path                       = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
         $settings                   = [];
         $settings['date-format']    = Input::get('date_format');
         $settings['has-headers']    = intval(Input::get('has_headers')) === 1;
@@ -424,7 +422,7 @@ class CsvController extends Controller
             }
         }
 
-        $this->data->setCsvFileLocation($fullPath);
+        $this->data->setCsvFileLocation($path);
         $this->data->setDateFormat($settings['date-format']);
         $this->data->setHasHeaders($settings['has-headers']);
         $this->data->setMap($settings['map']);

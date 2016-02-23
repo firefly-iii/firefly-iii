@@ -5,6 +5,7 @@ namespace FireflyIII\Helpers\Csv;
 use Crypt;
 use League\Csv\Reader;
 use Session;
+use Storage;
 
 /**
  * Class Data
@@ -253,7 +254,8 @@ class Data
     protected function loadCsvFile()
     {
         $file             = $this->getCsvFileLocation();
-        $content          = file_get_contents($file);
+        $disk             = Storage::disk('upload');
+        $content          = $disk->get($file);
         $contentDecrypted = Crypt::decrypt($content);
         $this->setCsvFileContent($contentDecrypted);
     }

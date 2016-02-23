@@ -15,34 +15,32 @@ interface HelpInterface
      *
      * @return string
      */
-    public function getFromCache(string $key);
+    public function getFromCache(string $key): string;
 
     /**
      * @param string $route
      *
      * @return array
      */
-    public function getFromGithub(string $route);
+    public function getFromGithub(string $language, string $route):array;
 
     /**
      * @param string $route
      *
      * @return bool
      */
-    public function hasRoute(string $route);
+    public function hasRoute(string $route): bool;
 
     /**
      * @param string $route
      *
      * @return bool
      */
-    public function inCache(string $route);
+    public function inCache(string $route): bool;
 
     /**
      * @param string $route
      * @param array  $content
-     *
-     * @return void
      */
     public function putInCache(string $route, array $content);
 }
