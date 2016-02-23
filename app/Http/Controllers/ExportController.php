@@ -19,6 +19,7 @@ use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
+use Log;
 use Preferences;
 use Response;
 use View;
@@ -51,7 +52,7 @@ class ExportController extends Controller
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
 
         $job->change('export_downloaded');
-
+        Log::debug('Will send user file "' . $file . '".');
 
         return response(file_get_contents($file), 200)
             ->header('Content-Description', 'File Transfer')
@@ -96,7 +97,7 @@ class ExportController extends Controller
         $checked       = array_keys($accountList);
         $formats       = array_keys(Config::get('firefly.export_formats'));
         $defaultFormat = Preferences::get('export_format', Config::get('firefly.default_export_format'))->data;
-        $first         = session('first')->format('Y-m-d');
+        $first         = Carbon::create()->subWeek()->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 
         return view('export.index', compact('job', 'checked', 'accountList', 'formats', 'defaultFormat', 'first', 'today'));

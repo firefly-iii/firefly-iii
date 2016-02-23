@@ -11,6 +11,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Export;
 
 use FireflyIII\Models\ExportJob;
+use Log;
 
 /**
  * Class ConfigurationFile
@@ -53,6 +54,8 @@ class ConfigurationFile
         }
 
         $file = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-configuration.json';
+        Log::debug('Created JSON config file.');
+        Log::debug('Will put "' . $file . '" in the ZIP file.');
         file_put_contents($file, json_encode($configuration, JSON_PRETTY_PRINT));
 
         return $file;

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Attachment;
 
 use FireflyIII\Models\Attachment;
+use Illuminate\Support\Collection;
 
 /**
  * Interface AttachmentRepositoryInterface
@@ -19,6 +20,11 @@ interface AttachmentRepositoryInterface
      * @return bool
      */
     public function destroy(Attachment $attachment): bool;
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection;
 
     /**
      * @param Attachment $attachment

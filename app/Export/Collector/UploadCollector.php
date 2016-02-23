@@ -15,6 +15,7 @@ use Crypt;
 use FireflyIII\Models\ExportJob;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
+
 /**
  * Class UploadCollector
  *
@@ -41,11 +42,14 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         // grab upload directory.
         $path  = storage_path('upload');
         $files = scandir($path);
+        Log::debug('Found ' . count($files) . ' in the upload directory.');
         // only allow old uploads for this user:
         $expected = 'csv-upload-' . Auth::user()->id . '-';
-        $len      = strlen($expected);
+        Log::debug('Searching for files that start with: "' . $expected . '".');
+        $len = strlen($expected);
         foreach ($files as $entry) {
             if (substr($entry, 0, $len) === $expected) {
+                Log::debug($entry . ' is part of this users original uploads.');
                 try {
                     // this is an original upload.
                     $parts          = explode('-', str_replace(['.csv.encrypted', $expected], '', $entry));
@@ -55,14 +59,17 @@ class UploadCollector extends BasicCollector implements CollectorInterface
                     $content        = Crypt::decrypt(file_get_contents($path . DIRECTORY_SEPARATOR . $entry));
                     $fullPath       = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-' . $newFileName;
 
+                    Log::debug('Will put "' . $fullPath . '" in the zip file.');
                     // write to file:
                     file_put_contents($fullPath, $content);
 
                     // add entry to set:
                     $this->getFiles()->push($fullPath);
                 } catch (DecryptException $e) {
-                    Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped.');
+                    Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped because ' . $e->getMessage());
                 }
+            } else {
+                Log::debug($entry . ' is not part of this users original uploads.');
             }
         }
     }

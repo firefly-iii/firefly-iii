@@ -11,11 +11,11 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Collector;
 
 use Amount;
-use Auth;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
 
@@ -29,6 +29,9 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     /** @var string */
     private $explanationString = '';
 
+    /** @var  AttachmentRepositoryInterface */
+    private $repository;
+
     /**
      * AttachmentCollector constructor.
      *
@@ -36,6 +39,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     public function __construct(ExportJob $job)
     {
+        $this->repository = app('FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface');
+
         parent::__construct($job);
     }
 
@@ -45,26 +50,27 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     public function run()
     {
         // grab all the users attachments:
-        $attachments = Auth::user()->attachments()->get();
+        $attachments = $this->repository->get();
 
         Log::debug('Found ' . $attachments->count() . ' attachments.');
 
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
             $originalFile = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
+            Log::debug('Original file is at "' . $originalFile . '".');
             if (file_exists($originalFile)) {
-                Log::debug('Stored 1 attachment');
                 try {
                     $decrypted = Crypt::decrypt(file_get_contents($originalFile));
                     $newFile   = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Attachment nr. ' . $attachment->id . ' - '
                                  . $attachment->filename;
                     file_put_contents($newFile, $decrypted);
                     $this->getFiles()->push($newFile);
+                    Log::debug('Stored file content in new file "' . $newFile . '", which will be in the final zip file.');
 
                     // explain:
                     $this->explain($attachment);
                 } catch (DecryptException $e) {
-                    Log::error('Catchable error: could not decrypt attachment #' . $attachment->id);
+                    Log::error('Catchable error: could not decrypt attachment #' . $attachment->id . ' because: ' . $e->getMessage());
                 }
 
             }
@@ -73,6 +79,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         // put the explanation string in a file and attach it as well.
         $explanationFile = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-Source of all your attachments explained.txt';
         file_put_contents($explanationFile, $this->explanationString);
+        Log::debug('Also put explanation file "' . $explanationFile . '" in the zip.');
         $this->getFiles()->push($explanationFile);
     }
 
