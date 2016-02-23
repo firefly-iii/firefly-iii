@@ -48,7 +48,7 @@ interface AccountRepositoryInterface
      *
      * @param array $ids
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function get(array $ids): Collection;
 
