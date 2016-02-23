@@ -12,6 +12,7 @@ namespace FireflyIII\Export;
 
 use Auth;
 use Config;
+use ErrorException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
@@ -141,14 +142,21 @@ class Processor
         foreach ($this->getFiles() as $file) {
             Log::debug('Will add "' . $file . '" to zip file.');
             $zipName = str_replace($search, '', $file);
-            $zip->addFile($file, $zipName);
+            $result  = $zip->addFile($file, $zipName);
+            if (!$result) {
+                Log::error('Could not add "' . $file . '" into zip file as "' . $zipName . '".');
+            }
         }
         $zip->close();
 
         // delete the files:
         foreach ($this->getFiles() as $file) {
             Log::debug('Will now delete file "' . $file . '".');
-            unlink($file);
+            try {
+                unlink($file);
+            } catch (ErrorException $e) {
+                Log::error('Cannot unlink file "' . $file . '" because: ' . $e->getMessage());
+            }
         }
         Log::debug('Done!');
     }
