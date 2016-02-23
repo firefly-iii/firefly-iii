@@ -131,6 +131,13 @@ return [
     'warning_transaction_subset'         => 'Je ziet hier maximaal :max_num_transactions transacties omdat je anders veel te lang moet wachten',
     'warning_no_matching_transactions'   => 'Niks gevonden in je laatste :num_transactions transacties.',
     'warning_no_valid_triggers'          => 'Geen geldige triggers gevonden.',
+
+    'execute_on_existing_transactions'          => 'Uitvoeren op bestaande transacties',
+    'execute_on_existing_transactions_intro'    => 'Wanneer een regel of groep is veranderd of toegevoegd, kun je hem hier uitvoeren voor bestaande transacties.',
+    'execute_on_existing_transactions_short'    => 'Bestaande transacties',
+    'executed_group_on_existing_transactions'   => 'Groep :title is uitgevoerd op bestaande transacties',    
+    'include_transactions_from_accounts'        => 'Gebruik transacties van deze rekeningen',
+    'execute'                                   => 'Uitvoeren',
     
     // actions and triggers
     'rule_trigger_user_action'           => 'Gebruikersactie is ":trigger_value"',

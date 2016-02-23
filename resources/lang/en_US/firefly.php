@@ -133,6 +133,13 @@ return [
     'warning_no_matching_transactions'   => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'          => 'No valid triggers provided.',
 
+    'execute_on_existing_transactions'          => 'Execute for existing transactions',
+    'execute_on_existing_transactions_intro'    => 'When a rule or group has been changed or added, you can execute it for existing transactions',
+    'execute_on_existing_transactions_short'    => 'Existing transactions',
+    'executed_group_on_existing_transactions'   => 'Executed group ":title" for existing transactions',
+    'include_transactions_from_accounts'        => 'Include transactions from these accounts',
+    'execute'                                   => 'Execute',
+    
     // actions and triggers
     'rule_trigger_user_action'           => 'User action is ":trigger_value"',
     'rule_trigger_from_account_starts'   => 'Source account starts with ":trigger_value"',
