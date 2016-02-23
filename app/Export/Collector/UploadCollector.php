@@ -15,6 +15,7 @@ use Crypt;
 use FireflyIII\Models\ExportJob;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
+use Storage;
 
 /**
  * Class UploadCollector
@@ -23,6 +24,12 @@ use Log;
  */
 class UploadCollector extends BasicCollector implements CollectorInterface
 {
+    /** @var string */
+    private $expected;
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    private $exportDisk;
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    private $uploadDisk;
 
     /**
      * AttachmentCollector constructor.
@@ -32,6 +39,11 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     public function __construct(ExportJob $job)
     {
         parent::__construct($job);
+
+        // make storage:
+        $this->uploadDisk = Storage::disk('upload');
+        $this->exportDisk = Storage::disk('export');
+        $this->expected   = 'csv-upload-' . Auth::user()->id . '-';
     }
 
     /**
@@ -40,37 +52,68 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     public function run()
     {
         // grab upload directory.
-        $path  = storage_path('upload');
-        $files = scandir($path);
-        Log::debug('Found ' . count($files) . ' in the upload directory.');
-        // only allow old uploads for this user:
-        $expected = 'csv-upload-' . Auth::user()->id . '-';
-        Log::debug('Searching for files that start with: "' . $expected . '".');
-        $len = strlen($expected);
+        $files = $this->uploadDisk->files();
+        Log::debug('Found ' . count($files) . ' files in the upload directory.');
+
         foreach ($files as $entry) {
-            if (substr($entry, 0, $len) === $expected) {
-                Log::debug($entry . ' is part of this users original uploads.');
-                try {
-                    // this is an original upload.
-                    $parts          = explode('-', str_replace(['.csv.encrypted', $expected], '', $entry));
-                    $originalUpload = intval($parts[1]);
-                    $date           = date('Y-m-d \a\t H-i-s', $originalUpload);
-                    $newFileName    = 'Old CSV import dated ' . $date . '.csv';
-                    $content        = Crypt::decrypt(file_get_contents($path . DIRECTORY_SEPARATOR . $entry));
-                    $fullPath       = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-' . $newFileName;
+            $this->processOldUpload($entry);
+        }
+    }
 
-                    Log::debug('Will put "' . $fullPath . '" in the zip file.');
-                    // write to file:
-                    file_put_contents($fullPath, $content);
+    /**
+     * @param string $entry
+     *
+     * @return string
+     */
+    private function getOriginalUploadDate(string $entry): string
+    {
+        // this is an original upload.
+        $parts          = explode('-', str_replace(['.csv.encrypted', $this->expected], '', $entry));
+        $originalUpload = intval($parts[1]);
+        $date           = date('Y-m-d \a\t H-i-s', $originalUpload);
 
-                    // add entry to set:
-                    $this->getFiles()->push($fullPath);
-                } catch (DecryptException $e) {
-                    Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped because ' . $e->getMessage());
-                }
-            } else {
-                Log::debug($entry . ' is not part of this users original uploads.');
+        return $date;
+    }
+
+    /**
+     * @param string $entry
+     *
+     * @return bool
+     */
+    private function isValidFile(string $entry): bool
+    {
+        $len = strlen($this->expected);
+        if (substr($entry, 0, $len) === $this->expected) {
+            Log::debug($entry . ' is part of this users original uploads.');
+
+            return true;
+        }
+        Log::debug($entry . ' is not part of this users original uploads.');
+
+        return false;
+    }
+
+    /**
+     * @param $entry
+     */
+    private function processOldUpload(string $entry)
+    {
+        $content = '';
+
+        if ($this->isValidFile($entry)) {
+            try {
+                $content = Crypt::decrypt($this->uploadDisk->get($entry));
+            } catch (DecryptException $e) {
+                Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped because ' . $e->getMessage());
             }
+        }
+        if (strlen($content) > 0) {
+            // continue with file:
+            $date = $this->getOriginalUploadDate($entry);
+            $file = $this->job->key . '-Old CSV import dated ' . $date . '.csv';
+            Log::debug('Will put "' . $file . '" in the zip file.');
+            $this->exportDisk->put($file, $content);
+            $this->getFiles()->push($file);
         }
     }
 }
