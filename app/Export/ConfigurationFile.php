@@ -12,6 +12,7 @@ namespace FireflyIII\Export;
 
 use FireflyIII\Models\ExportJob;
 use Log;
+use Storage;
 
 /**
  * Class ConfigurationFile
@@ -20,6 +21,8 @@ use Log;
  */
 class ConfigurationFile
 {
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    private $exportDisk;
     /** @var  ExportJob */
     private $job;
 
@@ -30,7 +33,8 @@ class ConfigurationFile
      */
     public function __construct(ExportJob $job)
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->exportDisk = Storage::disk('export');
     }
 
     /**
@@ -52,11 +56,10 @@ class ConfigurationFile
         foreach ($fields as $field) {
             $configuration['roles'][] = $types[$field];
         }
-
-        $file = storage_path('export') . DIRECTORY_SEPARATOR . $this->job->key . '-configuration.json';
+        $file = $this->job->key . '-configuration.json';
         Log::debug('Created JSON config file.');
         Log::debug('Will put "' . $file . '" in the ZIP file.');
-        file_put_contents($file, json_encode($configuration, JSON_PRETTY_PRINT));
+        $this->exportDisk->put($file, json_encode($configuration, JSON_PRETTY_PRINT));
 
         return $file;
     }
