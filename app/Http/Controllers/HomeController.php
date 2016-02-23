@@ -144,12 +144,46 @@ class HomeController extends Controller
      */
     public function routes()
     {
-        $ignore = [];
+        // these routes are not relevant for the help pages:
+        $ignore = [
+            'logout', 'register', 'bills.rescan', 'attachments.download', 'attachments.preview',
+            'budgets.income', 'csv.download-config', 'currency.default', 'export.status', 'export.download',
+            'json.', 'help.', 'piggy-banks.addMoney', 'piggy-banks.removeMoney', 'rules.rule.up', 'rules.rule.down',
+            'rules.rule-group.up', 'rules.rule-group.down', 'debugbar',
+        ];
         $routes = Route::getRoutes();
+        /** @var \Illuminate\Routing\Route $route */
         foreach ($routes as $route) {
-            var_dump($route);
-            exit;
+
+            $name    = $route->getName();
+            $methods = $route->getMethods();
+
+            if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
+                foreach (array_keys(Config::get('firefly.languages')) as $lang) {
+                    echo 'touch ' . $lang . '/' . $name . '.md<br>';
+                }
+
+            }
         }
+
+        return '<hr>';
     }
 
+
+    /**
+     * @param array  $array
+     * @param string $needle
+     *
+     * @return bool
+     */
+    private function startsWithAny(array $array, string $needle): bool
+    {
+        foreach ($array as $entry) {
+            if ((substr($needle, 0, strlen($entry)) === $entry)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
