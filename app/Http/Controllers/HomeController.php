@@ -8,6 +8,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
 use Preferences;
+use Route;
 use Session;
 use Steam;
 
@@ -29,6 +30,7 @@ class HomeController extends Controller
 
     public function dateRange()
     {
+
         $start = new Carbon(Input::get('start'));
         $end   = new Carbon(Input::get('end'));
 
@@ -42,6 +44,9 @@ class HomeController extends Controller
         Session::put('end', $end);
     }
 
+    /**
+     * @throws FireflyException
+     */
     public function displayError()
     {
         throw new FireflyException('A very simple test error.');
@@ -131,6 +136,20 @@ class HomeController extends Controller
         return view(
             'index', compact('count', 'showTour', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts')
         );
+    }
+
+    /**
+     * Display a list of named routes. Excludes some that cannot be "shown". This method
+     * is used to generate help files (down the road).
+     */
+    public function routes()
+    {
+        $ignore = [];
+        $routes = Route::getRoutes();
+        foreach ($routes as $route) {
+            var_dump($route);
+            exit;
+        }
     }
 
 }

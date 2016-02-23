@@ -40,6 +40,7 @@ Route::group(
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+    Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
     /**
      * Account Controller
      */
@@ -274,7 +275,7 @@ Route::group(
     Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
     Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
     Route::get('/rules/rules/test_triggers', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
-    
+
     // rules POST:
     Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
     Route::post('/rules/rules/action/reorder/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
