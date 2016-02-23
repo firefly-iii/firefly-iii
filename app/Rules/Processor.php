@@ -14,10 +14,10 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Rules\Factory\ActionFactory;
 use FireflyIII\Rules\Actions\ActionInterface;
-use FireflyIII\Rules\Triggers\AbstractTrigger;
+use FireflyIII\Rules\Factory\ActionFactory;
 use FireflyIII\Rules\Factory\TriggerFactory;
+use FireflyIII\Rules\Triggers\AbstractTrigger;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -113,6 +113,14 @@ final class Processor
         return $self;
     }
 
+    /**
+     *
+     * @return \FireflyIII\Models\Rule
+     */
+    public function getRule()
+    {
+        return $this->rule;
+    }
 
     /**
      * This method will scan the given transaction journal and check if it matches the triggers found in the Processor
@@ -140,14 +148,6 @@ final class Processor
 
     }
 
-    /**
-     * 
-     * @return \FireflyIII\Models\Rule
-     */
-    public function getRule() {
-        return $this->rule;    
-    }
-    
     /**
      * @return bool
      */
