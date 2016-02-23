@@ -21,7 +21,8 @@
     "league/commonmark": "~0.7",
     "rcrowe/twigbridge": "~0.9",
     "league/csv": "^7.1",
-    "laravelcollective/html": "^5.2"
+    "laravelcollective/html": "^5.2",
+    "rmccue/requests": "^1.6"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
