@@ -37,14 +37,14 @@ class SelectTransactionsRequest extends Request
     {
         $sessionFirst = clone session('first');
 
-        $first   = $sessionFirst->subDay()->format('Y-m-d');
-        $today   = Carbon::create()->addDay()->format('Y-m-d');
+        $first = $sessionFirst->subDay()->format('Y-m-d');
+        $today = Carbon::create()->addDay()->format('Y-m-d');
 
         return [
-            'start_date'          => 'required|date|after:' . $first,
-            'end_date'            => 'required|date|before:' . $today,
-            'accounts'            => 'required',
-            'accounts.*'          => 'required|exists:accounts,id|belongsToUser:accounts',
+            'start_date' => 'required|date|after:' . $first,
+            'end_date'   => 'required|date|before:' . $today,
+            'accounts'   => 'required',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];
     }
 }
