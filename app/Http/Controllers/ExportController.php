@@ -97,7 +97,7 @@ class ExportController extends Controller
         $checked       = array_keys($accountList);
         $formats       = array_keys(Config::get('firefly.export_formats'));
         $defaultFormat = Preferences::get('export_format', Config::get('firefly.default_export_format'))->data;
-        $first         = Carbon::create()->subWeek()->format('Y-m-d');
+        $first         = session('first')->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 
         return view('export.index', compact('job', 'checked', 'accountList', 'formats', 'defaultFormat', 'first', 'today'));

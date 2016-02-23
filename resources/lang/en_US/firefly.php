@@ -58,6 +58,7 @@ return [
     'include_config_help'                       => 'For easy re-import into Firefly III',
     'include_old_uploads_help'                  => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
     'do_export'                                 => 'Export',
+    'export_status_never_started'               => 'The export has not started yet',
     'export_status_make_exporter'               => 'Creating exporter thing...',
     'export_status_collecting_journals'         => 'Collecting your transactions...',
     'export_status_collected_journals'          => 'Collected your transactions!',
