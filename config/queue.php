@@ -45,7 +45,7 @@ return [
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host'   => 'localhost',
-            'queue'  => 'firefly',
+            'queue'  => 'default',
             'ttr'    => 60,
         ],
 
