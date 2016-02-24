@@ -72,6 +72,7 @@ class Handler extends ExceptionHandler
             $data = [
                 'class'        => get_class($exception),
                 'errorMessage' => $exception->getMessage(),
+                'time'         => date('r'),
                 'stackTrace'   => $exception->getTraceAsString(),
                 'file'         => $exception->getFile(),
                 'line'         => $exception->getLine(),
