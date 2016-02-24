@@ -263,7 +263,7 @@ class RuleController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('rules.rule.create.fromStore', true);
 
-            return redirect(route('rules.rule.create', [$request->input('what')]))->withInput();
+            return redirect(route('rules.rule.create', [$ruleGroup]))->withInput();
         }
 
         // redirect to previous URL.
