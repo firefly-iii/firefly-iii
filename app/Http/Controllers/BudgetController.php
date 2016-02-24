@@ -190,11 +190,11 @@ class BudgetController extends Controller
      */
     public function noBudget(BudgetRepositoryInterface $repository)
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $date */
-        $date     = session('start', new Carbon);
-        $start    = Navigation::startOfPeriod($date, $range);
-        $end      = Navigation::endOfPeriod($start, $range);
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end      = session('end', Carbon::now()->startOfMonth());
+
         $list     = $repository->getWithoutBudget($start, $end);
         $subTitle = trans(
             'firefly.without_budget_between',
