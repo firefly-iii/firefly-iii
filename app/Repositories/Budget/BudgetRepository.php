@@ -463,7 +463,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return string
      */
-    public function getWithoutBudgetSum(Carbon $start, Carbon $end)
+    public function getWithoutBudgetSum(Carbon $start, Carbon $end): string
     {
         $entry = Auth::user()
                      ->transactionjournals()
@@ -488,7 +488,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                      ->transactionTypes([TransactionType::WITHDRAWAL])
                      ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
         if (is_null($entry->journalAmount)) {
-            return '';
+            return '0';
         }
 
         return $entry->journalAmount;

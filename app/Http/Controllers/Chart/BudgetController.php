@@ -259,21 +259,24 @@ class BudgetController extends Controller
                 $currentEnd = clone $currentStart;
                 $currentEnd->endOfYear();
 
-                // save to array:
+                // basic information:
                 $year          = $currentStart->year;
-                $entry['name'] = $budget->name;
+                $entry['name'] = $budget->name ?? (string)trans('firefly.noBudget');
                 $spent         = 0;
-                $budgeted      = 0;
-                if (isset($set[$id]['entries'][$year])) {
-                    $spent = $set[$id]['entries'][$year] * -1;
+                // this might be a good moment to collect no budget stuff.
+                if (is_null($budget->id)) {
+                    // get without budget sum in range:
+                    $spent = $repository->getWithoutBudgetSum($currentStart, $currentEnd) * -1;
+                } else {
+                    if (isset($set[$id]['entries'][$year])) {
+                        $spent = $set[$id]['entries'][$year] * -1;
+                    }
                 }
 
-                if (isset($budgetedArray[$id][$year])) {
-                    $budgeted = round($budgetedArray[$id][$year], 2);
-                }
-
+                $budgeted                 = $budgetedArray[$id][$year] ?? '0';
                 $entry['spent'][$year]    = $spent;
-                $entry['budgeted'][$year] = $budgeted;
+                $entry['budgeted'][$year] = round($budgeted, 2);
+
 
                 // jump to next year.
                 $currentStart = clone $currentEnd;

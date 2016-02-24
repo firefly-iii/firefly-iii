@@ -171,9 +171,9 @@ interface BudgetRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return mixed
+     * @return string
      */
-    public function getWithoutBudgetSum(Carbon $start, Carbon $end);
+    public function getWithoutBudgetSum(Carbon $start, Carbon $end): string;
 
     /**
      * Returns an array with the following key:value pairs:
