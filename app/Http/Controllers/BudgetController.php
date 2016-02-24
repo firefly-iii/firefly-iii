@@ -193,7 +193,7 @@ class BudgetController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->startOfMonth());
+        $end      = session('end', Carbon::now()->endOfMonth());
 
         $list     = $repository->getWithoutBudget($start, $end);
         $subTitle = trans(
