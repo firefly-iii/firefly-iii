@@ -5,14 +5,12 @@ namespace FireflyIII\Exceptions;
 use Auth;
 use ErrorException;
 use Exception;
+use FireflyIII\Jobs\MailError;
+use FireflyIII\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Mail\Message;
-use Log;
-use Mail;
 use Request;
-use Swift_TransportException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -69,34 +67,20 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
 
-            // mail?
-            try {
-                $email = env('SITE_OWNER');
-                $user  = Auth::user();
-                $args  = [
-                    'errorMessage' => $exception->getMessage(),
-                    'stacktrace'   => $exception->getTraceAsString(),
-                    'file'         => $exception->getFile(),
-                    'line'         => $exception->getLine(),
-                    'code'         => $exception->getCode(),
-                    'loggedIn'     => !is_null($user),
-                    'user'         => $user,
-                    'ip'           => Request::ip(),
+            $user = Auth::check() ? Auth::user() : new User;
 
-                ];
+            $data = [
+                'class'        => get_class($exception),
+                'errorMessage' => $exception->getMessage(),
+                'stackTrace'   => $exception->getTraceAsString(),
+                'file'         => $exception->getFile(),
+                'line'         => $exception->getLine(),
+                'code'         => $exception->getCode(),
+            ];
 
-                Mail::send(
-                    ['emails.error-html', 'emails.error'], $args,
-                    function (Message $message) use ($email) {
-                        if ($email != 'mail@example.com') {
-                            $message->to($email, $email)->subject('Caught an error in Firely III.');
-                        }
-                    }
-                );
-            } catch (Swift_TransportException $e) {
-                // could also not mail! :o
-                Log::error($e->getMessage());
-            }
+            // create job that will mail.
+            $job = new MailError($user, env('SITE_OWNER'), Request::ip(), $data);
+            dispatch($job);
         }
 
         parent::report($exception);
