@@ -47,7 +47,7 @@ class AddTag implements ActionInterface
         // journal has this tag maybe?
         $tag = Tag::firstOrCreateEncrypted(['tag' => $this->action->action_value, 'user_id' => Auth::user()->id]);
 
-        $count = $journal->tags()->where('id', $tag->id)->count();
+        $count = $journal->tags()->where('tag_id', $tag->id)->count();
         if ($count == 0) {
             $journal->tags()->save($tag);
         }
