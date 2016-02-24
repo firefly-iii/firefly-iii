@@ -59,19 +59,11 @@ class MailError extends Job implements ShouldQueue
         if ($this->attempts() < 3) {
             // mail?
             try {
-                $email = env('SITE_OWNER');
-                $args  = [
-                    'class'        => $this->exception['class'],
-                    'errorMessage' => $this->exception['errorMessage'],
-                    'stacktrace'   => $this->exception['stackTrace'],
-                    'file'         => $this->exception['file'],
-                    'line'         => $this->exception['line'],
-                    'code'         => $this->exception['code'],
-                    'loggedIn'     => !is_null($this->user->id),
-                    'user'         => $this->user,
-                    'ip'           => $this->ip,
-
-                ];
+                $email            = env('SITE_OWNER');
+                $args             = $this->exception;
+                $args['loggedIn'] = !is_null($this->user->id);
+                $args['user']     = $this->user;
+                $args['ip']       = $this->ip;
 
                 Mail::send(
                     ['emails.error-html', 'emails.error'], $args,
