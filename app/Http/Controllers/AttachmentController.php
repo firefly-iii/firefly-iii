@@ -14,6 +14,7 @@ use Input;
 use Preferences;
 use Response;
 use Session;
+use Storage;
 use URL;
 use View;
 
@@ -79,14 +80,16 @@ class AttachmentController extends Controller
      */
     public function download(Attachment $attachment, AttachmentHelperInterface $helper)
     {
+        // create a disk.
+        $disk = Storage::disk('upload');
+        $file = $attachment->fileName();
 
-        $file = $helper->getAttachmentLocation($attachment);
-        if (file_exists($file)) {
+        if ($disk->exists($file)) {
 
             $quoted = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
 
-            return response(Crypt::decrypt(file_get_contents($file)), 200)
+            return response(Crypt::decrypt($disk->get($file)), 200)
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
                 ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -95,7 +98,7 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', $attachment->size);
+                ->header('Content-Length', $disk->size($file));
 
         }
         throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
