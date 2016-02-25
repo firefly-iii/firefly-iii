@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Processor;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ExportFormRequest;
@@ -22,6 +23,7 @@ use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
 use Log;
 use Preferences;
 use Response;
+use Storage;
 use View;
 
 /**
@@ -43,18 +45,27 @@ class ExportController extends Controller
 
     /**
      * @param ExportJob $job
+     *
+     * @return mixed
+     * @throws FireflyException
      */
     public function download(ExportJob $job)
     {
-        $file   = storage_path('export') . DIRECTORY_SEPARATOR . $job->key . '.zip';
+        $disk   = Storage::disk('export');
+        $file   = $job->key . '.zip';
         $date   = date('Y-m-d \a\t H-i-s');
         $name   = 'Export job on ' . $date . '.zip';
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
 
+        if (!$disk->exists($file)) {
+            throw new FireflyException('Against all expectations, zip file "' . $file . '" does not exist.');
+        }
+
+
         $job->change('export_downloaded');
         Log::debug('Will send user file "' . $file . '".');
 
-        return response(file_get_contents($file), 200)
+        return response($disk->get($file), 200)
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
             ->header('Content-Disposition', 'attachment; filename=' . $quoted)
