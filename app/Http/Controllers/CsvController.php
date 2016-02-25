@@ -417,7 +417,9 @@ class CsvController extends Controller
         $settings['roles']  = [];
 
         if ($request->hasFile('csv_config')) { // Process config file if present.
-            $data = file_get_contents($request->file('csv_config')->getRealPath());
+
+            $size = $request->file('csv_config')->getSize();
+            $data = $request->file('csv_config')->openFile()->fread($size);
             $json = json_decode($data, true);
             if (is_array($json)) {
                 $settings = array_merge($settings, $json);
