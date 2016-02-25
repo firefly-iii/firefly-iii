@@ -95,8 +95,12 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
 
             // description and opposing account will be the same.
             $this->data['opposing-account-name'] = $matches[4];
-            $this->data['description']           = $matches[4];
-
+            
+            if( $matches[1] == 'GEA' ) {
+                $this->data['description']           = 'GEA ' . $matches[4];
+            } else {
+                $this->data['description']           = $matches[4];
+            }
             return true;
         }
 
