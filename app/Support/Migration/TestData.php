@@ -30,6 +30,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
+use Storage;
 
 /**
  * Class TestData
@@ -136,8 +137,9 @@ class TestData
             ]
         );
         // echo crypted data to the file.
-        file_put_contents(storage_path('upload/at-' . $one->id . '.data'), $encrypted);
-        file_put_contents(storage_path('upload/at-' . $two->id . '.data'), $encrypted);
+        $disk = Storage::disk('upload');
+        $disk->put('at-' . $one->id . '.data', $encrypted);
+        $disk->put('at-' . $two->id . '.data', $encrypted);
 
         return $journal;
     }
