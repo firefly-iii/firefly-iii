@@ -161,6 +161,7 @@ class ReportController extends Controller
         $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
         $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
         $bills         = $this->helper->getBillReport($start, $end, $accounts);
+        $tags          = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = join(',', $accounts->pluck('id')->toArray());
@@ -170,7 +171,7 @@ class ReportController extends Controller
             'reports.default.month',
             compact(
                 'start', 'end', 'reportType',
-                'accountReport',
+                'accountReport', 'tags',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
                 'budgets', 'balance',
@@ -234,6 +235,7 @@ class ReportController extends Controller
         $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags          = $this->helper->tagReport($start, $end, $accounts);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
@@ -251,7 +253,7 @@ class ReportController extends Controller
             'reports.default.year',
             compact(
                 'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
-                'expenses', 'incomeTopLength', 'expenseTopLength'
+                'expenses', 'incomeTopLength', 'expenseTopLength','tags'
             )
         );
     }

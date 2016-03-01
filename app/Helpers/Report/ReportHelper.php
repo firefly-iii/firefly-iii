@@ -11,6 +11,7 @@ use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -215,6 +216,63 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $months;
+    }
+
+    /**
+     * Returns an array of tags and their comparitive size with amounts bla bla.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        bcscale(2);
+        $ids        = $accounts->pluck('id')->toArray();
+        $set        = Tag::
+        distinct()
+                         ->leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
+                         ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                         ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                         ->whereIn('transactions.account_id', $ids)->get(['tags.id', 'tags.tag', 'transactions.amount']);
+        $collection = [];
+        if ($set->count() === 0) {
+            return $collection;
+        }
+        foreach ($set as $entry) {
+            // less than zero? multiply to be above zero.
+            $amount = $entry->amount;
+            if (bccomp($amount, '0', 2) === -1) {
+                $amount = bcmul($amount, '-1');
+            }
+            $id = intval($entry->id);
+
+            if (!isset($collection[$id])) {
+                $collection[$id] = [
+                    'id'     => $id,
+                    'tag'    => $entry->tag,
+                    'amount' => $amount,
+                ];
+            } else {
+                $collection[$id]['amount'] = bcadd($collection[$id]['amount'], $amount);
+            }
+        }
+
+        // cleanup collection (match "fonts")
+        $max = strval(max(array_column($collection, 'amount')));
+        foreach ($collection as $id => $entry) {
+            $size = bcdiv($entry['amount'], $max, 4);
+            if (bccomp($size, '0.25') === -1) {
+                $size = '0.5';
+            }
+            $collection[$id]['fontsize'] = $size;
+        }
+
+        return $collection;
     }
 
     /**

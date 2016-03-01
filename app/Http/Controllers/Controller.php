@@ -23,6 +23,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /** @var  string */
+    protected $dateTimeFormat;
     /** @var string */
     protected $monthAndDayFormat;
     /** @var string */
@@ -43,6 +45,7 @@ class Controller extends BaseController
             $lang                    = $pref->data;
             $this->monthFormat       = (string)trans('config.month');
             $this->monthAndDayFormat = (string)trans('config.month_and_day');
+            $this->dateTimeFormat    = (string)trans('config.date_time');
 
             App::setLocale($lang);
             Carbon::setLocale(substr($lang, 0, 2));
@@ -61,6 +64,7 @@ class Controller extends BaseController
             ];
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
+            View::share('dateTimeFormat', $this->dateTimeFormat);
             View::share('language', $lang);
             View::share('localeconv', $localeconv);
         }
