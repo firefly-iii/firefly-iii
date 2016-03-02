@@ -3,7 +3,6 @@
 use Auth;
 use Carbon\Carbon;
 use Crypt;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -131,6 +130,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * TODO zo even aanpassen naar nieuwe veldnaam.
      * @return bool
      */
     public function isDeposit()
@@ -143,6 +143,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * TODO zo even aanpassen naar nieuwe veldnaam.
+     *
      * @return bool
      */
     public function isOpeningBalance()
@@ -155,6 +157,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * TODO zo even aanpassen naar nieuwe veldnaam.
+     *
      * @return bool
      */
     public function isTransfer()
@@ -167,6 +171,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * TODO zo even aanpassen naar nieuwe veldnaam.
+     *
      * @return bool
      */
     public function isWithdrawal()
@@ -240,22 +246,6 @@ class TransactionJournal extends Model
             'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
         );
         $query->whereIn('transaction_types.type', $types);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * Automatically includes the 'with' parameters to get relevant related
-     * objects.
-     *
-     * @param EloquentBuilder $query
-     */
-    public function scopeWithRelevantData(EloquentBuilder $query)
-    {
-        $query->with(
-            ['transactions' => function (HasMany $q) {
-                $q->orderBy('amount', 'ASC');
-            }, 'transactionType', 'transactionCurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill']
-        );
     }
 
     /**
