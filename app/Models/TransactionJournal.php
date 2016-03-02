@@ -13,34 +13,34 @@ use Watson\Validating\ValidatingTrait;
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property integer $user_id
- * @property integer $transaction_type_id
- * @property integer $bill_id
- * @property integer $transaction_currency_id
- * @property string $description
- * @property boolean $completed
- * @property \Carbon\Carbon $date
- * @property \Carbon\Carbon $interest_date
- * @property \Carbon\Carbon $book_date
- * @property boolean $encrypted
- * @property integer $order
- * @property integer $tag_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
- * @property-read \FireflyIII\Models\Bill $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
- * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
- * @property-read \FireflyIII\Models\TransactionType $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups
+ * @property integer                                                                                   $id
+ * @property \Carbon\Carbon                                                                            $created_at
+ * @property \Carbon\Carbon                                                                            $updated_at
+ * @property \Carbon\Carbon                                                                            $deleted_at
+ * @property integer                                                                                   $user_id
+ * @property integer                                                                                   $transaction_type_id
+ * @property integer                                                                                   $bill_id
+ * @property integer                                                                                   $transaction_currency_id
+ * @property string                                                                                    $description
+ * @property boolean                                                                                   $completed
+ * @property \Carbon\Carbon                                                                            $date
+ * @property \Carbon\Carbon                                                                            $interest_date
+ * @property \Carbon\Carbon                                                                            $book_date
+ * @property boolean                                                                                   $encrypted
+ * @property integer                                                                                   $order
+ * @property integer                                                                                   $tag_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]             $attachments
+ * @property-read \FireflyIII\Models\Bill                                                              $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]                 $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]               $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]         $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]                    $tags
+ * @property-read \FireflyIII\Models\TransactionCurrency                                               $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionType                                                   $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[]       $transactiongroups
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionjournalmeta
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read \FireflyIII\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]            $transactions
+ * @property-read \FireflyIII\User                                                                     $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
@@ -165,55 +165,51 @@ class TransactionJournal extends Model
     }
 
     /**
-     * TODO zo even aanpassen naar nieuwe veldnaam.
      * @return bool
      */
     public function isDeposit()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::DEPOSIT;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::DEPOSIT;
         }
 
         return $this->transactionType->isDeposit();
     }
 
     /**
-     * TODO zo even aanpassen naar nieuwe veldnaam.
      *
      * @return bool
      */
     public function isOpeningBalance()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::OPENING_BALANCE;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::OPENING_BALANCE;
         }
 
         return $this->transactionType->isOpeningBalance();
     }
 
     /**
-     * TODO zo even aanpassen naar nieuwe veldnaam.
      *
      * @return bool
      */
     public function isTransfer()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::TRANSFER;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::TRANSFER;
         }
 
         return $this->transactionType->isTransfer();
     }
 
     /**
-     * TODO zo even aanpassen naar nieuwe veldnaam.
      *
      * @return bool
      */
     public function isWithdrawal()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::WITHDRAWAL;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::WITHDRAWAL;
         }
 
         return $this->transactionType->isWithdrawal();
