@@ -115,13 +115,11 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     {
         $offset = $page > 0 ? $page * 50 : 0;
 
-        return $category->transactionjournals()->withRelevantData()->take(50)->offset($offset)
+        return $category->transactionjournals()->expanded()->take(50)->offset($offset)
                         ->orderBy('transaction_journals.date', 'DESC')
                         ->orderBy('transaction_journals.order', 'ASC')
                         ->orderBy('transaction_journals.id', 'DESC')
-                        ->get(
-                            ['transaction_journals.*']
-                        );
+                        ->get(TransactionJournal::QUERYFIELDS);
 
     }
 
@@ -140,13 +138,13 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
         return $category->transactionjournals()
                         ->after($start)
                         ->before($end)
-                        ->withRelevantData()->take(50)->offset($offset)
+                        ->expanded()
+                        ->take(50)
+                        ->offset($offset)
                         ->orderBy('transaction_journals.date', 'DESC')
                         ->orderBy('transaction_journals.order', 'ASC')
                         ->orderBy('transaction_journals.id', 'DESC')
-                        ->get(
-                            ['transaction_journals.*']
-                        );
+                        ->get(TransactionJournal::QUERYFIELDS);
     }
 
 

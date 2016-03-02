@@ -4,7 +4,6 @@ use Auth;
 use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
@@ -46,7 +45,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
  */
-class TransactionJournal extends Model
+class TransactionJournal extends BaseModel
 {
     use SoftDeletes, ValidatingTrait;
 
@@ -92,8 +91,6 @@ class TransactionJournal extends Model
             'date'                    => 'required|date',
             'encrypted'               => 'required|boolean',
         ];
-    /** @var bool */
-    private $joinedTypes = false;
 
     /**
      * @param $value
@@ -312,8 +309,9 @@ class TransactionJournal extends Model
     public function scopeExpanded(EloquentBuilder $query)
     {
         // left join transaction type:
-        $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-        $this->joinedTypes = true;
+        if (!self::isJoined($query, 'transaction_types')) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        }
 
         // left join transaction currency:
         $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
@@ -356,9 +354,8 @@ class TransactionJournal extends Model
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
 
-        if (!$this->joinedTypes) {
+        if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-            $this->joinedTypes = true;
         }
         $query->whereIn('transaction_types.type', $types);
     }
