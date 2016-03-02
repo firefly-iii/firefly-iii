@@ -70,31 +70,29 @@ class Amount
      */
     public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($journal->id);
-        $cache->addProperty('formatJournal');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+        $locale = setlocale(LC_MONETARY, 0);
+        $float  = floatval($journal->destination_amount);
+        if ($journal->isWithdrawal()) {
+            $float = floatval($journal->source_amount);
         }
+        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $result    = $formatter->formatCurrency($float, $journal->transaction_currency_code);
 
-        if ($journal->isTransfer() && $coloured) {
-            $txt = '<span class="text-info">' . $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false) . '</span>';
-            $cache->store($txt);
-
-            return $txt;
+        if ($coloured === true && $float == 0) {
+            return '<span style="color:#999">' . $result . '</span>'; // always grey.
         }
-        if ($journal->isTransfer() && !$coloured) {
-            $txt = $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false);
-            $cache->store($txt);
-
-            return $txt;
+        if (!$coloured) {
+            return $result;
         }
+        if (!$journal->isTransfer()) {
+            if ($float > 0) {
+                return '<span class="text-success">' . $result . '</span>';
+            }
 
-        $txt = $this->formatAnything($journal->transactionCurrency, $journal->amount, $coloured);
-        $cache->store($txt);
-
-        return $txt;
+            return '<span class="text-danger">' . $result . '</span>';
+        } else {
+            return '<span class="text-info">' . $result . '</span>';
+        }
     }
 
     /**

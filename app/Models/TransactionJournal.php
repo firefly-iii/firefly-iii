@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
@@ -56,7 +57,19 @@ class TransactionJournal extends Model
     const QUERYFIELDS
         = [
             'transaction_journals.*',
-            'transaction_types.type as transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
+            'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
+            'transaction_currencies.code AS transaction_currency_code',
+            // all for destination:
+            'destination.amount AS destination_amount',
+            'destination_account.id AS destination_account_id',
+            'destination_account.name AS destination_account_name',
+            'destination_acct_type.type AS destination_account_type',
+            // all for source:
+            'source.amount AS source_amount',
+            'source_account.id AS source_account_id',
+            'source_account.name AS source_account_name',
+            'source_acct_type.type AS source_account_type',
+
         ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date'];
@@ -279,7 +292,33 @@ class TransactionJournal extends Model
         // left join transaction type:
         $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
 
-        // try to get amount
+        // left join transaction currency:
+        $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
+
+        // left join destination (for amount and account info).
+        $query->leftJoin(
+            'transactions as destination', function (JoinClause $join) {
+            $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
+                 ->where('destination.amount', '>', 0);
+        }
+        );
+        // join destination account
+        $query->leftJoin('accounts as destination_account', 'destination_account.id', '=', 'destination.account_id');
+        // join destination account type
+        $query->leftJoin('account_types as destination_acct_type', 'destination_account.account_type_id', '=', 'destination_acct_type.id');
+
+        // left join source (for amount and account info).
+        $query->leftJoin(
+            'transactions as source', function (JoinClause $join) {
+            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
+                 ->where('source.amount', '<', 0);
+        }
+        );
+        // join destination account
+        $query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
+        // join destination account type
+        $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id');
+
 
     }
 
