@@ -53,7 +53,8 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal)
     {
-        $fromAccountName = strtolower($journal->source_account->name);
+        $sourceAccount   = $journal->transactions()->where('amount', '<', 0)->first()->account;
+        $fromAccountName = strtolower($sourceAccount->name);
         $search          = strtolower($this->triggerValue);
 
         if ($fromAccountName == $search) {

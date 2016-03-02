@@ -99,7 +99,7 @@ class TransactionController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
-        $what     = strtolower($journal->getTransactionType());
+        $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
@@ -141,6 +141,9 @@ class TransactionController extends Controller
      */
     public function edit(ARI $repository, TransactionJournal $journal)
     {
+        // get journal again:
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::expanded()->where('transaction_journals.id', $journal->id)->first(TransactionJournal::QUERYFIELDS);
         // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
             throw new FireflyException('Cannot edit this transaction (#' . $journal->id . '). Edit the account instead!');
@@ -150,7 +153,7 @@ class TransactionController extends Controller
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        $what        = strtolower($journal->getTransactionType());
+        $what        = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
@@ -183,15 +186,19 @@ class TransactionController extends Controller
         $preFilled['amount'] = $journal->amount_positive;
 
         if ($journal->isWithdrawal()) {
-            $preFilled['account_id']      = $journal->source_account->id;
-            $preFilled['expense_account'] = $journal->destination_account->name_for_editform;
+            $preFilled['account_id'] = $journal->source_account_id;
+            if ($journal->destination_account_type != 'Cash account') {
+                $preFilled['expense_account'] = $journal->destination_account_name;
+            }
         } else {
-            $preFilled['account_id']      = $journal->destination_account->id;
-            $preFilled['revenue_account'] = $journal->source_account->name_for_editform;
+            $preFilled['account_id'] = $journal->destination_account_id;
+            if ($journal->source_account_type != 'Cash account') {
+                $preFilled['revenue_account'] = $journal->source_account_name;
+            }
         }
 
-        $preFilled['account_from_id'] = $journal->source_account->id;
-        $preFilled['account_to_id']   = $journal->destination_account->id;
+        $preFilled['account_from_id'] = $journal->source_account_id;
+        $preFilled['account_to_id']   = $journal->destination_account_id;
 
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'transactions');
@@ -279,8 +286,8 @@ class TransactionController extends Controller
                 $t->after  = bcadd($t->before, $t->amount);
             }
         );
-        $what     = strtolower($journal->getTransactionType());
-        $subTitle = trans('firefly.' . $journal->getTransactionType()) . ' "' . e($journal->description) . '"';
+        $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle = trans('firefly.' . $journal->transaction_type_type ?? $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what'));
     }
@@ -314,7 +321,6 @@ class TransactionController extends Controller
         if (count($att->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
-        Log::debug('Before event. From account name is: ' . $journal->source_account->name);
 
         event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 

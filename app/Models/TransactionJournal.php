@@ -44,6 +44,19 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
+ *
+ * @property-read string $transaction_type_type
+ * @property-read string $transaction_currency_code
+ * @property-read string $destination_amount
+ * @property-read string $destination_account_id
+ * @property-read string $destination_account_name
+ * @property-read string $destination_account_type
+ * @property-read string $source_amount
+ * @property-read string $source_account_id
+ * @property-read string $source_account_name
+ * @property-read string $source_account_type
+
+ *
  */
 class TransactionJournal extends BaseModel
 {

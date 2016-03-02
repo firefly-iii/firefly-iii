@@ -187,7 +187,7 @@ class Importer
 
         // some debug info:
         $journalId = $journal->id;
-        $type      = $journal->getTransactionType();
+        $type      = $journal->transaction_type_type ?? $journal->transactionType->type;
         /** @var Account $asset */
         $asset = $this->importData['asset-account-object'];
         /** @var Account $opposing */
