@@ -238,7 +238,9 @@ class ReportHelper implements ReportHelperInterface
                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                         ->whereIn('transactions.account_id', $ids)->get(['tags.id', 'tags.tag', 'transactions.amount']);
+                         ->whereIn('transactions.account_id', $ids)->get(
+                ['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'transactions.amount']
+            );
         $collection = [];
         if ($set->count() === 0) {
             return $collection;
