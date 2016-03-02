@@ -103,16 +103,16 @@ class Search implements SearchInterface
     public function searchTransactions(array $words): Collection
     {
         // decrypted transaction journals:
-        $decrypted = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 0)->where( // TODO firefly will crash here.
+        $decrypted = Auth::user()->transactionjournals()->expanded()->where('encrypted', 0)->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('description', 'LIKE', '%' . e($word) . '%');
                 }
             }
-        )->get();
+        )->get(TransactionJournal::QUERYFIELDS);
 
         // encrypted
-        $all      = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 1)->get(); // TODO firefly will crash here.
+        $all      = Auth::user()->transactionjournals()->expanded()->where('encrypted', 1)->get(TransactionJournal::QUERYFIELDS);
         $set      = $all->filter(
             function (TransactionJournal $journal) use ($words) {
                 foreach ($words as $word) {
