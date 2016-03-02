@@ -33,6 +33,7 @@ class TransactionJournalSupport extends Model
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
         $cache->addProperty('amount');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
@@ -60,6 +61,7 @@ class TransactionJournalSupport extends Model
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
@@ -84,9 +86,22 @@ class TransactionJournalSupport extends Model
      */
     public static function destinationAccount(TransactionJournal $journal): Account
     {
-        $account = $journal->transactions()->where('amount', '>', 0)->first()->account;
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('destination-account');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (!is_null($transaction)) {
+            $account = $transaction->account;
+            $cache->store($account);
+        } else {
+            $account = new Account;
+        }
 
-        return $account ?? new Account;
+        return $account;
     }
 
     /**
@@ -96,8 +111,17 @@ class TransactionJournalSupport extends Model
      */
     public static function destinationAccountTypeStr(TransactionJournal $journal): string
     {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('destination-account-type-str');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
         $account = self::destinationAccount($journal);
         $type    = $account->accountType ? $account->accountType->type : '(unknown)';
+        $cache->store($type);
 
         return $type;
     }
@@ -130,9 +154,22 @@ class TransactionJournalSupport extends Model
      */
     public static function sourceAccount(TransactionJournal $journal): Account
     {
-        $account = $journal->transactions()->where('amount', '<', 0)->first()->account;
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('source-account');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $transaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (!is_null($transaction)) {
+            $account = $transaction->account;
+            $cache->store($account);
+        } else {
+            $account = new Account;
+        }
 
-        return $account ?? new Account;
+        return $account;
     }
 
     /**
@@ -142,8 +179,17 @@ class TransactionJournalSupport extends Model
      */
     public static function sourceAccountTypeStr(TransactionJournal $journal): string
     {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('source-account-type-str');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
         $account = self::sourceAccount($journal);
         $type    = $account->accountType ? $account->accountType->type : '(unknown)';
+        $cache->store($type);
 
         return $type;
     }
@@ -155,7 +201,18 @@ class TransactionJournalSupport extends Model
      */
     public static function transactionTypeStr(TransactionJournal $journal): string
     {
-        return $journal->transaction_type_type ?? $journal->transactionType->type;
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('type-string');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $typeStr = $journal->transaction_type_type ?? $journal->transactionType->type;
+        $cache->store($typeStr);
+
+        return $typeStr;
     }
 
 
