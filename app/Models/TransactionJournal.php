@@ -167,6 +167,16 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getDestinationAccountNameAttribute($value)
+    {
+        return Crypt::decrypt($value);
+    }
+
+    /**
      *
      * @param string $fieldName
      *
@@ -181,6 +191,16 @@ class TransactionJournal extends Model
         }
 
         return '';
+    }
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getSourceAccountNameAttribute($value)
+    {
+        return Crypt::decrypt($value);
     }
 
     /**
@@ -319,6 +339,8 @@ class TransactionJournal extends Model
         // join destination account type
         $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id');
 
+        $query->with(['categories', 'budgets', 'attachments', 'bill']);
+
 
     }
 
@@ -330,9 +352,6 @@ class TransactionJournal extends Model
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
-        $query->leftJoin(
-            'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-        );
         $query->whereIn('transaction_types.type', $types);
     }
 

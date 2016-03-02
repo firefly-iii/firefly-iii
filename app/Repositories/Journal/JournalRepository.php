@@ -118,14 +118,20 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50)
     {
-        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take($pagesize)->offset($offset)
-                        ->orderBy('date', 'DESC')
-                        ->orderBy('order', 'ASC')
-                        ->orderBy('id', 'DESC')
-                        ->get(
-                            ['transaction_journals.*']
-                        );
-        $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
+        $set = Auth::user()
+                   ->transactionJournals()
+                   ->expanded()
+                   ->transactionTypes($types)
+                   ->take($pagesize)
+                   ->offset($offset)
+                   ->orderBy('date', 'DESC')
+                   ->orderBy('order', 'ASC')
+                   ->orderBy('id', 'DESC')
+                   ->get(TransactionJournal::QUERYFIELDS);
+
+        $count    = Auth::user()->transactionJournals()
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->transactionTypes($types)->count();
         $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
 
         return $journals;
