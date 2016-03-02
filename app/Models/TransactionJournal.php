@@ -50,22 +50,23 @@ class TransactionJournal extends Model
     use SoftDeletes, ValidatingTrait;
 
     /**
-     * Fields which queries must load..
+     * Fields which queries must load.
+     * ['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']
      */
-    const QUERYFIELDS = ['transaction_journals.*'];
-
+    const QUERYFIELDS
+        = [
+            'transaction_journals.*',
+            'transaction_types.type as transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
+        ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date'];
-
     /** @var array */
     protected $fillable
         = ['user_id', 'transaction_type_id', 'bill_id',
            'transaction_currency_id', 'description', 'completed',
            'date', 'rent_date', 'book_date', 'encrypted', 'tag_count'];
-
     /** @var array */
     protected $hidden = ['encrypted'];
-
     /** @var array */
     protected $rules
         = [
@@ -268,6 +269,18 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     */
+    public function scopeExpanded(EloquentBuilder $query)
+    {
+        // left join transaction type:
+        $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+
+        // try to get amount
+
     }
 
     /**
