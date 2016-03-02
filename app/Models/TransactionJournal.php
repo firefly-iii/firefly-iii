@@ -49,6 +49,11 @@ class TransactionJournal extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    /**
+     * Fields which queries must load..
+     */
+    const QUERYFIELDS = ['transaction_journals.*'];
+
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date'];
 
