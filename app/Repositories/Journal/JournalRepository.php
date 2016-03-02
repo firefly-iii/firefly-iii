@@ -129,9 +129,7 @@ class JournalRepository implements JournalRepositoryInterface
                    ->orderBy('id', 'DESC')
                    ->get(TransactionJournal::QUERYFIELDS);
 
-        $count    = Auth::user()->transactionJournals()
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->transactionTypes($types)->count();
+        $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
         $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
 
         return $journals;
