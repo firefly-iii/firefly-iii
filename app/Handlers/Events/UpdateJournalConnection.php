@@ -5,6 +5,7 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class UpdateJournalConnection
@@ -44,7 +45,7 @@ class UpdateJournalConnection
         }
         bcscale(2);
 
-        $amount = $journal->amount; // TODO TransactionJournal cannot deliver "amount".
+        $amount = TransactionJournal::amount($journal);
         $diff   = bcsub($amount, $event->amount); // update current repetition
 
         $repetition->currentamount = bcadd($repetition->currentamount, $diff);

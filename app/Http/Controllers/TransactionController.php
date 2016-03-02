@@ -19,7 +19,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
 use Preferences;
 use Response;
 use Session;
@@ -141,10 +140,6 @@ class TransactionController extends Controller
      */
     public function edit(ARI $repository, TransactionJournal $journal)
     {
-        // get journal again:
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::expanded()->where('transaction_journals.id', $journal->id)->first(TransactionJournal::QUERYFIELDS);
-        // TODO REMOVE this in favour of something static in TransactionJournal.
         // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
             throw new FireflyException('Cannot edit this transaction (#' . $journal->id . '). Edit the account instead!');
@@ -154,11 +149,11 @@ class TransactionController extends Controller
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        $what        = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $what        = strtolower(TransactionJournal::transactionTypeStr($journal));
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
+        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get()); // TODO this must be a repository call
         $budgets[0]  = trans('form.noBudget');
-        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
+        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get()); // TODO this must be a repository call
         $piggies[0]  = trans('form.noPiggybank');
         $subTitle    = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $preFilled   = [
@@ -184,22 +179,22 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount'] = $journal->amount_positive; // TODO TransactionJournal cannot deliver "amount_positive".
+        $preFilled['amount'] = TransactionJournal::amountPositive($journal);
 
         if ($journal->isWithdrawal()) {
-            $preFilled['account_id'] = $journal->source_account_id;
-            if ($journal->destination_account_type != 'Cash account') {
-                $preFilled['expense_account'] = $journal->destination_account_name;
+            $preFilled['account_id'] = TransactionJournal::sourceAccount($journal)->id;
+            if (TransactionJournal::destinationAccountTypeStr($journal) != 'Cash account') {
+                $preFilled['expense_account'] = TransactionJournal::destinationAccount($journal)->name;
             }
         } else {
-            $preFilled['account_id'] = $journal->destination_account_id;
-            if ($journal->source_account_type != 'Cash account') {
-                $preFilled['revenue_account'] = $journal->source_account_name;
+            $preFilled['account_id'] = TransactionJournal::destinationAccount($journal)->id;
+            if (TransactionJournal::sourceAccountTypeStr($journal) != 'Cash account') {
+                $preFilled['revenue_account'] = TransactionJournal::sourceAccount($journal)->name;
             }
         }
 
-        $preFilled['account_from_id'] = $journal->source_account_id;
-        $preFilled['account_to_id']   = $journal->destination_account_id;
+        $preFilled['account_from_id'] = TransactionJournal::sourceAccount($journal)->id;
+        $preFilled['account_to_id']   = TransactionJournal::destinationAccount($journal)->id;
 
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'transactions');

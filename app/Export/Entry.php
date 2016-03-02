@@ -80,7 +80,7 @@ class Entry
         $entry = new self;
         $entry->setDescription($journal->description);
         $entry->setDate($journal->date->format('Y-m-d'));
-        $entry->setAmount($journal->amount); // TODO TransactionJournal cannot deliver "amount".
+        $entry->setAmount(TransactionJournal::amount($journal));
 
         /** @var Budget $budget */
         $budget = $journal->budgets->first();
@@ -102,14 +102,14 @@ class Entry
         }
 
         /** @var Account $sourceAccount */
-        $sourceAccount = $journal->source_account; // TODO TransactionJournal cannot deliver "source_account"
+        $sourceAccount = TransactionJournal::sourceAccount($journal);
         $entry->setFromAccountId($sourceAccount->id);
         $entry->setFromAccountName($sourceAccount->name);
         $entry->setFromAccountIban($sourceAccount->iban);
         $entry->setFromAccountType($sourceAccount->accountType->type);
 
         /** @var Account $destination */
-        $destination = $journal->destination_account; // TODO TransactionJournal cannot deliver "destination_account"
+        $destination = TransactionJournal::destinationAccount($journal);
         $entry->setToAccountId($destination->id);
         $entry->setToAccountName($destination->name);
         $entry->setToAccountIban($destination->iban);

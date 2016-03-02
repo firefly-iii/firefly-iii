@@ -212,7 +212,7 @@ class AccountRepository implements AccountRepositoryInterface
         $offset = ($page - 1) * 50;
         $query  = Auth::user()
                       ->transactionJournals()
-                      ->expanded()// TODO firefly will crash here.
+                      ->expanded()
                       ->where(
                 function (Builder $q) use ($account) {
                     $q->where('destination.account_id', $account->id);

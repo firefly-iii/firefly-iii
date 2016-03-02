@@ -129,8 +129,8 @@ class TagRepository implements TagRepositoryInterface
 
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
-                if ($journal->destination_account->id == $account->id) { // TODO TransactionJournal cannot deliver "destination_account"
-                    $amount = bcadd($amount, $journal->amount); // TODO TransactionJournal cannot deliver "amount".
+                if (TransactionJournal::destinationAccount($journal)->id == $account->id) {
+                    $amount = bcadd($amount, TransactionJournal::amount($journal));
                 }
             }
         }
@@ -376,10 +376,11 @@ class TagRepository implements TagRepositoryInterface
         foreach ($tag->transactionjournals as $check) {
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            if ($check->isWithdrawal() && $check->source_account->id != $journal->destination_account->id) { // TODO TransactionJournal cannot deliver "source_account"
+
+            if ($check->isWithdrawal() && TransactionJournal::sourceAccount($check)->id != TransactionJournal::destinationAccount($journal)->id) {
                 $match = false;
             }
-            if ($check->isDeposit() && $check->destination_account->id != $journal->destination_account->id) { // TODO TransactionJournal cannot deliver "destination_account"
+            if ($check->isDeposit() && TransactionJournal::destinationAccount($check)->id != TransactionJournal::destinationAccount($journal)->id) {
                 $match = false;
             }
 

@@ -416,7 +416,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
         $setQuery   = $budget->transactionjournals()->expanded()
-                             ->take($take)->offset($offset)// TODO firefly will crash here.
+                             ->take($take)->offset($offset)
                              ->orderBy('transaction_journals.date', 'DESC')
                              ->orderBy('transaction_journals.order', 'ASC')
                              ->orderBy('transaction_journals.id', 'DESC');

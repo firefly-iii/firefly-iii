@@ -443,13 +443,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal): bool
     {
-        // grab the expanded info for this journal.
-        // looks weird, but is useful:
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::expanded()->where('transaction_journals.id', $journal->id)->get(TransactionJournal::QUERYFIELDS)->first();
-        // TODO REMOVE this in favour of something static in TransactionJournal.
-
-
         /*
          * Can only support withdrawals.
          */
@@ -458,9 +451,9 @@ class BillRepository implements BillRepositoryInterface
         }
 
         $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account_name);
+        $description = strtolower($journal->description) . ' ' . strtolower(TransactionJournal::destinationAccount($journal)->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($journal->destination_amount, $bill->amount_min, $bill->amount_max);
+        $amountMatch = $this->doAmountMatch(TransactionJournal::amountPositive($journal), $bill->amount_min, $bill->amount_max);
         Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
 
 
