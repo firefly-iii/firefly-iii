@@ -40,9 +40,6 @@ class TransactionJournal extends Model
             'encrypted'               => 'required|boolean',
         ];
 
-    /** @var  bool */
-    private $joinedTransactionTypes;
-
     /**
      * @param $value
      *
@@ -307,12 +304,9 @@ class TransactionJournal extends Model
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
-        if (is_null($this->joinedTransactionTypes)) {
-            $query->leftJoin(
-                'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-            );
-            $this->joinedTransactionTypes = true;
-        }
+        $query->leftJoin(
+            'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
+        );
         $query->whereIn('transaction_types.type', $types);
     }
 
