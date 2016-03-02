@@ -112,7 +112,7 @@ class TransactionJournal extends Model
 
         return $value;
     }
-    
+
     /**
      *
      * @param string $fieldName
@@ -128,16 +128,6 @@ class TransactionJournal extends Model
         }
 
         return '';
-    }
-
-    /**
-     * @return Account
-     */
-    public function getSourceAccountAttribute()
-    {
-        $account = $this->transactions()->where('amount', '<', 0)->first()->account;
-
-        return $account;
     }
 
     /**
