@@ -211,7 +211,7 @@ class AccountRepository implements AccountRepositoryInterface
         $offset = ($page - 1) * 50;
         $query  = Auth::user()
                       ->transactionJournals()
-                      ->withRelevantData()
+                      ->withRelevantData() // TODO firefly will crash here.
                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                       ->where('transactions.account_id', $account->id)
                       ->orderBy('transaction_journals.date', 'DESC')

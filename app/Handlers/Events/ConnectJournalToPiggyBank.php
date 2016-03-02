@@ -44,9 +44,9 @@ class ConnectJournalToPiggyBank
         }
         bcscale(2);
 
-        $amount = $journal->amount_positive;
+        $amount = $journal->amount_positive; // TODO TransactionJournal cannot deliver "amount_positive".
         // if piggy account matches source account, the amount is positive
-        if ($piggyBank->account_id == $journal->source_account->id) {
+        if ($piggyBank->account_id == $journal->source_account->id) {// TODO TransactionJournal cannot deliver "source_account"
             $amount = bcmul($amount, '-1');
         }
 

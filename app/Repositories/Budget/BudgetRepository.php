@@ -414,7 +414,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50)
     {
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
-        $setQuery   = $budget->transactionjournals()->withRelevantData()->take($take)->offset($offset)
+        $setQuery   = $budget->transactionjournals()->withRelevantData()->take($take)->offset($offset) // TODO firefly will crash here.
                              ->orderBy('transaction_journals.date', 'DESC')
                              ->orderBy('transaction_journals.order', 'ASC')
                              ->orderBy('transaction_journals.id', 'DESC');

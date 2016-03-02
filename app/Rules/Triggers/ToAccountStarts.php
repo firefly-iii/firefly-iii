@@ -53,7 +53,7 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal)
     {
-        $toAccountName = strtolower($journal->destination_account->name);
+        $toAccountName = strtolower($journal->destination_account->name); // TODO TransactionJournal cannot deliver "destination_account"
         $search        = strtolower($this->triggerValue);
 
         $part = substr($toAccountName, 0, strlen($search));

@@ -44,7 +44,7 @@ class UpdateJournalConnection
         }
         bcscale(2);
 
-        $amount = $journal->amount;
+        $amount = $journal->amount; // TODO TransactionJournal cannot deliver "amount".
         $diff   = bcsub($amount, $event->amount); // update current repetition
 
         $repetition->currentamount = bcadd($repetition->currentamount, $diff);
