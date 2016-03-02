@@ -131,14 +131,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return string
-     */
-    public function getTransactionType()
-    {
-        return $this->transactionType->type;
-    }
-
-    /**
      * @return bool
      */
     public function isDeposit()
