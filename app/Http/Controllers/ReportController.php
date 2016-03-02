@@ -201,6 +201,7 @@ class ReportController extends Controller
         $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags          = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = [];
@@ -214,7 +215,7 @@ class ReportController extends Controller
             'reports.default.multi-year',
             compact(
                 'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
-                'incomeTopLength', 'expenseTopLength'
+                'incomeTopLength', 'expenseTopLength', 'tags'
             )
         );
     }
@@ -253,7 +254,7 @@ class ReportController extends Controller
             'reports.default.year',
             compact(
                 'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
-                'expenses', 'incomeTopLength', 'expenseTopLength','tags'
+                'expenses', 'incomeTopLength', 'expenseTopLength', 'tags'
             )
         );
     }
