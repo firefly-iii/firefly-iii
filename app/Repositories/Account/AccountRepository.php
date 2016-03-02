@@ -177,9 +177,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * This method is used on the front page where (in turn) its viewed journals-tiny.php which (in turn)
-     * is almost the only place where formatJournal is used. Aka, we can use some custom querying to get some specific.
-     * fields using left joins.
      *
      * @param Account $account
      * @param Carbon  $start
@@ -191,18 +188,14 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $set = Auth::user()
                    ->transactionjournals()
-                   ->with(['transactions'])
-                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-                   ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
-                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                   ->expanded()
                    ->before($end)
                    ->after($start)
                    ->orderBy('transaction_journals.date', 'DESC')
                    ->orderBy('transaction_journals.order', 'ASC')
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
-                   ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+                   ->get(TransactionJournal::QUERYFIELDS);
 
         return $set;
     }
