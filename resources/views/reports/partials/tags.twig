@@ -4,11 +4,13 @@
             <h3 class="box-title">{{ 'tags'|_ }}</h3>
         </div>
         <div class="box-body">
+
             {% if tag|length == 1 %}
                 {% set multiplier = 12 %}
             {% else %}
                 {% set multiplier = 30 %}
             {% endif %}
+
             {% for tag in tags %}
                 <span title="{{ tag.amount|formatAmountPlain }}"
                       style="font-size: {{ tag.fontsize * multiplier }}px"
