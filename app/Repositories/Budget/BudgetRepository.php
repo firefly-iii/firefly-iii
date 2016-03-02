@@ -9,6 +9,7 @@ use DB;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -414,7 +415,8 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50)
     {
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
-        $setQuery   = $budget->transactionjournals()->withRelevantData()->take($take)->offset($offset) // TODO firefly will crash here.
+        $setQuery   = $budget->transactionjournals()->expanded()
+                             ->take($take)->offset($offset)// TODO firefly will crash here.
                              ->orderBy('transaction_journals.date', 'DESC')
                              ->orderBy('transaction_journals.order', 'ASC')
                              ->orderBy('transaction_journals.id', 'DESC');
@@ -427,7 +429,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         }
 
 
-        $set   = $setQuery->get(['transaction_journals.*']);
+        $set   = $setQuery->get(TransactionJournal::QUERYFIELDS);
         $count = $countQuery->count();
 
 
@@ -581,13 +583,13 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                           ->before($end)
                           ->groupBy('t_from.account_id')
                           ->groupBy('budget_transaction_journal.budget_id')
-                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]) // opening balance is not an expense.
+                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])// opening balance is not an expense.
                           ->get(
-                              [
-                                  't_from.account_id', 'budget_transaction_journal.budget_id',
-                                  DB::raw('SUM(`t_from`.`amount`) AS `spent`'),
-                              ]
-                          );
+                [
+                    't_from.account_id', 'budget_transaction_journal.budget_id',
+                    DB::raw('SUM(`t_from`.`amount`) AS `spent`'),
+                ]
+            );
 
         return $set;
 

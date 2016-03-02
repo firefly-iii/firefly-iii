@@ -16,6 +16,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -211,15 +212,19 @@ class AccountRepository implements AccountRepositoryInterface
         $offset = ($page - 1) * 50;
         $query  = Auth::user()
                       ->transactionJournals()
-                      ->withRelevantData() // TODO firefly will crash here.
-                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                      ->where('transactions.account_id', $account->id)
+                      ->expanded()// TODO firefly will crash here.
+                      ->where(
+                function (Builder $q) use ($account) {
+                    $q->where('destination.account_id', $account->id);
+                    $q->orWhere('source.account_id', $account->id);
+                }
+            )
                       ->orderBy('transaction_journals.date', 'DESC')
                       ->orderBy('transaction_journals.order', 'ASC')
                       ->orderBy('transaction_journals.id', 'DESC');
 
         $count     = $query->count();
-        $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
+        $set       = $query->take(50)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
         $paginator = new LengthAwarePaginator($set, $count, 50, $page);
 
         return $paginator;
@@ -345,7 +350,6 @@ class AccountRepository implements AccountRepositoryInterface
             ::orderBy('transaction_journals.date', 'ASC')
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
-
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
