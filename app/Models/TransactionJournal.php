@@ -92,6 +92,8 @@ class TransactionJournal extends Model
             'date'                    => 'required|date',
             'encrypted'               => 'required|boolean',
         ];
+    /** @var bool */
+    private $joinedTypes = false;
 
     /**
      * @param $value
@@ -311,6 +313,7 @@ class TransactionJournal extends Model
     {
         // left join transaction type:
         $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        $this->joinedTypes = true;
 
         // left join transaction currency:
         $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
@@ -352,6 +355,11 @@ class TransactionJournal extends Model
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
+
+        if (!$this->joinedTypes) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+            $this->joinedTypes = true;
+        }
         $query->whereIn('transaction_types.type', $types);
     }
 

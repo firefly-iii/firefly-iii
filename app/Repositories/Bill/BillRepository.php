@@ -280,16 +280,11 @@ class BillRepository implements BillRepositoryInterface
     public function getJournals(Bill $bill): Collection
     {
         $set = $bill->transactionjournals()
-                    ->leftJoin(
-                        'transactions', function (JoinClause $join) {
-                        $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                             ->where('amount', '<', 0);
-                    }
-                    )
+                    ->expanded()
                     ->orderBy('transaction_journals.date', 'DESC')
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
-                    ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
+                    ->get(TransactionJournal::QUERYFIELDS);
 
         return $set;
     }
@@ -399,7 +394,7 @@ class BillRepository implements BillRepositoryInterface
     public function nextExpectedMatch(Bill $bill): Carbon
     {
 
-        $finalDate = Carbon::now();
+        $finalDate       = Carbon::now();
         $finalDate->year = 1900;
         if ($bill->active == 0) {
             return $finalDate;
@@ -448,6 +443,11 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal): bool
     {
+        // grab the expanded info for this journal.
+        // looks weird, but is useful:
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::expanded()->where('transaction_journals.id', $journal->id)->get(TransactionJournal::QUERYFIELDS)->first();
+
 
         /*
          * Can only support withdrawals.
@@ -457,9 +457,9 @@ class BillRepository implements BillRepositoryInterface
         }
 
         $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
+        $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account_name);
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
+        $amountMatch = $this->doAmountMatch($journal->destination_amount, $bill->amount_min, $bill->amount_max);
         Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
 
 

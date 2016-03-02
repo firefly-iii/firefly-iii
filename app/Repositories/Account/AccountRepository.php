@@ -345,6 +345,7 @@ class AccountRepository implements AccountRepositoryInterface
             ::orderBy('transaction_journals.date', 'ASC')
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
+
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
