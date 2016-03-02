@@ -11,65 +11,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
-/**
- * FireflyIII\Models\TransactionJournal
- *
- * @property integer                                                          $id
- * @property \Carbon\Carbon                                                   $created_at
- * @property \Carbon\Carbon                                                   $updated_at
- * @property \Carbon\Carbon                                                   $deleted_at
- * @property integer                                                          $user_id
- * @property integer                                                          $transaction_type_id
- * @property integer                                                          $bill_id
- * @property integer                                                          $transaction_currency_id
- * @property string                                                           $description
- * @property boolean                                                          $completed
- * @property \Carbon\Carbon                                                   $date
- * @property boolean                                                          $encrypted
- * @property integer                                                          $order
- * @property integer                                                          $tag_count
- * @property-read Bill                                                        $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]           $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[]         $categories
- * @property-read mixed                                                       $amount_positive
- * @property-read mixed                                                       $amount
- * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]              $tags
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]      $transactions
- * @property-read mixed                                                       $destination_account
- * @property-read mixed                                                       $source_account
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]   $piggyBankEvents
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]       $attachments
- * @property-read TransactionCurrency                                         $transactionCurrency
- * @property-read TransactionType                                             $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[] $transactiongroups
- * @property-read \FireflyIII\User                                            $user
- * @property float                                                            $journalAmount
- * @property int                                                              $account_id
- * @property int                                                              $budget_id
- * @property string                                                           $account_name
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal accountIs($account)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal after($date)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal before($date)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal onDate($date)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal transactionTypes($types)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal withRelevantData()
- * @property string                                                           $type
- * @property \Carbon\Carbon                                                   $interest_date
- * @property \Carbon\Carbon                                                   $book_date
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionjournalmeta
- */
 class TransactionJournal extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date'];
+
     /** @var array */
     protected $fillable
-        = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
+        = ['user_id', 'transaction_type_id', 'bill_id',
+           'transaction_currency_id', 'description', 'completed',
+           'date', 'rent_date', 'book_date', 'encrypted', 'tag_count'];
+
     /** @var array */
     protected $hidden = ['encrypted'];
+
     /** @var array */
     protected $rules
         = [
@@ -85,24 +42,6 @@ class TransactionJournal extends Model
 
     /** @var  bool */
     private $joinedTransactionTypes;
-
-
-    /**
-     *
-     * @param string $fieldName
-     *
-     * @return string
-     */
-    public function getMeta($fieldName): string
-    {
-        foreach ($this->transactionjournalmeta as $meta) {
-            if ($meta->name == $fieldName) {
-                return $meta->data;
-            }
-        }
-
-        return '';
-    }
 
     /**
      * @param $value
@@ -225,6 +164,23 @@ class TransactionJournal extends Model
         $account = $this->transactions()->where('amount', '>', 0)->first()->account;
 
         return $account;
+    }
+
+    /**
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public function getMeta($fieldName): string
+    {
+        foreach ($this->transactionjournalmeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return '';
     }
 
     /**
