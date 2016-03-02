@@ -7,6 +7,7 @@ use Auth;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -219,8 +220,9 @@ class TagController extends Controller
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
+        $journals     = $tag->transactionjournals()->expanded()->get(TransactionJournal::QUERYFIELDS);
 
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon'));
+        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon','journals'));
     }
 
     /**
