@@ -37,6 +37,9 @@ class AccountList implements BinderInterface
         if (Auth::check()) {
 
             $ids = explode(',', $value);
+            // filter ids:
+            $ids = self::filterIds($ids);
+
             /** @var \Illuminate\Support\Collection $object */
             $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                              ->where('account_types.editable', 1)
@@ -48,5 +51,23 @@ class AccountList implements BinderInterface
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return array
+     */
+    protected static function filterIds(array $ids): array
+    {
+        $new = [];
+        foreach ($ids as $id) {
+            if (intval($id) > 0) {
+                $new[] = $id;
+            }
+        }
+        $new = array_unique($new);
+
+        return $new;
     }
 }
