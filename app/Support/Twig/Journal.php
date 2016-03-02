@@ -74,13 +74,6 @@ class Journal extends Twig_Extension
         return new Twig_SimpleFilter(
             'typeIcon', function (TransactionJournal $journal): string {
 
-            $cache = new CacheProperties();
-            $cache->addProperty($journal->id);
-            $cache->addProperty('typeIcon');
-            if ($cache->has()) {
-                return $cache->get(); // @codeCoverageIgnore
-            }
-
             switch (true) {
                 case $journal->isWithdrawal():
                     $txt = '<i class="fa fa-long-arrow-left fa-fw" title="' . trans('firefly.withdrawal') . '"></i>';
@@ -98,11 +91,8 @@ class Journal extends Twig_Extension
                     $txt = '';
                     break;
             }
-            $cache->store($txt);
 
             return $txt;
-
-
         }, ['is_safe' => ['html']]
         );
     }
