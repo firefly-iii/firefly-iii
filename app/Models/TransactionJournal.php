@@ -10,6 +10,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * FireflyIII\Models\TransactionJournal
+ *
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property integer $user_id
+ * @property integer $transaction_type_id
+ * @property integer $bill_id
+ * @property integer $transaction_currency_id
+ * @property string $description
+ * @property boolean $completed
+ * @property \Carbon\Carbon $date
+ * @property \Carbon\Carbon $interest_date
+ * @property \Carbon\Carbon $book_date
+ * @property boolean $encrypted
+ * @property integer $order
+ * @property integer $tag_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read \FireflyIII\Models\Bill $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
+ * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionType $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionjournalmeta
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \FireflyIII\User $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
+ */
 class TransactionJournal extends Model
 {
     use SoftDeletes, ValidatingTrait;
