@@ -98,22 +98,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return string
-     */
-    public function getAmountPositiveAttribute()
-    {
-        $amount = '0';
-        /** @var Transaction $t */
-        foreach ($this->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
      * @codeCoverageIgnore
      *
      * @param $value
