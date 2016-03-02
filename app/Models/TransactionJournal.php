@@ -112,17 +112,7 @@ class TransactionJournal extends Model
 
         return $value;
     }
-
-    /**
-     * @return Account
-     */
-    public function getDestinationAccountAttribute()
-    {
-        $account = $this->transactions()->where('amount', '>', 0)->first()->account;
-
-        return $account;
-    }
-
+    
     /**
      *
      * @param string $fieldName
