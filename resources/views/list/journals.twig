@@ -26,9 +26,7 @@
     </tr>
     </thead>
     <tbody>
-    {% set _sum = 0 %}
     {% for journal in journals %}
-        {% set _sum = _sum + journal.amount %}
         <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
             <td class="hidden-xs">
                 <div class="btn-group btn-group-xs">
@@ -101,26 +99,6 @@
         </tr>
     {% endfor %}
     </tbody>
-    <tfoot>
-    {% if showPageSum %}
-        <tr>
-            <td colspan="3" style="text-align: right;"><em>{{ 'sum'|_ }}</em></td>
-            <td colspan="2">{{ _sum|formatAmount }}</td>
-        </tr>
-    {% endif %}
-    {% if showPeriodSum %}
-        <tr>
-            <td colspan="3" style="text-align: right;"><em>{{ 'period_sum'|_ }}</em></td>
-            <td colspan="2">{{ periodSum|formatAmount }}</td>
-        </tr>
-    {% endif %}
-    {% if showTotalSum %}
-        <tr>
-            <td colspan="3" style="text-align: right;"><em>{{ 'total_sum'|_ }}</em></td>
-            <td colspan="2">{{ totalSum|formatAmount }}</td>
-        </tr>
-    {% endif %}
-    </tfoot>
 </table>
 
 {{ journals.render|raw }}
