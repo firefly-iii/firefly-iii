@@ -98,30 +98,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return float
-     */
-    public function getAmountAttribute()
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty($this->id);
-        $cache->addProperty('amount');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        bcscale(2);
-        $transaction = $this->transactions->sortByDesc('amount')->first();
-        $amount      = $transaction->amount;
-        if ($this->isWithdrawal()) {
-            $amount = bcmul($amount, '-1');
-        }
-        $cache->store($amount);
-
-        return $amount;
-
-    }
-
-    /**
      * @return string
      */
     public function getAmountPositiveAttribute()
