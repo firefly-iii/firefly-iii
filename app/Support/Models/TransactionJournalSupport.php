@@ -1,39 +1,44 @@
 <?php
 /**
- * BaseModel.php
+ * TransactionJournalSupport.php
  * Copyright (C) 2016 Sander Dorigo
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Models;
+namespace FireflyIII\Support\Models;
 
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+
 /**
- * Class BaseModel
+ * Class TransactionJournalSupport
  *
- * @package FireflyIII\Models
+ * @package FireflyIII\Support\Models
  */
-class BaseModel extends Model
+class TransactionJournalSupport extends Model
 {
     /**
-     * @param $query
-     * @param $table
+     * @param Builder $query
+     * @param string  $table
      *
      * @return bool
      */
-    public static function isJoined($query, $table)
+    public static function isJoined(Builder $query, string $table):bool
     {
         $joins = $query->getQuery()->joins;
-        if($joins == null) {
+        if (is_null($joins)) {
             return false;
         }
         foreach ($joins as $join) {
-            if ($join->table == $table) {
+            if ($join->table === $table) {
                 return true;
             }
         }
+
         return false;
     }
+
 }

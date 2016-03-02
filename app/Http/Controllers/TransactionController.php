@@ -144,6 +144,7 @@ class TransactionController extends Controller
         // get journal again:
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::expanded()->where('transaction_journals.id', $journal->id)->first(TransactionJournal::QUERYFIELDS);
+        // TODO REMOVE this in favour of something static in TransactionJournal.
         // cannot edit opening balance
         if ($journal->isOpeningBalance()) {
             throw new FireflyException('Cannot edit this transaction (#' . $journal->id . '). Edit the account instead!');

@@ -3,6 +3,7 @@
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use FireflyIII\Support\Models\TransactionJournalSupport;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -58,7 +59,7 @@ use Watson\Validating\ValidatingTrait;
 
  *
  */
-class TransactionJournal extends BaseModel
+class TransactionJournal extends TransactionJournalSupport
 {
     use SoftDeletes, ValidatingTrait;
 

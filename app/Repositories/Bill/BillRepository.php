@@ -447,6 +447,7 @@ class BillRepository implements BillRepositoryInterface
         // looks weird, but is useful:
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::expanded()->where('transaction_journals.id', $journal->id)->get(TransactionJournal::QUERYFIELDS)->first();
+        // TODO REMOVE this in favour of something static in TransactionJournal.
 
 
         /*
