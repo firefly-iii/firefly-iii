@@ -41,7 +41,7 @@ class Balance
      */
     public function getBalanceHeader(): BalanceHeader
     {
-        return $this->balanceHeader;
+        return $this->balanceHeader ?? new BalanceHeader;
     }
 
     /**

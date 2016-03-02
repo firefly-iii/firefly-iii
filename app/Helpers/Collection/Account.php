@@ -16,11 +16,19 @@ class Account
     /** @var Collection */
     protected $accounts;
     /** @var string */
-    protected $difference;
+    protected $difference = '';
     /** @var string */
-    protected $end;
+    protected $end = '';
     /** @var string */
-    protected $start;
+    protected $start = '';
+
+    /**
+     * Account constructor.
+     */
+    public function __construct()
+    {
+        $this->accounts = new Collection;
+    }
 
     /**
      * @return Collection

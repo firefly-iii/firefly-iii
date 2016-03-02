@@ -2,6 +2,9 @@
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Report\AccountReportHelperInterface;
+use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
+use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -19,9 +22,12 @@ use View;
 class ReportController extends Controller
 {
 
-
+    /** @var AccountReportHelperInterface */
     protected $accountHelper;
+    /** @var BalanceReportHelperInterface */
     protected $balanceHelper;
+
+    /** @var BudgetReportHelperInterface */
     protected $budgetHelper;
     /** @var ReportHelperInterface */
     protected $helper;
