@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Budget;
@@ -12,12 +11,14 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 
 /**
  * Class BudgetRepository
@@ -26,6 +27,19 @@ use Input;
  */
 class BudgetRepository extends ComponentRepository implements BudgetRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param Budget     $budget
@@ -83,7 +97,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getActiveBudgets()
     {
         /** @var Collection $set */
-        $set = Auth::user()->budgets()->where('active', 1)->get();
+        $set = $this->user->budgets()->where('active', 1)->get();
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -108,7 +122,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                               ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                               ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
                               ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-                              ->where('budgets.user_id', Auth::user()->id)
+                              ->where('budgets.user_id', $this->user->id)
                               ->get(['limit_repetitions.*', 'budget_limits.budget_id']);
     }
 
@@ -125,21 +139,21 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         $budgetIds = $budgets->pluck('id')->toArray();
 
-        $set = Auth::user()->budgets()
-                   ->leftJoin('budget_limits', 'budgets.id', '=', 'budget_limits.budget_id')
-                   ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                   ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))
-                   ->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d'))
-                   ->groupBy('budgets.id')
-                   ->groupBy('dateFormatted')
-                   ->whereIn('budgets.id', $budgetIds)
-                   ->get(
-                       [
-                           'budgets.*',
-                           DB::raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
-                           DB::raw('SUM(`limit_repetitions`.`amount`) as `budgeted`'),
-                       ]
-                   );
+        $set = $this->user->budgets()
+                          ->leftJoin('budget_limits', 'budgets.id', '=', 'budget_limits.budget_id')
+                          ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                          ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))
+                          ->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d'))
+                          ->groupBy('budgets.id')
+                          ->groupBy('dateFormatted')
+                          ->whereIn('budgets.id', $budgetIds)
+                          ->get(
+                              [
+                                  'budgets.*',
+                                  DB::raw('DATE_FORMAT(`limit_repetitions`.`startdate`,"%Y") as `dateFormatted`'),
+                                  DB::raw('SUM(`limit_repetitions`.`amount`) as `budgeted`'),
+                              ]
+                          );
 
         return $set;
     }
@@ -150,7 +164,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getBudgets()
     {
         /** @var Collection $set */
-        $set = Auth::user()->budgets()->get();
+        $set = $this->user->budgets()->get();
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -176,26 +190,26 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         $ids = $accounts->pluck('id')->toArray();
 
         /** @var Collection $set */
-        $set = Auth::user()->budgets()
-                   ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->groupBy('budgets.id')
-                   ->groupBy('dateFormatted')
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereIn('transactions.account_id', $ids)
-                   ->get(
-                       [
-                           'budgets.*',
-                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
-                           DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
-                       ]
-                   );
+        $set = $this->user->budgets()
+                          ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->groupBy('budgets.id')
+                          ->groupBy('dateFormatted')
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                          ->whereIn('transactions.account_id', $ids)
+                          ->get(
+                              [
+                                  'budgets.*',
+                                  DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y-%m") AS `dateFormatted`'),
+                                  DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
+                              ]
+                          );
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -238,27 +252,27 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         $budgetIds = $budgets->pluck('id')->toArray();
 
         /** @var Collection $set */
-        $set = Auth::user()->budgets()
-                   ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->groupBy('budgets.id')
-                   ->groupBy('dateFormatted')
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereIn('transactions.account_id', $ids)
-                   ->whereIn('budgets.id', $budgetIds)
-                   ->get(
-                       [
-                           'budgets.*',
-                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
-                           DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
-                       ]
-                   );
+        $set = $this->user->budgets()
+                          ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->groupBy('budgets.id')
+                          ->groupBy('dateFormatted')
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                          ->whereIn('transactions.account_id', $ids)
+                          ->whereIn('budgets.id', $budgetIds)
+                          ->get(
+                              [
+                                  'budgets.*',
+                                  DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
+                                  DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
+                              ]
+                          );
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -294,27 +308,27 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end)
     {
         /** @var Collection $set */
-        $set = Auth::user()
-                   ->budgets()
-                   ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
-                   ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                   ->where(
-                       function (Builder $query) use ($start, $end) {
-                           $query->where(
-                               function (Builder $query) use ($start, $end) {
-                                   $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'));
-                                   $query->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d'));
-                               }
-                           );
-                           $query->orWhere(
-                               function (Builder $query) {
-                                   $query->whereNull('limit_repetitions.startdate');
-                                   $query->whereNull('limit_repetitions.enddate');
-                               }
-                           );
-                       }
-                   )
-                   ->get(['budgets.*', 'limit_repetitions.startdate', 'limit_repetitions.enddate', 'limit_repetitions.amount']);
+        $set = $this->user
+            ->budgets()
+            ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
+            ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+            ->where(
+                function (Builder $query) use ($start, $end) {
+                    $query->where(
+                        function (Builder $query) use ($start, $end) {
+                            $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'));
+                            $query->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d'));
+                        }
+                    );
+                    $query->orWhere(
+                        function (Builder $query) {
+                            $query->whereNull('limit_repetitions.startdate');
+                            $query->whereNull('limit_repetitions.enddate');
+                        }
+                    );
+                }
+            )
+            ->get(['budgets.*', 'limit_repetitions.startdate', 'limit_repetitions.enddate', 'limit_repetitions.amount']);
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -355,18 +369,18 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end)
     {
-        $set = Auth::user()->budgets()
-                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
-                   ->leftJoin('transaction_journals', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->where('budgets.id', $budget->id)
-                   ->where('transactions.amount', '<', 0)
-                   ->groupBy('transaction_journals.date')
-                   ->orderBy('transaction_journals.date')
-                   ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `dailyAmount`')]);
+        $set = $this->user->budgets()
+                          ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
+                          ->leftJoin('transaction_journals', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                          ->where('budgets.id', $budget->id)
+                          ->where('transactions.amount', '<', 0)
+                          ->groupBy('transaction_journals.date')
+                          ->orderBy('transaction_journals.date')
+                          ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `dailyAmount`')]);
 
         return $set;
     }
@@ -392,7 +406,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getInactiveBudgets()
     {
         /** @var Collection $set */
-        $set = Auth::user()->budgets()->where('active', 0)->get();
+        $set = $this->user->budgets()->where('active', 0)->get();
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -446,17 +460,17 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getWithoutBudget(Carbon $start, Carbon $end)
     {
-        return Auth::user()
-                   ->transactionjournals()
-                   ->transactionTypes([TransactionType::WITHDRAWAL])
-                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereNull('budget_transaction_journal.id')
-                   ->before($end)
-                   ->after($start)
-                   ->orderBy('transaction_journals.date', 'DESC')
-                   ->orderBy('transaction_journals.order', 'ASC')
-                   ->orderBy('transaction_journals.id', 'DESC')
-                   ->get(['transaction_journals.*']);
+        return $this->user
+            ->transactionjournals()
+            ->transactionTypes([TransactionType::WITHDRAWAL])
+            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('budget_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->get(['transaction_journals.*']);
     }
 
     /**
@@ -467,28 +481,28 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function getWithoutBudgetSum(Carbon $start, Carbon $end): string
     {
-        $entry = Auth::user()
-                     ->transactionjournals()
-                     ->whereNotIn(
-                         'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
-                         $query
-                             ->select('transaction_journals.id')
-                             ->from('transaction_journals')
-                             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                             ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                             ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
-                             ->whereNotNull('budget_transaction_journal.budget_id');
-                     }
-                     )
-                     ->after($start)
-                     ->before($end)
-                     ->leftJoin(
-                         'transactions', function (JoinClause $join) {
-                         $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                     }
-                     )
-                     ->transactionTypes([TransactionType::WITHDRAWAL])
-                     ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
+        $entry = $this->user
+            ->transactionjournals()
+            ->whereNotIn(
+                'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
+                $query
+                    ->select('transaction_journals.id')
+                    ->from('transaction_journals')
+                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
+                    ->whereNotNull('budget_transaction_journal.budget_id');
+            }
+            )
+            ->after($start)
+            ->before($end)
+            ->leftJoin(
+                'transactions', function (JoinClause $join) {
+                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+            }
+            )
+            ->transactionTypes([TransactionType::WITHDRAWAL])
+            ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
         if (is_null($entry->journalAmount)) {
             return '0';
         }
@@ -518,20 +532,20 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         $ids = $accounts->pluck('id')->toArray();
         /** @var Collection $query */
-        $query = Auth::user()->transactionJournals()
-                     ->transactionTypes([TransactionType::WITHDRAWAL])
-                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                     ->whereIn('transactions.account_id', $ids)
-                     ->where('transactions.amount', '<', 0)
-                     ->before($end)
-                     ->after($start)
-                     ->groupBy('budget_id')
-                     ->groupBy('dateFormatted')
-                     ->get(
-                         ['transaction_journals.date as dateFormatted', 'budget_transaction_journal.budget_id',
-                          DB::raw('SUM(`transactions`.`amount`) AS `sum`')]
-                     );
+        $query = $this->user->transactionJournals()
+                            ->transactionTypes([TransactionType::WITHDRAWAL])
+                            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                            ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                            ->whereIn('transactions.account_id', $ids)
+                            ->where('transactions.amount', '<', 0)
+                            ->before($end)
+                            ->after($start)
+                            ->groupBy('budget_id')
+                            ->groupBy('dateFormatted')
+                            ->get(
+                                ['transaction_journals.date as dateFormatted', 'budget_transaction_journal.budget_id',
+                                 DB::raw('SUM(`transactions`.`amount`) AS `sum`')]
+                            );
 
         $return = [];
         foreach ($query->toArray() as $entry) {
@@ -559,32 +573,32 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         $accountIds = $accounts->pluck('id')->toArray();
         $budgetIds  = $budgets->pluck('id')->toArray();
-        $set        = Auth::user()->transactionjournals()
-                          ->leftJoin(
-                              'transactions AS t_from', function (JoinClause $join) {
-                              $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
-                          }
-                          )
-                          ->leftJoin(
-                              'transactions AS t_to', function (JoinClause $join) {
-                              $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
-                          }
-                          )
-                          ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                          ->whereIn('t_from.account_id', $accountIds)
-                          ->whereNotIn('t_to.account_id', $accountIds)
-                          ->where(
-                              function (Builder $q) use ($budgetIds) {
-                                  $q->whereIn('budget_transaction_journal.budget_id', $budgetIds);
-                                  $q->orWhereNull('budget_transaction_journal.budget_id');
-                              }
-                          )
-                          ->after($start)
-                          ->before($end)
-                          ->groupBy('t_from.account_id')
-                          ->groupBy('budget_transaction_journal.budget_id')
-                          ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])// opening balance is not an expense.
-                          ->get(
+        $set        = $this->user->transactionjournals()
+                                 ->leftJoin(
+                                     'transactions AS t_from', function (JoinClause $join) {
+                                     $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin(
+                                     'transactions AS t_to', function (JoinClause $join) {
+                                     $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                                 }
+                                 )
+                                 ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                                 ->whereIn('t_from.account_id', $accountIds)
+                                 ->whereNotIn('t_to.account_id', $accountIds)
+                                 ->where(
+                                     function (Builder $q) use ($budgetIds) {
+                                         $q->whereIn('budget_transaction_journal.budget_id', $budgetIds);
+                                         $q->orWhereNull('budget_transaction_journal.budget_id');
+                                     }
+                                 )
+                                 ->after($start)
+                                 ->before($end)
+                                 ->groupBy('t_from.account_id')
+                                 ->groupBy('budget_transaction_journal.budget_id')
+                                 ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])// opening balance is not an expense.
+                                 ->get(
                 [
                     't_from.account_id', 'budget_transaction_journal.budget_id',
                     DB::raw('SUM(`t_from`.`amount`) AS `spent`'),
