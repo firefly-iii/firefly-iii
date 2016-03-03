@@ -3,12 +3,13 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class PiggyBankRepository
@@ -17,6 +18,20 @@ use Illuminate\Support\Collection;
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
+
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed piggy bank repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param PiggyBank $piggyBank
@@ -66,7 +81,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getMaxOrder()
     {
-        return intval(Auth::user()->piggyBanks()->max('order'));
+        return intval($this->user->piggyBanks()->max('order'));
     }
 
     /**
@@ -75,7 +90,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function getPiggyBanks()
     {
         /** @var Collection $set */
-        $set = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+        $set = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
 
         return $set;
     }
@@ -90,7 +105,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         // split query to make it work in sqlite:
         $set = PiggyBank::
         leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
-                        ->where('accounts.user_id', Auth::user()->id)->get(['piggy_banks.*']);
+                        ->where('accounts.user_id', $this->user->id)->get(['piggy_banks.*']);
         foreach ($set as $e) {
             $e->order = 0;
             $e->save();
@@ -110,7 +125,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function setOrder(int $piggyBankId, int $order)
     {
-        $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', Auth::user()->id)
+        $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', $this->user->id)
                               ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
         if ($piggyBank) {
             $piggyBank->order = $order;
