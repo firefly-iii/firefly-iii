@@ -5,7 +5,6 @@ namespace FireflyIII\Support\Twig;
 
 
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
