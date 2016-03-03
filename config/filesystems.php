@@ -52,7 +52,7 @@ return [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export'      => [
+        'export' => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],
@@ -62,13 +62,6 @@ return [
             'host'     => 'ftp.example.com',
             'username' => 'your-username',
             'password' => 'your-password',
-
-            // Optional FTP Settings...
-            // 'port'     => 21,
-            // 'root'     => '',
-            // 'passive'  => true,
-            // 'ssl'      => true,
-            // 'timeout'  => 30,
         ],
 
         's3' => [

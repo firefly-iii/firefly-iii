@@ -11,7 +11,7 @@ return [
 
     'export_formats'        => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
-        //'mt940' => 'FireflyIII\Export\Exporter\MtExporter',
+        // mt940 FireflyIII Export Exporter MtExporter
     ],
     'default_export_format' => 'csv',
 

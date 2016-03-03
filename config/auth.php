@@ -24,11 +24,6 @@ return [
             'driver' => 'eloquent',
             'model'  => FireflyIII\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     'passwords' => [
