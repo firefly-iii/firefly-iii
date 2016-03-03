@@ -10,10 +10,11 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\ExportJob;
 
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\ExportJob;
+use FireflyIII\User;
 use Illuminate\Support\Str;
+use Log;
 
 /**
  * Class ExportJobRepository
@@ -22,6 +23,19 @@ use Illuminate\Support\Str;
  */
 class ExportJobRepository implements ExportJobRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @return bool
@@ -57,7 +71,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     public function create()
     {
         $exportJob = new ExportJob;
-        $exportJob->user()->associate(Auth::user());
+        $exportJob->user()->associate($this->user);
         /*
          * In theory this random string could give db error.
          */
@@ -75,7 +89,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function findByKey(string $key)
     {
-        return Auth::user()->exportJobs()->where('key', $key)->first();
+        return $this->user->exportJobs()->where('key', $key)->first();
     }
 
 }
