@@ -19,11 +19,11 @@ return [
     |
     */
 
-    "password" => "As senhas devem ter pelo menos seis caracteres e devem ser iguais.",
-    "user"     => "Não podemos encontrar um usuário com esse endereço de e-mail.",
-    "token"    => "Este token de redefinição de senha é inválido.",
-    "sent"     => "Nós te enviamos um email com um link para trocar a senha!",
-    "reset"    => "Sua senha foi redefinida!",
-    'blocked'  => 'Boa tentativa.'
+    'password' => 'As senhas devem ter pelo menos seis caracteres e devem ser iguais.',
+    'user'     => 'Não podemos encontrar um usuário com esse endereço de e-mail.',
+    'token'    => 'Este token de redefinição de senha é inválido.',
+    'sent'     => 'Nós te enviamos um email com um link para trocar a senha!',
+    'reset'    => 'Sua senha foi redefinida!',
+    'blocked'  => 'Boa tentativa.',
 
 ];
