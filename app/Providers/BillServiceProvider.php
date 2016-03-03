@@ -2,8 +2,16 @@
 
 namespace FireflyIII\Providers;
 
+use Auth;
+use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class BillServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class BillServiceProvider extends ServiceProvider
 {
     /**
