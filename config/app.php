@@ -154,6 +154,16 @@ return [
          * More service providers.
          */
         FireflyIII\Providers\AccountServiceProvider::class,
+        FireflyIII\Providers\AttachmentServiceProvider::class,
+        FireflyIII\Providers\BillServiceProvider::class,
+        FireflyIII\Providers\BudgetServiceProvider::class,
+        FireflyIII\Providers\CategoryServiceProvider::class,
+        FireflyIII\Providers\ExportJobServiceProvider::class,
+        FireflyIII\Providers\JournalServiceProvider::class,
+        FireflyIII\Providers\PiggyBankServiceProvider::class,
+        FireflyIII\Providers\RuleServiceProvider::class,
+        FireflyIII\Providers\RuleGroupServiceProvider::class,
+        FireflyIII\Providers\TagServiceProvider::class,
 
 
         /*
