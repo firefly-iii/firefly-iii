@@ -4,15 +4,16 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Tag;
 
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TagRepository
@@ -22,6 +23,19 @@ use Illuminate\Support\Collection;
 class TagRepository implements TagRepositoryInterface
 {
 
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed piggy bank repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param Collection $accounts
@@ -33,34 +47,34 @@ class TagRepository implements TagRepositoryInterface
     public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end)
     {
         $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->tags()
-                   ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                   ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                   ->leftJoin(
-                       'transactions AS t_from', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions AS t_to', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
-                   }
-                   )
-                   ->where('tags.tagMode', 'balancingAct')
-                   ->where('transaction_types.type', TransactionType::TRANSFER)
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->whereIn('t_from.account_id', $ids)
-                   ->whereIn('t_to.account_id', $ids)
-                   ->groupBy('t_to.account_id')
-                   ->get(
-                       [
-                           't_to.account_id',
-                           DB::raw('SUM(`t_to`.`amount`) as `sum`'),
-                       ]
-                   );
+        $set = $this->user->tags()
+                          ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                          ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                          ->leftJoin(
+                              'transactions AS t_from', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
+                          }
+                          )
+                          ->leftJoin(
+                              'transactions AS t_to', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                          }
+                          )
+                          ->where('tags.tagMode', 'balancingAct')
+                          ->where('transaction_types.type', TransactionType::TRANSFER)
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->whereIn('t_from.account_id', $ids)
+                          ->whereIn('t_to.account_id', $ids)
+                          ->groupBy('t_to.account_id')
+                          ->get(
+                              [
+                                  't_to.account_id',
+                                  DB::raw('SUM(`t_to`.`amount`) as `sum`'),
+                              ]
+                          );
 
         return $set;
     }
@@ -117,7 +131,7 @@ class TagRepository implements TagRepositoryInterface
     {
         // the quickest way to do this is by scanning all balancingAct tags
         // because there will be less of them any way.
-        $tags   = Auth::user()->tags()->where('tagMode', 'balancingAct')->get();
+        $tags   = $this->user->tags()->where('tagMode', 'balancingAct')->get();
         $amount = '0';
         bcscale(2);
 
@@ -157,7 +171,7 @@ class TagRepository implements TagRepositoryInterface
     public function get()
     {
         /** @var Collection $tags */
-        $tags = Auth::user()->tags()->get();
+        $tags = $this->user->tags()->get();
         $tags = $tags->sortBy(
             function (Tag $tag) {
                 return strtolower($tag->tag);
@@ -182,7 +196,7 @@ class TagRepository implements TagRepositoryInterface
         $tag->longitude   = $data['longitude'];
         $tag->zoomLevel   = $data['zoomLevel'];
         $tag->tagMode     = $data['tagMode'];
-        $tag->user()->associate(Auth::user());
+        $tag->user()->associate($this->user);
         $tag->save();
 
         return $tag;
