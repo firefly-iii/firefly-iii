@@ -75,8 +75,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
             /*
              * journalAmount has been collected in BillRepository::getJournals
              */
-            $journalAmount  = TransactionJournal::amountPositive($entry) ?? '0';
-            $actualAmount[] = round($journalAmount, 2);
+            $actualAmount[] = round(TransactionJournal::amountPositive($entry), 2);
         }
 
         $data['datasets'][] = [
