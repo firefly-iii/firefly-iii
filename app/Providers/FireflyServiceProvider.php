@@ -19,6 +19,7 @@ use Illuminate\Support\ServiceProvider;
 use Twig;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
+use Auth;
 
 /**
  * Class FireflyServiceProvider
@@ -82,7 +83,7 @@ class FireflyServiceProvider extends ServiceProvider
         }
         );
 
-        $this->app->bind('FireflyIII\Repositories\Account\AccountRepositoryInterface', 'FireflyIII\Repositories\Account\AccountRepository');
+
         $this->app->bind('FireflyIII\Repositories\Budget\BudgetRepositoryInterface', 'FireflyIII\Repositories\Budget\BudgetRepository');
         $this->app->bind('FireflyIII\Repositories\Category\CategoryRepositoryInterface', 'FireflyIII\Repositories\Category\CategoryRepository');
         $this->app->bind('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface', 'FireflyIII\Repositories\Category\SingleCategoryRepository');

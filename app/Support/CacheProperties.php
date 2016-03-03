@@ -31,8 +31,10 @@ class CacheProperties
     public function __construct()
     {
         $this->properties = new Collection;
-        $this->addProperty(Auth::user()->id);
-        $this->addProperty(Prefs::lastActivity());
+        if (Auth::check()) {
+            $this->addProperty(Auth::user()->id);
+            $this->addProperty(Prefs::lastActivity());
+        }
     }
 
     /**

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Account;
 
-use Auth;
 use Carbon\Carbon;
 use Config;
 use DB;
@@ -16,6 +15,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -33,8 +33,21 @@ use Steam;
 class AccountRepository implements AccountRepositoryInterface
 {
 
+    /** @var User */
+    private $user;
     /** @var array Valid field names of account_meta */
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
+
+    /**
+     * AccountRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param array $types
@@ -43,7 +56,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function countAccounts(array $types): int
     {
-        $count = Auth::user()->accounts()->accountTypeIn($types)->count();
+        $count = $this->user->accounts()->accountTypeIn($types)->count();
 
         return $count;
     }
@@ -75,7 +88,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function find(int $accountId): Account
     {
-        return Auth::user()->accounts()->findOrNew($accountId);
+        return $this->user->accounts()->findOrNew($accountId);
     }
 
     /**
@@ -87,7 +100,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function get(array $ids): Collection
     {
-        return Auth::user()->accounts()->whereIn('id', $ids)->get(['accounts.*']);
+        return $this->user->accounts()->whereIn('id', $ids)->get(['accounts.*']);
     }
 
     /**
@@ -98,7 +111,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccounts(array $types): Collection
     {
         /** @var Collection $result */
-        $result = Auth::user()->accounts()->with(
+        $result = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
@@ -126,22 +139,22 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getCreditCards(Carbon $date): Collection
     {
-        $set = Auth::user()->accounts()
-                   ->hasMetaValue('accountRole', 'ccAsset')
-                   ->hasMetaValue('ccType', 'monthlyFull')
-                   ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                   ->whereNull('transactions.deleted_at')
-                   ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                   ->groupBy('accounts.id')
-                   ->get(
-                       [
-                           'accounts.*',
-                           'ccType.data as ccType',
-                           'accountRole.data as accountRole',
-                           DB::raw('SUM(`transactions`.`amount`) AS `balance`'),
-                       ]
-                   );
+        $set = $this->user->accounts()
+                          ->hasMetaValue('accountRole', 'ccAsset')
+                          ->hasMetaValue('ccType', 'monthlyFull')
+                          ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->whereNull('transactions.deleted_at')
+                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                          ->groupBy('accounts.id')
+                          ->get(
+                              [
+                                  'accounts.*',
+                                  'ccType.data as ccType',
+                                  'accountRole.data as accountRole',
+                                  DB::raw('SUM(`transactions`.`amount`) AS `balance`'),
+                              ]
+                          );
 
         return $set;
     }
@@ -166,7 +179,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageAccounts(Preference $preference): Collection
     {
-        $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
+        $query = $this->user->accounts()->accountTypeIn(['Default account', 'Asset account']);
 
         if (count($preference->data) > 0) {
             $query->whereIn('accounts.id', $preference->data);
@@ -187,16 +200,16 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection
     {
-        $set = Auth::user()
-                   ->transactionjournals()
-                   ->expanded()
-                   ->before($end)
-                   ->after($start)
-                   ->orderBy('transaction_journals.date', 'DESC')
-                   ->orderBy('transaction_journals.order', 'ASC')
-                   ->orderBy('transaction_journals.id', 'DESC')
-                   ->take(10)
-                   ->get(TransactionJournal::QUERYFIELDS);
+        $set = $this->user
+            ->transactionjournals()
+            ->expanded()
+            ->before($end)
+            ->after($start)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->take(10)
+            ->get(TransactionJournal::QUERYFIELDS);
 
         return $set;
     }
@@ -210,18 +223,18 @@ class AccountRepository implements AccountRepositoryInterface
     public function getJournals(Account $account, $page): LengthAwarePaginator
     {
         $offset = ($page - 1) * 50;
-        $query  = Auth::user()
-                      ->transactionJournals()
-                      ->expanded()
-                      ->where(
+        $query  = $this->user
+            ->transactionJournals()
+            ->expanded()
+            ->where(
                 function (Builder $q) use ($account) {
                     $q->where('destination.account_id', $account->id);
                     $q->orWhere('source.account_id', $account->id);
                 }
             )
-                      ->orderBy('transaction_journals.date', 'DESC')
-                      ->orderBy('transaction_journals.order', 'ASC')
-                      ->orderBy('transaction_journals.id', 'DESC');
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC');
 
         $count     = $query->count();
         $set       = $query->take(50)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
@@ -247,7 +260,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $ids = array_unique($ids);
         if (count($ids) > 0) {
-            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
+            $accounts = $this->user->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
         }
         bcscale(2);
 
@@ -281,12 +294,12 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getSavingsAccounts(): Collection
     {
-        $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
-                        ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                        ->where('account_meta.name', 'accountRole')
-                        ->where('accounts.active', 1)
-                        ->where('account_meta.data', '"savingAsset"')
-                        ->get(['accounts.*']);
+        $accounts = $this->user->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
+                               ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                               ->where('account_meta.name', 'accountRole')
+                               ->where('accounts.active', 1)
+                               ->where('account_meta.data', '"savingAsset"')
+                               ->get(['accounts.*']);
         $start    = clone session('start', new Carbon);
         $end      = clone session('end', new Carbon);
 
@@ -399,7 +412,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function sumOfEverything(): string
     {
-        return strval(Auth::user()->transactions()->sum('amount'));
+        return strval($this->user->transactions()->sum('amount'));
     }
 
     /**
