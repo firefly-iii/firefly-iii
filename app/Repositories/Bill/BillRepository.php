@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Bill;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
@@ -11,6 +10,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -24,6 +24,20 @@ use Navigation;
  */
 class BillRepository implements BillRepositoryInterface
 {
+
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param Bill $bill
@@ -43,14 +57,14 @@ class BillRepository implements BillRepositoryInterface
     public function getActiveBills(): Collection
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()
-                   ->where('active', 1)
-                   ->get(
-                       [
-                           'bills.*',
-                           DB::raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
-                       ]
-                   )->sortBy('name');
+        $set = $this->user->bills()
+                          ->where('active', 1)
+                          ->get(
+                              [
+                                  'bills.*',
+                                  DB::raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
+                              ]
+                          )->sortBy('name');
 
         return $set;
     }
@@ -69,23 +83,23 @@ class BillRepository implements BillRepositoryInterface
     {
         $ids = $bills->pluck('id')->toArray();
 
-        $set = Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->whereIn('bill_id', $ids)
-                   ->before($end)
-                   ->after($start)
-                   ->groupBy('transaction_journals.bill_id')
-                   ->get(
-                       [
-                           'transaction_journals.bill_id',
-                           'transaction_journals.id',
-                           DB::raw('SUM(`transactions`.`amount`) as `journalAmount`'),
-                       ]
-                   );
+        $set = $this->user->transactionjournals()
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->whereIn('bill_id', $ids)
+                          ->before($end)
+                          ->after($start)
+                          ->groupBy('transaction_journals.bill_id')
+                          ->get(
+                              [
+                                  'transaction_journals.bill_id',
+                                  'transaction_journals.id',
+                                  DB::raw('SUM(`transactions`.`amount`) as `journalAmount`'),
+                              ]
+                          );
 
         return $set;
     }
@@ -96,7 +110,7 @@ class BillRepository implements BillRepositoryInterface
     public function getBills(): Collection
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
+        $set = $this->user->bills()->orderBy('name', 'ASC')->get();
 
         $set = $set->sortBy(
             function (Bill $bill) {
@@ -118,21 +132,21 @@ class BillRepository implements BillRepositoryInterface
     public function getBillsForAccounts(Collection $accounts): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->bills()
-                   ->leftJoin(
-                       'transaction_journals', function (JoinClause $join) {
-                       $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->whereIn('transactions.account_id', $ids)
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->groupBy('bills.id')
-                   ->get(['bills.*']);
+        $set = $this->user->bills()
+                          ->leftJoin(
+                              'transaction_journals', function (JoinClause $join) {
+                              $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
+                          }
+                          )
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->whereIn('transactions.account_id', $ids)
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->groupBy('bills.id')
+                          ->get(['bills.*']);
 
         $set = $set->sortBy(
             function (Bill $bill) {
@@ -248,7 +262,7 @@ class BillRepository implements BillRepositoryInterface
                       ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                       ->where('transactions.account_id', $creditCard->id)
                       ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-                      ->where('transaction_journals.user_id', Auth::user()->id)
+                      ->where('transaction_journals.user_id', $this->user->id)
                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                       ->where('transaction_types.type', TransactionType::TRANSFER);
@@ -320,7 +334,7 @@ class BillRepository implements BillRepositoryInterface
 
         $journals = new Collection;
         if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
+            $journals = $this->user->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
                 ['transaction_journals.*']
             );
         }
