@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
@@ -15,6 +14,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -26,6 +26,19 @@ use Log;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed transaction journal repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param TransactionJournal $journal
@@ -46,7 +59,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function first()
     {
-        $entry = Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         return $entry;
     }
@@ -85,14 +98,14 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getCollectionOfTypes(array $types, int $offset, int $count)
     {
-        $set = Auth::user()->transactionJournals()->transactionTypes($types)
-                   ->take($count)->offset($offset)
-                   ->orderBy('date', 'DESC')
-                   ->orderBy('order', 'ASC')
-                   ->orderBy('id', 'DESC')
-                   ->get(
-                       ['transaction_journals.*']
-                   );
+        $set = $this->user->transactionJournals()->transactionTypes($types)
+                          ->take($count)->offset($offset)
+                          ->orderBy('date', 'DESC')
+                          ->orderBy('order', 'ASC')
+                          ->orderBy('id', 'DESC')
+                          ->get(
+                              ['transaction_journals.*']
+                          );
 
         return $set;
     }
@@ -104,7 +117,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsOfType(TransactionType $dbType)
     {
-        return Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
+        return $this->user->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
     }
 
     /**
@@ -118,18 +131,18 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50)
     {
-        $set = Auth::user()
-                   ->transactionJournals()
-                   ->expanded()
-                   ->transactionTypes($types)
-                   ->take($pagesize)
-                   ->offset($offset)
-                   ->orderBy('date', 'DESC')
-                   ->orderBy('order', 'ASC')
-                   ->orderBy('id', 'DESC')
-                   ->get(TransactionJournal::QUERYFIELDS);
+        $set = $this->user
+            ->transactionJournals()
+            ->expanded()
+            ->transactionTypes($types)
+            ->take($pagesize)
+            ->offset($offset)
+            ->orderBy('date', 'DESC')
+            ->orderBy('order', 'ASC')
+            ->orderBy('id', 'DESC')
+            ->get(TransactionJournal::QUERYFIELDS);
 
-        $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
+        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
         $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
 
         return $journals;
@@ -153,7 +166,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getWithDate(int $journalId, Carbon $date)
     {
-        return Auth::user()->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
+        return $this->user->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
     }
 
     /**
