@@ -18,7 +18,6 @@ use Illuminate\Support\Collection;
  */
 class SingleCategoryRepository extends ComponentRepository implements SingleCategoryRepositoryInterface
 {
-
     /**
      * @param Category $category
      *

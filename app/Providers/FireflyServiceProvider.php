@@ -83,8 +83,6 @@ class FireflyServiceProvider extends ServiceProvider
         }
         );
 
-
-        $this->app->bind('FireflyIII\Repositories\Category\CategoryRepositoryInterface', 'FireflyIII\Repositories\Category\CategoryRepository');
         $this->app->bind('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface', 'FireflyIII\Repositories\Category\SingleCategoryRepository');
         $this->app->bind('FireflyIII\Repositories\Journal\JournalRepositoryInterface', 'FireflyIII\Repositories\Journal\JournalRepository');
         $this->app->bind('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface', 'FireflyIII\Repositories\PiggyBank\PiggyBankRepository');

@@ -3,14 +3,15 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Category;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Sql\Query;
+use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class CategoryRepository
@@ -19,6 +20,19 @@ use Illuminate\Support\Collection;
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * Returns a collection of Categories appended with the amount of money that has been earned
@@ -34,36 +48,36 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
 
-        $collection = Auth::user()->categories()
-                          ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
-                          ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                          ->leftJoin(
-                              'transactions AS t_src', function (JoinClause $join) {
-                              $join->on('t_src.transaction_journal_id', '=', 'transaction_journals.id')->where('t_src.amount', '<', 0);
-                          }
-                          )
-                          ->leftJoin(
-                              'transactions AS t_dest', function (JoinClause $join) {
-                              $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
-                          }
-                          )
-                          ->whereIn('t_dest.account_id', $accounts->pluck('id')->toArray())// to these accounts (earned)
-                          ->whereNotIn('t_src.account_id', $accounts->pluck('id')->toArray())//-- but not from these accounts
-                          ->whereIn(
+        $collection = $this->user->categories()
+                                 ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                                 ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions AS t_src', function (JoinClause $join) {
+                                     $join->on('t_src.transaction_journal_id', '=', 'transaction_journals.id')->where('t_src.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin(
+                                     'transactions AS t_dest', function (JoinClause $join) {
+                                     $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
+                                 }
+                                 )
+                                 ->whereIn('t_dest.account_id', $accounts->pluck('id')->toArray())// to these accounts (earned)
+                                 ->whereNotIn('t_src.account_id', $accounts->pluck('id')->toArray())//-- but not from these accounts
+                                 ->whereIn(
                 'transaction_types.type', [TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
             )
-                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                          ->groupBy('categories.id')
-                          ->groupBy('dateFormatted')
-                          ->get(
-                              [
-                                  'categories.*',
-                                  DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
-                                  DB::raw('SUM(`t_dest`.`amount`) AS `earned`'),
-                              ]
-                          );
+                                 ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                 ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                 ->groupBy('categories.id')
+                                 ->groupBy('dateFormatted')
+                                 ->get(
+                                     [
+                                         'categories.*',
+                                         DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y-%m") as `dateFormatted`'),
+                                         DB::raw('SUM(`t_dest`.`amount`) AS `earned`'),
+                                     ]
+                                 );
 
         return $collection;
 
@@ -78,7 +92,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function listCategories()
     {
         /** @var Collection $set */
-        $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $set = $this->user->categories()->orderBy('name', 'ASC')->get();
         $set = $set->sortBy(
             function (Category $category) {
                 return strtolower($category->name);
@@ -105,27 +119,27 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end)
     {
 
-        $set = Auth::user()->categories()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
-                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
-                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereIn('transaction_types.type', [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL])
-                   ->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
-                   ->whereIn('categories.id', $categories->pluck('id')->toArray())
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->groupBy('categories.id')
-                   ->groupBy('transaction_types.type')
-                   ->groupBy('dateFormatted')
-                   ->get(
-                       [
-                           'categories.*',
-                           DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
-                           'transaction_types.type',
-                           DB::raw('SUM(`amount`) as `sum`'),
-                       ]
-                   );
+        $set = $this->user->categories()
+                          ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
+                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->whereIn('transaction_types.type', [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL])
+                          ->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
+                          ->whereIn('categories.id', $categories->pluck('id')->toArray())
+                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                          ->groupBy('categories.id')
+                          ->groupBy('transaction_types.type')
+                          ->groupBy('dateFormatted')
+                          ->get(
+                              [
+                                  'categories.*',
+                                  DB::raw('DATE_FORMAT(`transaction_journals`.`date`,"%Y") as `dateFormatted`'),
+                                  'transaction_types.type',
+                                  DB::raw('SUM(`amount`) as `sum`'),
+                              ]
+                          );
 
         return $set;
 
@@ -142,16 +156,16 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function listNoCategory(Carbon $start, Carbon $end)
     {
-        return Auth::user()
-                   ->transactionjournals()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereNull('category_transaction_journal.id')
-                   ->before($end)
-                   ->after($start)
-                   ->orderBy('transaction_journals.date', 'DESC')
-                   ->orderBy('transaction_journals.order', 'ASC')
-                   ->orderBy('transaction_journals.id', 'DESC')
-                   ->get(['transaction_journals.*']);
+        return $this->user
+            ->transactionjournals()
+            ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('category_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->get(['transaction_journals.*']);
     }
 
     /**
@@ -168,27 +182,27 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
     {
         $accountIds = $accounts->pluck('id')->toArray();
-        $query      = Auth::user()->categories()
-                          ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
-                          ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                          ->leftJoin(
-                              'transactions AS t_src', function (JoinClause $join) {
-                              $join->on('t_src.transaction_journal_id', '=', 'transaction_journals.id')->where('t_src.amount', '<', 0);
-                          }
-                          )
-                          ->leftJoin(
-                              'transactions AS t_dest', function (JoinClause $join) {
-                              $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
-                          }
-                          )
-                          ->whereIn(
-                              'transaction_types.type', [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
-                          )// spent on these things.
-                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                          ->groupBy('categories.id')
-                          ->groupBy('dateFormatted');
+        $query      = $this->user->categories()
+                                 ->leftJoin('category_transaction_journal', 'category_transaction_journal.category_id', '=', 'categories.id')
+                                 ->leftJoin('transaction_journals', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions AS t_src', function (JoinClause $join) {
+                                     $join->on('t_src.transaction_journal_id', '=', 'transaction_journals.id')->where('t_src.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin(
+                                     'transactions AS t_dest', function (JoinClause $join) {
+                                     $join->on('t_dest.transaction_journal_id', '=', 'transaction_journals.id')->where('t_dest.amount', '>', 0);
+                                 }
+                                 )
+                                 ->whereIn(
+                                     'transaction_types.type', [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE]
+                                 )// spent on these things.
+                                 ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                 ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                 ->groupBy('categories.id')
+                                 ->groupBy('dateFormatted');
 
         if (count($accountIds) > 0) {
             $query->whereIn('t_src.account_id', $accountIds)// from these accounts (spent)
@@ -257,14 +271,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         // is withdrawal or transfer AND account_from is in the list of $accounts
-        $query = Auth::user()
-                     ->transactionjournals()
-                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->whereNull('category_transaction_journal.id')
-                     ->before($end)
-                     ->after($start)
-                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->transactionTypes($types);
+        $query = $this->user
+            ->transactionjournals()
+            ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('category_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->transactionTypes($types);
         if (count($accountIds) > 0) {
             $query->whereIn('transactions.account_id', $accountIds);
         }
