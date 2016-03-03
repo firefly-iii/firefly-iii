@@ -207,6 +207,12 @@ class AccountRepository implements AccountRepositoryInterface
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
+            ->where(
+                function (Builder $q) use ($account) {
+                    $q->where('destination.account_id', $account->id);
+                    $q->orWhere('source.account_id', $account->id);
+                }
+            )
             ->take(10)
             ->get(TransactionJournal::QUERYFIELDS);
 
