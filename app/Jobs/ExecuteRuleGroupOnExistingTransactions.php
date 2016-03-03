@@ -7,10 +7,15 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
+/**
+ * Class ExecuteRuleGroupOnExistingTransactions
+ *
+ * @package FireflyIII\Jobs
+ */
 class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
@@ -29,6 +34,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     /**
      * Create a new job instance.
      *
+     * @param RuleGroup $ruleGroup
      */
     public function __construct(RuleGroup $ruleGroup)
     {

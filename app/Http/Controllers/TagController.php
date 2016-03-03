@@ -222,7 +222,7 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $journals     = $tag->transactionjournals()->expanded()->get(TransactionJournal::QUERYFIELDS);
 
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon','journals'));
+        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals'));
     }
 
     /**

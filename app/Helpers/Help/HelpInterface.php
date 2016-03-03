@@ -18,6 +18,7 @@ interface HelpInterface
     public function getFromCache(string $key): string;
 
     /**
+     * @param string $language
      * @param string $route
      *
      * @return array

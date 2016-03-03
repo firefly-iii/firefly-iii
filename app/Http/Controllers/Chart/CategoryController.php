@@ -152,6 +152,8 @@ class CategoryController extends Controller
      *
      * @param CRI $repository
      *
+     * @param ARI $accountRepository
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function frontpage(CRI $repository, ARI $accountRepository)
