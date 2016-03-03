@@ -10,12 +10,13 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Rule;
 
-use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\User;
+use Log;
 
 /**
  * Class RuleRepository
@@ -24,13 +25,26 @@ use FireflyIII\Models\RuleTrigger;
  */
 class RuleRepository implements RuleRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed rule repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @return int
      */
     public function count()
     {
-        return Auth::user()->rules()->count();
+        return $this->user->rules()->count();
     }
 
     /**
@@ -56,7 +70,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getFirstRuleGroup()
     {
-        return Auth::user()->ruleGroups()->first();
+        return $this->user->ruleGroups()->first();
     }
 
     /**
@@ -205,7 +219,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function store(array $data)
     {
         /** @var RuleGroup $ruleGroup */
-        $ruleGroup = Auth::user()->ruleGroups()->find($data['rule_group_id']);
+        $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
 
         // get max order:
         $order = $this->getHighestOrderInRuleGroup($ruleGroup);
