@@ -38,6 +38,11 @@
                     {% if tag.date %}
                         <p>{{ 'date'|_ }}: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
                     {% endif %}
+
+                    <p>
+                        {{ 'sum'|_ }}: {{ sum|formatAmount }}<br />
+                    </p>
+
                 </div>
             </div>
         </div>

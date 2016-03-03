@@ -220,9 +220,12 @@ class TagController extends Controller
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
+        /** @var Collection $journals */
         $journals     = $tag->transactionjournals()->expanded()->get(TransactionJournal::QUERYFIELDS);
 
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals'));
+        $sum = $journals->sum('amount');
+
+        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals','sum'));
     }
 
     /**
