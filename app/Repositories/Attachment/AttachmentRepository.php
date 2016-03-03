@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Auth;
 use FireflyIII\Models\Attachment;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class AttachmentRepository
@@ -14,6 +15,19 @@ use Illuminate\Support\Collection;
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * AttachmentRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        Log::debug('Constructed attachment repository for user #' . $user->id . ' (' . $user->email . ')');
+        $this->user = $user;
+    }
 
     /**
      * @param Attachment $attachment
@@ -37,7 +51,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function get(): Collection
     {
-        return Auth::user()->attachments()->get();
+        return $this->user->attachments()->get();
     }
 
     /**
