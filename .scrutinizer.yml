@@ -1,3 +1,6 @@
 # .scrutinizer.yml
 tools:
   external_code_coverage: false
+filter:
+    excluded_paths:
+        - app/Support/Migration/*
