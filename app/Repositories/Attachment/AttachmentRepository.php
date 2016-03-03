@@ -6,7 +6,6 @@ namespace FireflyIII\Repositories\Attachment;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class AttachmentRepository
@@ -25,7 +24,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed attachment repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

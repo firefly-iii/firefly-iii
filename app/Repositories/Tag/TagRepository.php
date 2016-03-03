@@ -13,7 +13,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class TagRepository
@@ -33,7 +32,6 @@ class TagRepository implements TagRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed piggy bank repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

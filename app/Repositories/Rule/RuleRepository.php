@@ -16,7 +16,6 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class RuleRepository
@@ -35,7 +34,6 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed rule repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

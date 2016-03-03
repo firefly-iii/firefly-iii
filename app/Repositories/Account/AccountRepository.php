@@ -45,7 +45,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed account repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

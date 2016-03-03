@@ -4,13 +4,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\RuleGroup;
 
 
-use Auth;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Log;
+
 /**
  * Class RuleGroupRepository
  *
@@ -28,7 +27,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed piggy bank repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

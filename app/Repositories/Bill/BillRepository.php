@@ -14,7 +14,6 @@ use FireflyIII\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 
 /**
@@ -35,7 +34,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 
@@ -468,7 +466,6 @@ class BillRepository implements BillRepositoryInterface
         $description = strtolower($journal->description) . ' ' . strtolower(TransactionJournal::destinationAccount($journal)->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch(TransactionJournal::amountPositive($journal), $bill->amount_min, $bill->amount_max);
-        Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
 
 
         /*
@@ -479,8 +476,6 @@ class BillRepository implements BillRepositoryInterface
             $journal->save();
 
             return true;
-        } else {
-            Log::debug('Wordmatch: ' . (($wordMatch) ? 'true' : 'false') . ' AmountMatch: ' . (($amountMatch) ? 'true' : 'false'));
         }
         if ($bill->id == $journal->bill_id) {
             // if no match, but bill used to match, remove it:

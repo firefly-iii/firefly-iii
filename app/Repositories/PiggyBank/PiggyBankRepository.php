@@ -9,7 +9,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class PiggyBankRepository
@@ -29,7 +28,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed piggy bank repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

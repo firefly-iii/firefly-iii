@@ -36,7 +36,6 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed transaction journal repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

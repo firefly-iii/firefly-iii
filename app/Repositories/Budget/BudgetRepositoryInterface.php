@@ -241,7 +241,7 @@ interface BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param Carbon $date
-     * @param int       $amount
+     * @param int    $amount
      *
      * @return mixed
      */

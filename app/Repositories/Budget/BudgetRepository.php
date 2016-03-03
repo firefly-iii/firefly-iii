@@ -18,7 +18,6 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
 
 /**
  * Class BudgetRepository
@@ -37,7 +36,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

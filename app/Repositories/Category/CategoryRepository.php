@@ -11,7 +11,6 @@ use FireflyIII\Sql\Query;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class CategoryRepository
@@ -30,7 +29,6 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 

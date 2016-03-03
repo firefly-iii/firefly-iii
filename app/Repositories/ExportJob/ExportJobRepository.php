@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
 use Illuminate\Support\Str;
-use Log;
 
 /**
  * Class ExportJobRepository
@@ -33,7 +32,6 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function __construct(User $user)
     {
-        Log::debug('Constructed bill repository for user #' . $user->id . ' (' . $user->email . ')');
         $this->user = $user;
     }
 
