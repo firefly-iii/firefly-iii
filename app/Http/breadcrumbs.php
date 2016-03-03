@@ -378,6 +378,14 @@ Breadcrumbs::register(
 }
 );
 
+Breadcrumbs::register(
+    'preferences.code', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences'));
+
+}
+);
+
 /**
  * PROFILE
  */
