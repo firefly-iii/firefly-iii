@@ -227,9 +227,10 @@ return [
     'pref_fiscal_year_start_label'           => 'Start van boekjaar',
     'pref_two_factor_auth'                   => 'Authenticatie in twee stappen',
     'pref_two_factor_auth_help'              => 'Als je authenticatie in twee stappen (ook wel twee-factor authenticatie genoemd) inschakelt voeg je een extra beveiligingslaag toe aan je account. Je logt in met iets dat je weet (je wachtwoord) en iets dat je hebt (een verificatiecode). Verificatiecodes worden gegeneerd door apps op je telefoon, zoals Authy en Google Authenticator.',
-    'pref_code'                              => 'Verifieer code',
-    'pref_code_help'                         => 'Scan onderstaande QR code met een app op je telefoon zoals Authy of Google Authenticator en vul de code die gegenereerd wordt in.',
     'pref_enable_two_factor_auth'            => 'Authenticatie in twee stappen inschakelen',
+    'pref_two_factor_auth_code'              => 'Verifieer code',
+    'pref_two_factor_auth_code_help'         => 'Scan onderstaande QR code met een app op je telefoon zoals Authy of Google Authenticator en vul de code die gegenereerd wordt in.',
+    'pref_two_factor_auth_reset_code'        => 'Reset verificatiecode',    
     'pref_save_settings'                     => 'Instellingen opslaan',
 
     // profile:
