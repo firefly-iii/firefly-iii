@@ -22,7 +22,7 @@
     "rcrowe/twigbridge": "~0.9",
     "league/csv": "^7.1",
     "laravelcollective/html": "^5.2",
-    "rmccue/requests": "^1.6"
+    "rmccue/requests": "^1.6",
     "pragmarx/google2fa": "^0.7.1"
   },
   "require-dev": {
