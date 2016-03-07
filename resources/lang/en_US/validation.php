@@ -68,4 +68,5 @@ return [
     'string'                         => 'The :attribute must be a string.',
     'url'                            => 'The :attribute format is invalid.',
     'timezone'                       => 'The :attribute must be a valid zone.',
+    '2fa_code'                       => 'The :attribute field is invalid.',
 ];

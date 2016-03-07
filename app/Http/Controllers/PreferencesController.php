@@ -1,11 +1,15 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Auth;
 use Config;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Http\Requests\TokenFormRequest;
 use Input;
 use Preferences;
+use Response;
 use Session;
 use View;
+use PragmaRX\Google2FA\Contracts\Google2FA;
 
 /**
  * Class PreferencesController
@@ -43,12 +47,15 @@ class PreferencesController extends Controller
         $fiscalYearStartStr   = Preferences::get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart      = date('Y') . '-' . $fiscalYearStartStr;
         $twoFactorAuthEnabled = Preferences::get('twoFactorAuthEnabled', 0)->data;
+
+        $hasTwoFactorAuthSecret = Preferences::get('twoFactorAuthSecret') != null && !empty(Preferences::get('twoFactorAuthSecret')->data);
+
         $showIncomplete       = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
 
         return view(
             'preferences.index',
             compact(
-                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled',
+                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled', 'hasTwoFactorAuthSecret',
                 'showIncomplete'
             )
         );
@@ -87,7 +94,14 @@ class PreferencesController extends Controller
 
         // two factor auth
         $twoFactorAuthEnabled = (int)Input::get('twoFactorAuthEnabled');
-        Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
+
+        $hasTwoFactorAuthSecret = Preferences::get('twoFactorAuthSecret') != null && !empty(Preferences::get('twoFactorAuthSecret')->data);
+        
+        // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
+        if($hasTwoFactorAuthSecret)
+        {
+            Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
+        }
 
         // language:
         $lang = Input::get('language');
@@ -99,7 +113,44 @@ class PreferencesController extends Controller
         Session::flash('success', 'Preferences saved!');
         Preferences::mark();
 
+        // if we don't have a valid secret yet, redirect to the code page.
+        if(!$hasTwoFactorAuthSecret)
+        {
+            return redirect(route('preferences.code'));
+        }
+
         return redirect(route('preferences'));
+    }
+
+    /*
+     * @param TokenFormRequest $request
+     *
+     * @return $this|\Illuminate\View\View
+     */
+    public function postCode(TokenFormRequest $request)
+    {
+        Preferences::set('twoFactorAuthEnabled', 1);
+        Preferences::set('twoFactorAuthSecret', $request->input('secret'));
+
+        Session::flash('success', 'Preferences saved!');
+        Preferences::mark();
+
+        return redirect(route('preferences'));
+    }
+
+    /*
+     * @param Google2FA $google2fa
+     *
+     * @return $this|\Illuminate\View\View
+     */
+    public function code(Google2FA $google2fa)
+    {
+        $secret = $google2fa->generateSecretKey(16, Auth::user()->id);        
+
+        $image = $google2fa->getQRCodeInline("FireflyIII", null, $secret, 150);
+
+
+        return view('preferences.code', compact('secret', 'image'));
     }
 
 }
