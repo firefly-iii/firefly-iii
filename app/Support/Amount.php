@@ -75,8 +75,9 @@ class Amount
         if ($journal->isWithdrawal()) {
             $float = floatval($journal->source_amount);
         }
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result    = $formatter->formatCurrency($float, $journal->transaction_currency_code);
+        $formatter    = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $currencyCode = $journal->transaction_currency_code ?? $journal->transactionCurrency->code;
+        $result       = $formatter->formatCurrency($float, $currencyCode);
 
         if ($coloured === true && $float == 0) {
             return '<span style="color:#999">' . $result . '</span>'; // always grey.
