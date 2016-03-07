@@ -344,6 +344,7 @@ return [
     'csv_column_opposing-id'                 => 'Opposing account ID (matching Firefly)',
     'csv_column_opposing-name'               => 'Opposing account (name)',
     'csv_column_rabo-debet-credit'           => 'Rabobank specific debet/credit indicator',
+    'csv_column_ing-debet-credit'            => 'ING specific debet/credit indicator',
     'csv_column_sepa-ct-id'                  => 'SEPA Credit Transfer end-to-end ID',
     'csv_column_sepa-ct-op'                  => 'SEPA Credit Transfer opposing account',
     'csv_column_sepa-db'                     => 'SEPA Direct Debet',

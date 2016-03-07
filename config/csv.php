@@ -88,6 +88,11 @@ return [
             'converter' => 'RabobankDebetCredit',
             'field'     => 'amount-modifier',
         ],
+        'ing-debet-credit' => [
+            'mappable'  => false,
+            'converter' => 'INGDebetCredit',
+            'field'     => 'amount-modifier',
+        ],
         'category-id'       => [
             'mappable'  => true,
             'converter' => 'CategoryId',
