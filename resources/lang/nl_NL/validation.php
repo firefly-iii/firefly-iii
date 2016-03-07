@@ -68,6 +68,5 @@ return [
     'string'                         => 'Het :attribute moet een tekenreeks zijn.',
     'url'                            => ':attribute is geen geldige URL.',
     'timezone'                       => 'Het :attribute moet een geldige zone zijn.',
-    '2fa_code'                       => ':attribute is ongeldig.',
+    '2fa_code'                       => 'De waarde in het :attribute-veld is niet geldig.',
 ];
-
