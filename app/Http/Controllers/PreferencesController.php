@@ -28,6 +28,11 @@ class PreferencesController extends Controller
         View::share('mainTitleIcon', 'fa-gear');
     }
 
+    /**
+     * @param Google2FA $google2fa
+     *
+     * @return View
+     */
     public function code(Google2FA $google2fa)
     {
         $domain = $this->getDomain();
