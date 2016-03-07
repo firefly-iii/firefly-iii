@@ -3,7 +3,7 @@
 
         <a class="list-group-item" title="{{ journal.date.formatLocalized(trans('config.month_and_day')) }}"
 
-                {% if journal.isOpeningBalance %}
+                {% if journal.isOpeningBalance() %}
                     href="#"
                 {% else %}
                     href="{{ route('transactions.show',journal.id) }}"
