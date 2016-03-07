@@ -30,8 +30,9 @@ class PreferencesController extends Controller
 
     public function code(Google2FA $google2fa)
     {
+        $domain = $this->getDomain();
         $secret = $google2fa->generateSecretKey(16, Auth::user()->id);
-        $image  = $google2fa->getQRCodeInline("FireflyIII", null, $secret, 150);
+        $image  = $google2fa->getQRCodeInline('Firefly III at ' . $domain, null, $secret, 150);
 
 
         return view('preferences.code', compact('secret', 'image'));
@@ -141,6 +142,17 @@ class PreferencesController extends Controller
         }
 
         return redirect(route('preferences'));
+    }
+
+    /**
+     * @return string
+     */
+    private function getDomain() : string
+    {
+        $url   = url()->to('/');
+        $parts = parse_url($url);
+
+        return $parts['host'];
     }
 
 }
