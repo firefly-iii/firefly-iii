@@ -247,6 +247,7 @@ Route::group(
     Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
     Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
     Route::get('/preferences/code', ['uses' => 'PreferencesController@code', 'as' => 'preferences.code']);
+    Route::get('/preferences/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'preferences.delete-code']);
     Route::post('/preferences/code', ['uses' => 'PreferencesController@postCode']);
 
     /**

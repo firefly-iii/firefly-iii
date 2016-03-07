@@ -44,6 +44,19 @@ class PreferencesController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function deleteCode()
+    {
+        Preferences::delete('twoFactorAuthEnabled');
+        Preferences::delete('twoFactorAuthSecret');
+        Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
+        Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
+
+        return redirect(route('preferences'));
+    }
+
+    /**
      * @param ARI $repository
      *
      * @return $this|\Illuminate\View\View
