@@ -2,14 +2,13 @@
 
 use Auth;
 use Config;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Http\Requests\TokenFormRequest;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
+use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
-use Response;
 use Session;
 use View;
-use PragmaRX\Google2FA\Contracts\Google2FA;
 
 /**
  * Class PreferencesController
@@ -29,6 +28,15 @@ class PreferencesController extends Controller
         View::share('mainTitleIcon', 'fa-gear');
     }
 
+    public function code(Google2FA $google2fa)
+    {
+        $secret = $google2fa->generateSecretKey(16, Auth::user()->id);
+        $image  = $google2fa->getQRCodeInline("FireflyIII", null, $secret, 150);
+
+
+        return view('preferences.code', compact('secret', 'image'));
+    }
+
     /**
      * @param ARI $repository
      *
@@ -36,29 +44,44 @@ class PreferencesController extends Controller
      */
     public function index(ARI $repository)
     {
-        $accounts             = $repository->getAccounts(['Default account', 'Asset account']);
-        $viewRangePref        = Preferences::get('viewRange', '1M');
-        $viewRange            = $viewRangePref->data;
-        $frontPageAccounts    = Preferences::get('frontPageAccounts', []);
-        $budgetMax            = Preferences::get('budgetMaximum', 1000);
-        $language             = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $budgetMaximum        = $budgetMax->data;
-        $customFiscalYear     = Preferences::get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr   = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart      = date('Y') . '-' . $fiscalYearStartStr;
-        $twoFactorAuthEnabled = Preferences::get('twoFactorAuthEnabled', 0)->data;
-
-        $hasTwoFactorAuthSecret = Preferences::get('twoFactorAuthSecret') != null && !empty(Preferences::get('twoFactorAuthSecret')->data);
-
-        $showIncomplete       = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
+        $accounts               = $repository->getAccounts(['Default account', 'Asset account']);
+        $viewRangePref          = Preferences::get('viewRange', '1M');
+        $viewRange              = $viewRangePref->data;
+        $frontPageAccounts      = Preferences::get('frontPageAccounts', []);
+        $budgetMax              = Preferences::get('budgetMaximum', 1000);
+        $language               = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $budgetMaximum          = $budgetMax->data;
+        $customFiscalYear       = Preferences::get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr     = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart        = date('Y') . '-' . $fiscalYearStartStr;
+        $twoFactorAuthEnabled   = Preferences::get('twoFactorAuthEnabled', 0)->data;
+        $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+        $showIncomplete         = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
 
         return view(
             'preferences.index',
             compact(
-                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled', 'hasTwoFactorAuthSecret',
-                'showIncomplete'
+                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts',
+                'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled',
+                'hasTwoFactorAuthSecret', 'showIncomplete'
             )
         );
+    }
+
+    /**
+     * @param TokenFormRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function postCode(TokenFormRequest $request)
+    {
+        Preferences::set('twoFactorAuthEnabled', 1);
+        Preferences::set('twoFactorAuthSecret', $request->input('secret'));
+
+        Session::flash('success', 'Preferences saved!');
+        Preferences::mark();
+
+        return redirect(route('preferences'));
     }
 
     /**
@@ -88,18 +111,16 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear = (int)Input::get('customFiscalYear');
+        $fiscalYearStart  = date('m-d', strtotime(Input::get('fiscalYearStart')));
         Preferences::set('customFiscalYear', $customFiscalYear);
-        $fiscalYearStart = date('m-d', strtotime(Input::get('fiscalYearStart')));
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
         // two factor auth
-        $twoFactorAuthEnabled = (int)Input::get('twoFactorAuthEnabled');
+        $twoFactorAuthEnabled   = intval(Input::get('twoFactorAuthEnabled'));
+        $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
 
-        $hasTwoFactorAuthSecret = Preferences::get('twoFactorAuthSecret') != null && !empty(Preferences::get('twoFactorAuthSecret')->data);
-        
         // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
-        if($hasTwoFactorAuthSecret)
-        {
+        if ($hasTwoFactorAuthSecret) {
             Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
         }
 
@@ -114,43 +135,12 @@ class PreferencesController extends Controller
         Preferences::mark();
 
         // if we don't have a valid secret yet, redirect to the code page.
-        if(!$hasTwoFactorAuthSecret)
-        {
+        // AND USER HAS ACTUALLY ENABLED 2FA
+        if (!$hasTwoFactorAuthSecret && $twoFactorAuthEnabled === 1) {
             return redirect(route('preferences.code'));
         }
 
         return redirect(route('preferences'));
-    }
-
-    /*
-     * @param TokenFormRequest $request
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function postCode(TokenFormRequest $request)
-    {
-        Preferences::set('twoFactorAuthEnabled', 1);
-        Preferences::set('twoFactorAuthSecret', $request->input('secret'));
-
-        Session::flash('success', 'Preferences saved!');
-        Preferences::mark();
-
-        return redirect(route('preferences'));
-    }
-
-    /*
-     * @param Google2FA $google2fa
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function code(Google2FA $google2fa)
-    {
-        $secret = $google2fa->generateSecretKey(16, Auth::user()->id);        
-
-        $image = $google2fa->getQRCodeInline("FireflyIII", null, $secret, 150);
-
-
-        return view('preferences.code', compact('secret', 'image'));
     }
 
 }
