@@ -97,7 +97,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         // stuff outside of budgets:
-        $noBudget   = $repository->getWithoutBudgetSum($start, $end);
+        $noBudget   = $repository->getWithoutBudgetSum($accounts, $start, $end);
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
         $budgetLine->setSpent($noBudget);

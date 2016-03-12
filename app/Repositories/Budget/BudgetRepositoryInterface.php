@@ -168,12 +168,13 @@ interface BudgetRepositoryInterface
     public function getWithoutBudget(Carbon $start, Carbon $end);
 
     /**
+     * @param Collection $accounts
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return string
      */
-    public function getWithoutBudgetSum(Carbon $start, Carbon $end): string;
+    public function getWithoutBudgetSum(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * Returns an array with the following key:value pairs:

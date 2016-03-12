@@ -472,13 +472,15 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      */
-    public function getWithoutBudgetSum(Carbon $start, Carbon $end): string
+    public function getWithoutBudgetSum(Collection $accounts, Carbon $start, Carbon $end): string
     {
+        $ids   = $accounts->pluck('id')->toArray();
         $entry = $this->user
             ->transactionjournals()
             ->whereNotIn(
@@ -499,6 +501,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                 $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
             }
             )
+            ->whereIn('transactions.account_id', $ids)
             ->transactionTypes([TransactionType::WITHDRAWAL])
             ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
         if (is_null($entry->journalAmount)) {

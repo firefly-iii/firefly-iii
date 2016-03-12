@@ -200,7 +200,7 @@ class BudgetController extends Controller
             $allEntries->push([$name, $left, $spent, $overspent, $amount, $expenses]);
         }
 
-        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
+        $noBudgetExpenses = $repository->getWithoutBudgetSum($accounts, $start, $end);
         $allEntries->push([trans('firefly.noBudget'), '0', '0', $noBudgetExpenses, '0', '0']);
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
@@ -266,7 +266,7 @@ class BudgetController extends Controller
                 // this might be a good moment to collect no budget stuff.
                 if (is_null($budget->id)) {
                     // get without budget sum in range:
-                    $spent = $repository->getWithoutBudgetSum($currentStart, $currentEnd) * -1;
+                    $spent = $repository->getWithoutBudgetSum($accounts, $currentStart, $currentEnd) * -1;
                 } else {
                     if (isset($set[$id]['entries'][$year])) {
                         $spent = $set[$id]['entries'][$year] * -1;
