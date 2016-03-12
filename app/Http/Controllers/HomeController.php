@@ -6,6 +6,7 @@ use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Input;
 use Preferences;
 use Route;
@@ -53,16 +54,18 @@ class HomeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @param TagRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function flush()
+    public function flush(TagRepositoryInterface $repository)
     {
 
         Preferences::mark();
 
         // get all tags.
         // update all counts:
-        $tags = Tag::get();
+        $tags = $repository->get();
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
