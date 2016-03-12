@@ -53,16 +53,15 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal)
     {
-        $sourceAccount   = $journal->transactions()->where('amount', '<', 0)->first()->account;
-        $fromAccountName = strtolower($sourceAccount->name);
-        $search          = strtolower($this->triggerValue);
+        $name   = $journal->source_account_name ?? strtolower(TransactionJournal::sourceAccount($journal)->name);
+        $search = strtolower($this->triggerValue);
 
-        if ($fromAccountName == $search) {
-            Log::debug('"' . $fromAccountName . '" equals "' . $search . '" exactly. Return true.');
+        if ($name == $search) {
+            Log::debug('"' . $name . '" equals "' . $search . '" exactly. Return true.');
 
             return true;
         }
-        Log::debug('"' . $fromAccountName . '" does not equal "' . $search . '". Return false.');
+        Log::debug('"' . $name . '" does not equal "' . $search . '". Return false.');
 
         return false;
 

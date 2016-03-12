@@ -53,7 +53,7 @@ final class TransactionType extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal)
     {
-        $type   = strtolower($journal->transactionType->type);
+        $type   = !is_null($journal->transaction_type_type) ? $journal->transaction_type_type : strtolower($journal->transactionType->type);
         $search = strtolower($this->triggerValue);
 
         if ($type == $search) {

@@ -53,7 +53,7 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
      */
     public function triggered(TransactionJournal $journal)
     {
-        $fromAccountName = strtolower(TransactionJournal::sourceAccount($journal)->name);
+        $fromAccountName = $journal->source_account_name ?? strtolower(TransactionJournal::sourceAccount($journal)->name);
         $search          = strtolower($this->triggerValue);
         $strpos          = strpos($fromAccountName, $search);
 

@@ -53,7 +53,7 @@ final class ToAccountContains extends AbstractTrigger implements TriggerInterfac
      */
     public function triggered(TransactionJournal $journal)
     {
-        $toAccountName = strtolower(TransactionJournal::destinationAccount($journal)->name);
+        $toAccountName = $journal->destination_account_name ?? strtolower(TransactionJournal::destinationAccount($journal)->name);
         $search        = strtolower($this->triggerValue);
         $strpos        = strpos($toAccountName, $search);
 

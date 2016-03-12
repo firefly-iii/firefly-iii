@@ -53,17 +53,17 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
      */
     public function triggered(TransactionJournal $journal)
     {
-        $fromAccountName = strtolower(TransactionJournal::sourceAccount($journal)->name);
+        $name   = $journal->source_account_name ?? strtolower(TransactionJournal::sourceAccount($journal)->name);
         $search          = strtolower($this->triggerValue);
 
-        $part = substr($fromAccountName, 0, strlen($search));
+        $part = substr($name, 0, strlen($search));
 
         if ($part == $search) {
-            Log::debug('"' . $fromAccountName . '" starts with "' . $search . '". Return true.');
+            Log::debug('"' . $name . '" starts with "' . $search . '". Return true.');
 
             return true;
         }
-        Log::debug('"' . $fromAccountName . '" does not start with "' . $search . '". Return false.');
+        Log::debug('"' . $name . '" does not start with "' . $search . '". Return false.');
 
         return false;
 
