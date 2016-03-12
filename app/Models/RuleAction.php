@@ -26,6 +26,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                       $action_type
  * @property string                       $action_value
  * @property-read \FireflyIII\Models\Rule $rule
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereRuleId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereStopProcessing($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereActionType($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereActionValue($value)
+ * @mixin \Eloquent
  */
 class RuleAction extends Model
 {

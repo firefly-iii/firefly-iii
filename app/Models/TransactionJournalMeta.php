@@ -17,6 +17,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @package FireflyIII\Models
  * @property-read \FireflyIII\Models\TransactionJournal $transactionjournal
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $transaction_journal_id
+ * @property string $name
+ * @property string $data
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereData($value)
+ * @mixin \Eloquent
  */
 class TransactionJournalMeta extends Model
 {

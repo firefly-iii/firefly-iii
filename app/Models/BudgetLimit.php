@@ -15,6 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                                                          $repeat_freq
  * @property-read Budget                                                     $budget
  * @property-read \Illuminate\Database\Eloquent\Collection|LimitRepetition[] $limitrepetitions
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereBudgetId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereRepeats($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereRepeatFreq($value)
+ * @mixin \Eloquent
  */
 class BudgetLimit extends Model
 {

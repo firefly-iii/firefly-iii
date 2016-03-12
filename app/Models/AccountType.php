@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                                                  $type
  * @property boolean                                                 $editable
  * @property-read \Illuminate\Database\Eloquent\Collection|Account[] $accounts
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereType($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountType whereEditable($value)
+ * @mixin \Eloquent
  */
 class AccountType extends Model
 {

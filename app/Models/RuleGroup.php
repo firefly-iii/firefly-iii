@@ -30,6 +30,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property boolean                                                                 $active
  * @property-read \FireflyIII\User                                                   $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup whereActive($value)
+ * @mixin \Eloquent
  */
 class RuleGroup extends Model
 {

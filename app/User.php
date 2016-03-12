@@ -33,6 +33,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[]          $ruleGroups
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[]               $rules
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[]          $exportjobs
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereReset($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlockedCode($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {

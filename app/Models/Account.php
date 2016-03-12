@@ -37,6 +37,18 @@ use Watson\Validating\ValidatingTrait;
  * @property \Carbon\Carbon                                                                 $lastActivityDate
  * @property float                                                                          $piggyBalance
  * @property float                                                                          $percentage
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereAccountTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereEncrypted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereVirtualBalance($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereIban($value)
+ * @mixin \Eloquent
  */
 class Account extends Model
 {

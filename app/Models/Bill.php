@@ -27,6 +27,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \FireflyIII\User                                              $user
  * @property \Carbon\Carbon                                                     $nextExpectedMatch
  * @property \Carbon\Carbon                                                     $lastFoundMatch
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereAmountMin($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereAmountMax($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereAutomatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereRepeatFreq($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereSkip($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
+ * @mixin \Eloquent
  */
 class Bill extends Model
 {

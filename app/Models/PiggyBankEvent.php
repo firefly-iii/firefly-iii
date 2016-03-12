@@ -14,6 +14,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                   $amount
  * @property PiggyBank               $piggyBank
  * @property-read TransactionJournal $transactionJournal
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent wherePiggyBankId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankEvent whereAmount($value)
+ * @mixin \Eloquent
  */
 class PiggyBankEvent extends Model
 {

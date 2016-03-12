@@ -22,6 +22,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property float                                                              $spent
  * @property \Carbon\Carbon                                                     $lastActivity
  * @property string                                                             $type
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereEncrypted($value)
+ * @mixin \Eloquent
  */
 class Category extends Model
 {

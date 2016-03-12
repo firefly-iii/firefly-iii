@@ -26,6 +26,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
  * @property-read \FireflyIII\User                                              $user
  * @property int                                                                $account_id
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereTag($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereTagMode($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereLatitude($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereLongitude($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereZoomLevel($value)
+ * @mixin \Eloquent
  */
 class Tag extends Model
 {

@@ -17,6 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read PiggyBank $piggyBank
  * @method static \Illuminate\Database\Query\Builder|PiggyBankRepetition onDates($start, $target)
  * @method static \Illuminate\Database\Query\Builder|PiggyBankRepetition relevantOnDate($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition wherePiggyBankId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereTargetdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereCurrentamount($value)
+ * @mixin \Eloquent
  */
 class PiggyBankRepetition extends Model
 {

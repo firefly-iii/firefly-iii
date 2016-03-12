@@ -45,7 +45,6 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
- *
  * @property-read string                                                                               $transaction_type_type
  * @property-read string                                                                               $transaction_currency_code
  * @property-read string                                                                               $destination_amount
@@ -56,7 +55,26 @@ use Watson\Validating\ValidatingTrait;
  * @property-read string                                                                               $source_account_id
  * @property-read string                                                                               $source_account_name
  * @property-read string                                                                               $source_account_type
- *
+ * @property string                                                                                    $process_date
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBillId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCompleted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereInterestDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBookDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereProcessDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal expanded()
+ * @mixin \Eloquent
  */
 class TransactionJournal extends TransactionJournalSupport
 {

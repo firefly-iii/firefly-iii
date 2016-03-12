@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class TransactionJournalSupport
  *
  * @package FireflyIII\Support\Models
+ * @mixin \Eloquent
  */
 class TransactionJournalSupport extends Model
 {

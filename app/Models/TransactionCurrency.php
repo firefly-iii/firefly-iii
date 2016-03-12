@@ -16,6 +16,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                                                             $name
  * @property string                                                             $symbol
  * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereCode($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereSymbol($value)
+ * @mixin \Eloquent
  */
 class TransactionCurrency extends Model
 {
