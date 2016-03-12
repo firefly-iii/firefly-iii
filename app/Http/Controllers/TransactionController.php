@@ -158,6 +158,9 @@ class TransactionController extends Controller
         $subTitle    = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $preFilled   = [
             'date'          => $journal->date->format('Y-m-d'),
+            'interest_date' => $journal->interest_date ? $journal->interest_date->format('Y-m-d') : '',
+            'book_date'     => $journal->book_date ? $journal->book_date->format('Y-m-d') : '',
+            'process_date'  => $journal->process_date ? $journal->process_date->format('Y-m-d') : '',
             'category'      => '',
             'budget_id'     => 0,
             'piggy_bank_id' => 0,
