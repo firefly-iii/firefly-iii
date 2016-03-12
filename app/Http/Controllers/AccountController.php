@@ -156,9 +156,9 @@ class AccountController extends Controller
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
         /** @var Carbon $start */
-        $start        = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end          = clone session('end', Carbon::now()->endOfMonth());
+        $end = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -224,6 +224,13 @@ class AccountController extends Controller
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
         Preferences::mark();
+
+        // update preferences if necessary:
+        $frontPage = Preferences::get('frontPageAccounts', [])->data;
+        if (count($frontPage) > 0) {
+            $frontPage[] = $account->id;
+            Preferences::set('frontPageAccounts', $frontPage);
+        }
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
