@@ -1,5 +1,6 @@
 # Firefly III
 
+[![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php#v7.0.4)
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/build.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/build-status/master)
