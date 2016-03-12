@@ -32,12 +32,10 @@ interface AccountRepositoryInterface
      *
      * @return boolean
      */
-    public function destroy(Account $account, Account $moveTo = null): bool;
+    public function destroy(Account $account, Account $moveTo): bool;
 
     /**
      * @param int $accountId
-     *
-     * @deprecated
      *
      * @return Account
      */

@@ -66,9 +66,9 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(Account $account, Account $moveTo = null): bool
+    public function destroy(Account $account, Account $moveTo): bool
     {
-        if (!is_null($moveTo)) {
+        if (!is_null($moveTo->id)) {
             // update all transactions:
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
@@ -79,15 +79,16 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @deprecated
-     *
      * @param int $accountId
      *
      * @return Account
      */
     public function find(int $accountId): Account
     {
-        return $this->user->accounts()->findOrNew($accountId);
+        $entry = $this->user->accounts()->find($accountId);
+        if (is_null($entry)) {
+            return new Account;
+        }
     }
 
     /**
