@@ -46,6 +46,9 @@ class JournalFormRequest extends Request
             'user'                      => Auth::user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
             'date'                      => new Carbon($this->get('date')),
+            'interest_date'             => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
+            'book_date'                 => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
+            'process_date'              => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
             'budget_id'                 => intval($this->get('budget_id')),
             'category'                  => $this->get('category') ?? '',
             'tags'                      => explode(',', $tags),
@@ -64,6 +67,9 @@ class JournalFormRequest extends Request
             'what'                      => 'required|in:withdrawal,deposit,transfer',
             'amount'                    => 'numeric|required|min:0.01',
             'date'                      => 'required|date',
+            'process_date'              => 'date',
+            'book_date'                 => 'date',
+            'interest_date'             => 'date',
             'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
 
         ];
