@@ -97,14 +97,14 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getCollectionOfTypes(array $types, int $offset, int $count)
     {
-        $set = $this->user->transactionJournals()->transactionTypes($types)
+        $set = $this->user->transactionJournals()
+                          ->expanded()
+                          ->transactionTypes($types)
                           ->take($count)->offset($offset)
                           ->orderBy('date', 'DESC')
                           ->orderBy('order', 'ASC')
                           ->orderBy('id', 'DESC')
-                          ->get(
-                              ['transaction_journals.*']
-                          );
+                          ->get(TransactionJournal::QUERYFIELDS);
 
         return $set;
     }
