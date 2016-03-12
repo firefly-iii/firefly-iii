@@ -102,12 +102,12 @@ class TransactionJournal extends TransactionJournalSupport
 
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date'];
+    protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date', 'process_date'];
     /** @var array */
     protected $fillable
-        = ['user_id', 'transaction_type_id', 'bill_id',
+        = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',
            'transaction_currency_id', 'description', 'completed',
-           'date', 'rent_date', 'book_date', 'encrypted', 'tag_count'];
+           'date', 'rent_date', 'encrypted', 'tag_count'];
     /** @var array */
     protected $hidden = ['encrypted'];
     /** @var array */
