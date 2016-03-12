@@ -46,17 +46,16 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
  *
- * @property-read string $transaction_type_type
- * @property-read string $transaction_currency_code
- * @property-read string $destination_amount
- * @property-read string $destination_account_id
- * @property-read string $destination_account_name
- * @property-read string $destination_account_type
- * @property-read string $source_amount
- * @property-read string $source_account_id
- * @property-read string $source_account_name
- * @property-read string $source_account_type
-
+ * @property-read string                                                                               $transaction_type_type
+ * @property-read string                                                                               $transaction_currency_code
+ * @property-read string                                                                               $destination_amount
+ * @property-read string                                                                               $destination_account_id
+ * @property-read string                                                                               $destination_account_name
+ * @property-read string                                                                               $destination_account_type
+ * @property-read string                                                                               $source_amount
+ * @property-read string                                                                               $source_account_id
+ * @property-read string                                                                               $source_account_name
+ * @property-read string                                                                               $source_account_type
  *
  */
 class TransactionJournal extends TransactionJournalSupport
@@ -186,7 +185,11 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public function getDestinationAccountNameAttribute($value)
     {
-        return Crypt::decrypt($value);
+        if (!is_null($value) && strlen(strval($value)) > 0) {
+            return Crypt::decrypt($value);
+        }
+
+        return null;
     }
 
     /**
@@ -213,7 +216,12 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public function getSourceAccountNameAttribute($value)
     {
-        return Crypt::decrypt($value);
+        if (!is_null($value) && strlen(strval($value)) > 0) {
+            return Crypt::decrypt($value);
+        }
+
+        return null;
+
     }
 
     /**
