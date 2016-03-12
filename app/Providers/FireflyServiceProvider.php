@@ -86,6 +86,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface', 'FireflyIII\Repositories\Category\SingleCategoryRepository');
         $this->app->bind('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface', 'FireflyIII\Repositories\Currency\CurrencyRepository');
         $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
+        $this->app->bind('FireflyIII\Repositories\User\UserRepositoryInterface', 'FireflyIII\Repositories\User\UserRepository');
 
         // CSV import
         $this->app->bind('FireflyIII\Helpers\Csv\WizardInterface', 'FireflyIII\Helpers\Csv\Wizard');

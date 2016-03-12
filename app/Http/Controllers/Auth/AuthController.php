@@ -6,7 +6,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Role;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -94,13 +94,14 @@ class AuthController extends Controller
     /**
      * Handle a registration request for the application.
      *
+     * @param UserRepositoryInterface   $repository
      * @param  \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      * @throws FireflyException
      * @throws \Illuminate\Foundation\Validation\ValidationException
      */
-    public function register(Request $request)
+    public function register(UserRepositoryInterface $repository, Request $request)
     {
         $validator = $this->validator($request->all());
 
@@ -146,11 +147,9 @@ class AuthController extends Controller
             Session::flash('gaEventAction', 'new-registration');
 
             // first user ever?
-            if (User::count() == 1) {
-                $admin = Role::where('name', 'owner')->first();
-                Auth::user()->attachRole($admin);
+            if ($repository->count() == 1) {
+                $repository->attachRole(Auth::user(), 'owner');
             }
-
 
             return redirect($this->redirectPath());
         }
