@@ -58,6 +58,7 @@ class Entry
     public $fromAccountId;
     /** @var  string */
     public $fromAccountName;
+    public $fromAccountNumber;
     /** @var  string */
     public $fromAccountType;
     /** @var  string */
@@ -66,6 +67,7 @@ class Entry
     public $toAccountId;
     /** @var  string */
     public $toAccountName;
+    public $toAccountNumber;
     /** @var  string */
     public $toAccountType;
 
@@ -107,6 +109,8 @@ class Entry
         $entry->setFromAccountName($sourceAccount->name);
         $entry->setFromAccountIban($sourceAccount->iban);
         $entry->setFromAccountType($sourceAccount->accountType->type);
+        $entry->setFromAccountNumber($sourceAccount->getMeta('accountNumber'));
+
 
         /** @var Account $destination */
         $destination = TransactionJournal::destinationAccount($journal);
@@ -114,6 +118,7 @@ class Entry
         $entry->setToAccountName($destination->name);
         $entry->setToAccountIban($destination->iban);
         $entry->setToAccountType($destination->accountType->type);
+        $entry->setToAccountNumber($destination->getMeta('accountNumber'));
 
         return $entry;
 
@@ -340,6 +345,22 @@ class Entry
     }
 
     /**
+     * @return mixed
+     */
+    public function getFromAccountNumber()
+    {
+        return $this->fromAccountNumber;
+    }
+
+    /**
+     * @param mixed $fromAccountNumber
+     */
+    public function setFromAccountNumber($fromAccountNumber)
+    {
+        $this->fromAccountNumber = $fromAccountNumber;
+    }
+
+    /**
      * @return string
      */
     public function getFromAccountType()
@@ -401,6 +422,22 @@ class Entry
     public function setToAccountName($toAccountName)
     {
         $this->toAccountName = $toAccountName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToAccountNumber()
+    {
+        return $this->toAccountNumber;
+    }
+
+    /**
+     * @param mixed $toAccountNumber
+     */
+    public function setToAccountNumber($toAccountNumber)
+    {
+        $this->toAccountNumber = $toAccountNumber;
     }
 
     /**
