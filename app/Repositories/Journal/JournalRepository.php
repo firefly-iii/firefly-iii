@@ -212,8 +212,12 @@ class JournalRepository implements JournalRepositoryInterface
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
+                'interest_date'           => $data['interest_date'],
+                'book_date'               => $data['book_date'],
+                'process_date'            => $data['process_date'],
             ]
         );
+        // TODO catch errors here. Match rules with JournalFormRequest
         $journal->save();
 
 
@@ -273,6 +277,9 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->transaction_currency_id = $data['amount_currency_id_amount'];
         $journal->description             = $data['description'];
         $journal->date                    = $data['date'];
+        $journal->interest_date           = $data['interest_date'];
+        $journal->book_date               = $data['book_date'];
+        $journal->process_date            = $data['process_date'];
 
 
         // unlink all categories, recreate them:
