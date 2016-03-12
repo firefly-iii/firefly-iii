@@ -414,6 +414,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param $account
+     * @param $name
+     * @param $value
+     *
+     * @return AccountMeta
+     */
+    public function storeMeta($account, $name, $value): AccountMeta
+    {
+        return AccountMeta::create(['name' => $name, 'data' => $value, 'account_id' => $account->id,]);
+    }
+
+    /**
      * @return string
      */
     public function sumOfEverything(): string

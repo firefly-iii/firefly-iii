@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -137,6 +138,15 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function store(array $data) : Account;
+
+    /**
+     * @param $account
+     * @param $name
+     * @param $value
+     *
+     * @return AccountMeta
+     */
+    public function storeMeta($account, $name, $value): AccountMeta;
 
     /**
      * @return string

@@ -107,8 +107,8 @@ class NewUserController extends Controller
             $creditCard    = $repository->store($creditAccount);
 
             // store meta for CC:
-            AccountMeta::create(['name' => 'ccType', 'data' => 'monthlyFull', 'account_id' => $creditCard->id,]);
-            AccountMeta::create(['name' => 'ccMonthlyPaymentDate', 'data' => Carbon::now()->year . '-01-01', 'account_id' => $creditCard->id,]);
+            $repository->storeMeta($creditCard, 'ccType', 'monthlyFull');
+            $repository->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
 
         }
         Session::flash('success', 'New account(s) created!');
