@@ -26,6 +26,14 @@ class ChangesForV380 extends Migration
      */
     public function up()
     {
+
+        // extend transaction journals:
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->date('process_date')->nullable()->after('book_date');
+        }
+        );
+
         // new table "export_jobs"
         Schema::create(
             'export_jobs', function (Blueprint $table) {
