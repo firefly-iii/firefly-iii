@@ -17,5 +17,4 @@ return [
     'quarter_of_year' => '%B %Y',
     'year'            => '%Y',
     'half_year'       => '%B %Y',
-
 ];

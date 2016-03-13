@@ -1,4 +1,12 @@
 <?php
+/**
+ * form.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 return [
 
     // new user:
@@ -37,6 +45,9 @@ return [
     'revenue_account'             => 'Revenue account',
     'amount'                      => 'Amount',
     'date'                        => 'Date',
+    'interest_date'               => 'Interest date',
+    'book_date'                   => 'Book date',
+    'process_date'                => 'Processing date',
     'category'                    => 'Category',
     'tags'                        => 'Tags',
     'deletePermanently'           => 'Delete permanently',
@@ -80,40 +91,35 @@ return [
     'include_config'              => 'Include configuration file',
     'include_old_uploads'         => 'Include imported data',
     'accounts'                    => 'Export transactions from these accounts',
-
-    'csv_comma'     => 'A comma (,)',
-    'csv_semicolon' => 'A semicolon (;)',
-    'csv_tab'       => 'A tab (invisible)',
-
-
-    'delete_account'    => 'Delete account ":name"',
-    'delete_bill'       => 'Supprimer la facture ":name"',
-    'delete_budget'     => 'Delete budget ":name"',
-    'delete_category'   => 'Delete category ":name"',
-    'delete_currency'   => 'Delete currency ":name"',
-    'delete_journal'    => 'Delete transaction with description ":description"',
-    'delete_attachment' => 'Delete attachment ":name"',
-    'delete_rule'       => 'Delete rule ":title"',
-    'delete_rule_group' => 'Delete rule group ":title"',
-
-    'attachment_areYouSure' => 'Are you sure you want to delete the attachment named ":name"?',
-    'account_areYouSure'    => 'Are you sure you want to delete the account named ":name"?',
-    'bill_areYouSure'       => 'Are you sure you want to delete the bill named ":name"?',
-    'rule_areYouSure'       => 'Are you sure you want to delete the rule titled ":title"?',
-    'ruleGroup_areYouSure'  => 'Are you sure you want to delete the rule group titled ":title"?',
-    'budget_areYouSure'     => 'Are you sure you want to delete the budget named ":name"?',
-    'category_areYouSure'   => 'Are you sure you want to delete the category named ":name"?',
-    'currency_areYouSure'   => 'Are you sure you want to delete the currency named ":name"?',
-    'piggyBank_areYouSure'  => 'Are you sure you want to delete the piggy bank named ":name"?',
-    'journal_areYouSure'    => 'Are you sure you want to delete the transaction described ":description"?',
-    'tag_areYouSure'        => 'Are you sure you want to delete the tag ":tag"?',
-
-    'permDeleteWarning'          => 'Deleting stuff from Firely is permanent and cannot be undone.',
-    'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
-    'also_delete_rules'          => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
-    'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
-    'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
-    'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',
-    'category_keep_transactions' => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
-    'tag_keep_transactions'      => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
+    'csv_comma'                   => 'A comma (,)',
+    'csv_semicolon'               => 'A semicolon (;)',
+    'csv_tab'                     => 'A tab (invisible)',
+    'delete_account'              => 'Delete account ":name"',
+    'delete_bill'                 => 'Supprimer la facture ":name"',
+    'delete_budget'               => 'Delete budget ":name"',
+    'delete_category'             => 'Delete category ":name"',
+    'delete_currency'             => 'Delete currency ":name"',
+    'delete_journal'              => 'Delete transaction with description ":description"',
+    'delete_attachment'           => 'Delete attachment ":name"',
+    'delete_rule'                 => 'Delete rule ":title"',
+    'delete_rule_group'           => 'Delete rule group ":title"',
+    'attachment_areYouSure'       => 'Are you sure you want to delete the attachment named ":name"?',
+    'account_areYouSure'          => 'Are you sure you want to delete the account named ":name"?',
+    'bill_areYouSure'             => 'Are you sure you want to delete the bill named ":name"?',
+    'rule_areYouSure'             => 'Are you sure you want to delete the rule titled ":title"?',
+    'ruleGroup_areYouSure'        => 'Are you sure you want to delete the rule group titled ":title"?',
+    'budget_areYouSure'           => 'Are you sure you want to delete the budget named ":name"?',
+    'category_areYouSure'         => 'Are you sure you want to delete the category named ":name"?',
+    'currency_areYouSure'         => 'Are you sure you want to delete the currency named ":name"?',
+    'piggyBank_areYouSure'        => 'Are you sure you want to delete the piggy bank named ":name"?',
+    'journal_areYouSure'          => 'Are you sure you want to delete the transaction described ":description"?',
+    'tag_areYouSure'              => 'Are you sure you want to delete the tag ":tag"?',
+    'permDeleteWarning'           => 'Deleting stuff from Firely is permanent and cannot be undone.',
+    'also_delete_transactions'    => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
+    'also_delete_rules'           => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
+    'also_delete_piggyBanks'      => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
+    'bill_keep_transactions'      => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
+    'budget_keep_transactions'    => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',
+    'category_keep_transactions'  => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
+    'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
 ];

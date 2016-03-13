@@ -1,7 +1,13 @@
 <?php
-return [
+/**
+ * form.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
-    // new user:
+return [
     'bank_name'                   => 'Banknaam',
     'bank_balance'                => 'Saldo',
     'savings_balance'             => 'Saldo van spaarrekening',
@@ -37,6 +43,9 @@ return [
     'revenue_account'             => 'Debiteur',
     'amount'                      => 'Bedrag',
     'date'                        => 'Datum',
+    'interest_date'               => 'Rentedatum',
+    'book_date'                   => 'Boekdatum',
+    'process_date'                => 'Verwerkingsdatum',
     'category'                    => 'Categorie',
     'tags'                        => 'Tags',
     'deletePermanently'           => 'Verwijderen',
@@ -80,40 +89,35 @@ return [
     'include_config'              => 'Sla ook een configuratiebestand ook',
     'include_old_uploads'         => 'Sla ook geïmporteerde bestanden op',
     'accounts'                    => 'Exporteer boekingen van deze rekeningen',
-
-    'csv_comma'     => 'Een komma (,)',
-    'csv_semicolon' => 'Een puntkomma (;)',
-    'csv_tab'       => 'Een tab (onzichtbaar)',
-
-
-    'delete_account'    => 'Verwijder rekening ":name"',
-    'delete_bill'       => 'Verwijder contract ":name"',
-    'delete_budget'     => 'Verwijder budget ":name"',
-    'delete_category'   => 'Verwijder categorie ":name"',
-    'delete_currency'   => 'Verwijder valuta ":name"',
-    'delete_journal'    => 'Verwijder transactie met omschrijving ":description"',
-    'delete_attachment' => 'Verwijder bijlage ":name"',
-    'delete_rule'       => 'Verwijder regel ":title"',
-    'delete_rule_group' => 'Verwijder regelgroep ":title"',
-
-    'attachment_areYouSure' => 'Weet je zeker dat je de bijlage met naam ":name" wilt verwijderen?',
-    'account_areYouSure'    => 'Weet je zeker dat je de rekening met naam ":name" wilt verwijderen?',
-    'bill_areYouSure'       => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
-    'rule_areYouSure'       => 'Weet je zeker dat je regel ":title" wilt verwijderen?',
-    'ruleGroup_areYouSure'  => 'Weet je zeker dat je regelgroep ":title" wilt verwijderen?',
-    'budget_areYouSure'     => 'Weet je zeker dat je het budget met naam ":name" wilt verwijderen?',
-    'category_areYouSure'   => 'Weet je zeker dat je het category met naam ":name" wilt verwijderen?',
-    'currency_areYouSure'   => 'Weet je zeker dat je de valuta met naam ":name" wilt verwijderen?',
-    'piggyBank_areYouSure'  => 'Weet je zeker dat je het spaarpotje met naam ":name" wilt verwijderen?',
-    'journal_areYouSure'    => 'Weet je zeker dat je de transactie met naam ":description" wilt verwijderen?',
-    'tag_areYouSure'        => 'Weet je zeker dat je de tag met naam ":tag" wilt verwijderen?',
-
-    'permDeleteWarning'          => 'Dingen verwijderen uit Firefly is permanent en kan niet ongedaan gemaakt worden.',
-    'also_delete_transactions'   => 'Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle :count transacties verbonden aan deze rekening worden verwijderd.',
-    'also_delete_rules'          => 'De enige regel in deze regelgroep wordt ook verwijderd.|Alle :count regels in deze regelgroep worden ook verwijderd.',
-    'also_delete_piggyBanks'     => 'Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle :count spaarpotjes verbonden aan deze rekening worden verwijderd.',
-    'bill_keep_transactions'     => 'De transactie verbonden aan dit contract blijft bewaard.|De :count transacties verbonden aan dit contract blijven bewaard.',
-    'budget_keep_transactions'   => 'De transactie verbonden aan dit budget blijft bewaard.|De :count transacties verbonden aan dit budget blijven bewaard.',
-    'category_keep_transactions' => 'De transactie verbonden aan deze categorie blijft bewaard.|De :count transacties verbonden aan deze categorie blijven bewaard.',
-    'tag_keep_transactions'      => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
+    'csv_comma'                   => 'Een komma (,)',
+    'csv_semicolon'               => 'Een puntkomma (;)',
+    'csv_tab'                     => 'Een tab (onzichtbaar)',
+    'delete_account'              => 'Verwijder rekening ":name"',
+    'delete_bill'                 => 'Verwijder contract ":name"',
+    'delete_budget'               => 'Verwijder budget ":name"',
+    'delete_category'             => 'Verwijder categorie ":name"',
+    'delete_currency'             => 'Verwijder valuta ":name"',
+    'delete_journal'              => 'Verwijder transactie met omschrijving ":description"',
+    'delete_attachment'           => 'Verwijder bijlage ":name"',
+    'delete_rule'                 => 'Verwijder regel ":title"',
+    'delete_rule_group'           => 'Verwijder regelgroep ":title"',
+    'attachment_areYouSure'       => 'Weet je zeker dat je de bijlage met naam ":name" wilt verwijderen?',
+    'account_areYouSure'          => 'Weet je zeker dat je de rekening met naam ":name" wilt verwijderen?',
+    'bill_areYouSure'             => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
+    'rule_areYouSure'             => 'Weet je zeker dat je regel ":title" wilt verwijderen?',
+    'ruleGroup_areYouSure'        => 'Weet je zeker dat je regelgroep ":title" wilt verwijderen?',
+    'budget_areYouSure'           => 'Weet je zeker dat je het budget met naam ":name" wilt verwijderen?',
+    'category_areYouSure'         => 'Weet je zeker dat je het category met naam ":name" wilt verwijderen?',
+    'currency_areYouSure'         => 'Weet je zeker dat je de valuta met naam ":name" wilt verwijderen?',
+    'piggyBank_areYouSure'        => 'Weet je zeker dat je het spaarpotje met naam ":name" wilt verwijderen?',
+    'journal_areYouSure'          => 'Weet je zeker dat je de transactie met naam ":description" wilt verwijderen?',
+    'tag_areYouSure'              => 'Weet je zeker dat je de tag met naam ":tag" wilt verwijderen?',
+    'permDeleteWarning'           => 'Dingen verwijderen uit Firefly is permanent en kan niet ongedaan gemaakt worden.',
+    'also_delete_transactions'    => 'Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle :count transacties verbonden aan deze rekening worden verwijderd.',
+    'also_delete_rules'           => 'De enige regel in deze regelgroep wordt ook verwijderd.|Alle :count regels in deze regelgroep worden ook verwijderd.',
+    'also_delete_piggyBanks'      => 'Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle :count spaarpotjes verbonden aan deze rekening worden verwijderd.',
+    'bill_keep_transactions'      => 'De transactie verbonden aan dit contract blijft bewaard.|De :count transacties verbonden aan dit contract blijven bewaard.',
+    'budget_keep_transactions'    => 'De transactie verbonden aan dit budget blijft bewaard.|De :count transacties verbonden aan dit budget blijven bewaard.',
+    'category_keep_transactions'  => 'De transactie verbonden aan deze categorie blijft bewaard.|De :count transacties verbonden aan deze categorie blijven bewaard.',
+    'tag_keep_transactions'       => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
 ];
