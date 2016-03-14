@@ -55,7 +55,10 @@ use Watson\Validating\ValidatingTrait;
  * @property-read string                                                                               $source_account_id
  * @property-read string                                                                               $source_account_name
  * @property-read string                                                                               $source_account_type
- * @property string                                                                                    $process_date
+ * @property \Carbon\Carbon                                                                                    $process_date
+ * @property int                                                                                       $account_id
+ * @property float                                                                                     $journalAmount
+ * @property string                                                                                    $account_name
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)

@@ -78,7 +78,7 @@ class AttachmentController extends Controller
      * @throws FireflyException
      *
      */
-    public function download(Attachment $attachment, AttachmentHelperInterface $helper)
+    public function download(Attachment $attachment)
     {
         // create a disk.
         $disk = Storage::disk('upload');
