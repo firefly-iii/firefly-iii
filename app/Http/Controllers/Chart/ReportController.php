@@ -62,7 +62,7 @@ class ReportController extends Controller
         $entries = new Collection;
         while ($current < $end) {
             $balances = Steam::balancesById($ids, $current);
-            $sum      = $this->array_sum($balances);
+            $sum      = $this->arraySum($balances);
             $entries->push(
                 [
                     'date'      => clone $current,
@@ -303,7 +303,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function array_sum($array) : string
+    private function arraySum($array) : string
     {
         bcscale(2);
         $sum = '0';
