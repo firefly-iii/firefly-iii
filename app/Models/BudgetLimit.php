@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean                                                         $repeats
  * @property string                                                          $repeat_freq
  * @property-read Budget                                                     $budget
+ * @property int                                                             $component_id
  * @property-read \Illuminate\Database\Eloquent\Collection|LimitRepetition[] $limitrepetitions
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)
