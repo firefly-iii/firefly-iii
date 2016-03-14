@@ -164,7 +164,6 @@ class CsvControllerTest extends TestCase
     public function testProcess()
     {
         $this->be($this->user());
-        //$this->session($this->getSessionData());
 
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped', 'csv-delimiter'];
         $wizard = $this->mock('FireflyIII\Helpers\Csv\WizardInterface');

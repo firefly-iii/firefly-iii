@@ -36,13 +36,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             // set period to match?
 
         }
-        // if selected "custom", change the session to a weird custom range:
+        // custom is a weird range
         // (20 days):
-        if ($range === "custom") {
+        if ($range === 'custom') {
             $this->session(
                 [
-                    'start' => Carbon::now(),
-                    'end'   => Carbon::now()->subDays(20),
+                    'start'   => Carbon::now()->subDays(20),
+                    'end' => Carbon::now(),
                 ]
             );
         }

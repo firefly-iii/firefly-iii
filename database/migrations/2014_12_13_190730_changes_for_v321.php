@@ -81,7 +81,7 @@ class ChangesForV321 extends Migration
         $this->renameBudgetLimits(); // 14.
         $this->renamePiggyBankEvents(); // 15.
         $this->renameBudgetLimitToBudgetInRepetitions(); // 16.
-        // 17, 18, 19
+        // 17 and then 18 and then 19
         $this->dropFieldsFromCurrencyTable(); // 20.
 
 

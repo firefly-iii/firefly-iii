@@ -26,7 +26,7 @@ class MailError extends Job implements ShouldQueue
     /** @var  array */
     protected $exception;
     /** @var  string */
-    protected $ip;
+    protected $ipAddress;
     /** @var  User */
     protected $user;
 
@@ -35,16 +35,16 @@ class MailError extends Job implements ShouldQueue
      *
      * @param User   $user
      * @param string $destination
-     * @param string $ip
+     * @param string $ipAddress
      * @param array  $exceptionData
      *
      * @internal param array $exception
      */
-    public function __construct(User $user, string $destination, string $ip, array $exceptionData)
+    public function __construct(User $user, string $destination, string $ipAddress, array $exceptionData)
     {
         $this->user        = $user;
         $this->destination = $destination;
-        $this->ip          = $ip;
+        $this->ipAddress   = $ipAddress;
         $this->exception   = $exceptionData;
 
         Log::debug('In mail job constructor');
@@ -65,7 +65,7 @@ class MailError extends Job implements ShouldQueue
                 $args             = $this->exception;
                 $args['loggedIn'] = !is_null($this->user->id);
                 $args['user']     = $this->user;
-                $args['ip']       = $this->ip;
+                $args['ip']       = $this->ipAddress;
 
                 Mail::send(
                     ['emails.error-html', 'emails.error'], $args,
