@@ -73,7 +73,6 @@ class AttachmentController extends Controller
 
     /**
      * @param Attachment                $attachment
-     * @param AttachmentHelperInterface $helper
      *
      * @throws FireflyException
      *
