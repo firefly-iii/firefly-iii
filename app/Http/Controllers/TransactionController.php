@@ -140,20 +140,14 @@ class TransactionController extends Controller
      */
     public function edit(ARI $repository, TransactionJournal $journal)
     {
-        // cannot edit opening balance
-        if ($journal->isOpeningBalance()) {
-            throw new FireflyException('Cannot edit this transaction (#' . $journal->id . '). Edit the account instead!');
-        }
-
-
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         $what        = strtolower(TransactionJournal::transactionTypeStr($journal));
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get()); // TODO this must be a repository call
+        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
-        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get()); // TODO this must be a repository call
+        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
         $piggies[0]  = trans('form.noPiggybank');
         $subTitle    = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $preFilled   = [
@@ -164,11 +158,10 @@ class TransactionController extends Controller
             'category'      => '',
             'budget_id'     => 0,
             'piggy_bank_id' => 0,
+            'tags'          => join(',', $journal->tags->pluck('tag')->toArray()),
         ];
-        // get tags:
-        $preFilled['tags'] = join(',', $journal->tags->pluck('tag')->toArray());
 
-        $category = $journal->categories()->first();
+        $category    = $journal->categories()->first();
         if (!is_null($category)) {
             $preFilled['category'] = $category->name;
         }
@@ -286,7 +279,7 @@ class TransactionController extends Controller
             }
         );
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle = trans('firefly.' . $journal->transaction_type_type ?? $journal->transactionType->type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what'));
     }

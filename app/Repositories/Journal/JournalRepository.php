@@ -217,7 +217,6 @@ class JournalRepository implements JournalRepositoryInterface
                 'process_date'            => $data['process_date'],
             ]
         );
-        // TODO catch errors here. Match rules with JournalFormRequest
         $journal->save();
 
 

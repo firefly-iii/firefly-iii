@@ -573,7 +573,8 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.show', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
 
-    $breadcrumbs->parent('transactions.index', strtolower($journal->getTransactionType()));
+    $what = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+    $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
 
 }
