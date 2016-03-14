@@ -41,7 +41,7 @@ class Help implements HelpInterface
         $routeIndex = str_replace('.', '-', $route);
         $title      = trans('help.' . $routeIndex);
         $content    = [
-            'text'  => '<p>There is no help for this route, or there is no help available in your language.</p>',
+            'text'  => '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>',
             'title' => $title,
         ];
 
@@ -58,7 +58,7 @@ class Help implements HelpInterface
 
         if (strlen(trim($content['text'])) == 0) {
             Log::debug('No actual help text for this route (even though a page was found).');
-            $content['text'] = '<p>There is no help for this route, or there is no help available in your language.</p>';
+            $content['text'] = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
         }
         $converter       = new CommonMarkConverter();
         $content['text'] = $converter->convertToHtml($content['text']);

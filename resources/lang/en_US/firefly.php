@@ -52,6 +52,7 @@ return [
     'flash_info_multiple'                       => 'There is one message|There are :count messages',
     'flash_error_multiple'                      => 'There is one error|There are :count errors',
     'net_worth'                                 => 'Net worth',
+    'route_has_no_help'                         => 'There is no help for this route, or there is no help available in your language.',
 
     // export data:
     'import_and_export'                         => 'Import and export',
