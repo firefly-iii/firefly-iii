@@ -1,7 +1,7 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsort="disabled">&nbsp;</th>
+        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
         <th>{{ trans('list.name') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
         <th colspan="2">{{ trans('list.matchingAmount') }}</th>
@@ -15,7 +15,7 @@
     <tbody>
     {% for entry in bills %}
         <tr>
-            <td>
+            <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs">
                     <a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
                     <a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>

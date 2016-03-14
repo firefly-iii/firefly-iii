@@ -1,12 +1,12 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsort="disabled">&nbsp;</th>
+        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
         <th>{{ trans('list.name') }}</th>
         {% if what == 'asset' %}
             <th class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
         {% endif %}
-        <th>{{ trans('list.iban') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
         <th>{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
@@ -16,7 +16,7 @@
     <tbody>
     {% for account in accounts %}
         <tr>
-            <td>
+            <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs">
                     <a class="btn btn-default btn-xs" href="{{ route('accounts.edit',account.id) }}"><i class="fa fa-fw fa-pencil"></i></a>
                     <a class="btn btn-danger btn-xs" href="{{ route('accounts.delete',account.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
@@ -32,7 +32,7 @@
                     {% endfor %}
                 </td>
             {% endif %}
-            <td>{{ account.iban }}</td>
+            <td class="hidden-sm hidden-xs">{{ account.iban }}</td>
             <td data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
             <td class="hidden-sm hidden-xs" data-value="{{ account.active }}">
                 {% if account.active %}
