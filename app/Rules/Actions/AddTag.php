@@ -24,17 +24,17 @@ use FireflyIII\Models\TransactionJournal;
 class AddTag implements ActionInterface
 {
 
-    /** @var RuleAction  */
+    /** @var RuleAction */
     private $action;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction         $action
+     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
-        $this->action  = $action;
+        $this->action = $action;
     }
 
     /**

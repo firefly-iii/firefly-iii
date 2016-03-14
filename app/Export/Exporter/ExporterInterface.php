@@ -9,6 +9,7 @@ declare(strict_types = 1);
  */
 
 namespace FireflyIII\Export\Exporter;
+
 use Illuminate\Support\Collection;
 
 /**
@@ -24,6 +25,11 @@ interface ExporterInterface
     public function getEntries();
 
     /**
+     * @return string
+     */
+    public function getFileName();
+
+    /**
      *
      */
     public function run();
@@ -33,10 +39,5 @@ interface ExporterInterface
      *
      */
     public function setEntries(Collection $entries);
-
-    /**
-     * @return string
-     */
-    public function getFileName();
 
 }

@@ -62,6 +62,7 @@ class FireRulesForUpdate
 
             }
         }
+
         return true;
     }
 }

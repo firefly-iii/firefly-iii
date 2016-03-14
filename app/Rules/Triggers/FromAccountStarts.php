@@ -54,7 +54,7 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     public function triggered(TransactionJournal $journal)
     {
         $name   = $journal->source_account_name ?? strtolower(TransactionJournal::sourceAccount($journal)->name);
-        $search          = strtolower($this->triggerValue);
+        $search = strtolower($this->triggerValue);
 
         $part = substr($name, 0, strlen($search));
 

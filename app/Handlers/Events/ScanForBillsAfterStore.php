@@ -33,6 +33,7 @@ class ScanForBillsAfterStore
     {
         $journal = $event->journal;
         BillScanner::scan($journal);
+
         return true;
     }
 

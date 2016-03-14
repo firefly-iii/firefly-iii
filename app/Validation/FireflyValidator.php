@@ -16,13 +16,11 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\User;
-use Input;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
+use Input;
 use Log;
-use PragmaRX\Google2FA\Contracts\Google2FA;
 use Symfony\Component\Translation\TranslatorInterface;
-use Session;
 
 /**
  * Class FireflyValidator
@@ -59,13 +57,13 @@ class FireflyValidator extends Validator
     {
         if (!is_string($value) || is_null($value) || strlen($value) <> 6) {
             return false;
-        }        
+        }
 
         // Retrieve the secret from our hidden form field.
         $secret = Input::get($parameters[0]);
 
         $google2fa = app('PragmaRX\Google2FA\Google2FA');
-        
+
         return $google2fa->verifyKey($secret, $value);
     }
 

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use Input;
 
 /**
  * Class TokenFormRequest
@@ -30,8 +29,8 @@ class TokenFormRequest extends Request
     {
 
         $rules = [
-        	'secret' => 'required',
-            'code' => 'required|2faCode:secret',            
+            'secret' => 'required',
+            'code'   => 'required|2faCode:secret',
         ];
 
         return $rules;

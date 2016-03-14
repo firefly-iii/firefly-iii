@@ -21,10 +21,9 @@ use Illuminate\Support\Collection;
  */
 class BasicExporter
 {
-    private $entries;
-
     /** @var  ExportJob */
     protected $job;
+    private $entries;
 
     /**
      * BasicExporter constructor.
@@ -34,7 +33,7 @@ class BasicExporter
     public function __construct(ExportJob $job)
     {
         $this->entries = new Collection;
-        $this->job = $job;
+        $this->job     = $job;
     }
 
     /**
@@ -52,7 +51,6 @@ class BasicExporter
     {
         $this->entries = $entries;
     }
-
 
 
 }

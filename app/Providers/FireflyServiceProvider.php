@@ -19,7 +19,6 @@ use Illuminate\Support\ServiceProvider;
 use Twig;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
-use Auth;
 
 /**
  * Class FireflyServiceProvider

@@ -63,6 +63,7 @@ class FireRulesForStore
 
             }
         }
+
         return true;
     }
 }

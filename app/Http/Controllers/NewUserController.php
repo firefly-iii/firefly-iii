@@ -4,7 +4,6 @@ use Auth;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Http\Requests\NewUserFormRequest;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Preferences;
 use Session;

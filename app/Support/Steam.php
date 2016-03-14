@@ -40,9 +40,11 @@ class Steam
 
         bcscale(2);
 
-        $balance = strval($account->transactions()->leftJoin(
-            'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-        )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount'));
+        $balance = strval(
+            $account->transactions()->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+        );
 
         if (!$ignoreVirtualBalance) {
             $balance = bcadd($balance, $account->virtual_balance);

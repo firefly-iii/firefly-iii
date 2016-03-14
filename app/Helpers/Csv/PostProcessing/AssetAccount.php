@@ -245,7 +245,7 @@ class AssetAccount implements PostProcessorInterface
         }
         // create new if not exists and return that one:
         /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $accountData = [
             'name'                   => $accountNumber,
             'accountType'            => 'asset',
@@ -260,7 +260,7 @@ class AssetAccount implements PostProcessorInterface
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => 1, // hard coded.
         ];
-        $account = $repository->store($accountData);
+        $account     = $repository->store($accountData);
 
         return $account;
     }

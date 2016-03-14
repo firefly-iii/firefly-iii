@@ -169,8 +169,8 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      */

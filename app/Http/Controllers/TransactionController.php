@@ -161,7 +161,7 @@ class TransactionController extends Controller
             'tags'          => join(',', $journal->tags->pluck('tag')->toArray()),
         ];
 
-        $category    = $journal->categories()->first();
+        $category = $journal->categories()->first();
         if (!is_null($category)) {
             $preFilled['category'] = $category->name;
         }

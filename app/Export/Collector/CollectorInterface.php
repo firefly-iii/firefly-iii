@@ -9,6 +9,7 @@ declare(strict_types = 1);
  */
 
 namespace FireflyIII\Export\Collector;
+
 use Illuminate\Support\Collection;
 
 /**
@@ -19,14 +20,14 @@ use Illuminate\Support\Collection;
 interface CollectorInterface
 {
     /**
-     * @return bool
-     */
-    public function run();
-
-    /**
      * @return Collection
      */
     public function getFiles();
+
+    /**
+     * @return bool
+     */
+    public function run();
 
     /**
      * @param Collection $files

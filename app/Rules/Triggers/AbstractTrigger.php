@@ -51,6 +51,7 @@ class AbstractTrigger
         $self                 = new static;
         $self->triggerValue   = $triggerValue;
         $self->stopProcessing = $stopProcessing;
+
         return $self;
     }
 

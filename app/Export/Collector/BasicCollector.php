@@ -21,11 +21,10 @@ use Illuminate\Support\Collection;
  */
 class BasicCollector
 {
-    /** @var Collection */
-    private $files;
-
     /** @var ExportJob */
     protected $job;
+    /** @var Collection */
+    private $files;
 
     /**
      * BasicCollector constructor.
