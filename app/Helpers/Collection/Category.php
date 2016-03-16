@@ -47,7 +47,6 @@ class Category
     public function addTotal(string $add)
     {
         $add = strval(round($add, 2));
-        bcscale(2);
         $this->total = bcadd($this->total, $add);
     }
 

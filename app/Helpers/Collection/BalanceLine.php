@@ -124,7 +124,6 @@ class BalanceLine
      */
     public function leftOfRepetition(): string
     {
-        bcscale(2);
         $start = $this->budget->amount ?? '0';
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {

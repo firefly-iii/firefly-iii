@@ -19,7 +19,6 @@ class Amount implements PostProcessorInterface
      */
     public function process()
     {
-        bcscale(2);
         $amount               = $this->data['amount'] ?? '0';
         $modifier             = strval($this->data['amount-modifier']);
         $this->data['amount'] = bcmul($amount, $modifier);

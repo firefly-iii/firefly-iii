@@ -155,7 +155,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
             if (!is_null($leftEntry->first())) {
                 $left = $leftEntry->first()->sum;
             }
-            bcscale(2);
             $diffValue = bcadd($spent, $left);
 
             // difference:
@@ -225,7 +224,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
             if (!is_null($leftEntry->first())) {
                 $left = $leftEntry->first()->sum;
             }
-            bcscale(2);
 
             // balanced by tags
             $tagEntry = new BalanceEntry;

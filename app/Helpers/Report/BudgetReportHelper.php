@@ -40,7 +40,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $set            = $repository->getBudgets();
         $allRepetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
         $allTotalSpent  = $repository->spentAllPerDayForAccounts($accounts, $start, $end);
-        bcscale(2);
 
         foreach ($set as $budget) {
 
@@ -119,7 +118,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      */
     protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
     {
-        bcscale(2);
         $sum          = '0';
         $currentStart = clone $start; // to not mess with the original one
         $currentEnd   = clone $end; // to not mess with the original one

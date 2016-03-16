@@ -34,7 +34,6 @@ class Expense
      */
     public function addOrCreateExpense(TransactionJournal $entry)
     {
-        bcscale(2);
 
         $accountId = $entry->account_id;
         $amount    = strval(round($entry->journalAmount, 2));
@@ -62,7 +61,6 @@ class Expense
      */
     public function addToTotal(string $add)
     {
-        bcscale(2);
 
 
         $add = strval(round($add, 2));

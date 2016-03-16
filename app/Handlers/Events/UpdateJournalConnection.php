@@ -43,7 +43,6 @@ class UpdateJournalConnection
         if (is_null($repetition)) {
             return false;
         }
-        bcscale(2);
 
         $amount = TransactionJournal::amount($journal);
         $diff   = bcsub($amount, $event->amount); // update current repetition

@@ -30,7 +30,6 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      */
     public function frontpage(string $paid, string $unpaid): array
     {
-        bcscale(2);
         $data = [
             [
                 'value'     => round($unpaid, 2),
@@ -57,7 +56,6 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      */
     public function single(Bill $bill, Collection $entries): array
     {
-        bcscale(2);
         $format       = (string)trans('config.month');
         $data         = [
             'count'    => 3,

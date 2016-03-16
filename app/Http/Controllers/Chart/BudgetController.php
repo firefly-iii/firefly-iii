@@ -98,7 +98,6 @@ class BudgetController extends Controller
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
-        bcscale(2);
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -169,8 +168,6 @@ class BudgetController extends Controller
         $allEntries = new Collection;
         $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
-
-        bcscale(2);
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {

@@ -156,7 +156,6 @@ class BudgetController extends Controller
         $period            = Navigation::periodShow($start, $range);
         $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
-        bcscale(2);
         /**
          * Do some cleanup:
          */

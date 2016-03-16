@@ -89,7 +89,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      */
     public function frontpage(Collection $entries): array
     {
-        bcscale(2);
         $data = [
             'count'    => 1,
             'labels'   => [],

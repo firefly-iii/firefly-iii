@@ -82,7 +82,6 @@ class Controller extends BaseController
      */
     protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
     {
-        bcscale(2);
         $sum          = '0';
         $currentStart = clone $start; // to not mess with the original one
         $currentEnd   = clone $end; // to not mess with the original one

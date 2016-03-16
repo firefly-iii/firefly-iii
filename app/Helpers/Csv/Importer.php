@@ -147,7 +147,6 @@ class Importer
      */
     protected function createTransactionJournal()
     {
-        bcscale(2);
         $date = $this->importData['date'];
         if (is_null($this->importData['date'])) {
             $date = $this->importData['date-rent'];

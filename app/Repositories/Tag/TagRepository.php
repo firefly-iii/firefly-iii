@@ -131,7 +131,6 @@ class TagRepository implements TagRepositoryInterface
         // because there will be less of them any way.
         $tags   = $this->user->tags()->where('tagMode', 'balancingAct')->get();
         $amount = '0';
-        bcscale(2);
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {

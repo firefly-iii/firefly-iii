@@ -271,7 +271,6 @@ class TransactionController extends Controller
             }
         );
 
-        bcscale(2);
         $journal->transactions->each(
             function (Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);

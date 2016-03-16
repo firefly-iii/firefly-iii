@@ -78,7 +78,6 @@ class JournalRepository implements JournalRepositoryInterface
                                     ->where('transaction_journals.order', '>=', $journal->order)
                                     ->where('transaction_journals.id', '!=', $journal->id)
                                     ->get(['transactions.*']);
-        bcscale(2);
         $sum = '0';
         foreach ($set as $entry) {
             $sum = bcadd($entry->amount, $sum);

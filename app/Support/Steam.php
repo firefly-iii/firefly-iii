@@ -38,8 +38,6 @@ class Steam
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        bcscale(2);
-
         $balance = strval(
             $account->transactions()->leftJoin(
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
@@ -123,8 +121,6 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
-        bcscale(2);
 
         $balances = Transaction::
         leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')

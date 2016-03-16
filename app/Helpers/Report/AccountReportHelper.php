@@ -44,7 +44,6 @@ class AccountReportHelper implements AccountReportHelperInterface
         $yesterday = clone $start;
         $yesterday->subDay();
 
-        bcscale(2);
 
         // get balances for start.
         $startSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')

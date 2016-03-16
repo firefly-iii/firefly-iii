@@ -77,7 +77,6 @@ class ReportHelper implements ReportHelperInterface
             $billLine->setMax($bill->amount_max);
 
             // is hit in period?
-            bcscale(2);
 
             $entry = $journals->filter(
                 function (TransactionJournal $journal) use ($bill) {
@@ -229,7 +228,6 @@ class ReportHelper implements ReportHelperInterface
      */
     public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
-        bcscale(2);
         $ids        = $accounts->pluck('id')->toArray();
         $set        = Tag::
         distinct()
@@ -289,7 +287,6 @@ class ReportHelper implements ReportHelperInterface
      */
     protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
     {
-        bcscale(2);
         $sum          = '0';
         $currentStart = clone $start; // to not mess with the original one
         $currentEnd   = clone $end; // to not mess with the original one

@@ -354,7 +354,6 @@ class TestData
      */
     public static function createGroceries(User $user, Carbon $date): bool
     {
-        bcscale(2);
         $start = clone $date;
         $end   = clone $date;
         $today = new Carbon;

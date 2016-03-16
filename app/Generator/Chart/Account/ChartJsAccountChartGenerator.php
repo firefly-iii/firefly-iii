@@ -30,7 +30,6 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
                                                'label' => trans('firefly.spent'),
                                                'data'  => []]]];
 
-        bcscale(2);
         $start->subDay();
         $ids           = $this->getIdsFromCollection($accounts);
         $startBalances = Steam::balancesById($ids, $start);

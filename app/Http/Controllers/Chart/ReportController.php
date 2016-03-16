@@ -46,7 +46,6 @@ class ReportController extends Controller
      */
     public function netWorth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        bcscale(2);
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('netWorth');
@@ -200,7 +199,6 @@ class ReportController extends Controller
      */
     protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
     {
-        bcscale(2);
         $income  = '0';
         $expense = '0';
         $count   = 0;
@@ -228,7 +226,6 @@ class ReportController extends Controller
      */
     protected function pluckFromArray($year, array $set)
     {
-        bcscale(2);
         $sum = '0';
         foreach ($set as $date => $amount) {
             if (substr($date, 0, 4) == $year) {
@@ -278,7 +275,6 @@ class ReportController extends Controller
      */
     protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
     {
-        bcscale(2);
         $income  = '0';
         $expense = '0';
         $count   = 0;
@@ -305,7 +301,6 @@ class ReportController extends Controller
      */
     private function arraySum($array) : string
     {
-        bcscale(2);
         $sum = '0';
         foreach ($array as $entry) {
             $sum = bcadd($sum, $entry);

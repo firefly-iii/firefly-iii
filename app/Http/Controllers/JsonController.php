@@ -56,7 +56,6 @@ class JsonController extends Controller
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
-        bcscale(2);
 
         /*
          * Since both this method and the chart use the exact same data, we can suffice
@@ -81,7 +80,6 @@ class JsonController extends Controller
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
-        bcscale(2);
         $start         = session('start', Carbon::now()->startOfMonth());
         $end           = session('end', Carbon::now()->endOfMonth());
         $amount        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.

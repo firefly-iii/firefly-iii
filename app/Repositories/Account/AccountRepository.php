@@ -268,7 +268,6 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($ids) > 0) {
             $accounts = $this->user->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
         }
-        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -309,7 +308,6 @@ class AccountRepository implements AccountRepositoryInterface
         $start    = clone session('start', new Carbon);
         $end      = clone session('end', new Carbon);
 
-        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {

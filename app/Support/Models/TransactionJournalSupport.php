@@ -40,7 +40,6 @@ class TransactionJournalSupport extends Model
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        bcscale(2);
         $transaction = $journal->transactions->sortByDesc('amount')->first();
         $amount      = $transaction->amount;
         if ($journal->isWithdrawal()) {

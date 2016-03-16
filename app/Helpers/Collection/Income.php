@@ -45,7 +45,6 @@ class Income
             $newObject->id     = $accountId;
             $this->incomes->put($accountId, $newObject);
         } else {
-            bcscale(2);
             $existing         = $this->incomes->get($accountId);
             $existing->amount = bcadd($existing->amount, $entry->journalAmount);
             $existing->count++;
@@ -59,7 +58,6 @@ class Income
     public function addToTotal(string $add)
     {
         $add = strval(round($add, 2));
-        bcscale(2);
         $this->total = bcadd($this->total, $add);
     }
 
