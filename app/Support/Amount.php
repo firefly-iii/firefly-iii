@@ -42,7 +42,7 @@ class Amount
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
         $locale    = setlocale(LC_MONETARY, 0);
-        $float     = floatval($amount);
+        $float     = round($amount, 2);
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $result    = $formatter->formatCurrency($float, $format->code);
 
@@ -71,9 +71,9 @@ class Amount
     public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
     {
         $locale = setlocale(LC_MONETARY, 0);
-        $float  = floatval($journal->destination_amount);
+        $float  = round($journal->destination_amount, 2);
         if ($journal->isWithdrawal()) {
-            $float = floatval($journal->source_amount);
+            $float = round($journal->source_amount, 2);
         }
         $formatter    = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $currencyCode = $journal->transaction_currency_code ?? $journal->transactionCurrency->code;

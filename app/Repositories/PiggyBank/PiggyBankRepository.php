@@ -157,7 +157,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         $piggyBank->name         = $data['name'];
         $piggyBank->account_id   = intval($data['account_id']);
-        $piggyBank->targetamount = floatval($data['targetamount']);
+        $piggyBank->targetamount = round($data['targetamount'], 2);
         $piggyBank->targetdate   = $data['targetdate'];
         $piggyBank->startdate    = $data['startdate'];
 
