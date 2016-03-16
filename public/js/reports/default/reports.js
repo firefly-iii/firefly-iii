@@ -116,7 +116,7 @@ function drawChart() {
     }
 
     if (typeof lineChart !== 'undefined' && typeof accountIds !== 'undefined') {
-        lineChart('/chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
+        lineChart('chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
     }
 }
 
