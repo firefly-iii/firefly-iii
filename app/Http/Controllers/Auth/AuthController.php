@@ -137,7 +137,7 @@ class AuthController extends Controller
                     $message->to($email, $email)->subject('Welcome to Firefly III! ');
                 }
                 );
-            } catch (\Swift_TransportException $e) {
+            } catch (Swift_TransportException $e) {
                 Log::error($e->getMessage());
             }
 
