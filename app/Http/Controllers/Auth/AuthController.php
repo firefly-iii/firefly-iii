@@ -94,7 +94,7 @@ class AuthController extends Controller
               $email = env('SITE_OWNER', false);
               $fields = [
                 'user_id' => $foundUser->id,
-                'email' => $credentials['email'],
+                'user_address' => $credentials['email'],
                 'code' => $code,
                 'message' => $message,
                 'ip' => $request->ip(),
