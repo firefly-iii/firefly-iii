@@ -17,6 +17,7 @@ use Log;
 use Mail;
 use Request as Rq;
 use Session;
+use Swift_TransportException;
 use Validator;
 
 
@@ -57,10 +58,8 @@ class AuthController extends Controller
     {
         $this->validate($request, [$this->loginUsername() => 'required', 'password' => 'required',]);
         $throttles = $this->isUsingThrottlesLoginsTrait();
-        Log::debug('Now at login.');
 
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
-          Log::debug('Lockout response sent.');
             return $this->sendLockoutResponse($request);
         }
 
@@ -68,7 +67,6 @@ class AuthController extends Controller
         $credentials['blocked'] = 0; // most not be blocked.
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-            Log::debug('User "'.$credentials['email'].'" is logged in!');
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
@@ -78,44 +76,15 @@ class AuthController extends Controller
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
             // if it exists, show message:
-            $code = $foundUser->blocked_code ?? '';
-
-            if (strlen($code) == 0) {
-                $code = 'general_blocked';
-            }
+            $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
             $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
-
-            Log::debug('User "'.$credentials['email'].'" found, but code '.$code);
-
-            // send a message home about the  blocked attempt to login.
-            // perhaps in a later stage, simply log these messages.
-            // send email.
-            try {
-              $email = env('SITE_OWNER', false);
-              $fields = [
-                'user_id' => $foundUser->id,
-                'user_address' => $credentials['email'],
-                'code' => $code,
-                'error_message' => $errorMessage,
-                'ip' => $request->ip(),
-              ];
-              Log::debug('Try to send error about user "'.$credentials['email'].'".');
-              Mail::send(
-                    ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email) {
-                    $message->to($email, $email)->subject('Blocked a login attempt.');
-                }
-                );
-            } catch (\Swift_TransportException $e) {
-                Log::error($e->getMessage());
-            }
-
+            $this->reportBlockedUserLoginAttempt($foundUser, $code, $request->ip());
         }
 
         if ($throttles) {
-            Log::debug('User "'.$credentials['email'].'" increment attempt count.');
             $this->incrementLoginAttempts($request);
         }
-        Log::debug('User "'.$credentials['email'].'" return failed login response.');
+
         return $this->sendFailedLoginResponse($request, $errorMessage);
     }
 
@@ -145,6 +114,9 @@ class AuthController extends Controller
         // is user email domain blocked?
         if ($this->isBlockedDomain($data['email'])) {
             $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
+
+            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
+
             $this->throwValidationException(
                 $request, $validator
             );
@@ -299,5 +271,63 @@ class AuthController extends Controller
                      'password' => 'required|confirmed|min:6',
                  ]
         );
+    }
+
+    /**
+     * Send a message home about a blocked domain and the address attempted to register.
+     *
+     * @param string $registrationMail
+     * @param string $ipAddress
+     */
+    private function reportBlockedDomainRegistrationAttempt(string $registrationMail, string $ipAddress)
+    {
+        try {
+            $email  = env('SITE_OWNER', false);
+            $parts  = explode('@', $registrationMail);
+            $domain = $parts[1];
+            $fields = [
+                'email_address'  => $registrationMail,
+                'blocked_domain' => $domain,
+                'ip'             => $ipAddress,
+            ];
+
+            Mail::send(
+                ['emails.blocked-registration-html', 'emails.blocked-registration'], $fields, function (Message $message) use ($email, $domain) {
+                $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    /**
+     * Send a message home about the  blocked attempt to login.
+     * Perhaps in a later stage, simply log these messages.
+     *
+     * @param User   $user
+     * @param string $code
+     * @param string $ipAddress
+     */
+    private function reportBlockedUserLoginAttempt(User $user, string $code, string $ipAddress)
+    {
+
+        try {
+            $email  = env('SITE_OWNER', false);
+            $fields = [
+                'user_id'      => $user->id,
+                'user_address' => $user->email,
+                'code'         => $code,
+                'ip'           => $ipAddress,
+            ];
+
+            Mail::send(
+                ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email, $user) {
+                $message->to($email, $email)->subject('Blocked a login attempt from ' . trim($user->email) . '.');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
     }
 }
