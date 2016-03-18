@@ -73,7 +73,7 @@ class AuthController extends Controller
         }
 
         // check if user is blocked:
-        $message = '';
+        $errorMessage = '';
         /** @var User $foundUser */
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
@@ -83,7 +83,7 @@ class AuthController extends Controller
             if (strlen($code) == 0) {
                 $code = 'general_blocked';
             }
-            $message = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
+            $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
 
             Log::debug('User "'.$credentials['email'].'" found, but code '.$code);
 
@@ -96,7 +96,7 @@ class AuthController extends Controller
                 'user_id' => $foundUser->id,
                 'user_address' => $credentials['email'],
                 'code' => $code,
-                'message' => $message,
+                'error_message' => $errorMessage,
                 'ip' => $request->ip(),
               ];
               Log::debug('Try to send error about user "'.$credentials['email'].'".');
@@ -116,7 +116,7 @@ class AuthController extends Controller
             $this->incrementLoginAttempts($request);
         }
         Log::debug('User "'.$credentials['email'].'" return failed login response.');
-        return $this->sendFailedLoginResponse($request, $message);
+        return $this->sendFailedLoginResponse($request, $errorMessage);
     }
 
     /**
