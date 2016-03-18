@@ -151,6 +151,8 @@ class AccountController extends Controller
      */
     public function index(ARI $repository, string $what)
     {
+      $what = $what ?? 'asset';
+
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
