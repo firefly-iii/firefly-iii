@@ -57,8 +57,10 @@ class AuthController extends Controller
     {
         $this->validate($request, [$this->loginUsername() => 'required', 'password' => 'required',]);
         $throttles = $this->isUsingThrottlesLoginsTrait();
+        Log::debug('Now at login.');
 
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
+          Log::debug('Lockout response sent.');
             return $this->sendLockoutResponse($request);
         }
 
@@ -66,7 +68,7 @@ class AuthController extends Controller
         $credentials['blocked'] = 0; // most not be blocked.
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-
+            Log::debug('User "'.$credentials['email'].'" is logged in!');
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
@@ -83,6 +85,8 @@ class AuthController extends Controller
             }
             $message = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
 
+            Log::debug('User "'.$credentials['email'].'" found, but code '.$code);
+
             // send a message home about the  blocked attempt to login.
             // perhaps in a later stage, simply log these messages.
             // send email.
@@ -95,6 +99,7 @@ class AuthController extends Controller
                 'message' => $message,
                 'ip' => $request->ip(),
               ];
+              Log::debug('Try to send error about user "'.$credentials['email'].'".');
               Mail::send(
                     ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email) {
                     $message->to($email, $email)->subject('Blocked a login attempt.');
@@ -107,9 +112,10 @@ class AuthController extends Controller
         }
 
         if ($throttles) {
+            Log::debug('User "'.$credentials['email'].'" increment attempt count.');
             $this->incrementLoginAttempts($request);
         }
-
+        Log::debug('User "'.$credentials['email'].'" return failed login response.');
         return $this->sendFailedLoginResponse($request, $message);
     }
 
