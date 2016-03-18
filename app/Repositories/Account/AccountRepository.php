@@ -450,8 +450,9 @@ class AccountRepository implements AccountRepositoryInterface
 
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
+
         if ($data['openingBalance'] != 0) {
-            if ($openingBalance) {
+            if (!is_null($openingBalance->id)) {
                 $this->updateInitialBalance($account, $openingBalance, $data);
             } else {
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
