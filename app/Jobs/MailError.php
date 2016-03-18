@@ -47,7 +47,8 @@ class MailError extends Job implements ShouldQueue
         $this->ipAddress   = $ipAddress;
         $this->exception   = $exceptionData;
 
-        Log::debug('In mail job constructor');
+        Log::debug('In mail job constructor for error handler.');
+        Log::error('Exception is: ' . json_encode($exceptionData));
     }
 
     /**
