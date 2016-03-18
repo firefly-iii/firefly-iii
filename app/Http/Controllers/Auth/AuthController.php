@@ -82,6 +82,28 @@ class AuthController extends Controller
                 $code = 'general_blocked';
             }
             $message = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
+
+            // send a message home about the  blocked attempt to login.
+            // perhaps in a later stage, simply log these messages.
+            // send email.
+            try {
+              $email = env('SITE_OWNER', false);
+              $fields = [
+                'user_id' => $foundUser->id,
+                'email' => $credentials['email'],
+                'code' => $code,
+                'message' => $message,
+                'ip' => $request->ip(),
+              ];
+              Mail::send(
+                    ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email) {
+                    $message->to($email, $email)->subject('Blocked a login attempt.');
+                }
+                );
+            } catch (\Swift_TransportException $e) {
+                Log::error($e->getMessage());
+            }
+
         }
 
         if ($throttles) {
