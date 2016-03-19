@@ -36,7 +36,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return int
      */
-    public function countAccounts(array $types)
+    public function countAccounts(array $types): int
     {
         $count = Auth::user()->accounts()->accountTypeIn($types)->count();
 
@@ -49,7 +49,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return boolean
      */
-    public function destroy(Account $account, Account $moveTo = null)
+    public function destroy(Account $account, Account $moveTo = null): bool
     {
         if (!is_null($moveTo)) {
             // update all transactions:
@@ -68,9 +68,21 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    public function find($accountId)
+    public function find(int $accountId): Account
     {
         return Auth::user()->accounts()->findOrNew($accountId);
+    }
+
+    /**
+     * Gets all the accounts by ID, for a given set.
+     *
+     * @param array $ids
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function get(array $ids): Collection
+    {
+        return $this->user->accounts()->whereIn('id', $ids)->get(['accounts.*']);
     }
 
     /**
@@ -78,7 +90,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getAccounts(array $types)
+    public function getAccounts(array $types): Collection
     {
         /** @var Collection $result */
         $result = Auth::user()->accounts()->with(
@@ -107,7 +119,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getCreditCards(Carbon $date)
+    public function getCreditCards(Carbon $date): Collection
     {
         $set = Auth::user()->accounts()
                    ->hasMetaValue('accountRole', 'ccAsset')
@@ -135,9 +147,12 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Transaction
      */
-    public function getFirstTransaction(TransactionJournal $journal, Account $account)
+    public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction
     {
         $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        if (is_null($transaction)) {
+            $transaction = new Transaction;
+        }
 
         return $transaction;
     }
@@ -147,7 +162,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getFrontpageAccounts(Preference $preference)
+    public function getFrontpageAccounts(Preference $preference): Collection
     {
         $query = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account']);
 
@@ -171,7 +186,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return mixed
      */
-    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end)
+    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection
     {
         $set = Auth::user()
                    ->transactionjournals()
@@ -197,7 +212,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, $page)
+    public function getJournals(Account $account, $page): LengthAwarePaginator
     {
         $offset = ($page - 1) * 50;
         $query  = Auth::user()
@@ -223,7 +238,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getPiggyBankAccounts()
+    public function getPiggyBankAccounts(): Collection
     {
         $start      = clone Session::get('start', new Carbon);
         $end        = clone Session::get('end', new Carbon);
@@ -265,7 +280,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getSavingsAccounts()
+    public function getSavingsAccounts(): Collection
     {
         $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
                         ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
@@ -312,7 +327,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return float
      */
-    public function leftOnAccount(Account $account, Carbon $date)
+    public function leftOnAccount(Account $account, Carbon $date): string
     {
 
         $balance = Steam::balance($account, $date, true);
@@ -330,7 +345,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return TransactionJournal|null
      */
-    public function openingBalanceTransaction(Account $account)
+    public function openingBalanceTransaction(Account $account): TransactionJournal
     {
         $journal = TransactionJournal
             ::orderBy('transaction_journals.date', 'ASC')
@@ -348,7 +363,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    public function store(array $data)
+    public function store(array $data): Account
     {
         $newAccount = $this->storeAccount($data);
         if (!is_null($newAccount)) {
@@ -378,9 +393,21 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param $account
+     * @param $name
+     * @param $value
+     *
+     * @return AccountMeta
+     */
+    public function storeMeta($account, $name, $value): AccountMeta
+    {
+        return AccountMeta::create(['name' => $name, 'data' => $value, 'account_id' => $account->id,]);
+    }
+
+    /**
      * @return string
      */
-    public function sumOfEverything()
+    public function sumOfEverything(): string
     {
         return strval(Auth::user()->transactions()->sum('amount'));
     }
@@ -393,7 +420,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    public function update(Account $account, array $data)
+    public function update(Account $account, array $data): Account
     {
         // update the account:
         $account->name            = $data['name'];
@@ -437,7 +464,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    protected function storeAccount(array $data)
+    protected function storeAccount(array $data): Account
     {
         $type        = Config::get('firefly.accountTypeByIdentifier.' . $data['accountType']);
         $accountType = AccountType::whereType($type)->first();
@@ -483,7 +510,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return TransactionJournal
      */
-    protected function storeInitialBalance(Account $account, Account $opposing, array $data)
+    protected function storeInitialBalance(Account $account, Account $opposing, array $data): TransactionJournal
     {
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
@@ -551,11 +578,11 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return TransactionJournal
      */
-    protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
+    protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data): TransactionJournal
     {
         $journal->date = $data['openingBalanceDate'];
         $journal->save();
-        
+
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id == $transaction->account_id) {
