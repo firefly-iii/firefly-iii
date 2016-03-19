@@ -53,6 +53,15 @@ return [
     'flash_error_multiple'                      => 'There is one error|There are :count errors',
     'net_worth'                                 => 'Net worth',
     'route_has_no_help'                         => 'There is no help for this route, or there is no help available in your language.',
+    'two_factor_welcome'                        => 'Hello, :user!',
+    'two_factor_enter_code'                     => 'To continue, please enter your two factor authentication code. Your application can generate it for you.',
+    'two_factor_code_here'                      => 'Enter code here',
+    'authenticate'                              => 'Authenticate',
+    'two_factor_forgot'                         => 'I forgot my two-factor thing.',
+    'two_factor_lost_header'                    => 'Lost your two factor authentication?',
+    'two_factor_lost_intro'                     => 'Unfortunately, this is not something you can reset from the web interface. You have two choices.',
+    'two_factor_lost_fix_self'                  => 'If you run your own instance of Firefly III, check the logs in <code>storage/logs</code> for instructions.',
+    'two_factor_lost_fix_owner'                 => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
 
     // export data:
     'import_and_export'                         => 'Import and export',
