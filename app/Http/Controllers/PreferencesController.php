@@ -96,7 +96,7 @@ class PreferencesController extends Controller
     public function postCode(TokenFormRequest $request)
     {
         Preferences::set('twoFactorAuthEnabled', 1);
-        Preferences::set('twoFactorAuthSecret', $request->input('secret'));
+        Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
 
         Session::flash('success', 'Preferences saved!');
         Preferences::mark();
