@@ -19,7 +19,7 @@ return [
     'budget-menu-title'        => 'Budgets',
     'budget-menu-text'         => 'Use this page to organise your finances and limit spending.',
     'report-menu-title'        => 'Reports',
-    'report-menu-text'         => 'Check this out when you want a solid overview of your fiances.',
+    'report-menu-text'         => 'Check this out when you want a solid overview of your finances.',
     'transaction-menu-title'   => 'Transactions',
     'transaction-menu-text'    => 'All transactions you\'ve created can be found here.',
     'option-menu-title'        => 'Options',
