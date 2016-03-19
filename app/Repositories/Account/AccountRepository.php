@@ -354,6 +354,9 @@ class AccountRepository implements AccountRepositoryInterface
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return new TransactionJournal;
+        }
 
         return $journal;
     }
