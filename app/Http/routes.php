@@ -29,6 +29,15 @@ Route::group(
 }
 );
 
+Route::group(
+    ['middleware' => 'web-auth-no-two-factor'], function () {
+    Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
+    Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
+    Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
+    Route::get('/flush', ['uses' => 'HomeController@flush']);
+}
+);
+
 
 Route::group(
     ['middleware' => ['web-auth-range']], function () {
@@ -39,7 +48,7 @@ Route::group(
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-    Route::get('/flush', ['uses' => 'HomeController@flush']);
+
     Route::get('/routes', ['uses' => 'HomeController@routes']);
     /**
      * Account Controller
