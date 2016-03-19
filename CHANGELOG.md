@@ -7,11 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [3.8.0] - 2016-03-20
 ### Added
-- A new preference for the future feature "2 factor authentication", thanks to @zjean
+- Two factor authentication, thanks to the excellent work of [zjean](https://github.com/zjean).
 - A new chart showing your net worth in year and multi-year reports.
-- A big revamp in rules: you can now see if your current or future rules actually match any transactions, thanks to the excellent work of @roberthorlings.
-- New date fields for transactions.
+- You can now see if your current or future rules actually match any transactions, thanks to the excellent work of @roberthorlings.
+- New date fields for transactions. They are not used yet in reports or anything, but they can be filled in.
 - New routine to export your data.
+- Firefly III will mail the site owner when blocked users try to login, or when blocked domains are used in registrations.
 
 
 ### Changed
@@ -19,9 +20,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
-- HTML fixes, thanks to @roberthorlings and @zjean
-- A bug fix in the ABN Amro importer, thanks to @roberthorlings
-- Various bug fixes.
+- HTML fixes, thanks to [roberthorlings](https://github.com/roberthorlings) and [zjean](https://github.com/zjean)..
+- A bug fix in the ABN Amro importer, thanks to [roberthorlings](https://github.com/roberthorlings)
+- It was not possible to change the opening balance, once it had been set. Thanks to [xnyhps](https://github.com/xnyhps) and [marcoveeneman](https://github.com/marcoveeneman) for spotting this.
+- Various other bug fixes.
 
 
 
