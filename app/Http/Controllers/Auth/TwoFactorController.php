@@ -13,7 +13,7 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\TwoFactorFormRequest;
+use FireflyIII\Http\Requests\TokenFormRequest;
 use Log;
 use Preferences;
 use Session;
@@ -57,18 +57,18 @@ class TwoFactorController extends Controller
         Log::info(
             'To reset the two factor authentication for user #' . $user->id .
             ' (' . $user->email . '), simply open the "preferences" table and delete the entries with the names "twoFactorAuthEnabled" and' .
-            ' "twoFactorAuthSecret" for user_id ' . $user->id.'. That will take care of it.'
+            ' "twoFactorAuthSecret" for user_id ' . $user->id . '. That will take care of it.'
         );
 
         return view('auth.lost-two-factor', compact('user', 'siteOwner'));
     }
 
     /**
-     * @param TwoFactorFormRequest $request
+     * @param TokenFormRequest $request
      *
      * @return mixed
      */
-    public function postIndex(TwoFactorFormRequest $request)
+    public function postIndex(TokenFormRequest $request)
     {
         Session::put('twofactor-authenticated', true);
         Session::put('twofactor-authenticated-date', new Carbon);
