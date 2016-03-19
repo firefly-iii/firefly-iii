@@ -6,8 +6,6 @@
 
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'preferences.code'}) }}
-    <input type="hidden" name="secret" value="{{ secret }}"/>
-
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6">            
             <div class="box">
@@ -19,19 +17,14 @@
                         {{ 'pref_two_factor_auth_code_help'|_ }}
                     </p>
                     <div class="form group">
-                        
                         <div class="col-sm-8 col-md-offset-4">
-                            <img src="{{ image }}" />
+                            <img src="{{ image }}" alt="" title="" />
+                            <br /><br />
                         </div>
                         
                     </div>
-                    <div class="form group">
-                        <div class="col-sm-8 col-md-offset-4">
-                            <p>{{ secret }}</p>
-                        </div>
-                    </div>
-                    
-                    {{ ExpandedForm.text('code', code, {'label' : 'Code'}) }}
+
+                    {{ ExpandedForm.text('code', code) }}
                 </div>
             </div>            
         </div>

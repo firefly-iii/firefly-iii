@@ -18,8 +18,8 @@ use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Input;
 use Log;
+use Session;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -59,9 +59,7 @@ class FireflyValidator extends Validator
             return false;
         }
 
-        // Retrieve the secret from our hidden form field.
-        $secret = Input::get($parameters[0]);
-
+        $secret    = Session::get('two-factor-secret');
         $google2fa = app('PragmaRX\Google2FA\Google2FA');
 
         return $google2fa->verifyKey($secret, $value);

@@ -29,8 +29,7 @@ class TokenFormRequest extends Request
     {
 
         $rules = [
-            'secret' => 'required',
-            'code'   => 'required|2faCode:secret',
+            'code'   => 'required|2faCode',
         ];
 
         return $rules;
