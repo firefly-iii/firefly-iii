@@ -59,12 +59,8 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
         $part = substr($toAccountName, 0, strlen($search));
 
         if ($part == $search) {
-            Log::debug('"' . $toAccountName . '" starts with "' . $search . '". Return true.');
-
             return true;
         }
-        Log::debug('"' . $toAccountName . '" does not start with "' . $search . '". Return false.');
-
         return false;
 
     }

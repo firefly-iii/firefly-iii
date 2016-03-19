@@ -58,16 +58,8 @@ final class ToAccountContains extends AbstractTrigger implements TriggerInterfac
         $strpos        = strpos($toAccountName, $search);
 
         if (!($strpos === false)) {
-            // found something
-            Log::debug('"' . $toAccountName . '" contains the text "' . $search . '". Return true.');
-
             return true;
         }
-
-        // found nothing.
-        Log::debug('"' . $toAccountName . '" does not contain the text "' . $search . '". Return false.');
-
         return false;
-
     }
 }

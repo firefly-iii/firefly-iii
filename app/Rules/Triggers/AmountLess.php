@@ -58,14 +58,8 @@ final class AmountLess extends AbstractTrigger implements TriggerInterface
         $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare, 4);
         if ($result === -1) {
-            // found something
-            Log::debug($amount . ' is less than ' . $compare . '. Return true.');
-
             return true;
         }
-
-        // found nothing.
-        Log::debug($amount . ' is not less than ' . $compare . '. Return false.');
 
         return false;
 

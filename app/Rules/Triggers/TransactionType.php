@@ -57,12 +57,8 @@ final class TransactionType extends AbstractTrigger implements TriggerInterface
         $search = strtolower($this->triggerValue);
 
         if ($type == $search) {
-            Log::debug('Journal is of type "' . $type . '" which matches with "' . $search . '". Return true');
-
             return true;
         }
-        Log::debug('Journal is of type "' . $type . '" which does not match with "' . $search . '". Return false');
-
         return false;
     }
 }

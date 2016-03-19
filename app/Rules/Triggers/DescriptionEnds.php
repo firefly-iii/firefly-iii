@@ -61,23 +61,15 @@ final class DescriptionEnds extends AbstractTrigger implements TriggerInterface
         // if the string to search for is longer than the description,
         // shorten the search string.
         if ($searchLength > $descriptionLength) {
-            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $description . '" (' . $descriptionLength . '). ');
             $search       = substr($search, ($descriptionLength * -1));
             $searchLength = strlen($search);
-            Log::debug('Search string is now "' . $search . '" (' . $searchLength . ') instead.');
         }
-
 
         $part = substr($description, $searchLength * -1);
 
         if ($part == $search) {
-            Log::debug('"' . $description . '" ends with "' . $search . '". Return true.');
-
             return true;
         }
-        Log::debug('"' . $description . '" does not end with "' . $search . '". Return false.');
-
         return false;
-
     }
 }

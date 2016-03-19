@@ -58,15 +58,8 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
         $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare, 4);
         if ($result === 0) {
-            // found something
-            Log::debug($amount . ' is exactly ' . $compare . '. Return true.');
-
             return true;
         }
-
-        // found nothing.
-        Log::debug($amount . ' is not exactly ' . $compare . '. Return false.');
-
         return false;
 
     }

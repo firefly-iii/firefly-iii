@@ -61,22 +61,16 @@ final class FromAccountEnds extends AbstractTrigger implements TriggerInterface
         // if the string to search for is longer than the account name,
         // shorten the search string.
         if ($searchLength > $nameLength) {
-            Log::debug('Search string "' . $search . '" (' . $searchLength . ') is longer than "' . $name . '" (' . $nameLength . '). ');
             $search       = substr($search, ($nameLength * -1));
             $searchLength = strlen($search);
-            Log::debug('Search string is now "' . $search . '" (' . $searchLength . ') instead.');
         }
 
 
         $part = substr($name, $searchLength * -1);
 
         if ($part == $search) {
-            Log::debug('"' . $name . '" ends with "' . $search . '". Return true.');
-
             return true;
         }
-        Log::debug('"' . $name . '" does not end with "' . $search . '". Return false.');
-
         return false;
 
     }

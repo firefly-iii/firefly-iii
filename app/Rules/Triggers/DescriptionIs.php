@@ -57,13 +57,8 @@ final class DescriptionIs extends AbstractTrigger implements TriggerInterface
         $search      = strtolower($this->triggerValue);
 
         if ($description == $search) {
-            Log::debug('"' . $description . '" equals "' . $search . '" exactly. Return true.');
-
             return true;
         }
-        Log::debug('"' . $description . '" does not equal "' . $search . '". Return false.');
-
         return false;
-
     }
 }

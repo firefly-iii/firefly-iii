@@ -57,12 +57,8 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
         $search        = strtolower($this->triggerValue);
 
         if ($toAccountName == $search) {
-            Log::debug('"' . $toAccountName . '" equals "' . $search . '" exactly. Return true.');
-
             return true;
         }
-        Log::debug('"' . $toAccountName . '" does not equal "' . $search . '". Return false.');
-
         return false;
 
     }

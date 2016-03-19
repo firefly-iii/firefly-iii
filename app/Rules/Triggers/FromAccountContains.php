@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class FromAccountContains
@@ -58,14 +57,8 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         $strpos          = strpos($fromAccountName, $search);
 
         if (!($strpos === false)) {
-            // found something
-            Log::debug('"' . $fromAccountName . '" contains the text "' . $search . '". Return true.');
-
             return true;
         }
-
-        // found nothing.
-        Log::debug('"' . $fromAccountName . '" does not contain the text "' . $search . '". Return false.');
 
         return false;
 

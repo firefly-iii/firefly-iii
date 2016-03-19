@@ -59,13 +59,8 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
         $part = substr($description, 0, strlen($search));
 
         if ($part == $search) {
-            Log::debug('"' . $description . '" starts with "' . $search . '". Return true.');
-
             return true;
         }
-        Log::debug('"' . $description . '" does not start with "' . $search . '". Return false.');
-
         return false;
-
     }
 }

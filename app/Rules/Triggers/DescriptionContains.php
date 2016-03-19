@@ -59,14 +59,8 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
 
         $strpos = strpos($source, $search);
         if (!($strpos === false)) {
-            // found something
-            Log::debug('"' . $source . '" contains the text "' . $search . '". Return true.');
-
             return true;
         }
-
-        // found nothing.
-        Log::debug('"' . $source . '" does not contain the text "' . $search . '". Return false.');
 
         return false;
 
