@@ -57,7 +57,7 @@ class Income
      */
     public function addToTotal(string $add)
     {
-        $add = strval(round($add, 2));
+        $add         = strval(round($add, 2));
         $this->total = bcadd($this->total, $add);
     }
 

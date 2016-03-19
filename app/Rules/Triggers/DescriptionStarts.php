@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class DescriptionStarts
@@ -61,6 +60,7 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
         if ($part == $search) {
             return true;
         }
+
         return false;
     }
 }

@@ -15,6 +15,7 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
 use Session;
+
 /**
  * Class RedirectIfTwoFactorAuthenticated
  *

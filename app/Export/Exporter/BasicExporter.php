@@ -23,7 +23,7 @@ class BasicExporter
 {
     /** @var  ExportJob */
     protected $job;
-    private $entries;
+    private   $entries;
 
     /**
      * BasicExporter constructor.

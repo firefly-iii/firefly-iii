@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class FromAccountIs
@@ -59,6 +58,7 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
         if ($name == $search) {
             return true;
         }
+
         return false;
 
     }

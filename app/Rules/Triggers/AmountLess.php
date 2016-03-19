@@ -12,7 +12,6 @@ namespace FireflyIII\Rules\Triggers;
 
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class AmountLess

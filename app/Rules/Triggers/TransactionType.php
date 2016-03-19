@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class TransactionType
@@ -59,6 +58,7 @@ final class TransactionType extends AbstractTrigger implements TriggerInterface
         if ($type == $search) {
             return true;
         }
+
         return false;
     }
 }

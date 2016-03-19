@@ -12,7 +12,6 @@ namespace FireflyIII\Rules\Triggers;
 
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class AmountExactly
@@ -60,6 +59,7 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
         if ($result === 0) {
             return true;
         }
+
         return false;
 
     }

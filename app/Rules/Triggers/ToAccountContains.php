@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class ToAccountContains
@@ -60,6 +59,7 @@ final class ToAccountContains extends AbstractTrigger implements TriggerInterfac
         if (!($strpos === false)) {
             return true;
         }
+
         return false;
     }
 }

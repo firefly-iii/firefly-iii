@@ -6,7 +6,6 @@ namespace FireflyIII\Http\Controllers;
 use Crypt;
 use File;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
@@ -72,7 +71,7 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Attachment                $attachment
+     * @param Attachment $attachment
      *
      * @throws FireflyException
      *
