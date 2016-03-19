@@ -53,7 +53,7 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal)
     {
-        $name   = $journal->source_account_name ?? strtolower(TransactionJournal::sourceAccount($journal)->name);
+        $name   = strtolower($journal->source_account_name ?? TransactionJournal::sourceAccount($journal)->name);
         $search = strtolower($this->triggerValue);
 
         if ($name == $search) {
@@ -61,7 +61,7 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
 
             return true;
         }
-        Log::debug('"' . $name . '" does not equal "' . $search . '". Return false.');
+        Log::debug('"' . $name . '" does not equal "' . $search . '" exactly. Return false.');
 
         return false;
 
