@@ -52,6 +52,16 @@ return [
     'flash_info_multiple'                       => 'Er is één melding|Er zijn :count meldingen',
     'flash_error_multiple'                      => 'Er is één fout|Er zijn :count fouten',
     'net_worth'                                 => 'Kapitaal',
+    'route_has_no_help'                         => 'Er is geen helptekst voor deze pagina, of er is geen helptekst in het Nederlands.',
+    'two_factor_welcome'                        => 'Hoi :user!',
+    'two_factor_enter_code'                     => 'Vul je authenticatiecode in. Je authenticatieapplicatie kan deze voor je genereren.',
+    'two_factor_code_here'                      => 'Code',
+    'authenticate'                              => 'Inloggen',
+    'two_factor_forgot'                         => 'Ik kan geen codes meer genereren.',
+    'two_factor_lost_header'                    => 'Kan je geen codes meer genereren?',
+    'two_factor_lost_intro'                     => 'Dit is helaas niet iets dat je kan resetten vanaf de site. Je hebt twee keuzes.',
+    'two_factor_lost_fix_self'                  => 'Als dit jouw installatie van Firefly III is, vind je in de logboeken (<code>storage/logs</code>) instructies.',
+    'two_factor_lost_fix_owner'                 => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
 
     // export data:
     'import_and_export'                         => 'Import en export',
