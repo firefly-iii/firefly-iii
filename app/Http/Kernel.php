@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http;
 
 use FireflyIII\Http\Middleware\Authenticate;
+use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\Range;
@@ -43,14 +44,23 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups
         = [
-            'web'            => [
+            'web'                    => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
             ],
-            'web-auth'       => [
+            'web-auth'               => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+                AuthenticateTwoFactor::class,
+            ],
+            'web-auth-no-two-factor' => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -58,13 +68,14 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Authenticate::class,
             ],
-            'web-auth-range' => [
+            'web-auth-range'         => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
+                AuthenticateTwoFactor::class,
                 Range::class,
                 Binder::class,
             ],
