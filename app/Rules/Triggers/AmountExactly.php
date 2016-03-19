@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * AmountExactly.php
  * Copyright (C) 2016 Sander Dorigo
@@ -10,53 +11,54 @@
 namespace FireflyIII\Rules\Triggers;
 
 
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class AmountExactly
  *
  * @package FireflyIII\Rules\Triggers
  */
-class AmountExactly implements TriggerInterface
+final class AmountExactly extends AbstractTrigger implements TriggerInterface
 {
-    /** @var RuleTrigger */
-    protected $trigger;
-
-    /** @var TransactionJournal */
-    protected $journal;
-
 
     /**
-     * TriggerInterface constructor.
+     * A trigger is said to "match anything", or match any given transaction,
+     * when the trigger value is very vague or has no restrictions. Easy examples
+     * are the "AmountMore"-trigger combined with an amount of 0: any given transaction
+     * has an amount of more than zero! Other examples are all the "Description"-triggers
+     * which have hard time handling empty trigger values such as "" or "*" (wild cards).
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * If the user tries to create such a trigger, this method MUST return true so Firefly III
+     * can stop the storing / updating the trigger. If the trigger is in any way restrictive
+     * (even if it will still include 99.9% of the users transactions), this method MUST return
+     * false.
+     *
+     * @param null $value
+     *
+     * @return bool
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public static function willMatchEverything($value = null)
     {
-        $this->trigger = $trigger;
-        $this->journal = $journal;
+        if (!is_null($value)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered()
+    public function triggered(TransactionJournal $journal)
     {
-        $amount  = $this->journal->amount_positive;
-        $compare = $this->trigger->trigger_value;
+        $amount  = $journal->destination_amount ?? TransactionJournal::amountPositive($journal);
+        $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare, 4);
         if ($result === 0) {
-            // found something
-            Log::debug($amount . ' is exactly ' . $compare . '. Return true.');
-
             return true;
         }
-
-        // found nothing.
-        Log::debug($amount . ' is not exactly ' . $compare . '. Return false.');
 
         return false;
 

@@ -25,7 +25,7 @@ class CategoryController extends Controller
 {
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -40,7 +40,7 @@ class CategoryController extends Controller
     public function create()
     {
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('categories.create.fromStore') !== true) {
+        if (session('categories.create.fromStore') !== true) {
             Session::put('categories.create.url', URL::previous());
         }
         Session::forget('categories.create.fromStore');
@@ -83,7 +83,7 @@ class CategoryController extends Controller
         Session::flash('success', 'The  category "' . e($name) . '" was deleted.');
         Preferences::mark();
 
-        return redirect(Session::get('categories.delete.url'));
+        return redirect(session('categories.delete.url'));
     }
 
     /**
@@ -96,7 +96,7 @@ class CategoryController extends Controller
         $subTitle = trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('categories.edit.fromUpdate') !== true) {
+        if (session('categories.edit.fromUpdate') !== true) {
             Session::put('categories.edit.url', URL::previous());
         }
         Session::forget('categories.edit.fromUpdate');
@@ -133,8 +133,10 @@ class CategoryController extends Controller
      */
     public function noCategory(CRI $repository)
     {
-        $start    = Session::get('start', Carbon::now()->startOfMonth());
-        $end      = Session::get('end', Carbon::now()->startOfMonth());
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end      = session('end', Carbon::now()->startOfMonth());
         $list     = $repository->listNoCategory($start, $end);
         $subTitle = trans(
             'firefly.without_category_between',
@@ -213,7 +215,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showWithDate(SCRI $repository, Category $category, $date)
+    public function showWithDate(SCRI $repository, Category $category, string $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;
@@ -284,7 +286,7 @@ class CategoryController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('categories.edit.url'));
+        return redirect(session('categories.edit.url'));
 
     }
 

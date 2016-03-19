@@ -1,6 +1,11 @@
 <?php
-
-// all table headers.
+/**
+ * list.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 return [
     'name'           => 'Naam',
@@ -19,6 +24,9 @@ return [
     'description'    => 'Omschrijving',
     'amount'         => 'Bedrag',
     'date'           => 'Datum',
+    'interest_date'  => 'Rentedatum',
+    'book_date'      => 'Boekdatum',
+    'process_date'   => 'Verwerkingsdatum',
     'from'           => 'Van',
     'to'             => 'Naar',
     'budget'         => 'Budget',

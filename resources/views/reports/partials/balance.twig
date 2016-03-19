@@ -26,7 +26,13 @@
                         <td>
                             <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
                         </td>
-                        <td>{{ balanceLine.getRepetition.amount|formatAmount }}</td>
+                        <td>
+                            {% if(balanceLine.getBudget.amount) %}
+                                {{ balanceLine.getBudget.amount|formatAmount }}
+                            {% else %}
+                                {{ '0'|formatAmount }}
+                            {% endif %}
+                        </td>
                     {% else %}
                         <td colspan="2">{{ balanceLine.getTitle }}</td>
                     {% endif %}
@@ -35,6 +41,7 @@
                         <td>
                             {% if balanceEntry.getSpent != 0 %}
                                 <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
+                                <i class="fa fa-fw text-muted fa-info-circle"></i>
                             {% endif %}
                             {% if balanceEntry.getLeft != 0 %}
                                 <span class="text-success">{{ (balanceEntry.getLeft)|formatAmountPlain }}</span>

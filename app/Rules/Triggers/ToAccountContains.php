@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * ToAccountContains.php
  * Copyright (C) 2016 Sander Dorigo
@@ -9,56 +10,56 @@
 
 namespace FireflyIII\Rules\Triggers;
 
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class ToAccountContains
  *
  * @package FireflyIII\Rules\Triggers
  */
-class ToAccountContains implements TriggerInterface
+final class ToAccountContains extends AbstractTrigger implements TriggerInterface
 {
-    /** @var RuleTrigger */
-    protected $trigger;
-
-    /** @var TransactionJournal */
-    protected $journal;
-
 
     /**
-     * TriggerInterface constructor.
+     * A trigger is said to "match anything", or match any given transaction,
+     * when the trigger value is very vague or has no restrictions. Easy examples
+     * are the "AmountMore"-trigger combined with an amount of 0: any given transaction
+     * has an amount of more than zero! Other examples are all the "Description"-triggers
+     * which have hard time handling empty trigger values such as "" or "*" (wild cards).
      *
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
+     * If the user tries to create such a trigger, this method MUST return true so Firefly III
+     * can stop the storing / updating the trigger. If the trigger is in any way restrictive
+     * (even if it will still include 99.9% of the users transactions), this method MUST return
+     * false.
+     *
+     * @param null $value
+     *
+     * @return bool
      */
-    public function __construct(RuleTrigger $trigger, TransactionJournal $journal)
+    public static function willMatchEverything($value = null)
     {
-        $this->trigger = $trigger;
-        $this->journal = $journal;
+        if (!is_null($value)) {
+            return strval($value) === '';
+        }
+
+        return true;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function triggered()
+    public function triggered(TransactionJournal $journal)
     {
-        $toAccountName = strtolower($this->journal->destination_account->name);
-        $search        = strtolower($this->trigger->trigger_value);
+        $toAccountName = strtolower($journal->destination_account_name ?? TransactionJournal::destinationAccount($journal)->name);
+        $search        = strtolower($this->triggerValue);
         $strpos        = strpos($toAccountName, $search);
 
         if (!($strpos === false)) {
-            // found something
-            Log::debug('"' . $toAccountName . '" contains the text "' . $search . '". Return true.');
-
             return true;
         }
 
-        // found nothing.
-        Log::debug('"' . $toAccountName . '" does not contain the text "' . $search . '". Return false.');
-
         return false;
-
     }
 }

@@ -14,6 +14,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string                                                             $relation
  * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
  * @property-read \FireflyIII\User                                              $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereRelation($value)
+ * @mixin \Eloquent
  */
 class TransactionGroup extends Model
 {

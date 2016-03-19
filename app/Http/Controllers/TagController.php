@@ -1,12 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Carbon\Carbon;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -35,7 +36,7 @@ class TagController extends Controller
     public $tagOptions = [];
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -66,7 +67,7 @@ class TagController extends Controller
             Session::flash('preFilled', $preFilled);
         }
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('tags.create.fromStore') !== true) {
+        if (session('tags.create.fromStore') !== true) {
             Session::put('tags.create.url', URL::previous());
         }
         Session::forget('tags.create.fromStore');
@@ -144,7 +145,7 @@ class TagController extends Controller
 
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('tags.edit.fromUpdate') !== true) {
+        if (session('tags.edit.fromUpdate') !== true) {
             Session::put('tags.edit.url', URL::previous());
         }
         Session::forget('tags.edit.fromUpdate');
@@ -159,11 +160,11 @@ class TagController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function hideTagHelp($state)
+    public function hideTagHelp(string $state)
     {
 
-        $state = $state == 'true' ? true : false;
-        Preferences::set('hideTagHelp', $state);
+        $newState = $state == 'true' ? true : false;
+        Preferences::set('hideTagHelp', $newState);
 
         return Response::json([true]);
     }
@@ -219,8 +220,16 @@ class TagController extends Controller
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
+        /** @var Collection $journals */
+        $journals = $tag->transactionjournals()->expanded()->get(TransactionJournal::QUERYFIELDS);
 
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon'));
+        $sum = $journals->sum(
+            function (TransactionJournal $journal) {
+                return TransactionJournal::amount($journal);
+            }
+        );
+
+        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals', 'sum'));
     }
 
     /**
@@ -232,25 +241,7 @@ class TagController extends Controller
      */
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {
-        if (Input::get('setTag') == 'true') {
-            $latitude  = $request->get('latitude');
-            $longitude = $request->get('longitude');
-            $zoomLevel = $request->get('zoomLevel');
-        } else {
-            $latitude  = null;
-            $longitude = null;
-            $zoomLevel = null;
-        }
-
-        $data = [
-            'tag'         => $request->get('tag'),
-            'date'        => strlen($request->get('date')) > 0 ? new Carbon($request->get('date')) : null,
-            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : '',
-            'latitude'    => $latitude,
-            'longitude'   => $longitude,
-            'zoomLevel'   => $zoomLevel,
-            'tagMode'     => $request->get('tagMode'),
-        ];
+        $data = $request->collectTagData();
         $repository->store($data);
 
         Session::flash('success', 'The tag has been created!');
@@ -264,7 +255,7 @@ class TagController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('tags.create.url'));
+        return redirect(session('tags.create.url'));
 
     }
 
@@ -277,27 +268,7 @@ class TagController extends Controller
      */
     public function update(TagFormRequest $request, TagRepositoryInterface $repository, Tag $tag)
     {
-        if (Input::get('setTag') == 'true') {
-            $latitude  = $request->get('latitude');
-            $longitude = $request->get('longitude');
-            $zoomLevel = $request->get('zoomLevel');
-        } else {
-            $latitude  = null;
-            $longitude = null;
-            $zoomLevel = null;
-        }
-
-        $data = [
-            'tag'         => $request->get('tag'),
-            'date'        => strlen($request->get('date')) > 0 ? new Carbon($request->get('date')) : null,
-            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : '',
-            'latitude'    => $latitude,
-            'longitude'   => $longitude,
-            'zoomLevel'   => $zoomLevel,
-            'tagMode'     => $request->get('tagMode'),
-        ];
-
-
+        $data = $request->collectTagData();
         $repository->update($tag, $data);
 
         Session::flash('success', 'Tag "' . e($data['tag']) . '" updated.');
@@ -311,6 +282,6 @@ class TagController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('tags.edit.url'));
+        return redirect(session('tags.edit.url'));
     }
 }

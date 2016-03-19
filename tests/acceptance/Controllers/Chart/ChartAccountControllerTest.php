@@ -14,6 +14,7 @@ class ChartAccountControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
+     * @covers FireflyIII\Http\Controllers\Chart\AccountController::__construct
      */
     public function testExpenseAccounts()
     {

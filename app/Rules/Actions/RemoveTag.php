@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * RemoveTag.php
  * Copyright (C) 2016 Sander Dorigo
@@ -24,24 +25,24 @@ class RemoveTag implements ActionInterface
 {
 
     private $action;
-    private $journal;
+
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction         $action
-     * @param TransactionJournal $journal
+     * @param RuleAction $action
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
-        $this->action  = $action;
-        $this->journal = $journal;
+        $this->action = $action;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
         // if tag does not exist, no need to continue:
         $name = $this->action->action_value;
@@ -53,7 +54,7 @@ class RemoveTag implements ActionInterface
         )->first();
 
         if (!is_null($tag)) {
-            $this->journal->tags()->detach([$tag->id]);
+            $journal->tags()->detach([$tag->id]);
         }
 
         return true;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -44,7 +45,7 @@ class UpgradeFireflyInstructions extends Command
         //
         $version = Config::get('firefly.version');
         $config  = Config::get('upgrade.text');
-        $text    = isset($config[$version]) ? $config[$version] : null;
+        $text    = $config[$version] ?? null;
 
         $this->line('+------------------------------------------------------------------------------+');
         $this->line('');

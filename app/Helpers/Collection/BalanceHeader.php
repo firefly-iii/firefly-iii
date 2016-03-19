@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Account as AccountModel;
@@ -37,7 +37,7 @@ class BalanceHeader
     /**
      * @return Collection
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

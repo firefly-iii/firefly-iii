@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
@@ -30,8 +31,10 @@ class CacheProperties
     public function __construct()
     {
         $this->properties = new Collection;
-        $this->addProperty(Auth::user()->id);
-        $this->addProperty(Prefs::lastActivity());
+        if (Auth::check()) {
+            $this->addProperty(Auth::user()->id);
+            $this->addProperty(Prefs::lastActivity());
+        }
     }
 
     /**
@@ -53,7 +56,7 @@ class CacheProperties
     /**
      * @return string
      */
-    public function getMd5()
+    public function getMd5(): string
     {
         return $this->md5;
     }
@@ -61,7 +64,7 @@ class CacheProperties
     /**
      * @return bool
      */
-    public function has()
+    public function has(): bool
     {
         if (getenv('APP_ENV') == 'testing') {
             return false;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
@@ -26,7 +27,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function amount($name, $value = null, array $options = [])
+    public function amount(string $name, $value = null, array $options = []): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -51,7 +52,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function balance($name, $value = null, array $options = [])
+    public function balance(string $name, $value = null, array $options = []): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -75,7 +76,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function checkbox($name, $value = 1, $checked = null, $options = [])
+    public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
     {
         $options['checked'] = $checked === true ? true : null;
         $label              = $this->label($name, $options);
@@ -97,7 +98,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function date($name, $value = null, array $options = [])
+    public function date(string $name, $value = null, array $options = []): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -115,7 +116,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function file($name, array $options = [])
+    public function file(string $name, array $options = []): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -133,7 +134,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function integer($name, $value = null, array $options = [])
+    public function integer(string $name, $value = null, array $options = []): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -153,7 +154,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function location($name, $value = null, array $options = [])
+    public function location(string $name, $value = null, array $options = []): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -172,9 +173,9 @@ class ExpandedForm
      * @param \Illuminate\Support\Collection $set
      * @param bool                           $addEmpty
      *
-     * @return mixed
+     * @return array
      */
-    public function makeSelectList(Collection $set, $addEmpty = false)
+    public function makeSelectList(Collection $set, bool $addEmpty = false): array
     {
         $selectList = [];
         if ($addEmpty) {
@@ -205,7 +206,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function multiCheckbox($name, array $list = [], $selected = null, array $options = [])
+    public function multiCheckbox(string $name, array $list = [], $selected = null, array $options = []): string
     {
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
@@ -226,7 +227,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function multiRadio($name, array $list = [], $selected = null, array $options = [])
+    public function multiRadio(string $name, array $list = [], $selected = null, array $options = []): string
     {
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
@@ -245,7 +246,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function optionsList($type, $name)
+    public function optionsList($type, $name): string
     {
         $previousValue = null;
 
@@ -271,7 +272,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function select($name, array $list = [], $selected = null, array $options = [])
+    public function select(string $name, array $list = [], $selected = null, array $options = []): string
     {
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
@@ -291,7 +292,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function staticText($name, $value, array $options = [])
+    public function staticText(string $name, $value, array $options = []): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -310,7 +311,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function tags($name, $value = null, array $options = [])
+    public function tags(string $name, $value = null, array $options = []): string
     {
         $label                = $this->label($name, $options);
         $options              = $this->expandOptionArray($name, $label, $options);
@@ -329,7 +330,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function text($name, $value = null, array $options = [])
+    public function text(string $name, $value = null, array $options = []): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -348,7 +349,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function textarea($name, $value = null, array $options = [])
+    public function textarea(string $name, $value = null, array $options = []): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -368,7 +369,7 @@ class ExpandedForm
      *
      * @return array
      */
-    protected function expandOptionArray($name, $label, array $options)
+    protected function expandOptionArray(string $name, $label, array $options): array
     {
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
@@ -384,10 +385,10 @@ class ExpandedForm
      *
      * @return mixed
      */
-    protected function fillFieldValue($name, $value)
+    protected function fillFieldValue(string $name, $value)
     {
         if (Session::has('preFilled')) {
-            $preFilled = Session::get('preFilled');
+            $preFilled = session('preFilled');
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
         // @codeCoverageIgnoreStart
@@ -409,13 +410,13 @@ class ExpandedForm
      *
      * @return string
      */
-    protected function getHolderClasses($name)
+    protected function getHolderClasses(string $name): string
     {
         /*
        * Get errors from session:
        */
         /** @var MessageBag $errors */
-        $errors  = Session::get('errors');
+        $errors  = session('errors');
         $classes = 'form-group';
 
         if (!is_null($errors) && $errors->has($name)) {
@@ -431,13 +432,13 @@ class ExpandedForm
      *
      * @return mixed
      */
-    protected function label($name, $options)
+    protected function label(string $name, array $options): string
     {
         if (isset($options['label'])) {
             return $options['label'];
         }
 
-        return trans('form.' . $name);
+        return strval(trans('form.' . $name));
 
     }
 }

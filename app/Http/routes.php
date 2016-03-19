@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 // auth routes, i think
 Route::group(
@@ -21,6 +22,19 @@ Route::group(
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
 
+    // display error:
+    Route::get('/error', 'HomeController@displayError');
+
+
+}
+);
+
+Route::group(
+    ['middleware' => 'web-auth-no-two-factor'], function () {
+    Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
+    Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
+    Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
+    Route::get('/flush', ['uses' => 'HomeController@flush']);
 }
 );
 
@@ -34,7 +48,8 @@ Route::group(
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-    Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+
+    Route::get('/routes', ['uses' => 'HomeController@routes']);
     /**
      * Account Controller
      */
@@ -58,7 +73,6 @@ Route::group(
 
     Route::get('/attachment/edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'attachments.edit']);
     Route::get('/attachment/delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'attachments.delete']);
-    Route::get('/attachment/show/{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'attachments.show']);
     Route::get('/attachment/preview/{attachment}', ['uses' => 'AttachmentController@preview', 'as' => 'attachments.preview']);
     Route::get('/attachment/download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'attachments.download']);
 
@@ -133,6 +147,14 @@ Route::group(
     Route::post('/currency/update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'currency.update']);
     Route::post('/currency/destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'currency.destroy']);
 
+    /**
+     * Export Controller
+     */
+    Route::get('/export', ['uses' => 'ExportController@index', 'as' => 'export.index']);
+    Route::post('/export/submit', ['uses' => 'ExportController@postIndex', 'as' => 'export.export']);
+    Route::get('/export/status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'export.status']);
+    Route::get('/export/download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'export.download']);
+
 
     /**
      * ALL CHART Controllers
@@ -178,6 +200,7 @@ Route::group(
     // reports:
     Route::get('/chart/report/in-out/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
     Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
+    Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
 
 
     /**
@@ -232,6 +255,9 @@ Route::group(
      */
     Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
     Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
+    Route::get('/preferences/code', ['uses' => 'PreferencesController@code', 'as' => 'preferences.code']);
+    Route::get('/preferences/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'preferences.delete-code']);
+    Route::post('/preferences/code', ['uses' => 'PreferencesController@postCode']);
 
     /**
      * Profile Controller
@@ -260,6 +286,7 @@ Route::group(
     Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
     Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
     Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
+    Route::get('/rules/rules/test_triggers', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
 
     // rules POST:
     Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
@@ -275,11 +302,15 @@ Route::group(
     Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
     Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
     Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
+    Route::get(
+        '/rules/groups/select_transactions/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'rules.rule-group.select_transactions']
+    );
 
     // rule groups POST
     Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
     Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
     Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
+    Route::post('/rules/groups/execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'rules.rule-group.execute']);
 
     /**
      * Search Controller

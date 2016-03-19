@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use Crypt;
@@ -20,7 +20,7 @@ class Income
     /** @var Collection */
     protected $incomes;
     /** @var string */
-    protected $total;
+    protected $total = '0';
 
     /**
      *
@@ -45,7 +45,6 @@ class Income
             $newObject->id     = $accountId;
             $this->incomes->put($accountId, $newObject);
         } else {
-            bcscale(2);
             $existing         = $this->incomes->get($accountId);
             $existing->amount = bcadd($existing->amount, $entry->journalAmount);
             $existing->count++;
@@ -54,19 +53,18 @@ class Income
     }
 
     /**
-     * @param $add
+     * @param string $add
      */
-    public function addToTotal($add)
+    public function addToTotal(string $add)
     {
-        $add = strval(round($add, 2));
-        bcscale(2);
+        $add         = strval(round($add, 2));
         $this->total = bcadd($this->total, $add);
     }
 
     /**
      * @return Collection
      */
-    public function getIncomes()
+    public function getIncomes(): Collection
     {
         $set = $this->incomes->sortByDesc(
             function (stdClass $object) {
@@ -80,7 +78,7 @@ class Income
     /**
      * @return string
      */
-    public function getTotal()
+    public function getTotal(): string
     {
         return strval(round($this->total, 2));
     }

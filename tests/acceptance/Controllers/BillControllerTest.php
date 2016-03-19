@@ -6,6 +6,8 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -16,6 +18,7 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::create
+     * @covers FireflyIII\Http\Controllers\BillController::__construct
      */
     public function testCreate()
     {
@@ -26,7 +29,6 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
@@ -58,38 +60,56 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BillController::index
+     * @covers       FireflyIII\Http\Controllers\BillController::index
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BillController::rescan
+     * @covers       FireflyIII\Http\Controllers\BillController::rescan
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testRescan()
+    public function testRescan($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills/rescan/1');
         $this->assertSessionHas('success');
         $this->assertResponseStatus(302);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BillController::show
+     * @covers       FireflyIII\Http\Controllers\BillController::show
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testShow()
+    public function testShow($range)
     {
+        $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $repository->shouldReceive('getJournals')->once()->andReturn(new Collection);
+        $repository->shouldReceive('nextExpectedMatch')->once()->andReturn(new Carbon);
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/bills/show/1');
         $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::store
+     * @covers FireflyIII\Http\Requests\BillFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BillFormRequest::getBillData
+     * @covers FireflyIII\Http\Requests\BillFormRequest::rules
      */
     public function testStore()
     {
@@ -115,6 +135,9 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BillController::update
+     * @covers FireflyIII\Http\Requests\BillFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BillFormRequest::getBillData
+     * @covers FireflyIII\Http\Requests\BillFormRequest::rules
      */
     public function testUpdate()
     {

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use Illuminate\Support\Collection;
@@ -41,49 +41,45 @@ class Budget
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addBudgeted($add)
+    public function addBudgeted(string $add)
     {
-        $add = strval(round($add, 2));
-        bcscale(2);
+        $add            = strval(round($add, 2));
         $this->budgeted = bcadd($this->budgeted, $add);
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addLeft($add)
+    public function addLeft(string $add)
     {
-        $add = strval(round($add, 2));
-        bcscale(2);
+        $add        = strval(round($add, 2));
         $this->left = bcadd($this->left, $add);
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addOverspent($add)
+    public function addOverspent(string $add)
     {
-        $add = strval(round($add, 2));
-        bcscale(2);
+        $add             = strval(round($add, 2));
         $this->overspent = bcadd($this->overspent, $add);
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addSpent($add)
+    public function addSpent(string $add)
     {
-        $add = strval(round($add, 2));
-        bcscale(2);
+        $add         = strval(round($add, 2));
         $this->spent = bcadd($this->spent, $add);
     }
 
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function getBudgetLines()
+    public function getBudgetLines(): Collection
     {
         return $this->budgetLines;
     }
@@ -91,7 +87,7 @@ class Budget
     /**
      * @return string
      */
-    public function getBudgeted()
+    public function getBudgeted(): string
     {
         return $this->budgeted;
     }
@@ -99,7 +95,7 @@ class Budget
     /**
      * @param string $budgeted
      */
-    public function setBudgeted($budgeted)
+    public function setBudgeted(string $budgeted)
     {
         $this->budgeted = $budgeted;
     }
@@ -107,7 +103,7 @@ class Budget
     /**
      * @return string
      */
-    public function getLeft()
+    public function getLeft(): string
     {
         return $this->left;
     }
@@ -115,7 +111,7 @@ class Budget
     /**
      * @param string $left
      */
-    public function setLeft($left)
+    public function setLeft(string $left)
     {
         $this->left = $left;
     }
@@ -123,7 +119,7 @@ class Budget
     /**
      * @return string
      */
-    public function getOverspent()
+    public function getOverspent(): string
     {
         return $this->overspent;
     }
@@ -131,7 +127,7 @@ class Budget
     /**
      * @param string $overspent
      */
-    public function setOverspent($overspent)
+    public function setOverspent(string $overspent)
     {
         $this->overspent = strval(round($overspent, 2));
     }
@@ -139,7 +135,7 @@ class Budget
     /**
      * @return string
      */
-    public function getSpent()
+    public function getSpent(): string
     {
         return $this->spent;
     }
@@ -147,7 +143,7 @@ class Budget
     /**
      * @param string $spent
      */
-    public function setSpent($spent)
+    public function setSpent(string $spent)
     {
         $this->spent = strval(round($spent, 2));
     }

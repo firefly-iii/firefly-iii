@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * Specifix.php
  * Copyright (C) 2016 Sander Dorigo
@@ -29,11 +30,11 @@ class Specifix
     }
 
     /**
-     * @param $processorType
+     * @param int $processorType
      *
      * @return $this
      */
-    public function setProcessorType($processorType)
+    public function setProcessorType(int $processorType)
     {
         $this->processorType = $processorType;
 

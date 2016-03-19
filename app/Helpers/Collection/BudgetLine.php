@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Budget as BudgetModel;
@@ -17,77 +17,77 @@ class BudgetLine
 
     /** @var  BudgetModel */
     protected $budget;
-    /** @var float */
-    protected $budgeted = 0;
-    /** @var float */
-    protected $left = 0;
-    /** @var float */
-    protected $overspent = 0;
+    /** @var string */
+    protected $budgeted = '0';
+    /** @var string */
+    protected $left = '0';
+    /** @var string */
+    protected $overspent = '0';
     /** @var  LimitRepetition */
     protected $repetition;
-    /** @var float */
-    protected $spent = 0;
+    /** @var string */
+    protected $spent = '0';
 
     /**
      * @return BudgetModel
      */
-    public function getBudget()
+    public function getBudget(): BudgetModel
     {
-        return $this->budget;
+        return $this->budget ?? new BudgetModel;
     }
 
     /**
      * @param BudgetModel $budget
      */
-    public function setBudget($budget)
+    public function setBudget(BudgetModel $budget)
     {
         $this->budget = $budget;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getBudgeted()
+    public function getBudgeted(): string
     {
         return $this->budgeted;
     }
 
     /**
-     * @param float $budgeted
+     * @param string $budgeted
      */
-    public function setBudgeted($budgeted)
+    public function setBudgeted(string $budgeted)
     {
         $this->budgeted = $budgeted;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getLeft()
+    public function getLeft(): string
     {
         return $this->left;
     }
 
     /**
-     * @param float $left
+     * @param string $left
      */
-    public function setLeft($left)
+    public function setLeft(string $left)
     {
         $this->left = $left;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getOverspent()
+    public function getOverspent(): string
     {
         return $this->overspent;
     }
 
     /**
-     * @param float $overspent
+     * @param string $overspent
      */
-    public function setOverspent($overspent)
+    public function setOverspent(string $overspent)
     {
         $this->overspent = $overspent;
     }
@@ -95,31 +95,31 @@ class BudgetLine
     /**
      * @return LimitRepetition
      */
-    public function getRepetition()
+    public function getRepetition(): LimitRepetition
     {
-        return $this->repetition;
+        return $this->repetition ?? new LimitRepetition;
     }
 
     /**
      * @param LimitRepetition $repetition
      */
-    public function setRepetition($repetition)
+    public function setRepetition(LimitRepetition $repetition)
     {
         $this->repetition = $repetition;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getSpent()
+    public function getSpent(): string
     {
         return $this->spent;
     }
 
     /**
-     * @param float $spent
+     * @param string $spent
      */
-    public function setSpent($spent)
+    public function setSpent(string $spent)
     {
         $this->spent = $spent;
     }

@@ -16,7 +16,7 @@ function showHelp(e) {
     $('#helpTitle').html('Please hold...');
 
     $('#helpModal').modal('show');
-    $.getJSON('help/' + encodeURI(route)).success(function (data) {
+    $.getJSON('help/' + encodeURI(route)).done(function (data) {
         $('#helpBody').html(data.text);
         $('#helpTitle').html(data.title);
     }).fail(function () {

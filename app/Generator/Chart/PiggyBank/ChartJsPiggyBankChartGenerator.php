@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\PiggyBank;
 
 use Carbon\Carbon;
@@ -19,7 +19,7 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
      *
      * @return array
      */
-    public function history(Collection $set)
+    public function history(Collection $set): array
     {
 
         // language:
@@ -36,7 +36,6 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
             ],
         ];
         $sum  = '0';
-        bcscale(2);
         foreach ($set as $entry) {
             $date                          = new Carbon($entry->date);
             $sum                           = bcadd($sum, $entry->sum);

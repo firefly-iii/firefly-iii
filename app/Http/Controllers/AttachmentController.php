@@ -1,10 +1,11 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Crypt;
 use File;
-use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
@@ -12,6 +13,7 @@ use Input;
 use Preferences;
 use Response;
 use Session;
+use Storage;
 use URL;
 use View;
 
@@ -65,25 +67,27 @@ class AttachmentController extends Controller
         Session::flash('success', trans('firefly.attachment_deleted', ['name' => $name]));
         Preferences::mark();
 
-        return redirect(Session::get('attachments.delete.url'));
+        return redirect(session('attachments.delete.url'));
     }
 
     /**
-     * @param Attachment                $attachment
-     * @param AttachmentHelperInterface $helper
+     * @param Attachment $attachment
      *
-     * @return string
+     * @throws FireflyException
+     *
      */
-    public function download(Attachment $attachment, AttachmentHelperInterface $helper)
+    public function download(Attachment $attachment)
     {
+        // create a disk.
+        $disk = Storage::disk('upload');
+        $file = $attachment->fileName();
 
-        $file = $helper->getAttachmentLocation($attachment);
-        if (file_exists($file)) {
+        if ($disk->exists($file)) {
 
             $quoted = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
 
-            return response(Crypt::decrypt(file_get_contents($file)), 200)
+            return response(Crypt::decrypt($disk->get($file)), 200)
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
                 ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -92,11 +96,10 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', $attachment->size);
+                ->header('Content-Length', $disk->size($file));
 
-        } else {
-            abort(404);
         }
+        throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
 
     /**
@@ -110,7 +113,7 @@ class AttachmentController extends Controller
         $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('attachments.edit.fromUpdate') !== true) {
+        if (session('attachments.edit.fromUpdate') !== true) {
             Session::put('attachments.edit.url', URL::previous());
         }
         Session::forget('attachments.edit.fromUpdate');
@@ -167,7 +170,7 @@ class AttachmentController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('attachments.edit.url'));
+        return redirect(session('attachments.edit.url'));
 
     }
 

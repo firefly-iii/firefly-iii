@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Report;
 
@@ -49,7 +50,7 @@ interface ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReport($start, $end, Collection $accounts);
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * Get a full report on the users incomes during the period for the given accounts.
@@ -60,7 +61,7 @@ interface ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReport($start, $end, Collection $accounts);
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts);
 
     /**
      * @param Carbon $date
@@ -68,5 +69,16 @@ interface ReportHelperInterface
      * @return array
      */
     public function listOfMonths(Carbon $date);
+
+    /**
+     * Returns an array of tags and their comparitive size with amounts bla bla.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
 }

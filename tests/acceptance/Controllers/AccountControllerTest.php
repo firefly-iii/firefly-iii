@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class AccountControllerTest
@@ -13,11 +14,16 @@
 class AccountControllerTest extends TestCase
 {
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::create
+     * @covers       FireflyIII\Http\Controllers\AccountController::create
+     * @covers       FireflyIII\Http\Controllers\AccountController::__construct
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testCreate()
+    public function testCreate($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/create/asset');
         $this->assertResponseStatus(200);
     }
@@ -55,28 +61,42 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::index
-     * @covers FireflyIII\Http\Controllers\AccountController::isInArray
+     * @covers       FireflyIII\Http\Controllers\AccountController::index
+     * @covers       FireflyIII\Http\Controllers\AccountController::isInArray
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/asset');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::show
+     * @covers       FireflyIII\Http\Controllers\AccountController::show
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testShow()
+    public function testShow($range)
     {
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('getJournals')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/accounts/show/1');
         $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::store
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::rules
+     *
      */
     public function testStore()
     {
@@ -97,6 +117,8 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::update
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\AccountFormRequest::rules
      */
     public function testUpdate()
     {

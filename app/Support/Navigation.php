@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
@@ -22,7 +23,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
+    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip)
     {
         $date = clone $theDate;
         $add  = ($skip + 1);
@@ -61,7 +62,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
+    public function endOfPeriod(Carbon $theCurrentEnd, string $repeatFreq)
     {
         $currentEnd = clone $theCurrentEnd;
 
@@ -120,7 +121,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      */
-    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate = null)
+    public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null)
     {
         $functionMap = [
             '1D'        => 'endOfDay',
@@ -161,30 +162,30 @@ class Navigation
      * @return string
      * @throws FireflyException
      */
-    public function periodShow(Carbon $date, $repeatFrequency)
+    public function periodShow(Carbon $date, string $repeatFrequency)
     {
         $formatMap = [
-            '1D'      => '%e %B %Y',
-            'daily'   => '%e %B %Y',
-            'custom'  => '%e %B %Y',
-            '1W'      => 'Week %W, %Y',
-            'week'    => 'Week %W, %Y',
-            'weekly'  => 'Week %W, %Y',
-            '3M'      => '%B %Y',
-            'quarter' => '%B %Y',
-            '1M'      => '%B %Y',
-            'month'   => '%B %Y',
-            'monthly' => '%B %Y',
-            '1Y'      => '%Y',
-            'year'    => '%Y',
-            'yearly'  => '%Y',
-            '6M'      => '%B %Y',
+            '1D'      => trans('config.specific_day'),
+            'daily'   => trans('config.specific_day'),
+            'custom'  => trans('config.specific_day'),
+            '1W'      => trans('config.week_in_year'),
+            'week'    => trans('config.week_in_year'),
+            'weekly'  => trans('config.week_in_year'),
+            '3M'      => trans('config.quarter_of_year'),
+            'quarter' => trans('config.quarter_of_year'),
+            '1M'      => trans('config.month'),
+            'month'   => trans('config.month'),
+            'monthly' => trans('config.month'),
+            '1Y'      => trans('config.year'),
+            'year'    => trans('config.year'),
+            'yearly'  => trans('config.year'),
+            '6M'      => trans('config.half_year'),
 
         ];
 
 
         if (isset($formatMap[$repeatFrequency])) {
-            return $date->formatLocalized($formatMap[$repeatFrequency]);
+            return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
         throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
     }
@@ -196,7 +197,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function startOfPeriod(Carbon $theDate, $repeatFreq)
+    public function startOfPeriod(Carbon $theDate, string $repeatFreq)
     {
         $date = clone $theDate;
 
@@ -247,7 +248,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
+    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1)
     {
         $date = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
@@ -286,13 +287,14 @@ class Navigation
         // a custom range requires the session start
         // and session end to calculate the difference in days.
         // this is then subtracted from $theDate (* $subtract).
-        if($repeatFreq === 'custom') {
+        if ($repeatFreq === 'custom') {
             /** @var Carbon $tStart */
             $tStart = session('start', Carbon::now()->startOfMonth());
             /** @var Carbon $tEnd */
             $tEnd       = session('end', Carbon::now()->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
             $date->subDays($diffInDays * $subtract);
+
             return $date;
         }
 
@@ -306,7 +308,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function updateEndDate($range, Carbon $start)
+    public function updateEndDate(string $range, Carbon $start)
     {
         $functionMap = [
             '1D' => 'endOfDay',
@@ -342,7 +344,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function updateStartDate($range, Carbon $start)
+    public function updateStartDate(string $range, Carbon $start)
     {
         $functionMap = [
             '1D' => 'startOfDay',

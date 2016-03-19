@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Category;
 
 use Illuminate\Support\Collection;
@@ -18,7 +18,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function all(Collection $entries)
+    public function all(Collection $entries): array
     {
 
 
@@ -39,11 +39,11 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
 
         foreach ($entries as $entry) {
             $data['labels'][] = $entry[1];
-            $spent            = round($entry[2], 2);
-            $earned           = round($entry[3], 2);
+            $spent            = $entry[2];
+            $earned           = $entry[3];
 
-            $data['datasets'][0]['data'][] = $spent == 0 ? null : $spent * -1;
-            $data['datasets'][1]['data'][] = $earned == 0 ? null : $earned;
+            $data['datasets'][0]['data'][] = bccomp($spent, '0') === 0 ? null : bcmul($spent, '-1');
+            $data['datasets'][1]['data'][] = bccomp($earned, '0') === 0 ? null : $earned;
         }
 
         return $data;
@@ -55,7 +55,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function earnedInPeriod(Collection $categories, Collection $entries)
+    public function earnedInPeriod(Collection $categories, Collection $entries): array
     {
 
         // language:
@@ -87,7 +87,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(Collection $entries)
+    public function frontpage(Collection $entries): array
     {
         $data = [
             'count'    => 1,
@@ -102,7 +102,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
         foreach ($entries as $entry) {
             if ($entry->spent != 0) {
                 $data['labels'][]              = $entry->name;
-                $data['datasets'][0]['data'][] = round(($entry->spent * -1), 2);
+                $data['datasets'][0]['data'][] = round(bcmul($entry->spent, '-1'), 2);
             }
         }
 
@@ -114,7 +114,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYear(Collection $entries)
+    public function multiYear(Collection $entries): array
     {
         // dataset:
         $data = [
@@ -154,7 +154,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function period(Collection $entries)
+    public function period(Collection $entries): array
     {
         return $this->all($entries);
 
@@ -166,7 +166,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function spentInPeriod(Collection $categories, Collection $entries)
+    public function spentInPeriod(Collection $categories, Collection $entries): array
     {
 
         // language:

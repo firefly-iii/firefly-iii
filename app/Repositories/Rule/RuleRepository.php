@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * RuleRepository.php
  * Copyright (C) 2016 Sander Dorigo
@@ -9,11 +10,12 @@
 
 namespace FireflyIII\Repositories\Rule;
 
-use Auth;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\User;
 
 /**
  * Class RuleRepository
@@ -22,13 +24,25 @@ use FireflyIII\Models\RuleTrigger;
  */
 class RuleRepository implements RuleRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * @return int
      */
     public function count()
     {
-        return Auth::user()->rules()->count();
+        return $this->user->rules()->count();
     }
 
     /**
@@ -54,7 +68,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getFirstRuleGroup()
     {
-        return Auth::user()->ruleGroups()->first();
+        return $this->user->ruleGroups()->first();
     }
 
     /**
@@ -65,6 +79,22 @@ class RuleRepository implements RuleRepositoryInterface
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
     {
         return intval($ruleGroup->rules()->max('order'));
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function getPrimaryTrigger(Rule $rule): string
+    {
+        $count = $rule->ruleTriggers()->count();
+        if ($count === 0) {
+            throw new FireflyException('Rules should have more than zero triggers, rule #' . $rule->id . ' has none!');
+        }
+
+        return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
     }
 
     /**
@@ -187,7 +217,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function store(array $data)
     {
         /** @var RuleGroup $ruleGroup */
-        $ruleGroup = Auth::user()->ruleGroups()->find($data['rule_group_id']);
+        $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
 
         // get max order:
         $order = $this->getHighestOrderInRuleGroup($ruleGroup);
@@ -206,47 +236,10 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->save();
 
         // start storing triggers:
-        $order          = 1;
-        $stopProcessing = false;
-
-        $triggerValues = [
-            'action'         => 'user_action',
-            'value'          => $data['trigger'],
-            'stopProcessing' => $stopProcessing,
-            'order'          => $order,
-        ];
-
-        $this->storeTrigger($rule, $triggerValues);
-        foreach ($data['rule-triggers'] as $index => $trigger) {
-            $value          = $data['rule-trigger-values'][$index];
-            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
-
-            $triggerValues = [
-                'action'         => $trigger,
-                'value'          => $value,
-                'stopProcessing' => $stopProcessing,
-                'order'          => $order,
-            ];
-
-            $this->storeTrigger($rule, $triggerValues);
-            $order++;
-        }
+        $this->storeTriggers($rule, $data);
 
         // same for actions.
-        $order = 1;
-        foreach ($data['rule-actions'] as $index => $action) {
-            $value          = $data['rule-action-values'][$index];
-            $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
-
-            $actionValues = [
-                'action'         => $action,
-                'value'          => $value,
-                'stopProcessing' => $stopProcessing,
-                'order'          => $order,
-            ];
-
-            $this->storeAction($rule, $actionValues);
-        }
+        $this->storeActions($rule, $data);
 
         return $rule;
     }
@@ -314,6 +307,44 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->ruleActions()->delete();
 
         // recreate triggers:
+        $this->storeTriggers($rule, $data);
+
+        // recreate actions:
+        $this->storeActions($rule, $data);
+
+
+        return $rule;
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $data
+     */
+    private function storeActions(Rule $rule, array $data)
+    {
+        $order = 1;
+        foreach ($data['rule-actions'] as $index => $action) {
+            $value          = $data['rule-action-values'][$index];
+            $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
+
+            $actionValues = [
+                'action'         => $action,
+                'value'          => $value,
+                'stopProcessing' => $stopProcessing,
+                'order'          => $order,
+            ];
+
+            $this->storeAction($rule, $actionValues);
+        }
+
+    }
+
+    /**
+     * @param Rule  $rule
+     * @param array $data
+     */
+    private function storeTriggers(Rule $rule, array $data)
+    {
         $order          = 1;
         $stopProcessing = false;
 
@@ -339,24 +370,5 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeTrigger($rule, $triggerValues);
             $order++;
         }
-
-        // recreate actions:
-        $order = 1;
-        foreach ($data['rule-actions'] as $index => $action) {
-            $value          = $data['rule-action-values'][$index];
-            $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
-
-            $actionValues = [
-                'action'         => $action,
-                'value'          => $value,
-                'stopProcessing' => $stopProcessing,
-                'order'          => $order,
-            ];
-
-            $this->storeAction($rule, $actionValues);
-        }
-
-
-        return $rule;
     }
 }

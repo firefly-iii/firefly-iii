@@ -1,10 +1,11 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -13,6 +14,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -24,6 +26,18 @@ use Log;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * @param TransactionJournal $journal
@@ -44,7 +58,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function first()
     {
-        $entry = Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         return $entry;
     }
@@ -64,13 +78,34 @@ class JournalRepository implements JournalRepositoryInterface
                                     ->where('transaction_journals.order', '>=', $journal->order)
                                     ->where('transaction_journals.id', '!=', $journal->id)
                                     ->get(['transactions.*']);
-        $sum = 0;
+        $sum = '0';
         foreach ($set as $entry) {
-            $sum += $entry->amount;
+            $sum = bcadd($entry->amount, $sum);
         }
 
         return $sum;
 
+    }
+
+    /**
+     * @param array $types
+     * @param int   $offset
+     * @param int   $count
+     *
+     * @return Collection
+     */
+    public function getCollectionOfTypes(array $types, int $offset, int $count)
+    {
+        $set = $this->user->transactionJournals()
+                          ->expanded()
+                          ->transactionTypes($types)
+                          ->take($count)->offset($offset)
+                          ->orderBy('date', 'DESC')
+                          ->orderBy('order', 'ASC')
+                          ->orderBy('id', 'DESC')
+                          ->get(TransactionJournal::QUERYFIELDS);
+
+        return $set;
     }
 
     /**
@@ -80,7 +115,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsOfType(TransactionType $dbType)
     {
-        return Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
+        return $this->user->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
     }
 
     /**
@@ -88,29 +123,35 @@ class JournalRepository implements JournalRepositoryInterface
      * @param int   $offset
      * @param int   $page
      *
+     * @param int   $pagesize
+     *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, $offset, $page)
+    public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50)
     {
-        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
-                        ->orderBy('date', 'DESC')
-                        ->orderBy('order', 'ASC')
-                        ->orderBy('id', 'DESC')
-                        ->get(
-                            ['transaction_journals.*']
-                        );
-        $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+        $set = $this->user
+            ->transactionJournals()
+            ->expanded()
+            ->transactionTypes($types)
+            ->take($pagesize)
+            ->offset($offset)
+            ->orderBy('date', 'DESC')
+            ->orderBy('order', 'ASC')
+            ->orderBy('id', 'DESC')
+            ->get(TransactionJournal::QUERYFIELDS);
+
+        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
+        $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
 
         return $journals;
     }
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return TransactionType
      */
-    public function getTransactionType($type)
+    public function getTransactionType(string $type)
     {
         return TransactionType::whereType($type)->first();
     }
@@ -121,9 +162,9 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function getWithDate($journalId, Carbon $date)
+    public function getWithDate(int $journalId, Carbon $date)
     {
-        return Auth::user()->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
+        return $this->user->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
     }
 
     /**
@@ -170,6 +211,9 @@ class JournalRepository implements JournalRepositoryInterface
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
+                'interest_date'           => $data['interest_date'],
+                'book_date'               => $data['book_date'],
+                'process_date'            => $data['process_date'],
             ]
         );
         $journal->save();
@@ -231,6 +275,9 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->transaction_currency_id = $data['amount_currency_id_amount'];
         $journal->description             = $data['description'];
         $journal->date                    = $data['date'];
+        $journal->interest_date           = $data['interest_date'];
+        $journal->book_date               = $data['book_date'];
+        $journal->process_date            = $data['process_date'];
 
 
         // unlink all categories, recreate them:
@@ -323,7 +370,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array           $data
      *
      * @return array
-     *
+     * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function storeAccounts(TransactionType $type, array $data)
@@ -347,14 +394,14 @@ class JournalRepository implements JournalRepositoryInterface
 
         if (is_null($toAccount)) {
             Log::error('"to"-account is null, so we cannot continue!');
-            abort(500, '"to"-account is null, so we cannot continue!');
+            throw new FireflyException('"to"-account is null, so we cannot continue!');
             // @codeCoverageIgnoreStart
         }
         // @codeCoverageIgnoreEnd
 
         if (is_null($fromAccount)) {
             Log::error('"from"-account is null, so we cannot continue!');
-            abort(500, '"from"-account is null, so we cannot continue!');
+            throw new FireflyException('"from"-account is null, so we cannot continue!');
 
             // @codeCoverageIgnoreStart
         }

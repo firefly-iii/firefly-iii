@@ -1,15 +1,15 @@
 language: php
 sudo: false
-
-
 php:
-  - 5.6
   - 7
 
 install:
+  - phpenv config-rm xdebug.ini
   - composer selfupdate
-  - composer install --no-dev
-  - composer update
+  - rm composer.lock
+  - composer update --no-scripts
+  - php artisan clear-compiled
+  - php artisan optimize
   - php artisan env
   - mv -v .env.testing .env
   - php artisan env

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * CategoryList.php
  * Copyright (C) 2016 Sander Dorigo
@@ -11,6 +12,7 @@ namespace FireflyIII\Support\Binder;
 
 use Auth;
 use FireflyIII\Models\Category;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -27,7 +29,7 @@ class CategoryList implements BinderInterface
      *
      * @return mixed
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder($value, $route): Collection
     {
         if (Auth::check()) {
             $ids = explode(',', $value);

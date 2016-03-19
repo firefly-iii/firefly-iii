@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * ChartJsBillChartGenerator.php
  * Copyright (C) 2016 Sander Dorigo
@@ -27,9 +28,8 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage($paid, $unpaid)
+    public function frontpage(string $paid, string $unpaid): array
     {
-        bcscale(2);
         $data = [
             [
                 'value'     => round($unpaid, 2),
@@ -38,7 +38,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
                 'label'     => trans('firefly.unpaid'),
             ],
             [
-                'value'     => round($paid * -1, 2), // paid is negative, must be positive.
+                'value'     => round(bcmul($paid, '-1'), 2), // paid is negative, must be positive.
                 'color'     => 'rgba(0, 141, 76, 0.7)',
                 'highlight' => 'rgba(0, 141, 76, 0.9)',
                 'label'     => trans('firefly.paid'),
@@ -54,7 +54,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
      *
      * @return array
      */
-    public function single(Bill $bill, Collection $entries)
+    public function single(Bill $bill, Collection $entries): array
     {
         $format       = (string)trans('config.month');
         $data         = [
@@ -73,7 +73,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
             /*
              * journalAmount has been collected in BillRepository::getJournals
              */
-            $actualAmount[] = round(($entry->journalAmount * -1), 2);
+            $actualAmount[] = round(TransactionJournal::amountPositive($entry), 2);
         }
 
         $data['datasets'][] = [

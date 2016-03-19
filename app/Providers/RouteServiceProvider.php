@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
@@ -45,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map(Router $router)
     {
         $router->group(
-            ['namespace' => $this->namespace], function ($router) {
+            ['namespace' => $this->namespace], function (Router $router) {
             /** @noinspection PhpIncludeInspection */
             require app_path('Http/routes.php');
         }

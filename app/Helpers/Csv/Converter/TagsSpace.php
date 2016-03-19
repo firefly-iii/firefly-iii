@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
@@ -23,7 +23,7 @@ class TagsSpace extends BasicConverter implements ConverterInterface
 
         $strings = explode(' ', $this->value);
         foreach ($strings as $string) {
-            $tag = Tag::firstOrCreateEncrypted(
+            $tag = Tag::firstOrCreateEncrypted( // See issue #180
                 [
                     'tag'     => $string,
                     'tagMode' => 'nothing',

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
@@ -31,19 +32,19 @@ class EventServiceProvider extends ServiceProvider
         = [
             'FireflyIII\Events\TransactionJournalUpdated' => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterUpdate',
-
                 'FireflyIII\Handlers\Events\UpdateJournalConnection',
                 'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
             'FireflyIII\Events\TransactionJournalStored'  => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
-
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
                 'FireflyIII\Handlers\Events\FireRulesForStore',
             ],
+            'Illuminate\Auth\Events\Logout'               => [
+                'FireflyIII\Handlers\Events\UserEventListener@onUserLogout',
+            ],
         ];
-
 
     /**
      * Register any other events for your application.
@@ -95,6 +96,26 @@ class EventServiceProvider extends ServiceProvider
     /**
      *
      */
+    protected function registerCreateEvents()
+    {
+
+        // move this routine to a filter
+        // in case of repeated piggy banks and/or other problems.
+        PiggyBank::created(
+            function (PiggyBank $piggyBank) {
+                $repetition = new PiggyBankRepetition;
+                $repetition->piggyBank()->associate($piggyBank);
+                $repetition->startdate     = is_null($piggyBank->startdate) ? null : $piggyBank->startdate;
+                $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
+                $repetition->currentamount = 0;
+                $repetition->save();
+            }
+        );
+    }
+
+    /**
+     *
+     */
     protected function registerDeleteEvents()
     {
         TransactionJournal::deleted(
@@ -118,26 +139,6 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
-    }
-
-    /**
-     *
-     */
-    protected function registerCreateEvents()
-    {
-
-        // move this routine to a filter
-        // in case of repeated piggy banks and/or other problems.
-        PiggyBank::created(
-            function (PiggyBank $piggyBank) {
-                $repetition = new PiggyBankRepetition;
-                $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = is_null($piggyBank->startdate) ? null : $piggyBank->startdate;
-                $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
-                $repetition->currentamount = 0;
-                $repetition->save();
-            }
-        );
     }
 
 }

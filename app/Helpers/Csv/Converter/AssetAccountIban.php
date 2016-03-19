@@ -1,10 +1,10 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountIban
@@ -15,10 +15,11 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return Account|null
+     * @return Account
      */
-    public function convert()
+    public function convert(): Account
     {
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = Auth::user()->accounts()->find($this->mapped[$this->index][$this->value]);
@@ -27,32 +28,41 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         }
         if (strlen($this->value) > 0) {
             // find or create new account:
-            $account     = $this->findAccount();
-            $accountType = AccountType::where('type', 'Asset account')->first();
+            $account = $this->findAccount();
 
-            if (is_null($account)) {
+            if (is_null($account->id)) {
                 // create it if doesn't exist.
-                $account = Account::firstOrCreateEncrypted(
-                    [
-                        'name'            => $this->value,
-                        'iban'            => $this->value,
-                        'user_id'         => Auth::user()->id,
-                        'account_type_id' => $accountType->id,
-                        'active'          => 1,
-                    ]
-                );
+
+                $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+                $accountData = [
+                    'name'                   => $this->value,
+                    'accountType'            => 'asset',
+                    'virtualBalance'         => 0,
+                    'virtualBalanceCurrency' => 1, // hard coded.
+                    'active'                 => true,
+                    'user'                   => Auth::user()->id,
+                    'iban'                   => null,
+                    'accountNumber'          => $this->value,
+                    'accountRole'            => null,
+                    'openingBalance'         => 0,
+                    'openingBalanceDate'     => new Carbon,
+                    'openingBalanceCurrency' => 1, // hard coded.
+
+                ];
+
+                $account = $repository->store($accountData);
             }
 
             return $account;
         }
 
-        return null;
+        return new Account;
     }
 
     /**
-     * @return Account|null
+     * @return Account
      */
-    protected function findAccount()
+    protected function findAccount(): Account
     {
         $set = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
         /** @var Account $entry */
@@ -63,6 +73,6 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             }
         }
 
-        return null;
+        return new Account;
     }
 }

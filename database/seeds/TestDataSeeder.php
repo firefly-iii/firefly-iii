@@ -1,16 +1,15 @@
 <?php
+declare(strict_types = 1);
+/**
+ * TestDataSeeder.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Role;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Migration\TestData;
-use FireflyIII\User;
 use Illuminate\Database\Seeder;
 
 /**
@@ -19,6 +18,8 @@ use Illuminate\Database\Seeder;
 class TestDataSeeder extends Seeder
 {
     /** @var  Carbon */
+    public $end;
+    /** @var  Carbon */
     public $start;
 
     /**
@@ -26,7 +27,8 @@ class TestDataSeeder extends Seeder
      */
     public function __construct()
     {
-        $this->start = Carbon::create()->subYear()->startOfYear();
+        $this->start = Carbon::create()->subYears(2)->startOfYear();
+        $this->end   = Carbon::now();
 
     }
 
@@ -37,249 +39,56 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
-        User::create(['email' => 'thegrumpydictator+empty@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
+        // start by creating all users:
+        // method will return the first user.
+        $user = TestData::createUsers();
 
-
-        $admin = Role::where('name', 'owner')->first();
-        $user->attachRole($admin);
-
-
-        // create asset accounts for user #1.
+        // create all kinds of static data:
         TestData::createAssetAccounts($user);
-
-        // create bills for user #1
         TestData::createBills($user);
-
-        // create some budgets for user #1
-        $this->createBudgets($user);
-
-        // create some categories for user #1
-        $this->createCategories($user);
-
-        // create some piggy banks for user #1
+        TestData::createBudgets($user);
+        TestData::createCategories($user);
         TestData::createPiggybanks($user);
+        TestData::createExpenseAccounts($user);
+        TestData::createRevenueAccounts($user);
+        TestData::createAttachments($user, $this->start);
+        TestData::openingBalanceSavings($user, $this->start);
+        TestData::createRules($user);
 
-        // create some expense accounts for user #1
-        $this->createExpenseAccounts($user);
+        // loop from start to end, create dynamic info.
+        $current = clone $this->start;
+        while ($current < $this->end) {
+            $month = $current->format('F Y');
+            // create salaries:
+            TestData::createIncome($user, 'Salary ' . $month, $current, strval(rand(2000, 2100)));
 
-        // create some revenue accounts for user #1
-        $this->createRevenueAccounts($user);
+            // pay bills:
+            TestData::createRent($user, 'Rent for ' . $month, $current, '800');
+            TestData::createWater($user, 'Water bill for ' . $month, $current, '15');
+            TestData::createTV($user, 'TV bill for ' . $month, $current, '60');
+            TestData::createPower($user, 'Power bill for ' . $month, $current, '120');
 
-        // create journal + attachment:
-        $this->createAttachments($user);
+            // pay daily groceries:
+            TestData::createGroceries($user, $current);
 
-        // create opening balance for savings account:
-        $this->openingBalanceSavings($user);
-    }
+            // create tag (each type of tag, for date):
+            TestData::createTags($user, $current);
 
-    /**
-     * @param User $user
-     */
-    private function createAttachments(User $user)
-    {
+            // go out for drinks:
+            TestData::createDrinksAndOthers($user, $current);
 
-        $toAccount   = TestData::findAccount($user, 'TestData Checking Account');
-        $fromAccount = TestData::findAccount($user, 'Job');
+            // save money every month:
+            TestData::createSavings($user, $current);
 
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 2,
-                'transaction_currency_id' => 1,
-                'description'             => 'Some journal for attachment',
-                'completed'               => 1,
-                'date'                    => new Carbon,
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $fromAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -100,
+            // buy gas for the car every month:
+            TestData::createCar($user, $current);
 
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $toAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
+            // create budget limits.
+            TestData::createBudgetLimit($user, $current, 'Groceries', '400');
+            TestData::createBudgetLimit($user, $current, 'Bills', '1000');
+            TestData::createBudgetLimit($user, $current, 'Car', '100');
 
-            ]
-        );
-
-        // and now attachments
-        $encrypted = Crypt::encrypt('I are secret');
-        Attachment::create(
-            [
-                'attachable_id'   => $journal->id,
-                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
-                'user_id'         => $user->id,
-                'md5'             => md5('Hallo'),
-                'filename'        => 'empty-file.txt',
-                'title'           => 'Empty file',
-                'description'     => 'This file is empty',
-                'notes'           => 'What notes',
-                'mime'            => 'text/plain',
-                'size'            => strlen($encrypted),
-                'uploaded'        => 1,
-            ]
-        );
-
-
-        // and now attachment.
-        Attachment::create(
-            [
-                'attachable_id'   => $journal->id,
-                'attachable_type' => 'FireflyIII\Models\TransactionJournal',
-                'user_id'         => $user->id,
-                'md5'             => md5('Ook hallo'),
-                'filename'        => 'empty-file-2.txt',
-                'title'           => 'Empty file 2',
-                'description'     => 'This file is empty too',
-                'notes'           => 'What notes do',
-                'mime'            => 'text/plain',
-                'size'            => strlen($encrypted),
-                'uploaded'        => 1,
-            ]
-        );
-        // echo crypted data to the file.
-        file_put_contents(storage_path('upload/at-1.data'), $encrypted);
-        file_put_contents(storage_path('upload/at-2.data'), $encrypted);
-
-    }
-
-    /**
-     * @param $user
-     */
-    private function createBudgets($user)
-    {
-        $set     = [
-            Budget::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]),
-            Budget::firstOrCreateEncrypted(['name' => 'Bills', 'user_id' => $user->id]),
-        ];
-        $current = new Carbon;
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-
-            // some budget limits:
-            $start = clone $current;
-            $end   = clone $current;
-            $start->startOfMonth();
-            $end->endOfMonth();
-
-            BudgetLimit::create(
-                [
-                    'budget_id'   => $budget->id,
-                    'startdate'   => $start->format('Y-m-d'),
-                    'amount'      => 500,
-                    'repeats'     => 0,
-                    'repeat_freq' => 'monthly',
-                ]
-            );
+            $current->addMonth();
         }
-    }
-
-    /**
-     * @param User $user
-     */
-    private function createCategories(User $user)
-    {
-        Category::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
-        Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
-    }
-
-    /**
-     * @param User $user
-     */
-    private function createExpenseAccounts(User $user)
-    {
-        $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
-                     'coolblue', 'Shell',
-                     'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
-        foreach ($expenses as $name) {
-            // create account:
-            Account::create(
-                [
-                    'user_id'         => $user->id,
-                    'account_type_id' => 4,
-                    'name'            => $name,
-                    'active'          => 1,
-                    'encrypted'       => 1,
-                ]
-            );
-        }
-
-    }
-
-    /**
-     * @param User $user
-     */
-    private function createRevenueAccounts(User $user)
-    {
-        $revenues = ['Job', 'Belastingdienst', 'Bank', 'KPN', 'Google'];
-        foreach ($revenues as $name) {
-            // create account:
-            Account::create(
-                [
-                    'user_id'         => $user->id,
-                    'account_type_id' => 5,
-                    'name'            => $name,
-                    'active'          => 1,
-                    'encrypted'       => 1,
-                ]
-            );
-        }
-    }
-
-    /**
-     * @param User $user
-     */
-    private function openingBalanceSavings(User $user)
-    {
-        // opposing account for opening balance:
-        $opposing = Account::create(
-            [
-                'user_id'         => $user->id,
-                'account_type_id' => 6,
-                'name'            => 'Opposing for savings',
-                'active'          => 1,
-                'encrypted'       => 1,
-            ]
-        );
-
-        // savings
-        $savings = TestData::findAccount($user, 'TestData Savings');
-
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 4,
-                'transaction_currency_id' => 1,
-                'description'             => 'Opening balance for savings account',
-                'completed'               => 1,
-                'date'                    => $this->start->format('Y-m-d'),
-            ]
-        );
-
-        // transactions
-        Transaction::create(
-            [
-                'account_id'             => $opposing->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -10000,
-            ]
-        );
-
-        Transaction::create(
-            [
-                'account_id'             => $savings->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 10000,
-            ]
-        );
-
-
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -7,7 +8,7 @@ use Auth;
 /**
  * Class AttachmentFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class AttachmentFormRequest extends Request

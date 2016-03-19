@@ -1,17 +1,19 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
 use Auth;
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 use Input;
 
 /**
  * Class JournalFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class JournalFormRequest extends Request
@@ -30,21 +32,26 @@ class JournalFormRequest extends Request
      */
     public function getJournalData()
     {
+        $tags = $this->get('tags') ?? '';
+
         return [
             'what'                      => $this->get('what'),
             'description'               => $this->get('description'),
             'account_id'                => intval($this->get('account_id')),
             'account_from_id'           => intval($this->get('account_from_id')),
             'account_to_id'             => intval($this->get('account_to_id')),
-            'expense_account'           => $this->get('expense_account'),
-            'revenue_account'           => $this->get('revenue_account'),
+            'expense_account'           => $this->get('expense_account') ?? '',
+            'revenue_account'           => $this->get('revenue_account') ?? '',
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => Auth::user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
             'date'                      => new Carbon($this->get('date')),
+            'interest_date'             => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
+            'book_date'                 => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
+            'process_date'              => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
             'budget_id'                 => intval($this->get('budget_id')),
-            'category'                  => $this->get('category'),
-            'tags'                      => explode(',', $this->get('tags')),
+            'category'                  => $this->get('category') ?? '',
+            'tags'                      => explode(',', $tags),
         ];
     }
 
@@ -60,6 +67,9 @@ class JournalFormRequest extends Request
             'what'                      => 'required|in:withdrawal,deposit,transfer',
             'amount'                    => 'numeric|required|min:0.01',
             'date'                      => 'required|date',
+            'process_date'              => 'date',
+            'book_date'                 => 'date',
+            'interest_date'             => 'date',
             'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
 
         ];
@@ -84,8 +94,7 @@ class JournalFormRequest extends Request
                 $rules['category']        = 'between:1,255';
                 break;
             default:
-                abort(500, 'Cannot handle ' . $what);
-                break;
+                throw new FireflyException('Cannot handle transaction type of type ' . e($what) . '.');
         }
 
         return $rules;

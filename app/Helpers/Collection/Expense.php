@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use Crypt;
@@ -34,7 +34,6 @@ class Expense
      */
     public function addOrCreateExpense(TransactionJournal $entry)
     {
-        bcscale(2);
 
         $accountId = $entry->account_id;
         $amount    = strval(round($entry->journalAmount, 2));
@@ -58,11 +57,10 @@ class Expense
     }
 
     /**
-     * @param $add
+     * @param string $add
      */
-    public function addToTotal($add)
+    public function addToTotal(string $add)
     {
-        bcscale(2);
 
 
         $add = strval(round($add, 2));
@@ -80,7 +78,7 @@ class Expense
     /**
      * @return Collection
      */
-    public function getExpenses()
+    public function getExpenses(): Collection
     {
         $set = $this->expenses->sortBy(
             function (stdClass $object) {
@@ -94,7 +92,7 @@ class Expense
     /**
      * @return string
      */
-    public function getTotal()
+    public function getTotal(): string
     {
         return strval(round($this->total, 2));
     }

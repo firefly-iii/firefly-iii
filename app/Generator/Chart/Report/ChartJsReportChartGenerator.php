@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Report;
 
 use Illuminate\Support\Collection;
@@ -19,7 +19,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOut(Collection $entries)
+    public function multiYearInOut(Collection $entries): array
     {
         $data = [
             'count'    => 2,
@@ -52,7 +52,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOutSummarized($income, $expense, $count)
+    public function multiYearInOutSummarized(string $income, string $expense, int $count): array
     {
         $data                          = [
             'count'    => 2,
@@ -81,7 +81,33 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function yearInOut(Collection $entries)
+    public function netWorth(Collection $entries) : array
+    {
+        $format = (string)trans('config.month_and_day');
+        $data   = [
+            'count'    => 1,
+            'labels'   => [],
+            'datasets' => [
+                [
+                    'label' => trans('firefly.net-worth'),
+                    'data'  => [],
+                ],
+            ],
+        ];
+        foreach ($entries as $entry) {
+            $data['labels'][]              = trim($entry['date']->formatLocalized($format));
+            $data['datasets'][0]['data'][] = round($entry['net-worth'], 2);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function yearInOut(Collection $entries): array
     {
         // language:
         $format = (string)trans('config.month');
@@ -117,7 +143,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function yearInOutSummarized($income, $expense, $count)
+    public function yearInOutSummarized(string $income, string $expense, int $count): array
     {
 
         $data                          = [

@@ -7,6 +7,7 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
@@ -18,7 +19,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
 use Preferences;
 use Response;
 use Session;
@@ -34,7 +34,7 @@ use View;
 class TransactionController extends Controller
 {
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -49,7 +49,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create(ARI $repository, $what = TransactionType::DEPOSIT)
+    public function create(ARI $repository, string $what = TransactionType::DEPOSIT)
     {
         $what        = strtolower($what);
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
@@ -66,7 +66,7 @@ class TransactionController extends Controller
 
         $piggies    = ExpandedForm::makeSelectList($piggyBanks);
         $piggies[0] = trans('form.noPiggybank');
-        $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
+        $preFilled  = Session::has('preFilled') ? session('preFilled') : [];
         $respondTo  = ['account_id', 'account_from_id'];
         $subTitle   = trans('form.add_new_' . $what);
 
@@ -76,7 +76,7 @@ class TransactionController extends Controller
         Session::put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('transactions.create.fromStore') !== true) {
+        if (session('transactions.create.fromStore') !== true) {
             Session::put('transactions.create.url', URL::previous());
         }
         Session::forget('transactions.create.fromStore');
@@ -98,7 +98,7 @@ class TransactionController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
-        $what     = strtolower($journal->getTransactionType());
+        $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
@@ -126,7 +126,7 @@ class TransactionController extends Controller
         Preferences::mark();
 
         // redirect to previous URL:
-        return redirect(Session::get('transactions.delete.url'));
+        return redirect(session('transactions.delete.url'));
     }
 
     /**
@@ -136,19 +136,14 @@ class TransactionController extends Controller
      * @param TransactionJournal $journal
      *
      * @return $this
+     * @throws FireflyException
      */
     public function edit(ARI $repository, TransactionJournal $journal)
     {
-        // cannot edit opening balance
-        if ($journal->isOpeningBalance()) {
-            return view('error')->with('message', 'Cannot edit this transaction. Edit the account instead!');
-        }
-
-
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        $what        = strtolower($journal->getTransactionType());
+        $what        = strtolower(TransactionJournal::transactionTypeStr($journal));
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]  = trans('form.noBudget');
@@ -157,12 +152,14 @@ class TransactionController extends Controller
         $subTitle    = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $preFilled   = [
             'date'          => $journal->date->format('Y-m-d'),
+            'interest_date' => $journal->interest_date ? $journal->interest_date->format('Y-m-d') : '',
+            'book_date'     => $journal->book_date ? $journal->book_date->format('Y-m-d') : '',
+            'process_date'  => $journal->process_date ? $journal->process_date->format('Y-m-d') : '',
             'category'      => '',
             'budget_id'     => 0,
             'piggy_bank_id' => 0,
+            'tags'          => join(',', $journal->tags->pluck('tag')->toArray()),
         ];
-        // get tags:
-        $preFilled['tags'] = join(',', $journal->tags->pluck('tag')->toArray());
 
         $category = $journal->categories()->first();
         if (!is_null($category)) {
@@ -178,25 +175,29 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount'] = $journal->amount_positive;
+        $preFilled['amount'] = TransactionJournal::amountPositive($journal);
 
         if ($journal->isWithdrawal()) {
-            $preFilled['account_id']      = $journal->source_account->id;
-            $preFilled['expense_account'] = $journal->destination_account->name_for_editform;
+            $preFilled['account_id'] = TransactionJournal::sourceAccount($journal)->id;
+            if (TransactionJournal::destinationAccountTypeStr($journal) != 'Cash account') {
+                $preFilled['expense_account'] = TransactionJournal::destinationAccount($journal)->name;
+            }
         } else {
-            $preFilled['account_id']      = $journal->destination_account->id;
-            $preFilled['revenue_account'] = $journal->source_account->name_for_editform;
+            $preFilled['account_id'] = TransactionJournal::destinationAccount($journal)->id;
+            if (TransactionJournal::sourceAccountTypeStr($journal) != 'Cash account') {
+                $preFilled['revenue_account'] = TransactionJournal::sourceAccount($journal)->name;
+            }
         }
 
-        $preFilled['account_from_id'] = $journal->source_account->id;
-        $preFilled['account_to_id']   = $journal->destination_account->id;
+        $preFilled['account_from_id'] = TransactionJournal::sourceAccount($journal)->id;
+        $preFilled['account_to_id']   = TransactionJournal::destinationAccount($journal)->id;
 
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('transactions.edit.fromUpdate') !== true) {
+        if (session('transactions.edit.fromUpdate') !== true) {
             Session::put('transactions.edit.url', URL::previous());
         }
         Session::forget('transactions.edit.fromUpdate');
@@ -211,7 +212,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(JournalRepositoryInterface $repository, $what)
+    public function index(JournalRepositoryInterface $repository, string $what)
     {
         $subTitleIcon = Config::get('firefly.transactionIconsByWhat.' . $what);
         $types        = Config::get('firefly.transactionTypesByWhat.' . $what);
@@ -270,15 +271,14 @@ class TransactionController extends Controller
             }
         );
 
-        bcscale(2);
         $journal->transactions->each(
             function (Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = bcadd($t->before, $t->amount);
             }
         );
-        $what     = strtolower($journal->getTransactionType());
-        $subTitle = trans('firefly.' . $journal->getTransactionType()) . ' "' . e($journal->description) . '"';
+        $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what'));
     }
@@ -312,7 +312,6 @@ class TransactionController extends Controller
         if (count($att->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
-        Log::debug('Before event. From account name is: ' . $journal->source_account->name);
 
         event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 
@@ -327,7 +326,7 @@ class TransactionController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('transactions.create.url'));
+        return redirect(session('transactions.create.url'));
 
     }
 
@@ -372,7 +371,7 @@ class TransactionController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('transactions.edit.url'));
+        return redirect(session('transactions.edit.url'));
 
     }
 

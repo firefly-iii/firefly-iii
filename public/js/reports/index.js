@@ -34,8 +34,8 @@ $(function () {
         var startStr = readCookie('report-start');
         var endStr = readCookie('report-end');
         if (startStr !== null && endStr !== null && startStr.length == 8 && endStr.length == 8) {
-            var startDate = moment(startStr, "YYYYMMDD");
-            var endDate = moment(endStr, "YYYYMMDD");
+            var startDate = moment(startStr, "YYYY-MM-DD");
+            var endDate = moment(endStr, "YYYY-MM-DD");
             var datePicker = $('#inputDateRange').data('daterangepicker');
             datePicker.setStartDate(startDate);
             datePicker.setEndDate(endDate);

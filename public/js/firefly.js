@@ -47,7 +47,7 @@ $(function () {
                 end: end.format('YYYY-MM-DD'),
                 label: label,
                 _token: token
-            }).success(function () {
+            }).done(function () {
                 console.log('Succesfully sent new date range.');
                 window.location.reload(true);
             }).fail(function () {

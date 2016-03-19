@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * Date.php
  * Copyright (C) 2016 Sander Dorigo
@@ -11,8 +12,8 @@ namespace FireflyIII\Support\Binder;
 
 use Auth;
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelper;
 use Exception;
+use FireflyIII\Helpers\FiscalHelper;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -31,7 +32,7 @@ class Date implements BinderInterface
      *
      * @return mixed
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder($value, $route): Carbon
     {
         $fiscalHelper = new FiscalHelper;
 

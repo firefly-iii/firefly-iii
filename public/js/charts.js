@@ -92,10 +92,10 @@ var defaultLineOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: false,
-    scaleLabel: "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
+    scaleLabel: " <%= accounting.formatMoney(value) %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
 };
 
 var defaultColumnOptions = {
@@ -136,7 +136,7 @@ var defaultStackedColumnOptions = {
  */
 function lineChart(URL, container, options) {
     "use strict";
-    $.getJSON(URL).success(function (data) {
+    $.getJSON(URL).done(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
         newData.datasets = [];
@@ -170,7 +170,7 @@ function lineChart(URL, container, options) {
 function areaChart(URL, container, options) {
     "use strict";
 
-    $.getJSON(URL).success(function (data) {
+    $.getJSON(URL).done(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
         newData.datasets = [];
@@ -206,7 +206,7 @@ function columnChart(URL, container, options) {
 
     options = options || {};
 
-    $.getJSON(URL).success(function (data) {
+    $.getJSON(URL).done(function (data) {
 
         var result = true;
         if (options.beforeDraw) {
@@ -252,7 +252,7 @@ function stackedColumnChart(URL, container, options) {
     options = options || {};
 
 
-    $.getJSON(URL).success(function (data) {
+    $.getJSON(URL).done(function (data) {
 
         var result = true;
         if (options.beforeDraw) {
@@ -295,7 +295,7 @@ function stackedColumnChart(URL, container, options) {
 function pieChart(URL, container, options) {
     "use strict";
 
-    $.getJSON(URL).success(function (data) {
+    $.getJSON(URL).done(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
         new Chart(ctx).Pie(data, defaultPieOptions);

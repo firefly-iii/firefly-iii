@@ -1,7 +1,7 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, rule) }}
 {% endblock %}
 
 {% block content %}
@@ -62,11 +62,14 @@
                     <p>
                         <br/>
                         <a href="#" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</a>
+                        <a href="#" class="btn btn-default test_rule_triggers">{{ 'test_rule_triggers'|_ }}</a>
                     </p>
                 </div>
             </div>
         </div>
     </div>
+    
+	{% include '/rules/partials/test-trigger-modal.twig' %}
 
     <!-- RULE ACTIONS -->
     <div class="row">
@@ -128,5 +131,5 @@
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
     </script>
-    <script type="text/javascript" src="js/rules/create.js"></script>
+    <script type="text/javascript" src="js/rules/edit.js"></script>
 {% endblock %}

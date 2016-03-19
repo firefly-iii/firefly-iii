@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -13,7 +14,6 @@ use Illuminate\Http\Request;
 use Input;
 use Log;
 use Preferences;
-use Request as RequestFacade;
 use Session;
 use View;
 
@@ -31,7 +31,7 @@ class CsvController extends Controller
     protected $wizard;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -85,7 +85,7 @@ class CsvController extends Controller
         foreach ($keys as $name) {
             $availableRoles[$name] = trans('firefly.csv_column_' . $name);
         }
-        ksort($availableRoles);
+        asort($availableRoles);
 
         return view('csv.column-roles', compact('availableRoles', 'map', 'roles', 'headers', 'example', 'subTitle'));
     }
@@ -106,36 +106,35 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
         $data = [
-            'date-format' => Session::get('csv-date-format'),
-            'has-headers' => Session::get('csv-has-headers'),
+            'date-format' => session('csv-date-format'),
+            'has-headers' => session('csv-has-headers'),
         ];
         if (Session::has('csv-map')) {
-            $data['map'] = Session::get('csv-map');
+            $data['map'] = session('csv-map');
         }
         if (Session::has('csv-roles')) {
-            $data['roles'] = Session::get('csv-roles');
+            $data['roles'] = session('csv-roles');
         }
         if (Session::has('csv-mapped')) {
-            $data['mapped'] = Session::get('csv-mapped');
+            $data['mapped'] = session('csv-mapped');
         }
 
         if (Session::has('csv-specifix')) {
-            $data['specifix'] = Session::get('csv-specifix');
+            $data['specifix'] = session('csv-specifix');
         }
 
         $result = json_encode($data, JSON_PRETTY_PRINT);
         $name   = sprintf('"%s"', addcslashes('csv-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
-        RequestFacade::header('Content-disposition: attachment; filename=' . $name);
-        RequestFacade::header('Content-Type: application/json');
-        RequestFacade::header('Content-Description: File Transfer');
-        RequestFacade::header('Connection: Keep-Alive');
-        RequestFacade::header('Expires: 0');
-        RequestFacade::header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        RequestFacade::header('Pragma: public');
-        RequestFacade::header('Content-Length: ' . strlen($result));
-
-        return $result;
+        return response($result, 200)
+            ->header('Content-disposition', 'attachment; filename=' . $name)
+            ->header('Content-Type', 'application/json')
+            ->header('Content-Description', 'File Transfer')
+            ->header('Connection', 'Keep-Alive')
+            ->header('Expires', '0')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'public')
+            ->header('Content-Length', strlen($result));
     }
 
     /**
@@ -218,8 +217,10 @@ class CsvController extends Controller
         }
 
         // process given roles and mapping:
-        $roles = $this->wizard->processSelectedRoles(Input::get('role'));
-        $maps  = $this->wizard->processSelectedMapping($roles, Input::get('map'));
+        $inputMap   = Input::get('map') ?? [];
+        $inputRoles = Input::get('role') ?? [];
+        $roles      = $this->wizard->processSelectedRoles($inputRoles);
+        $maps       = $this->wizard->processSelectedMapping($roles, $inputMap);
 
         Session::put('csv-map', $maps);
         Session::put('csv-roles', $roles);
@@ -277,13 +278,7 @@ class CsvController extends Controller
          *       field id => field identifier.
          * ]
          */
-        try {
-            $options = $this->wizard->showOptions($this->data->getMap());
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-
-            return view('error', ['message' => $e->getMessage()]);
-        }
+        $options = $this->wizard->showOptions($this->data->getMap());
 
         // After these values are prepped, read the actual CSV file
         $reader     = $this->data->getReader();
@@ -318,15 +313,10 @@ class CsvController extends Controller
         }
 
         Log::debug('Created importer');
-        $importer = new Importer;
+        /** @var Importer $importer */
+        $importer = app('FireflyIII\Helpers\Csv\Importer');
         $importer->setData($this->data);
-        try {
-            $importer->run();
-        } catch (FireflyException $e) {
-            Log::error('Catch error: ' . $e->getMessage());
-
-            return view('error', ['message' => $e->getMessage()]);
-        }
+        $importer->run();
         Log::debug('Done importing!');
 
         $rows     = $importer->getRows();
@@ -408,7 +398,7 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
 
-        $fullPath                   = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
+        $path                       = $this->wizard->storeCsvFile($request->file('csv')->getRealPath());
         $settings                   = [];
         $settings['date-format']    = Input::get('date_format');
         $settings['has-headers']    = intval(Input::get('has_headers')) === 1;
@@ -427,14 +417,16 @@ class CsvController extends Controller
         $settings['roles']  = [];
 
         if ($request->hasFile('csv_config')) { // Process config file if present.
-            $data = file_get_contents($request->file('csv_config')->getRealPath());
+
+            $size = $request->file('csv_config')->getSize();
+            $data = $request->file('csv_config')->openFile()->fread($size);
             $json = json_decode($data, true);
             if (is_array($json)) {
                 $settings = array_merge($settings, $json);
             }
         }
 
-        $this->data->setCsvFileLocation($fullPath);
+        $this->data->setCsvFileLocation($path);
         $this->data->setDateFormat($settings['date-format']);
         $this->data->setHasHeaders($settings['has-headers']);
         $this->data->setMap($settings['map']);

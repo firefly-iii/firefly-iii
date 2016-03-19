@@ -1,10 +1,10 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountName
@@ -26,8 +26,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             return $account;
         }
         // find or create new account:
-        $accountType = AccountType::where('type', 'Asset account')->first();
-        $set         = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->get();
+        $set = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $this->value) {
@@ -36,15 +35,25 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
         }
 
         // create it if doesnt exist.
-        $account = Account::firstOrCreateEncrypted(
-            [
-                'name'            => $this->value,
-                'iban'            => '',
-                'user_id'         => Auth::user()->id,
-                'account_type_id' => $accountType->id,
-                'active'          => 1,
-            ]
-        );
+
+        $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $accountData = [
+            'name'                   => $this->value,
+            'accountType'            => 'asset',
+            'virtualBalance'         => 0,
+            'virtualBalanceCurrency' => 1, // hard coded.
+            'active'                 => true,
+            'user'                   => Auth::user()->id,
+            'iban'                   => null,
+            'accountNumber'          => $this->value,
+            'accountRole'            => null,
+            'openingBalance'         => 0,
+            'openingBalanceDate'     => new Carbon,
+            'openingBalanceCurrency' => 1, // hard coded.
+
+        ];
+
+        $account = $repository->store($accountData);
 
         return $account;
     }

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Category as CategoryModel;
@@ -42,19 +42,18 @@ class Category
     }
 
     /**
-     * @param float $add
+     * @param string $add
      */
-    public function addTotal($add)
+    public function addTotal(string $add)
     {
-        $add = strval(round($add, 2));
-        bcscale(2);
+        $add         = strval(round($add, 2));
         $this->total = bcadd($this->total, $add);
     }
 
     /**
      * @return Collection
      */
-    public function getCategories()
+    public function getCategories(): Collection
     {
         $set = $this->categories->sortBy(
             function (CategoryModel $category) {
@@ -69,7 +68,7 @@ class Category
     /**
      * @return string
      */
-    public function getTotal()
+    public function getTotal(): string
     {
         return strval(round($this->total, 2));
     }

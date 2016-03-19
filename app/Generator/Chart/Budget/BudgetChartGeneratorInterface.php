@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * BudgetChartGeneratorInterface.php
  * Copyright (C) 2016 Sander Dorigo
@@ -23,28 +24,28 @@ interface BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function budget(Collection $entries);
+    public function budget(Collection $entries): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function budgetLimit(Collection $entries);
+    public function budgetLimit(Collection $entries): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function frontpage(Collection $entries);
+    public function frontpage(Collection $entries): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function multiYear(Collection $entries);
+    public function multiYear(Collection $entries): array;
 
     /**
      * @param Collection $budgets
@@ -52,6 +53,6 @@ interface BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function year(Collection $budgets, Collection $entries);
+    public function year(Collection $budgets, Collection $entries): array;
 
 }

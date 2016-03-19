@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * BillChartGeneratorInterface.php
  * Copyright (C) 2016 Sander Dorigo
@@ -27,7 +28,7 @@ interface BillChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage($paid, $unpaid);
+    public function frontpage(string $paid, string $unpaid): array;
 
     /**
      * @param Bill       $bill
@@ -35,6 +36,6 @@ interface BillChartGeneratorInterface
      *
      * @return array
      */
-    public function single(Bill $bill, Collection $entries);
+    public function single(Bill $bill, Collection $entries): array;
 
 }

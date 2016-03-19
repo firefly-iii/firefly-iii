@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\PostProcessing;
 
 /**
@@ -18,7 +18,8 @@ class Description implements PostProcessorInterface
      */
     public function process()
     {
-        $this->data['description'] = trim($this->data['description']);
+        $description               = $this->data['description'] ?? '';
+        $this->data['description'] = trim($description);
         if (strlen($this->data['description']) == 0) {
             $this->data['description'] = trans('firefly.csv_empty_description');
         }

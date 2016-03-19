@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
@@ -18,12 +19,12 @@ class Amount
 {
 
     /**
-     * @param      $amount
-     * @param bool $coloured
+     * @param string $amount
+     * @param bool   $coloured
      *
      * @return string
      */
-    public function format($amount, $coloured = true)
+    public function format(string $amount, bool $coloured = true): string
     {
         return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
@@ -33,16 +34,17 @@ class Amount
      * as a currency, given two things: the currency required and the current locale.
      *
      * @param TransactionCurrency $format
-     * @param                     $amount
+     * @param string              $amount
      * @param bool                $coloured
      *
      * @return string
      */
-    public function formatAnything(TransactionCurrency $format, $amount, $coloured = true)
+    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
         $locale    = setlocale(LC_MONETARY, 0);
+        $float     = round($amount, 2);
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result    = $formatter->formatCurrency($amount, $format->code);
+        $result    = $formatter->formatCurrency($float, $format->code);
 
         if ($coloured === true) {
             if ($amount == 0) {
@@ -61,38 +63,37 @@ class Amount
 
     /**
      *
-     * @param TransactionJournal $journal
-     * @param bool               $coloured
+     * @param \FireflyIII\Models\TransactionJournal $journal
+     * @param bool                                  $coloured
      *
      * @return string
      */
-    public function formatJournal(TransactionJournal $journal, $coloured = true)
+    public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($journal->id);
-        $cache->addProperty('formatJournal');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+        $locale = setlocale(LC_MONETARY, 0);
+        $float  = round($journal->destination_amount, 2);
+        if ($journal->isWithdrawal()) {
+            $float = round($journal->source_amount, 2);
         }
+        $formatter    = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $currencyCode = $journal->transaction_currency_code ?? $journal->transactionCurrency->code;
+        $result       = $formatter->formatCurrency($float, $currencyCode);
 
-        if ($journal->isTransfer() && $coloured) {
-            $txt = '<span class="text-info">' . $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false) . '</span>';
-            $cache->store($txt);
-
-            return $txt;
+        if ($coloured === true && $float == 0) {
+            return '<span style="color:#999">' . $result . '</span>'; // always grey.
         }
-        if ($journal->isTransfer() && !$coloured) {
-            $txt = $this->formatAnything($journal->transactionCurrency, $journal->amount_positive, false);
-            $cache->store($txt);
-
-            return $txt;
+        if (!$coloured) {
+            return $result;
         }
+        if (!$journal->isTransfer()) {
+            if ($float > 0) {
+                return '<span class="text-success">' . $result . '</span>';
+            }
 
-        $txt = $this->formatAnything($journal->transactionCurrency, $journal->amount, $coloured);
-        $cache->store($txt);
-
-        return $txt;
+            return '<span class="text-danger">' . $result . '</span>';
+        } else {
+            return '<span class="text-info">' . $result . '</span>';
+        }
     }
 
     /**
@@ -101,23 +102,11 @@ class Amount
      *
      * @return string
      */
-    public function formatTransaction(Transaction $transaction, $coloured = true)
+    public function formatTransaction(Transaction $transaction, bool $coloured = true)
     {
         $currency = $transaction->transactionJournal->transactionCurrency;
 
         return $this->formatAnything($currency, $transaction->amount, $coloured);
-    }
-
-    /**
-     * @param string $symbol
-     * @param float  $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     */
-    public function formatWithSymbol($symbol, $amount, $coloured = true)
-    {
-        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
 
     /**

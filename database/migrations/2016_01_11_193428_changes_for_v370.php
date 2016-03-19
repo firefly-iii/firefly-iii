@@ -67,7 +67,6 @@ class ChangesForV370 extends Migration
         );
 
 
-        // new table "rules":
         Schema::create(
             'rules', function (Blueprint $table) {
             $table->increments('id');

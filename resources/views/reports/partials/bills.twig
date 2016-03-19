@@ -15,33 +15,30 @@
             </thead>
             <tbody>
             {% for line in bills.getBills %}
-                {% if not line.isActive %}
-                    <tr class="text-muted">
-                {% else %}
-                    <tr>
-                {% endif %}
-                <td data-value="{{ line.getBill.name }}">
-                    <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
+                <tr>
+                    <td data-value="{{ line.getBill.name }}">
+                        <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
+                    </td>
+                    <td data-value="{{ line.getMin }}">{{ line.getMin|formatAmount }}</td>
+                    <td data-value="{{ line.getMax }}">{{ line.getMax|formatAmount }}</td>
+                    {% if line.isHit %}
+                        <td data-value="{{ line.getAmount }}">
+                            <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">
+                                {{ line.getAmount|formatAmount }}
+                            </a>
+                        </td>
+                    {% endif %}
+                    {% if not line.isHit and line.isActive %}
+                        <td data-value="0" class="bg-success">{{ 'notCharged'|_ }}</td>
+                    {% endif %}
                     {% if not line.isActive %}
-                        ({{ 'inactive'|_|lower }})
+                        <td data-value="-1">&nbsp;</td>
                     {% endif %}
-                </td>
-                <td data-value="{{ line.getMin }}">{{ line.getMin|formatAmount }}</td>
-                <td data-value="{{ line.getMax }}">{{ line.getMax|formatAmount }}</td>
-                {% if line.isHit %}
-                    <td data-value="{{ line.getAmount }}">{{ line.getAmount|formatAmount }}</td>
-                {% endif %}
-                {% if not line.isHit and line.isActive %}
-                    <td data-value="0" class="bg-success">{{ 'notCharged'|_ }}</td>
-                {% endif %}
-                {% if not line.isActive %}
-                    <td data-value="-1">&nbsp;</td>
-                {% endif %}
-                <td data-value="{{ (line.getMax - line.getAmount) }}">
-                    {% if line.isActive %}
-                        {{ (line.getMax + line.getAmount)|formatAmount }}
-                    {% endif %}
-                </td>
+                    <td data-value="{{ (line.getMax - line.getAmount) }}">
+                        {% if line.isActive %}
+                            {{ (line.getMax + line.getAmount)|formatAmount }}
+                        {% endif %}
+                    </td>
 
                 </tr>
 

@@ -18,12 +18,13 @@ class ChartBudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::budget
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::__construct
      */
     public function testBudget()
     {
 
         $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('getExpensesPerMonth')->once()->andReturn(new Collection([new Budget]));
+        $repository->shouldReceive('spentPerDay')->once()->andReturn([]);
         $repository->shouldReceive('getFirstBudgetLimitDate')->once()->andReturn(new Carbon);
 
         $this->be($this->user());

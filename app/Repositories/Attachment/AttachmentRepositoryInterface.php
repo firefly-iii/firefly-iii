@@ -1,8 +1,10 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
 use FireflyIII\Models\Attachment;
+use Illuminate\Support\Collection;
 
 /**
  * Interface AttachmentRepositoryInterface
@@ -17,7 +19,12 @@ interface AttachmentRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(Attachment $attachment);
+    public function destroy(Attachment $attachment): bool;
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection;
 
     /**
      * @param Attachment $attachment
@@ -25,6 +32,6 @@ interface AttachmentRepositoryInterface
      *
      * @return Attachment
      */
-    public function update(Attachment $attachment, array $attachmentData);
+    public function update(Attachment $attachment, array $attachmentData): Attachment;
 }
 

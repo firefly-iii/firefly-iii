@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * RuleController.php
  * Copyright (C) 2016 Sander Dorigo
@@ -10,14 +11,16 @@
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Config;
 use FireflyIII\Http\Requests\RuleFormRequest;
+use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use FireflyIII\Rules\TransactionMatcher;
 use Input;
 use Preferences;
 use Response;
@@ -43,6 +46,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Create a new rule. It will be stored under the given $ruleGroup.
+     *
      * @param RuleGroup $ruleGroup
      *
      * @return View
@@ -72,7 +77,7 @@ class RuleController extends Controller
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('rules.rule.create.fromStore') !== true) {
+        if (session('rules.rule.create.fromStore') !== true) {
             Session::put('rules.rule.create.url', URL::previous());
         }
         Session::forget('rules.rule.create.fromStore');
@@ -85,6 +90,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Delete a given rule.
+     *
      * @param Rule $rule
      *
      * @return View
@@ -103,6 +110,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Actually destroy the given rule.
+     *
      * @param Rule                    $rule
      * @param RuleRepositoryInterface $repository
      *
@@ -118,7 +127,7 @@ class RuleController extends Controller
         Preferences::mark();
 
 
-        return redirect(Session::get('rules.rule.delete.url'));
+        return redirect(session('rules.rule.delete.url'));
     }
 
     /**
@@ -136,11 +145,12 @@ class RuleController extends Controller
     }
 
     /**
-     * @param Rule $rule
+     * @param RuleRepositoryInterface $repository
+     * @param Rule                    $rule
      *
      * @return View
      */
-    public function edit(Rule $rule)
+    public function edit(RuleRepositoryInterface $repository, Rule $rule)
     {
         // has old input?
         if (Input::old()) {
@@ -156,11 +166,11 @@ class RuleController extends Controller
         }
 
         // get rule trigger for update / store-journal:
-        $primaryTrigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
+        $primaryTrigger = $repository->getPrimaryTrigger($rule);
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('rules.rule.edit.fromUpdate') !== true) {
+        if (session('rules.rule.edit.fromUpdate') !== true) {
             Session::put('rules.rule.edit.url', URL::previous());
         }
         Session::forget('rules.rule.edit.fromUpdate');
@@ -171,32 +181,15 @@ class RuleController extends Controller
     }
 
     /**
+     * @param RuleGroupRepositoryInterface $repository
+     *
      * @return View
      */
-    public function index()
+    public function index(RuleGroupRepositoryInterface $repository)
     {
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
-
-        $ruleGroups = Auth::user()
-                          ->ruleGroups()
-                          ->orderBy('active', 'DESC')
-                          ->orderBy('order', 'ASC')
-                          ->with(
-                              [
-                                  'rules'              => function (HasMany $query) {
-                                      $query->orderBy('active', 'DESC');
-                                      $query->orderBy('order', 'ASC');
-
-                                  },
-                                  'rules.ruleTriggers' => function (HasMany $query) {
-                                      $query->orderBy('order', 'ASC');
-                                  },
-                                  'rules.ruleActions'  => function (HasMany $query) {
-                                      $query->orderBy('order', 'ASC');
-                                  },
-                              ]
-                          )->get();
+        $ruleGroups = $repository->getRuleGroupsWithRules(Auth::user());
 
         return view('rules.index', compact('ruleGroups'));
     }
@@ -270,12 +263,59 @@ class RuleController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('rules.rule.create.fromStore', true);
 
-            return redirect(route('rules.rule.create', [$request->input('what')]))->withInput();
+            return redirect(route('rules.rule.create', [$ruleGroup]))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('rules.rule.create.url'));
+        return redirect(session('rules.rule.create.url'));
 
+    }
+
+    /**
+     * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
+     * using the URL parameters (GET), and are usually put there using a Javascript thing.
+     *
+     * This method will parse and validate those rules and create a "TransactionMatcher" which will attempt
+     * to find transaction journals matching the users input. A maximum range of transactions to try (range) and
+     * a maximum number of transactions to return (limit) are set as well.
+     *
+     * @param TestRuleFormRequest $request
+     *
+     * @return \Illuminate\View\View
+     */
+    public function testTriggers(TestRuleFormRequest $request)
+    {
+        // build trigger array from response
+        $triggers = $this->getValidTriggerList($request);
+
+        if (count($triggers) == 0) {
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
+        }
+
+        $limit = Config::get('firefly.test-triggers.limit');
+        $range = Config::get('firefly.test-triggers.range');
+
+        /** @var TransactionMatcher $matcher */
+        $matcher = app('FireflyIII\Rules\TransactionMatcher');
+        $matcher->setLimit($limit);
+        $matcher->setRange($range);
+        $matcher->setTriggers($triggers);
+        $matchingTransactions = $matcher->findMatchingTransactions();
+
+        // Warn the user if only a subset of transactions is returned
+        $warning = '';
+        if (count($matchingTransactions) == $limit) {
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
+        } else {
+            if (count($matchingTransactions) == 0) {
+                $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
+            }
+        }
+
+        // Return json response
+        $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+
+        return Response::json(['html' => $view, 'warning' => $warning]);
     }
 
     /**
@@ -329,7 +369,7 @@ class RuleController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('rules.rule.edit.url'));
+        return redirect(session('rules.rule.edit.url'));
     }
 
     private function createDefaultRule()
@@ -374,7 +414,7 @@ class RuleController extends Controller
 
         if ($repository->count() === 0) {
             $data = [
-                'user_id'        => Auth::user()->id,
+                'user_id'     => Auth::user()->id,
                 'title'       => trans('firefly.default_rule_group_name'),
                 'description' => trans('firefly.default_rule_group_description'),
             ];
@@ -490,6 +530,31 @@ class RuleController extends Controller
                 ]
             )->render();
             $newIndex++;
+        }
+
+        return $triggers;
+    }
+
+    /**
+     * @param TestRuleFormRequest $request
+     *
+     * @return array
+     */
+    private function getValidTriggerList(TestRuleFormRequest $request): array
+    {
+
+        $triggers = [];
+        $data     = [
+            'rule-triggers'       => $request->get('rule-trigger'),
+            'rule-trigger-values' => $request->get('rule-trigger-value'),
+            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
+        ];
+        foreach ($data['rule-triggers'] as $index => $triggerType) {
+            $triggers[] = [
+                'type'           => $triggerType,
+                'value'          => $data['rule-trigger-values'][$index],
+                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+            ];
         }
 
         return $triggers;

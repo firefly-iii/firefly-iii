@@ -46,17 +46,18 @@
                                     <li><a href="{{ route('rules.rule-group.edit',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                     <li><a href="{{ route('rules.rule-group.delete',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a>
+                                                    class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                                    <li><a href="{{ route('rules.rule-group.select_transactions',ruleGroup.id) }}"><i
+                                                    class="fa fa-fw fa-anchor"></i> {{ 'execute_on_existing_transactions_short'|_ }}</a></li>
                                         {% if ruleGroup.order > 1 %}
                                     <li><a href="{{ route('rules.rule-group.up',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a>
+                                                    class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a></li>
                                         {% endif %}
                                         {% if ruleGroup.order < ruleGroups|length %}
                                     <li><a href="{{ route('rules.rule-group.down',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}
-                                        </a>
+                                        </a></li>
                                         {% endif %}
-                                    </li>
                                 </ul>
                             </div>
                         </div>

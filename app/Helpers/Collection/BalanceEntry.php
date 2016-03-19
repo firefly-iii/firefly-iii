@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Account as AccountModel;
@@ -17,15 +17,15 @@ class BalanceEntry
 
     /** @var  AccountModel */
     protected $account;
-    /** @var float */
-    protected $left = 0.0;
-    /** @var float */
-    protected $spent = 0.0;
+    /** @var string */
+    protected $left = '0';
+    /** @var string */
+    protected $spent = '0';
 
     /**
      * @return AccountModel
      */
-    public function getAccount()
+    public function getAccount(): AccountModel
     {
         return $this->account;
     }
@@ -33,39 +33,39 @@ class BalanceEntry
     /**
      * @param AccountModel $account
      */
-    public function setAccount($account)
+    public function setAccount(AccountModel $account)
     {
         $this->account = $account;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getLeft()
+    public function getLeft(): string
     {
         return $this->left;
     }
 
     /**
-     * @param float $left
+     * @param string $left
      */
-    public function setLeft($left)
+    public function setLeft(string $left)
     {
         $this->left = $left;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getSpent()
+    public function getSpent(): string
     {
         return $this->spent;
     }
 
     /**
-     * @param float $spent
+     * @param string $spent
      */
-    public function setSpent($spent)
+    public function setSpent(string $spent)
     {
         $this->spent = $spent;
     }

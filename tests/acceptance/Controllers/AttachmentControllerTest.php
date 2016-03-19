@@ -15,6 +15,7 @@ class AttachmentControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::delete
+     * @covers FireflyIII\Http\Controllers\AttachmentController::__construct
      */
     public function testDelete()
     {
@@ -42,6 +43,8 @@ class AttachmentControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', '/attachment/download/1');
         $this->assertResponseStatus(200);
+        // must have certain headers
+
     }
 
     /**
@@ -66,6 +69,8 @@ class AttachmentControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AttachmentController::update
+     * @covers FireflyIII\Http\Requests\AttachmentFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\AttachmentFormRequest::rules
      */
     public function testUpdate()
     {

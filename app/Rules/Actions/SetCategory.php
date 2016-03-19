@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * SetCategory.php
  * Copyright (C) 2016 Sander Dorigo
@@ -25,29 +26,29 @@ class SetCategory implements ActionInterface
 {
 
     private $action;
-    private $journal;
+
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction         $action
-     * @param TransactionJournal $journal
+     * @param RuleAction $action
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
-        $this->action  = $action;
-        $this->journal = $journal;
+        $this->action = $action;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
         $name     = $this->action->action_value;
         $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => Auth::user()->id]);
-        Log::debug('Will set category "' . $name . '" (#' . $category->id . ') on journal #' . $this->journal->id . '.');
-        $this->journal->categories()->sync([$category->id]);
+        Log::debug('Will set category "' . $name . '" (#' . $category->id . ') on journal #' . $journal->id . '.');
+        $journal->categories()->sync([$category->id]);
 
         return true;
     }

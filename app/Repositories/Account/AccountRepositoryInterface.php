@@ -1,9 +1,11 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -17,12 +19,13 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * @param array $types
      *
      * @return int
      */
-    public function countAccounts(array $types);
+    public function countAccounts(array $types): int;
 
     /**
      * @param Account $account
@@ -30,23 +33,30 @@ interface AccountRepositoryInterface
      *
      * @return boolean
      */
-    public function destroy(Account $account, Account $moveTo = null);
+    public function destroy(Account $account, Account $moveTo): bool;
 
     /**
-     * @param $accountId
-     *
-     * @deprecated
+     * @param int $accountId
      *
      * @return Account
      */
-    public function find($accountId);
+    public function find(int $accountId): Account;
+
+    /**
+     * Gets all the accounts by ID, for a given set.
+     *
+     * @param array $ids
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function get(array $ids): Collection;
 
     /**
      * @param array $types
      *
      * @return Collection
      */
-    public function getAccounts(array $types);
+    public function getAccounts(array $types): Collection;
 
     /**
      * This method returns the users credit cards, along with some basic information about the
@@ -59,7 +69,7 @@ interface AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getCreditCards(Carbon $date);
+    public function getCreditCards(Carbon $date): Collection;
 
     /**
      * @param TransactionJournal $journal
@@ -67,23 +77,23 @@ interface AccountRepositoryInterface
      *
      * @return Transaction
      */
-    public function getFirstTransaction(TransactionJournal $journal, Account $account);
+    public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 
     /**
      * @param Preference $preference
      *
      * @return Collection
      */
-    public function getFrontpageAccounts(Preference $preference);
+    public function getFrontpageAccounts(Preference $preference): Collection;
 
     /**
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return mixed
+     * @return Collection
      */
-    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end);
+    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Account $account
@@ -91,48 +101,57 @@ interface AccountRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, $page);
+    public function getJournals(Account $account, $page): LengthAwarePaginator;
 
     /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
      */
-    public function getPiggyBankAccounts();
+    public function getPiggyBankAccounts(): Collection;
 
     /**
      * Get savings accounts and the balance difference in the period.
      *
      * @return Collection
      */
-    public function getSavingsAccounts();
+    public function getSavingsAccounts() : Collection;
 
     /**
      * @param Account $account
      * @param Carbon  $date
      *
-     * @return float
+     * @return string
      */
-    public function leftOnAccount(Account $account, Carbon $date);
+    public function leftOnAccount(Account $account, Carbon $date): string;
 
     /**
      * @param Account $account
      *
-     * @return TransactionJournal|null
+     * @return TransactionJournal
      */
-    public function openingBalanceTransaction(Account $account);
+    public function openingBalanceTransaction(Account $account) : TransactionJournal;
 
     /**
      * @param array $data
      *
      * @return Account
      */
-    public function store(array $data);
+    public function store(array $data) : Account;
+
+    /**
+     * @param $account
+     * @param $name
+     * @param $value
+     *
+     * @return AccountMeta
+     */
+    public function storeMeta($account, $name, $value): AccountMeta;
 
     /**
      * @return string
      */
-    public function sumOfEverything();
+    public function sumOfEverything() : string;
 
     /**
      * @param Account $account
@@ -140,5 +159,5 @@ interface AccountRepositoryInterface
      *
      * @return Account
      */
-    public function update(Account $account, array $data);
+    public function update(Account $account, array $data): Account;
 }

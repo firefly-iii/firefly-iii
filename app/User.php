@@ -1,9 +1,12 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 /**
  * Class User
@@ -27,12 +30,22 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[]         $preferences
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[]               $roles
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[] $ruleGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[]          $ruleGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[]               $rules
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[]          $exportjobs
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereReset($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlockedCode($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {
-    use EntrustUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -40,16 +53,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
-
-
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
-
-
     /**
      * The database table used by the model.
      *
@@ -58,97 +67,154 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function accounts()
+    public function accounts(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Account');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Alias to eloquent many-to-many relation's attach() method.
+     *
+     * Full credit goes to: https://github.com/Zizaco/entrust
+     *
+     * @param mixed $role
      */
-    public function attachments()
+    public function attachRole($role)
+    {
+        if (is_object($role)) {
+            $role = $role->getKey();
+        }
+
+        if (is_array($role)) {
+            $role = $role['id'];
+        }
+
+        $this->roles()->attach($role);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function attachments(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Attachment');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function bills()
+    public function bills(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Bill');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function budgets()
+    public function budgets(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Budget');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function categories()
+    public function categories(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Category');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasMany
      */
-    public function piggyBanks()
+    public function exportjobs(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\ExportJob');
+    }
+
+    /**
+     * Checks if the user has a role by its name.
+     *
+     * Full credit goes to: https://github.com/Zizaco/entrust
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasRole(string $name): bool
+    {
+
+        foreach ($this->roles as $role) {
+            if ($role->name == $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return HasManyThrough
+     */
+    public function piggyBanks(): HasManyThrough
     {
         return $this->hasManyThrough('FireflyIII\Models\PiggyBank', 'FireflyIII\Models\Account');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function preferences()
+    public function preferences(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Preference');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function ruleGroups()
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany('FireflyIII\Models\Role');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function ruleGroups(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\RuleGroup');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function rules()
+    public function rules(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Rule');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function tags()
+    public function tags(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Tag');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactionjournals()
+    public function transactionjournals(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function transactions()
+    public function transactions(): HasManyThrough
     {
         return $this->hasManyThrough('FireflyIII\Models\Transaction', 'FireflyIII\Models\TransactionJournal');
     }

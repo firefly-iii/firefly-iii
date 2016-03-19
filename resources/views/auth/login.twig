@@ -14,6 +14,18 @@
         </div>
     {% endif %}
 
+    {% if session('logoutMessage') %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+                    </button>
+                    {{ session('logoutMessage') }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
 

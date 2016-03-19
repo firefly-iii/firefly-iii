@@ -17,6 +17,25 @@
                             <td>{{ trans('list.date') }}</td>
                             <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
                         </tr>
+                        {% if journal.interest_date %}
+                            <tr>
+                                <td>{{ trans('list.interest_date') }}</td>
+                                <td>{{ journal.interest_date.formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if journal.book_date %}
+                            <tr>
+                                <td>{{ trans('list.book_date') }}</td>
+                                <td>{{ journal.book_date.formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if journal.process_date %}
+                            <tr>
+                                <td>{{ trans('list.process_date') }}</td>
+                                <td>{{ journal.process_date.formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+
                         <tr>
                             <td>{{ trans('list.type') }}</td>
                             <td>{{ journal.transactiontype.type|_ }}</td>

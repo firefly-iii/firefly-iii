@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
@@ -16,7 +17,7 @@ class AccountId extends BasicConverter implements ConverterInterface
     /**
      * @return Account
      */
-    public function convert()
+    public function convert(): Account
     {
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
@@ -30,6 +31,9 @@ class AccountId extends BasicConverter implements ConverterInterface
 
             if (!is_null($account)) {
                 Log::debug('Found ' . $account->accountType->type . ' named "******" with ID: ' . $this->value . ' (not mapped) ');
+            } else {
+                // new account to prevent TypeErrors.
+                $account = new Account;
             }
         }
 

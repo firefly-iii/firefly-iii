@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Budget;
 
@@ -136,18 +137,6 @@ interface BudgetRepositoryInterface
     public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
 
     /**
-     * Returns the expenses for this budget grouped per month, with the date
-     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
-     *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getExpensesPerMonth(Budget $budget, Carbon $start, Carbon $end);
-
-    /**
      * @param Budget $budget
      *
      * @return Carbon
@@ -168,7 +157,7 @@ interface BudgetRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50);
+    public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50);
 
     /**
      * @param Carbon $start
@@ -179,12 +168,13 @@ interface BudgetRepositoryInterface
     public function getWithoutBudget(Carbon $start, Carbon $end);
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return mixed
+     * @return string
      */
-    public function getWithoutBudgetSum(Carbon $start, Carbon $end);
+    public function getWithoutBudgetSum(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * Returns an array with the following key:value pairs:
@@ -232,7 +222,7 @@ interface BudgetRepositoryInterface
      *
      * @return array
      */
-    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end);
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end): array;
 
     /**
      * @param array $data
@@ -252,10 +242,10 @@ interface BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param Carbon $date
-     * @param        $amount
+     * @param int    $amount
      *
      * @return mixed
      */
-    public function updateLimitAmount(Budget $budget, Carbon $date, $amount);
+    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount);
 
 }

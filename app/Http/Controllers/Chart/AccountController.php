@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -10,7 +11,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
-use Session;
 
 /**
  * Class AccountController
@@ -24,7 +24,7 @@ class AccountController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -44,7 +44,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -75,8 +75,8 @@ class AccountController extends Controller
      */
     public function expenseAccounts(ARI $repository)
     {
-        $start    = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end      = clone Session::get('end', Carbon::now()->endOfMonth());
+        $start    = clone session('start', Carbon::now()->startOfMonth());
+        $end      = clone session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccounts(['Expense account', 'Beneficiary account']);
 
         // chart properties for cache:
@@ -106,8 +106,8 @@ class AccountController extends Controller
     public function frontpage(ARI $repository)
     {
         $frontPage = Preferences::get('frontPageAccounts', []);
-        $start     = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end       = clone Session::get('end', Carbon::now()->endOfMonth());
+        $start     = clone session('start', Carbon::now()->startOfMonth());
+        $end       = clone session('end', Carbon::now()->endOfMonth());
         $accounts  = $repository->getFrontpageAccounts($frontPage);
 
         // chart properties for cache:
@@ -138,8 +138,8 @@ class AccountController extends Controller
     {
 
 
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();

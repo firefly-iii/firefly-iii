@@ -3,70 +3,115 @@
 use Auth;
 use Carbon\Carbon;
 use Crypt;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Models\TransactionJournalSupport;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property integer                                                          $id
- * @property \Carbon\Carbon                                                   $created_at
- * @property \Carbon\Carbon                                                   $updated_at
- * @property \Carbon\Carbon                                                   $deleted_at
- * @property integer                                                          $user_id
- * @property integer                                                          $transaction_type_id
- * @property integer                                                          $bill_id
- * @property integer                                                          $transaction_currency_id
- * @property string                                                           $description
- * @property boolean                                                          $completed
- * @property \Carbon\Carbon                                                   $date
- * @property boolean                                                          $encrypted
- * @property integer                                                          $order
- * @property integer                                                          $tag_count
- * @property-read Bill                                                        $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]           $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[]         $categories
- * @property-read mixed                                                       $amount_positive
- * @property-read mixed                                                       $amount
- * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]              $tags
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]      $transactions
- * @property-read mixed                                                       $destination_account
- * @property-read mixed                                                       $source_account
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]   $piggyBankEvents
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]       $attachments
- * @property-read TransactionCurrency                                         $transactionCurrency
- * @property-read TransactionType                                             $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[] $transactiongroups
- * @property-read \FireflyIII\User                                            $user
- * @property float                                                            $journalAmount
- * @property int                                                              $account_id
- * @property int                                                              $budget_id
- * @property string                                                           $account_name
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal accountIs($account)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal after($date)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal before($date)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal onDate($date)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal transactionTypes($types)
- * @method static \Illuminate\Database\Query\Builder|TransactionJournal withRelevantData()
- * @property string                                                           $type
- * @property \Carbon\Carbon $interest_date
- * @property \Carbon\Carbon $book_date
+ * @property integer                                                                                   $id
+ * @property \Carbon\Carbon                                                                            $created_at
+ * @property \Carbon\Carbon                                                                            $updated_at
+ * @property \Carbon\Carbon                                                                            $deleted_at
+ * @property integer                                                                                   $user_id
+ * @property integer                                                                                   $transaction_type_id
+ * @property integer                                                                                   $bill_id
+ * @property integer                                                                                   $transaction_currency_id
+ * @property string                                                                                    $description
+ * @property boolean                                                                                   $completed
+ * @property \Carbon\Carbon                                                                            $date
+ * @property \Carbon\Carbon                                                                            $interest_date
+ * @property \Carbon\Carbon                                                                            $book_date
+ * @property boolean                                                                                   $encrypted
+ * @property integer                                                                                   $order
+ * @property integer                                                                                   $tag_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]             $attachments
+ * @property-read \FireflyIII\Models\Bill                                                              $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]                 $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]               $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]         $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]                    $tags
+ * @property-read \FireflyIII\Models\TransactionCurrency                                               $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionType                                                   $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[]       $transactiongroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionjournalmeta
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]            $transactions
+ * @property-read \FireflyIII\User                                                                     $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
+ * @property-read string                                                                               $transaction_type_type
+ * @property-read string                                                                               $transaction_currency_code
+ * @property-read string                                                                               $destination_amount
+ * @property-read string                                                                               $destination_account_id
+ * @property-read string                                                                               $destination_account_name
+ * @property-read string                                                                               $destination_account_type
+ * @property-read string                                                                               $source_amount
+ * @property-read string                                                                               $source_account_id
+ * @property-read string                                                                               $source_account_name
+ * @property-read string                                                                               $source_account_type
+ * @property \Carbon\Carbon                                                                            $process_date
+ * @property int                                                                                       $account_id
+ * @property float                                                                                     $journalAmount
+ * @property string                                                                                    $account_name
+ * @property int                                                                                       $budget_id
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBillId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCompleted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereInterestDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBookDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereProcessDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal expanded()
+ * @mixin \Eloquent
  */
-class TransactionJournal extends Model
+class TransactionJournal extends TransactionJournalSupport
 {
     use SoftDeletes, ValidatingTrait;
 
+    /**
+     * Fields which queries must load.
+     * ['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']
+     */
+    const QUERYFIELDS
+        = [
+            'transaction_journals.*',
+            'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
+            'transaction_currencies.code AS transaction_currency_code',
+            // all for destination:
+            'destination.amount AS destination_amount', // is always positive
+            'destination_account.id AS destination_account_id',
+            'destination_account.name AS destination_account_name',
+            'destination_acct_type.type AS destination_account_type',
+            // all for source:
+            'source.amount AS source_amount', // is always negative
+            'source_account.id AS source_account_id',
+            'source_account.name AS source_account_name',
+            'source_acct_type.type AS source_account_type',
 
+        ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date'];
+    protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date', 'process_date'];
     /** @var array */
     protected $fillable
-        = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
+        = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',
+           'transaction_currency_id', 'description', 'completed',
+           'date', 'rent_date', 'encrypted', 'tag_count'];
     /** @var array */
     protected $hidden = ['encrypted'];
     /** @var array */
@@ -81,9 +126,6 @@ class TransactionJournal extends Model
             'date'                    => 'required|date',
             'encrypted'               => 'required|boolean',
         ];
-
-    /** @var  bool */
-    private $joinedTransactionTypes;
 
     /**
      * @param $value
@@ -143,46 +185,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return float
-     */
-    public function getAmountAttribute()
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty($this->id);
-        $cache->addProperty('amount');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        bcscale(2);
-        $transaction = $this->transactions->sortByDesc('amount')->first();
-        $amount      = $transaction->amount;
-        if ($this->isWithdrawal()) {
-            $amount = $amount * -1;
-        }
-        $cache->store($amount);
-
-        return $amount;
-
-    }
-
-    /**
-     * @return string
-     */
-    public function getAmountPositiveAttribute()
-    {
-        $amount = '0';
-        /** @var Transaction $t */
-        foreach ($this->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
      * @codeCoverageIgnore
      *
      * @param $value
@@ -199,31 +201,49 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return Account
-     */
-    public function getDestinationAccountAttribute()
-    {
-        $account = $this->transactions()->where('amount', '>', 0)->first()->account;
-
-        return $account;
-    }
-
-    /**
-     * @return Account
-     */
-    public function getSourceAccountAttribute()
-    {
-        $account = $this->transactions()->where('amount', '<', 0)->first()->account;
-
-        return $account;
-    }
-
-    /**
+     * @param $value
+     *
      * @return string
      */
-    public function getTransactionType()
+    public function getDestinationAccountNameAttribute($value)
     {
-        return $this->transactionType->type;
+        if (!is_null($value) && strlen(strval($value)) > 0) {
+            return Crypt::decrypt($value);
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public function getMeta($fieldName): string
+    {
+        foreach ($this->transactionjournalmeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getSourceAccountNameAttribute($value)
+    {
+        if (!is_null($value) && strlen(strval($value)) > 0) {
+            return Crypt::decrypt($value);
+        }
+
+        return null;
+
     }
 
     /**
@@ -231,44 +251,47 @@ class TransactionJournal extends Model
      */
     public function isDeposit()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::DEPOSIT;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::DEPOSIT;
         }
 
         return $this->transactionType->isDeposit();
     }
 
     /**
+     *
      * @return bool
      */
     public function isOpeningBalance()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::OPENING_BALANCE;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::OPENING_BALANCE;
         }
 
         return $this->transactionType->isOpeningBalance();
     }
 
     /**
+     *
      * @return bool
      */
     public function isTransfer()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::TRANSFER;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::TRANSFER;
         }
 
         return $this->transactionType->isTransfer();
     }
 
     /**
+     *
      * @return bool
      */
     public function isWithdrawal()
     {
-        if (!is_null($this->type)) {
-            return $this->type == TransactionType::WITHDRAWAL;
+        if (!is_null($this->transaction_type_type)) {
+            return $this->transaction_type_type == TransactionType::WITHDRAWAL;
         }
 
         return $this->transactionType->isWithdrawal();
@@ -325,6 +348,48 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @param EloquentBuilder $query
+     */
+    public function scopeExpanded(EloquentBuilder $query)
+    {
+        // left join transaction type:
+        if (!self::isJoined($query, 'transaction_types')) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        }
+
+        // left join transaction currency:
+        $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
+
+        // left join destination (for amount and account info).
+        $query->leftJoin(
+            'transactions as destination', function (JoinClause $join) {
+            $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
+                 ->where('destination.amount', '>', 0);
+        }
+        );
+        // join destination account
+        $query->leftJoin('accounts as destination_account', 'destination_account.id', '=', 'destination.account_id');
+        // join destination account type
+        $query->leftJoin('account_types as destination_acct_type', 'destination_account.account_type_id', '=', 'destination_acct_type.id');
+
+        // left join source (for amount and account info).
+        $query->leftJoin(
+            'transactions as source', function (JoinClause $join) {
+            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
+                 ->where('source.amount', '<', 0);
+        }
+        );
+        // join destination account
+        $query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
+        // join destination account type
+        $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id');
+
+        $query->with(['categories', 'budgets', 'attachments', 'bill']);
+
+
+    }
+
+    /**
      * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
@@ -332,29 +397,11 @@ class TransactionJournal extends Model
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
-        if (is_null($this->joinedTransactionTypes)) {
-            $query->leftJoin(
-                'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-            );
-            $this->joinedTransactionTypes = true;
+
+        if (!self::isJoined($query, 'transaction_types')) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
         $query->whereIn('transaction_types.type', $types);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * Automatically includes the 'with' parameters to get relevant related
-     * objects.
-     *
-     * @param EloquentBuilder $query
-     */
-    public function scopeWithRelevantData(EloquentBuilder $query)
-    {
-        $query->with(
-            ['transactions' => function (HasMany $q) {
-                $q->orderBy('amount', 'ASC');
-            }, 'transactionType', 'transactionCurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill']
-        );
     }
 
     /**
@@ -402,6 +449,14 @@ class TransactionJournal extends Model
     public function transactiongroups()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionGroup');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactionjournalmeta(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\TransactionJournalMeta');
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * FireRulesForStore.php
  * Copyright (C) 2016 Sander Dorigo
@@ -25,25 +26,15 @@ use Log;
  */
 class FireRulesForStore
 {
-    /**
-     * Create the event handler.
-     *
-     * @codeCoverageIgnore
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Connect a new transaction journal to any related piggy banks.
      *
      * @param  TransactionJournalStored $event
      *
-     * @return boolean
+     * @return bool
      */
-    public function handle(TransactionJournalStored $event)
+    public function handle(TransactionJournalStored $event): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
@@ -61,17 +52,18 @@ class FireRulesForStore
                            ->get(['rules.*']);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
-                $processor = new Processor($rule, $event->journal);
 
-                // get some return out of this?
-                $processor->handle();
+                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($event->journal);
 
                 if ($rule->stop_processing) {
-                    break;
+                    return true;
                 }
 
             }
         }
+
+        return true;
     }
 }

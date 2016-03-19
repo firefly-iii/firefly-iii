@@ -1,4 +1,12 @@
 <?php
+/**
+ * help.php
+ * Copyright (C) 2016 Sander Dorigo
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 return [
 
     // tour!
@@ -18,8 +26,6 @@ return [
     'option-menu-text'       => 'C\'est assez explicite.',
     'main-content-end-title' => 'Fin !',
     'main-content-end-text'  => 'N\'oubliez pas que chaque page a un petit point d\'interrogation en haut à droite. Cliquez dessus pour obtenir de l\'aide concernant la page actuelle.',
-
-
     'index'                    => 'index',
     'home'                     => 'home',
     'accounts-index'           => 'accounts.index',

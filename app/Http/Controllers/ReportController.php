@@ -1,10 +1,15 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Report\AccountReportHelperInterface;
+use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
+use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Session;
 use View;
@@ -17,15 +22,18 @@ use View;
 class ReportController extends Controller
 {
 
-
+    /** @var AccountReportHelperInterface */
     protected $accountHelper;
+    /** @var BalanceReportHelperInterface */
     protected $balanceHelper;
+
+    /** @var BudgetReportHelperInterface */
     protected $budgetHelper;
     /** @var ReportHelperInterface */
     protected $helper;
 
     /**
-     * @codeCoverageIgnore
+     *
      *
      * @param ReportHelperInterface $helper
      */
@@ -44,122 +52,6 @@ class ReportController extends Controller
     }
 
     /**
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
-     */
-    public function defaultMonth($reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-
-        // get report stuff!
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
-        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
-        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
-        $bills         = $this->helper->getBillReport($start, $end, $accounts);
-
-        // and some id's, joined:
-        $accountIds = join(',', $accounts->pluck('id')->toArray());
-
-        // continue!
-        return view(
-            'reports.default.month',
-            compact(
-                'start', 'end', 'reportType',
-                'accountReport',
-                'incomes', 'incomeTopLength',
-                'expenses', 'expenseTopLength',
-                'budgets', 'balance',
-                'categories',
-                'bills',
-                'accountIds', 'reportType'
-            )
-        );
-    }
-
-    /**
-     * @param $reportType
-     * @param $start
-     * @param $end
-     * @param $accounts
-     *
-     * @return View
-     */
-    public function defaultMultiYear($reportType, $start, $end, $accounts)
-    {
-
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-        // list of users stuff:
-        $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
-        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-
-        // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
-
-        return view(
-            'reports.default.multi-year',
-            compact(
-                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
-                'incomeTopLength', 'expenseTopLength'
-            )
-        );
-    }
-
-    /**
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
-     */
-    public function defaultYear($reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-
-        Session::flash('gaEventCategory', 'report');
-        Session::flash('gaEventAction', 'year');
-        Session::flash('gaEventLabel', $start->format('Y'));
-
-        // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
-
-        return view(
-            'reports.default.year',
-            compact(
-                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
-                'expenses', 'incomeTopLength', 'expenseTopLength'
-            )
-        );
-    }
-
-    /**
      * @param ARI $repository
      *
      * @return View
@@ -167,7 +59,8 @@ class ReportController extends Controller
      */
     public function index(ARI $repository)
     {
-        $start            = Session::get('first');
+        /** @var Carbon $start */
+        $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
 
@@ -182,31 +75,34 @@ class ReportController extends Controller
         $accountList = join(',', $accountIds);
 
 
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList','customFiscalYear'));
+        return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
     }
 
     /**
-     * @param            $reportType
+     * @param string     $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return View
+     * @throws FireflyException
      */
-    public function report($reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // throw an error if necessary.
         if ($end < $start) {
-            return view('error')->with('message', 'End date cannot be before start date, silly!');
+            throw new FireflyException('End date cannot be before start date, silly!');
         }
 
         // lower threshold
-        if ($start < Session::get('first')) {
-            $start = Session::get('first');
+        if ($start < session('first')) {
+            Log::debug('Start is ' . $start . ' but sessionfirst is ' . session('first'));
+            $start = session('first');
         }
 
         switch ($reportType) {
             default:
+                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
             case 'default':
 
                 View::share(
@@ -230,9 +126,143 @@ class ReportController extends Controller
                 }
 
                 return $this->defaultMonth($reportType, $start, $end, $accounts);
+            case 'audit':
+
+                View::share(
+                    'subTitle', trans(
+                                  'firefly.report_audit',
+                                  [
+                                      'start' => $start->formatLocalized($this->monthFormat),
+                                      'end'   => $end->formatLocalized($this->monthFormat),
+                                  ]
+                              )
+                );
+                View::share('subTitleIcon', 'fa-calendar');
+
+                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
+                break;
         }
 
 
+    }
+
+    /**
+     * @param            $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return View
+     */
+    private function defaultMonth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
+
+        // get report stuff!
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
+        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
+        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
+        $bills         = $this->helper->getBillReport($start, $end, $accounts);
+        $tags          = $this->helper->tagReport($start, $end, $accounts);
+
+        // and some id's, joined:
+        $accountIds = join(',', $accounts->pluck('id')->toArray());
+
+        // continue!
+        return view(
+            'reports.default.month',
+            compact(
+                'start', 'end', 'reportType',
+                'accountReport', 'tags',
+                'incomes', 'incomeTopLength',
+                'expenses', 'expenseTopLength',
+                'budgets', 'balance',
+                'categories',
+                'bills',
+                'accountIds', 'reportType'
+            )
+        );
+    }
+
+    /**
+     * @param $reportType
+     * @param $start
+     * @param $end
+     * @param $accounts
+     *
+     * @return View
+     */
+    private function defaultMultiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
+        // list of users stuff:
+        $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
+        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags          = $this->helper->tagReport($start, $end, $accounts);
+
+        // and some id's, joined:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        $accountIds = join(',', $accountIds);
+
+        return view(
+            'reports.default.multi-year',
+            compact(
+                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
+                'incomeTopLength', 'expenseTopLength', 'tags'
+            )
+        );
+    }
+
+    /**
+     * @param            $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return View
+     */
+    private function defaultYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
+
+        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags          = $this->helper->tagReport($start, $end, $accounts);
+
+        Session::flash('gaEventCategory', 'report');
+        Session::flash('gaEventAction', 'year');
+        Session::flash('gaEventLabel', $start->format('Y'));
+
+        // and some id's, joined:
+        $accountIds = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountIds[] = $account->id;
+        }
+        $accountIds = join(',', $accountIds);
+
+        return view(
+            'reports.default.year',
+            compact(
+                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
+                'expenses', 'incomeTopLength', 'expenseTopLength', 'tags'
+            )
+        );
     }
 
 

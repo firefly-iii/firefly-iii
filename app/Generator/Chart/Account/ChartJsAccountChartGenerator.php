@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Account;
 
 use Carbon\Carbon;
@@ -22,7 +22,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $data = [
             'count'  => 1,
@@ -30,7 +30,6 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
                                                'label' => trans('firefly.spent'),
                                                'data'  => []]]];
 
-        bcscale(2);
         $start->subDay();
         $ids           = $this->getIdsFromCollection($accounts);
         $startBalances = Steam::balancesById($ids, $start);
@@ -69,7 +68,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(Collection $accounts, Carbon $start, Carbon $end)
+    public function frontpage(Collection $accounts, Carbon $start, Carbon $end): array
     {
         // language:
         $format  = (string)trans('config.month_and_day');
@@ -116,7 +115,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function single(Account $account, Carbon $start, Carbon $end)
+    public function single(Account $account, Carbon $start, Carbon $end): array
     {
         // language:
         $format = (string)trans('config.month_and_day');
@@ -137,7 +136,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
 
         while ($end >= $current) {
             $theDate = $current->format('Y-m-d');
-            $balance = isset($range[$theDate]) ? $range[$theDate] : $previous;
+            $balance = $range[$theDate] ?? $previous;
 
             $data['labels'][]              = $current->formatLocalized($format);
             $data['datasets'][0]['data'][] = $balance;
@@ -153,7 +152,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      *
      * @return array
      */
-    protected function getIdsFromCollection(Collection $collection)
+    protected function getIdsFromCollection(Collection $collection): array
     {
         $ids = [];
         foreach ($collection as $entry) {
@@ -170,7 +169,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      *
      * @return string
      */
-    protected function isInArray($array, $entryId)
+    protected function isInArray($array, $entryId): string
     {
         if (isset($array[$entryId])) {
             return $array[$entryId];

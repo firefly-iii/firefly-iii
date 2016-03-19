@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace FireflyIII\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\PostProcessing;
 
 use Auth;
@@ -125,7 +125,7 @@ class OpposingAccount implements PostProcessorInterface
         // create if not exists:
         $name    = is_string($this->data['opposing-account-name']) && strlen($this->data['opposing-account-name']) > 0 ? $this->data['opposing-account-name']
             : $this->data['opposing-account-iban'];
-        $account = Account::firstOrCreateEncrypted(
+        $account = Account::firstOrCreateEncrypted( // See issue #180
             [
                 'user_id'         => Auth::user()->id,
                 'account_type_id' => $accountType->id,
@@ -195,7 +195,7 @@ class OpposingAccount implements PostProcessorInterface
             }
         }
         // create if not exists:
-        $account = Account::firstOrCreateEncrypted(
+        $account = Account::firstOrCreateEncrypted( // See issue #180
             [
                 'user_id'         => Auth::user()->id,
                 'account_type_id' => $accountType->id,

@@ -1,11 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
 
-use Auth;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
@@ -15,12 +17,25 @@ use Illuminate\Support\Collection;
  */
 class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * @return int
      */
     public function count()
     {
-        return Auth::user()->ruleGroups()->count();
+        return $this->user->ruleGroups()->count();
     }
 
     /**
@@ -59,7 +74,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function get()
     {
-        return Auth::user()->ruleGroups()->orderBy('order', 'ASC')->get();
+        return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
     }
 
     /**
@@ -67,9 +82,36 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function getHighestOrderRuleGroup()
     {
-        $entry = Auth::user()->ruleGroups()->max('order');
+        $entry = $this->user->ruleGroups()->max('order');
 
         return intval($entry);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getRuleGroupsWithRules(User $user): Collection
+    {
+        return $user->ruleGroups()
+                    ->orderBy('active', 'DESC')
+                    ->orderBy('order', 'ASC')
+                    ->with(
+                        [
+                            'rules'              => function (HasMany $query) {
+                                $query->orderBy('active', 'DESC');
+                                $query->orderBy('order', 'ASC');
+
+                            },
+                            'rules.ruleTriggers' => function (HasMany $query) {
+                                $query->orderBy('order', 'ASC');
+                            },
+                            'rules.ruleActions'  => function (HasMany $query) {
+                                $query->orderBy('order', 'ASC');
+                            },
+                        ]
+                    )->get();
     }
 
     /**
@@ -82,7 +124,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $order = $ruleGroup->order;
 
         // find the rule with order+1 and give it order-1
-        $other = Auth::user()->ruleGroups()->where('order', ($order + 1))->first();
+        $other = $this->user->ruleGroups()->where('order', ($order + 1))->first();
         if ($other) {
             $other->order = ($other->order - 1);
             $other->save();
@@ -103,7 +145,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $order = $ruleGroup->order;
 
         // find the rule with order-1 and give it order+1
-        $other = Auth::user()->ruleGroups()->where('order', ($order - 1))->first();
+        $other = $this->user->ruleGroups()->where('order', ($order - 1))->first();
         if ($other) {
             $other->order = ($other->order + 1);
             $other->save();
@@ -119,9 +161,9 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function resetRuleGroupOrder()
     {
-        Auth::user()->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
+        $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
 
-        $set   = Auth::user()->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
+        $set   = $this->user->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
         $count = 1;
         /** @var RuleGroup $entry */
         foreach ($set as $entry) {
@@ -202,5 +244,4 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         return $ruleGroup;
     }
-
 }

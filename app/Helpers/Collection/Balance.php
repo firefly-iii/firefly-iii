@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use Illuminate\Support\Collection;
@@ -39,23 +39,23 @@ class Balance
     /**
      * @return BalanceHeader
      */
-    public function getBalanceHeader()
+    public function getBalanceHeader(): BalanceHeader
     {
-        return $this->balanceHeader;
+        return $this->balanceHeader ?? new BalanceHeader;
     }
 
     /**
      * @param BalanceHeader $balanceHeader
      */
-    public function setBalanceHeader($balanceHeader)
+    public function setBalanceHeader(BalanceHeader $balanceHeader)
     {
         $this->balanceHeader = $balanceHeader;
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    public function getBalanceLines()
+    public function getBalanceLines(): Collection
     {
         return $this->balanceLines;
     }

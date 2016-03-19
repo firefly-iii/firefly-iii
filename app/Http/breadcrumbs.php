@@ -1,18 +1,23 @@
 <?php
+declare(strict_types = 1);
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbGenerator;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 
-/*
- * Back home.
+/**
+ * HOME
  */
 Breadcrumbs::register(
     'home',
@@ -29,18 +34,19 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('breadcrumbs.home'), route('index'));
     }
 );
-//trans('breadcrumbs.')
 
-// accounts
+/**
+ * ACCOUNTS
+ */
 Breadcrumbs::register(
-    'accounts.index', function (BreadCrumbGenerator $breadcrumbs, $what) {
+    'accounts.index', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
 }
 );
 
 Breadcrumbs::register(
-    'accounts.create', function (BreadCrumbGenerator $breadcrumbs, $what) {
+    'accounts.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push(trans('firefly.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
 }
@@ -73,7 +79,77 @@ Breadcrumbs::register(
 }
 );
 
-// budgets.
+/**
+ * ATTACHMENTS
+ */
+Breadcrumbs::register(
+    'attachments.edit', function (BreadCrumbGenerator $breadcrumbs, Attachment $attachment) {
+    $object = $attachment->attachable;
+    if ($object instanceof TransactionJournal) {
+        $breadcrumbs->parent('transactions.show', $object);
+        $breadcrumbs->push($attachment->filename, route('attachments.edit', [$attachment]));
+
+    } else {
+        throw new FireflyException('Cannot make breadcrumb for attachment connected to object of type ' . get_class($object));
+    }
+
+}
+);
+Breadcrumbs::register(
+    'attachments.delete', function (BreadCrumbGenerator $breadcrumbs, Attachment $attachment) {
+
+    $object = $attachment->attachable;
+    if ($object instanceof TransactionJournal) {
+        $breadcrumbs->parent('transactions.show', $object);
+        $breadcrumbs->push(trans('firefly.delete_attachment', ['name' => $attachment->filename]), route('attachments.edit', [$attachment]));
+
+    } else {
+        throw new FireflyException('Cannot make breadcrumb for attachment connected to object of type ' . get_class($object));
+    }
+}
+);
+
+/**
+ * BILLS
+ */
+Breadcrumbs::register(
+    'bills.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('breadcrumbs.bills'), route('bills.index'));
+}
+);
+Breadcrumbs::register(
+    'bills.create', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('bills.index');
+    $breadcrumbs->push(trans('breadcrumbs.newBill'), route('bills.create'));
+}
+);
+
+Breadcrumbs::register(
+    'bills.edit', function (BreadCrumbGenerator $breadcrumbs, Bill $bill) {
+    $breadcrumbs->parent('bills.show', $bill);
+    $breadcrumbs->push(trans('breadcrumbs.edit_bill', ['name' => e($bill->name)]), route('bills.edit', [$bill->id]));
+}
+);
+Breadcrumbs::register(
+    'bills.delete', function (BreadCrumbGenerator $breadcrumbs, Bill $bill) {
+    $breadcrumbs->parent('bills.show', $bill);
+    $breadcrumbs->push(trans('breadcrumbs.delete_bill', ['name' => e($bill->name)]), route('bills.delete', [$bill->id]));
+}
+);
+
+Breadcrumbs::register(
+    'bills.show', function (BreadCrumbGenerator $breadcrumbs, Bill $bill) {
+    $breadcrumbs->parent('bills.index');
+    $breadcrumbs->push(e($bill->name), route('bills.show', [$bill->id]));
+
+}
+);
+
+
+/**
+ * BUDGETS
+ */
 Breadcrumbs::register(
     'budgets.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -119,7 +195,9 @@ Breadcrumbs::register(
 }
 );
 
-// categories
+/**
+ * CATEGORIES
+ */
 Breadcrumbs::register(
     'categories.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -174,7 +252,9 @@ Breadcrumbs::register(
 }
 );
 
-// CSV:
+/**
+ * CSV CONTROLLER
+ */
 Breadcrumbs::register(
     'csv.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -210,8 +290,9 @@ Breadcrumbs::register(
 }
 );
 
-
-// currencies.
+/**
+ * CURRENCIES
+ */
 Breadcrumbs::register(
     'currency.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -239,8 +320,19 @@ Breadcrumbs::register(
 }
 );
 
+/**
+ * EXPORT
+ */
+Breadcrumbs::register(
+    'export.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.export_data'), route('export.index'));
+}
+);
 
-// piggy banks
+/**
+ * PIGGY BANKS
+ */
 Breadcrumbs::register(
     'piggy-banks.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -275,7 +367,9 @@ Breadcrumbs::register(
 }
 );
 
-// preferences
+/**
+ * PREFERENCES
+ */
 Breadcrumbs::register(
     'preferences', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -284,7 +378,17 @@ Breadcrumbs::register(
 }
 );
 
-// profile
+Breadcrumbs::register(
+    'preferences.code', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences'));
+
+}
+);
+
+/**
+ * PROFILE
+ */
 Breadcrumbs::register(
     'profile', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -307,42 +411,9 @@ Breadcrumbs::register(
 }
 );
 
-// bills
-Breadcrumbs::register(
-    'bills.index', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.bills'), route('bills.index'));
-}
-);
-Breadcrumbs::register(
-    'bills.create', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('bills.index');
-    $breadcrumbs->push(trans('breadcrumbs.newBill'), route('bills.create'));
-}
-);
-
-Breadcrumbs::register(
-    'bills.edit', function (BreadCrumbGenerator $breadcrumbs, Bill $bill) {
-    $breadcrumbs->parent('bills.show', $bill);
-    $breadcrumbs->push(trans('breadcrumbs.edit_bill', ['name' => e($bill->name)]), route('bills.edit', [$bill->id]));
-}
-);
-Breadcrumbs::register(
-    'bills.delete', function (BreadCrumbGenerator $breadcrumbs, Bill $bill) {
-    $breadcrumbs->parent('bills.show', $bill);
-    $breadcrumbs->push(trans('breadcrumbs.delete_bill', ['name' => e($bill->name)]), route('bills.delete', [$bill->id]));
-}
-);
-
-Breadcrumbs::register(
-    'bills.show', function (BreadCrumbGenerator $breadcrumbs, Bill $bill) {
-    $breadcrumbs->parent('bills.index');
-    $breadcrumbs->push(e($bill->name), route('bills.show', [$bill->id]));
-
-}
-);
-
-// reports
+/**
+ * REPORTS
+ */
 Breadcrumbs::register(
     'reports.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -374,7 +445,56 @@ Breadcrumbs::register(
 }
 );
 
-// search
+Breadcrumbs::register(
+    'rules.rule.create', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.rule.create', [$ruleGroup]));
+}
+);
+Breadcrumbs::register(
+    'rules.rule.edit', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.rule.edit', [$rule]));
+}
+);
+Breadcrumbs::register(
+    'rules.rule.delete', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.delete_rule', ['title' => $rule->title]), route('rules.rule.delete', [$rule]));
+}
+);
+Breadcrumbs::register(
+    'rules.rule-group.create', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.make_new_rule_group'), route('rules.rule-group.create'));
+}
+);
+Breadcrumbs::register(
+    'rules.rule-group.edit', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]), route('rules.rule-group.edit', [$ruleGroup]));
+}
+);
+Breadcrumbs::register(
+    'rules.rule-group.delete', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]), route('rules.rule-group.delete', [$ruleGroup]));
+}
+);
+
+Breadcrumbs::register(
+    'rules.rule-group.select_transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(
+        trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]), route('rules.rule-group.select_transactions', [$ruleGroup])
+    );
+}
+);
+
+
+/**
+ * SEARCH
+ */
 Breadcrumbs::register(
     'search', function (BreadCrumbGenerator $breadcrumbs, $query) {
     $breadcrumbs->parent('home');
@@ -382,43 +502,9 @@ Breadcrumbs::register(
 }
 );
 
-// transactions
-Breadcrumbs::register(
-    'transactions.index', function (BreadCrumbGenerator $breadcrumbs, $what) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
-}
-);
-Breadcrumbs::register(
-    'transactions.create', function (BreadCrumbGenerator $breadcrumbs, $what) {
-    $breadcrumbs->parent('transactions.index', $what);
-    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
-}
-);
-
-Breadcrumbs::register(
-    'transactions.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
-    $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', [$journal->id]));
-}
-);
-Breadcrumbs::register(
-    'transactions.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
-    $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => e($journal->description)]), route('transactions.delete', [$journal->id]));
-}
-);
-
-Breadcrumbs::register(
-    'transactions.show', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
-
-    $breadcrumbs->parent('transactions.index', strtolower($journal->getTransactionType()));
-    $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
-
-}
-);
-
-// tags
+/**
+ * TAGS
+ */
 Breadcrumbs::register(
     'tags.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -452,5 +538,44 @@ Breadcrumbs::register(
     'tags.show', function (BreadCrumbGenerator $breadcrumbs, Tag $tag) {
     $breadcrumbs->parent('tags.index');
     $breadcrumbs->push(e($tag->tag), route('tags.show', [$tag->id]));
+}
+);
+
+/**
+ * TRANSACTIONS
+ */
+Breadcrumbs::register(
+    'transactions.index', function (BreadCrumbGenerator $breadcrumbs, string $what) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
+}
+);
+Breadcrumbs::register(
+    'transactions.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
+    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
+}
+);
+
+Breadcrumbs::register(
+    'transactions.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+    $breadcrumbs->parent('transactions.show', $journal);
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', [$journal->id]));
+}
+);
+Breadcrumbs::register(
+    'transactions.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+    $breadcrumbs->parent('transactions.show', $journal);
+    $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => e($journal->description)]), route('transactions.delete', [$journal->id]));
+}
+);
+
+Breadcrumbs::register(
+    'transactions.show', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+
+    $what = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
+
 }
 );

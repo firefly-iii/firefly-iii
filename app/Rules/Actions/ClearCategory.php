@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * ClearCategory.php
  * Copyright (C) 2016 Sander Dorigo
@@ -22,26 +23,26 @@ class ClearCategory implements ActionInterface
 {
 
     private $action;
-    private $journal;
+
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction         $action
-     * @param TransactionJournal $journal
+     * @param RuleAction $action
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal)
+    public function __construct(RuleAction $action)
     {
-        $this->action  = $action;
-        $this->journal = $journal;
+        $this->action = $action;
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act()
+    public function act(TransactionJournal $journal)
     {
-        $this->journal->categories()->detach();
+        $journal->categories()->detach();
 
         return true;
     }

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Attachments;
 
 use Auth;
@@ -9,7 +9,10 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
 use Input;
+use Log;
+use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use TypeError;
 
 /**
  * Class AttachmentHelper
@@ -28,6 +31,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     /** @var int */
     protected $maxUploadSize;
 
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    protected $uploadDisk;
+
     /**
      *
      */
@@ -37,6 +43,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->allowedMimes  = Config::get('firefly.allowedMimes');
         $this->errors        = new MessageBag;
         $this->messages      = new MessageBag;
+        $this->uploadDisk    = Storage::disk('upload');
     }
 
     /**
@@ -44,7 +51,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return string
      */
-    public function getAttachmentLocation(Attachment $attachment)
+    public function getAttachmentLocation(Attachment $attachment): string
     {
         $path = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
 
@@ -54,7 +61,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * @return MessageBag
      */
-    public function getErrors()
+    public function getErrors(): MessageBag
     {
         return $this->errors;
     }
@@ -62,7 +69,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * @return MessageBag
      */
-    public function getMessages()
+    public function getMessages(): MessageBag
     {
         return $this->messages;
     }
@@ -72,9 +79,17 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model)
+    public function saveAttachmentsForModel(Model $model): bool
     {
-        $files = Input::file('attachments');
+        $files = null;
+        try {
+            if (Input::hasFile('attachments')) {
+                $files = Input::file('attachments');
+            }
+        } catch (TypeError $e) {
+            // Log it, do nothing else.
+            Log::error($e->getMessage());
+        }
 
         if (is_array($files)) {
             foreach ($files as $entry) {
@@ -97,7 +112,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function hasFile(UploadedFile $file, Model $model)
+    protected function hasFile(UploadedFile $file, Model $model): bool
     {
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
@@ -115,16 +130,17 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     *
      * @param UploadedFile $file
      * @param Model        $model
      *
-     * @return bool|Attachment
+     * @return Attachment
      */
-    protected function processFile(UploadedFile $file, Model $model)
+    protected function processFile(UploadedFile $file, Model $model): Attachment
     {
         $validation = $this->validateUpload($file, $model);
         if ($validation === false) {
-            return false;
+            return new Attachment;
         }
 
         $attachment = new Attachment; // create Attachment object.
@@ -137,15 +153,13 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->uploaded = 0;
         $attachment->save();
 
-        $path      = $file->getRealPath(); // encrypt and move file to storage.
-        $content   = file_get_contents($path);
+        $fileObject = $file->openFile('r');
+        $fileObject->rewind();
+        $content   = $fileObject->fread($file->getSize());
         $encrypted = Crypt::encrypt($content);
 
         // store it:
-        $upload = $this->getAttachmentLocation($attachment);
-        if (is_writable(dirname($upload))) {
-            file_put_contents($upload, $encrypted);
-        }
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
 
         $attachment->uploaded = 1; // update attachment
         $attachment->save();
@@ -165,7 +179,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function validMime(UploadedFile $file)
+    protected function validMime(UploadedFile $file): bool
     {
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
@@ -185,7 +199,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function validSize(UploadedFile $file)
+    protected function validSize(UploadedFile $file): bool
     {
         $size = $file->getSize();
         $name = e($file->getClientOriginalName());
@@ -205,7 +219,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    protected function validateUpload(UploadedFile $file, Model $model)
+    protected function validateUpload(UploadedFile $file, Model $model): bool
     {
         if (!$this->validMime($file)) {
             return false;

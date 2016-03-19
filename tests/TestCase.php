@@ -1,10 +1,13 @@
 <?php
 use Carbon\Carbon;
+use FireflyIII\Models\Preference;
 use FireflyIII\User;
 
 /**
  * Class TestCase
  */
+
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
@@ -13,6 +16,37 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      * @var string
      */
     protected $baseUrl = 'http://localhost';
+
+    /**
+     * @param User   $user
+     * @param string $range
+     */
+    public function changeDateRange(User $user, $range)
+    {
+        $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
+        if (in_array($range, $valid)) {
+            Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
+            Preference::create(
+                [
+                    'user_id' => $user->id,
+                    'name'    => 'viewRange',
+                    'data'    => $range,
+                ]
+            );
+            // set period to match?
+
+        }
+        // custom is a weird range
+        // (20 days):
+        if ($range === 'custom') {
+            $this->session(
+                [
+                    'start'   => Carbon::now()->subDays(20),
+                    'end' => Carbon::now(),
+                ]
+            );
+        }
+    }
 
     /**
      * Creates the application.
@@ -26,6 +60,22 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         return $app;
+    }
+
+    /**
+     * @return array
+     */
+    public function dateRangeProvider()
+    {
+        return [
+            'one day'      => ['1D'],
+            'one week'     => ['1W'],
+            'one month'    => ['1M'],
+            'three months' => ['3M'],
+            'six months'   => ['6M'],
+            'one year'     => ['1Y'],
+            'custom range' => ['custom'],
+        ];
     }
 
     /**
@@ -65,6 +115,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         }
         // if the database copy does exists, copy back as original.
 
+
         $this->session(
             [
                 'start' => Carbon::now()->startOfMonth(),
@@ -83,11 +134,14 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function tearDown()
     {
         parent::tearDown();
+    }
 
-        // delete copy original.
-        //$original = __DIR__.'/../storage/database/testing.db';
-        //unlink($original);
-
+    /**
+     * @return User
+     */
+    public function toBeDeletedUser()
+    {
+        return User::find(3);
     }
 
     /**
@@ -95,7 +149,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     public function user()
     {
-        return User::find(1);
+        $user = User::find(1);
+
+        return $user;
     }
 
     /**

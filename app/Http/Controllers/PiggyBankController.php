@@ -28,7 +28,7 @@ class PiggyBankController extends Controller
 {
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -47,8 +47,8 @@ class PiggyBankController extends Controller
      */
     public function add(ARI $repository, PiggyBank $piggyBank)
     {
-        bcscale(2);
-        $date          = Session::get('end', Carbon::now()->endOfMonth());
+        /** @var Carbon $date */
+        $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
@@ -71,7 +71,7 @@ class PiggyBankController extends Controller
         $subTitleIcon = 'fa-plus';
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('piggy-banks.create.fromStore') !== true) {
+        if (session('piggy-banks.create.fromStore') !== true) {
             Session::put('piggy-banks.create.url', URL::previous());
         }
         Session::forget('piggy-banks.create.fromStore');
@@ -112,7 +112,7 @@ class PiggyBankController extends Controller
         Preferences::mark();
         $repository->destroy($piggyBank);
 
-        return redirect(Session::get('piggy-banks.delete.url'));
+        return redirect(session('piggy-banks.delete.url'));
     }
 
     /**
@@ -148,7 +148,7 @@ class PiggyBankController extends Controller
         Session::flash('gaEventAction', 'edit');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('piggy-banks.edit.fromUpdate') !== true) {
+        if (session('piggy-banks.edit.fromUpdate') !== true) {
             Session::put('piggy-banks.edit.url', URL::previous());
         }
         Session::forget('piggy-banks.edit.fromUpdate');
@@ -166,8 +166,8 @@ class PiggyBankController extends Controller
     {
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
-        $end        = Session::get('end', Carbon::now()->endOfMonth());
-        bcscale(2);
+        /** @var Carbon $end */
+        $end = session('end', Carbon::now()->endOfMonth());
 
         $accounts = [];
         /** @var PiggyBank $piggyBank */
@@ -185,8 +185,8 @@ class PiggyBankController extends Controller
                     'name'              => $account->name,
                     'balance'           => Steam::balance($account, $end, true),
                     'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
-                    'sumOfSaved'        => $piggyBank->savedSoFar,
-                    'sumOfTargets'      => round($piggyBank->targetamount, 2),
+                    'sumOfSaved'        => strval($piggyBank->savedSoFar),
+                    'sumOfTargets'      => strval(round($piggyBank->targetamount, 2)),
                     'leftToSave'        => $piggyBank->leftToSave,
                 ];
             } else {
@@ -226,9 +226,9 @@ class PiggyBankController extends Controller
      */
     public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
     {
-        bcscale(2);
-        $amount        = round(Input::get('amount'), 2);
-        $date          = Session::get('end', Carbon::now()->endOfMonth());
+        $amount = round(Input::get('amount'), 2);
+        /** @var Carbon $date */
+        $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
@@ -261,7 +261,6 @@ class PiggyBankController extends Controller
     public function postRemove(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $amount = round(Input::get('amount'), 2);
-        bcscale(2);
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
@@ -271,7 +270,7 @@ class PiggyBankController extends Controller
             $repetition->save();
 
             // create event
-            $repository->createEvent($piggyBank, $amount * -1);
+            $repository->createEvent($piggyBank, bcmul($amount, '-1'));
 
             Session::flash('success', 'Removed ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
             Preferences::mark();
@@ -341,7 +340,7 @@ class PiggyBankController extends Controller
 
 
         // redirect to previous URL.
-        return redirect(Session::get('piggy-banks.create.url'));
+        return redirect(session('piggy-banks.create.url'));
     }
 
     /**
@@ -376,7 +375,7 @@ class PiggyBankController extends Controller
 
 
         // redirect to previous URL.
-        return redirect(Session::get('piggy-banks.edit.url'));
+        return redirect(session('piggy-banks.edit.url'));
 
 
     }

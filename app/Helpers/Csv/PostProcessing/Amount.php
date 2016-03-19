@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Csv\PostProcessing;
 
@@ -19,8 +19,9 @@ class Amount implements PostProcessorInterface
      */
     public function process()
     {
-        bcscale(2);
-        $this->data['amount'] = bcmul($this->data['amount'], $this->data['amount-modifier']);
+        $amount               = $this->data['amount'] ?? '0';
+        $modifier             = strval($this->data['amount-modifier']);
+        $this->data['amount'] = bcmul($amount, $modifier);
 
         return $this->data;
     }

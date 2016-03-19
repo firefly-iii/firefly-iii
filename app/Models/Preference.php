@@ -15,6 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                $data
  * @property string                $data_encrypted
  * @property-read \FireflyIII\User $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereNameEncrypted($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereData($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereDataEncrypted($value)
+ * @mixin \Eloquent
  */
 class Preference extends Model
 {

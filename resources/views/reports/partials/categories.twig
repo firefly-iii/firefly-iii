@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th>{{ 'categories'|_ }}</th>
-                <th>{{ 'spent'|_ }}</th>
+                <th colspan="2">{{ 'spent'|_ }}</th>
             </tr>
             </thead>
             <tbody>
@@ -17,6 +17,9 @@
                         <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
                     </td>
                     <td>{{ cat.spent|formatAmount }}</td>
+                    <td style="width:20px;">
+                        <i class="fa fa-fw fa-info-circle text-muted"></i>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

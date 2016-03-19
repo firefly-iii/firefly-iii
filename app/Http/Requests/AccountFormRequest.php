@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -10,7 +11,7 @@ use Input;
 /**
  * Class AccountFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class AccountFormRequest extends Request
@@ -47,6 +48,7 @@ class AccountFormRequest extends Request
             'iban'                              => 'iban',
             'virtualBalance'                    => 'numeric',
             'openingBalanceDate'                => 'date',
+            'accountNumber'                     => 'between:1,255|uniqueAccountNumberForUser',
             'accountRole'                       => 'in:' . $accountRoles,
             'active'                            => 'boolean',
             'ccType'                            => 'in:' . $ccPaymentTypes,

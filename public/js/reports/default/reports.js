@@ -116,7 +116,7 @@ function drawChart() {
     }
 
     if (typeof lineChart !== 'undefined' && typeof accountIds !== 'undefined') {
-        lineChart('/chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
+        lineChart('chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
     }
 }
 
@@ -126,7 +126,7 @@ function openModal(e) {
     var target = $(e.target).parent();
     var URL = target.attr('href');
 
-    $.get(URL).success(function (data) {
+    $.get(URL).done(function (data) {
         $('#defaultModal').empty().html(data).modal('show');
 
     }).fail(function () {

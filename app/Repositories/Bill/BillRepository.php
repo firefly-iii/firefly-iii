@@ -1,8 +1,8 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Bill;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
@@ -10,10 +10,10 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 
 /**
@@ -24,30 +24,45 @@ use Navigation;
 class BillRepository implements BillRepositoryInterface
 {
 
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * @param Bill $bill
      *
-     * @return boolean|null
+     * @return boolean
      */
-    public function destroy(Bill $bill)
+    public function destroy(Bill $bill): bool
     {
-        return $bill->delete();
+        $bill->delete();
+
+        return true;
     }
 
     /**
      * @return Collection
      */
-    public function getActiveBills()
+    public function getActiveBills(): Collection
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()
-                   ->where('active', 1)
-                   ->get(
-                       [
-                           'bills.*',
-                           DB::Raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
-                       ]
-                   )->sortBy('name');
+        $set = $this->user->bills()
+                          ->where('active', 1)
+                          ->get(
+                              [
+                                  'bills.*',
+                                  DB::raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
+                              ]
+                          )->sortBy('name');
 
         return $set;
     }
@@ -62,26 +77,27 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end)
+    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection
     {
         $ids = $bills->pluck('id')->toArray();
 
-        $set = Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->whereIn('bill_id', $ids)
-                   ->before($end)
-                   ->after($start)
-                   ->groupBy('transaction_journals.bill_id')
-                   ->get(
-                       [
-                           'transaction_journals.bill_id',
-                           DB::Raw('SUM(`transactions`.`amount`) as `journalAmount`'),
-                       ]
-                   );
+        $set = $this->user->transactionjournals()
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->whereIn('bill_id', $ids)
+                          ->before($end)
+                          ->after($start)
+                          ->groupBy('transaction_journals.bill_id')
+                          ->get(
+                              [
+                                  'transaction_journals.bill_id',
+                                  'transaction_journals.id',
+                                  DB::raw('SUM(`transactions`.`amount`) as `journalAmount`'),
+                              ]
+                          );
 
         return $set;
     }
@@ -89,10 +105,10 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @return Collection
      */
-    public function getBills()
+    public function getBills(): Collection
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
+        $set = $this->user->bills()->orderBy('name', 'ASC')->get();
 
         $set = $set->sortBy(
             function (Bill $bill) {
@@ -111,24 +127,24 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getBillsForAccounts(Collection $accounts)
+    public function getBillsForAccounts(Collection $accounts): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->bills()
-                   ->leftJoin(
-                       'transaction_journals', function (JoinClause $join) {
-                       $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->whereIn('transactions.account_id', $ids)
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->groupBy('bills.id')
-                   ->get(['bills.*']);
+        $set = $this->user->bills()
+                          ->leftJoin(
+                              'transaction_journals', function (JoinClause $join) {
+                              $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
+                          }
+                          )
+                          ->leftJoin(
+                              'transactions', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                          }
+                          )
+                          ->whereIn('transactions.account_id', $ids)
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->groupBy('bills.id')
+                          ->get(['bills.*']);
 
         $set = $set->sortBy(
             function (Bill $bill) {
@@ -151,7 +167,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return string
      */
-    public function getBillsPaidInRange(Carbon $start, Carbon $end)
+    public function getBillsPaidInRange(Carbon $start, Carbon $end): string
     {
         $amount = '0';
         $bills  = $this->getActiveBills();
@@ -161,16 +177,17 @@ class BillRepository implements BillRepositoryInterface
             $ranges = $this->getRanges($bill, $start, $end);
 
             foreach ($ranges as $range) {
-                $paid   = $bill->transactionjournals()
-                               ->before($range['end'])
-                               ->after($range['start'])
-                               ->leftJoin(
-                                   'transactions', function (JoinClause $join) {
-                                   $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                               }
-                               )
-                               ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $amount = bcadd($amount, $paid->sum_amount);
+                $paid      = $bill->transactionjournals()
+                                  ->before($range['end'])
+                                  ->after($range['start'])
+                                  ->leftJoin(
+                                      'transactions', function (JoinClause $join) {
+                                      $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                  }
+                                  )
+                                  ->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                $sumAmount = $paid->sum_amount ?? '0';
+                $amount    = bcadd($amount, $sumAmount);
             }
         }
 
@@ -185,7 +202,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return string
      */
-    public function getBillsUnpaidInRange(Carbon $start, Carbon $end)
+    public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string
     {
         $amount = '0';
         $bills  = $this->getActiveBills();
@@ -195,16 +212,17 @@ class BillRepository implements BillRepositoryInterface
             $ranges   = $this->getRanges($bill, $start, $end);
             $paidBill = '0';
             foreach ($ranges as $range) {
-                $paid     = $bill->transactionjournals()
-                                 ->before($range['end'])
-                                 ->after($range['start'])
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-                                 }
-                                 )
-                                 ->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $paidBill = bcadd($paid->sum_amount, $paidBill);
+                $paid      = $bill->transactionjournals()
+                                  ->before($range['end'])
+                                  ->after($range['start'])
+                                  ->leftJoin(
+                                      'transactions', function (JoinClause $join) {
+                                      $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+                                  }
+                                  )
+                                  ->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                $sumAmount = $paid->sum_amount ?? '0';
+                $paidBill  = bcadd($sumAmount, $paidBill);
             }
             if ($paidBill == 0) {
                 $amount = bcadd($amount, $bill->expectedAmount);
@@ -223,7 +241,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return string
      */
-    public function getCreditCardBill(Carbon $start, Carbon $end)
+    public function getCreditCardBill(Carbon $start, Carbon $end): string
     {
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -242,7 +260,7 @@ class BillRepository implements BillRepositoryInterface
                       ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                       ->where('transactions.account_id', $creditCard->id)
                       ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-                      ->where('transaction_journals.user_id', Auth::user()->id)
+                      ->where('transaction_journals.user_id', $this->user->id)
                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                       ->where('transaction_types.type', TransactionType::TRANSFER);
@@ -251,7 +269,7 @@ class BillRepository implements BillRepositoryInterface
                     'transactions', function (JoinClause $join) {
                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
                 }
-                )->first([DB::Raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
+                )->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
 
                 $amount = bcadd($amount, $set->sum_amount);
             } else {
@@ -271,19 +289,14 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournals(Bill $bill)
+    public function getJournals(Bill $bill): Collection
     {
         $set = $bill->transactionjournals()
-                    ->leftJoin(
-                        'transactions', function (JoinClause $join) {
-                        $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                             ->where('amount', '<', 0);
-                    }
-                    )
+                    ->expanded()
                     ->orderBy('transaction_journals.date', 'DESC')
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
-                    ->get(['transaction_journals.*', 'transactions.amount as journalAmount']);
+                    ->get(TransactionJournal::QUERYFIELDS);
 
         return $set;
     }
@@ -299,7 +312,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end)
+    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         return $bill->transactionjournals()->before($end)->after($start)->get();
     }
@@ -309,7 +322,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getPossiblyRelatedJournals(Bill $bill)
+    public function getPossiblyRelatedJournals(Bill $bill): Collection
     {
         $set = new Collection(
             DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)
@@ -319,7 +332,7 @@ class BillRepository implements BillRepositoryInterface
 
         $journals = new Collection;
         if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
+            $journals = $this->user->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
                 ['transaction_journals.*']
             );
         }
@@ -336,9 +349,9 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return mixed
+     * @return array
      */
-    public function getRanges(Bill $bill, Carbon $start, Carbon $end)
+    public function getRanges(Bill $bill, Carbon $start, Carbon $end): array
     {
         $startOfBill = $bill->date;
         $startOfBill = Navigation::startOfPeriod($startOfBill, $bill->repeat_freq);
@@ -373,16 +386,16 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return Carbon|null
+     * @return \Carbon\Carbon
      */
-    public function lastFoundMatch(Bill $bill)
+    public function lastFoundMatch(Bill $bill): Carbon
     {
         $last = $bill->transactionjournals()->orderBy('date', 'DESC')->first();
         if ($last) {
             return $last->date;
         }
 
-        return null;
+        return Carbon::now()->addDays(2); // in the future!
     }
 
     /**
@@ -390,10 +403,11 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return \Carbon\Carbon
      */
-    public function nextExpectedMatch(Bill $bill)
+    public function nextExpectedMatch(Bill $bill): Carbon
     {
 
-        $finalDate = null;
+        $finalDate       = Carbon::now();
+        $finalDate->year = 1900;
         if ($bill->active == 0) {
             return $finalDate;
         }
@@ -437,11 +451,10 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill               $bill
      * @param TransactionJournal $journal
      *
-     * @return boolean|null
+     * @return bool
      */
-    public function scan(Bill $bill, TransactionJournal $journal)
+    public function scan(Bill $bill, TransactionJournal $journal): bool
     {
-
         /*
          * Can only support withdrawals.
          */
@@ -450,10 +463,9 @@ class BillRepository implements BillRepositoryInterface
         }
 
         $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
+        $description = strtolower($journal->description) . ' ' . strtolower(TransactionJournal::destinationAccount($journal)->name);
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($journal->amount_positive, $bill->amount_min, $bill->amount_max);
-        Log::debug('Journal #' . $journal->id . ' has description "' . $description . '"');
+        $amountMatch = $this->doAmountMatch(TransactionJournal::amountPositive($journal), $bill->amount_min, $bill->amount_max);
 
 
         /*
@@ -464,8 +476,6 @@ class BillRepository implements BillRepositoryInterface
             $journal->save();
 
             return true;
-        } else {
-            Log::debug('Wordmatch: ' . (($wordMatch) ? 'true' : 'false') . ' AmountMatch: ' . (($amountMatch) ? 'true' : 'false'));
         }
         if ($bill->id == $journal->bill_id) {
             // if no match, but bill used to match, remove it:
@@ -484,7 +494,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      */
-    public function store(array $data)
+    public function store(array $data): Bill
     {
 
 
@@ -513,7 +523,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      */
-    public function update(Bill $bill, array $data)
+    public function update(Bill $bill, array $data): Bill
     {
 
 
@@ -538,7 +548,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return bool
      */
-    protected function doAmountMatch($amount, $min, $max)
+    protected function doAmountMatch($amount, $min, $max): bool
     {
         if ($amount >= $min && $amount <= $max) {
             return true;
@@ -553,7 +563,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return bool
      */
-    protected function doWordMatch(array $matches, $description)
+    protected function doWordMatch(array $matches, $description): bool
     {
         $wordMatch = false;
         $count     = 0;

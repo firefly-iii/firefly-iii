@@ -1,4 +1,7 @@
-<?php namespace FireflyIII\Events;
+<?php
+declare(strict_types = 1);
+
+namespace FireflyIII\Events;
 
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;

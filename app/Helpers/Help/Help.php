@@ -1,11 +1,11 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Help;
 
 use Cache;
-use ErrorException;
 use League\CommonMark\CommonMarkConverter;
 use Log;
+use Requests;
 use Route;
 
 /**
@@ -19,38 +19,46 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $key
+     * @param string $key
      *
      * @return string
      */
-    public function getFromCache($key)
+    public function getFromCache(string $key): string
     {
         return Cache::get($key);
     }
 
     /**
-     * @codeCoverageIgnore
-     *
-     * @param $route
+     * @param string $language
+     * @param string $route
      *
      * @return array
      */
-    public function getFromGithub($route)
+    public function getFromGithub(string $language, string $route): array
     {
-        $uri        = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/en/' . e($route) . '.md';
+
+        $uri        = sprintf('https://raw.githubusercontent.com/JC5/firefly-iii-help/master/%s/%s.md', $language, $route);
         $routeIndex = str_replace('.', '-', $route);
         $title      = trans('help.' . $routeIndex);
         $content    = [
-            'text'  => '<p>There is no help for this route!</p>',
+            'text'  => '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>',
             'title' => $title,
         ];
-        try {
-            $content['text'] = file_get_contents($uri);
-        } catch (ErrorException $e) {
-            Log::error(trim($e->getMessage()));
+
+        Log::debug('Going to get from Github: ' . $uri);
+
+        $result = Requests::get($uri);
+
+        Log::debug('Status code was ' . $result->status_code . '.');
+
+        if ($result->status_code === 200) {
+            $content['text'] = $result->body;
         }
+
+
         if (strlen(trim($content['text'])) == 0) {
-            $content['text'] = '<p>There is no help for this route.</p>';
+            Log::debug('No actual help text for this route (even though a page was found).');
+            $content['text'] = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
         }
         $converter       = new CommonMarkConverter();
         $content['text'] = $converter->convertToHtml($content['text']);
@@ -62,11 +70,11 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function hasRoute($route)
+    public function hasRoute(string $route):bool
     {
         return Route::has($route);
     }
@@ -74,11 +82,11 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function inCache($route)
+    public function inCache(string $route):bool
     {
         return Cache::has('help.' . $route . '.title') && Cache::has('help.' . $route . '.text');
     }
@@ -86,12 +94,12 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param       $route
-     * @param array $content
+     * @param string $route
+     * @param array  $content
      *
      * @internal param $title
      */
-    public function putInCache($route, array $content)
+    public function putInCache(string $route, array $content)
     {
         Cache::put('help.' . $route . '.text', $content['text'], 10080); // a week.
         Cache::put('help.' . $route . '.title', $content['title'], 10080);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * RuleGroupFormRequest.php
  * Copyright (C) 2016 Sander Dorigo
@@ -16,7 +17,7 @@ use Input;
 /**
  * Class RuleGroupFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class RuleGroupFormRequest extends Request

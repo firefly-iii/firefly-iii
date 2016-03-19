@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * Processor.php
  * Copyright (C) 2016 Sander Dorigo
@@ -14,8 +15,10 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionInterface;
-use FireflyIII\Rules\Triggers\TriggerInterface;
-use FireflyIII\Support\Domain;
+use FireflyIII\Rules\Factory\ActionFactory;
+use FireflyIII\Rules\Factory\TriggerFactory;
+use FireflyIII\Rules\Triggers\AbstractTrigger;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -23,49 +26,96 @@ use Log;
  *
  * @package FireflyIII\Rules
  */
-class Processor
+final class Processor
 {
+    /** @var  Collection */
+    public $actions;
     /** @var  TransactionJournal */
-    protected $journal;
+    public $journal;
     /** @var  Rule */
-    protected $rule;
-    /** @var array */
-    private $actionTypes = [];
-    /** @var array */
-    private $triggerTypes = [];
+    public $rule;
+    /** @var Collection */
+    public $triggers;
 
     /**
      * Processor constructor.
      *
-     * @param Rule               $rule
-     * @param TransactionJournal $journal
      */
-    public function __construct(Rule $rule, TransactionJournal $journal)
+    private function __construct()
     {
-        $this->rule         = $rule;
-        $this->journal      = $journal;
-        $this->triggerTypes = Domain::getRuleTriggers();
-        $this->actionTypes  = Domain::getRuleActions();
+        $this->triggers = new Collection;
+        $this->actions  = new Collection;
     }
 
     /**
-     * @return TransactionJournal
+     * This method will make a Processor that will process each transaction journal using the triggers
+     * and actions found in the given Rule.
+     *
+     * @param Rule $rule
+     *
+     * @return Processor
      */
-    public function getJournal()
+    public static function make(Rule $rule)
     {
-        return $this->journal;
+        $self       = new self;
+        $self->rule = $rule;
+
+        $triggerSet = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        /** @var RuleTrigger $trigger */
+        foreach ($triggerSet as $trigger) {
+            $self->triggers->push(TriggerFactory::getTrigger($trigger));
+        }
+        $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+
+        return $self;
     }
 
     /**
-     * @param TransactionJournal $journal
+     * This method will make a Processor that will process each transaction journal using the given
+     * trigger (singular!). It can only report if the transaction journal was hit by the given trigger
+     * and will not be able to act on it using actions.
+     *
+     * @param string $triggerName
+     * @param string $triggerValue
+     *
+     * @return Processor
      */
-    public function setJournal($journal)
+    public static function makeFromString(string $triggerName, string $triggerValue)
     {
-        $this->journal = $journal;
+        $self    = new self;
+        $trigger = TriggerFactory::makeTriggerFromStrings($triggerName, $triggerValue, false);
+        $self->triggers->push($trigger);
+
+        return $self;
     }
 
     /**
-     * @return Rule
+     * This method will make a Processor that will process each transaction journal using the given
+     * triggers. It can only report if the transaction journal was hit by the given triggers
+     * and will not be able to act on it using actions.
+     *
+     * The given triggers must be in the following format:
+     *
+     * [type => xx, value => yy, stopProcessing => bool], [type => xx, value => yy, stopProcessing => bool],
+     *
+     * @param array $triggers
+     *
+     * @return Processor
+     */
+    public static function makeFromStringArray(array $triggers)
+    {
+        $self = new self;
+        foreach ($triggers as $entry) {
+            $trigger = TriggerFactory::makeTriggerFromStrings($entry['type'], $entry['value'], $entry['stopProcessing']);
+            $self->triggers->push($trigger);
+        }
+
+        return $self;
+    }
+
+    /**
+     *
+     * @return \FireflyIII\Models\Rule
      */
     public function getRule()
     {
@@ -73,43 +123,44 @@ class Processor
     }
 
     /**
-     * @param Rule $rule
+     * This method will scan the given transaction journal and check if it matches the triggers found in the Processor
+     * If so, it will also attempt to run the given actions on the journal. It returns a bool indicating if the transaction journal
+     * matches all of the triggers (regardless of whether the Processor could act on it).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return bool
      */
-    public function setRule($rule)
+    public function handleTransactionJournal(TransactionJournal $journal)
     {
-        $this->rule = $rule;
-    }
-
-    public function handle()
-    {
+        $this->journal = $journal;
         // get all triggers:
         $triggered = $this->triggered();
         if ($triggered) {
-            Log::debug('Rule #' . $this->rule->id . ' was triggered. Now process each action.');
-            $this->actions();
+            if ($this->actions->count() > 0) {
+                $this->actions();
+            }
+
+            return true;
         }
+
+        return false;
 
     }
 
     /**
      * @return bool
      */
-    protected function actions()
+    private function actions()
     {
         /**
          * @var int        $index
          * @var RuleAction $action
          */
-        foreach ($this->rule->ruleActions()->orderBy('order', 'ASC')->get() as $action) {
-            $type  = $action->action_type;
-            $class = $this->actionTypes[$type];
-            Log::debug('Action #' . $action->id . ' for rule #' . $action->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule action type "' . $type . '" (' . $class . ').');
-            }
+        foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
-            $actionClass = new $class($action, $this->journal);
-            $actionClass->act();
+            $actionClass = ActionFactory::getAction($action);
+            $actionClass->act($this->journal);
             if ($action->stop_processing) {
                 break;
             }
@@ -120,39 +171,31 @@ class Processor
     }
 
     /**
+     * Method to check whether the current transaction would be triggered
+     * by the given list of triggers
+     *
      * @return bool
      */
-    protected function triggered()
+    private function triggered()
     {
         $foundTriggers = 0;
         $hitTriggers   = 0;
         /** @var RuleTrigger $trigger */
-        foreach ($this->rule->ruleTriggers()->orderBy('order', 'ASC')->get() as $trigger) {
+        foreach ($this->triggers as $trigger) {
             $foundTriggers++;
-            $type = $trigger->trigger_type;
 
-            if (!isset($this->triggerTypes[$type])) {
-                abort(500, 'No such trigger exists ("' . $type . '").');
-            }
-
-            $class = $this->triggerTypes[$type];
-            Log::debug('Trigger #' . $trigger->id . ' for rule #' . $trigger->rule_id . ' (' . $type . ')');
-            if (!class_exists($class)) {
-                abort(500, 'Could not instantiate class for rule trigger type "' . $type . '" (' . $class . ').');
-            }
-            /** @var TriggerInterface $triggerClass */
-            $triggerClass = new $class($trigger, $this->journal);
-            if ($triggerClass->triggered()) {
+            /** @var AbstractTrigger $trigger */
+            if ($trigger->triggered($this->journal)) {
                 $hitTriggers++;
             }
-            if ($trigger->stop_processing) {
+            if ($trigger->stopProcessing) {
                 break;
             }
 
         }
         Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
-        return ($hitTriggers == $foundTriggers);
+        return ($hitTriggers == $foundTriggers && $foundTriggers > 0);
 
     }
 

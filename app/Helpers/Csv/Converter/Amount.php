@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 /**
@@ -11,14 +11,14 @@ class Amount extends BasicConverter implements ConverterInterface
 {
 
     /**
-     * @return string|int
+     * @return string
      */
-    public function convert()
+    public function convert(): string
     {
         if (is_numeric($this->value)) {
-            return $this->value;
+            return strval($this->value);
         }
 
-        return 0;
+        return '0';
     }
 }

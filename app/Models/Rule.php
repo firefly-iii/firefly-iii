@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * Rule.php
  * Copyright (C) 2016 Sander Dorigo
@@ -33,6 +34,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \FireflyIII\Models\RuleGroup                                              $ruleGroup
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleAction[]  $ruleActions
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleTrigger[] $ruleTriggers
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereRuleGroupId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereStopProcessing($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereDescription($value)
+ * @mixin \Eloquent
  */
 class Rule extends Model
 {

@@ -6,6 +6,8 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 /**
@@ -14,14 +16,19 @@
 class BudgetControllerTest extends TestCase
 {
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::amount
+     * @covers       FireflyIII\Http\Controllers\BudgetController::amount
+     * @covers       FireflyIII\Http\Controllers\BudgetController::__construct
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testAmount()
+    public function testAmount($range)
     {
         $args = [
             'amount' => 1200,
         ];
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
 
         $this->call('POST', '/budgets/amount/1', $args);
         $this->assertResponseStatus(200);
@@ -71,58 +78,82 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::index
+     * @covers       FireflyIII\Http\Controllers\BudgetController::index
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @covers       FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testNoBudget()
+    public function testNoBudget($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/list/noBudget');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
+     * @covers       FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testPostUpdateIncome()
+    public function testPostUpdateIncome($range)
     {
         $args = [
             'amount' => 1200,
         ];
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
 
         $this->call('POST', '/budgets/income', $args);
         $this->assertResponseStatus(302);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::show
+     * @covers       FireflyIII\Http\Controllers\BudgetController::show
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testShow()
+    public function testShow($range)
     {
+        // mock some stuff:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('getJournals')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+        $repository->shouldReceive('firstActivity')->once()->andReturn(new Carbon);
+        $repository->shouldReceive('spentPerDay')->once()->andReturn([]);
+
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/show/1');
         $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::store
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::rules
      */
     public function testStore()
     {
         $this->be($this->user());
         $this->session(['budgets.create.url' => 'http://localhost']);
         $args = [
-            'name'   => 'Some kind of test budget.',
+            'name' => 'Some kind of test budget.',
         ];
 
         $this->call('POST', '/budgets/store', $args);
@@ -132,13 +163,16 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\BudgetController::update
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\BudgetFormRequest::rules
      */
     public function testUpdate()
     {
         $this->be($this->user());
         $this->session(['budgets.edit.url' => 'http://localhost']);
         $args = [
-            'name'   => 'Some kind of test budget.',
+            'name' => 'Some kind of test budget.',
+            'id'   => 1,
         ];
 
         $this->call('POST', '/budgets/update/1', $args);
@@ -147,11 +181,15 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\BudgetController::updateIncome
+     * @covers       FireflyIII\Http\Controllers\BudgetController::updateIncome
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testUpdateIncome()
+    public function testUpdateIncome($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/budgets/income');
         $this->assertResponseStatus(200);
     }

@@ -81,7 +81,7 @@ class ChangesForV321 extends Migration
         $this->renameBudgetLimits(); // 14.
         $this->renamePiggyBankEvents(); // 15.
         $this->renameBudgetLimitToBudgetInRepetitions(); // 16.
-        // 17, 18, 19
+        // 17 and then 18 and then 19
         $this->dropFieldsFromCurrencyTable(); // 20.
 
 
@@ -359,7 +359,6 @@ class ChangesForV321 extends Migration
 
                 ];
                 $budget = Budget::firstOrCreate($entry);
-                Log::debug('Migrated budget #' . $budget->id . ': ' . $budget->name);
                 // create entry in budget_transaction_journal
                 $connections = DB::table('component_transaction_journal')->where('component_id', $c->id)->get();
                 /** @var \stdClass $connection */
@@ -400,7 +399,6 @@ class ChangesForV321 extends Migration
 
                 ];
                 $category = Category::firstOrCreate($entry);
-                Log::debug('Migrated category #' . $category->id . ': ' . $category->name);
                 // create entry in category_transaction_journal
                 $connections = DB::table('component_transaction_journal')->where('component_id', $c->id)->get();
                 /** @var \stdClass $connection */
@@ -435,21 +433,13 @@ class ChangesForV321 extends Migration
     {
         BudgetLimit::get()->each(
             function (BudgetLimit $bl) {
-                Log::debug('Now at budgetLimit #' . $bl->id . ' with component_id: ' . $bl->component_id);
                 $component = Component::find($bl->component_id);
                 if ($component) {
-                    Log::debug('Found component with id #' . $component->id . ' and name ' . $component->name);
                     $budget = Budget::whereName($component->name)->whereUserId($component->user_id)->first();
                     if ($budget) {
-                        Log::debug('Found a budget with ID #' . $budget->id . ' and name ' . $budget->name);
                         $bl->budget_id = $budget->id;
                         $bl->save();
-                        Log::debug('Connected budgetLimit #' . $bl->id . ' to budget_id' . $budget->id);
-                    } else {
-                        Log::debug('Could not find a matching budget with name ' . $component->name);
                     }
-                } else {
-                    Log::debug('Could not find a component with id ' . $bl->component_id);
                 }
             }
         );

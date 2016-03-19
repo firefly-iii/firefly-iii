@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Auth;
@@ -136,7 +136,7 @@ class Importer
     /**
      * @param Data $data
      */
-    public function setData($data)
+    public function setData(Data $data)
     {
         $this->data = $data;
     }
@@ -147,7 +147,6 @@ class Importer
      */
     protected function createTransactionJournal()
     {
-        bcscale(2);
         $date = $this->importData['date'];
         if (is_null($this->importData['date'])) {
             $date = $this->importData['date-rent'];
@@ -169,7 +168,7 @@ class Importer
 
             // second transaction
             $accountId   = $this->importData['opposing-account-object']->id; // create second transaction:
-            $amount      = bcmul($this->importData['amount'], -1);
+            $amount      = bcmul($this->importData['amount'], '-1');
             $transaction = Transaction::create(['transaction_journal_id' => $journal->id, 'account_id' => $accountId, 'amount' => $amount]);
             $errors      = $transaction->getErrors()->merge($errors);
         }
@@ -187,7 +186,7 @@ class Importer
 
         // some debug info:
         $journalId = $journal->id;
-        $type      = $journal->getTransactionType();
+        $type      = $journal->transaction_type_type ?? $journal->transactionType->type;
         /** @var Account $asset */
         $asset = $this->importData['asset-account-object'];
         /** @var Account $opposing */
@@ -195,7 +194,7 @@ class Importer
 
         Log::info('Created journal #' . $journalId . ' of type ' . $type . '!');
         Log::info('Asset account #' . $asset->id . ' lost/gained: ' . $this->importData['amount']);
-        Log::info($opposing->accountType->type . ' #' . $opposing->id . ' lost/gained: ' . bcmul($this->importData['amount'], -1));
+        Log::info($opposing->accountType->type . ' #' . $opposing->id . ' lost/gained: ' . bcmul($this->importData['amount'], '-1'));
 
         return $journal;
     }
@@ -218,17 +217,17 @@ class Importer
     }
 
     /**
-     * @param $row
+     * @param array $row
      *
      * @throws FireflyException
      * @return string|bool
      */
-    protected function importRow($row)
+    protected function importRow(array $row)
     {
 
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
-            $role  = isset($this->roles[$index]) ? $this->roles[$index] : '_ignore';
+            $role  = $this->roles[$index] ?? '_ignore';
             $class = Config::get('csv.roles.' . $role . '.converter');
             $field = Config::get('csv.roles.' . $role . '.field');
 
@@ -266,7 +265,7 @@ class Importer
      *
      * @return bool
      */
-    protected function parseRow($index)
+    protected function parseRow(int $index)
     {
         return (($this->data->hasHeaders() && $index >= 1) || !$this->data->hasHeaders());
     }
@@ -296,7 +295,8 @@ class Importer
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
             $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
-            $postProcessor->setData($this->importData);
+            $array         = $this->importData ?? [];
+            $postProcessor->setData($array);
             Log::debug('Now post-process processor named ' . $className . ':');
             $this->importData = $postProcessor->process();
         }
@@ -343,7 +343,9 @@ class Importer
      */
     protected function validateData()
     {
-        if (is_null($this->importData['date']) && is_null($this->importData['date-rent'])) {
+        $date     = $this->importData['date'] ?? null;
+        $rentDate = $this->importData['date-rent'] ?? null;
+        if (is_null($date) && is_null($rentDate)) {
             return 'No date value for this row.';
         }
         if (is_null($this->importData['opposing-account-object'])) {
@@ -368,8 +370,8 @@ class Importer
 
             /** @var Rule $rule */
             foreach ($group->rules as $rule) {
-                $processor = new Processor($rule, $journal);
-                $processor->handle();
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($journal);
                 if ($rule->stop_processing) {
                     break;
                 }

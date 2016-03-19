@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Bill as BillModel;
@@ -27,18 +27,21 @@ class BillLine
     /** @var  string */
     protected $min;
 
+    /** @var  int */
+    private $transactionJournalId;
+
     /**
      * @return string
      */
-    public function getAmount()
+    public function getAmount(): string
     {
-        return $this->amount;
+        return $this->amount ?? '0';
     }
 
     /**
      * @param string $amount
      */
-    public function setAmount($amount)
+    public function setAmount(string $amount)
     {
         $this->amount = $amount;
     }
@@ -46,7 +49,7 @@ class BillLine
     /**
      * @return BillModel
      */
-    public function getBill()
+    public function getBill(): BillModel
     {
         return $this->bill;
     }
@@ -54,7 +57,7 @@ class BillLine
     /**
      * @param BillModel $bill
      */
-    public function setBill($bill)
+    public function setBill(BillModel $bill)
     {
         $this->bill = $bill;
     }
@@ -62,7 +65,7 @@ class BillLine
     /**
      * @return string
      */
-    public function getMax()
+    public function getMax(): string
     {
         return $this->max;
     }
@@ -70,7 +73,7 @@ class BillLine
     /**
      * @param string $max
      */
-    public function setMax($max)
+    public function setMax(string $max)
     {
         $this->max = $max;
     }
@@ -78,7 +81,7 @@ class BillLine
     /**
      * @return string
      */
-    public function getMin()
+    public function getMin(): string
     {
         return $this->min;
     }
@@ -86,23 +89,39 @@ class BillLine
     /**
      * @param string $min
      */
-    public function setMin($min)
+    public function setMin(string $min)
     {
         $this->min = $min;
     }
 
     /**
+     * @return int
+     */
+    public function getTransactionJournalId(): int
+    {
+        return $this->transactionJournalId ?? 0;
+    }
+
+    /**
+     * @param int $transactionJournalId
+     */
+    public function setTransactionJournalId(int $transactionJournalId)
+    {
+        $this->transactionJournalId = $transactionJournalId;
+    }
+
+    /**
      * @return boolean
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
     /**
-     * @param boolean $active
+     * @param bool $active
      */
-    public function setActive($active)
+    public function setActive(bool $active)
     {
         $this->active = $active;
     }
@@ -110,15 +129,15 @@ class BillLine
     /**
      * @return boolean
      */
-    public function isHit()
+    public function isHit(): bool
     {
         return $this->hit;
     }
 
     /**
-     * @param boolean $hit
+     * @param bool $hit
      */
-    public function setHit($hit)
+    public function setHit(bool $hit)
     {
         $this->hit = $hit;
     }

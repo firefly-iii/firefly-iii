@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -9,7 +10,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Response;
-use Session;
 
 /**
  * Class BillController
@@ -23,7 +23,7 @@ class BillController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -41,8 +41,8 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository)
     {
-        $start         = Session::get('start', Carbon::now()->startOfMonth());
-        $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $start         = session('start', Carbon::now()->startOfMonth());
+        $end           = session('end', Carbon::now()->endOfMonth());
         $paid          = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
         $unpaid        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
         $creditCardDue = $repository->getCreditCardBill($start, $end);

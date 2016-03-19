@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Budget as BudgetModel;
@@ -25,6 +25,7 @@ class BalanceLine
     /** @var BudgetModel */
     protected $budget;
 
+    /** @var int */
     protected $role = self::ROLE_DEFAULTROLE;
 
     /**
@@ -33,6 +34,7 @@ class BalanceLine
     public function __construct()
     {
         $this->balanceEntries = new Collection;
+
     }
 
     /**
@@ -46,7 +48,7 @@ class BalanceLine
     /**
      * @return Collection
      */
-    public function getBalanceEntries()
+    public function getBalanceEntries(): Collection
     {
         return $this->balanceEntries;
     }
@@ -54,7 +56,7 @@ class BalanceLine
     /**
      * @param Collection $balanceEntries
      */
-    public function setBalanceEntries($balanceEntries)
+    public function setBalanceEntries(Collection $balanceEntries)
     {
         $this->balanceEntries = $balanceEntries;
     }
@@ -62,15 +64,15 @@ class BalanceLine
     /**
      * @return BudgetModel
      */
-    public function getBudget()
+    public function getBudget(): BudgetModel
     {
-        return $this->budget;
+        return $this->budget ?? new BudgetModel;
     }
 
     /**
      * @param BudgetModel $budget
      */
-    public function setBudget($budget)
+    public function setBudget(BudgetModel $budget)
     {
         $this->budget = $budget;
     }
@@ -78,7 +80,7 @@ class BalanceLine
     /**
      * @return int
      */
-    public function getRole()
+    public function getRole(): int
     {
         return $this->role;
     }
@@ -86,7 +88,7 @@ class BalanceLine
     /**
      * @param int $role
      */
-    public function setRole($role)
+    public function setRole(int $role)
     {
         $this->role = $role;
     }
@@ -94,9 +96,9 @@ class BalanceLine
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
-        if ($this->getBudget() instanceof BudgetModel) {
+        if ($this->getBudget() instanceof BudgetModel && !is_null($this->getBudget()->id)) {
             return $this->getBudget()->name;
         }
         if ($this->getRole() == self::ROLE_DEFAULTROLE) {
@@ -118,14 +120,14 @@ class BalanceLine
      * on the given budget/repetition. If you subtract all those amounts from the budget/repetition's
      * total amount, this is returned:
      *
-     * @return float
+     * @return string
      */
-    public function leftOfRepetition()
+    public function leftOfRepetition(): string
     {
-        $start = isset($this->budget->amount) ? $this->budget->amount : 0;
+        $start = $this->budget->amount ?? '0';
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
-            $start += $balanceEntry->getSpent();
+            $start = bcadd($balanceEntry->getSpent(), $start);
         }
 
         return $start;

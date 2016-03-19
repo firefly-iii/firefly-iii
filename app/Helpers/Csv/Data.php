@@ -1,9 +1,11 @@
 <?php
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Crypt;
 use League\Csv\Reader;
 use Session;
+use Storage;
 
 /**
  * Class Data
@@ -14,13 +16,13 @@ class Data
 {
 
     /** @var string */
-    protected $csvFileContent;
+    protected $csvFileContent = '';
     /** @var string */
-    protected $csvFileLocation;
+    protected $csvFileLocation = '';
     /** @var  string */
-    protected $dateFormat;
+    protected $dateFormat = '';
     /** @var  string */
-    protected $delimiter;
+    protected $delimiter = '';
     /** @var  bool */
     protected $hasHeaders;
     /** @var int */
@@ -57,14 +59,14 @@ class Data
      */
     public function getCsvFileContent()
     {
-        return $this->csvFileContent;
+        return $this->csvFileContent ?? '';
     }
 
     /**
      *
      * @param string $csvFileContent
      */
-    public function setCsvFileContent($csvFileContent)
+    public function setCsvFileContent(string $csvFileContent)
     {
         $this->csvFileContent = $csvFileContent;
     }
@@ -82,7 +84,7 @@ class Data
      *
      * @param string $csvFileLocation
      */
-    public function setCsvFileLocation($csvFileLocation)
+    public function setCsvFileLocation(string $csvFileLocation)
     {
         Session::put('csv-file', $csvFileLocation);
         $this->csvFileLocation = $csvFileLocation;
@@ -99,9 +101,9 @@ class Data
 
     /**
      *
-     * @param mixed $dateFormat
+     * @param string $dateFormat
      */
-    public function setDateFormat($dateFormat)
+    public function setDateFormat(string $dateFormat)
     {
         Session::put('csv-date-format', $dateFormat);
         $this->dateFormat = $dateFormat;
@@ -120,7 +122,7 @@ class Data
      *
      * @param string $delimiter
      */
-    public function setDelimiter($delimiter)
+    public function setDelimiter(string $delimiter)
     {
         Session::put('csv-delimiter', $delimiter);
         $this->delimiter = $delimiter;
@@ -170,7 +172,7 @@ class Data
      */
     public function getReader()
     {
-        if (strlen($this->csvFileContent) === 0) {
+        if (!is_null($this->csvFileContent) && strlen($this->csvFileContent) === 0) {
             $this->loadCsvFile();
         }
 
@@ -233,7 +235,7 @@ class Data
      *
      * @param bool $hasHeaders
      */
-    public function setHasHeaders($hasHeaders)
+    public function setHasHeaders(bool $hasHeaders)
     {
         Session::put('csv-has-headers', $hasHeaders);
         $this->hasHeaders = $hasHeaders;
@@ -243,7 +245,7 @@ class Data
      *
      * @param int $importAccount
      */
-    public function setImportAccount($importAccount)
+    public function setImportAccount(int $importAccount)
     {
         Session::put('csv-import-account', $importAccount);
         $this->importAccount = $importAccount;
@@ -252,7 +254,8 @@ class Data
     protected function loadCsvFile()
     {
         $file             = $this->getCsvFileLocation();
-        $content          = file_get_contents($file);
+        $disk             = Storage::disk('upload');
+        $content          = $disk->get($file);
         $contentDecrypted = Crypt::decrypt($content);
         $this->setCsvFileContent($contentDecrypted);
     }
@@ -260,63 +263,63 @@ class Data
     protected function sessionCsvFileLocation()
     {
         if (Session::has('csv-file')) {
-            $this->csvFileLocation = (string)Session::get('csv-file');
+            $this->csvFileLocation = (string)session('csv-file');
         }
     }
 
     protected function sessionDateFormat()
     {
         if (Session::has('csv-date-format')) {
-            $this->dateFormat = (string)Session::get('csv-date-format');
+            $this->dateFormat = (string)session('csv-date-format');
         }
     }
 
     protected function sessionDelimiter()
     {
         if (Session::has('csv-delimiter')) {
-            $this->delimiter = Session::get('csv-delimiter');
+            $this->delimiter = session('csv-delimiter');
         }
     }
 
     protected function sessionHasHeaders()
     {
         if (Session::has('csv-has-headers')) {
-            $this->hasHeaders = (bool)Session::get('csv-has-headers');
+            $this->hasHeaders = (bool)session('csv-has-headers');
         }
     }
 
     protected function sessionImportAccount()
     {
         if (Session::has('csv-import-account')) {
-            $this->importAccount = intval(Session::get('csv-import-account'));
+            $this->importAccount = intval(session('csv-import-account'));
         }
     }
 
     protected function sessionMap()
     {
         if (Session::has('csv-map')) {
-            $this->map = (array)Session::get('csv-map');
+            $this->map = (array)session('csv-map');
         }
     }
 
     protected function sessionMapped()
     {
         if (Session::has('csv-mapped')) {
-            $this->mapped = (array)Session::get('csv-mapped');
+            $this->mapped = (array)session('csv-mapped');
         }
     }
 
     protected function sessionRoles()
     {
         if (Session::has('csv-roles')) {
-            $this->roles = (array)Session::get('csv-roles');
+            $this->roles = (array)session('csv-roles');
         }
     }
 
     protected function sessionSpecifix()
     {
         if (Session::has('csv-specifix')) {
-            $this->specifix = (array)Session::get('csv-specifix');
+            $this->specifix = (array)session('csv-specifix');
         }
     }
 }

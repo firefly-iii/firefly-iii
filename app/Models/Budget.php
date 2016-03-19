@@ -24,6 +24,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                                                             $budgeted
  * @property float                                                              $amount
  * @property \Carbon\Carbon                                                     $date
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereEncrypted($value)
+ * @mixin \Eloquent
  */
 class Budget extends Model
 {

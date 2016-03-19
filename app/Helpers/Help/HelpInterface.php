@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Help;
 
 /**
@@ -11,38 +11,37 @@ interface HelpInterface
 {
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return string
      */
-    public function getFromCache($key);
+    public function getFromCache(string $key): string;
 
     /**
-     * @param $route
+     * @param string $language
+     * @param string $route
      *
      * @return array
      */
-    public function getFromGithub($route);
+    public function getFromGithub(string $language, string $route):array;
 
     /**
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function hasRoute($route);
+    public function hasRoute(string $route): bool;
 
     /**
-     * @param $route
+     * @param string $route
      *
      * @return bool
      */
-    public function inCache($route);
+    public function inCache(string $route): bool;
 
     /**
-     * @param       $route
-     * @param array $content
-     *
-     * @return void
+     * @param string $route
+     * @param array  $content
      */
-    public function putInCache($route, array $content);
+    public function putInCache(string $route, array $content);
 }

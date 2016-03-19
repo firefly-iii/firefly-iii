@@ -1,4 +1,7 @@
-<?php namespace FireflyIII\Handlers\Events;
+<?php
+declare(strict_types = 1);
+
+namespace FireflyIII\Handlers\Events;
 
 use Auth;
 use FireflyIII\Events\TransactionJournalStored;
@@ -15,24 +18,13 @@ class ConnectJournalToPiggyBank
 {
 
     /**
-     * Create the event handler.
-     *
-     * @codeCoverageIgnore
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Connect a new transaction journal to any related piggy banks.
      *
      * @param  TransactionJournalStored $event
      *
-     * @return boolean
+     * @return bool
      */
-    public function handle(TransactionJournalStored $event)
+    public function handle(TransactionJournalStored $event): bool
     {
         /** @var TransactionJournal $journal */
         $journal     = $event->journal;
@@ -49,12 +41,11 @@ class ConnectJournalToPiggyBank
         if (is_null($repetition)) {
             return true;
         }
-        bcscale(2);
 
-        $amount = $journal->amount_positive;
+        $amount = TransactionJournal::amountPositive($journal);
         // if piggy account matches source account, the amount is positive
-        if ($piggyBank->account_id == $journal->source_account->id) {
-            $amount = $amount * -1;
+        if ($piggyBank->account_id == TransactionJournal::sourceAccount($journal)->id) {
+            $amount = bcmul($amount, '-1');
         }
 
 

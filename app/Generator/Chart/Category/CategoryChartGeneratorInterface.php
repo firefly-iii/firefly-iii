@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * CategoryChartGeneratorInterface.php
  * Copyright (C) 2016 Sander Dorigo
@@ -32,28 +33,28 @@ interface CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function earnedInPeriod(Collection $categories, Collection $entries);
+    public function earnedInPeriod(Collection $categories, Collection $entries): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function frontpage(Collection $entries);
+    public function frontpage(Collection $entries): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function multiYear(Collection $entries);
+    public function multiYear(Collection $entries): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function period(Collection $entries);
+    public function period(Collection $entries): array;
 
     /**
      * @param Collection $categories
@@ -61,5 +62,5 @@ interface CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function spentInPeriod(Collection $categories, Collection $entries);
+    public function spentInPeriod(Collection $categories, Collection $entries): array;
 }

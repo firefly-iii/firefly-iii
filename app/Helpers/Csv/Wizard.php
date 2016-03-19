@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Auth;
@@ -10,6 +11,8 @@ use League\Csv\Reader;
 use Log;
 use ReflectionException;
 use Session;
+use SplFileObject;
+use Storage;
 
 /**
  * Class Wizard
@@ -26,7 +29,7 @@ class Wizard implements WizardInterface
      *
      * @return array
      */
-    public function getMappableValues($reader, array $map, $hasHeaders)
+    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders)
     {
         $values = [];
         /*
@@ -52,11 +55,11 @@ class Wizard implements WizardInterface
 
     /**
      * @param array $roles
-     * @param mixed $map
+     * @param array $map
      *
      * @return array
      */
-    public function processSelectedMapping(array $roles, $map)
+    public function processSelectedMapping(array $roles, array $map)
     {
         $configRoles = Config::get('csv.roles');
         $maps        = [];
@@ -79,11 +82,11 @@ class Wizard implements WizardInterface
     }
 
     /**
-     * @param mixed $input
+     * @param array $input
      *
      * @return array
      */
-    public function processSelectedRoles($input)
+    public function processSelectedRoles(array $input)
     {
         $roles = [];
 
@@ -140,7 +143,7 @@ class Wizard implements WizardInterface
                 /** @var MapperInterface $mapObject */
                 $mapObject = app($class);
             } catch (ReflectionException $e) {
-                throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because class ' . $mapper . ' does not exist.');
+                throw new FireflyException('Column "' . $columnRole . '" cannot be mapped because mapper class ' . $mapper . ' does not exist.');
             }
             $set             = $mapObject->getMap();
             $options[$index] = $set;
@@ -150,20 +153,21 @@ class Wizard implements WizardInterface
     }
 
     /**
-     * @param $path
+     * @param string $path
      *
      * @return string
      */
-    public function storeCsvFile($path)
+    public function storeCsvFile(string $path)
     {
         $time             = str_replace(' ', '-', microtime());
         $fileName         = 'csv-upload-' . Auth::user()->id . '-' . $time . '.csv.encrypted';
-        $fullPath         = storage_path('upload') . DIRECTORY_SEPARATOR . $fileName;
-        $content          = file_get_contents($path);
+        $disk             = Storage::disk('upload');
+        $file             = new SplFileObject($path, 'r');
+        $content          = $file->fread($file->getSize());
         $contentEncrypted = Crypt::encrypt($content);
-        file_put_contents($fullPath, $contentEncrypted);
+        $disk->put($fileName, $contentEncrypted);
 
-        return $fullPath;
+        return $fileName;
 
 
     }
@@ -188,7 +192,7 @@ class Wizard implements WizardInterface
      *
      * @return bool
      */
-    protected function useRow($hasHeaders, $index)
+    protected function useRow(bool $hasHeaders, int $index)
     {
         return ($hasHeaders && $index > 1) || !$hasHeaders;
     }

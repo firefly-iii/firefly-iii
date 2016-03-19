@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * ReportChartGenerator.php
  * Copyright (C) 2016 Sander Dorigo
@@ -24,7 +25,7 @@ interface ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOut(Collection $entries);
+    public function multiYearInOut(Collection $entries): array;
 
     /**
      * @param string $income
@@ -33,14 +34,21 @@ interface ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYearInOutSummarized($income, $expense, $count);
+    public function multiYearInOutSummarized(string $income, string $expense, int $count): array;
 
     /**
      * @param Collection $entries
      *
      * @return array
      */
-    public function yearInOut(Collection $entries);
+    public function netWorth(Collection $entries) : array;
+
+    /**
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function yearInOut(Collection $entries): array;
 
     /**
      * @param string $income
@@ -49,6 +57,6 @@ interface ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function yearInOutSummarized($income, $expense, $count);
+    public function yearInOutSummarized(string $income, string $expense, int $count): array;
 
 }

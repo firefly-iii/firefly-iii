@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -9,7 +10,7 @@ use Input;
 /**
  * Class CategoryFormRequest
  *
- * @codeCoverageIgnore
+ *
  * @package FireflyIII\Http\Requests
  */
 class CategoryFormRequest extends Request

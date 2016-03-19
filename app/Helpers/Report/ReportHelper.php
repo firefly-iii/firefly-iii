@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Report;
 
@@ -10,6 +11,7 @@ use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -75,21 +77,23 @@ class ReportHelper implements ReportHelperInterface
             $billLine->setMax($bill->amount_max);
 
             // is hit in period?
-            bcscale(2);
 
             $entry = $journals->filter(
                 function (TransactionJournal $journal) use ($bill) {
-                    return $journal->bill_id == $bill->id;
+                    return $journal->bill_id === $bill->id;
                 }
             );
-            if (!is_null($entry->first())) {
-                $billLine->setAmount($entry->first()->journalAmount);
+            $first = $entry->first();
+            if (!is_null($first)) {
+                $billLine->setTransactionJournalId($first->id);
+                $billLine->setAmount($first->journalAmount);
                 $billLine->setHit(true);
             } else {
                 $billLine->setHit(false);
             }
-
-            $collection->addBill($billLine);
+            if (!(!$billLine->isHit() && !$billLine->isActive())) {
+                $collection->addBill($billLine);
+            }
 
         }
 
@@ -130,7 +134,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReport($start, $end, Collection $accounts)
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $object = new Expense;
         $set    = $this->query->expense($accounts, $start, $end);
@@ -152,7 +156,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReport($start, $end, Collection $accounts)
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         $object = new Income;
         $set    = $this->query->income($accounts, $start, $end);
@@ -214,6 +218,64 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
+     * Returns an array of tags and their comparitive size with amounts bla bla.
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        $ids        = $accounts->pluck('id')->toArray();
+        $set        = Tag::
+        distinct()
+                         ->leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
+                         ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                         ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                         ->whereIn('transactions.account_id', $ids)->get(
+                ['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'transactions.amount']
+            );
+        $collection = [];
+        if ($set->count() === 0) {
+            return $collection;
+        }
+        foreach ($set as $entry) {
+            // less than zero? multiply to be above zero.
+            $amount = $entry->amount;
+            if (bccomp($amount, '0', 2) === -1) {
+                $amount = bcmul($amount, '-1');
+            }
+            $id = intval($entry->id);
+
+            if (!isset($collection[$id])) {
+                $collection[$id] = [
+                    'id'     => $id,
+                    'tag'    => $entry->tag,
+                    'amount' => $amount,
+                ];
+            } else {
+                $collection[$id]['amount'] = bcadd($collection[$id]['amount'], $amount);
+            }
+        }
+
+        // cleanup collection (match "fonts")
+        $max = strval(max(array_column($collection, 'amount')));
+        foreach ($collection as $id => $entry) {
+            $size = bcdiv($entry['amount'], $max, 4);
+            if (bccomp($size, '0.25') === -1) {
+                $size = '0.5';
+            }
+            $collection[$id]['fontsize'] = $size;
+        }
+
+        return $collection;
+    }
+
+    /**
      * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
      * and sum up everything in the array in the given range.
      *
@@ -225,7 +287,6 @@ class ReportHelper implements ReportHelperInterface
      */
     protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
     {
-        bcscale(2);
         $sum          = '0';
         $currentStart = clone $start; // to not mess with the original one
         $currentEnd   = clone $end; // to not mess with the original one

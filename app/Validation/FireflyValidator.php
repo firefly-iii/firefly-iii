@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Validation;
 
@@ -7,15 +8,18 @@ use Config;
 use Crypt;
 use DB;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
 use Log;
+use Session;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -45,12 +49,35 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
-    public function validateBelongsToUser($attribute, $value, $parameters)
+    public function validate2faCode($attribute, $value, $parameters): bool
     {
+        if (!is_string($value) || is_null($value) || strlen($value) <> 6) {
+            return false;
+        }
 
-        $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where('id', $value)->count();
+        $secret    = Session::get('two-factor-secret');
+        $google2fa = app('PragmaRX\Google2FA\Google2FA');
+
+        return $google2fa->verifyKey($secret, $value);
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateBelongsToUser($attribute, $value, $parameters): bool
+    {
+        $field = $parameters[1] ?? 'id';
+
+
+        $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where($field, $value)->count();
         if ($count == 1) {
             return true;
         }
@@ -67,7 +94,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateIban($attribute, $value)
+    public function validateIban($attribute, $value): bool
     {
         if (!is_string($value) || is_null($value) || strlen($value) < 6) {
             return false;
@@ -94,7 +121,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateRuleActionValue($attribute)
+    public function validateRuleActionValue($attribute): bool
     {
         // get the index from a string like "rule-action-value.2".
         $parts = explode('.', $attribute);
@@ -103,8 +130,8 @@ class FireflyValidator extends Validator
         // check if rule-action-value matches the thing.
 
         if (is_array($this->data['rule-action'])) {
-            $name  = isset($this->data['rule-action'][$index]) ? $this->data['rule-action'][$index] : 'invalid';
-            $value = isset($this->data['rule-action-value'][$index]) ? $this->data['rule-action-value'][$index] : false;
+            $name  = $this->data['rule-action'][$index] ?? 'invalid';
+            $value = $this->data['rule-action-value'][$index] ?? false;
             switch ($name) {
                 default:
                     Log::debug(' (' . $attribute . ') (index:' . $index . ') Name is "' . $name . '" so no action is taken.');
@@ -136,7 +163,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateRuleTriggerValue($attribute)
+    public function validateRuleTriggerValue($attribute): bool
     {
         // get the index from a string like "rule-trigger-value.2".
         $parts = explode('.', $attribute);
@@ -147,18 +174,34 @@ class FireflyValidator extends Validator
         if (is_array($this->data['rule-trigger'])) {
             $name  = $this->getRuleTriggerName($index);
             $value = $this->getRuleTriggerValue($index);
+
+            // break on some easy checks:
             switch ($name) {
-                default:
-                    return true;
                 case 'amount_less':
-                    return is_numeric($value);
+                    $result = is_numeric($value);
+                    if ($result === false) {
+                        return false;
+                    }
+                    break;
                 case 'transaction_type':
                     $count = TransactionType::where('type', $value)->count();
-
-                    return $count === 1;
+                    if (!($count === 1)) {
+                        return false;
+                    }
+                    break;
                 case 'invalid':
                     return false;
             }
+            // still a special case where the trigger is
+            // triggered in such a way that it would trigger ANYTHING. We can check for such things
+            // with function willmatcheverything
+            // we know which class it is so dont bother checking that.
+            $classes = Config::get('firefly.rule-triggers');
+            /** @var TriggerInterface $class */
+            $class = $classes[$name];
+
+            return !($class::willMatchEverything($value));
+
         }
 
         return false;
@@ -173,7 +216,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueAccountForUser($attribute, $value, $parameters)
+    public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
         if (!Auth::check()) {
@@ -200,11 +243,45 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
+     * @return bool
+     */
+    public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
+    {
+        $accountId = $this->data['id'] ?? 0;
+
+        $query = AccountMeta::
+        leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+                            ->where('accounts.user_id', Auth::user()->id)
+                            ->where('account_meta.name', 'accountNumber');
+
+        if (intval($accountId) > 0) {
+            // exclude current account from check.
+            $query->where('account_meta.account_id', '!=', intval($accountId));
+        }
+        $set = $query->get(['account_meta.*']);
+
+        /** @var AccountMeta $entry */
+        foreach ($set as $entry) {
+            if ($entry->data == $value) {
+
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
-    public function validateUniqueForUser($attribute, $value, $parameters)
+    public function validateUniqueForUser($attribute, $value, $parameters): bool
     {
         $query = DB::table($parameters[0])->where($parameters[1], $value);
         $query->where('user_id', Auth::user()->id);
@@ -235,13 +312,13 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueObjectForUser($attribute, $value, $parameters)
+    public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
     {
         $value = $this->tryDecrypt($value);
         // exclude?
         $table   = $parameters[0];
         $field   = $parameters[1];
-        $exclude = isset($parameters[2]) ? intval($parameters[2]) : 0;
+        $exclude = $parameters[2] ?? 0;
 
         // get entries from table
         $set = DB::table($table)->where('user_id', Auth::user()->id)
@@ -268,9 +345,9 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniquePiggyBankForUser($attribute, $value, $parameters)
+    public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
     {
-        $exclude = isset($parameters[0]) ? $parameters[0] : null;
+        $exclude = $parameters[0] ?? null;
         $query   = DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
                      ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', Auth::user()->id);
         if (!is_null($exclude)) {
@@ -290,11 +367,32 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getRuleTriggerName($index): string
+    {
+        return $this->data['rule-trigger'][$index] ?? 'invalid';
+
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getRuleTriggerValue($index): string
+    {
+        return $this->data['rule-trigger-value'][$index] ?? '';
+    }
+
+    /**
      * @param $value
      *
      * @return mixed
      */
-    protected function tryDecrypt($value)
+    private function tryDecrypt($value)
     {
         try {
             $value = Crypt::decrypt($value);
@@ -308,7 +406,7 @@ class FireflyValidator extends Validator
     /**
      * @return bool
      */
-    protected function validateAccountAnonymously()
+    private function validateAccountAnonymously(): bool
     {
         if (!isset($this->data['user_id'])) {
             return false;
@@ -337,7 +435,7 @@ class FireflyValidator extends Validator
      * @internal param $parameters
      *
      */
-    protected function validateByAccountId($value)
+    private function validateByAccountId($value): bool
     {
         /** @var Account $existingAccount */
         $existingAccount = Account::find($this->data['id']);
@@ -364,10 +462,10 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    protected function validateByAccountTypeId($value, $parameters)
+    private function validateByAccountTypeId($value, $parameters): bool
     {
         $type   = AccountType::find($this->data['account_type_id'])->first();
-        $ignore = isset($parameters[0]) ? intval($parameters[0]) : 0;
+        $ignore = $parameters[0] ?? 0;
         $value  = $this->tryDecrypt($value);
 
         $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
@@ -388,11 +486,11 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    protected function validateByAccountTypeString($value, $parameters)
+    private function validateByAccountTypeString($value, $parameters): bool
     {
         $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
         $type   = AccountType::whereType($search)->first();
-        $ignore = isset($parameters[0]) ? intval($parameters[0]) : 0;
+        $ignore = $parameters[0] ?? 0;
 
         $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
@@ -403,27 +501,6 @@ class FireflyValidator extends Validator
         }
 
         return true;
-    }
-
-    /**
-     * @param int $index
-     *
-     * @return string
-     */
-    private function getRuleTriggerName($index)
-    {
-        return isset($this->data['rule-trigger'][$index]) ? $this->data['rule-trigger'][$index] : 'invalid';
-
-    }
-
-    /**
-     * @param int $index
-     *
-     * @return string
-     */
-    private function getRuleTriggerValue($index)
-    {
-        return isset($this->data['rule-trigger-value'][$index]) ? $this->data['rule-trigger-value'][$index] : '';
     }
 }
 

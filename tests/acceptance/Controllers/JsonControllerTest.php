@@ -17,6 +17,7 @@ class JsonControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\JsonController::action
+     * @covers FireflyIII\Http\Controllers\JsonController::__construct
      */
     public function testAction()
     {
@@ -26,51 +27,71 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\JsonController::boxBillsPaid
+     * @covers       FireflyIII\Http\Controllers\JsonController::boxBillsPaid
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testBoxBillsPaid()
+    public function testBoxBillsPaid($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/bills-paid');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\JsonController::boxBillsUnpaid
+     * @covers       FireflyIII\Http\Controllers\JsonController::boxBillsUnpaid
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testBoxBillsUnpaid()
+    public function testBoxBillsUnpaid($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/bills-unpaid');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\JsonController::boxIn
+     * @covers       FireflyIII\Http\Controllers\JsonController::boxIn
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testBoxIn()
+    public function testBoxIn($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/in');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\JsonController::boxOut
+     * @covers       FireflyIII\Http\Controllers\JsonController::boxOut
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testBoxOut()
+    public function testBoxOut($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/box/out');
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\JsonController::categories
+     * @covers       FireflyIII\Http\Controllers\JsonController::categories
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testCategories()
+    public function testCategories($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/categories');
         $this->assertResponseStatus(200);
     }
@@ -127,9 +148,12 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\JsonController::transactionJournals
+     * @covers       FireflyIII\Http\Controllers\JsonController::transactionJournals
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testTransactionJournals()
+    public function testTransactionJournals($range)
     {
         $type       = factory(FireflyIII\Models\TransactionType::class)->make();
         $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
@@ -138,6 +162,7 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('getJournalsOfType')->with($type)->once()->andReturn(new Collection);
 
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/json/transaction-journals/deposit');
         $this->assertResponseStatus(200);
     }

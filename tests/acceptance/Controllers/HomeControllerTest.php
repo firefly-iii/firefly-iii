@@ -7,10 +7,12 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
 class HomeControllerTest extends TestCase
 {
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::dateRange
+     * @covers FireflyIII\Http\Controllers\HomeController::__construct
      */
     public function testDateRange()
     {
@@ -39,12 +41,16 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\HomeController::index
-     * @covers FireflyIII\Http\Controllers\Controller::__construct
+     * @covers       FireflyIII\Http\Controllers\HomeController::index
+     * @covers       FireflyIII\Http\Controllers\Controller::__construct
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testIndex()
+    public function testIndex($range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', '/');
         $this->assertResponseStatus(200);
     }

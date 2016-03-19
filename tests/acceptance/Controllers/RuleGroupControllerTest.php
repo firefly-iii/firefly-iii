@@ -16,97 +16,105 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::create
-     * @todo   Implement testCreate().
+     * @covers FireflyIII\Http\Controllers\RuleGroupController::__construct
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/groups/create');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/groups/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.rule-group.delete.url' => 'http://localhost']);
+
+        $this->be($this->user());
+        $this->call('POST', '/rules/groups/destroy/1');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::down
-     * @todo   Implement testDown().
      */
     public function testDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/groups/down/1');
+        $this->assertResponseStatus(302);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/groups/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::store
-     * @todo   Implement testStore().
+     * @covers FireflyIII\Http\Requests\RuleGroupFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\RuleGroupFormRequest::rules
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.rule-group.create.url' => 'http://localhost']);
+        $args = [
+            'title'        => 'Some new rule group',
+            'description' => 'New rules',
+        ];
+
+        $this->be($this->user());
+        $this->call('POST', '/rules/groups/store', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::up
-     * @todo   Implement testUp().
      */
     public function testUp()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/groups/up/1');
+        $this->assertResponseStatus(302);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleGroupController::update
-     * @todo   Implement testUpdate().
+     * @covers FireflyIII\Http\Requests\RuleGroupFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\RuleGroupFormRequest::rules
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.rule-group.edit.url' => 'http://localhost']);
+        $args = [
+            'id'          => 1,
+            'title'        => 'Some new rule group X',
+            'description' => 'New rules',
+            'active'      => 1,
+        ];
+
+        $this->be($this->user());
+        $this->call('POST', '/rules/groups/update/1', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

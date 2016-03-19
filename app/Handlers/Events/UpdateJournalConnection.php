@@ -1,8 +1,11 @@
-<?php namespace FireflyIII\Handlers\Events;
+<?php
+declare(strict_types = 1);
+namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class UpdateJournalConnection
@@ -14,22 +17,13 @@ class UpdateJournalConnection
 {
 
     /**
-     * Create the event handler.
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      *
      * @param  TransactionJournalUpdated $event
      *
-     * @return void
+     * @return bool
      */
-    public function handle(TransactionJournalUpdated $event)
+    public function handle(TransactionJournalUpdated $event):bool
     {
         $journal = $event->journal;
 
@@ -37,7 +31,7 @@ class UpdateJournalConnection
         /** @var PiggyBankEvent $event */
         $event = PiggyBankEvent::where('transaction_journal_id', $journal->id)->first();
         if (is_null($event)) {
-            return;
+            return false;
         }
         $piggyBank  = $event->piggyBank()->first();
         $repetition = null;
@@ -47,11 +41,10 @@ class UpdateJournalConnection
         }
 
         if (is_null($repetition)) {
-            return;
+            return false;
         }
-        bcscale(2);
 
-        $amount = $journal->amount;
+        $amount = TransactionJournal::amount($journal);
         $diff   = bcsub($amount, $event->amount); // update current repetition
 
         $repetition->currentamount = bcadd($repetition->currentamount, $diff);
@@ -60,6 +53,8 @@ class UpdateJournalConnection
 
         $event->amount = $amount;
         $event->save();
+
+        return true;
     }
 
 }

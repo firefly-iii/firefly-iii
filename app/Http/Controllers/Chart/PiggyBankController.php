@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -22,7 +23,7 @@ class PiggyBankController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {

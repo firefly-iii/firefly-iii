@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * RuleTrigger.php
  * Copyright (C) 2016 Sander Dorigo
@@ -25,6 +26,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean                      $active
  * @property boolean                      $stop_processing
  * @property-read \FireflyIII\Models\Rule $rule
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereRuleId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereStopProcessing($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereTriggerType($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleTrigger whereTriggerValue($value)
+ * @mixin \Eloquent
  */
 class RuleTrigger extends Model
 {

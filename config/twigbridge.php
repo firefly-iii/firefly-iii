@@ -28,7 +28,6 @@ return [
             'debug'               => config('app.debug', false),
 
             // The charset used by the templates.
-            // default: utf-8
             'charset'             => 'utf-8',
 
             // The base template class to use for generated templates.

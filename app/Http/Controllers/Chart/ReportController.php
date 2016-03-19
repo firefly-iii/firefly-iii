@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -9,6 +10,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
+use Steam;
 
 /**
  * Class ReportController
@@ -22,13 +24,58 @@ class ReportController extends Controller
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
         parent::__construct();
         // create chart generator:
         $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface');
+    }
+
+    /**
+     * This chart, by default, is shown on the multi-year and year report pages,
+     * which means that giving it a 2 week "period" should be enough granularity.
+     *
+     * @param string     $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function netWorth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('netWorth');
+        $cache->addProperty($start);
+        $cache->addProperty($reportType);
+        $cache->addProperty($accounts);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+        $ids     = $accounts->pluck('id')->toArray();
+        $current = clone $start;
+        $entries = new Collection;
+        while ($current < $end) {
+            $balances = Steam::balancesById($ids, $current);
+            $sum      = $this->arraySum($balances);
+            $entries->push(
+                [
+                    'date'      => clone $current,
+                    'net-worth' => $sum,
+                ]
+            );
+
+            $current->addDays(7);
+        }
+        $data = $this->generator->netWorth($entries);
+
+        $cache->store($data);
+
+        return Response::json($data);
     }
 
 
@@ -45,7 +92,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOut(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOut(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -88,7 +135,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOutSummarized(ReportQueryInterface $query, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOutSummarized(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:
@@ -125,64 +172,6 @@ class ReportController extends Controller
      *
      * @return array
      */
-    protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
-    {
-        $income  = '0';
-        $expense = '0';
-        $count   = 0;
-        while ($start < $end) {
-            $date           = $start->format('Y-m');
-            $currentIncome  = isset($earned[$date]) ? $earned[$date] : 0;
-            $currentExpense = isset($spent[$date]) ? ($spent[$date] * -1) : 0;
-            $income         = bcadd($income, $currentIncome);
-            $expense        = bcadd($expense, $currentExpense);
-
-            $count++;
-            $start->addMonth();
-        }
-
-        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
-
-        return $data;
-    }
-
-    /**
-     * @param array  $earned
-     * @param array  $spent
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
-    {
-        $income  = '0';
-        $expense = '0';
-        $count   = 0;
-        while ($start < $end) {
-
-            $currentIncome  = $this->pluckFromArray($start->year, $earned);
-            $currentExpense = $this->pluckFromArray($start->year, $spent) * -1;
-            $income         = bcadd($income, $currentIncome);
-            $expense        = bcadd($expense, $currentExpense);
-
-            $count++;
-            $start->addYear();
-        }
-
-        $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
-
-        return $data;
-    }
-
-    /**
-     * @param array  $earned
-     * @param array  $spent
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     protected function multiYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
     {
         $entries = new Collection;
@@ -208,22 +197,23 @@ class ReportController extends Controller
      *
      * @return array
      */
-    protected function singleYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
+    protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
     {
-        // per month? simply use each month.
-
-        $entries = new Collection;
+        $income  = '0';
+        $expense = '0';
+        $count   = 0;
         while ($start < $end) {
-            // total income and total expenses:
-            $date       = $start->format('Y-m');
-            $incomeSum  = isset($earned[$date]) ? $earned[$date] : 0;
-            $expenseSum = isset($spent[$date]) ? ($spent[$date] * -1) : 0;
 
-            $entries->push([clone $start, $incomeSum, $expenseSum]);
-            $start->addMonth();
+            $currentIncome  = $this->pluckFromArray($start->year, $earned);
+            $currentExpense = bcmul($this->pluckFromArray($start->year, $spent), '-1');
+            $income         = bcadd($income, $currentIncome);
+            $expense        = bcadd($expense, $currentExpense);
+
+            $count++;
+            $start->addYear();
         }
 
-        $data = $this->generator->yearInOut($entries);
+        $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
 
         return $data;
     }
@@ -236,7 +226,6 @@ class ReportController extends Controller
      */
     protected function pluckFromArray($year, array $set)
     {
-        bcscale(2);
         $sum = '0';
         foreach ($set as $date => $amount) {
             if (substr($date, 0, 4) == $year) {
@@ -246,5 +235,77 @@ class ReportController extends Controller
 
         return $sum;
 
+    }
+
+    /**
+     * @param array  $earned
+     * @param array  $spent
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    protected function singleYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
+    {
+        // per month? simply use each month.
+
+        $entries = new Collection;
+        while ($start < $end) {
+            // total income and total expenses:
+            $date       = $start->format('Y-m');
+            $incomeSum  = $earned[$date] ?? 0;
+            $expenseSum = isset($spent[$date]) ? ($spent[$date] * -1) : 0;
+
+            $entries->push([clone $start, $incomeSum, $expenseSum]);
+            $start->addMonth();
+        }
+
+        $data = $this->generator->yearInOut($entries);
+
+        return $data;
+    }
+
+    /**
+     * @param array  $earned
+     * @param array  $spent
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
+    {
+        $income  = '0';
+        $expense = '0';
+        $count   = 0;
+        while ($start < $end) {
+            $date           = $start->format('Y-m');
+            $currentIncome  = $earned[$date] ?? '0';
+            $currentExpense = isset($spent[$date]) ? bcmul($spent[$date], '-1') : '0';
+            $income         = bcadd($income, $currentIncome);
+            $expense        = bcadd($expense, $currentExpense);
+
+            $count++;
+            $start->addMonth();
+        }
+
+        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
+
+        return $data;
+    }
+
+    /**
+     * @param $array
+     *
+     * @return string
+     */
+    private function arraySum($array) : string
+    {
+        $sum = '0';
+        foreach ($array as $entry) {
+            $sum = bcadd($sum, $entry);
+        }
+
+        return $sum;
     }
 }

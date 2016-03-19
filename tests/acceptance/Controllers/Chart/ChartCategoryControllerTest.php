@@ -16,6 +16,7 @@ class ChartCategoryControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\CategoryController::all
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::__construct
      */
     public function testAll()
     {

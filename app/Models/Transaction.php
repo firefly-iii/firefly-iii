@@ -23,6 +23,15 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|Transaction before($date)
  * @property float                   $before
  * @property float                   $after
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAccountId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmount($value)
+ * @mixin \Eloquent
  */
 class Transaction extends Model
 {

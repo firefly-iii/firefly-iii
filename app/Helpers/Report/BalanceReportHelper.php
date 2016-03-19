@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * BalanceReportHelper.php
  * Copyright (C) 2016 Sander Dorigo
@@ -14,8 +15,8 @@ use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -78,7 +79,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $balance->addBalanceLine($this->createEmptyBalanceLine($accounts, $spentData));
         $balance->addBalanceLine($this->createTagsBalanceLine($accounts, $start, $end));
         $balance->addBalanceLine($this->createDifferenceBalanceLine($accounts, $spentData, $start, $end));
-
         $balance->setBalanceHeader($header);
 
         return $balance;
@@ -108,7 +108,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $model->account_id == $account->id && $model->budget_id == $budget->id;
                 }
             );
-            $spent = 0;
+            $spent = '0';
             if (!is_null($entry->first())) {
                 $spent = $entry->first()->spent;
             }
@@ -142,7 +142,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $model->account_id == $account->id && is_null($model->budget_id);
                 }
             );
-            $spent = 0;
+            $spent = '0';
             if (!is_null($entry->first())) {
                 $spent = $entry->first()->spent;
             }
@@ -151,11 +151,10 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $tag->account_id == $account->id;
                 }
             );
-            $left      = 0;
+            $left      = '0';
             if (!is_null($leftEntry->first())) {
                 $left = $leftEntry->first()->sum;
             }
-            bcscale(2);
             $diffValue = bcadd($spent, $left);
 
             // difference:
@@ -185,7 +184,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $model->account_id == $account->id && is_null($model->budget_id);
                 }
             );
-            $spent = 0;
+            $spent = '0';
             if (!is_null($entry->first())) {
                 $spent = $entry->first()->spent;
             }
@@ -221,11 +220,10 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                     return $tag->account_id == $account->id;
                 }
             );
-            $left      = 0;
+            $left      = '0';
             if (!is_null($leftEntry->first())) {
                 $left = $leftEntry->first()->sum;
             }
-            bcscale(2);
 
             // balanced by tags
             $tagEntry = new BalanceEntry;

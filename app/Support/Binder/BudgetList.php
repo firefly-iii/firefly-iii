@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * BudgetList.php
  * Copyright (C) 2016 Sander Dorigo
@@ -11,6 +12,7 @@ namespace FireflyIII\Support\Binder;
 
 use Auth;
 use FireflyIII\Models\Budget;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -28,7 +30,7 @@ class BudgetList implements BinderInterface
      *
      * @return mixed
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder($value, $route): Collection
     {
         if (Auth::check()) {
             $ids = explode(',', $value);

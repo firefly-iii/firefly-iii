@@ -22,7 +22,7 @@ use View;
 class AccountController extends Controller
 {
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -36,7 +36,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create($what = 'asset')
+    public function create(string $what = 'asset')
     {
 
 
@@ -44,7 +44,7 @@ class AccountController extends Controller
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('accounts.create.fromStore') !== true) {
+        if (session('accounts.create.fromStore') !== true) {
             Session::put('accounts.create.url', URL::previous());
         }
         Session::forget('accounts.create.fromStore');
@@ -65,7 +65,7 @@ class AccountController extends Controller
     {
         $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = Expandedform::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
+        $accountList = ExpandedForm::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -87,14 +87,14 @@ class AccountController extends Controller
         $type     = $account->accountType->type;
         $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = Auth::user()->accounts()->find(intval(Input::get('move_account_before_delete')));
+        $moveTo   = $repository->find(intval(Input::get('move_account_before_delete')));
 
         $repository->destroy($account, $moveTo);
 
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
         Preferences::mark();
 
-        return redirect(Session::get('accounts.delete.url'));
+        return redirect(session('accounts.delete.url'));
     }
 
     /**
@@ -112,7 +112,7 @@ class AccountController extends Controller
         $openingBalance = $repository->openingBalanceTransaction($account);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('accounts.edit.fromUpdate') !== true) {
+        if (session('accounts.edit.fromUpdate') !== true) {
             Session::put('accounts.edit.url', URL::previous());
         }
         Session::forget('accounts.edit.fromUpdate');
@@ -122,16 +122,17 @@ class AccountController extends Controller
         // the opening balance is tricky:
         $openingBalanceAmount = null;
 
-        if ($openingBalance) {
+        if ($openingBalance->id) {
             $transaction          = $repository->getFirstTransaction($openingBalance, $account);
             $openingBalanceAmount = $transaction->amount;
         }
 
         $preFilled = [
+            'accountNumber'        => $account->getMeta('accountNumber'),
             'accountRole'          => $account->getMeta('accountRole'),
             'ccType'               => $account->getMeta('ccType'),
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
-            'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
+            'openingBalanceDate'   => $openingBalance->id ? $openingBalance->date->format('Y-m-d') : null,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => round($account->virtual_balance, 2),
         ];
@@ -148,14 +149,18 @@ class AccountController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(ARI $repository, $what)
+    public function index(ARI $repository, string $what)
     {
+        $what = $what ?? 'asset';
+
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
-        $start        = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end          = clone Session::get('end', Carbon::now()->endOfMonth());
+        /** @var Carbon $start */
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -209,6 +214,7 @@ class AccountController extends Controller
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
+            'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
@@ -221,6 +227,13 @@ class AccountController extends Controller
         Session::flash('success', 'New account "' . $account->name . '" stored!');
         Preferences::mark();
 
+        // update preferences if necessary:
+        $frontPage = Preferences::get('frontPageAccounts', [])->data;
+        if (count($frontPage) > 0) {
+            $frontPage[] = $account->id;
+            Preferences::set('frontPageAccounts', $frontPage);
+        }
+
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('accounts.create.fromStore', true);
@@ -229,7 +242,7 @@ class AccountController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('accounts.create.url'));
+        return redirect(session('accounts.create.url'));
     }
 
     /**
@@ -247,6 +260,7 @@ class AccountController extends Controller
             'active'                 => $request->input('active'),
             'user'                   => Auth::user()->id,
             'iban'                   => $request->input('iban'),
+            'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'openingBalance'         => round($request->input('openingBalance'), 2),
@@ -268,24 +282,24 @@ class AccountController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('accounts.edit.url'));
+        return redirect(session('accounts.edit.url'));
 
     }
 
 
     /**
      * @param array $array
-     * @param       $entryId
+     * @param int   $entryId
      *
      * @return null|mixed
      */
-    protected function isInArray(array $array, $entryId)
+    protected function isInArray(array $array, int $entryId)
     {
         if (isset($array[$entryId])) {
             return $array[$entryId];
         }
 
-        return null;
+        return '';
     }
 
 }

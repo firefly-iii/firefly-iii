@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
@@ -81,19 +82,10 @@ class FireflyServiceProvider extends ServiceProvider
         }
         );
 
-        $this->app->bind('FireflyIII\Repositories\Account\AccountRepositoryInterface', 'FireflyIII\Repositories\Account\AccountRepository');
-        $this->app->bind('FireflyIII\Repositories\Budget\BudgetRepositoryInterface', 'FireflyIII\Repositories\Budget\BudgetRepository');
-        $this->app->bind('FireflyIII\Repositories\Category\CategoryRepositoryInterface', 'FireflyIII\Repositories\Category\CategoryRepository');
         $this->app->bind('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface', 'FireflyIII\Repositories\Category\SingleCategoryRepository');
-        $this->app->bind('FireflyIII\Repositories\Journal\JournalRepositoryInterface', 'FireflyIII\Repositories\Journal\JournalRepository');
-        $this->app->bind('FireflyIII\Repositories\Bill\BillRepositoryInterface', 'FireflyIII\Repositories\Bill\BillRepository');
-        $this->app->bind('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface', 'FireflyIII\Repositories\PiggyBank\PiggyBankRepository');
         $this->app->bind('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface', 'FireflyIII\Repositories\Currency\CurrencyRepository');
-        $this->app->bind('FireflyIII\Repositories\Tag\TagRepositoryInterface', 'FireflyIII\Repositories\Tag\TagRepository');
-        $this->app->bind('FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface', 'FireflyIII\Repositories\Attachment\AttachmentRepository');
-        $this->app->bind('FireflyIII\Repositories\Rule\RuleRepositoryInterface', 'FireflyIII\Repositories\Rule\RuleRepository');
-        $this->app->bind('FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface', 'FireflyIII\Repositories\RuleGroup\RuleGroupRepository');
         $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
+        $this->app->bind('FireflyIII\Repositories\User\UserRepositoryInterface', 'FireflyIII\Repositories\User\UserRepository');
 
         // CSV import
         $this->app->bind('FireflyIII\Helpers\Csv\WizardInterface', 'FireflyIII\Helpers\Csv\Wizard');
@@ -125,7 +117,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Report\AccountReportHelperInterface', 'FireflyIII\Helpers\Report\AccountReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\BalanceReportHelperInterface', 'FireflyIII\Helpers\Report\BalanceReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\BudgetReportHelperInterface', 'FireflyIII\Helpers\Report\BudgetReportHelper');
-
 
     }
 

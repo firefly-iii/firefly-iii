@@ -2,6 +2,7 @@
 
 use FireflyIII\Helpers\Help\HelpInterface;
 use Log;
+use Preferences;
 use Response;
 
 /**
@@ -25,7 +26,7 @@ class HelpController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(HelpInterface $help, $route)
+    public function show(HelpInterface $help, string $route)
     {
         $content = [
             'text'  => '<p>There is no help for this route!</p>',
@@ -46,7 +47,8 @@ class HelpController extends Controller
 
             return Response::json($content);
         }
-        $content = $help->getFromGithub($route);
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $content  = $help->getFromGithub($language, $route);
 
         $help->putInCache($route, $content);
 

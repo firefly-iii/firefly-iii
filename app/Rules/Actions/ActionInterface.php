@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * ActionInterface.php
  * Copyright (C) 2016 Sander Dorigo
@@ -22,13 +23,14 @@ interface ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction         $action
-     * @param TransactionJournal $journal
+     * @param RuleAction $action
      */
-    public function __construct(RuleAction $action, TransactionJournal $journal);
+    public function __construct(RuleAction $action);
 
     /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
-    public function act();
+    public function act(TransactionJournal $journal);
 }

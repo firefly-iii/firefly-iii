@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -6,6 +7,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
@@ -13,7 +15,6 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
-use Session;
 use stdClass;
 
 /**
@@ -23,11 +24,15 @@ use stdClass;
  */
 class CategoryController extends Controller
 {
+    const MAKE_POSITIVE = -1;
+    const KEEP_POSITIVE = 1;
+
+
     /** @var  \FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface */
     protected $generator;
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -92,8 +97,8 @@ class CategoryController extends Controller
      */
     public function currentPeriod(SCRI $repository, Category $category)
     {
-        $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
         $data  = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
@@ -115,7 +120,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function earnedInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function earnedInPeriod(CRI $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
@@ -134,32 +139,8 @@ class CategoryController extends Controller
                 return $category->name;
             }
         );
-        $entries    = new Collection;
-
-        while ($start < $end) { // filter the set:
-            $row        = [clone $start];
-            $currentSet = $set->filter( // get possibly relevant entries from the big $set
-                function (Category $category) use ($start) {
-                    return $category->dateFormatted == $start->format('Y-m');
-                }
-            );
-            /** @var Category $category */
-            foreach ($categories as $category) { // check for each category if its in the current set.
-                $entry = $currentSet->filter( // if its in there, use the value.
-                    function (Category $cat) use ($category) {
-                        return ($cat->id == $category->id);
-                    }
-                )->first();
-                if (!is_null($entry)) {
-                    $row[] = round($entry->earned, 2);
-                } else {
-                    $row[] = 0;
-                }
-            }
-            $entries->push($row);
-            $start->addMonth();
-        }
-        $data = $this->generator->earnedInPeriod($categories, $entries);
+        $entries    = $this->filterCollection($start, $end, $set, $categories);
+        $data       = $this->generator->earnedInPeriod($categories, $entries);
         $cache->store($data);
 
         return $data;
@@ -171,13 +152,15 @@ class CategoryController extends Controller
      *
      * @param CRI $repository
      *
+     * @param ARI $accountRepository
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(CRI $repository)
+    public function frontpage(CRI $repository, ARI $accountRepository)
     {
 
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -190,8 +173,9 @@ class CategoryController extends Controller
         }
 
         // get data for categories (and "no category"):
-        $set     = $repository->spentForAccountsPerMonth(new Collection, $start, $end);
-        $outside = $repository->sumSpentNoCategory(new Collection, $start, $end);
+        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $set      = $repository->spentForAccountsPerMonth($accounts, $start, $end);
+        $outside  = $repository->sumSpentNoCategory($accounts, $start, $end);
 
         // this is a "fake" entry for the "no category" entry.
         $entry        = new stdClass();
@@ -216,7 +200,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear($reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function multiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
         /** @var CRI $repository */
         $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
@@ -340,42 +324,81 @@ class CategoryController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+
         $set        = $repository->spentForAccountsPerMonth($accounts, $start, $end);
         $categories = $set->unique('id')->sortBy(
             function (Category $category) {
                 return $category->name;
             }
         );
-        $entries    = new Collection;
+        $entries    = $this->filterCollection($start, $end, $set, $categories);
+        $entries    = $this->invertSelection($entries);
+        $data       = $this->generator->spentInPeriod($categories, $entries);
+        $cache->store($data);
+
+        return $data;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $set
+     * @param Collection $categories
+     *
+     * @return Collection
+     */
+    private function filterCollection(Carbon $start, Carbon $end, Collection $set, Collection $categories): Collection
+    {
+        $entries = new Collection;
 
         while ($start < $end) { // filter the set:
             $row        = [clone $start];
-            $currentSet = $set->filter(// get possibly relevant entries from the big $set
+            $currentSet = $set->filter( // get possibly relevant entries from the big $set
                 function (Category $category) use ($start) {
                     return $category->dateFormatted == $start->format('Y-m');
                 }
             );
             /** @var Category $category */
-            foreach ($categories as $category) {// check for each category if its in the current set.
-                $entry = $currentSet->filter(// if its in there, use the value.
+            foreach ($categories as $category) { // check for each category if its in the current set.
+                $entry = $currentSet->filter( // if its in there, use the value.
                     function (Category $cat) use ($category) {
                         return ($cat->id == $category->id);
                     }
                 )->first();
                 if (!is_null($entry)) {
-                    $row[] = round(($entry->spent * -1), 2);
+                    $row[] = $entry->earned ? round($entry->earned, 2) : round($entry->spent, 2);
                 } else {
                     $row[] = 0;
                 }
             }
-
             $entries->push($row);
             $start->addMonth();
         }
-        $data = $this->generator->spentInPeriod($categories, $entries);
-        $cache->store($data);
 
-        return $data;
+        return $entries;
+    }
+
+    /**
+     * Not the most elegant solution but it works.
+     *
+     * @param Collection $entries
+     *
+     * @return Collection
+     */
+    private function invertSelection(Collection $entries): Collection
+    {
+        $result = new Collection;
+        foreach ($entries as $entry) {
+            $new   = [$entry[0]];
+            $count = count($entry);
+            for ($i = 1; $i < $count; $i++) {
+                $new[$i] = ($entry[$i] * -1);
+            }
+            $result->push($new);
+        }
+
+        return $result;
+
     }
 
     /**
@@ -395,7 +418,7 @@ class CategoryController extends Controller
         $cache->addProperty($category->id);
         $cache->addProperty('specific-period');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); //
         }
         $entries = new Collection;
 
@@ -406,8 +429,8 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $str    = $start->format('Y-m-d');
-            $spent  = isset($spentArray[$str]) ? $spentArray[$str] : 0;
-            $earned = isset($earnedArray[$str]) ? $earnedArray[$str] : 0;
+            $spent  = $spentArray[$str] ?? '0';
+            $earned = $earnedArray[$str] ?? '0';
             $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
@@ -418,6 +441,5 @@ class CategoryController extends Controller
 
         return $data;
     }
-
 
 }

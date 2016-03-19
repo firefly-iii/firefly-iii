@@ -1,10 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Session;
+
 /**
  * Class Authenticate
  *
@@ -27,6 +30,12 @@ class Authenticate
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
+                return redirect()->guest('login');
+            }
+        } else {
+            if (intval(Auth::user()->blocked) === 1) {
+                Auth::guard($guard)->logout();
+                Session::flash('logoutMessage', trans('firefly.block_account_logout'));
 
                 return redirect()->guest('login');
             }

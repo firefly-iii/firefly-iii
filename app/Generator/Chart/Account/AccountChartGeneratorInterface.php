@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * AccountChartGeneratorInterface.php
  * Copyright (C) 2016 Sander Dorigo
@@ -28,7 +29,7 @@ interface AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end);
+    public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $accounts
@@ -37,7 +38,7 @@ interface AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function frontpage(Collection $accounts, Carbon $start, Carbon $end);
+    public function frontpage(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Account $account
@@ -46,5 +47,5 @@ interface AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function single(Account $account, Carbon $start, Carbon $end);
+    public function single(Account $account, Carbon $start, Carbon $end): array;
 }

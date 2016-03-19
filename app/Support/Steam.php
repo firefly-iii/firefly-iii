@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
@@ -22,9 +23,9 @@ class Steam
      * @param \Carbon\Carbon             $date
      * @param bool                       $ignoreVirtualBalance
      *
-     * @return float
+     * @return string
      */
-    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false)
+    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false): string
     {
 
         // abuse chart properties:
@@ -37,18 +38,18 @@ class Steam
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        bcscale(2);
-
-        $balance = $account->transactions()->leftJoin(
-            'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-        )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount');
+        $balance = strval(
+            $account->transactions()->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+        );
 
         if (!$ignoreVirtualBalance) {
             $balance = bcadd($balance, $account->virtual_balance);
         }
-        $cache->store(round($balance, 2));
+        $cache->store($balance);
 
-        return round($balance, 2);
+        return $balance;
     }
 
     /**
@@ -87,7 +88,7 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
-                                  ->get(['transaction_journals.date', DB::Raw('SUM(`transactions`.`amount`) as `modified`')]);
+                                  ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `modified`')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
             $currentBalance         = bcadd($currentBalance, $entry->modified);
@@ -102,6 +103,7 @@ class Steam
     }
 
     /**
+     * This method always ignores the virtual balance.
      *
      * @param array          $ids
      * @param \Carbon\Carbon $date
@@ -120,19 +122,17 @@ class Steam
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        bcscale(2);
-
         $balances = Transaction::
         leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
-                               ->get(['transactions.account_id', DB::Raw('sum(`transactions`.`amount`) as aggregate')]);
+                               ->get(['transactions.account_id', DB::raw('sum(`transactions`.`amount`) as aggregate')]);
 
         $result = [];
         foreach ($balances as $entry) {
             $accountId          = intval($entry->account_id);
-            $balance            = round($entry->aggregate, 2);
+            $balance            = $entry->aggregate;
             $result[$accountId] = $balance;
         }
 
@@ -176,14 +176,14 @@ class Steam
 
         if (!(strpos($string, 'k') === false)) {
             // has a K in it, remove the K and multiply by 1024.
-            $bytes = bcmul(rtrim($string, 'k'), 1024);
+            $bytes = bcmul(rtrim($string, 'k'), '1024');
 
             return intval($bytes);
         }
 
         if (!(strpos($string, 'm') === false)) {
             // has a M in it, remove the M and multiply by 1048576.
-            $bytes = bcmul(rtrim($string, 'm'), 1048576);
+            $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
             return intval($bytes);
         }

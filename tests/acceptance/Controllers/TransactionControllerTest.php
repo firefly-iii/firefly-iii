@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 /**
@@ -16,109 +17,141 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::create
-     * @todo   Implement testCreate().
+     * @covers FireflyIII\Http\Controllers\TransactionController::__construct
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/transactions/create/withdrawal');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/transaction/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.delete.url' => 'http://localhost']);
+
+        $this->be($this->user());
+        $this->call('POST', '/transaction/destroy/1');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/transaction/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\TransactionController::index
-     * @todo   Implement testIndex().
+     * @covers       FireflyIII\Http\Controllers\TransactionController::index
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testIndex()
+    public function testIndex($range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $journals = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+        $journals->shouldReceive('getJournalsOfTypes')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', '/transactions/deposit');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::reorder
-     * @todo   Implement testReorder().
      */
     public function testReorder()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'ids'  => [1],
+            'date' => '2015-01-01',
+        ];
+        $this->be($this->user());
+        $this->call('POST', '/transaction/reorder', $args);
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\TransactionController::show
-     * @todo   Implement testShow().
+     * @covers       FireflyIII\Http\Controllers\TransactionController::show
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testShow()
+    public function testShow($range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', '/transaction/show/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::store
-     * @todo   Implement testStore().
+     * @covers FireflyIII\Http\Requests\JournalFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\JournalFormRequest::rules
+     * @covers FireflyIII\Http\Requests\JournalFormRequest::getJournalData
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.create.url' => 'http://localhost']);
+
+        $args = [
+            'what'                      => 'withdrawal',
+            'description'               => 'Something',
+            'account_id'                => '1',
+            'expense_account'           => 'Some expense',
+            'amount'                    => 100,
+            'amount_currency_id_amount' => 1,
+            'date'                      => '2015-01-01',
+        ];
+        $this->be($this->user());
+        $this->call('POST', '/transactions/store/withdrawal', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\TransactionController::update
-     * @todo   Implement testUpdate().
+     * @covers FireflyIII\Http\Requests\JournalFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\JournalFormRequest::rules
+     * @covers FireflyIII\Http\Requests\JournalFormRequest::getJournalData
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.edit.url' => 'http://localhost']);
+
+        $args = [
+            'what'                      => 'withdrawal',
+            'id'                        => 2,
+            'description'               => 'Something new',
+            'account_id'                => '1',
+            'expense_account'           => 'Some expense',
+            'amount'                    => 100,
+            'amount_currency_id_amount' => 1,
+            'date'                      => '2015-01-01',
+        ];
+        $this->be($this->user());
+        $this->call('POST', '/transaction/update/1', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Specifix;
 
 /**
@@ -10,6 +11,7 @@ interface SpecifixInterface
 {
     const PRE_PROCESSOR  = 1;
     const POST_PROCESSOR = 2;
+
     /**
      * Implement bank and locale related fixes.
      */
@@ -23,17 +25,17 @@ interface SpecifixInterface
     /**
      * @param array $data
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * @param int $processorType
      *
      * @return $this
      */
-    public function setProcessorType($processorType);
+    public function setProcessorType(int $processorType);
 
     /**
      * @param array $row
      */
-    public function setRow($row);
+    public function setRow(array $row);
 }

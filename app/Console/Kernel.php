@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 /**
  * Kernel.php
  * Copyright (C) 2016 Sander Dorigo

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * PiggyBankChartGenerator.php
  * Copyright (C) 2016 Sander Dorigo
@@ -23,5 +24,5 @@ interface PiggyBankChartGeneratorInterface
      *
      * @return array
      */
-    public function history(Collection $set);
+    public function history(Collection $set): array;
 }

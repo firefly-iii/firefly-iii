@@ -38,6 +38,11 @@
                     {% if tag.date %}
                         <p>{{ 'date'|_ }}: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
                     {% endif %}
+
+                    <p>
+                        {{ 'sum'|_ }}: {{ sum|formatAmount }}<br />
+                    </p>
+
                 </div>
             </div>
         </div>
@@ -93,7 +98,7 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    {% include 'list/journals.twig' with {'journals': tag.transactionjournals, 'showPageSum' : true} %}
+                    {% include 'list/journals.twig' %}
                 </div>
             </div>
         </div>

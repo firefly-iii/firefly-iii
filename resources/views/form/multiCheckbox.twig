@@ -3,9 +3,14 @@
 
     <div class="col-sm-8">
         {% for value,description in list %}
-            <div class="checkbox">
+            {% set options = options|merge({'id': 'ffInput_'~name~'_'~value}) %}
+        <div class="checkbox">
                 <label>
-                    {{ Form.checkbox(name~'[]', value, (selected == value), options) }}
+                    {% if value in selected %}
+                        {{ Form.checkbox(name~'[]', value, true, options) }}
+                    {% else %}
+                        {{ Form.checkbox(name~'[]', value, false, options) }}
+                    {% endif %}
                     {{ description }}
                 </label>
             </div>

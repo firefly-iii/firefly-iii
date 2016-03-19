@@ -1,12 +1,11 @@
 # Firefly III
 
+[![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php#v7.0.4)
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii)
-[![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/build.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/build-status/master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
-[![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
 
 ## About
 

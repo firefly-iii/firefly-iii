@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 
@@ -38,7 +38,7 @@ class Bill
     /**
      * @return Collection
      */
-    public function getBills()
+    public function getBills(): Collection
     {
         $set = $this->bills->sortBy(
             function (BillLine $bill) {

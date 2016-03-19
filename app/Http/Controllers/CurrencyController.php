@@ -22,7 +22,7 @@ class CurrencyController extends Controller
 
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {
@@ -40,7 +40,7 @@ class CurrencyController extends Controller
         $subTitle     = trans('firefly.create_currency');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('currency.create.fromStore') !== true) {
+        if (session('currency.create.fromStore') !== true) {
             Session::put('currency.create.url', URL::previous());
         }
         Session::forget('currency.create.fromStore');
@@ -114,7 +114,7 @@ class CurrencyController extends Controller
             $currency->delete();
         }
 
-        return redirect(Session::get('currency.delete.url'));
+        return redirect(session('currency.delete.url'));
     }
 
     /**
@@ -129,7 +129,7 @@ class CurrencyController extends Controller
         $currency->symbol = htmlentities($currency->symbol);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('currency.edit.fromUpdate') !== true) {
+        if (session('currency.edit.fromUpdate') !== true) {
             Session::put('currency.edit.url', URL::previous());
         }
         Session::forget('currency.edit.fromUpdate');
@@ -183,7 +183,7 @@ class CurrencyController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('currency.create.url'));
+        return redirect(session('currency.create.url'));
 
 
     }
@@ -212,7 +212,7 @@ class CurrencyController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(Session::get('currency.edit.url'));
+        return redirect(session('currency.edit.url'));
 
     }
 

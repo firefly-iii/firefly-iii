@@ -22,22 +22,26 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12">
 
-                {% if what == 'asset' %}
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
 
-                            {{ ExpandedForm.text('iban') }}
+                        {{ ExpandedForm.text('iban') }}
+                        {{ ExpandedForm.text('accountNumber') }}
+
+                        {% if what == 'asset' %}
+
                             {{ ExpandedForm.balance('openingBalance') }}
                             {{ ExpandedForm.date('openingBalanceDate', phpdate('Y-m-d')) }}
                             {{ ExpandedForm.select('accountRole', Config.get('firefly.accountRoles'),null,{'helpText' : 'asset_account_role_help'|_}) }}
                             {{ ExpandedForm.balance('virtualBalance') }}
+                        {% endif %}
 
-                        </div>
                     </div>
-                {% endif %}
+                </div>
+
 
                 <div class="box">
                     <div class="box-header with-border">

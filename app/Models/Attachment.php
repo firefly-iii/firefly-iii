@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
@@ -28,12 +29,44 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property boolean               $uploaded
  * @property-read Attachment       $attachable
  * @property-read \FireflyIII\User $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereAttachableId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereAttachableType($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereMd5($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereFilename($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereNotes($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereMime($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereSize($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment whereUploaded($value)
+ * @mixin \Eloquent
  */
 class Attachment extends Model
 {
     use SoftDeletes;
 
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
+
+    /**
+     * @param Attachment $value
+     *
+     * @return Attachment
+     */
+    public static function routeBinder(Attachment $value)
+    {
+        if (Auth::check()) {
+
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * Get all of the owning imageable models.
@@ -44,14 +77,30 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Returns the expected filename for this attachment.
+     *
+     * @return string
      */
-    public function user()
+    public function fileName(): string
     {
-        return $this->belongsTo('FireflyIII\User');
+        return sprintf('at-%s.data', strval($this->id));
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
+     * @return null|string
+     */
+    public function getDescriptionAttribute($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Crypt::decrypt($value);
+    }
 
     /**
      * @codeCoverageIgnore
@@ -67,14 +116,6 @@ class Attachment extends Model
         }
 
         return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param string $value
-     */
-    public function setFilenameAttribute($value)
-    {
-        $this->attributes['filename'] = Crypt::encrypt($value);
     }
 
     /**
@@ -94,11 +135,19 @@ class Attachment extends Model
     }
 
     /**
-     * @param string $value
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
+     * @return null|string
      */
-    public function setMimeAttribute($value)
+    public function getNotesAttribute($value)
     {
-        $this->attributes['mime'] = Crypt::encrypt($value);
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Crypt::decrypt($value);
     }
 
     /**
@@ -120,49 +169,25 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setTitleAttribute($value)
-    {
-        $this->attributes['title'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return null|string
-     */
-    public function getDescriptionAttribute($value)
-    {
-        if (is_null($value)) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param string $value
-     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = Crypt::encrypt($value);
     }
 
     /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return null|string
+     * @param string $value
      */
-    public function getNotesAttribute($value)
+    public function setFilenameAttribute($value)
     {
-        if (is_null($value)) {
-            return null;
-        }
+        $this->attributes['filename'] = Crypt::encrypt($value);
+    }
 
-        return Crypt::decrypt($value);
+    /**
+     * @param string $value
+     */
+    public function setMimeAttribute($value)
+    {
+        $this->attributes['mime'] = Crypt::encrypt($value);
     }
 
     /**
@@ -174,19 +199,20 @@ class Attachment extends Model
     }
 
     /**
-     * @param Attachment $value
-     *
-     * @return Attachment
+     * @param string $value
      */
-    public static function routeBinder(Attachment $value)
+    public function setTitleAttribute($value)
     {
-        if (Auth::check()) {
+        $this->attributes['title'] = Crypt::encrypt($value);
+    }
 
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
     }
 
 }

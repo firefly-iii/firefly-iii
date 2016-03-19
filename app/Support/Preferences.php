@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
@@ -13,6 +14,25 @@ use FireflyIII\Models\Preference;
  */
 class Preferences
 {
+    /**
+     * @param $name
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete($name): bool
+    {
+        $fullName = 'preference' . Auth::user()->id . $name;
+        if (Cache::has($fullName)) {
+            Cache::forget($fullName);
+        }
+        /** @var Preference $preference */
+        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first();
+        $preference->delete();
+
+        return true;
+    }
+
     /**
      * @param      string $name
      * @param string      $default

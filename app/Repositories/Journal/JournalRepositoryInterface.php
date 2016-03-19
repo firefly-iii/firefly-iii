@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
@@ -52,14 +53,23 @@ interface JournalRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, $offset, $page);
+    public function getJournalsOfTypes(array $types, int $offset, int $page);
 
     /**
-     * @param $type
+     * @param array $types
+     * @param int   $offset
+     * @param int   $count
+     *
+     * @return Collection
+     */
+    public function getCollectionOfTypes(array $types, int $offset, int $count);
+
+    /**
+     * @param string $type
      *
      * @return TransactionType
      */
-    public function getTransactionType($type);
+    public function getTransactionType(string $type);
 
     /**
      * @param  int   $journalId
@@ -67,7 +77,7 @@ interface JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function getWithDate($journalId, Carbon $date);
+    public function getWithDate(int $journalId, Carbon $date);
 
     /**
      * @param TransactionJournal $journal

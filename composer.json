@@ -20,18 +20,21 @@
     "doctrine/dbal": "~2.5",
     "league/commonmark": "~0.7",
     "rcrowe/twigbridge": "~0.9",
-    "zizaco/entrust": "dev-laravel-5",
     "league/csv": "^7.1",
-    "laravelcollective/html": "^5.2"
+    "laravelcollective/html": "^5.2",
+    "rmccue/requests": "^1.6",
+    "pragmarx/google2fa": "^0.7.1"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
-    "mockery/mockery": "0.9.*",
+    "mockery/mockery": "dev-master",
     "phpunit/phpunit": "~4.0",
     "symfony/css-selector": "2.8.*|3.0.*",
     "symfony/dom-crawler": "2.8.*|3.0.*",
     "barryvdh/laravel-debugbar": "@stable",
-    "barryvdh/laravel-ide-helper": "~2.0"
+    "barryvdh/laravel-ide-helper": "~2.0",
+    "johnkary/phpunit-speedtrap": "^1.0",
+    "hamcrest/hamcrest-php": "^2.0@dev"
   },
   "autoload": {
     "classmap": [

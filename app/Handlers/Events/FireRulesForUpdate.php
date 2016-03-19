@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * FireRulesForUpdate.php
  * Copyright (C) 2016 Sander Dorigo
@@ -25,22 +26,13 @@ use Log;
 class FireRulesForUpdate
 {
     /**
-     * Create the event handler.
-     *
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      *
      * @param  TransactionJournalUpdated $event
      *
-     * @return void
+     * @return bool
      */
-    public function handle(TransactionJournalUpdated $event)
+    public function handle(TransactionJournalUpdated $event): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
@@ -59,10 +51,10 @@ class FireRulesForUpdate
             /** @var Rule $rule */
             foreach ($rules as $rule) {
                 Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
-                $processor = new Processor($rule, $event->journal);
 
-                // get some return out of this?
-                $processor->handle();
+                Log::debug('Now handling rule #' . $rule->id . ' (' . $rule->title . ')');
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($event->journal);
 
                 if ($rule->stop_processing) {
                     break;
@@ -70,5 +62,7 @@ class FireRulesForUpdate
 
             }
         }
+
+        return true;
     }
 }

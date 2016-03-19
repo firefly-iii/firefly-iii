@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -22,6 +23,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /** @var  string */
+    protected $dateTimeFormat;
     /** @var string */
     protected $monthAndDayFormat;
     /** @var string */
@@ -42,6 +45,7 @@ class Controller extends BaseController
             $lang                    = $pref->data;
             $this->monthFormat       = (string)trans('config.month');
             $this->monthAndDayFormat = (string)trans('config.month_and_day');
+            $this->dateTimeFormat    = (string)trans('config.date_time');
 
             App::setLocale($lang);
             Carbon::setLocale(substr($lang, 0, 2));
@@ -60,6 +64,7 @@ class Controller extends BaseController
             ];
             View::share('monthFormat', $this->monthFormat);
             View::share('monthAndDayFormat', $this->monthAndDayFormat);
+            View::share('dateTimeFormat', $this->dateTimeFormat);
             View::share('language', $lang);
             View::share('localeconv', $localeconv);
         }
@@ -77,7 +82,6 @@ class Controller extends BaseController
      */
     protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
     {
-        bcscale(2);
         $sum          = '0';
         $currentStart = clone $start; // to not mess with the original one
         $currentEnd   = clone $end; // to not mess with the original one

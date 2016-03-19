@@ -15,134 +15,163 @@ class RuleControllerTest extends TestCase
 {
 
     /**
+     * @covers FireflyIII\Http\Controllers\RuleController::__construct
      * @covers FireflyIII\Http\Controllers\RuleController::create
-     * @todo   Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/create/1');
+        $this->assertResponseStatus(200);
+
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/rules/delete/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.rule.delete.url' => 'http://localhost']);
+
+        $this->be($this->user());
+        $this->call('POST', '/rules/destroy/1');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::down
-     * @todo   Implement testDown().
      */
     public function testDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/rules/down/1');
+        $this->assertResponseStatus(302);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::edit
-     * @todo   Implement testEdit().
+     * @covers FireflyIII\Http\Controllers\RuleController::getCurrentTriggers
+     * @covers FireflyIII\Http\Controllers\RuleController::getCurrentActions
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules/rules/edit/1');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::index
-     * @todo   Implement testIndex().
+     * @covers FireflyIII\Http\Controllers\RuleController::createDefaultRuleGroup
+     * @covers FireflyIII\Http\Controllers\RuleController::createDefaultRule
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/rules');
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::reorderRuleActions
-     * @todo   Implement testReorderRuleActions().
      */
     public function testReorderRuleActions()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $args = ['actions' => [1, 2, 3]];
+        $this->call('POST', '/rules/rules/action/reorder/1', $args);
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::reorderRuleTriggers
-     * @todo   Implement testReorderRuleTriggers().
      */
     public function testReorderRuleTriggers()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $args = ['actions' => [1, 2]];
+        $this->call('POST', '/rules/rules/trigger/reorder/1', $args);
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::store
-     * @todo   Implement testStore().
+     * @covers FireflyIII\Http\Requests\RuleFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\RuleFormRequest::rules
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.rule.create.url' => 'http://localhost']);
+        $this->be($this->user());
+        $args = [
+            'rule_group_id'      => 1,
+            'title'              => 'Some new rule',
+            'user_id'            => 1,
+            'trigger'            => 'store-journal',
+            'description'        => 'Some new rule',
+            'rule-trigger'       => ['description_is'],
+            'rule-trigger-value' => ['something'],
+            'rule-trigger-stop'  => [],
+            'rule-action'        => ['set_category'],
+            'rule-action-value'  => ['something'],
+            'rule-action-stop'   => [],
+            'stop_processing'    => 0,
+        ];
+        $this->call('POST', '/rules/store/1', $args);
+
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::up
-     * @todo   Implement testUp().
      */
     public function testUp()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->be($this->user());
+        $this->call('GET', '/rules/rules/up/1');
+        $this->assertResponseStatus(302);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\RuleController::update
-     * @todo   Implement testUpdate().
+     * @covers FireflyIII\Http\Requests\RuleFormRequest::authorize
+     * @covers FireflyIII\Http\Requests\RuleFormRequest::rules
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.rule.edit.url' => 'http://localhost']);
+
+        $this->be($this->user());
+        $args = [
+            'title'              => 'Some new rule update',
+            'rule_group_id'      => 1,
+            'id'                 => 1,
+            'active'             => 1,
+            'trigger'            => 'store-journal',
+            'description'        => 'Some new rule',
+            'rule-trigger'       => ['description_is'],
+            'rule-trigger-value' => ['something'],
+            'rule-trigger-stop'  => [],
+            'rule-action'        => ['set_category'],
+            'rule-action-value'  => ['something'],
+            'rule-action-stop'   => [],
+            'stop_processing'    => 0,
+        ];
+        $this->call('POST', '/rules/update/1', $args);
+        $this->assertSessionHas('success');
+        $this->assertResponseStatus(302);
     }
 }

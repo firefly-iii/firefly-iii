@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * TransactionJournalStored.php
  * Copyright (C) 2016 Sander Dorigo
@@ -30,9 +31,9 @@ class TransactionJournalStored extends Event
      * Create a new event instance.
      *
      * @param TransactionJournal $journal
-     * @param                    $piggyBankId
+     * @param int                $piggyBankId
      */
-    public function __construct(TransactionJournal $journal, $piggyBankId)
+    public function __construct(TransactionJournal $journal, int $piggyBankId)
     {
         //
         $this->journal     = $journal;

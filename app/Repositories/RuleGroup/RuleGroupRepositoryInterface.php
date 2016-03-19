@@ -1,9 +1,11 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
 
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -13,6 +15,8 @@ use Illuminate\Support\Collection;
  */
 interface RuleGroupRepositoryInterface
 {
+
+
     /**
      * @return int
      */
@@ -35,6 +39,13 @@ interface RuleGroupRepositoryInterface
      * @return int
      */
     public function getHighestOrderRuleGroup();
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getRuleGroupsWithRules(User $user): Collection;
 
     /**
      * @param RuleGroup $ruleGroup

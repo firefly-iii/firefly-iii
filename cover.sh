@@ -9,19 +9,21 @@ cp phpunit.cover.xml phpunit.xml
 # delete test databases:
 if [ -f storage/database/testing.db ]
 then
-    rm storage/database/testing.db
+    echo "Will not remove test db"
+    # rm storage/database/testing.db
 fi
 
 if [ -f storage/database/testing-copy.db ]
 then
-    rm storage/database/testing-copy.db
+    echo "Will not remove test db"
+    # rm storage/database/testing-copy.db
 fi
 
 # test!
 if [ -z "$1" ]
 then
     echo "Running all tests..."
-    phpunit --verbose
+    phpunit
 fi
 
 # test selective..
@@ -37,14 +39,14 @@ then
         then
             # run it!
             echo "Now running $firstFile"
-            phpunit --verbose $firstFile
+            phpunit $firstFile
             result=$?
         fi
         if [ -f "$secondFile" ]
         then
             # run it!
             echo "Now running $secondFile"
-            phpunit --verbose $secondFile
+            phpunit $secondFile
             result=$?
         fi
 

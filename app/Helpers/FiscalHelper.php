@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Helpers;
 
@@ -36,6 +37,27 @@ class FiscalHelper implements FiscalHelperInterface
      *
      * @return Carbon date object
      */
+    public function endOfFiscalYear(Carbon $date)
+    {
+        // get start of fiscal year for passed date
+        $endDate = $this->startOfFiscalYear($date);
+        if ($this->useCustomFiscalYear === true) {
+            // add 1 year and sub 1 day
+            $endDate->addYear();
+            $endDate->subDay();
+        } else {
+            $endDate->endOfYear();
+        }
+
+
+        return $endDate;
+    }
+
+    /**
+     * @param Carbon $date
+     *
+     * @return Carbon date object
+     */
     public function startOfFiscalYear(Carbon $date)
     {
         // get start mm-dd. Then create a start date in the year passed.
@@ -52,27 +74,7 @@ class FiscalHelper implements FiscalHelperInterface
         } else {
             $startDate->startOfYear();
         }
+
         return $startDate;
-    }
-
-    /**
-     * @param Carbon $date
-     *
-     * @return Carbon date object
-     */
-    public function endOfFiscalYear(Carbon $date)
-    {
-        // get start of fiscal year for passed date
-        $endDate = $this->startOfFiscalYear($date);
-        if ($this->useCustomFiscalYear === true) {
-            // add 1 year and sub 1 day
-            $endDate->addYear();
-            $endDate->subDay();
-        } else {
-            $endDate->endOfYear();
-        }
-
-
-        return $endDate;
     }
 }

@@ -19,19 +19,19 @@
             {% for budgetLine in budgets.getBudgetLines %}
                 <tr>
                     <td>
-                        {% if budgetLine.getBudget %}
+                        {% if budgetLine.getBudget.id %}
                             <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
                         {% else %}
                             <em>{{ 'noBudget'|_ }}</em>
                         {% endif %}
                     </td>
                     <td>
-                        {% if budgetLine.getRepetition %}
+                        {% if budgetLine.getRepetition.id %}
                             <a href="{{ route('budgets.show', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">{{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}</a>
                         {% endif %}
                     </td>
                     <td>
-                        {% if budgetLine.getRepetition %}
+                        {% if budgetLine.getRepetition.id %}
                             {{ budgetLine.getRepetition.amount|formatAmount }}
                         {% else %}
                             {{ 0|formatAmount }}
@@ -39,15 +39,18 @@
                     </td>
                     <td>
                         {% if budgetLine.getSpent != 0 %}
-                            {{ budgetLine.getSpent|formatAmount }}
+                            {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle"></i>
                         {% endif %}
 
                         {% if budgetLine.getSpent == 0 %}
                             {{ budgetLine.getSpent|formatAmount }}
                         {% endif %}
+
                     </td>
                     <td>
-                        {{ budgetLine.getLeft|formatAmount }}
+                        {% if(budgetLine.getOverspent == 0) %}
+                            {{ budgetLine.getLeft|formatAmount }}
+                        {% endif %}
                     </td>
                     <td>
                         {% if budgetLine.getOverspent != 0 %}

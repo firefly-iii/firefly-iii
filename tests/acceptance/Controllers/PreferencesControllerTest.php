@@ -16,25 +16,35 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\PreferencesController::index
-     * @todo   Implement testIndex().
+     * @covers FireflyIII\Http\Controllers\PreferencesController::__construct
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', '/preferences');
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\PreferencesController::postIndex
-     * @todo   Implement testPostIndex().
+     * @covers       FireflyIII\Http\Controllers\PreferencesController::postIndex
+     * @dataProvider dateRangeProvider
+     *
+     * @param $range
      */
-    public function testPostIndex()
+    public function testPostIndex($range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $args = [
+            'frontPageAccounts' => [1],
+            'viewRange'         => $range,
+            'budgetMaximum'     => 100,
+            'customFiscalYear'  => 1,
+            'fiscalYearStart'   => '01-01',
+            'language'          => 'en_US',
+        ];
+
+        $this->be($this->user());
+        $this->call('POST', '/preferences', $args);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

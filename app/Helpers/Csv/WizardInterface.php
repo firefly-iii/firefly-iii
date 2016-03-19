@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Csv;
 
@@ -18,22 +19,22 @@ interface WizardInterface
      *
      * @return array
      */
-    public function getMappableValues($reader, array $map, $hasHeaders);
+    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders);
 
     /**
      * @param array $roles
-     * @param mixed $map
+     * @param array $map
      *
      * @return array
      */
-    public function processSelectedMapping(array $roles, $map);
+    public function processSelectedMapping(array $roles, array $map);
 
     /**
-     * @param mixed $input
+     * @param array $input
      *
      * @return array
      */
-    public function processSelectedRoles($input);
+    public function processSelectedRoles(array $input);
 
     /**
      * @param array $fields
@@ -50,10 +51,10 @@ interface WizardInterface
     public function showOptions(array $map);
 
     /**
-     * @param $path
+     * @param string $path
      *
      * @return string
      */
-    public function storeCsvFile($path);
+    public function storeCsvFile(string $path);
 
 }

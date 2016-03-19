@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace FireflyIII\Support\Twig;
 
@@ -19,7 +20,7 @@ class Budget extends Twig_Extension
     /**
      * {@inheritDoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         $functions   = [];
         $functions[] = new Twig_SimpleFunction(
@@ -52,7 +53,7 @@ class Budget extends Twig_Extension
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'FireflyIII\Support\Twig\Budget';
     }

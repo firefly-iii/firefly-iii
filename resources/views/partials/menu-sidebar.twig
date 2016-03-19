@@ -109,6 +109,33 @@
 
     </li>
 
+    <!-- import and export  -->
+    <li class="{{ activeRoutePartial('export') }} {{ activeRoutePartial('csv') }} treeview">
+        <a href="#">
+            <i class="fa fa-arrows-alt fa-fw"></i>
+            <span>
+                {% if Config.get('firefly.csv_import_enabled') %}
+                    {{ 'import_and_export'|_ }}
+                {% else %}
+                    {{ 'export_data'|_ }}
+                {% endif %}
+            </span>
+            <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+            {% if Config.get('firefly.csv_import_enabled') %}
+                <li class="{{ activeRoutePartial('csv') }}">
+                    <a href="{{ route('csv.index') }}"><i class="fa fa-file-text-o fa-fw"></i> {{ 'csv_import'|_ }}</a>
+                </li>
+            {% endif %}
+
+            <li class="{{ activeRoutePartial('export') }}">
+                <a href="{{ route('export.index') }}"><i class="fa fa-file-archive-o fa-fw"></i> {{ 'export_data'|_ }}</a>
+            </li>
+        </ul>
+
+    </li>
+
     <!-- options and preferences -->
     <li id="option-menu" class="{{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
         <a href="#">
@@ -127,11 +154,6 @@
             <li class="{{ activeRoutePartial('currency') }}">
                 <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
             </li>
-            {% if Config.get('firefly.csv_import_enabled') %}
-                <li class="{{ activeRoutePartial('csv') }}">
-                    <a href="{{ route('csv.index') }}"><i class="fa fa-file-text-o fa-fw"></i> {{ 'csv_import'|_ }}</a>
-                </li>
-            {% endif %}
         </ul>
 
 

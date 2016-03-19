@@ -3,13 +3,16 @@
 use Artisan;
 use Carbon\Carbon;
 use Config;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Input;
-use Log;
 use Preferences;
+use Route;
 use Session;
 use Steam;
+
 
 /**
  * Class HomeController
@@ -28,6 +31,7 @@ class HomeController extends Controller
 
     public function dateRange()
     {
+
         $start = new Carbon(Input::get('start'));
         $end   = new Carbon(Input::get('end'));
 
@@ -42,16 +46,26 @@ class HomeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @throws FireflyException
      */
-    public function flush()
+    public function displayError()
+    {
+        throw new FireflyException('A very simple test error.');
+    }
+
+    /**
+     * @param TagRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function flush(TagRepositoryInterface $repository)
     {
 
         Preferences::mark();
 
         // get all tags.
         // update all counts:
-        $tags = Tag::get();
+        $tags = $repository->get();
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
@@ -76,22 +90,22 @@ class HomeController extends Controller
      */
     public function index(ARI $repository)
     {
-        Log::debug('You are at index.');
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
-        bcscale(2);
 
         if ($count == 0) {
             return redirect(route('new-user.index'));
         }
 
-        $title             = 'Firefly';
-        $subTitle          = trans('firefly.welcomeBack');
-        $mainTitleIcon     = 'fa-fire';
-        $transactions      = [];
-        $frontPage         = Preferences::get('frontPageAccounts', []);
-        $start             = Session::get('start', Carbon::now()->startOfMonth());
-        $end               = Session::get('end', Carbon::now()->endOfMonth());
+        $title         = 'Firefly';
+        $subTitle      = trans('firefly.welcomeBack');
+        $mainTitleIcon = 'fa-fire';
+        $transactions  = [];
+        $frontPage     = Preferences::get('frontPageAccounts', []);
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
         $accounts          = $repository->getFrontpageAccounts($frontPage);
         $savings           = $repository->getSavingsAccounts();
@@ -105,11 +119,11 @@ class HomeController extends Controller
 
         $sum = $repository->sumOfEverything();
 
-        if ($sum != 0) {
+        if (bccomp($sum, '0') !== 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
                          . ' withdrawal, deposit or transfer was not stored properly. '
-                         . 'Please check your accounts and transactions for errors.'
+                         . 'Please check your accounts and transactions for errors (' . $sum . ').'
             );
         }
 
@@ -126,4 +140,52 @@ class HomeController extends Controller
         );
     }
 
+    /**
+     * Display a list of named routes. Excludes some that cannot be "shown". This method
+     * is used to generate help files (down the road).
+     */
+    public function routes()
+    {
+        // these routes are not relevant for the help pages:
+        $ignore = [
+            'logout', 'register', 'bills.rescan', 'attachments.download', 'attachments.preview',
+            'budgets.income', 'csv.download-config', 'currency.default', 'export.status', 'export.download',
+            'json.', 'help.', 'piggy-banks.addMoney', 'piggy-banks.removeMoney', 'rules.rule.up', 'rules.rule.down',
+            'rules.rule-group.up', 'rules.rule-group.down', 'debugbar',
+        ];
+        $routes = Route::getRoutes();
+        /** @var \Illuminate\Routing\Route $route */
+        foreach ($routes as $route) {
+
+            $name    = $route->getName();
+            $methods = $route->getMethods();
+
+            if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
+                foreach (array_keys(Config::get('firefly.languages')) as $lang) {
+                    echo 'touch ' . $lang . '/' . $name . '.md<br>';
+                }
+
+            }
+        }
+
+        return '<hr>';
+    }
+
+
+    /**
+     * @param array  $array
+     * @param string $needle
+     *
+     * @return bool
+     */
+    private function startsWithAny(array $array, string $needle): bool
+    {
+        foreach ($array as $entry) {
+            if ((substr($needle, 0, strlen($entry)) === $entry)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * Domain.php
  * Copyright (C) 2016 Sander Dorigo
@@ -21,7 +22,7 @@ class Domain
     /**
      * @return array
      */
-    public static function getBindables()
+    public static function getBindables(): array
     {
         return Config::get('firefly.bindables');
 
@@ -30,7 +31,7 @@ class Domain
     /**
      * @return array
      */
-    public static function getRuleActions()
+    public static function getRuleActions(): array
     {
         return Config::get('firefly.rule-actions');
     }
@@ -38,7 +39,7 @@ class Domain
     /**
      * @return array
      */
-    public static function getRuleTriggers()
+    public static function getRuleTriggers(): array
     {
         return Config::get('firefly.rule-triggers');
     }
