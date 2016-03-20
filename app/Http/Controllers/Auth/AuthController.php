@@ -142,7 +142,7 @@ class AuthController extends Controller
             }
 
             // set flash message
-            Session::flash('success', 'You have registered successfully!');
+            Session::flash('success', strval(trans('firefly.registered')));
             Session::flash('gaEventCategory', 'user');
             Session::flash('gaEventAction', 'new-registration');
 

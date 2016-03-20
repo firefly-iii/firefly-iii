@@ -98,7 +98,7 @@ class PreferencesController extends Controller
         Preferences::set('twoFactorAuthEnabled', 1);
         Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
 
-        Session::flash('success', 'Preferences saved!');
+        Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
         return redirect(route('preferences'));
@@ -151,7 +151,7 @@ class PreferencesController extends Controller
         }
 
 
-        Session::flash('success', 'Preferences saved!');
+        Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
         // if we don't have a valid secret yet, redirect to the code page.

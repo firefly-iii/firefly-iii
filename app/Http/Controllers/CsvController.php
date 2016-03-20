@@ -61,7 +61,7 @@ class CsvController extends Controller
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-import-account', 'csv-specifix', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
             Log::error('Could not recover upload.');
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -101,7 +101,7 @@ class CsvController extends Controller
     {
         $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -144,7 +144,7 @@ class CsvController extends Controller
     {
         $fields = ['csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -211,7 +211,7 @@ class CsvController extends Controller
     {
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -227,7 +227,7 @@ class CsvController extends Controller
 
         // Go back when no roles defined:
         if (count($roles) === 0) {
-            Session::flash('warning', 'Please select some roles.');
+            Session::flash('warning', strval(trans('firefly.must_select_roles')));
 
             return redirect(route('csv.column-roles'));
         }
@@ -263,7 +263,7 @@ class CsvController extends Controller
         // Make sure all fields we need are accounted for.
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -307,7 +307,7 @@ class CsvController extends Controller
          */
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-mapped', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -348,7 +348,7 @@ class CsvController extends Controller
          */
         $fields = ['csv-file', 'csv-date-format', 'csv-has-headers', 'csv-map', 'csv-roles', 'csv-delimiter'];
         if (!$this->wizard->sessionHasValues($fields)) {
-            Session::flash('warning', 'Could not recover upload.');
+            Session::flash('warning', strval(trans('firefly.could_not_recover')));
 
             return redirect(route('csv.index'));
         }
@@ -356,7 +356,7 @@ class CsvController extends Controller
         // save mapping to session.
         $mapped = [];
         if (!is_array(Input::get('mapping'))) {
-            Session::flash('warning', 'Invalid mapping.');
+            Session::flash('warning', strval(trans('firefly.invalid_mapping')));
 
             return redirect(route('csv.map'));
         }
@@ -393,7 +393,7 @@ class CsvController extends Controller
     public function upload(Request $request)
     {
         if (!$request->hasFile('csv')) {
-            Session::flash('warning', 'No file uploaded.');
+            Session::flash('warning', strval(trans('firefly.no_file_uploaded')));
 
             return redirect(route('csv.index'));
         }

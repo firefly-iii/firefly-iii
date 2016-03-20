@@ -38,7 +38,7 @@ class HomeController extends Controller
         $diff = $start->diffInDays($end);
 
         if ($diff > 50) {
-            Session::flash('warning', $diff . ' days of data may take a while to load.');
+            Session::flash('warning', strval(trans('firefly.warning_much_data', ['days' => $diff])));
         }
 
         Session::put('start', $start);

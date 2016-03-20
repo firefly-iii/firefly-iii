@@ -80,7 +80,7 @@ class CategoryController extends Controller
         $name = $category->name;
         $repository->destroy($category);
 
-        Session::flash('success', 'The  category "' . e($name) . '" was deleted.');
+        Session::flash('success', strval(trans('firefly.deleted_category', ['name' => e($name)])));
         Preferences::mark();
 
         return redirect(session('categories.delete.url'));
@@ -248,7 +248,7 @@ class CategoryController extends Controller
         ];
         $category     = $repository->store($categoryData);
 
-        Session::flash('success', 'New category "' . $category->name . '" stored!');
+        Session::flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
         Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
@@ -276,7 +276,7 @@ class CategoryController extends Controller
 
         $repository->update($category, $categoryData);
 
-        Session::flash('success', 'Category "' . $category->name . '" updated.');
+        Session::flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

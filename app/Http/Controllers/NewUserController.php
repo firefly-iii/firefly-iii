@@ -55,6 +55,7 @@ class NewUserController extends Controller
      */
     public function submit(NewUserFormRequest $request, ARI $repository)
     {
+        $count = 1;
         // create normal asset account:
         $assetAccount = [
             'name'                   => $request->get('bank_name'),
@@ -86,6 +87,7 @@ class NewUserController extends Controller
                 'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
             ];
             $repository->store($savingsAccount);
+            $count++;
         }
 
 
@@ -108,9 +110,14 @@ class NewUserController extends Controller
             // store meta for CC:
             $repository->storeMeta($creditCard, 'ccType', 'monthlyFull');
             $repository->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
-
+            $count++;
         }
-        Session::flash('success', 'New account(s) created!');
+        if ($count == 1) {
+            Session::flash('success', strval(trans('firefly.stored_new_account')));
+        } else {
+            Session::flash('success', strval(trans('firefly.stored_new_accounts')));
+        }
+
         Preferences::mark();
 
         return redirect(route('index'));

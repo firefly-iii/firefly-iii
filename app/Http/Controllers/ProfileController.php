@@ -60,7 +60,7 @@ class ProfileController extends Controller
     {
         // old, new1, new2
         if (!Hash::check($request->get('current_password'), Auth::user()->password)) {
-            Session::flash('error', trans('firefly.invalid_current_password'));
+            Session::flash('error', strval(trans('firefly.invalid_current_password')));
 
             return redirect(route('profile.change-password'));
         }
@@ -75,7 +75,7 @@ class ProfileController extends Controller
         Auth::user()->password = bcrypt($request->get('new_password'));
         Auth::user()->save();
 
-        Session::flash('success', trans('firefly.password_changed'));
+        Session::flash('success', strval(trans('firefly.password_changed')));
 
         return redirect(route('profile'));
     }
@@ -90,7 +90,7 @@ class ProfileController extends Controller
     {
         // old, new1, new2
         if (!Hash::check($request->get('password'), Auth::user()->password)) {
-            Session::flash('error', trans('firefly.invalid_password'));
+            Session::flash('error', strval(trans('firefly.invalid_password')));
 
             return redirect(route('profile.delete-account'));
         }

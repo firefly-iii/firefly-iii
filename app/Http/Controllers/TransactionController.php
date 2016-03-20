@@ -119,7 +119,8 @@ class TransactionController extends Controller
      */
     public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
     {
-        Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
+        $type = strtolower($transactionJournal->transaction_type_type ?? TransactionJournal::transactionTypeStr($transactionJournal));
+        Session::flash('success', strval(trans('firefly.deleted_' . $type, ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
 
@@ -315,7 +316,7 @@ class TransactionController extends Controller
 
         event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 
-        Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
@@ -360,7 +361,8 @@ class TransactionController extends Controller
         event(new TransactionJournalUpdated($journal));
         // update, get events by date and sort DESC
 
-        Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
+        $type = strtolower($journal->transaction_type_type ?? TransactionJournal::transactionTypeStr($journal));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($journalData['description'])])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
