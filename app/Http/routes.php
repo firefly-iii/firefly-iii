@@ -282,35 +282,33 @@ Route::group(
 
     // rules GET:
     Route::get('/rules/create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rules.rule.create']);
-    Route::get('/rules/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
-    Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
-    Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
-    Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
-    Route::get('/rules/rules/test_triggers', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
+    Route::get('/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
+    Route::get('/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
+    Route::get('/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
+    Route::get('/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
+    Route::get('/rules/test', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
 
     // rules POST:
-    Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
-    Route::post('/rules/rules/action/reorder/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
+    Route::post('/rules/trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
+    Route::post('/rules/action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
     Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rules.rule.store']);
     Route::post('/rules/update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rules.rule.update']);
     Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rules.rule.destroy']);
 
 
     // rule groups GET
-    Route::get('/rules/groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
-    Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
-    Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
-    Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
-    Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
-    Route::get(
-        '/rules/groups/select_transactions/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'rules.rule-group.select_transactions']
-    );
+    Route::get('/rule-groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
+    Route::get('/rule-groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
+    Route::get('/rule-groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
+    Route::get('/rule-groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
+    Route::get('/rule-groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
+    Route::get('/rule-groups/select/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'rules.rule-group.select_transactions']);
 
     // rule groups POST
-    Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
-    Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
-    Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
-    Route::post('/rules/groups/execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'rules.rule-group.execute']);
+    Route::post('/rule-groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
+    Route::post('/rule-groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
+    Route::post('/rule-groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
+    Route::post('/rule-groups/execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'rules.rule-group.execute']);
 
     /**
      * Search Controller
