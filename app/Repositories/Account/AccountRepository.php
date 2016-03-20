@@ -14,6 +14,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -30,6 +31,19 @@ use Steam;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
+
+    /** @var User */
+    private $user;
+
+    /**
+     * AttachmentRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * @param array $types
