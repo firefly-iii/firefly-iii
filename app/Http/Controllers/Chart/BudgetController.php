@@ -310,7 +310,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('year');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $budgetInformation = $repository->getBudgetsAndExpensesPerMonth($accounts, $start, $end);
@@ -321,13 +321,15 @@ class BudgetController extends Controller
         foreach ($budgetInformation as $row) {
             $budgets->push($row['budget']);
         }
-
         while ($start < $end) {
             // month is the current end of the period:
             $month = clone $start;
             $month->endOfMonth();
             $row           = [clone $start];
             $dateFormatted = $start->format('Y-m');
+
+            //echo $start,' '.$month.'<br>';
+
 
             // each budget, check if there is an entry for this month:
             /** @var array $row */
@@ -338,10 +340,13 @@ class BudgetController extends Controller
                 }
                 $row[] = $spent;
             }
+
+            // add "no budget" thing.
+            $row[] = round(bcmul($repository->getWithoutBudgetSum($accounts, $start, $month), '-1'), 4);
+
             $entries->push($row);
             $start->endOfMonth()->addDay();
         }
-
         $data = $this->generator->year($budgets, $entries);
         $cache->store($data);
 
