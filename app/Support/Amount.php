@@ -70,11 +70,8 @@ class Amount
      */
     public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
     {
-        $locale = setlocale(LC_MONETARY, 0);
-        $float  = round($journal->destination_amount, 2);
-        if ($journal->isWithdrawal()) {
-            $float = round($journal->source_amount, 2);
-        }
+        $locale       = setlocale(LC_MONETARY, 0);
+        $float        = round(TransactionJournal::amount($journal), 2);
         $formatter    = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $currencyCode = $journal->transaction_currency_code ?? $journal->transactionCurrency->code;
         $result       = $formatter->formatCurrency($float, $currencyCode);
