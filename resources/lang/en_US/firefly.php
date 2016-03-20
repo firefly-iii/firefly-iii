@@ -650,7 +650,7 @@ return [
     'earned'                                    => 'Earned',
     'overspent'                                 => 'Overspent',
     'left'                                      => 'Left',
-    'noBudget'                                  => '(no budget)',
+    'no_budget'                                  => '(no budget)',
     'maxAmount'                                 => 'Maximum amount',
     'minAmount'                                 => 'Minumum amount',
     'billEntry'                                 => 'Current bill entry',

@@ -74,7 +74,6 @@ return [
     'add_new_deposit'             => 'Add a new deposit',
     'add_new_transfer'            => 'Add a new transfer',
     'noPiggybank'                 => '(no piggy bank)',
-    'noBudget'                    => '(no budget)',
     'title'                       => 'Title',
     'notes'                       => 'Notes',
     'filename'                    => 'File name',

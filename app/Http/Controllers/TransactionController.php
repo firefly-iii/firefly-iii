@@ -7,7 +7,6 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\PiggyBank;
@@ -16,7 +15,9 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
 use Preferences;
@@ -57,7 +58,7 @@ class TransactionController extends Controller
         $uploadSize  = min($maxFileSize, $maxPostSize);
         $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0]  = trans('form.noBudget');
+        $budgets[0]  = trans('firefly.no_budget');
         $piggyBanks  = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
@@ -131,52 +132,44 @@ class TransactionController extends Controller
     }
 
     /**
-     * Shows the view to edit a transaction.
-     *
-     * @param ARI                $repository
      * @param TransactionJournal $journal
      *
-     * @return $this
-     * @throws FireflyException
+     * @return mixed
      */
-    public function edit(ARI $repository, TransactionJournal $journal)
+    public function edit(TransactionJournal $journal)
     {
-        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize  = min($maxFileSize, $maxPostSize);
-        $what        = strtolower(TransactionJournal::transactionTypeStr($journal));
-        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0]  = trans('form.noBudget');
-        $piggies     = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0]  = trans('form.noPiggybank');
-        $subTitle    = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $preFilled   = [
-            'date'          => $journal->date->format('Y-m-d'),
-            'interest_date' => $journal->interest_date ? $journal->interest_date->format('Y-m-d') : '',
-            'book_date'     => $journal->book_date ? $journal->book_date->format('Y-m-d') : '',
-            'process_date'  => $journal->process_date ? $journal->process_date->format('Y-m-d') : '',
-            'category'      => '',
-            'budget_id'     => 0,
-            'piggy_bank_id' => 0,
-            'tags'          => join(',', $journal->tags->pluck('tag')->toArray()),
+        /** @var ARI $accountRepository */
+        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        /** @var PiggyBankRepositoryInterface $piggyRepository */
+        $piggyRepository = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+
+        $accountList      = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $budgetList       = ExpandedForm::makeSelectList($budgetRepository->getActiveBudgets());
+        $piggyBankList    = ExpandedForm::makeSelectList($piggyRepository->getPiggyBanks());
+        $budgetList[0]    = trans('firefly.no_budget');
+        $piggyBankList[0] = trans('form.noPiggybank');
+        $maxFileSize      = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize      = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize       = min($maxFileSize, $maxPostSize);
+        $what             = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $subTitle         = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+
+
+        $preFilled = [
+            'date'            => TransactionJournal::dateAsString($journal),
+            'interest_date'   => TransactionJournal::dateAsString($journal, 'interest_date'),
+            'book_date'       => TransactionJournal::dateAsString($journal, 'book_date'),
+            'process_date'    => TransactionJournal::dateAsString($journal, 'process_date'),
+            'category'        => TransactionJournal::categoryAsString($journal),
+            'budget_id'       => TransactionJournal::budgetId($journal),
+            'piggy_bank_id'   => TransactionJournal::piggyBankId($journal),
+            'tags'            => join(',', $journal->tags->pluck('tag')->toArray()),
+            'account_from_id' => TransactionJournal::sourceAccount($journal)->id,
+            'account_to_id'   => TransactionJournal::destinationAccount($journal)->id,
+            'amount'          => TransactionJournal::amountPositive($journal),
         ];
-
-        $category = $journal->categories()->first();
-        if (!is_null($category)) {
-            $preFilled['category'] = $category->name;
-        }
-
-        $budget = $journal->budgets()->first();
-        if (!is_null($budget)) {
-            $preFilled['budget_id'] = $budget->id;
-        }
-
-        if ($journal->piggyBankEvents()->count() > 0) {
-            $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
-        }
-
-        $preFilled['amount'] = TransactionJournal::amountPositive($journal);
 
         if ($journal->isWithdrawal()) {
             $preFilled['account_id'] = TransactionJournal::sourceAccount($journal)->id;
@@ -190,8 +183,6 @@ class TransactionController extends Controller
             }
         }
 
-        $preFilled['account_from_id'] = TransactionJournal::sourceAccount($journal)->id;
-        $preFilled['account_to_id']   = TransactionJournal::destinationAccount($journal)->id;
 
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'transactions');
@@ -204,7 +195,9 @@ class TransactionController extends Controller
         Session::forget('transactions.edit.fromUpdate');
 
 
-        return view('transactions.edit', compact('journal', 'uploadSize', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
+        return view('transactions.edit', compact('journal', 'uploadSize', 'accountList', 'what', 'budgetList', 'piggyBankList', 'subTitle'))->with(
+            'data', $preFilled
+        );
     }
 
     /**

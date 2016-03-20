@@ -102,7 +102,7 @@ class BalanceLine
             return $this->getBudget()->name;
         }
         if ($this->getRole() == self::ROLE_DEFAULTROLE) {
-            return trans('firefly.noBudget');
+            return trans('firefly.no_budget');
         }
         if ($this->getRole() == self::ROLE_TAGROLE) {
             return trans('firefly.coveredWithTags');

@@ -24,7 +24,7 @@
 
                         <!-- SHOW ACCOUNT (FROM) ONLY FOR WITHDRAWALS AND DEPOSITS -->
                         {% if what == 'deposit' or what == 'withdrawal' %}
-                            {{ ExpandedForm.select('account_id',accounts,data['account_id']) }}
+                            {{ ExpandedForm.select('account_id',accountList,data['account_id']) }}
                         {% endif %}
 
                         <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
@@ -39,8 +39,8 @@
 
                         <!-- ONLY SHOW FROM/TO ACCOUNT WHEN CREATING TRANSFER -->
                         {% if what == 'transfer' %}
-                            {{ ExpandedForm.select('account_from_id',accounts,data['account_from_id']) }}
-                            {{ ExpandedForm.select('account_to_id',accounts,data['account_to_id']) }}
+                            {{ ExpandedForm.select('account_from_id',accountList,data['account_from_id']) }}
+                            {{ ExpandedForm.select('account_to_id',accountList,data['account_to_id']) }}
                         {% endif %}
 
                         <!-- ALWAYS SHOW AMOUNT -->
@@ -61,7 +61,7 @@
                     <div class="box-body">
                         <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
                         {% if what == 'withdrawal' %}
-                            {{ ExpandedForm.select('budget_id',budgets,data['budget_id']) }}
+                            {{ ExpandedForm.select('budget_id',budgetList,data['budget_id']) }}
                         {% endif %}
 
                         <!-- CATEGORY ALWAYS -->
@@ -80,8 +80,8 @@
                         {{ ExpandedForm.text('tags') }}
 
                         <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
-                        {% if what == 'withdrawal' and piggies|length > 0 %}
-                            {{ ExpandedForm.select('piggy_bank_id',piggies,data['piggy_bank_id']) }}
+                        {% if what == 'transfer' and piggyBankList|length > 0 %}
+                            {{ ExpandedForm.select('piggy_bank_id',piggyBankList,data['piggy_bank_id']) }}
                         {% endif %}
 
                         <!-- ATTACHMENTS -->

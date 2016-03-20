@@ -10,6 +10,7 @@
 namespace FireflyIII\Support\Models;
 
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -82,6 +83,56 @@ class TransactionJournalSupport extends Model
     /**
      * @param TransactionJournal $journal
      *
+     * @return int
+     */
+    public static function budgetId(TransactionJournal $journal): int
+    {
+        $budget = $journal->budgets()->first();
+        if (!is_null($budget)) {
+            return $budget->id;
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public static function categoryAsString(TransactionJournal $journal): string
+    {
+        $category = $journal->categories()->first();
+        if (!is_null($category)) {
+            return $category->name;
+        }
+
+        return '';
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $dateField
+     *
+     * @return string
+     */
+    public static function dateAsString(TransactionJournal $journal, string $dateField = ''): string
+    {
+        if ($dateField === '') {
+            return $journal->date->format('Y-m-d');
+        }
+        if (!is_null($journal->$dateField) && $journal->$dateField instanceof Carbon) {
+            return $journal->$dateField->format('Y-m-d');
+        }
+
+        return '';
+
+
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
      * @return Account
      */
     public static function destinationAccount(TransactionJournal $journal): Account
@@ -145,6 +196,20 @@ class TransactionJournalSupport extends Model
         }
 
         return false;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public static function piggyBankId(TransactionJournal $journal): int
+    {
+        if ($journal->piggyBankEvents()->count() > 0) {
+            return $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
+        }
+
+        return 0;
     }
 
     /**

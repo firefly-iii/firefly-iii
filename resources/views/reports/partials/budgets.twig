@@ -22,7 +22,7 @@
                         {% if budgetLine.getBudget.id %}
                             <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
                         {% else %}
-                            <em>{{ 'noBudget'|_ }}</em>
+                            <em>{{ 'no_budget'|_ }}</em>
                         {% endif %}
                     </td>
                     <td>
