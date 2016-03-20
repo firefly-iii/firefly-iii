@@ -16,6 +16,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\User;
+use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
 use Log;
@@ -60,6 +61,7 @@ class FireflyValidator extends Validator
         }
 
         $secret    = Session::get('two-factor-secret');
+        /** @var Google2FA $google2fa */
         $google2fa = app('PragmaRX\Google2FA\Google2FA');
 
         return $google2fa->verifyKey($secret, $value);
