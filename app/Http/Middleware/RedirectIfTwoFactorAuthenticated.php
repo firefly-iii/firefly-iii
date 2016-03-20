@@ -36,10 +36,10 @@ class RedirectIfTwoFactorAuthenticated
     {
         if (Auth::guard($guard)->check()) {
 
-            $twoFactorAuthEnabled     = Preferences::get('twoFactorAuthEnabled', false)->data;
-            $hasTwoFactorAuthSecret   = !is_null(Preferences::get('twoFactorAuthSecret'));
-            $isTwoFactorAuthenticated = Session::get('twofactor-authenticated');
-            if ($twoFactorAuthEnabled && $hasTwoFactorAuthSecret && $isTwoFactorAuthenticated) {
+            $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
+            $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+            $is2faAuthed  = Session::get('twofactor-authenticated');
+            if ($is2faEnabled && $has2faSecret && $is2faAuthed) {
                 return redirect('/');
             }
         }

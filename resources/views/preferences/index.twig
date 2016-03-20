@@ -150,12 +150,12 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="twoFactorAuthEnabled" value="1"
-                                               {% if twoFactorAuthEnabled == '1' %} checked {% endif %}> {{ 'pref_enable_two_factor_auth'|_ }}
+                                               {% if is2faEnabled == '1' %} checked {% endif %}> {{ 'pref_enable_two_factor_auth'|_ }}
                                 </label>
                             </div>
                         </div>
 
-                        {% if twoFactorAuthEnabled == 1 and hasTwoFactorAuthSecret == true %}
+                        {% if is2faEnabled == 1 and has2faSecret == true %}
 
                         <div class="col-sm-10">
                             <div class="checkbox">
