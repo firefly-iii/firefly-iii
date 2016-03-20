@@ -62,6 +62,8 @@ return [
     'two_factor_lost_intro'                     => 'Unfortunately, this is not something you can reset from the web interface. You have two choices.',
     'two_factor_lost_fix_self'                  => 'If you run your own instance of Firefly III, check the logs in <code>storage/logs</code> for instructions.',
     'two_factor_lost_fix_owner'                 => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
+    'warning_much_data'                         => ':days days of data may take a while to load.',
+    'registered'                                => 'You have registered successfully!',
 
     // export data:
     'import_and_export'                         => 'Import and export',
@@ -247,6 +249,7 @@ return [
     'pref_two_factor_auth_remove_code'          => 'Remove verification code',
     'pref_two_factor_auth_remove_will_disable'  => '(this will also disable two-factor authentication)',
     'pref_save_settings'                        => 'Save settings',
+    'saved_preferences'                         => 'Preferences saved!',
 
     // profile:
     'change_your_password'                      => 'Change your password',
@@ -273,6 +276,7 @@ return [
     'update_attachment'                         => 'Update attachment',
     'delete_attachment'                         => 'Delete attachment ":name"',
     'attachment_deleted'                        => 'Deleted attachment ":name"',
+    'attachment_updated'                        => 'Updated attachment ":name"',
     'upload_max_file_size'                      => 'Maximum file size: :size',
 
     // tour:
@@ -374,6 +378,11 @@ return [
     'csv_import_account_help'                   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
     'csv_delimiter_help'                        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'csv_date_parse_error'                      => 'Could not parse a valid date from ":value", using the format ":format". Are you sure your CSV is correct?',
+    'could_not_recover'                         => 'Could not continue from the previous step. Your progress has been lost :(. The log files will tell you what happened.',
+    'must_select_roles'                         => 'You must select some roles for your file content, or the process cannot continue.',
+    'invalid_mapping'                           => 'You have submitted an invalid mapping. The process cannot continue.',
+    'no_file_uploaded'                          => 'It seems you did not upload a file.',
+
 
     // create new stuff:
     'create_new_withdrawal'                     => 'Create new withdrawal',
@@ -406,6 +415,8 @@ return [
     'to_get_started'                            => 'To get started with Firefly, please enter your current bank\'s name, and the balance of your checking account:',
     'savings_balance_text'                      => 'If you have a savings account, please enter the current balance of your savings account:',
     'cc_balance_text'                           => 'If you have a credit card, please enter your credit card\'s limit.',
+    'stored_new_account'                        => 'Yay! Your new account has been stored.',
+    'stored_new_accounts'                       => 'Yay! Your new accounts have been stored.',
 
     // forms:
     'mandatoryFields'                           => 'Mandatory fields',
@@ -415,7 +426,8 @@ return [
 
     // budgets:
     'create_new_budget'                         => 'Create a new budget',
-    'store_new_budget'                          => ' Store new budget',
+    'store_new_budget'                          => 'Store new budget',
+    'stored_new_budget'                         => 'Stored new budget ":name"',
     'availableIn'                               => 'Available in :date',
     'transactionsWithoutBudget'                 => 'Expenses without budget',
     'transactionsWithoutBudgetDate'             => 'Expenses without budget in :date',
@@ -424,15 +436,22 @@ return [
     'without_budget_between'                    => 'Transactions without a budget between :start and :end',
     'budget_in_month'                           => ':name in :month',
     'delete_budget'                             => 'Delete budget ":name"',
+    'deleted_budget'                            => 'Deleted budget ":name"',
     'edit_budget'                               => 'Edit budget ":name"',
+    'updated_budget'                            => 'Updated budget ":name"',
     'update_amount'                             => 'Update amount',
     'update_budget'                             => 'Update budget',
 
     // bills:
     'delete_bill'                               => 'Delete bill ":name"',
+    'deleted_bill'                              => 'Deleted bill ":name"',
     'edit_bill'                                 => 'Edit bill ":name"',
     'update_bill'                               => 'Update bill',
+    'updated_bill'                              => 'Updated bill ":name"',
     'store_new_bill'                            => 'Store new bill',
+    'stored_new_bill'                           => 'Stored new bill ":name"',
+    'cannot_scan_inactive_bill'                 => 'Inactive bills cannot be scanned.',
+    'rescanned_bill'                            => 'Rescanned everything.',
 
     // accounts:
     'details_for_asset'                         => 'Details for asset account ":name"',
@@ -465,27 +484,39 @@ return [
     'accountExtraHelp_revenue'                  => '',
     'account_type'                              => 'Account type',
     'save_transactions_by_moving'               => 'Save these transaction(s) by moving them to another account:',
+    'stored_new_account'                        => 'New account ":name" stored!',
+    'updated_account'                           => 'Updated account ":name"',
 
     // categories:
     'new_category'                              => 'New category',
     'create_new_category'                       => 'Create a new category',
     'without_category'                          => 'Without a category',
-    'update_category'                           => 'Wijzig categorie',
+    'update_category'                           => 'Update category',
+    'updated_category'                          => 'Updated category ":name"',
     'categories'                                => 'Categories',
     'edit_category'                             => 'Edit category ":name"',
     'no_category'                               => '(no category)',
     'category'                                  => 'Category',
     'delete_category'                           => 'Delete category ":name"',
+    'deleted_category'                          => 'Deleted category ":name"',
     'store_category'                            => 'Store new category',
+    'stored_category'                           => 'Stored new category ":name"',
     'without_category_between'                  => 'Without category between :start and :end',
 
     // transactions:
     'update_withdrawal'                         => 'Update withdrawal',
     'update_deposit'                            => 'Update deposit',
     'update_transfer'                           => 'Update transfer',
+    'updated_withdrawal'                        => 'Updated withdrawal ":description"',
+    'updated_deposit'                           => 'Updated deposit ":description"',
+    'updated_transfer'                          => 'Updated transfer ":description"',
     'delete_withdrawal'                         => 'Delete withdrawal ":description"',
     'delete_deposit'                            => 'Delete deposit ":description"',
     'delete_transfer'                           => 'Delete transfer ":description"',
+    'deleted_withdrawal'                        => 'Successfully deleted withdrawal ":description"',
+    'deleted_deposit'                           => 'Successfully deleted deposit ":description"',
+    'deleted_transfer'                          => 'Successfully deleted transfer ":description"',
+    'stored_journal'                            => 'Successfully created new transaction ":description"',
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly!',
@@ -640,6 +671,7 @@ return [
     'piggy_bank'                                => 'Piggy bank',
     'new_piggy_bank'                            => 'Create new piggy bank',
     'store_piggy_bank'                          => 'Store new piggy bank',
+    'stored_piggy_bank'                         => 'Store new piggy bank ":name"',
     'account_status'                            => 'Account status',
     'left_for_piggy_banks'                      => 'Left for piggy banks',
     'sum_of_piggy_banks'                        => 'Sum of piggy banks',
@@ -653,6 +685,7 @@ return [
     'max_amount_remove'                         => 'The maximum amount you can remove is',
     'update_piggy_button'                       => 'Update piggy bank',
     'update_piggy_title'                        => 'Update piggy bank ":name"',
+    'updated_piggy_bank'                        => 'Updated piggy bank ":name"',
     'details'                                   => 'Details',
     'events'                                    => 'Events',
     'target_amount'                             => 'Target amount',
@@ -665,14 +698,22 @@ return [
     'add_any_amount_to_piggy'                   => 'Add money to this piggy bank to reach your target of :amount.',
     'add_set_amount_to_piggy'                   => 'Add :amount to fill this piggy bank on :date',
     'delete_piggy_bank'                         => 'Delete piggy bank ":name"',
+    'cannot_add_amount_piggy'                   => 'Could not add :amount to ":name".',
+    'deleted_piggy_bank'                        => 'Deleted piggy bank ":name"',
+    'added_amount_to_piggy'                     => 'Added :amount to ":name"',
+    'removed_amount_from_piggy'                 => 'Removed :amount from ":name"',
+    'cannot_remove_amount_piggy'                => 'Could not remove :amount from ":name".',
 
     // tags
     'regular_tag'                               => 'Just a regular tag.',
     'balancing_act'                             => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
     'advance_payment'                           => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
     'delete_tag'                                => 'Delete tag ":tag"',
+    'deleted_tag'                               => 'Deleted tag ":tag"',
     'new_tag'                                   => 'Make new tag',
     'edit_tag'                                  => 'Edit tag ":tag"',
+    'updated_tag'                               => 'Updated tag ":tag"',
+    'created_tag'                               => 'Tag ":tag" has been created!',
     'no_year'                                   => 'No year set',
     'no_month'                                  => 'No month set',
     'tag_title_nothing'                         => 'Default tags',
