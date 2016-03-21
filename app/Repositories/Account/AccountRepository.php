@@ -230,7 +230,7 @@ class AccountRepository implements AccountRepositoryInterface
         $offset = ($page - 1) * 50;
         $query  = $this->user
             ->transactionJournals()
-            ->withRelevantData()
+            ->expanded()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->orderBy('transaction_journals.date', 'DESC')
@@ -238,7 +238,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->orderBy('transaction_journals.id', 'DESC');
 
         $count     = $query->count();
-        $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
+        $set       = $query->take(50)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
         $paginator = new LengthAwarePaginator($set, $count, 50, $page);
 
         return $paginator;
