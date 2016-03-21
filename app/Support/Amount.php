@@ -52,7 +52,7 @@ class Amount
                 return '<span class="text-success" title="' . e($float) . '">' . $result . '</span>';
             } else {
                 if ($amount < 0) {
-                    return '<span class="text-danger">' . $result . '</span>';
+                    return '<span class="text-danger" title="' . e($float) . '">' . $result . '</span>';
                 }
             }
 
