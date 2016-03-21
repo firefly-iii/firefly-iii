@@ -47,14 +47,17 @@ class Amount
         $result    = $formatter->formatCurrency($float, $format->code);
 
         if ($coloured === true) {
-            if ($amount === 0.00) {
-                return '<span style="color:#999">' . $result . '</span>';
-            }
+
             if ($amount > 0) {
                 return '<span class="text-success" title="' . e($float) . '">' . $result . '</span>';
+            } else {
+                if ($amount < 0) {
+                    return '<span class="text-danger">' . $result . '</span>';
+                }
             }
 
-            return '<span class="text-danger">' . $result . '</span>';
+            return '<span style="color:#999" title="' . e($float) . '">' . $result . '</span>';
+
 
         }
 
