@@ -415,8 +415,8 @@ return [
     'to_get_started'                            => 'To get started with Firefly, please enter your current bank\'s name, and the balance of your checking account:',
     'savings_balance_text'                      => 'If you have a savings account, please enter the current balance of your savings account:',
     'cc_balance_text'                           => 'If you have a credit card, please enter your credit card\'s limit.',
-    'stored_new_account'                        => 'Yay! Your new account has been stored.',
-    'stored_new_accounts'                       => 'Yay! Your new accounts have been stored.',
+    'stored_new_account_new_user'               => 'Yay! Your new account has been stored.',
+    'stored_new_accounts_new_user'              => 'Yay! Your new accounts have been stored.',
 
     // forms:
     'mandatoryFields'                           => 'Mandatory fields',
@@ -479,6 +479,8 @@ return [
     'asset_accounts'                            => 'Asset accounts',
     'expense_accounts'                          => 'Expense accounts',
     'revenue_accounts'                          => 'Revenue accounts',
+    'cash_accounts'                             => 'Cash accounts',
+    'Cash account'                              => 'Cash account',
     'accountExtraHelp_asset'                    => '',
     'accountExtraHelp_expense'                  => '',
     'accountExtraHelp_revenue'                  => '',
@@ -650,7 +652,7 @@ return [
     'earned'                                    => 'Earned',
     'overspent'                                 => 'Overspent',
     'left'                                      => 'Left',
-    'no_budget'                                  => '(no budget)',
+    'no_budget'                                 => '(no budget)',
     'maxAmount'                                 => 'Maximum amount',
     'minAmount'                                 => 'Minumum amount',
     'billEntry'                                 => 'Current bill entry',

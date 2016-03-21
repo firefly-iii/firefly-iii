@@ -113,9 +113,9 @@ class NewUserController extends Controller
             $count++;
         }
         if ($count == 1) {
-            Session::flash('success', strval(trans('firefly.stored_new_account')));
+            Session::flash('success', strval(trans('firefly.stored_new_account_new_user')));
         } else {
-            Session::flash('success', strval(trans('firefly.stored_new_accounts')));
+            Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
         }
 
         Preferences::mark();

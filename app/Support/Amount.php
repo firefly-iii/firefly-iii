@@ -47,7 +47,7 @@ class Amount
         $result    = $formatter->formatCurrency($float, $format->code);
 
         if ($coloured === true) {
-            if ($amount == 0) {
+            if ($amount === 0.00) {
                 return '<span style="color:#999">' . $result . '</span>';
             }
             if ($amount > 0) {
@@ -76,7 +76,7 @@ class Amount
         $currencyCode = $journal->transaction_currency_code ?? $journal->transactionCurrency->code;
         $result       = $formatter->formatCurrency($float, $currencyCode);
 
-        if ($coloured === true && $float == 0) {
+        if ($coloured === true && $float === 0.00) {
             return '<span style="color:#999">' . $result . '</span>'; // always grey.
         }
         if (!$coloured) {
