@@ -51,7 +51,7 @@ class Amount
                 return '<span style="color:#999">' . $result . '</span>';
             }
             if ($amount > 0) {
-                return '<span class="text-success">' . $result . '</span>';
+                return '<span class="text-success" title="' . e($float) . '">' . $result . '</span>';
             }
 
             return '<span class="text-danger">' . $result . '</span>';
