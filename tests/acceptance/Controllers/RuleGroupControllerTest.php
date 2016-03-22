@@ -21,7 +21,7 @@ class RuleGroupControllerTest extends TestCase
     public function testCreate()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/groups/create');
+        $this->call('GET', '/rule-groups/create');
         $this->assertResponseStatus(200);
     }
 
@@ -31,7 +31,7 @@ class RuleGroupControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/groups/delete/1');
+        $this->call('GET', '/rule-groups/delete/1');
         $this->assertResponseStatus(200);
     }
 
@@ -43,7 +43,7 @@ class RuleGroupControllerTest extends TestCase
         $this->session(['rules.rule-group.delete.url' => 'http://localhost']);
 
         $this->be($this->user());
-        $this->call('POST', '/rules/groups/destroy/1');
+        $this->call('POST', '/rule-groups/destroy/1');
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
@@ -54,7 +54,7 @@ class RuleGroupControllerTest extends TestCase
     public function testDown()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/groups/down/1');
+        $this->call('GET', '/rule-groups/down/1');
         $this->assertResponseStatus(302);
     }
 
@@ -64,7 +64,7 @@ class RuleGroupControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/groups/edit/1');
+        $this->call('GET', '/rule-groups/edit/1');
         $this->assertResponseStatus(200);
     }
 
@@ -82,7 +82,7 @@ class RuleGroupControllerTest extends TestCase
         ];
 
         $this->be($this->user());
-        $this->call('POST', '/rules/groups/store', $args);
+        $this->call('POST', '/rule-groups/store', $args);
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
@@ -93,7 +93,7 @@ class RuleGroupControllerTest extends TestCase
     public function testUp()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/groups/up/1');
+        $this->call('GET', '/rule-groups/up/1');
         $this->assertResponseStatus(302);
     }
 
@@ -113,7 +113,7 @@ class RuleGroupControllerTest extends TestCase
         ];
 
         $this->be($this->user());
-        $this->call('POST', '/rules/groups/update/1', $args);
+        $this->call('POST', '/rule-groups/update/1', $args);
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
