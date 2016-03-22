@@ -39,7 +39,9 @@
                     </td>
                     <td>
                         {% if budgetLine.getSpent != 0 %}
-                            {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle"></i>
+                            {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
+                                                                      data-location="budget-spent-amount" data-budget-id="x"
+                        ></i>
                         {% endif %}
 
                         {% if budgetLine.getSpent == 0 %}
