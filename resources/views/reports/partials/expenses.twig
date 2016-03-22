@@ -17,7 +17,7 @@
                         <br/>
                         <small>
                             {{ expense.count }} {{ 'transactions'|_|lower }}
-                            <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="expense-entry" data-account-id="x"></i>
+                            <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="expense-entry" data-account-id="{{ expense.id }}"></i>
                         </small>
                     {% endif %}
                 </td>

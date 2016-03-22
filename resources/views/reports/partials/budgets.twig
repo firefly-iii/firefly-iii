@@ -40,7 +40,7 @@
                     <td>
                         {% if budgetLine.getSpent != 0 %}
                             {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
-                                                                      data-location="budget-spent-amount" data-budget-id="x"
+                                                                      data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"
                         ></i>
                         {% endif %}
 
