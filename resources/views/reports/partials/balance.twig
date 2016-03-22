@@ -41,8 +41,10 @@
                         <td>
                             {% if balanceEntry.getSpent != 0 %}
                                 <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
-                                <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="balance-amount" data-account-id="x"
-                                   data-budget-id="y"></i>
+                                <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="balance-amount"
+                                   data-account-id="{{ balanceEntry.getAccount.id }}"
+                                   data-budget-id="{{ balanceLine.getBudget.id }}"></i>
+
                             {% endif %}
                             {% if balanceEntry.getLeft != 0 %}
                                 <span class="text-success">{{ (balanceEntry.getLeft)|formatAmountPlain }}</span>
