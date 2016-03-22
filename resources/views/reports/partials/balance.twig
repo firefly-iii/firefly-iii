@@ -22,7 +22,7 @@
             {% for balanceLine in balance.getBalanceLines %}
                 <tr>
 
-                    {% if balanceLine.getBudget %}
+                    {% if balanceLine.getBudget.id %}
                         <td>
                             <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
                         </td>
