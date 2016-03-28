@@ -31,6 +31,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $admin = Role::where('name', 'owner')->first();
         $user->attachRole($admin);
+        $user->save();
 
         return true;
     }
