@@ -7,6 +7,8 @@ use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\IsConfirmed;
+use FireflyIII\Http\Middleware\IsNotConfirmed;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
@@ -60,6 +62,17 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
+                IsConfirmed::class,
+            ],
+            'web-auth-no-confirm'    => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+                AuthenticateTwoFactor::class,
+                IsNotConfirmed::class,
             ],
             'web-auth-no-two-factor' => [
                 EncryptCookies::class,
@@ -69,6 +82,7 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
+                IsConfirmed::class,
             ],
             'web-auth-range'         => [
                 EncryptCookies::class,
@@ -78,6 +92,7 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
+                IsConfirmed::class,
                 Range::class,
                 Binder::class,
             ],
