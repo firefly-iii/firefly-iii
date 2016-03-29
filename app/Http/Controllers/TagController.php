@@ -106,7 +106,7 @@ class TagController extends Controller
         $tagName = $tag->tag;
         $repository->destroy($tag);
 
-        Session::flash('success', 'Tag "' . e($tagName) . '" was deleted.');
+        Session::flash('success', strval(trans('firefly.deleted_tag', ['tag' => e($tagName)])));
         Preferences::mark();
 
         return redirect(route('tags.index'));
@@ -244,7 +244,7 @@ class TagController extends Controller
         $data = $request->collectTagData();
         $repository->store($data);
 
-        Session::flash('success', 'The tag has been created!');
+        Session::flash('success', strval(trans('firefly.created_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
@@ -271,7 +271,7 @@ class TagController extends Controller
         $data = $request->collectTagData();
         $repository->update($tag, $data);
 
-        Session::flash('success', 'Tag "' . e($data['tag']) . '" updated.');
+        Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

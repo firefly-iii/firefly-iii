@@ -1,24 +1,17 @@
 <div class="list-group">
     {% for journal in transactions %}
-
         <a class="list-group-item" title="{{ journal.date.formatLocalized(trans('config.month_and_day')) }}"
-
                 {% if journal.isOpeningBalance() %}
                     href="#"
                 {% else %}
                     href="{{ route('transactions.show',journal.id) }}"
                 {% endif %}
         >
-
-            {{ journal|typeIcon }}
-
-            {{ journal.description }}
-
-            <span class="pull-right small">
-    {{ journal|formatJournal }}
-
-    </span>
-
+        {{ journal|typeIcon }}
+        {{ journal.description }}
+        <span class="pull-right small">
+            {{ journal|formatJournal }}
+        </span>
         </a>
     {% endfor %}
 </div>

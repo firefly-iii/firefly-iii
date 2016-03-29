@@ -73,9 +73,10 @@ class BillController extends Controller
      */
     public function destroy(BillRepositoryInterface $repository, Bill $bill)
     {
+        $name = $bill->name;
         $repository->destroy($bill);
 
-        Session::flash('success', 'The bill was deleted.');
+        Session::flash('success', strval(trans('firefly.deleted_bill', ['name' => $name])));
         Preferences::mark();
 
         return redirect(session('bills.delete.url'));
@@ -109,11 +110,29 @@ class BillController extends Controller
      */
     public function index(BillRepositoryInterface $repository)
     {
+        $start = session('start');
+        $end   = session('end');
+
         $bills = $repository->getBills();
         $bills->each(
-            function (Bill $bill) use ($repository) {
+            function (Bill $bill) use ($repository, $start, $end) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
                 $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
+                $journals                = $repository->getJournalsInRange($bill, $start, $end);
+                // loop journals, find average:
+                $average = '0';
+                $count   = $journals->count();
+                if ($count > 0) {
+                    $sum = '0';
+                    foreach ($journals as $journal) {
+                        $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
+                    }
+                    $average = bcdiv($sum, strval($count));
+                }
+
+                $bill->lastPaidAmount = $average;
+                $bill->paidInPeriod   = ($start <= $bill->lastFoundMatch) && ($end >= $bill->lastFoundMatch);
+
             }
         );
 
@@ -129,7 +148,7 @@ class BillController extends Controller
     public function rescan(BillRepositoryInterface $repository, Bill $bill)
     {
         if (intval($bill->active) == 0) {
-            Session::flash('warning', 'Inactive bills cannot be scanned.');
+            Session::flash('warning', strval(trans('firefly.cannot_scan_inactive_bill')));
 
             return redirect(URL::previous());
         }
@@ -141,7 +160,7 @@ class BillController extends Controller
         }
 
 
-        Session::flash('success', 'Rescanned everything.');
+        Session::flash('success', strval(trans('firefly.rescanned_bill')));
         Preferences::mark();
 
         return redirect(URL::previous());
@@ -173,7 +192,7 @@ class BillController extends Controller
     {
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
-        Session::flash('success', 'Bill "' . e($bill->name) . '" stored.');
+        Session::flash('success', strval(trans('firefly.stored_new_bill', ['name' => e($bill->name)])));
         Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
@@ -200,7 +219,7 @@ class BillController extends Controller
         $billData = $request->getBillData();
         $bill     = $repository->update($bill, $billData);
 
-        Session::flash('success', 'Bill "' . e($bill->name) . '" updated.');
+        Session::flash('success', strval(trans('firefly.updated_bill', ['name' => e($bill->name)])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

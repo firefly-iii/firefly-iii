@@ -5,6 +5,31 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.8.1] - 2016-03-29
+### Added
+- More translations
+- Extended cookie control.
+- User accounts can now be activated (disabled by default).
+- Bills can now take the source and destination account name into account.
+
+### Changed
+- The pages related to rules have new URL's.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Spelling errors.
+- Problems related to the "account repository".
+- Some views showed empty (0.0) amounts.
+
+### Security
+- Initial release.
+
+
 ## [3.8.0] - 2016-03-20
 ### Added
 - Two factor authentication, thanks to the excellent work of [zjean](https://github.com/zjean).

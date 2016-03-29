@@ -38,7 +38,7 @@ class TwoFactorController extends Controller
         $secret = Preferences::get('twoFactorAuthSecret', '')->data;
 
         if (strlen($secret) === 0) {
-            throw new FireflyException('Your two factor authentication secret is empty, which it should be at this point. Please check the log files.');
+            throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         Session::flash('two-factor-secret', $secret);
 

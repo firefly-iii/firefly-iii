@@ -91,7 +91,7 @@ function testRuleTriggers() {
 	var triggerData = $( ".rule-trigger-tbody" ).find( "input[type=text], input[type=checkbox], select" ).serializeArray();
 	
 	// Find a list of existing transactions that match these triggers
-    $.get('rules/rules/test_triggers', triggerData).done(function (data) {
+    $.get('rules/test', triggerData).done(function (data) {
     	var modal = $( "#testTriggerModal" );
     	var numTriggers = $( ".rule-trigger-body > tr" ).length;
     	

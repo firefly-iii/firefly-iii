@@ -91,7 +91,7 @@ class RuleGroupController extends Controller
         $repository->destroy($ruleGroup, $moveTo);
 
 
-        Session::flash('success', trans('firefly.deleted_rule_group', ['title' => $title]));
+        Session::flash('success', strval(trans('firefly.deleted_rule_group', ['title' => $title])));
         Preferences::mark();
 
 
@@ -162,7 +162,7 @@ class RuleGroupController extends Controller
         $this->dispatch($job);
 
         // Tell the user that the job is queued
-        Session::flash('success', trans('firefly.executed_group_on_existing_transactions', ['title' => $ruleGroup->title]));
+        Session::flash('success', strval(trans('firefly.executed_group_on_existing_transactions', ['title' => $ruleGroup->title])));
 
         return redirect()->route('rules.index');
     }
@@ -204,7 +204,7 @@ class RuleGroupController extends Controller
 
         $ruleGroup = $repository->store($data);
 
-        Session::flash('success', trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
+        Session::flash('success', strval(trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
@@ -249,7 +249,7 @@ class RuleGroupController extends Controller
 
         $repository->update($ruleGroup, $data);
 
-        Session::flash('success', trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
+        Session::flash('success', strval(trans('firefly.updated_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

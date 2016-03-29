@@ -38,5 +38,6 @@
 /* cursors */
 .rule-triggers {cursor:move;}
 .rule-actions {cursor:move;}
+.firefly-info-button {cursor:pointer;}
 
 #testTriggerModal .modal-body { max-height: 500px; overflow-y: scroll; }

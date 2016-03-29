@@ -21,7 +21,7 @@ class UserEventListener
     /**
      * Handle user logout events.
      */
-    public function onUserLogout($event)
+    public function onUserLogout()
     {
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');

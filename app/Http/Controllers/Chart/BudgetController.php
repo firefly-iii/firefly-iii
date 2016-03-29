@@ -198,7 +198,7 @@ class BudgetController extends Controller
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($accounts, $start, $end);
-        $allEntries->push([trans('firefly.noBudget'), '0', '0', $noBudgetExpenses, '0', '0']);
+        $allEntries->push([trans('firefly.no_budget'), '0', '0', $noBudgetExpenses, '0', '0']);
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
 
@@ -258,7 +258,7 @@ class BudgetController extends Controller
 
                 // basic information:
                 $year          = $currentStart->year;
-                $entry['name'] = $budget->name ?? (string)trans('firefly.noBudget');
+                $entry['name'] = $budget->name ?? (string)trans('firefly.no_budget');
                 $spent         = 0;
                 // this might be a good moment to collect no budget stuff.
                 if (is_null($budget->id)) {
@@ -321,7 +321,6 @@ class BudgetController extends Controller
         foreach ($budgetInformation as $row) {
             $budgets->push($row['budget']);
         }
-
         while ($start < $end) {
             // month is the current end of the period:
             $month = clone $start;
@@ -338,10 +337,13 @@ class BudgetController extends Controller
                 }
                 $row[] = $spent;
             }
+
+            // add "no budget" thing.
+            $row[] = round(bcmul($repository->getWithoutBudgetSum($accounts, $start, $month), '-1'), 4);
+
             $entries->push($row);
             $start->endOfMonth()->addDay();
         }
-
         $data = $this->generator->year($budgets, $entries);
         $cache->store($data);
 

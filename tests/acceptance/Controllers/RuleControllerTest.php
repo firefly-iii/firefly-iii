@@ -32,7 +32,7 @@ class RuleControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/rules/delete/1');
+        $this->call('GET', '/rules/delete/1');
         $this->assertResponseStatus(200);
     }
 
@@ -55,7 +55,7 @@ class RuleControllerTest extends TestCase
     public function testDown()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/rules/down/1');
+        $this->call('GET', '/rules/down/1');
         $this->assertResponseStatus(302);
     }
 
@@ -67,7 +67,7 @@ class RuleControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $this->call('GET', '/rules/rules/edit/1');
+        $this->call('GET', '/rules/edit/1');
         $this->assertResponseStatus(200);
     }
 
@@ -90,7 +90,7 @@ class RuleControllerTest extends TestCase
     {
         $this->be($this->user());
         $args = ['actions' => [1, 2, 3]];
-        $this->call('POST', '/rules/rules/action/reorder/1', $args);
+        $this->call('POST', '/rules/action/order/1', $args);
         $this->assertResponseStatus(200);
     }
 
@@ -101,7 +101,7 @@ class RuleControllerTest extends TestCase
     {
         $this->be($this->user());
         $args = ['actions' => [1, 2]];
-        $this->call('POST', '/rules/rules/trigger/reorder/1', $args);
+        $this->call('POST', '/rules/trigger/order/1', $args);
         $this->assertResponseStatus(200);
     }
 
@@ -141,7 +141,7 @@ class RuleControllerTest extends TestCase
     {
 
         $this->be($this->user());
-        $this->call('GET', '/rules/rules/up/1');
+        $this->call('GET', '/rules/up/1');
         $this->assertResponseStatus(302);
     }
 

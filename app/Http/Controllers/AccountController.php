@@ -91,7 +91,7 @@ class AccountController extends Controller
 
         $repository->destroy($account, $moveTo);
 
-        Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
+        Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
 
         return redirect(session('accounts.delete.url'));
@@ -224,7 +224,7 @@ class AccountController extends Controller
 
         $account = $repository->store($accountData);
 
-        Session::flash('success', 'New account "' . $account->name . '" stored!');
+        Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
 
         // update preferences if necessary:
@@ -271,7 +271,7 @@ class AccountController extends Controller
         ];
         $repository->update($account, $accountData);
 
-        Session::flash('success', 'Account "' . $account->name . '" updated.');
+        Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

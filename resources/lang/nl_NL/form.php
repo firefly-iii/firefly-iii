@@ -72,7 +72,6 @@ return [
     'add_new_deposit'             => 'Maak nieuwe inkomsten',
     'add_new_transfer'            => 'Maak nieuwe overschrijving',
     'noPiggybank'                 => '(geen spaarpotje)',
-    'noBudget'                    => '(geen budget)',
     'title'                       => 'Titel',
     'notes'                       => 'Notities',
     'filename'                    => 'Bestandsnaam',

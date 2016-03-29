@@ -44,6 +44,14 @@ class EventServiceProvider extends ServiceProvider
             'Illuminate\Auth\Events\Logout'               => [
                 'FireflyIII\Handlers\Events\UserEventListener@onUserLogout',
             ],
+            'FireflyIII\Events\UserRegistration'          => [
+                'FireflyIII\Handlers\Events\SendRegistrationMail',
+                'FireflyIII\Handlers\Events\AttachUserRole',
+                'FireflyIII\Handlers\Events\UserConfirmation@sendConfirmation',
+            ],
+            'FireflyIII\Events\ResendConfirmation'        => [
+                'FireflyIII\Handlers\Events\UserConfirmation@resendConfirmation',
+            ],
         ];
 
     /**

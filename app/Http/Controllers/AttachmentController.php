@@ -64,7 +64,7 @@ class AttachmentController extends Controller
 
         $repository->destroy($attachment);
 
-        Session::flash('success', trans('firefly.attachment_deleted', ['name' => $name]));
+        Session::flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
         Preferences::mark();
 
         return redirect(session('attachments.delete.url'));
@@ -159,7 +159,7 @@ class AttachmentController extends Controller
 
         $repository->update($attachment, $attachmentData);
 
-        Session::flash('success', 'Attachment "' . $attachment->filename . '" updated.');
+        Session::flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

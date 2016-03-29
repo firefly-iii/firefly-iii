@@ -1,14 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-// auth routes, i think
+
+/**
+ * These routes only work when the user is NOT logged in.
+ */
 Route::group(
-    ['middleware' => 'web'], function () {
+    ['middleware' => 'user-not-logged-in'], function () {
 
     // Authentication Routes...
     Route::get('/login', 'Auth\AuthController@showLoginForm');
     Route::post('/login', 'Auth\AuthController@login');
-    Route::get('/logout', 'Auth\AuthController@logout');
 
     // Registration Routes...
     Route::get('/register', ['uses' => 'Auth\AuthController@showRegistrationForm', 'as' => 'register']);
@@ -22,25 +24,51 @@ Route::group(
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
 
-    // display error:
-    Route::get('/error', 'HomeController@displayError');
-
-
 }
 );
 
+/**
+ * For other routes, it is only relevant that the user is authenticated.
+ */
+
 Route::group(
-    ['middleware' => 'web-auth-no-two-factor'], function () {
-    Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
-    Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
-    Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
+    ['middleware' => 'user-simple-auth'], function () {
+    Route::get('/error', 'HomeController@displayError');
+    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
     Route::get('/flush', ['uses' => 'HomeController@flush']);
 }
 );
 
-
+/**
+ * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+ */
 Route::group(
-    ['middleware' => ['web-auth-range']], function () {
+    ['middleware' => 'user-logged-in-no-2fa'], function () {
+    Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
+    Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
+    Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
+
+}
+);
+
+/**
+ * For the confirmation routes, the user must be logged in, also 2FA, but his account must not be confirmed.
+ */
+Route::group(
+    ['middleware' => 'user-logged-in-2fa-no-activation'], function () {
+    //
+    Route::get('/confirm-your-account', ['uses' => 'Auth\ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
+    Route::get('/resend-confirmation', ['uses' => 'Auth\ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
+    Route::get('/confirmation/{code}', ['uses' => 'Auth\ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
+
+}
+);
+
+/**
+ * For all other routes, the user must be fully authenticated and have an activated account.
+ */
+Route::group(
+    ['middleware' => ['user-full-auth']], function () {
 
     /**
      * Home Controller
@@ -48,7 +76,6 @@ Route::group(
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-
     Route::get('/routes', ['uses' => 'HomeController@routes']);
     /**
      * Account Controller
@@ -282,35 +309,33 @@ Route::group(
 
     // rules GET:
     Route::get('/rules/create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rules.rule.create']);
-    Route::get('/rules/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
-    Route::get('/rules/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
-    Route::get('/rules/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
-    Route::get('/rules/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
-    Route::get('/rules/rules/test_triggers', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
+    Route::get('/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
+    Route::get('/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
+    Route::get('/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
+    Route::get('/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
+    Route::get('/rules/test', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
 
     // rules POST:
-    Route::post('/rules/rules/trigger/reorder/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
-    Route::post('/rules/rules/action/reorder/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
+    Route::post('/rules/trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
+    Route::post('/rules/action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
     Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rules.rule.store']);
     Route::post('/rules/update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rules.rule.update']);
     Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rules.rule.destroy']);
 
 
     // rule groups GET
-    Route::get('/rules/groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
-    Route::get('/rules/groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
-    Route::get('/rules/groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
-    Route::get('/rules/groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
-    Route::get('/rules/groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
-    Route::get(
-        '/rules/groups/select_transactions/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'rules.rule-group.select_transactions']
-    );
+    Route::get('/rule-groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
+    Route::get('/rule-groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
+    Route::get('/rule-groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
+    Route::get('/rule-groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
+    Route::get('/rule-groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
+    Route::get('/rule-groups/select/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'rules.rule-group.select_transactions']);
 
     // rule groups POST
-    Route::post('/rules/groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
-    Route::post('/rules/groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
-    Route::post('/rules/groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
-    Route::post('/rules/groups/execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'rules.rule-group.execute']);
+    Route::post('/rule-groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
+    Route::post('/rule-groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
+    Route::post('/rule-groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
+    Route::post('/rule-groups/execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'rules.rule-group.execute']);
 
     /**
      * Search Controller
@@ -352,12 +377,6 @@ Route::group(
     Route::post('/transaction/update/{tj}', ['uses' => 'TransactionController@update', 'as' => 'transactions.update']);
     Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
-
-    /**
-     * Auth\Auth Controller
-     */
-    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
-
 
 }
 );

@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
+use FireflyIII\Events\UserRegistration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -91,14 +91,13 @@ class AuthController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @param UserRepositoryInterface   $repository
      * @param  \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      * @throws FireflyException
      * @throws \Illuminate\Foundation\Validation\ValidationException
      */
-    public function register(UserRepositoryInterface $repository, Request $request)
+    public function register(Request $request)
     {
         $validator = $this->validator($request->all());
 
@@ -123,37 +122,18 @@ class AuthController extends Controller
         }
 
 
-        Auth::login($this->create($request->all()));
+        $user = $this->create($request->all());
 
-        // get the email address
-        if (Auth::user() instanceof User) {
-            $email     = Auth::user()->email;
-            $address   = route('index');
-            $ipAddress = $request->ip();
-            // send email.
-            try {
-                Mail::send(
-                    ['emails.registered-html', 'emails.registered'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
-                    $message->to($email, $email)->subject('Welcome to Firefly III! ');
-                }
-                );
-            } catch (Swift_TransportException $e) {
-                Log::error($e->getMessage());
-            }
+        // trigger user registration event:
+        event(new UserRegistration($user, $request->ip()));
 
-            // set flash message
-            Session::flash('success', 'You have registered successfully!');
-            Session::flash('gaEventCategory', 'user');
-            Session::flash('gaEventAction', 'new-registration');
+        Auth::login($user);
 
-            // first user ever?
-            if ($repository->count() == 1) {
-                $repository->attachRole(Auth::user(), 'owner');
-            }
+        Session::flash('success', strval(trans('firefly.registered')));
+        Session::flash('gaEventCategory', 'user');
+        Session::flash('gaEventAction', 'new-registration');
 
-            return redirect($this->redirectPath());
-        }
-        throw new FireflyException('The authenticated user object is invalid.');
+        return redirect($this->redirectPath());
     }
 
     /**

@@ -108,7 +108,7 @@ class PiggyBankController extends Controller
     {
 
 
-        Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
+        Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
         $repository->destroy($piggyBank);
 
@@ -242,11 +242,15 @@ class PiggyBankController extends Controller
             // create event
             $repository->createEvent($piggyBank, $amount);
 
-            Session::flash('success', 'Added ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
+            Session::flash(
+                'success', strval(trans('firefly.added_amount_to_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
+            );
             Preferences::mark();
         } else {
             Log::error('Cannot add ' . $amount . ' because max amount is ' . $maxAmount . ' (left on account is ' . $leftOnAccount . ')');
-            Session::flash('error', 'Could not add ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
+            Session::flash(
+                'error', strval(trans('firefly.cannot_add_amount_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
+            );
         }
 
         return redirect(route('piggy-banks.index'));
@@ -272,10 +276,14 @@ class PiggyBankController extends Controller
             // create event
             $repository->createEvent($piggyBank, bcmul($amount, '-1'));
 
-            Session::flash('success', 'Removed ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
+            Session::flash(
+                'success', strval(trans('firefly.removed_amount_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
+            );
             Preferences::mark();
         } else {
-            Session::flash('error', 'Could not remove ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
+            Session::flash(
+                'error', strval(trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
+            );
         }
 
         return redirect(route('piggy-banks.index'));
@@ -329,7 +337,7 @@ class PiggyBankController extends Controller
 
         $piggyBank = $repository->store($piggyBankData);
 
-        Session::flash('success', 'Stored piggy bank "' . e($piggyBank->name) . '".');
+        Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
@@ -364,7 +372,7 @@ class PiggyBankController extends Controller
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
 
-        Session::flash('success', 'Updated piggy bank "' . e($piggyBank->name) . '".');
+        Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {

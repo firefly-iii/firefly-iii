@@ -82,6 +82,7 @@ class ChartBudgetControllerTest extends TestCase
     {
         $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $repository->shouldReceive('getBudgetsAndExpensesPerMonth')->once()->andReturn([]);
+        $repository->shouldReceive('getWithoutBudgetSum')->times(12)->andReturn('0');
 
         $this->be($this->user());
         $this->call('GET', '/chart/budget/year/default/20150101/20151231/1');

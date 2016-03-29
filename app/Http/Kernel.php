@@ -7,6 +7,8 @@ use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\IsConfirmed;
+use FireflyIII\Http\Middleware\IsNotConfirmed;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
@@ -45,23 +47,30 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups
         = [
-            'web'                    => [
+            // does not check login
+            // does not check 2fa
+            // does not check activation
+            'web'                              => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
             ],
-            'web-auth'               => [
+            // MUST NOT be logged in. Does not care about 2FA or confirmation.
+            'user-not-logged-in'               => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                Authenticate::class,
-                AuthenticateTwoFactor::class,
+                RedirectIfAuthenticated::class,
             ],
-            'web-auth-no-two-factor' => [
+
+            // MUST be logged in.
+            // MUST NOT have 2FA
+            // don't care about confirmation:
+            'user-logged-in-no-2fa'            => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -70,7 +79,10 @@ class Kernel extends HttpKernel
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
             ],
-            'web-auth-range'         => [
+            // MUST be logged in
+            // MUST have 2FA
+            // MUST NOT have confirmation.
+            'user-logged-in-2fa-no-activation' => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -78,6 +90,34 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
+                IsNotConfirmed::class,
+            ],
+
+            // MUST be logged in
+            // don't care about 2fa
+            // don't care about confirmation.
+            'user-simple-auth'                 => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+            ],
+
+            // MUST be logged in
+            // MUST have 2fa
+            // MUST be confirmed.
+            // (this group includes the other Firefly middleware)
+            'user-full-auth'                   => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+                AuthenticateTwoFactor::class,
+                IsConfirmed::class,
                 Range::class,
                 Binder::class,
             ],

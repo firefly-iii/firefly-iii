@@ -18,7 +18,9 @@
                     </td>
                     <td>{{ cat.spent|formatAmount }}</td>
                     <td style="width:20px;">
-                        <i class="fa fa-fw fa-info-circle text-muted"></i>
+                        <i class="fa fa-fw fa-info-circle text-muted firefly-info-button"
+                           data-location="category-entry" data-category-id="{{ cat.id }}"
+                        ></i>
                     </td>
                 </tr>
             {% endfor %}

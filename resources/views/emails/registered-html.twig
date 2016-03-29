@@ -4,14 +4,13 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
 </head>
-<body itemscope itemtype="http://schema.org/SoftwareApplication">
+<body>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Hey there,
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Welkome to <a style="color:#337ab7" href="{{ address }}">
-        <span itemprop="name">Firefly III</span></a>. Your registration has made it, and this email is here to confirm it. Yay!
+    Welkome to <a style="color:#337ab7" href="{{ address }}">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!
 </p>
 
 <ul>
@@ -27,45 +26,22 @@
         <a style="color:#337ab7" href="https://github.com/JC5/firefly-iii/wiki/First-use">first use guide</a> and the
         <a style="color:#337ab7" href="http://jc5.github.io/firefly-iii//description/">full description</a>.
     </li>
-
+    <li style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+        If this installation of Firefly is configured to send activation mails as well, you should get an activation
+        link very soon!
+    </li>
 </ul>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Enjoy!
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">James Cole</span></span>
+    James Cole
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;color:#aaa;">
     The registration has been created from IP {{ ip }}
 </p>
-
-
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "EmailMessage",
-  "description": "Visit Firefly III",
-  "potentialAction": {
-    "@type": "ViewAction",
-    "target": "{{ address }}",
-    "url": "{{ address }}",
-    "name": "Visit Firefly III"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Firefly III",
-    "url": "{{ address }}"
-  }
-}
-
-
-
-
-
-
-</script>
 
 </body>
 </html>

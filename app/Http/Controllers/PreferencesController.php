@@ -64,26 +64,26 @@ class PreferencesController extends Controller
      */
     public function index(ARI $repository)
     {
-        $accounts               = $repository->getAccounts(['Default account', 'Asset account']);
-        $viewRangePref          = Preferences::get('viewRange', '1M');
-        $viewRange              = $viewRangePref->data;
-        $frontPageAccounts      = Preferences::get('frontPageAccounts', []);
-        $budgetMax              = Preferences::get('budgetMaximum', 1000);
-        $language               = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $budgetMaximum          = $budgetMax->data;
-        $customFiscalYear       = Preferences::get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr     = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart        = date('Y') . '-' . $fiscalYearStartStr;
-        $twoFactorAuthEnabled   = Preferences::get('twoFactorAuthEnabled', 0)->data;
-        $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
-        $showIncomplete         = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
+        $accounts           = $repository->getAccounts(['Default account', 'Asset account']);
+        $viewRangePref      = Preferences::get('viewRange', '1M');
+        $viewRange          = $viewRangePref->data;
+        $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
+        $budgetMax          = Preferences::get('budgetMaximum', 1000);
+        $language           = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $budgetMaximum      = $budgetMax->data;
+        $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
+        $is2faEnabled       = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
+        $has2faSecret       = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
+        $showIncomplete     = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
 
         return view(
             'preferences.index',
             compact(
                 'budgetMaximum', 'language', 'accounts', 'frontPageAccounts',
-                'viewRange', 'customFiscalYear', 'fiscalYearStart', 'twoFactorAuthEnabled',
-                'hasTwoFactorAuthSecret', 'showIncomplete'
+                'viewRange', 'customFiscalYear', 'fiscalYearStart', 'is2faEnabled',
+                'has2faSecret', 'showIncomplete'
             )
         );
     }
@@ -98,7 +98,7 @@ class PreferencesController extends Controller
         Preferences::set('twoFactorAuthEnabled', 1);
         Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
 
-        Session::flash('success', 'Preferences saved!');
+        Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
         return redirect(route('preferences'));
@@ -151,7 +151,7 @@ class PreferencesController extends Controller
         }
 
 
-        Session::flash('success', 'Preferences saved!');
+        Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
         // if we don't have a valid secret yet, redirect to the code page.

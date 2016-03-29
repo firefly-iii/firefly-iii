@@ -8,6 +8,8 @@
  */
 
 return [
+
+    // tour!
     'main-content-title'       => 'Welkom bij Firefly III',
     'main-content-text'        => 'Doe jezelf een lol en volg deze korte tour. Je weet dan precies hoe alles werkt.',
     'sidebar-toggle-title'     => 'Sidebar om nieuwe dingen te maken',
@@ -17,7 +19,7 @@ return [
     'budget-menu-title'        => 'Budgetten',
     'budget-menu-text'         => 'Gebruik deze pagina voor budgetten.',
     'report-menu-title'        => 'Overzichten',
-    'report-menu-text'         => 'Hier vind je allerlei financiele rapportages.',
+    'report-menu-text'         => 'Bekijk dit als je een goed overzicht van je financiën wil.',
     'transaction-menu-title'   => 'Transacties',
     'transaction-menu-text'    => 'Hier vind je al je bijschrijvingen, afschrijvingen en overboekingen.',
     'option-menu-title'        => 'Opties',
