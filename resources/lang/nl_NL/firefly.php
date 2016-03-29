@@ -62,6 +62,21 @@ return [
     'two_factor_lost_intro'                     => 'Dit is helaas niet iets dat je kan resetten vanaf de site. Je hebt twee keuzes.',
     'two_factor_lost_fix_self'                  => 'Als dit jouw installatie van Firefly III is, vind je in de logboeken (<code>storage/logs</code>) instructies.',
     'two_factor_lost_fix_owner'                 => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
+    'warning_much_data'                         => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
+    'registered'                                => 'Je bent geregistreerd!',
+
+    // account confirmation:
+    'confirm_account_header'                    => 'Bevestig je account',
+    'confirm_account_intro'                     => 'TIjdens het registreren heb je een mailtje gehad. Kijk daar in voor instructies. Als je het mailtje niet hebt gehad, kan Firefly je een nieuwe sturen.',
+    'confirm_account_resend_email'              => 'Stuur me het bevestigingsmailtje dat ik nodig heb om mijn account te activeren.',
+    'account_is_confirmed'                      => 'Je account is geactiveerd!',
+    'invalid_activation_code'                   => 'Het lijkt er op dat de code die je gebruikt niet geldig is (of wellicht verlopen).',
+    'confirm_account_is_resent_header'          => 'De bevestiging is verstuurd',
+    'confirm_account_is_resent_text'            => 'De bevestiging is opnieuw verstuurd. Als je hem nu nog niet krijgt, stuur dan zelf een mailtje naar <a href="mailto::owner">:owner</a> of kijk in de logboeken om te zien wat er is fout gegaan.',
+    'confirm_account_is_resent_go_home'         => 'Ga naar de index van Firefly',
+    'confirm_account_not_resent_header'         => 'Er ging iets fout :(',
+    'confirm_account_not_resent_intro'          => 'Het bevestigingsmailtje is niet verstuurd. Als je het bevestigingsmailtje nog niet hebt gehad, neem dan even contact op met <a href="mailto::owner">:owner</a>.Het kan zijn dat je het bevestigingsmailtje te vaak laat versturen. Je kan dit slechts één keer per uur laten doen.',
+    'confirm_account_not_resent_go_home'        => 'Ga naar de index van Firefly',
 
     // export data:
     'import_and_export'                         => 'Import en export',
@@ -247,6 +262,7 @@ return [
     'pref_two_factor_auth_remove_code'          => 'Verwijder de verificatiecode',
     'pref_two_factor_auth_remove_will_disable'  => '(hiermee zet je authenticatie in twee stappen ook uit)',
     'pref_save_settings'                        => 'Instellingen opslaan',
+    'saved_preferences'                         => 'Voorkeuren opgeslagen!',
 
     // profile:
     'change_your_password'                      => 'Verander je wachtwoord',
@@ -273,6 +289,7 @@ return [
     'update_attachment'                         => 'Update bijlage',
     'delete_attachment'                         => 'Verwijder bijlage ":name"',
     'attachment_deleted'                        => 'Bijlage ":name" verwijderd',
+    'attachment_updated'                        => 'Attachment ":name" geüpdatet',
     'upload_max_file_size'                      => 'Maximale grootte: :size',
 
     // tour:
@@ -374,6 +391,11 @@ return [
     'csv_import_account_help'                   => 'Als jouw CSV bestand geen referenties bevat naar jouw rekening(en), geef dan hier aan om welke rekening het gaat.',
     'csv_delimiter_help'                        => 'Kies het veldscheidingsteken dat in het invoerbestand is gebruikt. Bij twijfel is de komma de veiligste optie.',
     'csv_date_parse_error'                      => 'Firefly kan van ":value" geen datum maken, gegeven het formaat ":format". Weet je zeker dat je CSV goed is?',
+    'could_not_recover'                         => 'Helaas, kan niet doorgaan vanaf de vorige stap. Je voortgang is verloren gegaan :(. De logbestanden bevatten meer informatie.',
+    'must_select_roles'                         => 'Je moet enkele rollen selecteren voor de kolommen in je bestand, anders kan je niet verder.',
+    'invalid_mapping'                           => 'Je hebt verkeerde gegevens ingevoerd. Je kan helaas niet verder.',
+    'no_file_uploaded'                          => 'Het lijkt er op dat je niets hebt geüpload.',
+
 
     // create new stuff:
     'create_new_withdrawal'                     => 'Nieuwe uitgave',
@@ -406,6 +428,8 @@ return [
     'to_get_started'                            => 'Begin met de naam van de bank waar je je betaalrekening hebt, en het saldo van die rekening.',
     'savings_balance_text'                      => 'Voer ook het saldo van je spaarrekening in, als je die hebt.',
     'cc_balance_text'                           => 'Als je een credit card hebt, vul dan hier je credit cardlimiet in.',
+    'stored_new_account_new_user'               => 'Hoera! Je nieuwe account is opgeslagen.',
+    'stored_new_accounts_new_user'              => 'Hoera! Je nieuwe accounts zijn opgeslagen.',
 
     // forms:
     'mandatoryFields'                           => 'Verplichte velden',
@@ -416,6 +440,7 @@ return [
     // budgets:
     'create_new_budget'                         => 'Maak een nieuw budget',
     'store_new_budget'                          => 'Sla nieuw budget op',
+    'stored_new_budget'                         => 'Nieuw budget ":name" opgeslagen',
     'availableIn'                               => 'Beschikbaar in :date',
     'transactionsWithoutBudget'                 => 'Uitgaven zonder budget',
     'transactionsWithoutBudgetDate'             => 'Uitgaven zonder budget in :date',
@@ -424,15 +449,23 @@ return [
     'without_budget_between'                    => 'Transacties zonder budget tussen :start en :end',
     'budget_in_month'                           => ':name in :month',
     'delete_budget'                             => 'Verwijder budget ":name"',
+    'deleted_budget'                            => 'Budget ":name" verwijderd',
     'edit_budget'                               => 'Wijzig budget ":name"',
+    'updated_budget'                            => 'Budget ":name" geüpdatet',
     'update_amount'                             => 'Bedrag bijwerken',
     'update_budget'                             => 'Budget bijwerken',
 
     // bills:
     'delete_bill'                               => 'Verwijder contract ":name"',
+    'deleted_bill'                              => 'Contract ":name" verwijderd',
     'edit_bill'                                 => 'Wijzig contract ":name"',
     'update_bill'                               => 'Wijzig contract',
+    'updated_bill'                              => 'Contract ":name" geüpdatet',
     'store_new_bill'                            => 'Sla nieuw contract op',
+    'stored_new_bill'                           => 'Nieuw contract ":name" opgeslagen',
+    'cannot_scan_inactive_bill'                 => 'Inactieve contracten kunnen niet worden gescand.',
+    'rescanned_bill'                            => 'Alles is opnieuw gescand.',
+    'bill_date_little_relevance'                => 'Firefly gebruikt alleen de dag van dit datumveld. Dit veld heeft alleen zin als je rekening ook echt op die dag van de maand komt. Zo niet, vul dan gewoon de 1e van de maand in.',
 
     // accounts:
     'details_for_asset'                         => 'Overzicht voor betaalrekening ":name"',
@@ -460,32 +493,46 @@ return [
     'asset_accounts'                            => 'Betaalrekeningen',
     'expense_accounts'                          => 'Crediteuren',
     'revenue_accounts'                          => 'Debiteuren',
+    'cash_accounts'                             => 'Contant geldrekeningen',
+    'Cash account'                              => 'Contant geldrekening',
     'accountExtraHelp_asset'                    => '',
     'accountExtraHelp_expense'                  => '',
     'accountExtraHelp_revenue'                  => '',
     'account_type'                              => 'Rekeningtype',
     'save_transactions_by_moving'               => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
+    'stored_new_account'                        => 'Nieuwe rekening ":name" opgeslagen!',
+    'updated_account'                           => 'Rekening ":name" geüpdatet',
 
     // categories:
     'new_category'                              => 'Nieuwe categorie',
     'create_new_category'                       => 'Nieuwe categorie',
     'without_category'                          => 'Zonder categorie',
-    'update_category'                           => 'Wijzig categorie',
+    'update_category'                           => 'Update categorie',
+    'updated_category'                          => 'Categorie ":name" geüpdatet',
     'categories'                                => 'Categorieën',
     'edit_category'                             => 'Wijzig categorie ":name"',
     'no_category'                               => '(geen categorie)',
     'category'                                  => 'Categorie',
     'delete_category'                           => 'Verwijder categorie ":name"',
+    'deleted_category'                          => 'Categorie ":name" verwijderd',
     'store_category'                            => 'Sla nieuwe categorie op',
+    'stored_category'                           => 'Nieuwe categorie ":name" opgeslagen',
     'without_category_between'                  => 'Zonder categorie tussen :start en :end',
 
     // transactions:
     'update_withdrawal'                         => 'Wijzig uitgave',
     'update_deposit'                            => 'Wijzig inkomsten',
     'update_transfer'                           => 'Wijzig overschrijving',
+    'updated_withdrawal'                        => 'Uitgave ":description" geüpdatet',
+    'updated_deposit'                           => 'Inkomsten ":description" geüpdatet',
+    'updated_transfer'                          => 'Overschrijving ":description" geüpdatet',
     'delete_withdrawal'                         => 'Verwijder uitgave ":description"',
     'delete_deposit'                            => 'Verwijder inkomsten ":description"',
     'delete_transfer'                           => 'Verwijder overschrijving ":description"',
+    'deleted_withdrawal'                        => 'Uitgave ":description" verwijderd',
+    'deleted_deposit'                           => 'Inkomsten ":description" verwijderd',
+    'deleted_transfer'                          => 'Overschrijving ":description" verwijderd',
+    'stored_journal'                            => 'Nieuw transactie ":description" opgeslagen',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly!',
@@ -619,7 +666,7 @@ return [
     'earned'                                    => 'Verdiend',
     'overspent'                                 => 'Teveel uitgegeven',
     'left'                                      => 'Over',
-    'noBudget'                                  => '(geen budget)',
+    'no_budget'                                 => '(geen budget)',
     'maxAmount'                                 => 'Maximaal bedrag',
     'minAmount'                                 => 'Minimaal bedrag',
     'billEntry'                                 => 'Bedrag voor dit contract',
@@ -640,6 +687,7 @@ return [
     'piggy_bank'                                => 'Spaarpotje',
     'new_piggy_bank'                            => 'Nieuw spaarpotje',
     'store_piggy_bank'                          => 'Sla spaarpotje op',
+    'stored_piggy_bank'                         => 'Nieuw spaarpotje ":name" opgeslagen',
     'account_status'                            => 'Rekeningoverzicht',
     'left_for_piggy_banks'                      => 'Over voor spaarpotjes',
     'sum_of_piggy_banks'                        => 'Som van spaarpotjes',
@@ -653,6 +701,7 @@ return [
     'max_amount_remove'                         => 'Hooguit te verwijderen',
     'update_piggy_button'                       => 'Wijzig spaarpotje',
     'update_piggy_title'                        => 'Wijzig spaarpotje ":name"',
+    'updated_piggy_bank'                        => 'Spaarpotje ":name" geüpdatet',
     'details'                                   => 'Details',
     'events'                                    => 'Gebeurtenissen',
     'target_amount'                             => 'Doelbedrag',
@@ -665,14 +714,22 @@ return [
     'add_any_amount_to_piggy'                   => 'Stop geld in dit spaarpotje om het doel van :amount te halen.',
     'add_set_amount_to_piggy'                   => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
     'delete_piggy_bank'                         => 'Verwijder spaarpotje ":name"',
+    'cannot_add_amount_piggy'                   => 'Kon bedrag :amount niet aan ":name" toevoegen.',
+    'deleted_piggy_bank'                        => 'Spaarpotje ":name" verwijderd',
+    'added_amount_to_piggy'                     => ':amount aan ":name" toegevoegd',
+    'removed_amount_from_piggy'                 => ':amount uit ":name" gehaald',
+    'cannot_remove_amount_piggy'                => 'Kon :amount niet uit ":name" halen.',
 
     // tags
     'regular_tag'                               => 'Een gewone tag.',
     'balancing_act'                             => 'Er kunnen maar twee transacties worden getagged; een uitgaven en inkomsten. Ze balanceren elkaar.',
     'advance_payment'                           => 'Je kan een uitgave taggen en zoveel inkomsten om de uitgave (helemaal) te compenseren.',
     'delete_tag'                                => 'Verwijder tag ":tag"',
+    'deleted_tag'                               => 'Tag ":tag" verwijderd',
     'new_tag'                                   => 'Maak nieuwe tag',
     'edit_tag'                                  => 'Wijzig tag ":tag"',
+    'updated_tag'                               => 'Tag ":tag" geüpdatet',
+    'created_tag'                               => 'Tag ":tag" opgeslagen!',
     'no_year'                                   => 'Zonder jaar',
     'no_month'                                  => 'Zonder maand',
     'tag_title_nothing'                         => 'Standaard tags',
