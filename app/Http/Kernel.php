@@ -92,6 +92,19 @@ class Kernel extends HttpKernel
                 AuthenticateTwoFactor::class,
                 IsNotConfirmed::class,
             ],
+
+            // MUST be logged in
+            // don't care about 2fa
+            // don't care about confirmation.
+            'user-simple-auth' => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+            ],
+
             // MUST be logged in
             // MUST have 2fa
             // MUST be confirmed.

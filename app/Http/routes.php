@@ -2,11 +2,6 @@
 declare(strict_types = 1);
 
 
-//Route::get('/logout', 'Auth\AuthController@logout');
-//Route::get('/error', 'HomeController@displayError');
-//Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
-//Route::get('/flush', ['uses' => 'HomeController@flush']);
-
 
 /**
  * These routes only work when the user is NOT logged in.
@@ -29,11 +24,24 @@ Route::group(
     Route::post('/password/email', 'Auth\PasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
+
 }
 );
 
 /**
- * For the two factor routes, the user must be logged in, but not 2FA. Account confirmation does not matter here.
+ * For other routes, it is only relevant that the user is authenticated.
+ */
+
+Route::group(
+    ['middleware' => 'user-simple-auth'], function () {
+    Route::get('/error', 'HomeController@displayError');
+    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
+    Route::get('/flush', ['uses' => 'HomeController@flush']);
+}
+);
+
+/**
+ * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
  */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa'], function () {
