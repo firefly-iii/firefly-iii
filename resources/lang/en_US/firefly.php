@@ -465,6 +465,7 @@ return [
     'stored_new_bill'                           => 'Stored new bill ":name"',
     'cannot_scan_inactive_bill'                 => 'Inactive bills cannot be scanned.',
     'rescanned_bill'                            => 'Rescanned everything.',
+    'bill_date_little_relevance'                => 'The only part of this date used by Firefly is the day. It is only useful when your bill arrives at exactly the same date every month. If the payment date of your bills varies, simply use the first of the month.',
 
     // accounts:
     'details_for_asset'                         => 'Details for asset account ":name"',

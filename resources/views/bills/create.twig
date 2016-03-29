@@ -19,7 +19,7 @@
                     {{ ExpandedForm.tags('match') }}
                     {{ ExpandedForm.amount('amount_min') }}
                     {{ ExpandedForm.amount('amount_max') }}
-                    {{ ExpandedForm.date('date',phpdate('Y-m-d')) }}
+                    {{ ExpandedForm.date('date',phpdate('Y-m-d'), {helpText: trans('firefly.bill_date_little_relevance')}) }}
                     {{ ExpandedForm.select('repeat_freq',periods,'monthly') }}
                 </div>
             </div>
