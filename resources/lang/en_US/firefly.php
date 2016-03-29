@@ -65,6 +65,19 @@ return [
     'warning_much_data'                         => ':days days of data may take a while to load.',
     'registered'                                => 'You have registered successfully!',
 
+    // account confirmation:
+    'confirm_account_header'                    => 'Please confirm your account',
+    'confirm_account_intro'                     => 'An email has been sent to the address you used during your registration. Please check it out for further instructions. If you did not get this message, you can have Firefly send it again.',
+    'confirm_account_resend_email'              => 'Send me the confirmation message again.',
+    'account_is_confirmed'                      => 'Your account has been confirmed!',
+    'invalid_activation_code'                   => 'It seems the code you are using is not valid, or has expired.',
+    'confirm_account_is_resent_header'          => 'The confirmation has been resent',
+    'confirm_account_is_resent_text'            => 'The confirmation message has been resent. If you still did not receive the confirmation message, please contact the site owner at <a href="mailto::owner">:owner</a> or check the log files to see what went wrong.',
+    'confirm_account_is_resent_go_home'         => 'Go to the index page of Firefly',
+    'confirm_account_not_resent_header'         => 'Something went wrong :(',
+    'confirm_account_not_resent_intro'          => 'The confirmation message has been not resent. If you still did not receive the confirmation message, please contact the site owner at <a href="mailto::owner">:owner</a> instead. Possibly, you have tried to resend the activation message too often. You can have Firefly III try to resend the confirmation message every hour.',
+    'confirm_account_not_resent_go_home'        => 'Go to the index page of Firefly',
+
     // export data:
     'import_and_export'                         => 'Import and export',
     'export_data'                               => 'Export data',
