@@ -1,13 +1,15 @@
 <?php
 
 return [
-    'chart'              => 'chartjs',
-    'version'            => '3.8.1',
-    'index_periods'      => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
-    'budget_periods'     => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'csv_import_enabled' => true,
-    'maxUploadSize'      => 5242880,
-    'allowedMimes'       => ['image/png', 'image/jpeg', 'application/pdf'],
+    'chart'               => 'chartjs',
+    'version'             => '3.8.1',
+    'index_periods'       => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
+    'budget_periods'      => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'csv_import_enabled'  => true,
+    'maxUploadSize'       => 5242880,
+    'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
+    'resend_confirmation' => 3600,
+    'confirmation_age'    => 14400, // four hours
 
     'export_formats'        => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
@@ -219,11 +221,11 @@ return [
         'append_description',
         'prepend_description',
     ],
-    'test-triggers' => [
+    'test-triggers'     => [
         // The maximum number of transactions shown when testing a list of triggers
         'limit' => 10,
-        
+
         // The maximum number of transactions to analyse, when testing a list of triggers
-        'range' => 200
-    ]
+        'range' => 200,
+    ],
 ];
