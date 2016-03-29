@@ -6,6 +6,7 @@ namespace FireflyIII\Support;
 use Auth;
 use Cache;
 use FireflyIII\Models\Preference;
+use FireflyIII\User;
 
 /**
  * Class Preferences
@@ -91,16 +92,34 @@ class Preferences
      */
     public function set($name, $value)
     {
-        $fullName = 'preference' . Auth::user()->id . $name;
+        $user = Auth::user();
+        if (is_null($user)) {
+            return $value;
+        }
+
+        return $this->setForUser(Auth::user(), $name, $value);
+    }
+
+    /**
+     * @param \FireflyIII\User $user
+     * @param                  $name
+     * @param string           $value
+     *
+     * @return Preference
+     */
+    public function setForUser(User $user, $name, $value)
+    {
+        $fullName = 'preference' . $user->id . $name;
         Cache::forget($fullName);
-        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
-        if ($pref) {
+        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
+
+        if (!is_null($pref)) {
             $pref->data = $value;
         } else {
             $pref       = new Preference;
             $pref->name = $name;
             $pref->data = $value;
-            $pref->user()->associate(Auth::user());
+            $pref->user()->associate($user);
 
         }
         $pref->save();
