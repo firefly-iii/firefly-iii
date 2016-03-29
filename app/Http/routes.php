@@ -1,16 +1,22 @@
 <?php
 declare(strict_types = 1);
 
-// does not check login
-// does not check 2fa
-// does not check activation
+
+//Route::get('/logout', 'Auth\AuthController@logout');
+//Route::get('/error', 'HomeController@displayError');
+//Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
+//Route::get('/flush', ['uses' => 'HomeController@flush']);
+
+
+/**
+ * These routes only work when the user is NOT logged in.
+ */
 Route::group(
-    ['middleware' => 'web'], function () {
+    ['middleware' => 'user-not-logged-in'], function () {
 
     // Authentication Routes...
     Route::get('/login', 'Auth\AuthController@showLoginForm');
     Route::post('/login', 'Auth\AuthController@login');
-    Route::get('/logout', 'Auth\AuthController@logout');
 
     // Registration Routes...
     Route::get('/register', ['uses' => 'Auth\AuthController@showRegistrationForm', 'as' => 'register']);
@@ -23,30 +29,26 @@ Route::group(
     Route::post('/password/email', 'Auth\PasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'Auth\PasswordController@reset');
 
-
-    // display error:
-    Route::get('/error', 'HomeController@displayError');
-
-    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
-
-
 }
 );
-// must be authenticated
-// does not care about 2fa
-// does not care about confirmation.
+
+/**
+ * For the two factor routes, the user must be logged in, but not 2FA. Account confirmation does not matter here.
+ */
 Route::group(
-    ['middleware' => 'web-auth-no-two-factor-any-confirm'], function () {
+    ['middleware' => 'user-logged-in-no-2fa'], function () {
     Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
     Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
     Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
-    Route::get('/flush', ['uses' => 'HomeController@flush']);
+
 }
 );
 
-// routes that can only be accessed without having your account confirmed.
+/**
+ * For the confirmation routes, the user must be logged in, also 2FA, but his account must not be confirmed.
+ */
 Route::group(
-    ['middleware' => 'web-auth-no-confirm'], function () {
+    ['middleware' => 'user-logged-in-2fa-no-activation'], function () {
     //
     Route::get('/confirm-your-account', ['uses' => 'Auth\ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
     Route::get('/resend-confirmation', ['uses' => 'Auth\ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
@@ -55,9 +57,11 @@ Route::group(
 }
 );
 
-
+/**
+ * For all other routes, the user must be fully authenticated and have an activated account.
+ */
 Route::group(
-    ['middleware' => ['web-auth-range']], function () {
+    ['middleware' => ['user-full-auth']], function () {
 
     /**
      * Home Controller
@@ -65,7 +69,6 @@ Route::group(
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-
     Route::get('/routes', ['uses' => 'HomeController@routes']);
     /**
      * Account Controller
