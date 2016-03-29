@@ -122,68 +122,6 @@ class Kernel extends HttpKernel
                 Binder::class,
             ],
 
-//
-//            // must be authenticated
-//            // must be 2fa (if enabled)
-//            // must be activated account
-//            'web-auth'                           => [
-//                EncryptCookies::class,
-//                AddQueuedCookiesToResponse::class,
-//                StartSession::class,
-//                ShareErrorsFromSession::class,
-//                VerifyCsrfToken::class,
-//                Authenticate::class,
-//                AuthenticateTwoFactor::class,
-//                IsConfirmed::class,
-//            ],
-//            // must be authenticated
-//            // must be 2fa (if enabled)
-//            // must NOT be activated account
-//            'web-auth-no-confirm'                => [
-//                EncryptCookies::class,
-//                AddQueuedCookiesToResponse::class,
-//                StartSession::class,
-//                ShareErrorsFromSession::class,
-//                VerifyCsrfToken::class,
-//                Authenticate::class,
-//                AuthenticateTwoFactor::class,
-//                IsNotConfirmed::class,
-//            ],
-//            // must be authenticated
-//            // does not care about 2fa
-//            // must be confirmed.
-//            'web-auth-no-two-factor'             => [
-//                EncryptCookies::class,
-//                AddQueuedCookiesToResponse::class,
-//                StartSession::class,
-//                ShareErrorsFromSession::class,
-//                VerifyCsrfToken::class,
-//                Authenticate::class,
-//                RedirectIfTwoFactorAuthenticated::class,
-//                IsConfirmed::class,
-//            ],
-//            'web-auth-no-two-factor-any-confirm' => [
-//                EncryptCookies::class,
-//                AddQueuedCookiesToResponse::class,
-//                StartSession::class,
-//                ShareErrorsFromSession::class,
-//                VerifyCsrfToken::class,
-//                Authenticate::class,
-//                RedirectIfTwoFactorAuthenticated::class,
-//            ],
-//            'web-auth-range'                     => [
-//                EncryptCookies::class,
-//                AddQueuedCookiesToResponse::class,
-//                StartSession::class,
-//                ShareErrorsFromSession::class,
-//                VerifyCsrfToken::class,
-//                Authenticate::class,
-//                AuthenticateTwoFactor::class,
-//                IsConfirmed::class,
-//                Range::class,
-//                Binder::class,
-//            ],
-
             'api' => [
                 'throttle:60,1',
             ],
