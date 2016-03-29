@@ -43,9 +43,6 @@ class Controller extends BaseController
         if (Auth::check()) {
             $pref                    = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
             $lang                    = $pref->data;
-            $this->monthFormat       = (string)trans('config.month');
-            $this->monthAndDayFormat = (string)trans('config.month_and_day');
-            $this->dateTimeFormat    = (string)trans('config.date_time');
 
             App::setLocale($lang);
             Carbon::setLocale(substr($lang, 0, 2));
@@ -54,6 +51,11 @@ class Controller extends BaseController
 
             setlocale(LC_TIME, $locale);
             setlocale(LC_MONETARY, $locale);
+
+            // save some formats:
+            $this->monthFormat       = (string)trans('config.month');
+            $this->monthAndDayFormat = (string)trans('config.month_and_day');
+            $this->dateTimeFormat    = (string)trans('config.date_time');
 
             // change localeconv to a new array:
             $numberFormatter = numfmt_create($lang, NumberFormatter::CURRENCY);
