@@ -25,16 +25,29 @@ Route::group(
     // display error:
     Route::get('/error', 'HomeController@displayError');
 
+    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
+
 
 }
 );
-
+// routes that can be accessed without being logged using two factor.
 Route::group(
     ['middleware' => 'web-auth-no-two-factor'], function () {
     Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
     Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
     Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
     Route::get('/flush', ['uses' => 'HomeController@flush']);
+}
+);
+
+// routes that can only be accessed without having your account confirmed.
+Route::group(
+    ['middleware' => 'web-auth-no-confirm'], function () {
+    //
+    Route::get('/confirm-your-account', ['uses' => 'Auth\ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
+    Route::get('/resend-confirmation', ['uses' => 'Auth\ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
+    Route::get('/confirmation/{code}', ['uses' => 'Auth\ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
+
 }
 );
 
@@ -350,12 +363,6 @@ Route::group(
     Route::post('/transaction/update/{tj}', ['uses' => 'TransactionController@update', 'as' => 'transactions.update']);
     Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
-
-    /**
-     * Auth\Auth Controller
-     */
-    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
-
 
 }
 );
