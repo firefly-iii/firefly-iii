@@ -54,7 +54,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validate2faCode($attribute, $value, $parameters): bool
+    public function validate2faCode($attribute, $value): bool
     {
         if (!is_string($value) || is_null($value) || strlen($value) <> 6) {
             return false;

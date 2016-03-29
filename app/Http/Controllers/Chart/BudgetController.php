@@ -310,7 +310,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('year');
         if ($cache->has()) {
-            //return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $budgetInformation = $repository->getBudgetsAndExpensesPerMonth($accounts, $start, $end);
@@ -327,9 +327,6 @@ class BudgetController extends Controller
             $month->endOfMonth();
             $row           = [clone $start];
             $dateFormatted = $start->format('Y-m');
-
-            //echo $start,' '.$month.'<br>';
-
 
             // each budget, check if there is an entry for this month:
             /** @var array $row */

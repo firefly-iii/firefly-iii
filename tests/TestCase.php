@@ -36,8 +36,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             // set period to match?
 
         }
-        // custom is a weird range
-        // (20 days):
         if ($range === 'custom') {
             $this->session(
                 [
