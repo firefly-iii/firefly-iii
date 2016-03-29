@@ -42,9 +42,12 @@ class IsConfirmed
                 return redirect()->guest('login');
             }
         } else {
+            // must the user be confirmed in the first place?
+            $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
             // user must be logged in, then continue:
             $isConfirmed = Preferences::get('user_confirmed', false)->data;
-            if ($isConfirmed === false) {
+
+            if ($isConfirmed === false && $confirmAccount === true) {
 
                 // user account is not confirmed, redirect to
                 // confirmation page:

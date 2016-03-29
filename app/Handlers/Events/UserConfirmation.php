@@ -67,11 +67,12 @@ class UserConfirmation
 
         // if user must confirm account, send email
         $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
-
+    
         // otherwise, auto-confirm:
         if ($confirmAccount === false) {
             Preferences::setForUser($user, 'user_confirmed', true);
             Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
+            Preferences::mark();
 
             return;
         }
