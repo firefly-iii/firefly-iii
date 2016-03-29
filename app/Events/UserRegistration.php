@@ -32,7 +32,7 @@ class UserRegistration extends Event
      */
     public function __construct(User $user, string $ipAddress)
     {
-        $this->user = $user;
-        $this->ip   = $ipAddress;
+        $this->user      = $user;
+        $this->ipAddress = $ipAddress;
     }
 }
