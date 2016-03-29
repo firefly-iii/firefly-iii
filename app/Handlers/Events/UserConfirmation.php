@@ -42,7 +42,7 @@ class UserConfirmation
     public function resendConfirmation(ResendConfirmation $event)
     {
         $user      = $event->user;
-        $ipAddress = $event->ip;
+        $ipAddress = $event->ipAddress;
         $this->doConfirm($user, $ipAddress);
     }
 
@@ -54,7 +54,7 @@ class UserConfirmation
     public function sendConfirmation(UserRegistration $event)
     {
         $user      = $event->user;
-        $ipAddress = $event->ip;
+        $ipAddress = $event->ipAddress;
         $this->doConfirm($user, $ipAddress);
     }
 

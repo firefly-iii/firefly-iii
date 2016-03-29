@@ -21,19 +21,18 @@ class UserRegistration extends Event
 {
     use SerializesModels;
 
-    public $ip;
+    public $ipAddress;
     public $user;
 
     /**
      * Create a new event instance.
      *
      * @param  User  $user
-     *
-     * @param string $ip
+     * @param string $ipAddress
      */
-    public function __construct(User $user, string $ip)
+    public function __construct(User $user, string $ipAddress)
     {
         $this->user = $user;
-        $this->ip   = $ip;
+        $this->ip   = $ipAddress;
     }
 }

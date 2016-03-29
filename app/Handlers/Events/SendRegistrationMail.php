@@ -48,7 +48,7 @@ class SendRegistrationMail
         // get the email address
         $email     = $event->user->email;
         $address   = route('index');
-        $ipAddress = $event->ip;
+        $ipAddress = $event->ipAddress;
         // send email.
         try {
             Mail::send(
