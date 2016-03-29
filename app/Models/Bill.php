@@ -27,6 +27,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \FireflyIII\User                                              $user
  * @property \Carbon\Carbon                                                     $nextExpectedMatch
  * @property \Carbon\Carbon                                                     $lastFoundMatch
+ * @property bool                                                               $paidInPeriod
+ * @property string $lastPaidAmount
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
@@ -47,11 +49,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Bill extends Model
 {
 
+    protected $dates  = ['created_at', 'updated_at', 'date'];
     protected $fillable
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
-
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-    protected $dates  = ['created_at', 'updated_at', 'date'];
+
+    /**
+     * @param Bill $value
+     *
+     * @return Bill
+     */
+    public static function routeBinder(Bill $value)
+    {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * @param $value
@@ -131,22 +147,6 @@ class Bill extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-
-    /**
-     * @param Bill $value
-     *
-     * @return Bill
-     */
-    public static function routeBinder(Bill $value)
-    {
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
     }
 
 

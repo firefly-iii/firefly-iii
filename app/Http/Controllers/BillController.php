@@ -110,11 +110,29 @@ class BillController extends Controller
      */
     public function index(BillRepositoryInterface $repository)
     {
+        $start = session('start');
+        $end   = session('end');
+
         $bills = $repository->getBills();
         $bills->each(
-            function (Bill $bill) use ($repository) {
+            function (Bill $bill) use ($repository, $start, $end) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
                 $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
+                $journals                = $repository->getJournalsInRange($bill, $start, $end);
+                // loop journals, find average:
+                $average = '0';
+                $count   = $journals->count();
+                if ($count > 0) {
+                    $sum = '0';
+                    foreach ($journals as $journal) {
+                        $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
+                    }
+                    $average = bcdiv($sum, strval($count));
+                }
+
+                $bill->lastPaidAmount = $average;
+                $bill->paidInPeriod   = ($start <= $bill->lastFoundMatch) && ($end >= $bill->lastFoundMatch);
+
             }
         );
 

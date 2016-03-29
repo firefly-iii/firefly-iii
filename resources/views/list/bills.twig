@@ -5,7 +5,7 @@
         <th>{{ trans('list.name') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
         <th colspan="2">{{ trans('list.matchingAmount') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.lastMatch') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.expectedMatch') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.automatch') }}</th>
@@ -36,8 +36,19 @@
                 {{ entry.amount_max|formatAmount }}
             </td>
             {% if not entry.lastFoundMatch.isFuture %}
-                <td class="hidden-sm hidden-xs" data-value="{{ entry.lastFoundMatch.format('U') }}">
+                <td class="hidden-sm hidden-xs
+                {% if entry.active %}
+                    {% if entry.paidInPeriod %}
+                        bg-success
+                    {% else %}
+                        bg-danger
+                    {% endif %}
+                {% endif %}
+                " data-value="{{ entry.lastFoundMatch.format('U') }}">
                     {{ entry.lastFoundMatch.formatLocalized(monthAndDayFormat) }}
+                    {% if entry.active and entry.paidInPeriod %}
+                        ({{ entry.lastPaidAmount|formatAmountPlain }})
+                    {% endif %}
                 </td>
             {% else %}
                 <td class="hidden-sm hidden-xs" data-value="0">
@@ -51,7 +62,7 @@
                 </td>
             {% else %}
                 <td class="hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('U') }}">
-                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                    ~ {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
 
