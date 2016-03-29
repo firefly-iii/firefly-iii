@@ -50,7 +50,7 @@ class Kernel extends HttpKernel
             // does not check login
             // does not check 2fa
             // does not check activation
-            'web'                                => [
+            'web'                              => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -58,7 +58,7 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
             ],
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
-            'user-not-logged-in'                 => [
+            'user-not-logged-in'               => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -70,7 +70,7 @@ class Kernel extends HttpKernel
             // MUST be logged in.
             // MUST NOT have 2FA
             // don't care about confirmation:
-            'user-logged-in-no-2fa'              => [
+            'user-logged-in-no-2fa'            => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -82,7 +82,7 @@ class Kernel extends HttpKernel
             // MUST be logged in
             // MUST have 2FA
             // MUST NOT have confirmation.
-            'user-logged-in-2fa-no-activation'   => [
+            'user-logged-in-2fa-no-activation' => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -96,7 +96,7 @@ class Kernel extends HttpKernel
             // MUST be logged in
             // don't care about 2fa
             // don't care about confirmation.
-            'user-simple-auth' => [
+            'user-simple-auth'                 => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -109,7 +109,7 @@ class Kernel extends HttpKernel
             // MUST have 2fa
             // MUST be confirmed.
             // (this group includes the other Firefly middleware)
-            'user-full-auth' => [
+            'user-full-auth'                   => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

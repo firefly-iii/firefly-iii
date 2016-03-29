@@ -161,7 +161,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
         }
         // also add "no budget"
         $data['labels'][] = strval(trans('firefly.no_budget'));
-        
+
         /** @var array $entry */
         foreach ($entries as $entry) {
             $array = [

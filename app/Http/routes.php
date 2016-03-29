@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 
 
-
 /**
  * These routes only work when the user is NOT logged in.
  */

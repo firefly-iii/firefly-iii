@@ -60,7 +60,7 @@ class FireflyValidator extends Validator
             return false;
         }
 
-        $secret    = Session::get('two-factor-secret');
+        $secret = Session::get('two-factor-secret');
         /** @var Google2FA $google2fa */
         $google2fa = app('PragmaRX\Google2FA\Google2FA');
 

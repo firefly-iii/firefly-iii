@@ -6,8 +6,6 @@ use FireflyIII\User;
 /**
  * Class TestCase
  */
-
-
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
@@ -39,8 +37,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         if ($range === 'custom') {
             $this->session(
                 [
-                    'start'   => Carbon::now()->subDays(20),
-                    'end' => Carbon::now(),
+                    'start' => Carbon::now()->subDays(20),
+                    'end'   => Carbon::now(),
                 ]
             );
         }

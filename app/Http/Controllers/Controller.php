@@ -41,8 +41,8 @@ class Controller extends BaseController
         View::share('hideTags', false);
 
         if (Auth::check()) {
-            $pref                    = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
-            $lang                    = $pref->data;
+            $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
+            $lang = $pref->data;
 
             App::setLocale($lang);
             Carbon::setLocale(substr($lang, 0, 2));
