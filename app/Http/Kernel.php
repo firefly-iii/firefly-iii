@@ -47,6 +47,9 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups
         = [
+            // does not check login
+            // does not check 2fa
+            // does not check activation
             'web'                    => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -54,6 +57,9 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
             ],
+            // must be authenticated
+            // must be 2fa (if enabled)
+            // must be activated account
             'web-auth'               => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -64,6 +70,9 @@ class Kernel extends HttpKernel
                 AuthenticateTwoFactor::class,
                 IsConfirmed::class,
             ],
+            // must be authenticated
+            // must be 2fa (if enabled)
+            // must NOT be activated account
             'web-auth-no-confirm'    => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -74,6 +83,9 @@ class Kernel extends HttpKernel
                 AuthenticateTwoFactor::class,
                 IsNotConfirmed::class,
             ],
+            // must be authenticated
+            // does not care about 2fa
+            // must be confirmed.
             'web-auth-no-two-factor' => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -83,6 +95,15 @@ class Kernel extends HttpKernel
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
                 IsConfirmed::class,
+            ],
+            'web-auth-no-two-factor-any-confirm' => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+                RedirectIfTwoFactorAuthenticated::class,
             ],
             'web-auth-range'         => [
                 EncryptCookies::class,

@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-// auth routes, i think
+// does not check login
+// does not check 2fa
+// does not check activation
 Route::group(
     ['middleware' => 'web'], function () {
 
@@ -30,9 +32,11 @@ Route::group(
 
 }
 );
-// routes that can be accessed without being logged using two factor.
+// must be authenticated
+// does not care about 2fa
+// does not care about confirmation.
 Route::group(
-    ['middleware' => 'web-auth-no-two-factor'], function () {
+    ['middleware' => 'web-auth-no-two-factor-any-confirm'], function () {
     Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
     Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
     Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);

@@ -68,7 +68,7 @@ return [
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
     'confirm_account_intro'                     => 'An email has been sent to the address you used during your registration. Please check it out for further instructions. If you did not get this message, you can have Firefly send it again.',
-    'confirm_account_resend_email'              => 'Send me the confirmation message again.',
+    'confirm_account_resend_email'              => 'Send me the confirmation message I need to activate my account.',
     'account_is_confirmed'                      => 'Your account has been confirmed!',
     'invalid_activation_code'                   => 'It seems the code you are using is not valid, or has expired.',
     'confirm_account_is_resent_header'          => 'The confirmation has been resent',
