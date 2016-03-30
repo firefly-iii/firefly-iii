@@ -34,6 +34,9 @@ class AccountRepository implements AccountRepositoryInterface
     /** @var User */
     private $user;
 
+    /** @var array  */
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
+
     /**
      * AttachmentRepository constructor.
      *
@@ -448,7 +451,7 @@ class AccountRepository implements AccountRepositoryInterface
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
         if ($data['openingBalance'] != 0) {
-            if ($openingBalance) {
+            if (!is_null($openingBalance->id)) {
                 $this->updateInitialBalance($account, $openingBalance, $data);
             } else {
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
@@ -570,8 +573,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeMetadata(Account $account, array $data)
     {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        foreach ($validFields as $field) {
+        foreach ($this->validFields as $field) {
             if (isset($data[$field])) {
                 $metaData = new AccountMeta(
                     [
@@ -621,9 +623,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateMetadata(Account $account, array $data)
     {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-
-        foreach ($validFields as $field) {
+        foreach ($this->validFields as $field) {
             $entry = $account->accountMeta()->where('name', $field)->first();
 
             if (isset($data[$field])) {
