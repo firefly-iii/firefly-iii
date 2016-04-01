@@ -50,6 +50,23 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Find a bill by ID.
+     *
+     * @param int $billId
+     *
+     * @return Bill
+     */
+    public function find(int $billId) : Bill
+    {
+        $bill = $this->user->bills()->find($billId);
+        if (is_null($bill)) {
+            $bill = new Bill;
+        }
+
+        return $bill;
+    }
+
+    /**
      * @return Collection
      */
     public function getActiveBills(): Collection

@@ -24,6 +24,15 @@ interface BillRepositoryInterface
     public function destroy(Bill $bill): bool;
 
     /**
+     * Find a bill by ID.
+     *
+     * @param int $billId
+     *
+     * @return Bill
+     */
+    public function find(int $billId) : Bill;
+
+    /**
      * @return Collection
      */
     public function getActiveBills(): Collection;
