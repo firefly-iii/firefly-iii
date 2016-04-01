@@ -17,7 +17,6 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
 
-
     /**
      *
      * Same as ::spentInPeriod but corrects journals for a set of accounts
@@ -42,6 +41,15 @@ interface BudgetRepositoryInterface
      * @return boolean
      */
     public function destroy(Budget $budget);
+
+    /**
+     * Find a budget.
+     *
+     * @param int $budgetId
+     *
+     * @return Budget
+     */
+    public function find(int $budgetId): Budget;
 
     /**
      * @param Budget $budget

@@ -75,6 +75,23 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * Find a budget.
+     *
+     * @param int $budgetId
+     *
+     * @return Budget
+     */
+    public function find(int $budgetId): Budget
+    {
+        $budget = $this->user->budgets()->find($budgetId);
+        if (is_null($budget)) {
+            $budget = new Budget;
+        }
+
+        return $budget;
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return Carbon

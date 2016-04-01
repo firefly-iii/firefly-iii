@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
  * Class BudgetId
@@ -18,11 +19,15 @@ class BudgetId extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $budget = Auth::user()->budgets()->find($this->mapped[$this->index][$this->value]);
+            $budget = $repository->find($this->mapped[$this->index][$this->value]);
         } else {
-            $budget = Auth::user()->budgets()->find($this->value);
+            $budget = $repository->find($this->value);
         }
 
         return $budget;
