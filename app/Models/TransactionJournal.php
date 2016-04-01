@@ -382,7 +382,8 @@ class TransactionJournal extends TransactionJournalSupport
         // join destination account
         $query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
         // join destination account type
-        $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id');
+        $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id')
+              ->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.order', 'ASC')->orderBy('transaction_journals.id', 'DESC');
 
         $query->with(['categories', 'budgets', 'attachments', 'bill']);
 

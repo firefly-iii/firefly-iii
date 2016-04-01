@@ -192,6 +192,15 @@ interface BudgetRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @return Collection
+     */
+    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
      * @return string
      */
     public function getWithoutBudgetSum(Collection $accounts, Carbon $start, Carbon $end): string;

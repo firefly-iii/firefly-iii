@@ -66,11 +66,12 @@ class ReportController extends Controller
         $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $budget     = $repository->find(intval($attributes['budgetId']));
         if (is_null($budget->id)) {
-            throw new FireflyException('Could not find a budget for value "' . e($attributes['budgetId']) . '".');
+            $journals = $repository->getWithoutBudgetForAccounts($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        } else {
+            // get all expenses in budget in period:
+            $journals = $repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         }
 
-        // get all expenses in budget in period:
-        $journals = $repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
 
         $view = view('popup.report.budget-spent-amount', compact('journals'))->render();
 

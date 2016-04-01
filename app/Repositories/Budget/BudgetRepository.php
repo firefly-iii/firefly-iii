@@ -389,7 +389,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                       ->before($end)
                       ->after($start)
                       ->expanded()
-                      ->where('transaction_types.type', 'Withdrawal')
+                      ->where('transaction_types.type', TransactionType::WITHDRAWAL)
                       ->whereIn('source_account.id', $ids)
                       ->get(TransactionJournal::QUERYFIELDS);
 
@@ -501,15 +501,36 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         return $this->user
             ->transactionjournals()
-            ->transactionTypes([TransactionType::WITHDRAWAL])
+            ->expanded()
+            ->where('transaction_types.type', TransactionType::WITHDRAWAL)
             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNull('budget_transaction_journal.id')
             ->before($end)
             ->after($start)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->get(['transaction_journals.*']);
+            ->get(TransactionJournal::QUERYFIELDS);
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+
+        return $this->user
+            ->transactionjournals()
+            ->expanded()
+            ->whereIn('source_account.id', $ids)
+            ->where('transaction_types.type', TransactionType::WITHDRAWAL)
+            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('budget_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->get(TransactionJournal::QUERYFIELDS);
     }
 
     /**
