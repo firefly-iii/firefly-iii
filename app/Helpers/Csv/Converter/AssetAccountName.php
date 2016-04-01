@@ -5,6 +5,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AssetAccountName
@@ -19,14 +20,19 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = Auth::user()->accounts()->find($this->mapped[$this->index][$this->value]);
+            $account = $repository->find($this->mapped[$this->index][$this->value]);
 
             return $account;
         }
+
+
         // find or create new account:
-        $set = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->get();
+        $set = $repository->getAccounts(['Default account', 'Asset account']);
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $this->value) {
@@ -35,8 +41,6 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
         }
 
         // create it if doesnt exist.
-
-        $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $accountData = [
             'name'                   => $this->value,
             'accountType'            => 'asset',

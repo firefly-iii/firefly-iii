@@ -34,7 +34,7 @@ class AccountRepository implements AccountRepositoryInterface
     /** @var User */
     private $user;
 
-    /** @var array  */
+    /** @var array */
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
     /**
@@ -78,15 +78,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @deprecated
-     *
      * @param $accountId
      *
      * @return Account
      */
     public function find(int $accountId): Account
     {
-        return $this->user->accounts()->findOrNew($accountId);
+        $account = $this->user->accounts()->find($accountId);
+        if (is_null($account)) {
+            $account = new Account;
+        }
+
+        return $account;
     }
 
     /**
