@@ -378,6 +378,14 @@ Route::group(
     Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
+    /**
+     * POPUP Controllers
+     */
+    /**
+     * Report popup
+     */
+    Route::get('/popup/report', ['uses' => 'Popup\ReportController@info', 'as' => 'popup.report']);
+
 }
 );
 

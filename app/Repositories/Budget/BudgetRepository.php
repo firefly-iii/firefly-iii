@@ -373,6 +373,30 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * Returns all expenses for the given budget and the given accounts, in the given period.
+     *
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpenses(Budget $budget, Collection $accounts, Carbon $start, Carbon $end):Collection
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        $set = $budget->transactionjournals()
+                      ->before($end)
+                      ->after($start)
+                      ->expanded()
+                      ->where('transaction_types.type', 'Withdrawal')
+                      ->whereIn('source_account.id', $ids)
+                      ->get(TransactionJournal::QUERYFIELDS);
+
+        return $set;
+    }
+
+    /**
      * Returns the expenses for this budget grouped per day, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *

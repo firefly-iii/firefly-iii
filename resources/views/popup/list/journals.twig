@@ -1,0 +1,78 @@
+<table class="table table-hover table-condensed">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th>{{ trans('list.description') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+        <th class="hidden-xs">{{ trans('list.from') }}</th>
+        <th class="hidden-xs">{{ trans('list.to') }}</th>
+        <!-- Hide budgets? -->
+        {% if not hideBudgets %}
+            <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        {% endif %}
+
+        <!-- Hide categories? -->
+        {% if not hideCategories %}
+            <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for journal in journals %}
+        <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
+            <td class="hidden-xs">
+                {{ journal|typeIcon }}
+            </td>
+            <td>
+                <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
+                {% if journal.attachments|length > 0 %}
+                    <i class="fa fa-paperclip pull-right"
+                       title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
+                {% endif %}
+
+            </td>
+            <td>
+                {{ journal|formatJournal }}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{ journal.date.formatLocalized(monthAndDayFormat) }}
+            </td>
+            <td class="hidden-xs">
+                {% if journal.source_account_type == 'Cash account' %}
+                    <span class="text-success">(cash)</span>
+                {% else %}
+                    <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
+                {% endif %}
+            </td>
+            <td class="hidden-xs">
+                {% if journal.destination_account_type == 'Cash account' %}
+                    <span class="text-success">(cash)</span>
+                {% else %}
+                    <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
+                {% endif %}
+            </td>
+
+            <!-- Do NOT hide the budget? -->
+            {% if not hideBudgets %}
+                <td class="hidden-xs">
+                    {% if journal.budgets[0] %}
+                        <a href="{{ route('budgets.show',journal.budgets[0].id) }}">{{ journal.budgets[0].name }}</a>
+                    {% endif %}
+                </td>
+            {% endif %}
+
+            <!-- Do NOT hide the category? -->
+            {% if not hideCategories %}
+                <td class="hidden-xs">
+                    {% if journal.categories[0] %}
+                        <a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a>
+                    {% endif %}
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ journals.render|raw }}

@@ -133,6 +133,18 @@ interface BudgetRepositoryInterface
     public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end);
 
     /**
+     * Returns all expenses for the given budget and the given accounts, in the given period.
+     *
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpenses(Budget $budget, Collection $accounts, Carbon $start, Carbon $end):Collection;
+
+    /**
      * Returns the expenses for this budget grouped per day, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *
