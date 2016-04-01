@@ -112,11 +112,15 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccounts(array $types): Collection
     {
         /** @var Collection $result */
-        $result = $this->user->accounts()->with(
+        $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->get(['accounts.*']);
+        );
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
+        $result = $query->get(['accounts.*']);
 
         $result = $result->sortBy(
             function (Account $account) {

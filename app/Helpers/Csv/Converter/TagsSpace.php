@@ -2,8 +2,7 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
-use Auth;
-use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -19,17 +18,23 @@ class TagsSpace extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+
         $tags = new Collection;
 
         $strings = explode(' ', $this->value);
         foreach ($strings as $string) {
-            $tag = Tag::firstOrCreateEncrypted( // See issue #180
-                [
-                    'tag'     => $string,
-                    'tagMode' => 'nothing',
-                    'user_id' => Auth::user()->id,
-                ]
-            );
+            $data = [
+                'tag'         => $string,
+                'date'        => null,
+                'description' => null,
+                'latitude'    => null,
+                'longitude'   => null,
+                'zoomLevel'   => null,
+                'tagMode'     => 'nothing',
+            ];
+            $tag  = $repository->store($data); // should validate first?
             $tags->push($tag);
         }
         $tags = $tags->merge($this->data['tags']);
