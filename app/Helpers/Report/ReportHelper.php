@@ -257,6 +257,7 @@ class ReportHelper implements ReportHelperInterface
         if ($set->count() === 0) {
             return $collection;
         }
+        /** @var Tag $entry */
         foreach ($set as $entry) {
             // less than zero? multiply to be above zero.
             $amount = $entry->amount;

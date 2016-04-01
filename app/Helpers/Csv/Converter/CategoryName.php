@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
 
 /**
  * Class CategoryName
@@ -18,16 +19,20 @@ class CategoryName extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var SingleCategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $category = Auth::user()->categories()->find($this->mapped[$this->index][$this->value]);
+            $category = $repository->find($this->mapped[$this->index][$this->value]);
         } else {
-            $category = Category::firstOrCreateEncrypted( // See issue #180
-                [
-                    'name'    => $this->value,
-                    'user_id' => Auth::user()->id,
-                ]
-            );
+
+            $data = [
+                'name' => $this->value,
+                'user' => Auth::user()->id,
+            ];
+
+            $category = $repository->store($data);
         }
 
         return $category;

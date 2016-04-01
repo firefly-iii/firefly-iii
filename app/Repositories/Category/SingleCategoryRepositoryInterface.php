@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
  */
 interface SingleCategoryRepositoryInterface
 {
+
     /**
      * @param Category $category
      *
@@ -54,6 +55,14 @@ interface SingleCategoryRepositoryInterface
      */
     public function earnedPerDay(Category $category, Carbon $start, Carbon $end);
 
+    /**
+     * Find a category
+     *
+     * @param int $categoryId
+     *
+     * @return Category
+     */
+    public function find(int $categoryId) : Category;
 
     /**
      * @param Category $category

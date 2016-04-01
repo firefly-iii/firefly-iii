@@ -29,7 +29,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 
             return $account;
         }
-        
+
         if (strlen($this->value) > 0) {
             // find or create new account:
             $set = $repository->getAccounts(['Default account', 'Asset account']);

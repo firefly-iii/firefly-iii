@@ -9,6 +9,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -18,6 +19,19 @@ use Illuminate\Support\Collection;
  */
 class SingleCategoryRepository extends ComponentRepository implements SingleCategoryRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * BillRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * @param Category $category
      *
@@ -88,6 +102,23 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     }
 
     /**
+     * Find a category
+     *
+     * @param int $categoryId
+     *
+     * @return Category
+     */
+    public function find(int $categoryId) : Category
+    {
+        $category = $this->user->categories()->find($categoryId);
+        if (is_null($category)) {
+            $category = new Category;
+        }
+
+        return $category;
+    }
+
+    /**
      * @param Category $category
      *
      * @return Carbon
@@ -145,7 +176,6 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                         ->orderBy('transaction_journals.id', 'DESC')
                         ->get(TransactionJournal::QUERYFIELDS);
     }
-
 
     /**
      * @param Category $category
@@ -206,7 +236,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      */
     public function store(array $data)
     {
-        $newCategory = new Category(
+        $newCategory = Category::firstOrCreateEncrypted(
             [
                 'user_id' => $data['user'],
                 'name'    => $data['name'],
@@ -231,6 +261,4 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
 
         return $category;
     }
-
-
 }
