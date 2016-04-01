@@ -15,6 +15,8 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -230,15 +232,27 @@ class ReportHelper implements ReportHelperInterface
     {
         $ids        = $accounts->pluck('id')->toArray();
         $set        = Tag::
-        distinct()
-                         ->leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
+        leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
                          ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->leftJoin(
+                             'transactions AS source', function (JoinClause $join) {
+                             $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', '0');
+                         }
+                         )
+                         ->leftJoin(
+                             'transactions AS destination', function (JoinClause $join) {
+                             $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', '0');
+                         }
+                         )
                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                         ->whereIn('transactions.account_id', $ids)->get(
-                ['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'transactions.amount']
-            );
+                         ->where(
+                             function (Builder $q) use ($ids) {
+                                 $q->whereIn('source.account_id', $ids)
+                                   ->whereIn('destination.account_id', $ids, 'xor');
+                             }
+                         )
+                         ->get(['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'destination.amount']);
         $collection = [];
         if ($set->count() === 0) {
             return $collection;
@@ -246,11 +260,7 @@ class ReportHelper implements ReportHelperInterface
         foreach ($set as $entry) {
             // less than zero? multiply to be above zero.
             $amount = $entry->amount;
-            if (bccomp($amount, '0', 2) === -1) {
-                $amount = bcmul($amount, '-1');
-            }
-            $id = intval($entry->id);
-
+            $id     = intval($entry->id);
             if (!isset($collection[$id])) {
                 $collection[$id] = [
                     'id'     => $id,
