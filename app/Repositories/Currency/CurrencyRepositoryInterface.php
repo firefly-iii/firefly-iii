@@ -15,13 +15,48 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
-
     /**
      * @param TransactionCurrency $currency
      *
      * @return int
      */
     public function countJournals(TransactionCurrency $currency);
+
+    /**
+     * Find by ID
+     *
+     * @param int $currencyId
+     *
+     * @return TransactionCurrency
+     */
+    public function find(int $currencyId) : TransactionCurrency;
+
+    /**
+     * Find by currency code
+     *
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency
+     */
+    public function findByCode(string $currencyCode) : TransactionCurrency;
+
+    /**
+     * Find by currency name
+     *
+     * @param string $currencyName
+     *
+     * @return TransactionCurrency
+     */
+    public function findByName(string $currencyName) : TransactionCurrency;
+
+    /**
+     * Find by currency symbol
+     *
+     * @param string $currencySymbol
+     *
+     * @return TransactionCurrency
+     */
+    public function findBySymbol(string $currencySymbol) : TransactionCurrency;
 
     /**
      * @return Collection
