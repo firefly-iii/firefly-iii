@@ -19,7 +19,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -90,9 +89,6 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $account           = $accountRepository->find(intval($attributes['accountId']));
-
-        /** @var TagRepositoryInterface $tagRepository */
-        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
