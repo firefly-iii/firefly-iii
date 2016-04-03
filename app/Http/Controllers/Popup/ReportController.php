@@ -48,6 +48,9 @@ class ReportController extends Controller
             case 'expense-entry':
                 $html = $this->expenseEntry($attributes);
                 break;
+            case 'income-entry':
+                $html = $this->incomeEntry($attributes);
+                break;
         }
 
         return Response::json(['html' => $html]);
@@ -79,6 +82,25 @@ class ReportController extends Controller
         }
 
         $view = view('popup.report.budget-spent-amount', compact('journals'))->render();
+
+        return $view;
+    }
+
+    /**
+     * Returns all the incomes that went to the given asset account.
+     *
+     * @param $attributes
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    private function incomeEntry($attributes)
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $account    = $repository->find(intval($attributes['accountId']));
+        $journals   = $repository->getIncomeByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $view       = view('popup.report.income-entry', compact('journals'))->render();
 
         return $view;
     }

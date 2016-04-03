@@ -676,4 +676,29 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
     }
+
+    /**
+     * Returns a list of transactions TO the given (asset) $account, but none from the
+     * given list of accounts
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids      = $accounts->pluck('id')->toArray();
+        $journals = $this->user->transactionjournals()
+                               ->expanded()
+                               ->before($end)
+                               ->where('source_account.id', $account->id)
+                               ->whereIn('destination_account.id', $ids)
+                               ->after($start)
+                               ->get(TransactionJournal::QUERYFIELDS);
+
+        return $journals;
+    }
 }
