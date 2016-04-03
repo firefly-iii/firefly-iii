@@ -25,24 +25,29 @@ function clickInfoButton(e) {
     var element = $(e.target);
     var attributes = element.data();
 
+    // set wait cursor
+    $('body').addClass('waiting');
+
     // add some more elements:
     attributes.startDate = startDate;
     attributes.endDate = endDate;
     attributes.reportType = reportType;
     attributes.accounts = accountIds;
 
-    console.log(attributes);
     $.getJSON('popup/report', {attributes: attributes}).success(respondInfoButton).fail(errorInfoButton);
 }
 
 function errorInfoButton(data) {
     "use strict";
-    console.log(data);
+    // remove wait cursor
+    $('body').removeClass('waiting');
+    alert('Apologies. The requested data is not (yet) available.');
 }
 
 function respondInfoButton(data) {
     "use strict";
-    console.log(123);
+    // remove wait cursor
+    $('body').removeClass('waiting');
     $('#defaultModal').empty().html(data.html);
     $('#defaultModal').modal('show');
 

@@ -33,7 +33,6 @@ class AccountRepository implements AccountRepositoryInterface
 
     /** @var User */
     private $user;
-
     /** @var array */
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
@@ -162,6 +161,31 @@ class AccountRepository implements AccountRepositoryInterface
                           );
 
         return $set;
+    }
+
+    /**
+     * Returns a list of transactions TO the $account, not including transfers
+     * and/or expenses in the $accounts list.
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids      = $accounts->pluck('id')->toArray();
+        $journals = $this->user->transactionjournals()
+                               ->expanded()
+                               ->before($end)
+                               ->where('destination_account.id', $account->id)
+                               ->whereIn('source_account.id', $ids)
+                               ->after($start)
+                               ->get(TransactionJournal::QUERYFIELDS);
+
+        return $journals;
     }
 
     /**

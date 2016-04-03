@@ -21,6 +21,19 @@ interface AccountRepositoryInterface
 {
 
     /**
+     * Returns a list of transactions TO the $account, not including transfers
+     * and/or expenses in the $accounts list.
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
      * @param array $types
      *
      * @return int

@@ -14,6 +14,7 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
@@ -37,13 +38,15 @@ class ReportController extends Controller
     {
         $attributes = $request->get('attributes');
         $attributes = $this->parseAttributes($attributes);
-        $html       = '';
         switch ($attributes['location']) {
             default:
                 throw new FireflyException('Firefly cannot handle "' . e($attributes['location']) . '" ');
             case 'budget-spent-amount':
                 $html = $this->budgetSpentAmount($attributes);
 
+                break;
+            case 'expense-entry':
+                $html = $this->expenseEntry($attributes);
                 break;
         }
 
@@ -53,6 +56,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Returns all expenses inside the given budget for the given accounts.
+     *
      * @param array $attributes
      *
      * @return string
@@ -73,8 +78,26 @@ class ReportController extends Controller
             $journals = $repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         }
 
-
         $view = view('popup.report.budget-spent-amount', compact('journals'))->render();
+
+        return $view;
+    }
+
+    /**
+     * Returns all the expenses that went to the given expense account.
+     *
+     * @param $attributes
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    private function expenseEntry($attributes)
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $account    = $repository->find(intval($attributes['accountId']));
+        $journals   = $repository->getExpensesByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $view       = view('popup.report.expense-entry', compact('journals'))->render();
 
         return $view;
     }
