@@ -37,13 +37,14 @@ class TwoFactorController extends Controller
 
         // to make sure the validator in the next step gets the secret, we push it in session
         $secret = Preferences::get('twoFactorAuthSecret', '')->data;
+        $title  = strval(trans('firefly.two_factor_title'));
 
         if (strlen($secret) === 0) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         Session::flash('two-factor-secret', $secret);
 
-        return view('auth.two-factor', compact('user'));
+        return view('auth.two-factor', compact('user', 'title'));
     }
 
     /**
@@ -54,6 +55,7 @@ class TwoFactorController extends Controller
     {
         $user      = Auth::user();
         $siteOwner = env('SITE_OWNER', '');
+        $title     = strval(trans('firefly.two_factor_forgot_title'));
 
         Log::info(
             'To reset the two factor authentication for user #' . $user->id .
@@ -61,7 +63,7 @@ class TwoFactorController extends Controller
             ' "twoFactorAuthSecret" for user_id ' . $user->id . '. That will take care of it.'
         );
 
-        return view('auth.lost-two-factor', compact('user', 'siteOwner'));
+        return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
     }
 
     /**
