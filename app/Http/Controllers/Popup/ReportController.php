@@ -16,6 +16,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -50,6 +51,9 @@ class ReportController extends Controller
                 break;
             case 'income-entry':
                 $html = $this->incomeEntry($attributes);
+                break;
+            case 'category-entry':
+                $html = $this->categoryEntry($attributes);
                 break;
         }
 
@@ -87,20 +91,20 @@ class ReportController extends Controller
     }
 
     /**
-     * Returns all the incomes that went to the given asset account.
+     * Returns all expenses in category in range.
      *
      * @param $attributes
      *
      * @return string
      * @throws FireflyException
      */
-    private function incomeEntry($attributes)
+    private function categoryEntry($attributes)
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $account    = $repository->find(intval($attributes['accountId']));
-        $journals   = $repository->getIncomeByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
-        $view       = view('popup.report.income-entry', compact('journals'))->render();
+        /** @var SingleCategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+        $category   = $repository->find(intval($attributes['categoryId']));
+        $journals   = $repository->getJournalsForAccountsInRange($category, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $view       = view('popup.report.category-entry', compact('journals'))->render();
 
         return $view;
     }
@@ -120,6 +124,25 @@ class ReportController extends Controller
         $account    = $repository->find(intval($attributes['accountId']));
         $journals   = $repository->getExpensesByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.expense-entry', compact('journals'))->render();
+
+        return $view;
+    }
+
+    /**
+     * Returns all the incomes that went to the given asset account.
+     *
+     * @param $attributes
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    private function incomeEntry($attributes)
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $account    = $repository->find(intval($attributes['accountId']));
+        $journals   = $repository->getIncomeByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $view       = view('popup.report.income-entry', compact('journals'))->render();
 
         return $view;
     }

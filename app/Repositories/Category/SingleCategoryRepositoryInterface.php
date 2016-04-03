@@ -79,6 +79,16 @@ interface SingleCategoryRepositoryInterface
      */
     public function getJournals(Category $category, $page);
 
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @param Category $category

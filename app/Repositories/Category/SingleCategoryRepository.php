@@ -154,6 +154,28 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     }
 
     /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+
+        return $category->transactionjournals()
+                        ->after($start)
+                        ->before($end)
+                        ->expanded()
+                        ->whereIn('source_account.id', $ids)
+                        ->whereNotIn('destination_account.id', $ids)
+                        ->get(TransactionJournal::QUERYFIELDS);
+    }
+
+    /**
      * @param Category $category
      * @param int      $page
      * @param Carbon   $start
@@ -171,9 +193,6 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                         ->expanded()
                         ->take(50)
                         ->offset($offset)
-                        ->orderBy('transaction_journals.date', 'DESC')
-                        ->orderBy('transaction_journals.order', 'ASC')
-                        ->orderBy('transaction_journals.id', 'DESC')
                         ->get(TransactionJournal::QUERYFIELDS);
     }
 
