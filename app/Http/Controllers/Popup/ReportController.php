@@ -24,6 +24,7 @@ use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Response;
+use View;
 
 /**
  * Class ReportController
@@ -42,6 +43,10 @@ class ReportController extends Controller
     {
         $attributes = $request->get('attributes');
         $attributes = $this->parseAttributes($attributes);
+
+        View::share('start', $attributes['startDate']);
+        View::share('end', $attributes['endDate']);
+
         switch ($attributes['location']) {
             default:
                 throw new FireflyException('Firefly cannot handle "' . e($attributes['location']) . '" ');
@@ -94,11 +99,13 @@ class ReportController extends Controller
                 $journals = $budgetRepository->expensesSplit($budget, $account, $attributes['startDate'], $attributes['endDate']);
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
-                $journals = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $budget->name = strval(trans('firefly.no_budget'));
+                $journals     = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
                 // journals no budget, not corrected by a tag.
                 $journals = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $budget->name = strval(trans('firefly.leftUnbalanced'));
                 $journals = $journals->filter(
                     function (TransactionJournal $journal) {
                         $tags = $journal->tags()->where('tagMode', 'balancingAct')->count();
@@ -111,7 +118,7 @@ class ReportController extends Controller
             case ($role === BalanceLine::ROLE_TAGROLE):
                 throw new FireflyException('Firefly cannot handle this type of info-button (BalanceLine::TagRole)');
         }
-        $view = view('popup.report.balance-amount', compact('journals'))->render();
+        $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
 
         return $view;
     }
@@ -139,7 +146,7 @@ class ReportController extends Controller
             $journals = $repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         }
 
-        $view = view('popup.report.budget-spent-amount', compact('journals'))->render();
+        $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
 
         return $view;
     }
@@ -158,7 +165,7 @@ class ReportController extends Controller
         $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
         $category   = $repository->find(intval($attributes['categoryId']));
         $journals   = $repository->getJournalsForAccountsInRange($category, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
-        $view       = view('popup.report.category-entry', compact('journals'))->render();
+        $view       = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
         return $view;
     }
@@ -177,7 +184,7 @@ class ReportController extends Controller
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $account    = $repository->find(intval($attributes['accountId']));
         $journals   = $repository->getExpensesByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
-        $view       = view('popup.report.expense-entry', compact('journals'))->render();
+        $view       = view('popup.report.expense-entry', compact('journals', 'account'))->render();
 
         return $view;
     }
@@ -196,7 +203,8 @@ class ReportController extends Controller
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $account    = $repository->find(intval($attributes['accountId']));
         $journals   = $repository->getIncomeByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
-        $view       = view('popup.report.income-entry', compact('journals'))->render();
+        $view       = view('popup.report.income-entry', compact('journals', 'account'))->render();
+
 
         return $view;
     }
