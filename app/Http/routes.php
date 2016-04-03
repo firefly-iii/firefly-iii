@@ -28,9 +28,8 @@ Route::group(
 );
 
 /**
- * For other routes, it is only relevant that the user is authenticated.
+ * For some other routes, it is only relevant that the user is authenticated.
  */
-
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
     Route::get('/error', 'HomeController@displayError');
@@ -389,3 +388,17 @@ Route::group(
 }
 );
 
+/**
+ * For the admin routes, the user must be logged in and have the role of 'owner'
+ */
+Route::group(
+    ['middleware' => 'admin'], function () {
+
+    // admin home
+    Route::get('/admin', ['uses' => 'Admin\HomeController@index', 'as' => 'admin.index']);
+
+    // user manager
+    Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
+
+}
+);

@@ -12,6 +12,7 @@ namespace FireflyIII\Repositories\User;
 
 
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Interface UserRepositoryInterface
@@ -20,6 +21,11 @@ use FireflyIII\User;
  */
 interface UserRepositoryInterface
 {
+    /**
+     * @return Collection
+     */
+    public function all(): Collection;
+
     /**
      * @param User   $user
      * @param string $role

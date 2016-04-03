@@ -13,6 +13,7 @@ namespace FireflyIII\Repositories\User;
 
 use FireflyIII\Models\Role;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Class UserRepository
@@ -21,6 +22,14 @@ use FireflyIII\User;
  */
 class UserRepository implements UserRepositoryInterface
 {
+
+    /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return User::orderBy('id', 'DESC')->get(['users.*']);
+    }
 
     /**
      * @param User   $user
