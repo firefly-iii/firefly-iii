@@ -13,10 +13,13 @@ namespace FireflyIII\Http\Controllers\Popup;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -55,11 +58,62 @@ class ReportController extends Controller
             case 'category-entry':
                 $html = $this->categoryEntry($attributes);
                 break;
+            case 'balance-amount':
+                $html = $this->balanceAmount($attributes);
+                break;
         }
 
         return Response::json(['html' => $html]);
 
 
+    }
+
+    /**
+     * @param $attributes
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    private function balanceAmount(array $attributes): string
+    {
+        $role = intval($attributes['role']);
+
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $budget           = $budgetRepository->find(intval($attributes['budgetId']));
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $account           = $accountRepository->find(intval($attributes['accountId']));
+
+        /** @var TagRepositoryInterface $tagRepository */
+        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+
+        switch (true) {
+            case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
+                $journals = $budgetRepository->expensesSplit($budget, $account, $attributes['startDate'], $attributes['endDate']);
+                break;
+            case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
+                $journals = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                break;
+            case ($role === BalanceLine::ROLE_DIFFROLE):
+                // journals no budget, not corrected by a tag.
+                $journals = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $journals = $journals->filter(
+                    function (TransactionJournal $journal) {
+                        $tags = $journal->tags()->where('tagMode', 'balancingAct')->count();
+                        if ($tags === 0) {
+                            return $journal;
+                        }
+                    }
+                );
+                break;
+            case ($role === BalanceLine::ROLE_TAGROLE):
+                throw new FireflyException('Firefly cannot handle this type of info-button (BalanceLine::TagRole)');
+        }
+        $view = view('popup.report.balance-amount', compact('journals'))->render();
+
+        return $view;
     }
 
     /**
@@ -98,7 +152,7 @@ class ReportController extends Controller
      * @return string
      * @throws FireflyException
      */
-    private function categoryEntry($attributes)
+    private function categoryEntry(array $attributes): string
     {
         /** @var SingleCategoryRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
@@ -117,7 +171,7 @@ class ReportController extends Controller
      * @return string
      * @throws FireflyException
      */
-    private function expenseEntry($attributes)
+    private function expenseEntry(array $attributes): string
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
@@ -136,7 +190,7 @@ class ReportController extends Controller
      * @return string
      * @throws FireflyException
      */
-    private function incomeEntry($attributes)
+    private function incomeEntry(array $attributes): string
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');

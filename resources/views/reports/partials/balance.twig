@@ -43,7 +43,7 @@
                                 <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
                                 <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="balance-amount"
                                    data-account-id="{{ balanceEntry.getAccount.id }}"
-                                   data-budget-id="{{ balanceLine.getBudget.id }}"></i>
+                                   data-budget-id="{{ balanceLine.getBudget.id }}" data-role="{{ balanceLine.getRole }}"></i>
 
                             {% endif %}
                             {% if balanceEntry.getLeft != 0 %}

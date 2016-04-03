@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
@@ -75,6 +76,23 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * @param Budget  $budget
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function expensesSplit(Budget $budget, Account $account, Carbon $start, Carbon $end): Collection
+    {
+        return $budget->transactionjournals()->expanded()
+                      ->before($end)
+                      ->after($start)
+                      ->where('source_account.id', $account->id)
+                      ->get(TransactionJournal::QUERYFIELDS);
+    }
+
+    /**
      * Find a budget.
      *
      * @param int $budgetId
@@ -139,6 +157,30 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                               ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
                               ->where('budgets.user_id', $this->user->id)
                               ->get(['limit_repetitions.*', 'budget_limits.budget_id']);
+    }
+
+    /**
+     * @param Account    $account
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+
+        return $this->user
+            ->transactionjournals()
+            ->expanded()
+            ->where('source_account.id', $account->id)
+            ->whereNotIn('destination_account.id', $ids)
+            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('budget_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->get(TransactionJournal::QUERYFIELDS);
     }
 
     /**
