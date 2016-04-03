@@ -56,7 +56,9 @@ return [
     'two_factor_welcome'                        => 'Hoi :user!',
     'two_factor_enter_code'                     => 'Vul je authenticatiecode in. Je authenticatieapplicatie kan deze voor je genereren.',
     'two_factor_code_here'                      => 'Code',
+    'two_factor_title'                          => 'Authenticatie in twee stappen',
     'authenticate'                              => 'Inloggen',
+    'two_factor_forgot_title'                   => 'Authenticatie in twee stappen werkt niet meer',
     'two_factor_forgot'                         => 'Ik kan geen codes meer genereren.',
     'two_factor_lost_header'                    => 'Kan je geen codes meer genereren?',
     'two_factor_lost_intro'                     => 'Dit is helaas niet iets dat je kan resetten vanaf de site. Je hebt twee keuzes.',
@@ -657,6 +659,11 @@ return [
     'report_preset_ranges'                      => 'Standaardbereik',
     'shared'                                    => 'Gedeeld',
     'fiscal_year'                               => 'Boekjaar',
+    'income_entry'                              => 'Inkomsten naar rekening ":name" tussen :start en :end',
+    'expense_entry'                             => 'Uitgaven naar rekening ":name" tussen :start en :end',
+    'category_entry'                            => 'Uitgaven in categorie ":name" tussen :start en :end',
+    'budget_spent_amount'                       => 'Uitgaven in budget ":budget" tussen :start en :end',
+    'balance_amount' => 'Uitgaven in :budget betaald van rekening ":account" tussen :start en :end',
 
     // charts:
     'dayOfMonth'                                => 'Dag vd maand',
@@ -739,4 +746,10 @@ return [
     'tags_group'                                => 'Omdat tags transacties groeperen kan je er teruggaves, vergoedingen en andere geldzaken mee aanduiden, zolang de transacties elkaar "opheffen". Hoe je dit aanpakt is aan jou. De gewone manier kan natuurlijk ook.',
     'tags_start'                                => 'Maak hieronder een tag, of voer nieuwe tags in als je nieuwe transacties maakt.',
 
+
+    // administration
+    'administration'                            => 'Administratie',
+    'user_administration'                       => 'Gebruikersadministratie',
+    'list_all_users'                            => 'Alle gebruikers',
+    'all_users'                                 => 'Alle gebruikers',
 ];

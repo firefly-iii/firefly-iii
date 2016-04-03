@@ -8,6 +8,8 @@
  */
 
 return [
+
+    // new user:
     'bank_name'                   => 'Banknaam',
     'bank_balance'                => 'Saldo',
     'savings_balance'             => 'Saldo van spaarrekening',
