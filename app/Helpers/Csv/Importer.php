@@ -120,6 +120,8 @@ class Importer
                     Log::error('Caught error at row #' . $index . ': ' . $result);
                     $this->errors[$index] = $result;
                 } else {
+
+                    
                     $this->imported++;
                     $this->journals->push($result);
                 }

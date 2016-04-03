@@ -42,6 +42,7 @@ class AccountController extends Controller
 
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
+        Session::flash('preFilled', []);
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {

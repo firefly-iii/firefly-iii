@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 
 /**
  * Class CurrencyName
@@ -17,10 +18,14 @@ class CurrencyName extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
+
         if (isset($this->mapped[$this->index][$this->value])) {
-            $currency = TransactionCurrency::find($this->mapped[$this->index][$this->value]);
+
+            $currency = $repository->find($this->mapped[$this->index][$this->value]);
         } else {
-            $currency = TransactionCurrency::whereName($this->value)->first();
+            $currency = $repository->findByName($this->value);
         }
 
         return $currency;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * TriggerFactory.php
  * Copyright (C) 2016 Robert Horlings

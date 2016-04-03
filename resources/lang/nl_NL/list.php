@@ -1,7 +1,7 @@
 <?php
 /**
  * list.php
- * Copyright (C) 2016 Sander Dorigo
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -39,4 +39,11 @@ return [
     'completed'           => 'Opgeslagen',
     'iban'                => 'IBAN',
     'paid_current_period' => 'Betaald deze periode',
+    'email'               => 'E-mail',
+    'registered_at'       => 'Geregistreerd op',
+    'is_activated'        => 'Is geactiveerd',
+    'is_blocked'          => 'Is geblokkeerd',
+    'is_admin'            => 'Is beheerder',
+    'has_two_factor'      => 'Heeft 2FA',
+    'blocked_code'        => 'Reden voor blokkade',
 ];

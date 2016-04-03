@@ -50,6 +50,23 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Find a bill by ID.
+     *
+     * @param int $billId
+     *
+     * @return Bill
+     */
+    public function find(int $billId) : Bill
+    {
+        $bill = $this->user->bills()->find($billId);
+        if (is_null($bill)) {
+            $bill = new Bill;
+        }
+
+        return $bill;
+    }
+
+    /**
      * @return Collection
      */
     public function getActiveBills(): Collection
@@ -252,7 +269,7 @@ class BillRepository implements BillRepositoryInterface
         foreach ($creditCards as $creditCard) {
             if ($creditCard->balance == 0) {
                 // find a transfer TO the credit card which should account for anything paid. If not, the CC is not yet used.
-                $set = TransactionJournal::whereIn(
+                $set       = TransactionJournal::whereIn(
                     'transaction_journals.id', function (Builder $q) use ($creditCard, $start, $end) {
                     $q->select('transaction_journals.id')
                       ->from('transactions')
@@ -270,8 +287,8 @@ class BillRepository implements BillRepositoryInterface
                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
                 }
                 )->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-
-                $amount = bcadd($amount, $set->sum_amount);
+                $sumAmount = $set->sum_amount ?? '0';
+                $amount    = bcadd($amount, $sumAmount);
             } else {
                 $amount = bcadd($amount, $creditCard->balance);
             }

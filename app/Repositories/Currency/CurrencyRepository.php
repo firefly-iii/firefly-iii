@@ -27,6 +27,75 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by ID
+     *
+     * @param int $currencyId
+     *
+     * @return TransactionCurrency
+     */
+    public function find(int $currencyId) : TransactionCurrency
+    {
+        $currency = TransactionCurrency::find($currencyId);
+        if (is_null($currency)) {
+            $currency = new TransactionCurrency;
+
+        }
+
+        return $currency;
+    }
+
+    /**
+     * Find by currency code
+     *
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency
+     */
+    public function findByCode(string $currencyCode) : TransactionCurrency
+    {
+        $currency = TransactionCurrency::whereCode($currencyCode)->first();
+        if (is_null($currency)) {
+            $currency = new TransactionCurrency;
+        }
+
+        return $currency;
+    }
+
+    /**
+     * Find by currency name
+     *
+     * @param string $currencyName
+     *
+     * @return TransactionCurrency
+     */
+    public function findByName(string $currencyName) : TransactionCurrency
+    {
+        $preferred = TransactionCurrency::whereName($currencyName)->first();
+        if (is_null($preferred)) {
+            $preferred = new TransactionCurrency;
+        }
+
+        return $preferred;
+    }
+
+    /**
+     * Find by currency symbol
+     *
+     * @param string $currencySymbol
+     *
+     * @return TransactionCurrency
+     */
+    public function findBySymbol(string $currencySymbol) : TransactionCurrency
+    {
+        $currency = TransactionCurrency::whereSymbol($currencySymbol)->first();
+        if (is_null($currency)) {
+            $currency = new TransactionCurrency;
+        }
+
+        return $currency;
+    }
+
+    /**
      * @return Collection
      */
     public function get()

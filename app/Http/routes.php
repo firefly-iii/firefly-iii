@@ -28,9 +28,8 @@ Route::group(
 );
 
 /**
- * For other routes, it is only relevant that the user is authenticated.
+ * For some other routes, it is only relevant that the user is authenticated.
  */
-
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
     Route::get('/error', 'HomeController@displayError');
@@ -378,6 +377,28 @@ Route::group(
     Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
+    /**
+     * POPUP Controllers
+     */
+    /**
+     * Report popup
+     */
+    Route::get('/popup/report', ['uses' => 'Popup\ReportController@info', 'as' => 'popup.report']);
+
 }
 );
 
+/**
+ * For the admin routes, the user must be logged in and have the role of 'owner'
+ */
+Route::group(
+    ['middleware' => 'admin'], function () {
+
+    // admin home
+    Route::get('/admin', ['uses' => 'Admin\HomeController@index', 'as' => 'admin.index']);
+
+    // user manager
+    Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
+
+}
+);

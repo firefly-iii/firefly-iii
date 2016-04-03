@@ -1,0 +1,27 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'user_administration'|_ }}</h3>
+            </div>
+            <div class="box-body">
+                <ul>
+                    <li><a href="{{ route('admin.users') }}">{{ 'list_all_users'|_ }}</a></li>
+                    <!-- <li><a href="#">{{ 'user_related_settings'|_ }}</a></li> -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

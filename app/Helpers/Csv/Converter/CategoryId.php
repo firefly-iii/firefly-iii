@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
-use Auth;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
 
 /**
  * Class CategoryId
@@ -18,11 +18,14 @@ class CategoryId extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var SingleCategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $category = Auth::user()->categories()->find($this->mapped[$this->index][$this->value]);
+            $category = $repository->find($this->mapped[$this->index][$this->value]);
         } else {
-            $category = Auth::user()->categories()->find($this->value);
+            $category = $repository->find($this->value);
         }
 
         return $category;

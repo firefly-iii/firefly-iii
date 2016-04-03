@@ -1,6 +1,9 @@
 #daterange {cursor:pointer;}
 .general-chart-error {height:30px;background:url('/images/error.png') no-repeat center center;}
 .handle {cursor:move;}
+body.waiting * {
+    cursor: progress;
+}
 
 .ui-sortable-placeholder {
     display: inline-block;

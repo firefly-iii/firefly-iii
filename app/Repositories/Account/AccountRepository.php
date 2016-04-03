@@ -33,6 +33,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     /** @var User */
     private $user;
+    /** @var array */
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
     /**
      * AttachmentRepository constructor.
@@ -75,15 +77,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @deprecated
-     *
      * @param $accountId
      *
      * @return Account
      */
     public function find(int $accountId): Account
     {
-        return $this->user->accounts()->findOrNew($accountId);
+        $account = $this->user->accounts()->find($accountId);
+        if (is_null($account)) {
+            $account = new Account;
+        }
+
+        return $account;
     }
 
     /**
@@ -106,11 +111,15 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccounts(array $types): Collection
     {
         /** @var Collection $result */
-        $result = $this->user->accounts()->with(
+        $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->get(['accounts.*']);
+        );
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
+        $result = $query->get(['accounts.*']);
 
         $result = $result->sortBy(
             function (Account $account) {
@@ -152,6 +161,31 @@ class AccountRepository implements AccountRepositoryInterface
                           );
 
         return $set;
+    }
+
+    /**
+     * Returns a list of transactions TO the $account, not including transfers
+     * and/or expenses in the $accounts list.
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids      = $accounts->pluck('id')->toArray();
+        $journals = $this->user->transactionjournals()
+                               ->expanded()
+                               ->before($end)
+                               ->where('destination_account.id', $account->id)
+                               ->whereIn('source_account.id', $ids)
+                               ->after($start)
+                               ->get(TransactionJournal::QUERYFIELDS);
+
+        return $journals;
     }
 
     /**
@@ -448,7 +482,7 @@ class AccountRepository implements AccountRepositoryInterface
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
         if ($data['openingBalance'] != 0) {
-            if ($openingBalance) {
+            if (!is_null($openingBalance->id)) {
                 $this->updateInitialBalance($account, $openingBalance, $data);
             } else {
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
@@ -570,8 +604,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeMetadata(Account $account, array $data)
     {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        foreach ($validFields as $field) {
+        foreach ($this->validFields as $field) {
             if (isset($data[$field])) {
                 $metaData = new AccountMeta(
                     [
@@ -621,9 +654,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateMetadata(Account $account, array $data)
     {
-        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-
-        foreach ($validFields as $field) {
+        foreach ($this->validFields as $field) {
             $entry = $account->accountMeta()->where('name', $field)->first();
 
             if (isset($data[$field])) {
@@ -644,5 +675,30 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
 
+    }
+
+    /**
+     * Returns a list of transactions TO the given (asset) $account, but none from the
+     * given list of accounts
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids      = $accounts->pluck('id')->toArray();
+        $journals = $this->user->transactionjournals()
+                               ->expanded()
+                               ->before($end)
+                               ->where('source_account.id', $account->id)
+                               ->whereIn('destination_account.id', $ids)
+                               ->after($start)
+                               ->get(TransactionJournal::QUERYFIELDS);
+
+        return $journals;
     }
 }

@@ -7,6 +7,7 @@ use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\IsConfirmed;
 use FireflyIII\Http\Middleware\IsNotConfirmed;
 use FireflyIII\Http\Middleware\Range;
@@ -120,6 +121,25 @@ class Kernel extends HttpKernel
                 IsConfirmed::class,
                 Range::class,
                 Binder::class,
+            ],
+            // MUST be logged in
+            // MUST have 2fa
+            // MUST be confirmed.
+            // MUST have owner role
+            // (this group includes the other Firefly middleware)
+            'admin'                   => [
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                Authenticate::class,
+                AuthenticateTwoFactor::class,
+                IsConfirmed::class,
+                IsAdmin::class,
+                Range::class,
+                Binder::class,
+
             ],
 
             'api' => [

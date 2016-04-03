@@ -1,7 +1,7 @@
 <?php
 /**
  * firefly.php
- * Copyright (C) 2016 Sander Dorigo
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -56,7 +56,9 @@ return [
     'two_factor_welcome'                        => 'Hello, :user!',
     'two_factor_enter_code'                     => 'To continue, please enter your two factor authentication code. Your application can generate it for you.',
     'two_factor_code_here'                      => 'Enter code here',
+    'two_factor_title'                          => 'Two factor authentication',
     'authenticate'                              => 'Authenticate',
+    'two_factor_forgot_title'                   => 'Lost two factor authentication',
     'two_factor_forgot'                         => 'I forgot my two-factor thing.',
     'two_factor_lost_header'                    => 'Lost your two factor authentication?',
     'two_factor_lost_intro'                     => 'Unfortunately, this is not something you can reset from the web interface. You have two choices.',
@@ -657,6 +659,11 @@ return [
     'report_preset_ranges'                      => 'Pre-set ranges',
     'shared'                                    => 'Shared',
     'fiscal_year'                               => 'Fiscal year',
+    'income_entry'                              => 'Income from account ":name" between :start and :end',
+    'expense_entry'                             => 'Expenses to account ":name" between :start and :end',
+    'category_entry'                            => 'Expenses in category ":name" between :start and :end',
+    'budget_spent_amount'                       => 'Expenses in budget ":budget" between :start and :end',
+    'balance_amount' => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
 
     // charts:
     'dayOfMonth'                                => 'Day of the month',
@@ -739,4 +746,10 @@ return [
     'tags_group'                                => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you. Using tags the old-fashioned way is of course always possible.',
     'tags_start'                                => 'Create a tag to get started or enter tags when creating new transactions.',
 
+
+    // administration
+    'administration'                            => 'Administration',
+    'user_administration'                       => 'User administration',
+    'list_all_users'                            => 'All users',
+    'all_users'                                 => 'All users',
 ];

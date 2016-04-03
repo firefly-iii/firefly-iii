@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
@@ -75,6 +76,40 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * @param Budget  $budget
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function expensesSplit(Budget $budget, Account $account, Carbon $start, Carbon $end): Collection
+    {
+        return $budget->transactionjournals()->expanded()
+                      ->before($end)
+                      ->after($start)
+                      ->where('source_account.id', $account->id)
+                      ->get(TransactionJournal::QUERYFIELDS);
+    }
+
+    /**
+     * Find a budget.
+     *
+     * @param int $budgetId
+     *
+     * @return Budget
+     */
+    public function find(int $budgetId): Budget
+    {
+        $budget = $this->user->budgets()->find($budgetId);
+        if (is_null($budget)) {
+            $budget = new Budget;
+        }
+
+        return $budget;
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return Carbon
@@ -122,6 +157,30 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                               ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
                               ->where('budgets.user_id', $this->user->id)
                               ->get(['limit_repetitions.*', 'budget_limits.budget_id']);
+    }
+
+    /**
+     * @param Account    $account
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+
+        return $this->user
+            ->transactionjournals()
+            ->expanded()
+            ->where('source_account.id', $account->id)
+            ->whereNotIn('destination_account.id', $ids)
+            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('budget_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->get(TransactionJournal::QUERYFIELDS);
     }
 
     /**
@@ -356,6 +415,30 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * Returns all expenses for the given budget and the given accounts, in the given period.
+     *
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpenses(Budget $budget, Collection $accounts, Carbon $start, Carbon $end):Collection
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        $set = $budget->transactionjournals()
+                      ->before($end)
+                      ->after($start)
+                      ->expanded()
+                      ->where('transaction_types.type', TransactionType::WITHDRAWAL)
+                      ->whereIn('source_account.id', $ids)
+                      ->get(TransactionJournal::QUERYFIELDS);
+
+        return $set;
+    }
+
+    /**
      * Returns the expenses for this budget grouped per day, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *
@@ -460,15 +543,36 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         return $this->user
             ->transactionjournals()
-            ->transactionTypes([TransactionType::WITHDRAWAL])
+            ->expanded()
+            ->where('transaction_types.type', TransactionType::WITHDRAWAL)
             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNull('budget_transaction_journal.id')
             ->before($end)
             ->after($start)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->get(['transaction_journals.*']);
+            ->get(TransactionJournal::QUERYFIELDS);
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $ids = $accounts->pluck('id')->toArray();
+
+        return $this->user
+            ->transactionjournals()
+            ->expanded()
+            ->whereIn('source_account.id', $ids)
+            ->where('transaction_types.type', TransactionType::WITHDRAWAL)
+            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNull('budget_transaction_journal.id')
+            ->before($end)
+            ->after($start)
+            ->get(TransactionJournal::QUERYFIELDS);
     }
 
     /**

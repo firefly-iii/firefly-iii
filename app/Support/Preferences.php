@@ -35,19 +35,35 @@ class Preferences
     }
 
     /**
+     * @param      $name
+     * @param null $default
+     *
+     * @return Preference|null
+     */
+    public function get($name, $default = null)
+    {
+        $user = Auth::user();
+        if (is_null($user)) {
+            return $default;
+        }
+
+        return $this->getForUser(Auth::user(), $name, $default);
+    }
+
+    /**
      * @param      string $name
      * @param string      $default
      *
      * @return null|\FireflyIII\Models\Preference
      */
-    public function get($name, $default = null)
+    public function getForUser(User $user, $name, $default = null)
     {
-        $fullName = 'preference' . Auth::user()->id . $name;
+        $fullName = 'preference' . $user->id . $name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
 
-        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
+        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
 
         if ($preference) {
             Cache::forever($fullName, $preference);
@@ -60,7 +76,7 @@ class Preferences
             return null;
         }
 
-        return $this->set($name, $default);
+        return $this->setForUser($user, $name, $default);
 
     }
 

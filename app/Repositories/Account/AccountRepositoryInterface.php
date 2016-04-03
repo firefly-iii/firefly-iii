@@ -72,6 +72,19 @@ interface AccountRepositoryInterface
     public function getCreditCards(Carbon $date): Collection;
 
     /**
+     * Returns a list of transactions TO the given (expense) $account, all from the
+     * given list of accounts
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+
+    /**
      * @param TransactionJournal $journal
      * @param Account            $account
      *
@@ -94,6 +107,19 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * Returns a list of transactions TO the given (asset) $account, but none from the
+     * given list of accounts
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @param Account $account

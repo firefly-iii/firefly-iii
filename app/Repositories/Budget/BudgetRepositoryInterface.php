@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,7 +17,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-
 
     /**
      *
@@ -44,6 +44,25 @@ interface BudgetRepositoryInterface
     public function destroy(Budget $budget);
 
     /**
+     * @param Budget  $budget
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function expensesSplit(Budget $budget, Account $account, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * Find a budget.
+     *
+     * @param int $budgetId
+     *
+     * @return Budget
+     */
+    public function find(int $budgetId): Budget;
+
+    /**
      * @param Budget $budget
      *
      * @return Carbon
@@ -62,6 +81,16 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end);
+
+    /**
+     * @param Account $account
+     * @param Collection $accounts
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * Get the budgeted amounts for each budgets in each year.
@@ -125,6 +154,18 @@ interface BudgetRepositoryInterface
     public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end);
 
     /**
+     * Returns all expenses for the given budget and the given accounts, in the given period.
+     *
+     * @param Budget     $budget
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getExpenses(Budget $budget, Collection $accounts, Carbon $start, Carbon $end):Collection;
+
+    /**
      * Returns the expenses for this budget grouped per day, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *
@@ -166,6 +207,15 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getWithoutBudget(Carbon $start, Carbon $end);
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @param Collection $accounts

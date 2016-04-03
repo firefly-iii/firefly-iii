@@ -1,7 +1,8 @@
 <?php
+declare(strict_types = 1);
 /**
  * AssetAccountNumber.php
- * Copyright (C) 2016 Sander Dorigo
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,6 +14,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AssetAccountNumber
@@ -27,9 +29,12 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = Auth::user()->accounts()->find($this->mapped[$this->index][$this->value]);
+            $account = $repository->find($this->mapped[$this->index][$this->value]);
 
             return $account;
         }
@@ -37,53 +42,38 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         $value = $this->value ?? '';
         if (strlen($value) > 0) {
             // find or create new account:
-            $account = $this->findAccount();
+            $set = $repository->getAccounts(['Default account', 'Asset account']);
+            /** @var Account $entry */
+            foreach ($set as $entry) {
+                $accountNumber = $entry->getMeta('accountNumber');
+                if ($accountNumber == $this->value) {
 
-            if (is_null($account->id)) {
-                // create it if doesn't exist.
-                $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-
-
-                $accountData = [
-                    'name'                   => $this->value,
-                    'accountType'            => 'asset',
-                    'virtualBalance'         => 0,
-                    'virtualBalanceCurrency' => 1, // hard coded.
-                    'active'                 => true,
-                    'user'                   => Auth::user()->id,
-                    'iban'                   => null,
-                    'accountNumber'          => $this->value,
-                    'accountRole'            => null,
-                    'openingBalance'         => 0,
-                    'openingBalanceDate'     => new Carbon,
-                    'openingBalanceCurrency' => 1, // hard coded.
-
-                ];
-
-                $account = $repository->store($accountData);
+                    return $entry;
+                }
             }
+
+            $accountData = [
+                'name'                   => $this->value,
+                'accountType'            => 'asset',
+                'virtualBalance'         => 0,
+                'virtualBalanceCurrency' => 1, // hard coded.
+                'active'                 => true,
+                'user'                   => Auth::user()->id,
+                'iban'                   => null,
+                'accountNumber'          => $this->value,
+                'accountRole'            => null,
+                'openingBalance'         => 0,
+                'openingBalanceDate'     => new Carbon,
+                'openingBalanceCurrency' => 1, // hard coded.
+
+            ];
+
+            $account = $repository->store($accountData);
 
             return $account;
         }
 
-        return null;
+        return null; // is this accepted?
     }
 
-    /**
-     * @return Account
-     */
-    protected function findAccount(): Account
-    {
-        $set = Auth::user()->accounts()->with(['accountmeta'])->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
-        /** @var Account $entry */
-        foreach ($set as $entry) {
-            $accountNumber = $entry->getMeta('accountNumber');
-            if ($accountNumber == $this->value) {
-
-                return $entry;
-            }
-        }
-
-        return new Account;
-    }
 }

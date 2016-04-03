@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
-use Auth;
 use FireflyIII\Models\Bill;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 
 /**
  * Class BillName
@@ -18,13 +18,15 @@ class BillName extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var BillRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+
         $bill = null;
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $bill = Auth::user()->bills()->find($this->mapped[$this->index][$this->value]);
+            $bill = $repository->find($this->mapped[$this->index][$this->value]);
         } else {
-
-            $bills = Auth::user()->bills()->get();
+            $bills = $repository->getBills();
             /** @var Bill $bill */
             foreach ($bills as $bill) {
                 if ($bill->name == $this->value) {

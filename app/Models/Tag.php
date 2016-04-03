@@ -93,6 +93,22 @@ class Tag extends Model
     }
 
     /**
+     * @param Tag $tag
+     *
+     * @return string
+     */
+    public static function tagSum(Tag $tag): string
+    {
+        $sum = '0';
+        /** @var TransactionJournal $journal */
+        foreach ($tag->transactionjournals as $journal) {
+            bcadd($sum, TransactionJournal::amount($journal));
+        }
+
+        return $sum;
+    }
+
+    /**
      * @codeCoverageIgnore
      *
      * @param $value

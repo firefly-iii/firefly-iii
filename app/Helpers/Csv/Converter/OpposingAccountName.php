@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
-use Auth;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class OpposingAccountName
@@ -20,8 +20,11 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = Auth::user()->accounts()->find($this->mapped[$this->index][$this->value]);
+            $account = $repository->find($this->mapped[$this->index][$this->value]);
 
             return $account;
         } else {

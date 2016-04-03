@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
  */
 interface SingleCategoryRepositoryInterface
 {
+
     /**
      * @param Category $category
      *
@@ -54,6 +55,14 @@ interface SingleCategoryRepositoryInterface
      */
     public function earnedPerDay(Category $category, Carbon $start, Carbon $end);
 
+    /**
+     * Find a category
+     *
+     * @param int $categoryId
+     *
+     * @return Category
+     */
+    public function find(int $categoryId) : Category;
 
     /**
      * @param Category $category
@@ -70,6 +79,16 @@ interface SingleCategoryRepositoryInterface
      */
     public function getJournals(Category $category, $page);
 
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end);
 
     /**
      * @param Category $category
