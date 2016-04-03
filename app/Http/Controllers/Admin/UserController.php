@@ -35,16 +35,7 @@ class UserController extends Controller
         $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
 
         // list all users:
-        $all = $repository->all();
-
-        // not deleted users:
-        $users = $all->filter(
-            function (User $user) {
-                if (!(intval($user->blocked) === 1 && is_null($user->blocked_code))) {
-                    return $user;
-                }
-            }
-        );
+        $users = $repository->all();
 
         // add meta stuff.
         $users->each(

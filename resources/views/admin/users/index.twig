@@ -28,23 +28,31 @@
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
                                 </td>
-                                {% if user.activated %}
-                                    <td>&nbsp;</td>
-                                {% else %}
-                                    <td class="bg-danger"><i class="fa fa-fw fa-times"></i></td>
-                                {% endif %}
-
-                                {% if user.blocked == 1 %}
-                                    <td class="bg-danger">
-                                        {% if user.blocked_code == "" %}
-                                            <em>no reason</em>
-                                        {% else %}
-                                            {{ user.blocked_code }}
+                                <td>
+                                    {% if user.activated %}
+                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                    {% else %}
+                                        <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.blocked == 1 %}
+                                        <small class="text-danger"><i class="fa fa-fw fa-user-times" alt="Yes"></i></small>
+                                    {% else %}
+                                        <small class="text-success"><i class="fa fa-fw fa-smile-o" alt="No"></i></small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small>
+                                        {% if user.blocked == 1 %}
+                                            {% if user.blocked_code == "" %}
+                                                <em>~</em>
+                                            {% else %}
+                                                {{ user.blocked_code }}
+                                            {% endif %}
                                         {% endif %}
-                                    </td>
-                                {% else %}
-                                    <td>&nbsp;</td>
-                                {% endif %}
+                                    </small>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

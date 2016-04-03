@@ -741,4 +741,9 @@ return [
     'tags_group'                                => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you. Using tags the old-fashioned way is of course always possible.',
     'tags_start'                                => 'Create a tag to get started or enter tags when creating new transactions.',
 
+
+    // administration
+    'administration'                            => 'Administration',
+    'user_administration'                       => 'User administration',
+    'list_all_users'                            => 'All users',
 ];
