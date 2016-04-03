@@ -52,7 +52,7 @@ class General extends Twig_Extension
             $this->getCurrencySymbol(),
             $this->phpdate(),
             $this->env(),
-
+            $this->getAmountFromJournal(),
             $this->activeRouteStrict(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
@@ -302,6 +302,18 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'phpdate', function (string $str) : string {
             return date($str);
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    private function getAmountFromJournal()
+    {
+        return new Twig_SimpleFunction(
+            'getAmount', function (TransactionJournal $journal) : string {
+            return TransactionJournal::amount($journal);
         }
         );
     }

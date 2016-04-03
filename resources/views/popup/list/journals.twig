@@ -9,7 +9,7 @@
             <th class="hidden-xs">{{ trans('list.from') }}</th>
         {% endif %}
         {% if not hideDestination %}
-        <th class="hidden-xs">{{ trans('list.to') }}</th>
+            <th class="hidden-xs">{{ trans('list.to') }}</th>
         {% endif %}
         <!-- Hide budgets? -->
         {% if not hideBudget %}
@@ -23,7 +23,14 @@
     </tr>
     </thead>
     <tbody>
+    <!--
+    Make sum:
+    {% set sum = 0 %}
+    -->
     {% for journal in journals %}
+        <!-- add to sum
+        {% set sum = (sum + getAmount(journal) ) %}
+        -->
         <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
             <td class="hidden-xs">
                 {{ journal|typeIcon }}
@@ -38,22 +45,22 @@
                 {{ journal.date.formatLocalized(monthAndDayFormat) }}
             </td>
             {% if not hideSource %}
-            <td class="hidden-xs">
-                {% if journal.source_account_type == 'Cash account' %}
-                    <span class="text-success">(cash)</span>
-                {% else %}
-                    <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
-                {% endif %}
-            </td>
+                <td class="hidden-xs">
+                    {% if journal.source_account_type == 'Cash account' %}
+                        <span class="text-success">(cash)</span>
+                    {% else %}
+                        <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
+                    {% endif %}
+                </td>
             {% endif %}
             {% if not hideDestination %}
-            <td class="hidden-xs">
-                {% if journal.destination_account_type == 'Cash account' %}
-                    <span class="text-success">(cash)</span>
-                {% else %}
-                    <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
-                {% endif %}
-            </td>
+                <td class="hidden-xs">
+                    {% if journal.destination_account_type == 'Cash account' %}
+                        <span class="text-success">(cash)</span>
+                    {% else %}
+                        <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
+                    {% endif %}
+                </td>
             {% endif %}
 
             <!-- Do NOT hide the budget? -->
@@ -76,6 +83,12 @@
         </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2" style="text-align: right;"><em>{{ 'sum'|_ }}:</em></td>
+        <td>{{ sum|formatAmount }}</td>
+    </tr>
+    </tfoot>
 </table>
 
 {{ journals.render|raw }}
