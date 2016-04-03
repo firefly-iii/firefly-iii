@@ -6,6 +6,8 @@
             <h4 class="modal-title" id="balanceAmountTitle">{{ 'balance_amount'|_ }}</h4>
         </div>
         <div class="modal-body">
+            {% set hideSource = true %}
+            {% set hideBudget = true %}
             {% include 'popup/list/journals.twig' %}
         </div>
         <div class="modal-footer">

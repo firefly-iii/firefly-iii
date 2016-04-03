@@ -5,15 +5,19 @@
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
-        <th class="hidden-xs">{{ trans('list.from') }}</th>
+        {% if not hideSource %}
+            <th class="hidden-xs">{{ trans('list.from') }}</th>
+        {% endif %}
+        {% if not hideDestination %}
         <th class="hidden-xs">{{ trans('list.to') }}</th>
+        {% endif %}
         <!-- Hide budgets? -->
-        {% if not hideBudgets %}
+        {% if not hideBudget %}
             <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
         {% endif %}
 
         <!-- Hide categories? -->
-        {% if not hideCategories %}
+        {% if not hideCategory %}
             <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
         {% endif %}
     </tr>
@@ -33,6 +37,7 @@
             <td class="hidden-sm hidden-xs">
                 {{ journal.date.formatLocalized(monthAndDayFormat) }}
             </td>
+            {% if not hideSource %}
             <td class="hidden-xs">
                 {% if journal.source_account_type == 'Cash account' %}
                     <span class="text-success">(cash)</span>
@@ -40,6 +45,8 @@
                     <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
                 {% endif %}
             </td>
+            {% endif %}
+            {% if not hideDestination %}
             <td class="hidden-xs">
                 {% if journal.destination_account_type == 'Cash account' %}
                     <span class="text-success">(cash)</span>
@@ -47,9 +54,10 @@
                     <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
                 {% endif %}
             </td>
+            {% endif %}
 
             <!-- Do NOT hide the budget? -->
-            {% if not hideBudgets %}
+            {% if not hideBudget %}
                 <td class="hidden-xs">
                     {% if journal.budgets[0] %}
                         <a href="{{ route('budgets.show',journal.budgets[0].id) }}">{{ journal.budgets[0].name }}</a>
@@ -58,7 +66,7 @@
             {% endif %}
 
             <!-- Do NOT hide the category? -->
-            {% if not hideCategories %}
+            {% if not hideCategory %}
                 <td class="hidden-xs">
                     {% if journal.categories[0] %}
                         <a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a>

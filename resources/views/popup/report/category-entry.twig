@@ -6,6 +6,7 @@
             <h4 class="modal-title" id="expenseEntryTitle">{{ 'category_entry'|_ }}</h4>
         </div>
         <div class="modal-body">
+            {% set hideCategory = true %}
             {% include 'popup/list/journals.twig' %}
         </div>
         <div class="modal-footer">

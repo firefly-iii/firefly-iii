@@ -6,6 +6,7 @@
             <h4 class="modal-title" id="budgetSpentAmountLabel">{{ 'budget_spent_amount'|_ }}</h4>
         </div>
         <div class="modal-body">
+            {% set hideBudget = true %}
             {% include 'popup/list/journals.twig' %}
         </div>
         <div class="modal-footer">
