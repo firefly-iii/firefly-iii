@@ -746,4 +746,5 @@ return [
     'administration'                            => 'Administration',
     'user_administration'                       => 'User administration',
     'list_all_users'                            => 'All users',
+    'all_users'                                 => 'All users',
 ];

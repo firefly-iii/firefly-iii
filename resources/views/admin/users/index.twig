@@ -14,19 +14,39 @@
                     <table class="table table-condensed table-sortable">
                         <thead>
                         <tr>
+                            <th colspan="2">&nbsp;</th>
                             <th>{{ trans('list.email') }}</th>
                             <th>{{ trans('list.registered_at') }}</th>
+                            <th>{{ trans('list.is_admin') }}</th>
+                            <th>{{ trans('list.has_two_factor') }}</th>
                             <th>{{ trans('list.is_activated') }}</th>
                             <th>{{ trans('list.is_blocked') }}</th>
+                            <th>{{ trans('list.blocked_code') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for user in users %}
                             <tr>
+                                <td>~</td>
+                                <td>#{{ user.id }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
+                                </td>
+                                <td>
+                                    {% if user.isAdmin %}
+                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                    {% else %}
+                                        <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.has2FA %}
+                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                    {% else %}
+                                        <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if user.activated %}
@@ -37,9 +57,9 @@
                                 </td>
                                 <td>
                                     {% if user.blocked == 1 %}
-                                        <small class="text-danger"><i class="fa fa-fw fa-user-times" alt="Yes"></i></small>
+                                        <small class="text-danger"><i class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></i></small>
                                     {% else %}
-                                        <small class="text-success"><i class="fa fa-fw fa-smile-o" alt="No"></i></small>
+                                        <small class="text-success"><i class="fa fa-fw fa-times" title="{{ 'no'|_ }}"></i></small>
                                     {% endif %}
                                 </td>
                                 <td>

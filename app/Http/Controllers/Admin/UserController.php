@@ -13,7 +13,6 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
-use Log;
 use Preferences;
 
 /**
@@ -40,7 +39,7 @@ class UserController extends Controller
         // add meta stuff.
         $users->each(
             function (User $user) use ($confirmAccount) {
-                // user must be logged in, then continue:
+                // is user activated?
                 $isConfirmed = Preferences::getForUser($user, 'user_confirmed', false)->data;
                 if ($isConfirmed === false && $confirmAccount === true) {
                     $user->activated = false;
@@ -48,6 +47,17 @@ class UserController extends Controller
                     $user->activated = true;
                 }
 
+                // is user admin?
+                $user->isAdmin = $user->hasRole('owner');
+
+                // user has 2FA enabled?
+                $is2faEnabled = Preferences::getForUser($user, 'twoFactorAuthEnabled', false)->data;
+                $has2faSecret = !is_null(Preferences::getForUser($user, 'twoFactorAuthSecret'));
+                if ($is2faEnabled && $has2faSecret) {
+                    $user->has2FA = true;
+                } else {
+                    $user->has2FA = false;
+                }
 
             }
         );

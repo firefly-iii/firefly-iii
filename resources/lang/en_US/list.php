@@ -39,4 +39,11 @@ return [
     'completed'           => 'Completed',
     'iban'                => 'IBAN',
     'paid_current_period' => 'Paid this period',
+    'email'               => 'Email',
+    'registered_at'       => 'Registered at',
+    'is_activated'        => 'Is activated',
+    'is_blocked'          => 'Is blocked',
+    'is_admin'            => 'Is admin',
+    'has_two_factor'      => 'Has 2FA',
+    'blocked_code'        => 'Block code',
 ];
