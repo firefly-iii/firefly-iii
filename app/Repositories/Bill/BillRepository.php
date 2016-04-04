@@ -77,7 +77,7 @@ class BillRepository implements BillRepositoryInterface
                           ->get(
                               [
                                   'bills.*',
-                                  DB::raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
+                           DB::raw('((`bills`.`amount_min` + `bills`.`amount_max`) / 2) as `expectedAmount`'),
                               ]
                           )->sortBy('name');
 
