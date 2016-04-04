@@ -66,6 +66,7 @@ return [
     'two_factor_lost_fix_owner'                 => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
     'warning_much_data'                         => ':days days of data may take a while to load.',
     'registered'                                => 'You have registered successfully!',
+    'search'                                    => 'Search',
 
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
@@ -663,7 +664,7 @@ return [
     'expense_entry'                             => 'Expenses to account ":name" between :start and :end',
     'category_entry'                            => 'Expenses in category ":name" between :start and :end',
     'budget_spent_amount'                       => 'Expenses in budget ":budget" between :start and :end',
-    'balance_amount' => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
+    'balance_amount'                            => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
 
     // charts:
     'dayOfMonth'                                => 'Day of the month',
