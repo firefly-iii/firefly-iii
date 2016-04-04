@@ -106,7 +106,7 @@ class Search implements SearchInterface
         $decrypted = Auth::user()->transactionjournals()->expanded()->where('transaction_journals.encrypted', 0)->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
-                    $q->orWhere('description', 'LIKE', '%' . e($word) . '%');
+                    $q->orWhere('transaction_journals.description', 'LIKE', '%' . e($word) . '%');
                 }
             }
         )->get(TransactionJournal::QUERYFIELDS);
