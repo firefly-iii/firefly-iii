@@ -50,7 +50,7 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
      *
      * @return bool
      */
-    public function triggered(TransactionJournal $journal)
+    public function triggered(TransactionJournal $journal): bool
     {
         $description = strtolower($journal->description);
         $search      = strtolower($this->triggerValue);

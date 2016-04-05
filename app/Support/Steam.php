@@ -63,7 +63,7 @@ class Steam
      *
      * @return array
      */
-    public function balanceInRange(Account $account, Carbon $start, Carbon $end)
+    public function balanceInRange(Account $account, Carbon $start, Carbon $end): array
     {
         // abuse chart properties:
         $cache = new CacheProperties;
@@ -110,7 +110,7 @@ class Steam
      *
      * @return array
      */
-    public function balancesById(array $ids, Carbon $date)
+    public function balancesById(array $ids, Carbon $date): array
     {
 
         // abuse chart properties:
@@ -147,7 +147,7 @@ class Steam
      *
      * @return array
      */
-    public function getLastActivities(array $accounts)
+    public function getLastActivities(array $accounts): array
     {
         $list = [];
 
@@ -170,7 +170,7 @@ class Steam
      *
      * @return int
      */
-    public function phpBytes($string)
+    public function phpBytes($string): int
     {
         $string = strtolower($string);
 

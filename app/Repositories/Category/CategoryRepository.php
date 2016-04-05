@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Sql\Query;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -19,6 +18,10 @@ use Illuminate\Support\Collection;
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
+    const SPENT  = 1;
+    const EARNED = 2;
+
+
     /** @var User */
     private $user;
 
@@ -43,7 +46,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
 
         $collection = $this->user->categories()
@@ -87,7 +90,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listCategories()
+    public function listCategories(): Collection
     {
         /** @var Collection $set */
         $set = $this->user->categories()->orderBy('name', 'ASC')->get();
@@ -114,7 +117,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end)
+    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
 
         $set = $this->user->categories()
@@ -152,7 +155,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listNoCategory(Carbon $start, Carbon $end)
+    public function listNoCategory(Carbon $start, Carbon $end): Collection
     {
         return $this->user
             ->transactionjournals()
@@ -177,7 +180,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $accountIds = $accounts->pluck('id')->toArray();
         $query      = $this->user->categories()
@@ -228,9 +231,9 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end)
+    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        return $this->sumNoCategory($accounts, $start, $end, Query::EARNED);
+        return $this->sumNoCategory($accounts, $start, $end, self::EARNED);
     }
 
     /**
@@ -243,9 +246,9 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end)
+    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        return $this->sumNoCategory($accounts, $start, $end, Query::SPENT);
+        return $this->sumNoCategory($accounts, $start, $end, self::SPENT);
     }
 
     /**
@@ -259,10 +262,10 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    protected function sumNoCategory(Collection $accounts, Carbon $start, Carbon $end, $group = Query::EARNED)
+    protected function sumNoCategory(Collection $accounts, Carbon $start, Carbon $end, $group = self::EARNED)
     {
         $accountIds = $accounts->pluck('id')->toArray();
-        if ($group == Query::EARNED) {
+        if ($group == self::EARNED) {
             $types = [TransactionType::DEPOSIT];
         } else {
             $types = [TransactionType::WITHDRAWAL];

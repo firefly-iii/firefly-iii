@@ -22,18 +22,18 @@ interface ExportJobRepositoryInterface
     /**
      * @return bool
      */
-    public function cleanup();
+    public function cleanup(): bool;
 
     /**
      * @return ExportJob
      */
-    public function create();
+    public function create(): ExportJob;
 
     /**
      * @param string $key
      *
      * @return ExportJob|null
      */
-    public function findByKey(string $key);
+    public function findByKey(string $key): ExportJob;
 
 }

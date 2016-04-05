@@ -166,7 +166,7 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $budget->spent      = $repository->balanceInPeriod($budget, $start, $end, $accounts);
             $budget->currentRep = $repository->getCurrentRepetition($budget, $start, $end);
-            if ($budget->currentRep) {
+            if (!is_null($budget->currentRep->id)) {
                 $budgeted = bcadd($budgeted, $budget->currentRep->amount);
             }
             $spent = bcadd($spent, $budget->spent);

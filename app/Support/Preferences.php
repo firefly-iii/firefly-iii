@@ -38,7 +38,7 @@ class Preferences
      * @param      $name
      * @param null $default
      *
-     * @return Preference|null
+     * @return \FireflyIII\Models\Preference|null
      */
     public function get($name, $default = null)
     {
@@ -83,7 +83,7 @@ class Preferences
     /**
      * @return string
      */
-    public function lastActivity()
+    public function lastActivity(): string
     {
         $preference = $this->get('lastActivity', microtime())->data;
 
@@ -93,7 +93,7 @@ class Preferences
     /**
      * @return bool
      */
-    public function mark()
+    public function mark(): bool
     {
         $this->set('lastActivity', microtime());
 
@@ -106,7 +106,7 @@ class Preferences
      *
      * @return Preference
      */
-    public function set($name, $value)
+    public function set($name, $value): Preference
     {
         $user = Auth::user();
         if (is_null($user)) {
@@ -123,7 +123,7 @@ class Preferences
      *
      * @return Preference
      */
-    public function setForUser(User $user, $name, $value)
+    public function setForUser(User $user, $name, $value): Preference
     {
         $fullName = 'preference' . $user->id . $name;
         Cache::forget($fullName);

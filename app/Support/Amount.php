@@ -112,7 +112,7 @@ class Amount
     /**
      * @return Collection
      */
-    public function getAllCurrencies()
+    public function getAllCurrencies(): Collection
     {
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
@@ -120,7 +120,7 @@ class Amount
     /**
      * @return string
      */
-    public function getCurrencyCode()
+    public function getCurrencyCode(): string
     {
 
         $cache = new CacheProperties;
@@ -146,7 +146,7 @@ class Amount
     /**
      * @return string
      */
-    public function getCurrencySymbol()
+    public function getCurrencySymbol(): string
     {
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencySymbol');
@@ -165,7 +165,7 @@ class Amount
     /**
      * @return TransactionCurrency
      */
-    public function getDefaultCurrency()
+    public function getDefaultCurrency(): TransactionCurrency
     {
         $cache = new CacheProperties;
         $cache->addProperty('getDefaultCurrency');

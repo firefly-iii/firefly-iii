@@ -51,7 +51,7 @@ final class AmountLess extends AbstractTrigger implements TriggerInterface
      *
      * @return bool
      */
-    public function triggered(TransactionJournal $journal)
+    public function triggered(TransactionJournal $journal): bool
     {
         $amount  = $journal->destination_amount ?? TransactionJournal::amountPositive($journal);
         $compare = $this->triggerValue;

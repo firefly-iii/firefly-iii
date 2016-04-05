@@ -20,7 +20,7 @@ class PiggyBank extends Twig_Extension
     /**
      *
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         $functions = [];
 
@@ -38,7 +38,7 @@ class PiggyBank extends Twig_Extension
      *
      * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'FireflyIII\Support\Twig\PiggyBank';
     }

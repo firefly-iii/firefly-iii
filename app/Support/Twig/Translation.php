@@ -19,7 +19,7 @@ class Translation extends Twig_Extension
     /**
      * @return array
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         $filters = [];
 
@@ -37,7 +37,7 @@ class Translation extends Twig_Extension
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'FireflyIII\Support\Twig\Translation';
     }

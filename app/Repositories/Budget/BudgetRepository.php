@@ -48,27 +48,28 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return string
      */
-    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
+    public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts): string
     {
         return $this->commonBalanceInPeriod($budget, $start, $end, $accounts);
     }
 
     /**
-     * @return void
+     * @return bool
      */
-    public function cleanupBudgets()
+    public function cleanupBudgets(): bool
     {
         // delete limits with amount 0:
         BudgetLimit::where('amount', 0)->delete();
+        return true;
 
     }
 
     /**
      * @param Budget $budget
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(Budget $budget)
+    public function destroy(Budget $budget): bool
     {
         $budget->delete();
 
@@ -114,7 +115,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Carbon
      */
-    public function firstActivity(Budget $budget)
+    public function firstActivity(Budget $budget): Carbon
     {
         $first = $budget->transactionjournals()->orderBy('date', 'ASC')->first();
         if ($first) {
@@ -127,7 +128,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * @return Collection
      */
-    public function getActiveBudgets()
+    public function getActiveBudgets(): Collection
     {
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)->get();
@@ -147,7 +148,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end)
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection
     {
         /** @var Collection $repetitions */
         return LimitRepetition::
@@ -167,7 +168,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
 
@@ -192,7 +193,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end)
+    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end): Collection
     {
         $budgetIds = $budgets->pluck('id')->toArray();
 
@@ -218,7 +219,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * @return Collection
      */
-    public function getBudgets()
+    public function getBudgets(): Collection
     {
         /** @var Collection $set */
         $set = $this->user->budgets()->get();
@@ -242,7 +243,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return array
      */
-    public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $ids = $accounts->pluck('id')->toArray();
 
@@ -303,7 +304,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return array
      */
-    public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
+    public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $ids       = $accounts->pluck('id')->toArray();
         $budgetIds = $budgets->pluck('id')->toArray();
@@ -362,7 +363,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end)
+    public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end): Collection
     {
         /** @var Collection $set */
         $set = $this->user
@@ -402,14 +403,17 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return LimitRepetition|null
+     * @return LimitRepetition
      */
-    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end)
+    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end): LimitRepetition
     {
         $data = $budget->limitrepetitions()
                        ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
                        ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
                        ->first(['limit_repetitions.*']);
+        if(is_null($data)) {
+            return new LimitRepetition;
+        }
 
         return $data;
     }
@@ -448,7 +452,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end)
+    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end): Collection
     {
         $set = $this->user->budgets()
                           ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
@@ -471,7 +475,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Carbon
      */
-    public function getFirstBudgetLimitDate(Budget $budget)
+    public function getFirstBudgetLimitDate(Budget $budget): Carbon
     {
         $limit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
         if ($limit) {
@@ -484,7 +488,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * @return Collection
      */
-    public function getInactiveBudgets()
+    public function getInactiveBudgets(): Collection
     {
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 0)->get();
@@ -507,7 +511,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50)
+    public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50): LengthAwarePaginator
     {
         $offset     = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
         $setQuery   = $budget->transactionjournals()->expanded()
@@ -539,7 +543,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getWithoutBudget(Carbon $start, Carbon $end)
+    public function getWithoutBudget(Carbon $start, Carbon $end): Collection
     {
         return $this->user
             ->transactionjournals()
@@ -559,7 +563,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
 
@@ -633,7 +637,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return array
      */
-    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end)
+    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $ids = $accounts->pluck('id')->toArray();
         /** @var Collection $query */
@@ -674,7 +678,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Collection
      */
-    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end)
+    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $accountIds = $accounts->pluck('id')->toArray();
         $budgetIds  = $budgets->pluck('id')->toArray();
@@ -752,7 +756,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Budget
      */
-    public function store(array $data)
+    public function store(array $data): Budget
     {
         $newBudget = new Budget(
             [
@@ -771,7 +775,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return Budget
      */
-    public function update(Budget $budget, array $data)
+    public function update(Budget $budget, array $data): Budget
     {
         // update the account:
         $budget->name   = $data['name'];
@@ -788,7 +792,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount)
+    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount): BudgetLimit
     {
         // there should be a budget limit for this startdate:
         /** @var BudgetLimit $limit */

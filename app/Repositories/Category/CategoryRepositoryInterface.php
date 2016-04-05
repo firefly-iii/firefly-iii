@@ -26,14 +26,14 @@ interface CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end);
+    public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * Returns a list of all the categories belonging to a user.
      *
      * @return Collection
      */
-    public function listCategories();
+    public function listCategories(): Collection;
 
     /**
      * This method returns a very special collection for each category:
@@ -49,7 +49,7 @@ interface CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end);
+    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * Returns a list of transaction journals in the range (all types, all accounts) that have no category
@@ -60,7 +60,7 @@ interface CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listNoCategory(Carbon $start, Carbon $end);
+    public function listNoCategory(Carbon $start, Carbon $end): Collection;
 
     /**
      * Returns a collection of Categories appended with the amount of money that has been spent
@@ -73,7 +73,7 @@ interface CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end);
+    public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * Returns the total amount of money related to transactions without any category connected to
@@ -85,7 +85,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end);
+    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * Returns the total amount of money related to transactions without any category connected to
@@ -97,6 +97,6 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end);
+    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
 }

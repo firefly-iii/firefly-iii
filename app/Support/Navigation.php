@@ -23,7 +23,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip)
+    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
     {
         $date = clone $theDate;
         $add  = ($skip + 1);
@@ -62,7 +62,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $theCurrentEnd, string $repeatFreq)
+    public function endOfPeriod(Carbon $theCurrentEnd, string $repeatFreq): Carbon
     {
         $currentEnd = clone $theCurrentEnd;
 
@@ -121,7 +121,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      */
-    public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null)
+    public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null): Carbon
     {
         $functionMap = [
             '1D'        => 'endOfDay',
@@ -162,7 +162,7 @@ class Navigation
      * @return string
      * @throws FireflyException
      */
-    public function periodShow(Carbon $date, string $repeatFrequency)
+    public function periodShow(Carbon $date, string $repeatFrequency): string
     {
         $formatMap = [
             '1D'      => trans('config.specific_day'),
@@ -197,7 +197,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function startOfPeriod(Carbon $theDate, string $repeatFreq)
+    public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
         $date = clone $theDate;
 
@@ -248,7 +248,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1)
+    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1): Carbon
     {
         $date = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
@@ -308,7 +308,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function updateEndDate(string $range, Carbon $start)
+    public function updateEndDate(string $range, Carbon $start): Carbon
     {
         $functionMap = [
             '1D' => 'endOfDay',
@@ -344,7 +344,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function updateStartDate(string $range, Carbon $start)
+    public function updateStartDate(string $range, Carbon $start): Carbon
     {
         $functionMap = [
             '1D' => 'startOfDay',

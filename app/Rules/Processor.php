@@ -117,7 +117,7 @@ final class Processor
      *
      * @return \FireflyIII\Models\Rule
      */
-    public function getRule()
+    public function getRule(): Rule
     {
         return $this->rule;
     }
@@ -131,7 +131,7 @@ final class Processor
      *
      * @return bool
      */
-    public function handleTransactionJournal(TransactionJournal $journal)
+    public function handleTransactionJournal(TransactionJournal $journal): bool
     {
         $this->journal = $journal;
         // get all triggers:

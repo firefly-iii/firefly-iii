@@ -43,7 +43,7 @@ class SetCategory implements ActionInterface
      *
      * @return bool
      */
-    public function act(TransactionJournal $journal)
+    public function act(TransactionJournal $journal): bool
     {
         $name     = $this->action->action_value;
         $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => Auth::user()->id]);

@@ -18,7 +18,7 @@ class Rule extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    public function allJournalTriggers()
+    public function allJournalTriggers(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'allJournalTriggers', function () {
@@ -33,7 +33,7 @@ class Rule extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    public function allRuleTriggers()
+    public function allRuleTriggers(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'allRuleTriggers', function () {
@@ -56,7 +56,7 @@ class Rule extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    public function allActionTriggers()
+    public function allActionTriggers(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'allRuleActions', function () {
@@ -76,7 +76,7 @@ class Rule extends Twig_Extension
     /**
      * @return array
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             $this->allJournalTriggers(),
@@ -91,7 +91,7 @@ class Rule extends Twig_Extension
      *
      * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'FireflyIII\Support\Twig\Rule';
     }

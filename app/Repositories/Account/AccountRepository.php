@@ -174,7 +174,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids      = $accounts->pluck('id')->toArray();
         $journals = $this->user->transactionjournals()
@@ -259,7 +259,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, $page): LengthAwarePaginator
+    public function getJournals(Account $account, int $page): LengthAwarePaginator
     {
         $offset = ($page - 1) * 50;
         $query  = $this->user
@@ -449,7 +449,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return AccountMeta
      */
-    public function storeMeta($account, $name, $value): AccountMeta
+    public function storeMeta(Account $account, string $name, $value): AccountMeta
     {
         return AccountMeta::create(['name' => $name, 'data' => $value, 'account_id' => $account->id,]);
     }
@@ -688,7 +688,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids      = $accounts->pluck('id')->toArray();
         $journals = $this->user->transactionjournals()

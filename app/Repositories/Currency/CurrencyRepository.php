@@ -21,7 +21,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return int
      */
-    public function countJournals(TransactionCurrency $currency)
+    public function countJournals(TransactionCurrency $currency): int
     {
         return $currency->transactionJournals()->count();
     }
@@ -98,7 +98,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @return Collection
      */
-    public function get()
+    public function get(): Collection
     {
         return TransactionCurrency::get();
     }
@@ -108,7 +108,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function getCurrencyByPreference(Preference $preference)
+    public function getCurrencyByPreference(Preference $preference): TransactionCurrency
     {
         $preferred = TransactionCurrency::whereCode($preference->data)->first();
         if (is_null($preferred)) {
@@ -123,7 +123,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function store(array $data)
+    public function store(array $data): TransactionCurrency
     {
         $currency = TransactionCurrency::create(
             [
@@ -142,7 +142,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function update(TransactionCurrency $currency, array $data)
+    public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
         $currency->code   = $data['code'];
         $currency->symbol = $data['symbol'];

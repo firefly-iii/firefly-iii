@@ -82,7 +82,7 @@ interface AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param TransactionJournal $journal
@@ -119,7 +119,7 @@ interface AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Account $account
@@ -127,7 +127,7 @@ interface AccountRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, $page): LengthAwarePaginator;
+    public function getJournals(Account $account, int $page): LengthAwarePaginator;
 
     /**
      * Get the accounts of a user that have piggy banks connected to them.
@@ -172,7 +172,7 @@ interface AccountRepositoryInterface
      *
      * @return AccountMeta
      */
-    public function storeMeta($account, $name, $value): AccountMeta;
+    public function storeMeta(Account $account, string $name, $value): AccountMeta;
 
     /**
      * @return string

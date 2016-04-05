@@ -48,7 +48,7 @@ final class UserAction extends AbstractTrigger implements TriggerInterface
      *
      * @return bool
      */
-    public function triggered(TransactionJournal $journal)
+    public function triggered(TransactionJournal $journal): bool
     {
         return true;
     }

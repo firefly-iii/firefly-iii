@@ -246,7 +246,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function optionsList($type, $name): string
+    public function optionsList(string $type, string $name): string
     {
         $previousValue = null;
 

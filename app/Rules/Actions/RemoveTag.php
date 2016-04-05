@@ -42,7 +42,7 @@ class RemoveTag implements ActionInterface
      *
      * @return bool
      */
-    public function act(TransactionJournal $journal)
+    public function act(TransactionJournal $journal): bool
     {
         // if tag does not exist, no need to continue:
         $name = $this->action->action_value;

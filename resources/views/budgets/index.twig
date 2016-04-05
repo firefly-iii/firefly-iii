@@ -107,7 +107,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             <!-- link in header -->
-                            {% if budget.currentRep %}
+                            {% if budget.currentRep.id %}
                                 <a href="{{ route('budgets.show', [budget.id, budget.currentRep.id]) }}" class="budget-link"
                                    data-id="{{ budget.id }}">{{ budget.name }}</a>
                             {% else %}
