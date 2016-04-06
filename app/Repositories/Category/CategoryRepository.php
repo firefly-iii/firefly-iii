@@ -248,7 +248,12 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        return $this->sumNoCategory($accounts, $start, $end, self::SPENT);
+        $sum = $this->sumNoCategory($accounts, $start, $end, self::SPENT);
+        if (is_null($sum)) {
+            return '0';
+        }
+
+        return $sum;
     }
 
     /**
