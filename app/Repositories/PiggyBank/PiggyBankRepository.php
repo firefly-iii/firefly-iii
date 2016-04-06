@@ -52,6 +52,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function destroy(PiggyBank $piggyBank): bool
     {
         $piggyBank->delete();
+
         return true;
     }
 
@@ -62,7 +63,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getEventSummarySet(PiggyBank $piggyBank): Collection
     {
-        return DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::raw('SUM(`amount`) AS `sum`')]);
+        $var = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::raw('SUM(`amount`) AS `sum`')]);
+
+        return new Collection($var);
     }
 
     /**
@@ -130,6 +133,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $piggyBank->order = $order;
             $piggyBank->save();
         }
+
         return true;
     }
 

@@ -50,8 +50,7 @@ class PiggyBankController extends Controller
             return Response::json($cache->get());
         }
 
-        /** @var Collection $set */
-        $set  = new Collection($repository->getEventSummarySet($piggyBank));
+        $set  = $repository->getEventSummarySet($piggyBank);
         $data = $this->generator->history($set);
         $cache->store($data);
 
