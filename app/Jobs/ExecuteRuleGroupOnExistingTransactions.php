@@ -44,7 +44,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     /**
      * @return Collection
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }
@@ -61,7 +61,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     /**
      * @return \Carbon\Carbon
      */
-    public function getEndDate()
+    public function getEndDate(): Carbon
     {
         return $this->endDate;
     }
@@ -78,7 +78,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     /**
      * @return \Carbon\Carbon
      */
-    public function getStartDate()
+    public function getStartDate(): Carbon
     {
         return $this->startDate;
     }
@@ -95,7 +95,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }

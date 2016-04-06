@@ -35,7 +35,7 @@ class Steam
         $cache->addProperty($date);
         $cache->addProperty($ignoreVirtualBalance);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $balance = strval(
@@ -72,7 +72,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $balances = [];
@@ -119,7 +119,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $balances = Transaction::

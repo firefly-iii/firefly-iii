@@ -37,7 +37,6 @@ class ReportHelper implements ReportHelperInterface
     /**
      * ReportHelper constructor.
      *
-     * @codeCoverageIgnore
      *
      * @param ReportQueryInterface      $query
      * @param BudgetRepositoryInterface $budgetRepository

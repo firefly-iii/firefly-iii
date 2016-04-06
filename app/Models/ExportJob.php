@@ -64,7 +64,6 @@ class ExportJob extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

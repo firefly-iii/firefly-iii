@@ -40,7 +40,7 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return boolean
+     * @return bool
      */
     public function destroy(Bill $bill): bool
     {

@@ -9,7 +9,6 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class TransactionJournalUpdated
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Events
  */
 class TransactionJournalUpdated extends Event

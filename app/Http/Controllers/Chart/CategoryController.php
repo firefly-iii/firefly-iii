@@ -67,7 +67,7 @@ class CategoryController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('categories');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
         $spentArray  = $repository->spentPerDay($category, $start, $end);
         $earnedArray = $repository->earnedPerDay($category, $start, $end);
@@ -130,7 +130,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('earned-in-period');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $set        = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
@@ -169,7 +169,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         // get data for categories (and "no category"):
@@ -215,7 +215,7 @@ class CategoryController extends Controller
         $cache->addProperty('multiYearCategory');
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $entries = new Collection;
@@ -321,7 +321,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('spent-in-period');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
 

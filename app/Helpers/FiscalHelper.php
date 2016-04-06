@@ -20,7 +20,6 @@ class FiscalHelper implements FiscalHelperInterface
     /**
      * FiscalHelper constructor.
      *
-     * @codeCoverageIgnore
      *
      */
     public function __construct()

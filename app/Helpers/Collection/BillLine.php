@@ -5,7 +5,6 @@ namespace FireflyIII\Helpers\Collection;
 use FireflyIII\Models\Bill as BillModel;
 
 /**
- * @codeCoverageIgnore
  *
  * Class BillLine
  *
@@ -111,7 +110,7 @@ class BillLine
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive(): bool
     {
@@ -127,7 +126,7 @@ class BillLine
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isHit(): bool
     {

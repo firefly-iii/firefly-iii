@@ -250,13 +250,11 @@ class ExpandedForm
     {
         $previousValue = null;
 
-        // @codeCoverageIgnoreStart
         try {
             $previousValue = Input::old('post_submit_action');
         } catch (RuntimeException $e) {
             // don't care
         }
-        // @codeCoverageIgnoreEnd
 
         $previousValue = is_null($previousValue) ? 'store' : $previousValue;
         $html          = view('form.options', compact('type', 'name', 'previousValue'))->render();
@@ -391,7 +389,6 @@ class ExpandedForm
             $preFilled = session('preFilled');
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
-        // @codeCoverageIgnoreStart
         try {
             if (!is_null(Input::old($name))) {
                 $value = Input::old($name);
@@ -400,7 +397,6 @@ class ExpandedForm
             // don't care about session errors.
         }
 
-        // @codeCoverageIgnoreEnd
 
         return $value;
     }

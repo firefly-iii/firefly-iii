@@ -39,7 +39,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('amount');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $transaction = $journal->transactions->sortByDesc('amount')->first();
@@ -66,7 +66,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $amount = '0';
@@ -143,7 +143,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('destination-account');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         if (!is_null($transaction)) {
@@ -168,7 +168,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('destination-account-type-str');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $account = self::destinationAccount($journal);
@@ -225,7 +225,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('source-account');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
         $transaction = $journal->transactions()->where('amount', '<', 0)->first();
         if (!is_null($transaction)) {
@@ -250,7 +250,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('source-account-type-str');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $account = self::sourceAccount($journal);
@@ -272,7 +272,7 @@ class TransactionJournalSupport extends Model
         $cache->addProperty('transaction-journal');
         $cache->addProperty('type-string');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $typeStr = $journal->transaction_type_type ?? $journal->transactionType->type;

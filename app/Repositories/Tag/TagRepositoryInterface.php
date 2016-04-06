@@ -24,15 +24,15 @@ interface TagRepositoryInterface
      *
      * @return Collection
      */
-    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end);
+    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @return boolean
+     * @return bool
      */
-    public function connect(TransactionJournal $journal, Tag $tag);
+    public function connect(TransactionJournal $journal, Tag $tag): bool;
 
     /**
      * @deprecated
@@ -49,26 +49,26 @@ interface TagRepositoryInterface
      *
      * @return string
      */
-    public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end);
+    public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end): string;
 
     /**
      * @param Tag $tag
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(Tag $tag);
+    public function destroy(Tag $tag): bool;
 
     /**
      * @return Collection
      */
-    public function get();
+    public function get(): Collection;
 
     /**
      * @param array $data
      *
      * @return Tag
      */
-    public function store(array $data);
+    public function store(array $data): Tag;
 
     /**
      * Can a tag become an advance payment?
@@ -77,7 +77,7 @@ interface TagRepositoryInterface
      *
      * @return bool
      */
-    public function tagAllowAdvance(Tag $tag);
+    public function tagAllowAdvance(Tag $tag): bool;
 
     /**
      * Can a tag become a balancing act?
@@ -86,7 +86,7 @@ interface TagRepositoryInterface
      *
      * @return bool
      */
-    public function tagAllowBalancing(Tag $tag);
+    public function tagAllowBalancing(Tag $tag): bool;
 
     /**
      * @param Tag   $tag
@@ -94,5 +94,5 @@ interface TagRepositoryInterface
      *
      * @return Tag
      */
-    public function update(Tag $tag, array $data);
+    public function update(Tag $tag, array $data): Tag;
 }

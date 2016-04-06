@@ -40,7 +40,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     /**
      * ReportHelper constructor.
      *
-     * @codeCoverageIgnore
      *
      * @param BudgetRepositoryInterface $budgetRepository
      * @param TagRepositoryInterface    $tagRepository

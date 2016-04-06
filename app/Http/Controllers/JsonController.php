@@ -114,7 +114,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-in');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
         $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
         $amount   = $reportQuery->income($accounts, $start, $end)->sum('journalAmount');
@@ -145,7 +145,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-out');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $amount = $reportQuery->expense($accounts, $start, $end)->sum('journalAmount');

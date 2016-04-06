@@ -7,7 +7,6 @@ use Twig_Extension;
 use Twig_SimpleFilter;
 
 /**
- * @codeCoverageIgnore
  *
  * Class Budget
  *

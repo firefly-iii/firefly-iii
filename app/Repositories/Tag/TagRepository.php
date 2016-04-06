@@ -42,7 +42,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Collection
      */
-    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end)
+    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
         $set = $this->user->tags()
@@ -84,9 +84,9 @@ class TagRepository implements TagRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      *
-     * @return boolean
+     * @return bool
      */
-    public function connect(TransactionJournal $journal, Tag $tag)
+    public function connect(TransactionJournal $journal, Tag $tag): Collection
     {
         /*
          * Already connected:
@@ -125,7 +125,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return string
      */
-    public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end)
+    public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end): string
     {
         // the quickest way to do this is by scanning all balancingAct tags
         // because there will be less of them any way.
@@ -152,20 +152,19 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param Tag $tag
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(Tag $tag)
+    public function destroy(Tag $tag): bool
     {
         $tag->delete();
 
         return true;
     }
-    // @codeCoverageIgnoreEnd
 
     /**
      * @return Collection
      */
-    public function get()
+    public function get(): Collection
     {
         /** @var Collection $tags */
         $tags = $this->user->tags()->get();
@@ -183,7 +182,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Tag
      */
-    public function store(array $data)
+    public function store(array $data): Tag
     {
         $tag              = new Tag;
         $tag->tag         = $data['tag'];
@@ -208,7 +207,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return bool
      */
-    public function tagAllowAdvance(Tag $tag)
+    public function tagAllowAdvance(Tag $tag): bool
     {
         /*
          * If this tag is a balancing act, and it contains transfers, it cannot be
@@ -247,7 +246,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return bool
      */
-    public function tagAllowBalancing(Tag $tag)
+    public function tagAllowBalancing(Tag $tag): bool
     {
         /*
          * If has more than two transactions already, cannot become a balancing act:
@@ -275,7 +274,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Tag
      */
-    public function update(Tag $tag, array $data)
+    public function update(Tag $tag, array $data): Tag
     {
         $tag->tag         = $data['tag'];
         $tag->date        = $data['date'];
@@ -295,9 +294,9 @@ class TagRepository implements TagRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
-     * @return boolean
+     * @return bool
      */
-    protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag)
+    protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag): bool
     {
         /** @var TransactionType $transfer */
         $transfer = TransactionType::whereType(TransactionType::TRANSFER)->first();
@@ -332,7 +331,7 @@ class TagRepository implements TagRepositoryInterface
         }
 
         // this statement is unreachable.
-        return false; // @codeCoverageIgnore
+        return false;
 
     }
 
@@ -340,9 +339,9 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @return boolean
+     * @return bool
      */
-    protected function connectBalancingAct(TransactionJournal $journal, Tag $tag)
+    protected function connectBalancingAct(TransactionJournal $journal, Tag $tag): bool
     {
         /** @var TransactionType $withdrawal */
         $withdrawal  = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
@@ -380,7 +379,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return bool
      */
-    protected function matchAll(TransactionJournal $journal, Tag $tag)
+    protected function matchAll(TransactionJournal $journal, Tag $tag): bool
     {
         $match = true;
         /** @var TransactionJournal $check */

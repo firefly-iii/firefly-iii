@@ -35,23 +35,24 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
-     * @return bool
+     * @return PiggyBankEvent
      */
-    public function createEvent(PiggyBank $piggyBank, string $amount)
+    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
     {
-        PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+        $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
 
-        return true;
+        return $event;
     }
 
     /**
      * @param PiggyBank $piggyBank
      *
-     * @return boolean|null
+     * @return bool
      */
-    public function destroy(PiggyBank $piggyBank)
+    public function destroy(PiggyBank $piggyBank): bool
     {
-        return $piggyBank->delete();
+        $piggyBank->delete();
+        return true;
     }
 
     /**
@@ -59,7 +60,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return Collection
      */
-    public function getEventSummarySet(PiggyBank $piggyBank)
+    public function getEventSummarySet(PiggyBank $piggyBank): Collection
     {
         return DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::raw('SUM(`amount`) AS `sum`')]);
     }
@@ -69,7 +70,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return Collection
      */
-    public function getEvents(PiggyBank $piggyBank)
+    public function getEvents(PiggyBank $piggyBank): Collection
     {
         return $piggyBank->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
     }
@@ -77,7 +78,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @return int
      */
-    public function getMaxOrder()
+    public function getMaxOrder(): int
     {
         return intval($this->user->piggyBanks()->max('order'));
     }
@@ -85,7 +86,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @return Collection
      */
-    public function getPiggyBanks()
+    public function getPiggyBanks(): Collection
     {
         /** @var Collection $set */
         $set = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
@@ -96,9 +97,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Set all piggy banks to order 0.
      *
-     * @return boolean
+     * @return bool
      */
-    public function reset()
+    public function reset(): bool
     {
         // split query to make it work in sqlite:
         $set = PiggyBank::
@@ -119,9 +120,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param int $piggyBankId
      * @param int $order
      *
-     * @return void
+     * @return bool
      */
-    public function setOrder(int $piggyBankId, int $order)
+    public function setOrder(int $piggyBankId, int $order): bool
     {
         $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', $this->user->id)
                               ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
@@ -129,6 +130,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $piggyBank->order = $order;
             $piggyBank->save();
         }
+        return true;
     }
 
     /**
@@ -136,7 +138,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return PiggyBank
      */
-    public function store(array $data)
+    public function store(array $data): PiggyBank
     {
         $data['remind_me']     = false;
         $data['reminder_skip'] = 0;
@@ -152,7 +154,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return PiggyBank
      */
-    public function update(PiggyBank $piggyBank, array $data)
+    public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
 
         $piggyBank->name         = $data['name'];

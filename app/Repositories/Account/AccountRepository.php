@@ -62,7 +62,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param Account $moveTo
      *
-     * @return boolean
+     * @return bool
      */
     public function destroy(Account $account, Account $moveTo = null): bool
     {
@@ -542,9 +542,7 @@ class AccountRepository implements AccountRepositoryInterface
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
                 abort(500);
-                // @codeCoverageIgnoreStart
             }
-            // @codeCoverageIgnoreEnd
             $newAccount = $existingAccount;
 
         }

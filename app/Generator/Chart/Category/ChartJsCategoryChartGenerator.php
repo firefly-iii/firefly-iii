@@ -148,7 +148,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param Collection $entries
      *

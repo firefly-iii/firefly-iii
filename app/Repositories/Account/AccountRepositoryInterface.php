@@ -31,7 +31,7 @@ interface AccountRepositoryInterface
      * @param Account $account
      * @param Account $moveTo
      *
-     * @return boolean
+     * @return bool
      */
     public function destroy(Account $account, Account $moveTo): bool;
 

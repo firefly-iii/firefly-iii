@@ -26,26 +26,26 @@ interface RuleRepositoryInterface
     /**
      * @return int
      */
-    public function count();
+    public function count(): int;
 
     /**
      * @param Rule $rule
      *
      * @return bool
      */
-    public function destroy(Rule $rule);
+    public function destroy(Rule $rule): bool;
 
     /**
      * @return RuleGroup
      */
-    public function getFirstRuleGroup();
+    public function getFirstRuleGroup(): RuleGroup;
 
     /**
      * @param RuleGroup $ruleGroup
      *
      * @return int
      */
-    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup);
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int;
 
     /**
      * @param Rule $rule
@@ -59,14 +59,14 @@ interface RuleRepositoryInterface
      *
      * @return bool
      */
-    public function moveDown(Rule $rule);
+    public function moveDown(Rule $rule): bool;
 
     /**
      * @param Rule $rule
      *
      * @return bool
      */
-    public function moveUp(Rule $rule);
+    public function moveUp(Rule $rule): bool;
 
     /**
      * @param Rule  $rule
@@ -74,7 +74,7 @@ interface RuleRepositoryInterface
      *
      * @return bool
      */
-    public function reorderRuleActions(Rule $rule, array $ids);
+    public function reorderRuleActions(Rule $rule, array $ids): bool;
 
     /**
      * @param Rule  $rule
@@ -82,21 +82,21 @@ interface RuleRepositoryInterface
      *
      * @return bool
      */
-    public function reorderRuleTriggers(Rule $rule, array $ids);
+    public function reorderRuleTriggers(Rule $rule, array $ids): bool;
 
     /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
 
     /**
      * @param array $data
      *
      * @return Rule
      */
-    public function store(array $data);
+    public function store(array $data): Rule;
 
     /**
      * @param Rule  $rule
@@ -104,7 +104,7 @@ interface RuleRepositoryInterface
      *
      * @return RuleAction
      */
-    public function storeAction(Rule $rule, array $values);
+    public function storeAction(Rule $rule, array $values): RuleAction;
 
     /**
      * @param Rule  $rule
@@ -112,7 +112,7 @@ interface RuleRepositoryInterface
      *
      * @return RuleTrigger
      */
-    public function storeTrigger(Rule $rule, array $values);
+    public function storeTrigger(Rule $rule, array $values): RuleTrigger;
 
     /**
      * @param Rule  $rule
@@ -120,6 +120,6 @@ interface RuleRepositoryInterface
      *
      * @return Rule
      */
-    public function update(Rule $rule, array $data);
+    public function update(Rule $rule, array $data): Rule;
 
 }

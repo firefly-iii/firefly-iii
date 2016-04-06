@@ -7,7 +7,6 @@ use Illuminate\Support\Collection;
 
 
 /**
- * @codeCoverageIgnore
  *
  * Class Category
  *

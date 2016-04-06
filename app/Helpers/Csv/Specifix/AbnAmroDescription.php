@@ -65,7 +65,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * Parses the current description with costs from ABN AMRO itself
      *
-     * @return boolean true if the description is GEA/BEA-format, false otherwise
+     * @return bool true if the description is GEA/BEA-format, false otherwise
      */
     protected function parseABNAMRODescription()
     {
@@ -85,7 +85,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * Parses the current description in GEA/BEA format
      *
-     * @return boolean true if the description is GEA/BEAformat, false otherwise
+     * @return bool true if the description is GEA/BEAformat, false otherwise
      */
     protected function parseGEABEADescription()
     {
@@ -111,7 +111,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * Parses the current description in SEPA format
      *
-     * @return boolean true if the description is SEPA format, false otherwise
+     * @return bool true if the description is SEPA format, false otherwise
      */
     protected function parseSepaDescription()
     {
@@ -168,7 +168,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * Parses the current description in TRTP format
      *
-     * @return boolean true if the description is TRTP format, false otherwise
+     * @return bool true if the description is TRTP format, false otherwise
      */
     protected function parseTRTPDescription()
     {

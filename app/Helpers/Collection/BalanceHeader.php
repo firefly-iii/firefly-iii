@@ -6,7 +6,6 @@ use FireflyIII\Models\Account as AccountModel;
 use Illuminate\Support\Collection;
 
 /**
- * @codeCoverageIgnore
  *
  * Class BalanceHeader
  *

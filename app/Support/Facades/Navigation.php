@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Navigation
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Support\Facades
  */
 class Navigation extends Facade

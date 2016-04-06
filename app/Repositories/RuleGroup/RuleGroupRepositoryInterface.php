@@ -20,7 +20,7 @@ interface RuleGroupRepositoryInterface
     /**
      * @return int
      */
-    public function count();
+    public function count(): int;
 
     /**
      * @param RuleGroup $ruleGroup
@@ -28,17 +28,17 @@ interface RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null);
+    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null): bool;
 
     /**
      * @return Collection
      */
-    public function get();
+    public function get(): Collection;
 
     /**
      * @return int
      */
-    public function getHighestOrderRuleGroup();
+    public function getHighestOrderRuleGroup(): int;
 
     /**
      * @param User $user
@@ -52,33 +52,33 @@ interface RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function moveDown(RuleGroup $ruleGroup);
+    public function moveDown(RuleGroup $ruleGroup): bool;
 
     /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
      */
-    public function moveUp(RuleGroup $ruleGroup);
+    public function moveUp(RuleGroup $ruleGroup): bool;
 
     /**
      * @return bool
      */
-    public function resetRuleGroupOrder();
+    public function resetRuleGroupOrder(): bool;
 
     /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup);
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
 
     /**
      * @param array $data
      *
      * @return RuleGroup
      */
-    public function store(array $data);
+    public function store(array $data): RuleGroup;
 
     /**
      * @param RuleGroup $ruleGroup
@@ -86,7 +86,7 @@ interface RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function update(RuleGroup $ruleGroup, array $data);
+    public function update(RuleGroup $ruleGroup, array $data): RuleGroup;
 
 
 }

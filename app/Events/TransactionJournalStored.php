@@ -16,7 +16,6 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class TransactionJournalStored
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Events
  */
 class TransactionJournalStored extends Event

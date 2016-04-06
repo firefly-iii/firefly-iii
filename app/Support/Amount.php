@@ -139,7 +139,7 @@ class Amount
             }
             $cache->store(env('DEFAULT_CURRENCY', 'EUR'));
 
-            return env('DEFAULT_CURRENCY', 'EUR'); // @codeCoverageIgnore
+            return env('DEFAULT_CURRENCY', 'EUR');
         }
     }
 

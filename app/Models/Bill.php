@@ -3,6 +3,8 @@
 use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -135,17 +137,17 @@ class Bill extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactionjournals()
+    public function transactionjournals(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\User');
     }

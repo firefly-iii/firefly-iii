@@ -109,7 +109,6 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -125,7 +124,6 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -155,7 +153,6 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */
@@ -165,7 +162,6 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */
@@ -175,7 +171,6 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionjournals()
@@ -184,7 +179,6 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
