@@ -73,19 +73,20 @@ class Processor
     }
 
     /**
-     *
+     * @return bool
      */
-    public function collectAttachments()
+    public function collectAttachments(): bool
     {
         $attachmentCollector = app('FireflyIII\Export\Collector\AttachmentCollector', [$this->job]);
         $attachmentCollector->run();
         $this->files = $this->files->merge($attachmentCollector->getFiles());
+        return true;
     }
 
     /**
-     *
+     * @return bool
      */
-    public function collectJournals()
+    public function collectJournals(): bool
     {
         $args             = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
         $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
@@ -97,20 +98,25 @@ class Processor
             $this->settings['endDate']->format('Y-m-d')
             . ').'
         );
+        return true;
     }
 
-    public function collectOldUploads()
+    /**
+     * @return bool
+     */
+    public function collectOldUploads(): bool
     {
         $uploadCollector = app('FireflyIII\Export\Collector\UploadCollector', [$this->job]);
         $uploadCollector->run();
 
         $this->files = $this->files->merge($uploadCollector->getFiles());
+        return true;
     }
 
     /**
-     *
+     * @return bool
      */
-    public function convertJournals()
+    public function convertJournals(): bool
     {
         $count = 0;
         /** @var TransactionJournal $journal */
@@ -119,15 +125,24 @@ class Processor
             $count++;
         }
         Log::debug('Converted ' . $count . ' journals to "Entry" objects.');
+        return true;
     }
 
-    public function createConfigFile()
+    /**
+     * @return bool
+     */
+    public function createConfigFile(): bool
     {
         $this->configurationMaker = app('FireflyIII\Export\ConfigurationFile', [$this->job]);
         $this->files->push($this->configurationMaker->make());
+        return true;
     }
 
-    public function createZipFile()
+    /**
+     * @return bool
+     * @throws FireflyException
+     */
+    public function createZipFile(): bool
     {
         $zip      = new ZipArchive;
         $file     = $this->job->key . '.zip';
@@ -156,12 +171,13 @@ class Processor
             $disk->delete($file);
         }
         Log::debug('Done!');
+        return true;
     }
 
     /**
-     *
+     * @return bool
      */
-    public function exportJournals()
+    public function exportJournals(): bool
     {
         $exporterClass = Config::get('firefly.export_formats.' . $this->exportFormat);
         $exporter      = app($exporterClass, [$this->job]);
@@ -170,12 +186,13 @@ class Processor
         $exporter->run();
         $this->files->push($exporter->getFileName());
         Log::debug('Added "' . $exporter->getFileName() . '" to the list of files to include in the zip.');
+        return true;
     }
 
     /**
      * @return Collection
      */
-    public function getFiles()
+    public function getFiles(): Collection
     {
         return $this->files;
     }

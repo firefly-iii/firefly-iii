@@ -27,7 +27,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
     /**
      * @return Account|null
      */
-    public function convert()
+    public function convert(): Account
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');

@@ -16,7 +16,7 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
     /**
      * @return TransactionCurrency
      */
-    public function convert()
+    public function convert(): TransactionCurrency
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');

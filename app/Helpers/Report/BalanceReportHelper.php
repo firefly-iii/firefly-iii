@@ -58,7 +58,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @return Balance
      */
-    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts): Balance
     {
         $balance = new Balance;
 
@@ -91,7 +91,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @return BalanceLine
      */
-    private function createBalanceLine(BudgetModel $budget, Collection $accounts, Collection $spentData)
+    private function createBalanceLine(BudgetModel $budget, Collection $accounts, Collection $spentData): BalanceLine
     {
         $line = new BalanceLine;
         $line->setBudget($budget);
@@ -128,7 +128,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @return BalanceLine
      */
-    private function createDifferenceBalanceLine(Collection $accounts, Collection $spentData, Carbon $start, Carbon $end)
+    private function createDifferenceBalanceLine(Collection $accounts, Collection $spentData, Carbon $start, Carbon $end): BalanceLine
     {
         $diff     = new BalanceLine;
         $tagsLeft = $this->tagRepository->allCoveredByBalancingActs($accounts, $start, $end);
@@ -173,7 +173,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @return BalanceLine
      */
-    private function createEmptyBalanceLine(Collection $accounts, Collection $spentData)
+    private function createEmptyBalanceLine(Collection $accounts, Collection $spentData): BalanceLine
     {
         $empty = new BalanceLine;
 
@@ -206,7 +206,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @return BalanceLine
      */
-    private function createTagsBalanceLine(Collection $accounts, Carbon $start, Carbon $end)
+    private function createTagsBalanceLine(Collection $accounts, Carbon $start, Carbon $end): BalanceLine
     {
         $tags     = new BalanceLine;
         $tagsLeft = $this->tagRepository->allCoveredByBalancingActs($accounts, $start, $end);

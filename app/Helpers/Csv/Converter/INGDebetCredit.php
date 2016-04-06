@@ -24,7 +24,7 @@ class INGDebetCredit extends BasicConverter implements ConverterInterface
     /**
      * @return int
      */
-    public function convert()
+    public function convert(): int
     {
         if ($this->value === 'Af') {
             return -1;

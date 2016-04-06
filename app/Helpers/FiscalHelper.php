@@ -36,7 +36,7 @@ class FiscalHelper implements FiscalHelperInterface
      *
      * @return Carbon date object
      */
-    public function endOfFiscalYear(Carbon $date)
+    public function endOfFiscalYear(Carbon $date): Carbon
     {
         // get start of fiscal year for passed date
         $endDate = $this->startOfFiscalYear($date);
@@ -57,7 +57,7 @@ class FiscalHelper implements FiscalHelperInterface
      *
      * @return Carbon date object
      */
-    public function startOfFiscalYear(Carbon $date)
+    public function startOfFiscalYear(Carbon $date): Carbon
     {
         // get start mm-dd. Then create a start date in the year passed.
         $startDate = clone $date;

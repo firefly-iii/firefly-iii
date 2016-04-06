@@ -29,7 +29,7 @@ class RabobankDescription extends Specifix implements SpecifixInterface
     /**
      * @return array
      */
-    public function fix()
+    public function fix(): array
     {
         $this->rabobankFixEmptyOpposing();
 

@@ -39,15 +39,15 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     /**
      * @return string
      */
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName;
     }
 
     /**
-     *
+     * @return bool
      */
-    public function run()
+    public function run(): bool
     {
         // create temporary file:
         $this->tempFile();
@@ -72,6 +72,7 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
         }
         $writer->insertAll($rows);
+        return true;
     }
 
     private function tempFile()

@@ -19,7 +19,7 @@ interface WizardInterface
      *
      * @return array
      */
-    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders);
+    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders): array;
 
     /**
      * @param array $roles
@@ -27,34 +27,34 @@ interface WizardInterface
      *
      * @return array
      */
-    public function processSelectedMapping(array $roles, array $map);
+    public function processSelectedMapping(array $roles, array $map): array;
 
     /**
      * @param array $input
      *
      * @return array
      */
-    public function processSelectedRoles(array $input);
+    public function processSelectedRoles(array $input): array;
 
     /**
      * @param array $fields
      *
      * @return bool
      */
-    public function sessionHasValues(array $fields);
+    public function sessionHasValues(array $fields): bool;
 
     /**
      * @param array $map
      *
      * @return array
      */
-    public function showOptions(array $map);
+    public function showOptions(array $map): array;
 
     /**
      * @param string $path
      *
      * @return string
      */
-    public function storeCsvFile(string $path);
+    public function storeCsvFile(string $path): string;
 
 }

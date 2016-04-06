@@ -40,7 +40,7 @@ class BasicCollector
     /**
      * @return Collection
      */
-    public function getFiles()
+    public function getFiles(): Collection
     {
         return $this->files;
     }

@@ -16,7 +16,7 @@ class BillName extends BasicConverter implements ConverterInterface
     /**
      * @return Bill
      */
-    public function convert()
+    public function convert(): Bill
     {
         /** @var BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');

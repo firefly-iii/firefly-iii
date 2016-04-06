@@ -19,7 +19,7 @@ class Date extends BasicConverter implements ConverterInterface
      * @return Carbon
      * @throws FireflyException
      */
-    public function convert()
+    public function convert(): Carbon
     {
         $format = session('csv-date-format');
         try {

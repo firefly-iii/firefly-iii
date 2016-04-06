@@ -22,7 +22,7 @@ class OpposingAccount implements PostProcessorInterface
     /**
      * @return array
      */
-    public function process()
+    public function process(): array
     {
         // three values:
         // opposing-account-id, opposing-account-iban, opposing-account-name

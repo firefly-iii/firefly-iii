@@ -23,7 +23,7 @@ class BasicConverter
     /**
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
@@ -39,7 +39,7 @@ class BasicConverter
     /**
      * @return string
      */
-    public function getField()
+    public function getField(): string
     {
         return $this->field;
     }
@@ -47,7 +47,7 @@ class BasicConverter
     /**
      * @param string $field
      */
-    public function setField($field)
+    public function setField(string $field)
     {
         $this->field = $field;
     }
@@ -55,7 +55,7 @@ class BasicConverter
     /**
      * @return int
      */
-    public function getIndex()
+    public function getIndex(): int
     {
         return $this->index;
     }
@@ -63,7 +63,7 @@ class BasicConverter
     /**
      * @param int $index
      */
-    public function setIndex($index)
+    public function setIndex(int $index)
     {
         $this->index = $index;
     }
@@ -71,7 +71,7 @@ class BasicConverter
     /**
      * @return array
      */
-    public function getMapped()
+    public function getMapped(): array
     {
         return $this->mapped;
     }
@@ -79,7 +79,7 @@ class BasicConverter
     /**
      * @param array $mapped
      */
-    public function setMapped($mapped)
+    public function setMapped(array $mapped)
     {
         $this->mapped = $mapped;
     }
@@ -87,7 +87,7 @@ class BasicConverter
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -95,7 +95,7 @@ class BasicConverter
     /**
      * @param string $value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
         $this->value = $value;
     }

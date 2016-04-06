@@ -29,5 +29,5 @@ interface BalanceReportHelperInterface
      *
      * @return Balance
      */
-    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts): Balance;
 }

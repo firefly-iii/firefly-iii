@@ -16,7 +16,7 @@ class AnyAccount implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $result = Auth::user()->accounts()->with('accountType')->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 

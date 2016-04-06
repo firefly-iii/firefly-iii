@@ -15,7 +15,7 @@ class AmountComma extends BasicConverter implements ConverterInterface
     /**
      * @return float|int
      */
-    public function convert()
+    public function convert(): string
     {
         $value = str_replace(',', '.', strval($this->value));
 

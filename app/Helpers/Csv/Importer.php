@@ -57,7 +57,7 @@ class Importer
      *
      * @return array
      */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
@@ -67,7 +67,7 @@ class Importer
      *
      * @return int
      */
-    public function getImported()
+    public function getImported(): int
     {
         return $this->imported;
     }
@@ -75,7 +75,7 @@ class Importer
     /**
      * @return Collection
      */
-    public function getJournals()
+    public function getJournals(): Collection
     {
         return $this->journals;
     }
@@ -85,7 +85,7 @@ class Importer
      *
      * @return int
      */
-    public function getRows()
+    public function getRows(): int
     {
         return $this->rows;
     }
@@ -93,7 +93,7 @@ class Importer
     /**
      * @return array
      */
-    public function getSpecifix()
+    public function getSpecifix(): array
     {
         return is_array($this->specifix) ? $this->specifix : [];
     }
@@ -144,10 +144,11 @@ class Importer
     }
 
     /**
-     *
+     * FIXME can return text
+     * 
      * @return TransactionJournal|string
      */
-    protected function createTransactionJournal()
+    protected function createTransactionJournal(): TransactionJournal
     {
         $date = $this->importData['date'];
         if (is_null($this->importData['date'])) {

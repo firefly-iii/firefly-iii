@@ -38,9 +38,9 @@ class ConfigurationFile
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function make()
+    public function make(): string
     {
         $fields = array_keys(get_class_vars(Entry::class));
         $types  = Entry::getTypes();

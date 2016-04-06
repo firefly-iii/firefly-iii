@@ -16,7 +16,7 @@ class Budget implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $result = Auth::user()->budgets()->get(['budgets.*']);
         $list   = [];

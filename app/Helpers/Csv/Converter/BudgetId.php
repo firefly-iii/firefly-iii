@@ -16,7 +16,7 @@ class BudgetId extends BasicConverter implements ConverterInterface
     /**
      * @return Budget
      */
-    public function convert()
+    public function convert(): Budget
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');

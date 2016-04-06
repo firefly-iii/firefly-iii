@@ -14,7 +14,7 @@ interface PostProcessorInterface
     /**
      * @return array
      */
-    public function process();
+    public function process(): array;
 
     /**
      * @param array $data

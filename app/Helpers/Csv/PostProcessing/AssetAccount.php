@@ -23,7 +23,7 @@ class AssetAccount implements PostProcessorInterface
     /**
      * @return array
      */
-    public function process()
+    public function process(): array
     {
         $result = $this->checkIdNameObject(); // has object in ID or Name?
         if (!is_null($result)) {

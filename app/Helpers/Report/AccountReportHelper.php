@@ -34,7 +34,7 @@ class AccountReportHelper implements AccountReportHelperInterface
      *
      * @return AccountCollection
      */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection
     {
         $startAmount = '0';
         $endAmount   = '0';

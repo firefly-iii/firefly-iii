@@ -26,7 +26,7 @@ class Dummy extends Specifix implements SpecifixInterface
     /**
      * @return array
      */
-    public function fix()
+    public function fix(): array
     {
         return $this->data;
 

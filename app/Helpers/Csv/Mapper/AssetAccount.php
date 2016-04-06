@@ -17,7 +17,7 @@ class AssetAccount implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {

@@ -24,7 +24,7 @@ interface ReportQueryInterface
      *
      * @return array
      */
-    public function earnedPerMonth(Collection $accounts, Carbon $start, Carbon $end);
+    public function earnedPerMonth(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * This method returns all the "out" transaction journals for the given account and given period. The amount
@@ -36,7 +36,7 @@ interface ReportQueryInterface
      *
      * @return Collection
      */
-    public function expense(Collection $accounts, Carbon $start, Carbon $end);
+    public function expense(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * This method returns all the "in" transaction journals for the given account and given period. The amount
@@ -48,7 +48,7 @@ interface ReportQueryInterface
      *
      * @return Collection
      */
-    public function income(Collection $accounts, Carbon $start, Carbon $end);
+    public function income(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * Returns an array of the amount of money spent in the given accounts (on withdrawals, opening balances and transfers)
@@ -60,7 +60,7 @@ interface ReportQueryInterface
      *
      * @return array
      */
-    public function spentPerMonth(Collection $accounts, Carbon $start, Carbon $end);
+    public function spentPerMonth(Collection $accounts, Carbon $start, Carbon $end): array;
 
 
 }

@@ -32,6 +32,6 @@ interface AccountReportHelperInterface
      *
      * @return AccountCollection
      */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection;
 
 }

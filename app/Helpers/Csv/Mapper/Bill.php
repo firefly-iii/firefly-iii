@@ -16,7 +16,7 @@ class Bill implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $result = Auth::user()->bills()->get(['bills.*']);
         $list   = [];

@@ -17,7 +17,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
     /**
      * @return Category
      */
-    public function convert()
+    public function convert(): Budget
     {
         /** @var SingleCategoryRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');

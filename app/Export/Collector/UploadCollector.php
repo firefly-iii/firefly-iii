@@ -47,9 +47,9 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     }
 
     /**
-     *
+     * @return bool
      */
-    public function run()
+    public function run(): bool
     {
         // grab upload directory.
         $files = $this->uploadDisk->files();
@@ -58,6 +58,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         foreach ($files as $entry) {
             $this->processOldUpload($entry);
         }
+        return true;
     }
 
     /**

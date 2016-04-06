@@ -14,7 +14,7 @@ class Description extends BasicConverter implements ConverterInterface
     /**
      * @return string
      */
-    public function convert()
+    public function convert(): string
     {
         $description = $this->data['description'] ?? '';
 

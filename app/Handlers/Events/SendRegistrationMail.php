@@ -38,13 +38,13 @@ class SendRegistrationMail
      *
      * @param  UserRegistration $event
      *
-     * @return void
+     * @return bool
      */
-    public function handle(UserRegistration $event)
+    public function handle(UserRegistration $event): bool
     {
         $sendMail = env('SEND_REGISTRATION_MAIL', true);
         if (!$sendMail) {
-            return;
+            return true;
         }
         // get the email address
         $email     = $event->user->email;
@@ -60,5 +60,6 @@ class SendRegistrationMail
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
         }
+        return true;
     }
 }

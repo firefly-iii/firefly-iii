@@ -32,7 +32,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     /**
      * @return array
      */
-    public function fix()
+    public function fix(): array
     {
         // Try to parse the description in known formats.
         $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
