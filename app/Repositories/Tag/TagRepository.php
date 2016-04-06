@@ -86,7 +86,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return bool
      */
-    public function connect(TransactionJournal $journal, Tag $tag): Collection
+    public function connect(TransactionJournal $journal, Tag $tag): bool
     {
         /*
          * Already connected:
