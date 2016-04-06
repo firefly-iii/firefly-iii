@@ -72,7 +72,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return Collection
      */
-    public function expense(Collection $accounts, Carbon $start, Carbon $end): array
+    public function expense(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
         $set = Auth::user()->transactionjournals()
