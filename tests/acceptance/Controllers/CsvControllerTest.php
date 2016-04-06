@@ -36,6 +36,7 @@ class CsvControllerTest extends TestCase
 
         $data->shouldReceive('getRoles')->once()->andReturn([]);
         $data->shouldReceive('getMap')->once()->andReturn([]);
+        
         $data->shouldReceive('hasHeaders')->once()->andReturn(false);
 
         $this->call('GET', '/csv/column_roles');
