@@ -38,7 +38,6 @@ class MailError extends Job implements ShouldQueue
      * @param string $ipAddress
      * @param array  $exceptionData
      *
-     * @internal param array $exception
      */
     public function __construct(User $user, string $destination, string $ipAddress, array $exceptionData)
     {

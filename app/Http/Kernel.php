@@ -30,6 +30,23 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 class Kernel extends HttpKernel
 {
     /**
+     * The bootstrap classes for the application.
+     *
+     * Next upgrade should verify these are all here.
+     *
+     * @var array
+     */
+    protected $bootstrappers = [
+        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+        'Illuminate\Foundation\Bootstrap\LoadConfiguration',
+        'FireflyIII\Bootstrap\ConfigureLogging',
+        'Illuminate\Foundation\Bootstrap\HandleExceptions',
+        'Illuminate\Foundation\Bootstrap\RegisterFacades',
+        'Illuminate\Foundation\Bootstrap\RegisterProviders',
+        'Illuminate\Foundation\Bootstrap\BootProviders',
+    ];
+
+    /**
      * The application's global HTTP middleware stack.
      *
      * These middleware are run during every request to your application.
