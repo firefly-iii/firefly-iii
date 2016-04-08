@@ -8,6 +8,12 @@
  */
 
 return [
+    'buttons'             => 'Knoppen',
+    'icon'                => 'Icoon',
+    'create_date'         => 'Aangemaakt op',
+    'update_date'         => 'Bijgewerkt op',
+    'balance_before'      => 'Saldo voor',
+    'balance_after'       => 'Saldo na',
     'name'                => 'Naam',
     'role'                => 'Rol',
     'currentBalance'      => 'Huidig saldo',

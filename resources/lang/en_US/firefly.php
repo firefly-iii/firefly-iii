@@ -665,6 +665,8 @@ return [
     'category_entry'                            => 'Expenses in category ":name" between :start and :end',
     'budget_spent_amount'                       => 'Expenses in budget ":budget" between :start and :end',
     'balance_amount'                            => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
+    'no_audit_activity'                         => 'No activity was recorded on account <a href=":url" title=":account_name">:account_name</a> between :start and :end.',
+    'audit_end_balance'                         => 'Account balance of <a href=":url" title=":account_name">:account_name</a> at the end of :end was: :balance',
 
     // charts:
     'dayOfMonth'                                => 'Day of the month',

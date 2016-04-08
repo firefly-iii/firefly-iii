@@ -66,6 +66,7 @@ return [
     'two_factor_lost_fix_owner'                 => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
     'warning_much_data'                         => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                => 'Je bent geregistreerd!',
+    'search'                                    => 'Zoeken',
 
     // account confirmation:
     'confirm_account_header'                    => 'Bevestig je account',
@@ -663,7 +664,9 @@ return [
     'expense_entry'                             => 'Uitgaven naar rekening ":name" tussen :start en :end',
     'category_entry'                            => 'Uitgaven in categorie ":name" tussen :start en :end',
     'budget_spent_amount'                       => 'Uitgaven in budget ":budget" tussen :start en :end',
-    'balance_amount' => 'Uitgaven in :budget betaald van rekening ":account" tussen :start en :end',
+    'balance_amount'                            => 'Uitgaven in :budget betaald van rekening ":account" tussen :start en :end',
+    'no_audit_activity'                         => 'Geen activiteit op betaalrekening <a href=":url" title=":account_name">:account_name</a> tussen :start en :end.',
+    'audit_end_balance'                         => 'Aan het einde van de dag, :end, was het saldo van betaalrekening <a href=":url" title=":account_name">:account_name</a> :balance',
 
     // charts:
     'dayOfMonth'                                => 'Dag vd maand',

@@ -35,31 +35,44 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ account.name }}</h3>
                     </div>
-
+                    {% set url = route('accounts.show',account.id) %}
                     {% if not auditData[account.id].exists %}
                         <div class="box-body">
+
                             <em>
-                                No activity was recorded
-                                on account <a href="{{ route('accounts.show',account.id) }}"
-                                              title="{{ account.name }}">{{ account.name }}</a>
-                                between
-                                {{ start }} and
-                                {{ end }}.
+                                {{ trans('firefly.no_audit_activity',
+                                    {
+                                        account_name: account.name,
+                                        url: url,
+                                        start: start.formatLocalized(monthAndDayFormat),
+                                        end: end.formatLocalized(monthAndDayFormat),
+                                    })|raw
+                                }}
                             </em>
                         </div>
                     {% else %}
                         <div class="box-body table-responsive no-padding">
                             <p style="padding:10px;">
-                                Account balance of <a href="{{ route('accounts.show',account.id) }}"
-                                                      title="{{ account.name }}">{{ account.name }}</a>
-                                at the end of {{ auditData[account.id].end }} was:
-                                {{ auditData[account.id].endBalance|formatAmount }}
+
+                                {{ trans('firefly.audit_end_balance',
+                                {
+                                    account_name: account.name,
+                                    url: url,
+                                    end: auditData[account.id].end,
+                                    balance: auditData[account.id].endBalance|formatAmount
+                                })|raw
+                                }}
                             </p>
                             {% include 'reports/partials/journals-audit.twig'  with {'journals': auditData[account.id].journals,'account':account} %}
                             <p style="padding:10px;">
-                                Account balance of <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
-                                at the end of {{ auditData[account.id].dayBefore }} was:
-                                {{ auditData[account.id].dayBeforeBalance|formatAmount }}
+                                {{ trans('firefly.audit_end_balance',
+                                {
+                                    account_name: account.name,
+                                    url: url,
+                                    end: auditData[account.id].dayBefore,
+                                    balance: auditData[account.id].dayBeforeBalance|formatAmount
+                                })|raw
+                                }}
                             </p>
                         </div>
                     {% endif %}
