@@ -1,0 +1,50 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
+{% endblock %}
+
+{% block content %}
+
+    {% for account in accounts %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ account.name }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {% if not auditData[account.id].exists %}
+                            <em>
+                                No activity was recorded
+                                on account <a href="{{ route('accounts.show',account.id) }}"
+                                              title="{{ account.name }}">{{ account.name }}</a>
+                                 between
+                                {{ start }} and
+                                {{ end }}.
+                            </em>
+                        {% else %}
+                        <p>
+                            Account balance of <a href="{{ route('accounts.show',account.id) }}"
+                                                  title="{{ account.name }}">{{ account.name }}</a>
+                            at the end of {{ auditData[account.id].end }} was:
+                            {{ auditData[account.id].endBalance|formatAmount }}
+                        </p>
+                            {% include 'list/journals-extended.twig'  with {'journals': auditData[account.id].journals,'account':account} %}
+                        <p>
+                            Account balance of <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+                            at the end of {{ auditData[account.id].dayBefore }} was:
+                            {{ auditData[account.id].dayBeforeBalance|formatAmount }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block scripts %}
+{% endblock %}

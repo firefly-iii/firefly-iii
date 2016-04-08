@@ -12,6 +12,7 @@ namespace FireflyIII\Events;
 
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 /**
  * Class TransactionJournalStored
@@ -34,6 +35,7 @@ class TransactionJournalStored extends Event
      */
     public function __construct(TransactionJournal $journal, int $piggyBankId)
     {
+        Log::debug('Created new TransactionJournalStored.');
         //
         $this->journal     = $journal;
         $this->piggyBankId = $piggyBankId;

@@ -34,6 +34,7 @@ class FireRulesForUpdate
      */
     public function handle(TransactionJournalUpdated $event): bool
     {
+        Log::debug('Now running FireRulesForUpdate because TransactionJournalUpdated fired.');
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
         $user   = Auth::user();
