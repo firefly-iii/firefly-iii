@@ -7,7 +7,7 @@ use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
 use Log;
@@ -102,21 +102,21 @@ class ReportController extends Controller
             $start = session('first');
         }
 
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_' . $reportType,
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+        View::share('subTitleIcon', 'fa-calendar');
+
         switch ($reportType) {
             default:
                 throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
             case 'default':
-
-                View::share(
-                    'subTitle', trans(
-                                  'firefly.report_default',
-                                  [
-                                      'start' => $start->formatLocalized($this->monthFormat),
-                                      'end'   => $end->formatLocalized($this->monthFormat),
-                                  ]
-                              )
-                );
-                View::share('subTitleIcon', 'fa-calendar');
 
                 // more than one year date difference means year report.
                 if ($start->diffInMonths($end) > 12) {
@@ -127,9 +127,10 @@ class ReportController extends Controller
                     return $this->defaultYear($reportType, $start, $end, $accounts);
                 }
 
+                // otherwise default
                 return $this->defaultMonth($reportType, $start, $end, $accounts);
             case 'audit':
-
+                // always default
                 return $this->auditReport($start, $end, $accounts);
         }
 
@@ -145,26 +146,14 @@ class ReportController extends Controller
      */
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        bcscale(2);
         /** @var ARI $repos */
-
-        $repos = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        View::share(
-            'subTitle', trans(
-                          'firefly.report_audit',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
-        );
-        View::share('subTitleIcon', 'fa-calendar');
-
+        $repos     = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $auditData = [];
         $dayBefore = clone $start;
         $dayBefore->subDay();
         /** @var Account $account */
         foreach ($accounts as $account) {
+
             // balance the day before:
             $id               = $account->id;
             $first            = $repos->oldestJournalDate($account);
@@ -173,34 +162,38 @@ class ReportController extends Controller
             $journals         = new Collection;
             $dayBeforeBalance = Steam::balance($account, $dayBefore);
 
+            /*
+             * Is there even activity on this account between the requested dates?
+             */
             if ($start->between($first, $last) || $end->between($first, $last)) {
                 $exists   = true;
                 $journals = $repos->getJournalsInRange($account, $start, $end);
-                $journals = $journals->reverse();
+
             }
-
-
+            /*
+             * Reverse set, get balances.
+             */
+            $journals     = $journals->reverse();
             $startBalance = $dayBeforeBalance;
+            /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
-                $journal->before = $startBalance;
+                $journal->before   = $startBalance;
+                $transactionAmount = $journal->source_amount;
 
                 // get currently relevant transaction:
-                $transaction = $journal->transactions->filter(
-                    function (Transaction $t) use ($account) {
-                        return $t->account_id === $account->id;
-                    }
-                )->first();
-
-                $newBalance     = bcadd($startBalance, $transaction->amount);
+                if (intval($journal->destination_account_id) === $account->id) {
+                    $transactionAmount = $journal->destination_amount;
+                }
+                $newBalance     = bcadd($startBalance, $transactionAmount);
                 $journal->after = $newBalance;
                 $startBalance   = $newBalance;
 
             }
 
-            $journals = $journals->reverse();
-
-
-            $auditData[$id]['journals']         = $journals;
+            /*
+             * Reverse set again.
+             */
+            $auditData[$id]['journals']         = $journals->reverse();
             $auditData[$id]['exists']           = $exists;
             $auditData[$id]['end']              = $end->formatLocalized(trans('config.month_and_day'));
             $auditData[$id]['endBalance']       = Steam::balance($account, $end);

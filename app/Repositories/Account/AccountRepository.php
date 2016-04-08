@@ -14,6 +14,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -254,6 +255,31 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns a list of transactions TO the given (asset) $account, but none from the
+     * given list of accounts
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
+    {
+        $ids      = $accounts->pluck('id')->toArray();
+        $journals = $this->user->transactionjournals()
+                               ->expanded()
+                               ->before($end)
+                               ->where('source_account.id', $account->id)
+                               ->whereIn('destination_account.id', $ids)
+                               ->after($start)
+                               ->get(TransactionJournal::QUERYFIELDS);
+
+        return $journals;
+    }
+
+    /**
      * @param Account $account
      * @param int     $page
      *
@@ -290,27 +316,16 @@ class AccountRepository implements AccountRepositoryInterface
     public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection
     {
         $query = $this->user
-                     ->transactionJournals()
-                     ->expanded()
-                     ->with(
-                         [
-                             'transactions' => function (HasMany $q) {
-                                 $q->orderBy('amount', 'ASC');
-                             },
-                             'transactionType',
-                             'transactionCurrency',
-                             'budgets',
-                             'categories',
-                             'bill',
-                         ]
-                     )
-                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->where('transactions.account_id', $account->id)
-                     ->after($start)
-                     ->before($end)
-                     ->orderBy('transaction_journals.date', 'DESC')
-                     ->orderBy('transaction_journals.order', 'ASC')
-                     ->orderBy('transaction_journals.id', 'DESC');
+            ->transactionJournals()
+            ->expanded()
+            ->where(
+                function (Builder $q) use ($account) {
+                    $q->where('destination_account.id', $account->id);
+                    $q->orWhere('source_account.id', $account->id);
+                }
+            )
+            ->after($start)
+            ->before($end);
 
         $set = $query->get(TransactionJournal::QUERYFIELDS);
 
@@ -334,7 +349,6 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($ids) > 0) {
             $accounts = $this->user->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
         }
-        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -374,8 +388,6 @@ class AccountRepository implements AccountRepositoryInterface
                                ->get(['accounts.*']);
         $start    = clone Session::get('start', new Carbon);
         $end      = clone Session::get('end', new Carbon);
-
-        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -760,30 +772,5 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
 
-    }
-
-    /**
-     * Returns a list of transactions TO the given (asset) $account, but none from the
-     * given list of accounts
-     *
-     * @param Account    $account
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $ids      = $accounts->pluck('id')->toArray();
-        $journals = $this->user->transactionjournals()
-                               ->expanded()
-                               ->before($end)
-                               ->where('source_account.id', $account->id)
-                               ->whereIn('destination_account.id', $ids)
-                               ->after($start)
-                               ->get(TransactionJournal::QUERYFIELDS);
-
-        return $journals;
     }
 }
