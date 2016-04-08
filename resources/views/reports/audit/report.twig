@@ -6,6 +6,28 @@
 
 {% block content %}
 
+    <!-- options block -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <ul class="list-inline">
+                        {% for hide in hideable %}
+                            <li><input
+                                        {% if hide in defaultShow %}checked{% endif %}
+                                        type="checkbox" class="audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}" /> <label for="option_{{ hide }}" style="font-weight:normal;">{{ trans('list.'~hide) }}</label></li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {% for account in accounts %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -13,31 +35,34 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ account.name }}</h3>
                     </div>
-                    <div class="box-body">
-                        {% if not auditData[account.id].exists %}
+
+                    {% if not auditData[account.id].exists %}
+                        <div class="box-body">
                             <em>
                                 No activity was recorded
                                 on account <a href="{{ route('accounts.show',account.id) }}"
                                               title="{{ account.name }}">{{ account.name }}</a>
-                                 between
+                                between
                                 {{ start }} and
                                 {{ end }}.
                             </em>
-                        {% else %}
-                        <p>
-                            Account balance of <a href="{{ route('accounts.show',account.id) }}"
-                                                  title="{{ account.name }}">{{ account.name }}</a>
-                            at the end of {{ auditData[account.id].end }} was:
-                            {{ auditData[account.id].endBalance|formatAmount }}
-                        </p>
-                            {% include 'list/journals-extended.twig'  with {'journals': auditData[account.id].journals,'account':account} %}
-                        <p>
-                            Account balance of <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
-                            at the end of {{ auditData[account.id].dayBefore }} was:
-                            {{ auditData[account.id].dayBeforeBalance|formatAmount }}
-                        </p>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% else %}
+                        <div class="box-body table-responsive no-padding">
+                            <p style="padding:10px;">
+                                Account balance of <a href="{{ route('accounts.show',account.id) }}"
+                                                      title="{{ account.name }}">{{ account.name }}</a>
+                                at the end of {{ auditData[account.id].end }} was:
+                                {{ auditData[account.id].endBalance|formatAmount }}
+                            </p>
+                            {% include 'reports/partials/journals-audit.twig'  with {'journals': auditData[account.id].journals,'account':account} %}
+                            <p style="padding:10px;">
+                                Account balance of <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+                                at the end of {{ auditData[account.id].dayBefore }} was:
+                                {{ auditData[account.id].dayBeforeBalance|formatAmount }}
+                            </p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -47,4 +72,8 @@
 {% block styles %}
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript">
+        var hideable = {{ hideable|json_encode|raw }};
+    </script>
+    <script type="text/javascript" src="js/reports/audit/all.js"></script>
 {% endblock %}

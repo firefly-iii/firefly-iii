@@ -130,6 +130,15 @@ interface AccountRepositoryInterface
     public function getJournals(Account $account, int $page): LengthAwarePaginator;
 
     /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection;
+
+    /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
@@ -150,6 +159,24 @@ interface AccountRepositoryInterface
      * @return string
      */
     public function leftOnAccount(Account $account, Carbon $date): string;
+
+    /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon;
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function oldestJournalDate(Account $account): Carbon;
 
     /**
      * @param Account $account

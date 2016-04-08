@@ -7,11 +7,13 @@ use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Session;
+use Steam;
 use View;
 
 /**
@@ -128,22 +130,94 @@ class ReportController extends Controller
                 return $this->defaultMonth($reportType, $start, $end, $accounts);
             case 'audit':
 
-                View::share(
-                    'subTitle', trans(
-                                  'firefly.report_audit',
-                                  [
-                                      'start' => $start->formatLocalized($this->monthFormat),
-                                      'end'   => $end->formatLocalized($this->monthFormat),
-                                  ]
-                              )
-                );
-                View::share('subTitleIcon', 'fa-calendar');
-
-                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
-                break;
+                return $this->auditReport($start, $end, $accounts);
         }
 
 
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return View
+     */
+    private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        bcscale(2);
+        /** @var ARI $repos */
+
+        $repos = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_audit',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+        View::share('subTitleIcon', 'fa-calendar');
+
+        $auditData = [];
+        $dayBefore = clone $start;
+        $dayBefore->subDay();
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            // balance the day before:
+            $id               = $account->id;
+            $first            = $repos->oldestJournalDate($account);
+            $last             = $repos->newestJournalDate($account);
+            $exists           = false;
+            $journals         = new Collection;
+            $dayBeforeBalance = Steam::balance($account, $dayBefore);
+
+            if ($start->between($first, $last) || $end->between($first, $last)) {
+                $exists   = true;
+                $journals = $repos->getJournalsInRange($account, $start, $end);
+                $journals = $journals->reverse();
+            }
+
+
+            $startBalance = $dayBeforeBalance;
+            foreach ($journals as $journal) {
+                $journal->before = $startBalance;
+
+                // get currently relevant transaction:
+                $transaction = $journal->transactions->filter(
+                    function (Transaction $t) use ($account) {
+                        return $t->account_id === $account->id;
+                    }
+                )->first();
+
+                $newBalance     = bcadd($startBalance, $transaction->amount);
+                $journal->after = $newBalance;
+                $startBalance   = $newBalance;
+
+            }
+
+            $journals = $journals->reverse();
+
+
+            $auditData[$id]['journals']         = $journals;
+            $auditData[$id]['exists']           = $exists;
+            $auditData[$id]['end']              = $end->formatLocalized(trans('config.month_and_day'));
+            $auditData[$id]['endBalance']       = Steam::balance($account, $end);
+            $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(trans('config.month_and_day'));
+            $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
+        }
+
+
+        $reportType = 'audit';
+        $accountIds = join(',', $accounts->pluck('id')->toArray());
+
+        $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'book_date', 'process_date', 'interest_date',
+                        'from', 'to', 'budget', 'category', 'bill', 'create_date', 'update_date',
+        ];
+        $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
+
+        return view('reports.audit.report', compact('start', 'end', 'reportType', 'accountIds', 'accounts', 'auditData', 'hideable', 'defaultShow'));
     }
 
     /**

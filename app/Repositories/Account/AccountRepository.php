@@ -281,6 +281,43 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection
+    {
+        $query = $this->user
+                     ->transactionJournals()
+                     ->expanded()
+                     ->with(
+                         [
+                             'transactions' => function (HasMany $q) {
+                                 $q->orderBy('amount', 'ASC');
+                             },
+                             'transactionType',
+                             'transactionCurrency',
+                             'budgets',
+                             'categories',
+                             'bill',
+                         ]
+                     )
+                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('transactions.account_id', $account->id)
+                     ->after($start)
+                     ->before($end)
+                     ->orderBy('transaction_journals.date', 'DESC')
+                     ->orderBy('transaction_journals.order', 'ASC')
+                     ->orderBy('transaction_journals.id', 'DESC');
+
+        $set = $query->get(TransactionJournal::QUERYFIELDS);
+
+        return $set;
+    }
+
+    /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
@@ -385,6 +422,56 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $balance;
 
+    }
+
+    /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon
+    {
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::
+        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->orderBy('transaction_journals.date', 'ASC')
+                                     ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            $date = new Carbon;
+            $date->addYear(); // in the future.
+        } else {
+            $date = $journal->date;
+        }
+
+        return $date;
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function oldestJournalDate(Account $account): Carbon
+    {
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::
+        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->orderBy('transaction_journals.date', 'DESC')
+                                     ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            $date = new Carbon;
+            $date->addYear(); // in the future.
+        } else {
+            $date = $journal->date;
+        }
+
+        return $date;
     }
 
     /**
