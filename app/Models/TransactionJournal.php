@@ -216,7 +216,7 @@ class TransactionJournal extends TransactionJournalSupport
      *
      * @return string
      */
-    public function getMeta($fieldName): string
+    public function getMeta($fieldName)
     {
         foreach ($this->transactionjournalmeta as $meta) {
             if ($meta->name == $fieldName) {
