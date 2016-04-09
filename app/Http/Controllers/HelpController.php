@@ -28,7 +28,8 @@ class HelpController extends Controller
      */
     public function show(HelpInterface $help, string $route)
     {
-        $content = [
+        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $content  = [
             'text'  => '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>',
             'title' => 'Help',
         ];
@@ -41,17 +42,17 @@ class HelpController extends Controller
 
         if ($help->inCache($route)) {
             $content = [
-                'text'  => $help->getFromCache('help.' . $route . '.text'),
-                'title' => $help->getFromCache('help.' . $route . '.title'),
+                'text'  => $help->getFromCache('help.' . $route . '.text.' . $language),
+                'title' => $help->getFromCache('help.' . $route . '.title.' . $language),
             ];
 
             return Response::json($content);
         }
-        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+
         Log::debug('Will get help from Github for language "' . $language . '" and route "' . $route . '".');
         $content = $help->getFromGithub($language, $route);
 
-        $help->putInCache($route, $content);
+        $help->putInCache($route, $language, $content);
 
         return Response::json($content);
 
