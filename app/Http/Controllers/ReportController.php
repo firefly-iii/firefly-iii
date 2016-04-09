@@ -132,6 +132,10 @@ class ReportController extends Controller
             case 'audit':
                 // always default
                 return $this->auditReport($start, $end, $accounts);
+            case 'meta-history':
+                // always default
+                return $this->metaHistoryReport($start, $end, $accounts);
+                break;
         }
 
 

@@ -656,6 +656,8 @@ return [
     'report_type'                               => 'Report type',
     'report_type_default'                       => 'Default financial report',
     'report_type_audit'                         => 'Transaction history overview (audit)',
+    'report_type_meta-history'                  => 'Categories, budgets and bills overview',
+    'more_info_help'                            => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
     'report_included_accounts'                  => 'Included accounts',
     'report_date_range'                         => 'Date range',
     'report_include_help'                       => 'In all cases, transfers to shared accounts count as expenses, and transfers from shared accounts count as income.',

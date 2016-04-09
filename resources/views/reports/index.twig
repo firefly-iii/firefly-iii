@@ -12,7 +12,9 @@
                     <h3 class="box-title">{{ 'reports'|_ }}</h3>
                 </div>
                 <div class="box-body">
-
+                    <p class="text-info">
+                        {{ 'more_info_help'|_ }}
+                    </p>
                     <form class="form-horizontal" id="report-form" action="{{ route('reports.index') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <div class="form-group">
@@ -22,6 +24,7 @@
                                 <select name="report_type" class="form-control" id="inputReportType">
                                     <option selected label="{{ 'report_type_default'|_ }}" value="default">{{ 'report_type_default'|_ }}</option>
                                     <option label="{{ 'report_type_audit'|_ }}" value="audit">{{ 'report_type_audit'|_ }}</option>
+                                    <option label="{{ 'report_type_meta-history'|_ }}" value="meta-history">{{ 'report_type_meta-history'|_ }}</option>
                                 </select>
                             </div>
                         </div>
