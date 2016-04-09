@@ -31,6 +31,7 @@ return [
     'bounced_error'                             => 'Het emailtje naar :email kwam nooit aan.',
     'deleted_error'                             => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                     => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
+    'expired_error'                             => 'Je account is verlopen, je kan helaas niet inloggen.',
     'removed_amount'                            => ':amount weggehaald',
     'added_amount'                              => ':amount toegevoegd',
     'asset_account_role_help'                   => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
