@@ -166,9 +166,9 @@
                     <div class="box-body">
                         {% for index,budget in inactive %}
                             {% if index != inactive|length-1 %}
-                                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
-                            {% else %}
                                 <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
+                            {% else %}
+                                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
                             {% endif %}
                         {% endfor %}
                     </div>
