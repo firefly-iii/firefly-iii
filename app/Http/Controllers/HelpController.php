@@ -29,7 +29,7 @@ class HelpController extends Controller
     public function show(HelpInterface $help, string $route)
     {
         $content = [
-            'text'  => '<p>There is no help for this route!</p>',
+            'text'  => '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>',
             'title' => 'Help',
         ];
 
@@ -48,7 +48,8 @@ class HelpController extends Controller
             return Response::json($content);
         }
         $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $content  = $help->getFromGithub($language, $route);
+        Log::debug('Will get help from Github for language "' . $language . '" and route "' . $route . '".');
+        $content = $help->getFromGithub($language, $route);
 
         $help->putInCache($route, $content);
 
