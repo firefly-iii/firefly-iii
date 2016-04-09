@@ -32,6 +32,7 @@ return [
     'deleted_error'                             => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                     => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
     'expired_error'                             => 'Je account is verlopen, je kan helaas niet inloggen.',
+    'unbalanced_error'                          => 'Je kasboek is uit balans. Dat betekent dat er een uitgave, inkomsten of overschrijving niet netjes is opgeslagen. Kijk goed of je ergens een fout kan vinden (afwijkend bedrag: :amount).',
     'removed_amount'                            => ':amount weggehaald',
     'added_amount'                              => ':amount toegevoegd',
     'asset_account_role_help'                   => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',

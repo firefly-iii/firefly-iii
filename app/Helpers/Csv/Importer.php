@@ -144,11 +144,9 @@ class Importer
     }
 
     /**
-     * FIXME can return text
-     * 
      * @return TransactionJournal|string
      */
-    protected function createTransactionJournal(): TransactionJournal
+    protected function createTransactionJournal()
     {
         $date = $this->importData['date'];
         if (is_null($this->importData['date'])) {

@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Artisan;
 use Carbon\Carbon;
 use Config;
@@ -120,11 +121,7 @@ class HomeController extends Controller
         $sum = $repository->sumOfEverything();
 
         if (bccomp($sum, '0') !== 0) {
-            Session::flash(
-                'error', 'Your transactions are unbalanced. This means a'
-                         . ' withdrawal, deposit or transfer was not stored properly. '
-                         . 'Please check your accounts and transactions for errors (' . $sum . ').'
-            );
+            Session::flash('error', strval(trans('firefly.unbalanced_error', ['amount' => Amount::format($sum,false)])));
         }
 
         foreach ($accounts as $account) {

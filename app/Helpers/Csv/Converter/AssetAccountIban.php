@@ -6,6 +6,7 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Log;
 
 /**
  * Class AssetAccountIban
@@ -26,6 +27,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = $repository->find($this->mapped[$this->index][$this->value]);
+            Log::debug('Found mapped account for value "' . $this->value . '". It is account #' . $account->id);
 
             return $account;
         }
@@ -36,10 +38,14 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             /** @var Account $entry */
             foreach ($set as $entry) {
                 if ($entry->iban == $this->value) {
+                    Log::debug('Found an account with the same IBAN ("' . $this->value . '"). It is account #' . $entry->id);
 
                     return $entry;
                 }
             }
+
+            Log::debug('Found no account with the same IBAN ("' . $this->value . '"), so will create a new one.');
+
             // create it if doesn't exist.
             $accountData = [
                 'name'                   => $this->value,
@@ -48,13 +54,12 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
                 'virtualBalanceCurrency' => 1, // hard coded.
                 'active'                 => true,
                 'user'                   => Auth::user()->id,
-                'iban'                   => null,
+                'iban'                   => $this->value,
                 'accountNumber'          => $this->value,
                 'accountRole'            => null,
                 'openingBalance'         => 0,
                 'openingBalanceDate'     => new Carbon,
                 'openingBalanceCurrency' => 1, // hard coded.
-
             ];
 
             $account = $repository->store($accountData);

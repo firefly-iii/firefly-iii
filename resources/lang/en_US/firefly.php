@@ -32,6 +32,7 @@ return [
     'deleted_error'                             => 'These credentials do not match our records.',
     'general_blocked_error'                     => 'Your account has been disabled, so you cannot login.',
     'expired_error'                             => 'Your account has expired, and can no longer be used.',
+    'unbalanced_error'                          => 'Your transactions are unbalanced. This means a withdrawal, deposit or transfer was not stored properly. Please check your accounts and transactions for errors (unbalanced amount :amount).',
     'removed_amount'                            => 'Removed :amount',
     'added_amount'                              => 'Added :amount',
     'asset_account_role_help'                   => 'Any extra options resulting from your choice can be set later.',
