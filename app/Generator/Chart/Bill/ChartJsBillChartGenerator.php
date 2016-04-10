@@ -74,14 +74,17 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
         }
 
         $data['datasets'][] = [
+            'type'  => 'bar',
             'label' => trans('firefly.minAmount'),
             'data'  => $minAmount,
         ];
         $data['datasets'][] = [
+            'type'  => 'line',
             'label' => trans('firefly.billEntry'),
             'data'  => $actualAmount,
         ];
         $data['datasets'][] = [
+            'type'  => 'bar',
             'label' => trans('firefly.maxAmount'),
             'data'  => $maxAmount,
         ];

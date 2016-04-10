@@ -160,6 +160,11 @@ var defaultColumnOptions = {
             }
         }]
     },
+    elements: {
+        line: {
+            fill: false
+        }
+    },
     tooltips: {
         mode: 'label',
         callbacks: {
@@ -302,7 +307,6 @@ function columnChart(URL, container, options) {
             dataset.backgroundColor = fillColors[i];
             newData.datasets.push(dataset);
         }
-        //new Chart(ctx).Bar(newData, defaultColumnOptions);
         new Chart(ctx, {
             type: 'bar',
             data: data,
