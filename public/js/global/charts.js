@@ -68,6 +68,13 @@ Chart.defaults.global.maintainAspectRatio = false;
  */
 var defaultAreaOptions = {
     scales: {
+        xAxes: [
+            {
+                gridLines: {
+                    display: false
+                }
+            }
+        ],
         yAxes: [{
             display: true,
             ticks: {
@@ -104,20 +111,14 @@ var defaultPieOptions = {
 
 
 var defaultLineOptions = {
-    // scaleShowGridLines: false,
-    // pointDotRadius: 2,
-    // datasetStrokeWidth: 1,
-    // pointHitDetectionRadius: 5,
-    // animation: false,
-    // datasetFill: false,
-    // scaleFontSize: 10,
-    // responsive: false,
-    // scaleLabel: " <%= accounting.formatMoney(value) %>",
-    // tooltipFillColor: "rgba(0,0,0,0.5)",
-    // tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
-    // multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
-
     scales: {
+        xAxes: [
+            {
+                gridLines: {
+                    display: false
+                }
+            }
+        ],
         yAxes: [{
             display: true,
             ticks: {
@@ -142,6 +143,13 @@ var defaultLineOptions = {
 
 var defaultColumnOptions = {
     scales: {
+        xAxes: [
+            {
+                gridLines: {
+                    display: false
+                }
+            }
+        ],
         yAxes: [{
             ticks: {
                 callback: function (tickValue, index, ticks) {
@@ -167,7 +175,10 @@ var defaultStackedColumnOptions = {
     stacked: true,
     scales: {
         xAxes: [{
-            stacked: true
+            stacked: true,
+            gridLines: {
+                display: false
+            }
         }],
         yAxes: [{
             stacked: true,
