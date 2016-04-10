@@ -103,7 +103,8 @@ var defaultPieOptions = {
         callbacks: {
             label: function (tooltipItem, data) {
                 "use strict";
-                return data.labels[tooltipItem.datasetIndex] + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+                var value = data.datasets[0].data[tooltipItem.index];
+                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
             }
         }
     }
