@@ -60,6 +60,9 @@ for (var i = 0; i < colourSet.length; i++) {
 
 Chart.defaults.global.legend.display = false;
 Chart.defaults.global.animation.duration = 0;
+Chart.defaults.global.responsive = true;
+Chart.defaults.global.maintainAspectRatio = false;
+
 /*
  Set default options:
  */
