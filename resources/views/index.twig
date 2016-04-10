@@ -243,17 +243,17 @@
 {% block scripts %}
     <!-- show tour? -->
     <script type="text/javascript">
+        var showTour;
         {% if showTour %}
-        var showTour = true;
+        showTour = true;
         {% else %}
-        var showTour = false;
+        showTour = false;
         {% endif %}
     </script>
 
 
-    <script type="text/javascript" src="js/Chart.min.js"></script>
-    <script type="text/javascript" src="js/Chart.StackedBar.js"></script>
-    <script type="text/javascript" src="js/charts.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/global/charts.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
 {% endblock %}
 {% block styles %}

@@ -31,18 +31,15 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
     public function frontpage(string $paid, string $unpaid): array
     {
         $data = [
-            [
-                'value'     => round($unpaid, 2),
-                'color'     => 'rgba(53, 124, 165,0.7)',
-                'highlight' => 'rgba(53, 124, 165,0.9)',
-                'label'     => trans('firefly.unpaid'),
+            'datasets' => [
+                [
+                    'data'            => [round($unpaid, 2), round(bcmul($paid, '-1'), 2)],
+                    'backgroundColor' => ['rgba(53, 124, 165,0.7)', 'rgba(0, 141, 76, 0.7)',],
+                ],
+
             ],
-            [
-                'value'     => round(bcmul($paid, '-1'), 2), // paid is negative, must be positive.
-                'color'     => 'rgba(0, 141, 76, 0.7)',
-                'highlight' => 'rgba(0, 141, 76, 0.9)',
-                'label'     => trans('firefly.paid'),
-            ],
+            'labels'   => [strval(trans('firefly.unpaid')), strval(trans('firefly.paid'))],
+
         ];
 
         return $data;

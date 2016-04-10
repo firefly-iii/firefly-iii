@@ -1,3 +1,11 @@
+/*
+ * charts.js
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 /* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits */
 
 /*
@@ -20,7 +28,7 @@ var colourSet = [
     [92, 107, 192],
     [240, 98, 146],
     [0, 121, 107],
-    [194, 24, 91],
+    [194, 24, 91]
 
 ];
 
@@ -50,82 +58,134 @@ for (var i = 0; i < colourSet.length; i++) {
     strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
 }
 
+Chart.defaults.global.legend.display = false;
+Chart.defaults.global.animation.duration = 0;
 /*
  Set default options:
  */
 var defaultAreaOptions = {
-    scaleShowGridLines: false,
-    pointDotRadius: 2,
-    datasetStrokeWidth: 1,
-    pointHitDetectionRadius: 5,
-    datasetFill: true,
-    animation: false,
-    scaleFontSize: 10,
-    responsive: false,
-    scaleLabel: " <%= accounting.formatMoney(value) %>",
-    tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
+    scales: {
+        yAxes: [{
+            display: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                }
+            }
+        }]
+    },
+    tooltips: {
+        mode: 'label',
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+            }
+        }
+    }
 };
 
 
 var defaultPieOptions = {
-    scaleShowGridLines: false,
-    pointDotRadius: 2,
-    datasetStrokeWidth: 1,
-    pointHitDetectionRadius: 5,
-    datasetFill: false,
-    animation: false,
-    scaleFontSize: 10,
-    responsive: false,
-    tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
-
+    tooltips: {
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                return data.labels[tooltipItem.datasetIndex] + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+            }
+        }
+    }
 };
 
 
 var defaultLineOptions = {
-    scaleShowGridLines: false,
-    pointDotRadius: 2,
-    datasetStrokeWidth: 1,
-    pointHitDetectionRadius: 5,
-    animation: false,
-    datasetFill: false,
-    scaleFontSize: 10,
-    responsive: false,
-    scaleLabel: " <%= accounting.formatMoney(value) %>",
-    tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
+    // scaleShowGridLines: false,
+    // pointDotRadius: 2,
+    // datasetStrokeWidth: 1,
+    // pointHitDetectionRadius: 5,
+    // animation: false,
+    // datasetFill: false,
+    // scaleFontSize: 10,
+    // responsive: false,
+    // scaleLabel: " <%= accounting.formatMoney(value) %>",
+    // tooltipFillColor: "rgba(0,0,0,0.5)",
+    // tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
+    // multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
+
+    scales: {
+        yAxes: [{
+            display: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                }
+            }
+        }]
+    },
+    tooltips: {
+        mode: 'label',
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+            }
+        }
+    }
 };
 
 var defaultColumnOptions = {
-    scaleShowGridLines: false,
-    pointDotRadius: 2,
-    barStrokeWidth: 1,
-    pointHitDetectionRadius: 5,
-    datasetFill: false,
-    scaleFontSize: 10,
-    responsive: false,
-    animation: false,
-    scaleLabel: "<%= accounting.formatMoney(value) %>",
-    tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%> <%= accounting.formatMoney(value) %>",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
+    scales: {
+        yAxes: [{
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                }
+            }
+        }]
+    },
+    tooltips: {
+        mode: 'label',
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+            }
+        }
+    }
 };
 
 var defaultStackedColumnOptions = {
-    scaleShowGridLines: false,
-    pointDotRadius: 2,
-    barStrokeWidth: 1,
-    pointHitDetectionRadius: 5,
-    datasetFill: false,
-    animation: false,
-    scaleFontSize: 10,
-    responsive: false,
-    scaleLabel: "<%= accounting.formatMoney(value) %>",
-    tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= accounting.formatMoney(value) %>"
+    stacked: true,
+    scales: {
+        xAxes: [{
+            stacked: true
+        }],
+        yAxes: [{
+            stacked: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
 
+                }
+            }
+        }]
+    },
+    tooltips: {
+        mode: 'label',
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+            }
+        }
+    }
 };
 
 /**
@@ -137,6 +197,7 @@ var defaultStackedColumnOptions = {
 function lineChart(URL, container, options) {
     "use strict";
     $.getJSON(URL).done(function (data) {
+
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
         newData.datasets = [];
@@ -144,15 +205,15 @@ function lineChart(URL, container, options) {
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
-            dataset.fillColor = fillColors[i];
-            dataset.strokeColor = strokePointHighColors[i];
-            dataset.pointColor = strokePointHighColors[i];
-            dataset.pointStrokeColor = "#fff";
-            dataset.pointHighlightFill = "#fff";
-            dataset.pointHighlightStroke = strokePointHighColors[i];
+            dataset.backgroundColor = fillColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Line(newData, defaultLineOptions);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: defaultLineOptions
+        });
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -178,15 +239,15 @@ function areaChart(URL, container, options) {
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
-            dataset.fillColor = fillColors[i];
-            dataset.strokeColor = strokePointHighColors[i];
-            dataset.pointColor = strokePointHighColors[i];
-            dataset.pointStrokeColor = "#fff";
-            dataset.pointHighlightFill = "#fff";
-            dataset.pointHighlightStroke = strokePointHighColors[i];
+            dataset.backgroundColor = fillColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Line(newData, defaultAreaOptions);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: newData,
+            options: defaultAreaOptions
+        });
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -224,15 +285,15 @@ function columnChart(URL, container, options) {
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
-            dataset.fillColor = fillColors[i];
-            dataset.strokeColor = strokePointHighColors[i];
-            dataset.pointColor = strokePointHighColors[i];
-            dataset.pointStrokeColor = "#fff";
-            dataset.pointHighlightFill = "#fff";
-            dataset.pointHighlightStroke = strokePointHighColors[i];
+            dataset.backgroundColor = fillColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Bar(newData, defaultColumnOptions);
+        //new Chart(ctx).Bar(newData, defaultColumnOptions);
+        new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: defaultColumnOptions
+        });
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -270,15 +331,15 @@ function stackedColumnChart(URL, container, options) {
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
-            dataset.fillColor = fillColors[i];
-            dataset.strokeColor = strokePointHighColors[i];
-            dataset.pointColor = strokePointHighColors[i];
-            dataset.pointStrokeColor = "#fff";
-            dataset.pointHighlightFill = "#fff";
-            dataset.pointHighlightStroke = strokePointHighColors[i];
+            dataset.backgroundColor = fillColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).StackedBar(newData, defaultStackedColumnOptions);
+        new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: defaultStackedColumnOptions
+        });
+
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
@@ -298,7 +359,11 @@ function pieChart(URL, container, options) {
     $.getJSON(URL).done(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
-        new Chart(ctx).Pie(data, defaultPieOptions);
+        new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: defaultPieOptions
+        });
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
