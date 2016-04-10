@@ -33,7 +33,7 @@ interface CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listCategories(): Collection;
+    public function getCategories(): Collection;
 
     /**
      * This method returns a very special collection for each category:

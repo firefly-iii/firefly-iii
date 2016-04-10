@@ -9,6 +9,8 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -132,10 +134,6 @@ class ReportController extends Controller
             case 'audit':
                 // always default
                 return $this->auditReport($start, $end, $accounts);
-            case 'meta-history':
-                // always default
-                return $this->metaHistoryReport($start, $end, $accounts);
-                break;
         }
 
 
@@ -274,7 +272,7 @@ class ReportController extends Controller
         $expenseTopLength = 8;
         // list of users stuff:
         $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
-        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->listCategories();
+        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->getCategories();
         $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
@@ -335,6 +333,4 @@ class ReportController extends Controller
             )
         );
     }
-
-
 }

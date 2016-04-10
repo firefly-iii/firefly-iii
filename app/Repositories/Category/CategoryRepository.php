@@ -90,7 +90,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function listCategories(): Collection
+    public function getCategories(): Collection
     {
         /** @var Collection $set */
         $set = $this->user->categories()->orderBy('name', 'ASC')->get();
