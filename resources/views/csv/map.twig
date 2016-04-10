@@ -48,8 +48,10 @@
                         <div class="box-body no-padding">
                             <table class="table table-hover">
                                 <thead>
-                                <th style="width:50%;">{{ 'csv_field_value'|_ }}</th>
-                                <th>{{ 'csv_field_mapped_to'|_ }}</th>
+                                <tr>
+                                    <th style="width:50%;">{{ 'csv_field_value'|_ }}</th>
+                                    <th>{{ 'csv_field_mapped_to'|_ }}</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 {% for value in values[index] %}

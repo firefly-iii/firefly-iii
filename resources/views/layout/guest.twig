@@ -16,9 +16,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all"/>
-    <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" type="text/css" media="all"/>
+    <link href="lib/adminlte/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/firefly.css" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
@@ -38,9 +38,9 @@
     {% block content %}{% endblock %}
 </div>
 <!-- /.login-box -->
-<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/guest.js"></script>
+<script type="text/javascript" src="js/lib/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/ff/guest.js"></script>
 
 {% if env('ANALYTICS_ID','') != '' %}
     <script>

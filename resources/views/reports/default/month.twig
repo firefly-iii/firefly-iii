@@ -72,9 +72,9 @@
 {% endblock %}
 {% block scripts %}
 
-    <script type="text/javascript" src="js/bootstrap-sortable.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/global/charts.js"></script>
+    <script type="text/javascript" src="js/ff/charts.js"></script>
     <script type="text/javascript">
         var year = {{ start.year }};
         var month = {{ start.month }};
@@ -94,6 +94,6 @@
         var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
         var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
     </script>
-    <script type="text/javascript" src="js/reports/default/all.js"></script>
-    <script type="text/javascript" src="js/reports/default/month.js"></script>
+    <script type="text/javascript" src="js/ff/reports/default/all.js"></script>
+    <script type="text/javascript" src="js/ff/reports/default/month.js"></script>
 {% endblock %}

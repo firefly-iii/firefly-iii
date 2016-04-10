@@ -118,7 +118,7 @@
                                     </td>
                                     <td>
                                         <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                        <a href="{{ route('attachments.download', att.id) }}" tle="{{ att.filename }}">
+                                        <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
                                             {% if att.title %}
                                                 {{ att.title }}
                                             {% else %}
@@ -132,7 +132,7 @@
                                         {% endif %}
                                     </td>
                                     <td style="width:100px;">
-                                        <img src="{{ route('attachments.preview', att.id) }}"></img>
+                                        <img src="{{ route('attachments.preview', att.id) }}" />
                                     </td>
                                 </tr>
                             {% endfor %}
