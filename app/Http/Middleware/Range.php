@@ -69,7 +69,7 @@ class Range
                 /** @var \FireflyIII\Repositories\Journal\JournalRepositoryInterface $repository */
                 $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
                 $journal    = $repository->first();
-                if ($journal) {
+                if (!is_null($journal->id)) {
                     Session::put('first', $journal->date);
                 } else {
                     Session::put('first', Carbon::now()->startOfYear());

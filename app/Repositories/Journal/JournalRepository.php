@@ -59,6 +59,9 @@ class JournalRepository implements JournalRepositoryInterface
     public function first(): TransactionJournal
     {
         $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        if (is_null($entry)) {
+            return new TransactionJournal;
+        }
 
         return $entry;
     }
