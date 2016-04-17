@@ -92,12 +92,12 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
             'data'  => $overspent,
         ];
         $data['datasets'][] = [
-            'label' => trans('firefly.spent'),
-            'data'  => $spent,
-        ];
-        $data['datasets'][] = [
             'label' => trans('firefly.left'),
             'data'  => $left,
+        ];
+        $data['datasets'][] = [
+            'label' => trans('firefly.spent'),
+            'data'  => $spent,
         ];
 
         $data['count'] = 3;
