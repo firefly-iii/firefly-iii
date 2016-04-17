@@ -87,7 +87,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
 
         $budgetRepos->shouldReceive('getActiveBudgets')->once()->andReturn(new Collection);
-        $categoryRepos->shouldReceive('listCategories')->once()->andReturn(new Collection);
+        $categoryRepos->shouldReceive('getCategories')->once()->andReturn(new Collection);
 
 
         $accountHelper->shouldReceive('getAccountReport')->once()->andReturn(new AccountCollection);
