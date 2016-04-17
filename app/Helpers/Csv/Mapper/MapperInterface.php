@@ -12,5 +12,5 @@ interface MapperInterface
     /**
      * @return array
      */
-    public function getMap();
+    public function getMap(): array;
 }

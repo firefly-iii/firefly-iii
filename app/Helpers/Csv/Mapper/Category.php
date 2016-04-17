@@ -16,7 +16,7 @@ class Category implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $result = Auth::user()->categories()->get(['categories.*']);
         $list   = [];

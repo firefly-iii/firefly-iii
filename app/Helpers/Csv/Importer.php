@@ -4,19 +4,15 @@ namespace FireflyIII\Helpers\Csv;
 
 use Auth;
 use Config;
+use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
 use FireflyIII\Helpers\Csv\PostProcessing\PostProcessorInterface;
 use FireflyIII\Helpers\Csv\Specifix\SpecifixInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Rules\Processor;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -57,7 +53,7 @@ class Importer
      *
      * @return array
      */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
@@ -67,7 +63,7 @@ class Importer
      *
      * @return int
      */
-    public function getImported()
+    public function getImported(): int
     {
         return $this->imported;
     }
@@ -75,7 +71,7 @@ class Importer
     /**
      * @return Collection
      */
-    public function getJournals()
+    public function getJournals(): Collection
     {
         return $this->journals;
     }
@@ -85,7 +81,7 @@ class Importer
      *
      * @return int
      */
-    public function getRows()
+    public function getRows(): int
     {
         return $this->rows;
     }
@@ -93,7 +89,7 @@ class Importer
     /**
      * @return array
      */
-    public function getSpecifix()
+    public function getSpecifix(): array
     {
         return is_array($this->specifix) ? $this->specifix : [];
     }
@@ -120,19 +116,13 @@ class Importer
                     Log::error('Caught error at row #' . $index . ': ' . $result);
                     $this->errors[$index] = $result;
                 } else {
-
-                    
                     $this->imported++;
                     $this->journals->push($result);
+                    event(new TransactionJournalStored($result, 0));
                 }
                 Log::debug('---');
             }
         }
-
-        // once all journals have been imported (or not)
-        // fire the rules.
-        $this->fireRules();
-
     }
 
     /**
@@ -144,7 +134,6 @@ class Importer
     }
 
     /**
-     *
      * @return TransactionJournal|string
      */
     protected function createTransactionJournal()
@@ -359,55 +348,6 @@ class Importer
         }
 
         return true;
-    }
-
-    /**
-     * @param Collection         $groups
-     * @param TransactionJournal $journal
-     */
-    private function fireRule(Collection $groups, TransactionJournal $journal)
-    {
-        /** @var RuleGroup $group */
-        foreach ($groups as $group) {
-
-            /** @var Rule $rule */
-            foreach ($group->rules as $rule) {
-                $processor = Processor::make($rule);
-                $processor->handleTransactionJournal($journal);
-                if ($rule->stop_processing) {
-                    break;
-                }
-            }
-        }
-    }
-
-    private function fireRules()
-    {
-        // get all users rules.
-        /** @var User $user */
-        $user   = Auth::user();
-        $groups = $user
-            ->ruleGroups()
-            ->where('rule_groups.active', 1)
-            ->orderBy('order', 'ASC')
-            ->with(
-                [
-                    'rules' => function (HasMany $q) {
-                        $q->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                          ->where('rule_triggers.trigger_type', 'user_action')
-                          ->where('rule_triggers.trigger_value', 'store-journal')
-                          ->where('rules.active', 1)
-                          ->orderBy('rules.order', 'ASC');
-                    },
-                ]
-            )
-            ->get();
-
-        /** @var TransactionJournal $journal */
-        foreach ($this->journals as $journal) {
-            $this->fireRule($groups, $journal);
-        }
-
     }
 
     /**

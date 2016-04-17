@@ -20,7 +20,7 @@ interface CurrencyRepositoryInterface
      *
      * @return int
      */
-    public function countJournals(TransactionCurrency $currency);
+    public function countJournals(TransactionCurrency $currency): int;
 
     /**
      * Find by ID
@@ -61,21 +61,21 @@ interface CurrencyRepositoryInterface
     /**
      * @return Collection
      */
-    public function get();
+    public function get(): Collection;
 
     /**
      * @param Preference $preference
      *
      * @return TransactionCurrency
      */
-    public function getCurrencyByPreference(Preference $preference);
+    public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
 
     /**
      * @param array $data
      *
      * @return TransactionCurrency
      */
-    public function store(array $data);
+    public function store(array $data): TransactionCurrency;
 
     /**
      * @param TransactionCurrency $currency
@@ -83,6 +83,6 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function update(TransactionCurrency $currency, array $data);
+    public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
 
 }

@@ -14,7 +14,6 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
- * @codeCoverageIgnore
  *
  * Class TwigSupport
  *

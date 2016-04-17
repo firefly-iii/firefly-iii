@@ -17,7 +17,6 @@ class Help implements HelpInterface
 {
 
     /**
-     * @codeCoverageIgnore
      *
      * @param string $key
      *
@@ -68,7 +67,6 @@ class Help implements HelpInterface
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param string $route
      *
@@ -80,7 +78,6 @@ class Help implements HelpInterface
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param string $route
      *
@@ -92,16 +89,16 @@ class Help implements HelpInterface
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param string $route
+     * @param string $language
      * @param array  $content
      *
      * @internal param $title
      */
-    public function putInCache(string $route, array $content)
+    public function putInCache(string $route, string $language, array $content)
     {
-        Cache::put('help.' . $route . '.text', $content['text'], 10080); // a week.
-        Cache::put('help.' . $route . '.title', $content['title'], 10080);
+        Cache::put('help.' . $route . '.text.' . $language, $content['text'], 10080); // a week.
+        Cache::put('help.' . $route . '.title.' . $language, $content['title'], 10080);
     }
 }

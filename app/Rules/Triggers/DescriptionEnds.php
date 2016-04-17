@@ -50,7 +50,7 @@ final class DescriptionEnds extends AbstractTrigger implements TriggerInterface
      *
      * @return bool
      */
-    public function triggered(TransactionJournal $journal)
+    public function triggered(TransactionJournal $journal): bool
     {
         $description       = strtolower($journal->description);
         $descriptionLength = strlen($description);

@@ -14,6 +14,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -62,7 +63,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param Account $moveTo
      *
-     * @return boolean
+     * @return bool
      */
     public function destroy(Account $account, Account $moveTo = null): bool
     {
@@ -174,7 +175,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids      = $accounts->pluck('id')->toArray();
         $journals = $this->user->transactionjournals()
@@ -254,12 +255,37 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns a list of transactions TO the given (asset) $account, but none from the
+     * given list of accounts
+     *
+     * @param Account    $account
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
+    {
+        $ids      = $accounts->pluck('id')->toArray();
+        $journals = $this->user->transactionjournals()
+                               ->expanded()
+                               ->before($end)
+                               ->where('source_account.id', $account->id)
+                               ->whereIn('destination_account.id', $ids)
+                               ->after($start)
+                               ->get(TransactionJournal::QUERYFIELDS);
+
+        return $journals;
+    }
+
+    /**
      * @param Account $account
      * @param int     $page
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, $page): LengthAwarePaginator
+    public function getJournals(Account $account, int $page): LengthAwarePaginator
     {
         $offset = ($page - 1) * 50;
         $query  = $this->user
@@ -281,6 +307,32 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection
+    {
+        $query = $this->user
+            ->transactionJournals()
+            ->expanded()
+            ->where(
+                function (Builder $q) use ($account) {
+                    $q->where('destination_account.id', $account->id);
+                    $q->orWhere('source_account.id', $account->id);
+                }
+            )
+            ->after($start)
+            ->before($end);
+
+        $set = $query->get(TransactionJournal::QUERYFIELDS);
+
+        return $set;
+    }
+
+    /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
@@ -297,7 +349,6 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($ids) > 0) {
             $accounts = $this->user->accounts()->whereIn('id', $ids)->where('accounts.active', 1)->get();
         }
-        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -337,8 +388,6 @@ class AccountRepository implements AccountRepositoryInterface
                                ->get(['accounts.*']);
         $start    = clone Session::get('start', new Carbon);
         $end      = clone Session::get('end', new Carbon);
-
-        bcscale(2);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -385,6 +434,56 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $balance;
 
+    }
+
+    /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon
+    {
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::
+        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->orderBy('transaction_journals.date', 'ASC')
+                                     ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            $date = new Carbon;
+            $date->addYear(); // in the future.
+        } else {
+            $date = $journal->date;
+        }
+
+        return $date;
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function oldestJournalDate(Account $account): Carbon
+    {
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::
+        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->orderBy('transaction_journals.date', 'DESC')
+                                     ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            $date = new Carbon;
+            $date->addYear(); // in the future.
+        } else {
+            $date = $journal->date;
+        }
+
+        return $date;
     }
 
     /**
@@ -449,7 +548,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return AccountMeta
      */
-    public function storeMeta($account, $name, $value): AccountMeta
+    public function storeMeta(Account $account, string $name, $value): AccountMeta
     {
         return AccountMeta::create(['name' => $name, 'data' => $value, 'account_id' => $account->id,]);
     }
@@ -542,9 +641,7 @@ class AccountRepository implements AccountRepositoryInterface
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
                 abort(500);
-                // @codeCoverageIgnoreStart
             }
-            // @codeCoverageIgnoreEnd
             $newAccount = $existingAccount;
 
         }
@@ -675,30 +772,5 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
 
-    }
-
-    /**
-     * Returns a list of transactions TO the given (asset) $account, but none from the
-     * given list of accounts
-     *
-     * @param Account    $account
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end)
-    {
-        $ids      = $accounts->pluck('id')->toArray();
-        $journals = $this->user->transactionjournals()
-                               ->expanded()
-                               ->before($end)
-                               ->where('source_account.id', $account->id)
-                               ->whereIn('destination_account.id', $ids)
-                               ->after($start)
-                               ->get(TransactionJournal::QUERYFIELDS);
-
-        return $journals;
     }
 }

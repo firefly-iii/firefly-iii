@@ -24,7 +24,7 @@ class Specifix
     /**
      * @return int
      */
-    public function getProcessorType()
+    public function getProcessorType(): int
     {
         return $this->processorType;
     }

@@ -35,7 +35,7 @@ class Steam
         $cache->addProperty($date);
         $cache->addProperty($ignoreVirtualBalance);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $balance = strval(
@@ -63,7 +63,7 @@ class Steam
      *
      * @return array
      */
-    public function balanceInRange(Account $account, Carbon $start, Carbon $end)
+    public function balanceInRange(Account $account, Carbon $start, Carbon $end): array
     {
         // abuse chart properties:
         $cache = new CacheProperties;
@@ -72,7 +72,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $balances = [];
@@ -110,7 +110,7 @@ class Steam
      *
      * @return array
      */
-    public function balancesById(array $ids, Carbon $date)
+    public function balancesById(array $ids, Carbon $date): array
     {
 
         // abuse chart properties:
@@ -119,7 +119,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get();
         }
 
         $balances = Transaction::
@@ -147,7 +147,7 @@ class Steam
      *
      * @return array
      */
-    public function getLastActivities(array $accounts)
+    public function getLastActivities(array $accounts): array
     {
         $list = [];
 
@@ -170,7 +170,7 @@ class Steam
      *
      * @return int
      */
-    public function phpBytes($string)
+    public function phpBytes($string): int
     {
         $string = strtolower($string);
 

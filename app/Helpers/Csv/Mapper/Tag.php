@@ -16,7 +16,7 @@ class Tag implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $result = Auth::user()->budgets()->get(['tags.*']);
         $list   = [];

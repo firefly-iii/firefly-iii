@@ -31,6 +31,8 @@ return [
     'bounced_error'                             => 'Het emailtje naar :email kwam nooit aan.',
     'deleted_error'                             => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                     => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
+    'expired_error'                             => 'Je account is verlopen, je kan helaas niet inloggen.',
+    'unbalanced_error'                          => 'Je kasboek is uit balans. Dat betekent dat er een uitgave, inkomsten of overschrijving niet netjes is opgeslagen. Kijk goed of je ergens een fout kan vinden (afwijkend bedrag: :amount).',
     'removed_amount'                            => ':amount weggehaald',
     'added_amount'                              => ':amount toegevoegd',
     'asset_account_role_help'                   => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
@@ -66,6 +68,7 @@ return [
     'two_factor_lost_fix_owner'                 => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
     'warning_much_data'                         => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                => 'Je bent geregistreerd!',
+    'search'                                    => 'Zoeken',
 
     // account confirmation:
     'confirm_account_header'                    => 'Bevestig je account',
@@ -652,7 +655,9 @@ return [
     'categories_spent_in_year'                  => 'Categorieën (uitgaven)',
     'report_type'                               => 'Rapporttype',
     'report_type_default'                       => 'Standard financieel rapport',
+    'more_info_help'                            => 'Meer informatie over deze rapportages vind je in de helppagina\'s. Klik op de (?) in de rechterbovenhoek.',
     'report_type_audit'                         => 'Transactiehistorie-overzicht (audit)',
+    'report_type_meta-history'                  => 'Categorieën, budgetten en contractenoverzicht',
     'report_included_accounts'                  => 'Accounts in rapport',
     'report_date_range'                         => 'Datumbereik',
     'report_include_help'                       => 'Overboekingen naar gedeelde rekeningen tellen als uitgave. Overboekingen van gedeelde rekeningen tellen als inkomsten.',
@@ -663,7 +668,9 @@ return [
     'expense_entry'                             => 'Uitgaven naar rekening ":name" tussen :start en :end',
     'category_entry'                            => 'Uitgaven in categorie ":name" tussen :start en :end',
     'budget_spent_amount'                       => 'Uitgaven in budget ":budget" tussen :start en :end',
-    'balance_amount' => 'Uitgaven in :budget betaald van rekening ":account" tussen :start en :end',
+    'balance_amount'                            => 'Uitgaven in :budget betaald van rekening ":account" tussen :start en :end',
+    'no_audit_activity'                         => 'Geen activiteit op betaalrekening <a href=":url" title=":account_name">:account_name</a> tussen :start en :end.',
+    'audit_end_balance'                         => 'Aan het einde van de dag, :end, was het saldo van betaalrekening <a href=":url" title=":account_name">:account_name</a> :balance',
 
     // charts:
     'dayOfMonth'                                => 'Dag vd maand',

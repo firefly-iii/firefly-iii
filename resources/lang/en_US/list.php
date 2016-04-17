@@ -8,6 +8,12 @@
  */
 
 return [
+    'buttons'             => 'Buttons',
+    'icon'                => 'Icon',
+    'create_date'         => 'Created at',
+    'update_date'         => 'Updated at',
+    'balance_before'      => 'Balance before',
+    'balance_after'       => 'Balance after',
     'name'                => 'Name',
     'role'                => 'Role',
     'currentBalance'      => 'Current balance',

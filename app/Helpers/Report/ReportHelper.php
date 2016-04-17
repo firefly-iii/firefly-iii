@@ -37,7 +37,6 @@ class ReportHelper implements ReportHelperInterface
     /**
      * ReportHelper constructor.
      *
-     * @codeCoverageIgnore
      *
      * @param ReportQueryInterface      $query
      * @param BudgetRepositoryInterface $budgetRepository
@@ -62,7 +61,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return BillCollection
      */
-    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection
     {
         /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
@@ -109,7 +108,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection
     {
         $object = new CategoryCollection;
 
@@ -136,7 +135,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense
     {
         $object = new Expense;
         $set    = $this->query->expense($accounts, $start, $end);
@@ -158,7 +157,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income
     {
         $object = new Income;
         $set    = $this->query->income($accounts, $start, $end);
@@ -176,7 +175,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return array
      */
-    public function listOfMonths(Carbon $date)
+    public function listOfMonths(Carbon $date): array
     {
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app('FireflyIII\Helpers\FiscalHelperInterface');

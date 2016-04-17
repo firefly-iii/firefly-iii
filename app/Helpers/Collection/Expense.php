@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use stdClass;
 
 /**
- * @codeCoverageIgnore
  *
  * Class Expense
  *

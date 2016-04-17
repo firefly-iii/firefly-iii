@@ -5,6 +5,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.8.3] - 2016-04-17
+### Added
+- New audit report to see what happened.
+
+### Changed
+- New Chart JS release used.
+- Help function is more reliable.
+
+### Fixed
+- Expected bill amount is now correct.
+- Upgrade will now invalidate cache.
+- Search was broken.
+- Queries run better
+
 ## [3.8.2] - 2016-04-03
 ### Added
 - Small user administration at /admin.

@@ -10,7 +10,6 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
- * @codeCoverageIgnore
  * Class Budget
  *
  * @package FireflyIII\Support\Twig
@@ -29,7 +28,7 @@ class Budget extends Twig_Extension
             $cache->addProperty($repetition->id);
             $cache->addProperty('spentInRepetition');
             if ($cache->has()) {
-                return $cache->get(); // @codeCoverageIgnore
+                return $cache->get();
             }
             $sum
                 = Auth::user()->transactionjournals()

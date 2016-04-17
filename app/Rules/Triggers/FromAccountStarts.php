@@ -50,7 +50,7 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
      *
      * @return bool
      */
-    public function triggered(TransactionJournal $journal)
+    public function triggered(TransactionJournal $journal): bool
     {
         $name   = strtolower($journal->source_account_name ?? TransactionJournal::sourceAccount($journal)->name);
         $search = strtolower($this->triggerValue);

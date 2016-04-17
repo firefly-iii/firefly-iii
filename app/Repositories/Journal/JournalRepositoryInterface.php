@@ -22,38 +22,22 @@ interface JournalRepositoryInterface
      *
      * @return bool
      */
-    public function delete(TransactionJournal $journal);
+    public function delete(TransactionJournal $journal): bool;
 
     /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
      */
-    public function first();
+    public function first(): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal
      * @param Transaction        $transaction
      *
-     * @return float
+     * @return string
      */
-    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction);
-
-    /**
-     * @param TransactionType $dbType
-     *
-     * @return Collection
-     */
-    public function getJournalsOfType(TransactionType $dbType);
-
-    /**
-     * @param array $types
-     * @param int   $offset
-     * @param int   $page
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournalsOfTypes(array $types, int $offset, int $page);
+    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction): string;
 
     /**
      * @param array $types
@@ -62,14 +46,30 @@ interface JournalRepositoryInterface
      *
      * @return Collection
      */
-    public function getCollectionOfTypes(array $types, int $offset, int $count);
+    public function getCollectionOfTypes(array $types, int $offset, int $count):Collection;
+
+    /**
+     * @param TransactionType $dbType
+     *
+     * @return Collection
+     */
+    public function getJournalsOfType(TransactionType $dbType): Collection;
+
+    /**
+     * @param array $types
+     * @param int   $offset
+     * @param int   $page
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getJournalsOfTypes(array $types, int $offset, int $page): LengthAwarePaginator;
 
     /**
      * @param string $type
      *
      * @return TransactionType
      */
-    public function getTransactionType(string $type);
+    public function getTransactionType(string $type): TransactionType;
 
     /**
      * @param  int   $journalId
@@ -77,7 +77,7 @@ interface JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function getWithDate(int $journalId, Carbon $date);
+    public function getWithDate(int $journalId, Carbon $date): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal
@@ -90,30 +90,30 @@ interface JournalRepositoryInterface
      * @param TransactionJournal $journal
      * @param array              $array
      *
-     * @return void
+     * @return bool
      */
-    public function saveTags(TransactionJournal $journal, array $array);
+    public function saveTags(TransactionJournal $journal, array $array): bool;
 
     /**
      * @param array $data
      *
      * @return TransactionJournal
      */
-    public function store(array $data);
+    public function store(array $data): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal
      * @param array              $data
      *
-     * @return mixed
+     * @return TransactionJournal
      */
-    public function update(TransactionJournal $journal, array $data);
+    public function update(TransactionJournal $journal, array $data): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal
      * @param array              $array
      *
-     * @return mixed
+     * @return bool
      */
-    public function updateTags(TransactionJournal $journal, array $array);
+    public function updateTags(TransactionJournal $journal, array $array): bool;
 }

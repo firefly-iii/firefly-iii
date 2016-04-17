@@ -28,7 +28,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return array
      */
-    public function earnedPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    public function earnedPerMonth(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $ids   = $accounts->pluck('id')->toArray();
         $query = Auth::user()->transactionjournals()
@@ -72,7 +72,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return Collection
      */
-    public function expense(Collection $accounts, Carbon $start, Carbon $end)
+    public function expense(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
         $set = Auth::user()->transactionjournals()
@@ -107,7 +107,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return Collection
      */
-    public function income(Collection $accounts, Carbon $start, Carbon $end)
+    public function income(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
         $set = Auth::user()->transactionjournals()
@@ -142,7 +142,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return array
      */
-    public function spentPerMonth(Collection $accounts, Carbon $start, Carbon $end)
+    public function spentPerMonth(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $ids   = $accounts->pluck('id')->toArray();
         $query = Auth::user()->transactionjournals()

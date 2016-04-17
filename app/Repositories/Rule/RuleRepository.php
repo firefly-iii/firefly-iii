@@ -40,7 +40,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->user->rules()->count();
     }
@@ -50,7 +50,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(Rule $rule)
+    public function destroy(Rule $rule): bool
     {
         foreach ($rule->ruleTriggers as $trigger) {
             $trigger->delete();
@@ -64,9 +64,11 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * FIXME can return null
+     *
      * @return RuleGroup
      */
-    public function getFirstRuleGroup()
+    public function getFirstRuleGroup(): RuleGroup
     {
         return $this->user->ruleGroups()->first();
     }
@@ -76,7 +78,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return int
      */
-    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup)
+    public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
         return intval($ruleGroup->rules()->max('order'));
     }
@@ -102,7 +104,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function moveDown(Rule $rule)
+    public function moveDown(Rule $rule): bool
     {
         $order = $rule->order;
 
@@ -117,6 +119,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order + 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+        return true;
     }
 
     /**
@@ -124,7 +127,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function moveUp(Rule $rule)
+    public function moveUp(Rule $rule): bool
     {
         $order = $rule->order;
 
@@ -138,6 +141,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order - 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+        return true;
     }
 
     /**
@@ -146,7 +150,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function reorderRuleActions(Rule $rule, array $ids)
+    public function reorderRuleActions(Rule $rule, array $ids): bool
     {
         $order = 1;
         foreach ($ids as $actionId) {
@@ -168,7 +172,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function reorderRuleTriggers(Rule $rule, array $ids)
+    public function reorderRuleTriggers(Rule $rule, array $ids): bool
     {
         $order = 1;
         foreach ($ids as $triggerId) {
@@ -189,7 +193,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
     {
         $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
 
@@ -214,7 +218,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return Rule
      */
-    public function store(array $data)
+    public function store(array $data): Rule
     {
         /** @var RuleGroup $ruleGroup */
         $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
@@ -250,7 +254,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return RuleAction
      */
-    public function storeAction(Rule $rule, array $values)
+    public function storeAction(Rule $rule, array $values): RuleAction
     {
         $ruleAction = new RuleAction;
         $ruleAction->rule()->associate($rule);
@@ -271,7 +275,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return RuleTrigger
      */
-    public function storeTrigger(Rule $rule, array $values)
+    public function storeTrigger(Rule $rule, array $values): RuleTrigger
     {
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
@@ -291,7 +295,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return Rule
      */
-    public function update(Rule $rule, array $data)
+    public function update(Rule $rule, array $data): Rule
     {
         // update rule:
         $rule->active          = $data['active'];
@@ -319,8 +323,10 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $data
+     *
+     * @return bool
      */
-    private function storeActions(Rule $rule, array $data)
+    private function storeActions(Rule $rule, array $data): bool
     {
         $order = 1;
         foreach ($data['rule-actions'] as $index => $action) {
@@ -336,14 +342,16 @@ class RuleRepository implements RuleRepositoryInterface
 
             $this->storeAction($rule, $actionValues);
         }
+        return true;
 
     }
 
     /**
      * @param Rule  $rule
      * @param array $data
+     * @return bool
      */
-    private function storeTriggers(Rule $rule, array $data)
+    private function storeTriggers(Rule $rule, array $data): bool
     {
         $order          = 1;
         $stopProcessing = false;
@@ -370,5 +378,6 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeTrigger($rule, $triggerValues);
             $order++;
         }
+        return true;
     }
 }

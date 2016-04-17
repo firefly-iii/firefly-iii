@@ -20,7 +20,7 @@ interface SpecifixInterface
     /**
      * @return int
      */
-    public function getProcessorType();
+    public function getProcessorType(): int;
 
     /**
      * @param array $data

@@ -44,7 +44,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return bool
      */
-    public function delete(TransactionJournal $journal)
+    public function delete(TransactionJournal $journal): bool
     {
         $journal->delete();
 
@@ -56,9 +56,12 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function first()
+    public function first(): TransactionJournal
     {
         $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        if (is_null($entry)) {
+            return new TransactionJournal;
+        }
 
         return $entry;
     }
@@ -67,9 +70,9 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      * @param Transaction        $transaction
      *
-     * @return integer
+     * @return string
      */
-    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction)
+    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction): string
     {
         $set = $transaction->account->transactions()->leftJoin(
             'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
@@ -94,7 +97,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return Collection
      */
-    public function getCollectionOfTypes(array $types, int $offset, int $count)
+    public function getCollectionOfTypes(array $types, int $offset, int $count): Collection
     {
         $set = $this->user->transactionJournals()
                           ->expanded()
@@ -113,7 +116,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournalsOfType(TransactionType $dbType)
+    public function getJournalsOfType(TransactionType $dbType): Collection
     {
         return $this->user->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
     }
@@ -127,7 +130,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50)
+    public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50): LengthAwarePaginator
     {
         $set = $this->user
             ->transactionJournals()
@@ -151,7 +154,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionType
      */
-    public function getTransactionType(string $type)
+    public function getTransactionType(string $type): TransactionType
     {
         return TransactionType::whereType($type)->first();
     }
@@ -162,7 +165,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function getWithDate(int $journalId, Carbon $date)
+    public function getWithDate(int $journalId, Carbon $date): TransactionJournal
     {
         return $this->user->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
     }
@@ -175,9 +178,9 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      * @param array              $array
      *
-     * @return void
+     * @return bool
      */
-    public function saveTags(TransactionJournal $journal, array $array)
+    public function saveTags(TransactionJournal $journal, array $array): bool
     {
         /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
         $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
@@ -190,6 +193,8 @@ class JournalRepository implements JournalRepositoryInterface
                 }
             }
         }
+
+        return true;
     }
 
     /**
@@ -197,7 +202,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function store(array $data)
+    public function store(array $data): TransactionJournal
     {
         // find transaction type.
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
@@ -269,7 +274,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function update(TransactionJournal $journal, array $data)
+    public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
         // update actual journal.
         $journal->transaction_currency_id = $data['amount_currency_id_amount'];
@@ -329,9 +334,9 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      * @param array              $array
      *
-     * @return void
+     * @return bool
      */
-    public function updateTags(TransactionJournal $journal, array $array)
+    public function updateTags(TransactionJournal $journal, array $array): bool
     {
         // create tag repository
         /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
@@ -363,6 +368,8 @@ class JournalRepository implements JournalRepositoryInterface
         foreach ($tags as $tag) {
             $tagRepository->connect($journal, $tag);
         }
+
+        return true;
     }
 
     /**
@@ -373,7 +380,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function storeAccounts(TransactionType $type, array $data)
+    protected function storeAccounts(TransactionType $type, array $data): array
     {
         $fromAccount = null;
         $toAccount   = null;
@@ -395,18 +402,14 @@ class JournalRepository implements JournalRepositoryInterface
         if (is_null($toAccount)) {
             Log::error('"to"-account is null, so we cannot continue!');
             throw new FireflyException('"to"-account is null, so we cannot continue!');
-            // @codeCoverageIgnoreStart
         }
-        // @codeCoverageIgnoreEnd
 
         if (is_null($fromAccount)) {
             Log::error('"from"-account is null, so we cannot continue!');
             throw new FireflyException('"from"-account is null, so we cannot continue!');
 
-            // @codeCoverageIgnoreStart
         }
 
-        // @codeCoverageIgnoreEnd
 
         return [$fromAccount, $toAccount];
     }
@@ -416,7 +419,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return array
      */
-    protected function storeDepositAccounts(array $data)
+    protected function storeDepositAccounts(array $data): array
     {
         $toAccount = Account::find($data['account_id']);
 
@@ -440,7 +443,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return array
      */
-    protected function storeWithdrawalAccounts(array $data)
+    protected function storeWithdrawalAccounts(array $data): array
     {
         $fromAccount = Account::find($data['account_id']);
 

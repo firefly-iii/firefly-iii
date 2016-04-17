@@ -21,7 +21,7 @@ interface FiscalHelperInterface
      *
      * @return Carbon date object
      */
-    public function endOfFiscalYear(Carbon $date);
+    public function endOfFiscalYear(Carbon $date): Carbon;
 
     /**
      * This method produces a clone of the Carbon date object passed, checks preferences
@@ -31,6 +31,6 @@ interface FiscalHelperInterface
      *
      * @return Carbon date object
      */
-    public function startOfFiscalYear(Carbon $date);
+    public function startOfFiscalYear(Carbon $date): Carbon;
 
 }

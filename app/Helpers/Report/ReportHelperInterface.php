@@ -30,7 +30,7 @@ interface ReportHelperInterface
      *
      * @return BillCollection
      */
-    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection;
 
     /**
      * @param Carbon     $start
@@ -39,7 +39,7 @@ interface ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection;
 
     /**
      * Get a full report on the users expenses during the period for a list of accounts.
@@ -50,7 +50,7 @@ interface ReportHelperInterface
      *
      * @return Expense
      */
-    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense;
 
     /**
      * Get a full report on the users incomes during the period for the given accounts.
@@ -61,14 +61,14 @@ interface ReportHelperInterface
      *
      * @return Income
      */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income;
 
     /**
      * @param Carbon $date
      *
      * @return array
      */
-    public function listOfMonths(Carbon $date);
+    public function listOfMonths(Carbon $date): array;
 
     /**
      * Returns an array of tags and their comparitive size with amounts bla bla.

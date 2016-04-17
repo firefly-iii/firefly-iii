@@ -6,6 +6,8 @@ namespace FireflyIII\Models;
 use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -70,8 +72,10 @@ class Attachment extends Model
 
     /**
      * Get all of the owning imageable models.
+     *
+     * @return MorphTo
      */
-    public function attachable()
+    public function attachable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -87,8 +91,6 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     *
      * @param $value
      *
      * @return null|string
@@ -103,8 +105,6 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     *
      * @param $value
      *
      * @return null|string
@@ -119,8 +119,6 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     *
      * @param $value
      *
      * @return null|string
@@ -135,7 +133,6 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -151,7 +148,6 @@ class Attachment extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -169,7 +165,7 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setDescriptionAttribute($value)
+    public function setDescriptionAttribute(string $value)
     {
         $this->attributes['description'] = Crypt::encrypt($value);
     }
@@ -177,7 +173,7 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setFilenameAttribute($value)
+    public function setFilenameAttribute(string $value)
     {
         $this->attributes['filename'] = Crypt::encrypt($value);
     }
@@ -185,7 +181,7 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setMimeAttribute($value)
+    public function setMimeAttribute(string $value)
     {
         $this->attributes['mime'] = Crypt::encrypt($value);
     }
@@ -193,7 +189,7 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setNotesAttribute($value)
+    public function setNotesAttribute(string $value)
     {
         $this->attributes['notes'] = Crypt::encrypt($value);
     }
@@ -201,16 +197,15 @@ class Attachment extends Model
     /**
      * @param string $value
      */
-    public function setTitleAttribute($value)
+    public function setTitleAttribute(string $value)
     {
         $this->attributes['title'] = Crypt::encrypt($value);
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\User');
     }

@@ -89,7 +89,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
             'labels'   => [],
             'datasets' => [
                 [
-                    'label' => trans('firefly.net-worth'),
+                    'label' => trans('firefly.net_worth'),
                     'data'  => [],
                 ],
             ],

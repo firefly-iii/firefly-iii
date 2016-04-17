@@ -37,7 +37,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return int
      */
-    public function countJournals(Category $category)
+    public function countJournals(Category $category): int
     {
         return $category->transactionjournals()->count();
 
@@ -51,7 +51,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return int
      */
-    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end)
+    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end): int
     {
         return $category->transactionjournals()->before($end)->after($start)->count();
     }
@@ -59,9 +59,9 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     /**
      * @param Category $category
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category): bool
     {
         $category->delete();
 
@@ -82,7 +82,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return array
      */
-    public function earnedPerDay(Category $category, Carbon $start, Carbon $end)
+    public function earnedPerDay(Category $category, Carbon $start, Carbon $end): array
     {
         /** @var Collection $query */
         $query = $category->transactionjournals()
@@ -123,7 +123,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return Carbon
      */
-    public function getFirstActivityDate(Category $category)
+    public function getFirstActivityDate(Category $category): Carbon
     {
         /** @var TransactionJournal $first */
         $first = $category->transactionjournals()->orderBy('date', 'ASC')->first();
@@ -141,7 +141,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return Collection
      */
-    public function getJournals(Category $category, $page)
+    public function getJournals(Category $category, $page): Collection
     {
         $offset = $page > 0 ? $page * 50 : 0;
 
@@ -162,7 +162,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return Collection
      */
-    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
 
@@ -181,9 +181,9 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      * @param Carbon   $start
      * @param Carbon   $end
      *
-     * @return mixed
+     * @return Collection
      */
-    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end)
+    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end): Collection
     {
         $offset = $page > 0 ? $page * 50 : 0;
 
@@ -201,7 +201,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return Carbon|null
      */
-    public function getLatestActivity(Category $category)
+    public function getLatestActivity(Category $category): Carbon
     {
         $latest = $category->transactionjournals()
                            ->orderBy('transaction_journals.date', 'DESC')
@@ -212,7 +212,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
             return $latest->date;
         }
 
-        return null;
+        return new Carbon('1900-01-01');
     }
 
     /**
@@ -229,7 +229,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return array
      */
-    public function spentPerDay(Category $category, Carbon $start, Carbon $end)
+    public function spentPerDay(Category $category, Carbon $start, Carbon $end): array
     {
         /** @var Collection $query */
         $query = $category->transactionjournals()
@@ -253,7 +253,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return Category
      */
-    public function store(array $data)
+    public function store(array $data): Category
     {
         $newCategory = Category::firstOrCreateEncrypted(
             [
@@ -272,7 +272,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      *
      * @return Category
      */
-    public function update(Category $category, array $data)
+    public function update(Category $category, array $data): Category
     {
         // update the account:
         $category->name = $data['name'];

@@ -20,6 +20,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -307,6 +308,7 @@ class TransactionController extends Controller
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
+        Log::debug('Triggered TransactionJournalStored with transaction journal #' . $journal->id.' and piggy #' . intval($request->get('piggy_bank_id')));
         event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));

@@ -15,7 +15,7 @@ class RabobankDebetCredit extends BasicConverter implements ConverterInterface
     /**
      * @return int
      */
-    public function convert()
+    public function convert(): int
     {
         if ($this->value == 'D') {
             return -1;

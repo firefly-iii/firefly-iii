@@ -57,6 +57,7 @@
       "php artisan key:generate"
     ],
     "post-install-cmd": [
+      "php artisan cache:clear",
       "php artisan clear-compiled",
       "php artisan optimize",
       "php artisan firefly:upgrade-instructions"
@@ -65,6 +66,7 @@
       "php artisan clear-compiled"
     ],
     "post-update-cmd": [
+      "php artisan cache:clear",
       "php artisan optimize",
       "php artisan firefly:upgrade-instructions"
     ]

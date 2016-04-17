@@ -10,7 +10,6 @@ use FireflyIII\Models\TransactionJournal;
 /**
  * Class UpdateJournalConnection
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Handlers\Events
  */
 class UpdateJournalConnection

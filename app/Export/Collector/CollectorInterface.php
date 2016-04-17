@@ -22,12 +22,12 @@ interface CollectorInterface
     /**
      * @return Collection
      */
-    public function getFiles();
+    public function getFiles(): Collection;
 
     /**
      * @return bool
      */
-    public function run();
+    public function run(): bool;
 
     /**
      * @param Collection $files

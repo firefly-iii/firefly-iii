@@ -25,7 +25,7 @@ interface CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function all(Collection $entries);
+    public function all(Collection $entries): array;
 
     /**
      * @param Collection $categories

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use Illuminate\Support\Collection;
 
 /**
@@ -18,47 +19,47 @@ interface PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
-     * @return bool
+     * @return PiggyBankEvent
      */
-    public function createEvent(PiggyBank $piggyBank, string $amount);
+    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent;
 
     /**
      * @param PiggyBank $piggyBank
      *
      * @return bool
      */
-    public function destroy(PiggyBank $piggyBank);
+    public function destroy(PiggyBank $piggyBank): bool;
 
     /**
      * @param PiggyBank $piggyBank
      *
      * @return Collection
      */
-    public function getEventSummarySet(PiggyBank $piggyBank);
+    public function getEventSummarySet(PiggyBank $piggyBank) : Collection;
 
     /**
      * @param PiggyBank $piggyBank
      *
      * @return Collection
      */
-    public function getEvents(PiggyBank $piggyBank);
+    public function getEvents(PiggyBank $piggyBank) : Collection;
 
     /**
      * @return int
      */
-    public function getMaxOrder();
+    public function getMaxOrder(): int;
 
     /**
      * @return Collection
      */
-    public function getPiggyBanks();
+    public function getPiggyBanks() : Collection;
 
     /**
      * Set all piggy banks to order 0.
      *
-     * @return void
+     * @return bool
      */
-    public function reset();
+    public function reset(): bool;
 
     /**
      *
@@ -67,9 +68,9 @@ interface PiggyBankRepositoryInterface
      * @param int $piggyBankId
      * @param int $order
      *
-     * @return void
+     * @return bool
      */
-    public function setOrder(int $piggyBankId, int $order);
+    public function setOrder(int $piggyBankId, int $order): bool;
 
 
     /**
@@ -77,7 +78,7 @@ interface PiggyBankRepositoryInterface
      *
      * @return PiggyBank
      */
-    public function store(array $data);
+    public function store(array $data): PiggyBank;
 
     /**
      * @param PiggyBank $piggyBank
@@ -85,5 +86,5 @@ interface PiggyBankRepositoryInterface
      *
      * @return PiggyBank
      */
-    public function update(PiggyBank $piggyBank, array $data);
+    public function update(PiggyBank $piggyBank, array $data): PiggyBank;
 }

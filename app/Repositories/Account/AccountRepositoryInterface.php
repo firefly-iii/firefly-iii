@@ -31,7 +31,7 @@ interface AccountRepositoryInterface
      * @param Account $account
      * @param Account $moveTo
      *
-     * @return boolean
+     * @return bool
      */
     public function destroy(Account $account, Account $moveTo): bool;
 
@@ -82,7 +82,7 @@ interface AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param TransactionJournal $journal
@@ -119,7 +119,7 @@ interface AccountRepositoryInterface
      *
      * @return Collection
      */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Account $account
@@ -127,7 +127,16 @@ interface AccountRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, $page): LengthAwarePaginator;
+    public function getJournals(Account $account, int $page): LengthAwarePaginator;
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection;
 
     /**
      * Get the accounts of a user that have piggy banks connected to them.
@@ -152,6 +161,24 @@ interface AccountRepositoryInterface
     public function leftOnAccount(Account $account, Carbon $date): string;
 
     /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon;
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function oldestJournalDate(Account $account): Carbon;
+
+    /**
      * @param Account $account
      *
      * @return TransactionJournal
@@ -172,7 +199,7 @@ interface AccountRepositoryInterface
      *
      * @return AccountMeta
      */
-    public function storeMeta($account, $name, $value): AccountMeta;
+    public function storeMeta(Account $account, string $name, $value): AccountMeta;
 
     /**
      * @return string

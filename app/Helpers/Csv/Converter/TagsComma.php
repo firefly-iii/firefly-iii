@@ -16,7 +16,7 @@ class TagsComma extends BasicConverter implements ConverterInterface
     /**
      * @return Collection
      */
-    public function convert()
+    public function convert(): Collection
     {
         /** @var TagRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');

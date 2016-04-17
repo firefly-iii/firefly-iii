@@ -17,7 +17,7 @@ class OpposingAccountId extends BasicConverter implements ConverterInterface
     /**
      * @return Account
      */
-    public function convert()
+    public function convert(): Account
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');

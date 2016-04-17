@@ -15,7 +15,7 @@ class TransactionCurrency implements MapperInterface
     /**
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         $currencies = TC::get();
         $list       = [];

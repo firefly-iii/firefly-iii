@@ -31,6 +31,8 @@ return [
     'bounced_error'                             => 'The message sent to :email bounced, so no access for you.',
     'deleted_error'                             => 'These credentials do not match our records.',
     'general_blocked_error'                     => 'Your account has been disabled, so you cannot login.',
+    'expired_error'                             => 'Your account has expired, and can no longer be used.',
+    'unbalanced_error'                          => 'Your transactions are unbalanced. This means a withdrawal, deposit or transfer was not stored properly. Please check your accounts and transactions for errors (unbalanced amount :amount).',
     'removed_amount'                            => 'Removed :amount',
     'added_amount'                              => 'Added :amount',
     'asset_account_role_help'                   => 'Any extra options resulting from your choice can be set later.',
@@ -66,6 +68,7 @@ return [
     'two_factor_lost_fix_owner'                 => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
     'warning_much_data'                         => ':days days of data may take a while to load.',
     'registered'                                => 'You have registered successfully!',
+    'search'                                    => 'Search',
 
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
@@ -653,6 +656,8 @@ return [
     'report_type'                               => 'Report type',
     'report_type_default'                       => 'Default financial report',
     'report_type_audit'                         => 'Transaction history overview (audit)',
+    'report_type_meta-history'                  => 'Categories, budgets and bills overview',
+    'more_info_help'                            => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
     'report_included_accounts'                  => 'Included accounts',
     'report_date_range'                         => 'Date range',
     'report_include_help'                       => 'In all cases, transfers to shared accounts count as expenses, and transfers from shared accounts count as income.',
@@ -663,7 +668,9 @@ return [
     'expense_entry'                             => 'Expenses to account ":name" between :start and :end',
     'category_entry'                            => 'Expenses in category ":name" between :start and :end',
     'budget_spent_amount'                       => 'Expenses in budget ":budget" between :start and :end',
-    'balance_amount' => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
+    'balance_amount'                            => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
+    'no_audit_activity'                         => 'No activity was recorded on account <a href=":url" title=":account_name">:account_name</a> between :start and :end.',
+    'audit_end_balance'                         => 'Account balance of <a href=":url" title=":account_name">:account_name</a> at the end of :end was: :balance',
 
     // charts:
     'dayOfMonth'                                => 'Day of the month',

@@ -29,7 +29,7 @@ class Wizard implements WizardInterface
      *
      * @return array
      */
-    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders)
+    public function getMappableValues(Reader $reader, array $map, bool $hasHeaders): array
     {
         $values = [];
         /*
@@ -59,7 +59,7 @@ class Wizard implements WizardInterface
      *
      * @return array
      */
-    public function processSelectedMapping(array $roles, array $map)
+    public function processSelectedMapping(array $roles, array $map): array
     {
         $configRoles = Config::get('csv.roles');
         $maps        = [];
@@ -86,7 +86,7 @@ class Wizard implements WizardInterface
      *
      * @return array
      */
-    public function processSelectedRoles(array $input)
+    public function processSelectedRoles(array $input): array
     {
         $roles = [];
 
@@ -110,7 +110,7 @@ class Wizard implements WizardInterface
      *
      * @return bool
      */
-    public function sessionHasValues(array $fields)
+    public function sessionHasValues(array $fields): bool
     {
         foreach ($fields as $field) {
             if (!Session::has($field)) {
@@ -129,7 +129,7 @@ class Wizard implements WizardInterface
      * @return array
      * @throws FireflyException
      */
-    public function showOptions(array $map)
+    public function showOptions(array $map): array
     {
         $options = [];
         foreach ($map as $index => $columnRole) {
@@ -157,7 +157,7 @@ class Wizard implements WizardInterface
      *
      * @return string
      */
-    public function storeCsvFile(string $path)
+    public function storeCsvFile(string $path): string
     {
         $time             = str_replace(' ', '-', microtime());
         $fileName         = 'csv-upload-' . Auth::user()->id . '-' . $time . '.csv.encrypted';

@@ -42,7 +42,7 @@ class AddTag implements ActionInterface
      *
      * @return bool
      */
-    public function act(TransactionJournal $journal)
+    public function act(TransactionJournal $journal): bool
     {
         // journal has this tag maybe?
         $tag = Tag::firstOrCreateEncrypted(['tag' => $this->action->action_value, 'user_id' => Auth::user()->id]);

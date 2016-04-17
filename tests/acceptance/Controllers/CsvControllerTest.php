@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
@@ -36,7 +37,7 @@ class CsvControllerTest extends TestCase
 
         $data->shouldReceive('getRoles')->once()->andReturn([]);
         $data->shouldReceive('getMap')->once()->andReturn([]);
-        $data->shouldReceive('hasHeaders')->once()->andReturn([]);
+        $data->shouldReceive('hasHeaders')->once()->andReturn(false);
 
         $this->call('GET', '/csv/column_roles');
 
@@ -177,10 +178,10 @@ class CsvControllerTest extends TestCase
         $importer->shouldReceive('setData')->once()->with($data);
         $importer->shouldReceive('run')->once()->withNoArgs();
 
-        $importer->shouldReceive('getRows')->once()->withNoArgs();
-        $importer->shouldReceive('getErrors')->once()->withNoArgs();
-        $importer->shouldReceive('getImported')->once()->withNoArgs();
-        $importer->shouldReceive('getJournals')->once()->withNoArgs();
+        $importer->shouldReceive('getRows')->once()->withNoArgs()->andReturn(0);
+        $importer->shouldReceive('getErrors')->once()->withNoArgs()->andReturn([]);
+        $importer->shouldReceive('getImported')->once()->withNoArgs()->andReturn(0);
+        $importer->shouldReceive('getJournals')->once()->withNoArgs()->andReturn(new Collection);
 
         $this->call('GET', '/csv/process');
         $this->assertResponseStatus(200);

@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="accounts-chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
 
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="budgets-chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="budgets-chart" style="width:100%;" height="400"></canvas>
                 </div>
             </div>
             <!-- CATEGORIES -->
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="categories-chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="categories-chart" style="width:100%;" height="400"></canvas>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="bills-chart" style="width:100%;height:250px;"></canvas>
+                    <canvas id="bills-chart" style="width:100%;" height="250"></canvas>
                 </div>
             </div>
 
@@ -116,7 +116,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="expense-accounts-chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="expense-accounts-chart" style="width:100%;" height="400"></canvas>
                 </div>
             </div>
         </div>
@@ -151,12 +151,12 @@
                                         <!-- green (100-pct), then red (pct) -->
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: {{ 100 - account.percentage }}%">
-                                                {% if account.percentage <= 50 %}
+                                                {% if account.percentage >= 20 %}
                                                     {{ account.difference|formatAmountPlain }}
                                                 {% endif %}
                                             </div>
                                             <div class="progress-bar progress-bar-danger" style="width: {{ account.percentage }}%">
-                                                {% if account.percentage > 50 %}
+                                                {% if account.percentage < 20 %}
                                                     {{ account.difference|formatAmountPlain }}
                                                 {% endif %}
                                             </div>
@@ -165,13 +165,12 @@
                                         <!-- green (pct), then blue (100-pct) -->
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: {{ account.percentage }}%">
-                                                {% if account.percentage <= 50 %}
-                                                    {{ account.difference|formatAmountPlain }}
+                                                {% if account.percentage >= 20 %}
                                                     {{ account.difference|formatAmountPlain }}
                                                 {% endif %}
                                             </div>
                                             <div class="progress-bar progress-bar-info" style="width: {{ 100 - account.percentage }}%">
-                                                {% if account.percentage > 50 %}
+                                                {% if account.percentage < 20 %}
                                                     {{ account.difference|formatAmountPlain }}
                                                 {% endif %}
                                             </div>
@@ -218,12 +217,12 @@
 
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-info progress-bar" style="width: {{ 100 - account.percentage }}%">
-                                            {% if account.percentage <= 50 %}
+                                            {% if account.percentage >= 20 %}
                                                 {{ account.piggyBalance|formatAmountPlain }} {{ 'divided'|_ }}
                                             {% endif %}
                                         </div>
                                         <div class="progress-bar progress-bar-success progress-bar" style="width: {{ account.percentage }}%">
-                                            {% if account.percentage > 50 %}
+                                            {% if account.percentage < 20 %}
                                                 {{ account.difference|formatAmountPlain }} {{ 'toDivide'|_ }}
                                             {% endif %}
                                         </div>
@@ -244,18 +243,17 @@
 {% block scripts %}
     <!-- show tour? -->
     <script type="text/javascript">
+        var showTour;
         {% if showTour %}
-        var showTour = true;
+        showTour = true;
         {% else %}
-        var showTour = false;
+        showTour = false;
         {% endif %}
     </script>
 
-
-    <script type="text/javascript" src="js/Chart.min.js"></script>
-    <script type="text/javascript" src="js/Chart.StackedBar.js"></script>
-    <script type="text/javascript" src="js/charts.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.js"></script>
+    <script type="text/javascript" src="js/ff/index.js"></script>
 {% endblock %}
 {% block styles %}
 {% endblock %}

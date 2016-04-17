@@ -49,7 +49,7 @@ class JournalCollector
     /**
      * @return Collection
      */
-    public function collect()
+    public function collect(): Collection
     {
         // get all the journals:
         $ids = $this->accounts->pluck('id')->toArray();

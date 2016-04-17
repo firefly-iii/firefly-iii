@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c1638ed0abc18262bab1f791b48af111",
+    "hash": "eccf1460fa3a4cecc969593ffca9397e",
     "content-hash": "3551da50dc493828d3ae5d73c10984f0",
     "packages": [
         {
@@ -51,16 +51,16 @@
         },
         {
             "name": "christian-riesen/base32",
-            "version": "1.2.2",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristianRiesen/base32.git",
-                "reference": "fbe67d49d45dc789f942ef828c787550ebb894bc"
+                "reference": "fde061a370b0a97fdcd33d9d5f7b1b70ce1f79d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/fbe67d49d45dc789f942ef828c787550ebb894bc",
-                "reference": "fbe67d49d45dc789f942ef828c787550ebb894bc",
+                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/fde061a370b0a97fdcd33d9d5f7b1b70ce1f79d4",
+                "reference": "fde061a370b0a97fdcd33d9d5f7b1b70ce1f79d4",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "encode",
                 "rfc4648"
             ],
-            "time": "2015-09-27 23:45:02"
+            "time": "2016-04-07 07:45:31"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -1245,16 +1245,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.2",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09"
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/064b38c16790249488e7a8b987acf1c9d7383c09",
-                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5f56ed5212dc509c8dc8caeba2715732abb32dbf",
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf",
                 "shasum": ""
             },
             "require": {
@@ -1319,7 +1319,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-04-02 13:12:58"
+            "time": "2016-04-12 18:29:35"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -2785,16 +2785,16 @@
         },
         {
             "name": "watson/validating",
-            "version": "2.1.1",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dwightwatson/validating.git",
-                "reference": "f86c284d599a66120c651b9cd41da60eb6124e96"
+                "reference": "64dc3d211372576d468e2bfaf3c7b7ace66ee970"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/f86c284d599a66120c651b9cd41da60eb6124e96",
-                "reference": "f86c284d599a66120c651b9cd41da60eb6124e96",
+                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/64dc3d211372576d468e2bfaf3c7b7ace66ee970",
+                "reference": "64dc3d211372576d468e2bfaf3c7b7ace66ee970",
                 "shasum": ""
             },
             "require": {
@@ -2836,7 +2836,7 @@
                 "laravel",
                 "validation"
             ],
-            "time": "2016-03-29 13:54:50"
+            "time": "2016-04-07 14:59:06"
         }
     ],
     "packages-dev": null,

@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * FireflyIII\Models\AccountMeta
@@ -29,9 +30,9 @@ class AccountMeta extends Model
 
     /**
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function account()
+    public function account(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\Models\Account');
     }

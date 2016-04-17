@@ -29,5 +29,5 @@ interface BudgetReportHelperInterface
      *
      * @return BudgetCollection
      */
-    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts);
+    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection;
 }

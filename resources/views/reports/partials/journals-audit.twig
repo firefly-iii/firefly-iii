@@ -1,0 +1,96 @@
+{{ journals.render|raw }}
+
+<table class="table table-hover table-compressed">
+    <thead>
+    <tr class="ignore">
+        <th class="hide-buttons">&nbsp;</th>
+        <th class="hide-icon">&nbsp;</th>
+
+        <th class="hide-description">{{ trans('list.description') }}</th>
+        <th class="hide-balance_before">{{ trans('list.balance_before') }}</th>
+        <th class="hide-amount">{{ trans('list.amount') }}</th>
+        <th class="hide-balance_after">{{ trans('list.balance_after') }}</th>
+
+        <th class="hide-date">{{ trans('list.date') }}</th>
+        <th class="hide-book_date">{{ trans('list.book_date') }}</th>
+        <th class="hide-process_date">{{ trans('list.process_date') }}</th>
+        <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
+
+        <th class="hide-from">{{ trans('list.from') }}</th>
+        <th class="hide-to">{{ trans('list.to') }}</th>
+
+        <th class="hide-budget"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        <th class="hide-category"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        <th class="hide-bill">{{ trans('list.bill') }}</th>
+
+        <th class="hide-create_date">{{ trans('list.create_date') }}</th>
+        <th class="hide-update_date">{{ trans('list.update_date') }}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for journal in journals %}
+        <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
+            <td class="hide-buttons">
+                <div class="btn-group btn-group-xs">
+                <a href="{{ route('transactions.edit',journal.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a></div></td>
+            <td class="hide-icon">{{ journal|typeIcon }}</td>
+
+            <td class="hide-description"><a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a></td>
+            <td class="hide-balance_before">{{ journal.before|formatAmount }}</td>
+            <td class="hide-amount">{{ journal|formatJournal }}</td>
+            <td class="hide-balance_after">{{ journal.after|formatAmount }}</td>
+
+            <td class="hide-date">{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+            <td class="hide-book_date">{{ journal.book_date.formatLocalized(monthAndDayFormat) }}</td>
+            <td class="hide-process_date">{{ journal.process_date.formatLocalized(monthAndDayFormat) }}</td>
+            <td class="hide-interest_date">{{ journal.interest_date.formatLocalized(monthAndDayFormat) }}</td>
+
+            <td class="hide-from">
+                {% if journal.source_account_type == 'Cash account' %}
+                    <span class="text-success">(cash)</span>
+                {% else %}
+                    <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
+                {% endif %}
+            </td>
+            <td class="hide-to">
+                {% if journal.destination_account_type == 'Cash account' %}
+                    <span class="text-success">(cash)</span>
+                {% else %}
+                    <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
+                {% endif %}
+            </td>
+
+
+            {% if journal.budgets[0] %}
+                <td class="hide-budget"><a href="{{ route('budgets.show',journal.budgets[0].id) }}">{{ journal.budgets[0].name }}</a></td>
+            {% else %}
+                <td class="hide-budget"><em>{{ 'no_budget'|_ }}</em></td>
+            {% endif %}
+            {% if journal.categories[0] %}
+                <td class="hide-category"><a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a></td>
+            {% else %}
+                <td class="hide-category"><em>{{ 'no_category'|_ }}</em></td>
+            {% endif %}
+            {% if journal.bill_id %}
+                <td class="hide-bill"><i class="fa fa-fw fa-rotate-right" title="{{ trans('list.bill') }}"></i>&nbsp;<a
+                            href="{{ route('bills.show',journal.bill_id) }}">{{ journal.bill.name }}</a></td>
+            {% else %}
+                <td class="hide-bill">&nbsp;</td>
+            {% endif %}
+
+            <td class="hide-create_date">
+                {{ journal.created_at.formatLocalized(dateTimeFormat) }}
+            </td>
+
+            <td class="hide-update_date">
+                {{ journal.updated_at.formatLocalized(dateTimeFormat) }}
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ journals.render|raw }}

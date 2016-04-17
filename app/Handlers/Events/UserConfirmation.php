@@ -39,24 +39,30 @@ class UserConfirmation
 
     /**
      * @param ResendConfirmation $event
+     *
+     * @return bool
      */
-    public function resendConfirmation(ResendConfirmation $event)
+    public function resendConfirmation(ResendConfirmation $event): bool
     {
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
         $this->doConfirm($user, $ipAddress);
+        return true;
     }
 
     /**
      * Handle the event.
      *
      * @param  UserRegistration $event
+     *
+     * @return bool
      */
-    public function sendConfirmation(UserRegistration $event)
+    public function sendConfirmation(UserRegistration $event): bool
     {
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
         $this->doConfirm($user, $ipAddress);
+        return true;
     }
 
     /**

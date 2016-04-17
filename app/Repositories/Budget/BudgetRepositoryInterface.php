@@ -6,6 +6,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -32,16 +33,16 @@ interface BudgetRepositoryInterface
     public function balanceInPeriod(Budget $budget, Carbon $start, Carbon $end, Collection $accounts);
 
     /**
-     * @return void
+     * @return bool
      */
-    public function cleanupBudgets();
+    public function cleanupBudgets(): bool;
 
     /**
      * @param Budget $budget
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(Budget $budget);
+    public function destroy(Budget $budget): bool;
 
     /**
      * @param Budget  $budget
@@ -67,12 +68,12 @@ interface BudgetRepositoryInterface
      *
      * @return Carbon
      */
-    public function firstActivity(Budget $budget);
+    public function firstActivity(Budget $budget): Carbon;
 
     /**
      * @return Collection
      */
-    public function getActiveBudgets();
+    public function getActiveBudgets(): Collection;
 
     /**
      * @param Carbon $start
@@ -80,17 +81,17 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end);
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param Account $account
+     * @param Account    $account
      * @param Collection $accounts
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Collection
      */
-    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end);
+    public function getAllWithoutBudget(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * Get the budgeted amounts for each budgets in each year.
@@ -101,12 +102,12 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end);
+    public function getBudgetedPerYear(Collection $budgets, Carbon $start, Carbon $end): Collection;
 
     /**
      * @return Collection
      */
-    public function getBudgets();
+    public function getBudgets(): Collection;
 
     /**
      * Returns an array with every budget in it and the expenses for each budget
@@ -118,7 +119,7 @@ interface BudgetRepositoryInterface
      *
      * @return array
      */
-    public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end);
+    public function getBudgetsAndExpensesPerMonth(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * Returns an array with every budget in it and the expenses for each budget
@@ -131,7 +132,7 @@ interface BudgetRepositoryInterface
      *
      * @return array
      */
-    public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
+    public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * Returns a list of budgets, budget limits and limit repetitions
@@ -142,16 +143,16 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end);
+    public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return LimitRepetition|null
+     * @return LimitRepetition
      */
-    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end);
+    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end): LimitRepetition;
 
     /**
      * Returns all expenses for the given budget and the given accounts, in the given period.
@@ -175,19 +176,19 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end);
+    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end):Collection;
 
     /**
      * @param Budget $budget
      *
      * @return Carbon
      */
-    public function getFirstBudgetLimitDate(Budget $budget);
+    public function getFirstBudgetLimitDate(Budget $budget):Carbon;
 
     /**
      * @return Collection
      */
-    public function getInactiveBudgets();
+    public function getInactiveBudgets(): Collection;
 
     /**
      * Returns all the transaction journals for a limit, possibly limited by a limit repetition.
@@ -198,7 +199,7 @@ interface BudgetRepositoryInterface
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50);
+    public function getJournals(Budget $budget, LimitRepetition $repetition = null, int $take = 50): LengthAwarePaginator;
 
     /**
      * @param Carbon $start
@@ -206,7 +207,7 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getWithoutBudget(Carbon $start, Carbon $end);
+    public function getWithoutBudget(Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Collection $accounts
@@ -215,7 +216,7 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+    public function getWithoutBudgetForAccounts(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Collection $accounts
@@ -244,7 +245,7 @@ interface BudgetRepositoryInterface
      *
      * @return array
      */
-    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end);
+    public function spentAllPerDayForAccounts(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * Returns a list of expenses (in the field "spent", grouped per budget per account.
@@ -256,7 +257,7 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end);
+    public function spentPerBudgetPerAccount(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * Returns an array with the following key:value pairs:
@@ -279,7 +280,7 @@ interface BudgetRepositoryInterface
      *
      * @return Budget
      */
-    public function store(array $data);
+    public function store(array $data): Budget;
 
     /**
      * @param Budget $budget
@@ -287,15 +288,15 @@ interface BudgetRepositoryInterface
      *
      * @return Budget
      */
-    public function update(Budget $budget, array $data);
+    public function update(Budget $budget, array $data) : Budget;
 
     /**
      * @param Budget $budget
      * @param Carbon $date
      * @param int    $amount
      *
-     * @return mixed
+     * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount);
+    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount) : BudgetLimit;
 
 }

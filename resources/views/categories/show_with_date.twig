@@ -13,7 +13,7 @@
                     <h3 class="box-title">{{ 'overview'|_ }} (period)</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="period-specific-period" style="width:100%;height:350px;"></canvas>
+                    <canvas id="period-specific-period" style="width:100%;height:350px;" height="350"></canvas>
                 </div>
             </div>
         </div>
@@ -43,8 +43,8 @@
         var categoryID = {{ category.id }};
         var categoryDate = "{{ carbon.format('Y-m-d') }}";
     </script>
-    <script type="text/javascript" src="js/Chart.min.js"></script>
-    <script type="text/javascript" src="js/charts.js"></script>
-    <script type="text/javascript" src="js/categories.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.js"></script>
+    <script type="text/javascript" src="js/ff/categories/show_with_date.js"></script>
 
 {% endblock %}

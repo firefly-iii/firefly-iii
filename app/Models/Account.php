@@ -4,6 +4,8 @@ use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -146,36 +148,39 @@ class Account extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function accountMeta()
+    public function accountMeta(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\AccountMeta');
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function accountType()
+    public function accountType(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\Models\AccountType');
     }
 
     /**
-     * @codeCoverageIgnore
+     * FIXME can return null
      *
      * @param $value
      *
      * @return string
      */
-    public function getIbanAttribute($value)
+    public function getIbanAttribute($value): string
     {
         if (is_null($value)) {
-            return null;
+            return '';
+        }
+        $result = Crypt::decrypt($value);
+        if (is_null($result)) {
+            return '';
         }
 
-        return Crypt::decrypt($value);
+        return $result;
     }
 
     /**
@@ -184,7 +189,7 @@ class Account extends Model
      *
      * @return string
      */
-    public function getMeta($fieldName): string
+    public function getMeta(string $fieldName): string
     {
         foreach ($this->accountMeta as $meta) {
             if ($meta->name == $fieldName) {
@@ -196,13 +201,12 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
      * @return string
      */
-    public function getNameAttribute($value)
+    public function getNameAttribute($value): string
     {
 
         if (intval($this->encrypted) == 1) {
@@ -216,7 +220,7 @@ class Account extends Model
      *
      * @return string
      */
-    public function getNameForEditformAttribute()
+    public function getNameForEditformAttribute(): string
     {
         $name = $this->name;
         if ($this->accountType->type == 'Cash account') {
@@ -227,16 +231,14 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function piggyBanks()
+    public function piggyBanks(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\PiggyBank');
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param array           $types
@@ -251,7 +253,6 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param string          $name
@@ -269,7 +270,6 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */
@@ -279,7 +279,6 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */
@@ -292,7 +291,6 @@ class Account extends Model
     /**
      * @param $value
      *
-     * @codeCoverageIgnore
      */
     public function setVirtualBalanceAttribute($value)
     {
@@ -300,19 +298,17 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\User');
     }

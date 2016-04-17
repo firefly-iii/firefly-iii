@@ -20,7 +20,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return int
      */
-    public function countJournals(Category $category);
+    public function countJournals(Category $category): int;
 
     /**
      * @param Category $category
@@ -30,14 +30,14 @@ interface SingleCategoryRepositoryInterface
      *
      * @return int
      */
-    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end);
+    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end): int;
 
     /**
      * @param Category $category
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(Category $category);
+    public function destroy(Category $category): bool;
 
     /**
      * Returns an array with the following key:value pairs:
@@ -53,7 +53,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return array
      */
-    public function earnedPerDay(Category $category, Carbon $start, Carbon $end);
+    public function earnedPerDay(Category $category, Carbon $start, Carbon $end): array;
 
     /**
      * Find a category
@@ -69,7 +69,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return Carbon
      */
-    public function getFirstActivityDate(Category $category);
+    public function getFirstActivityDate(Category $category): Carbon;
 
     /**
      * @param Category $category
@@ -77,7 +77,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournals(Category $category, $page);
+    public function getJournals(Category $category, $page): Collection;
 
     /**
      * @param Category   $category
@@ -88,7 +88,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end);
+    public function getJournalsForAccountsInRange(Category $category, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Category $category
@@ -99,14 +99,14 @@ interface SingleCategoryRepositoryInterface
      *
      * @return Collection
      */
-    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end);
+    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Category $category
      *
-     * @return Carbon|null
+     * @return Carbon
      */
-    public function getLatestActivity(Category $category);
+    public function getLatestActivity(Category $category): Carbon;
 
     /**
      * Returns an array with the following key:value pairs:
@@ -122,7 +122,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return array
      */
-    public function spentPerDay(Category $category, Carbon $start, Carbon $end);
+    public function spentPerDay(Category $category, Carbon $start, Carbon $end): array;
 
 
     /**
@@ -130,7 +130,7 @@ interface SingleCategoryRepositoryInterface
      *
      * @return Category
      */
-    public function store(array $data);
+    public function store(array $data): Category;
 
     /**
      * @param Category $category
@@ -138,5 +138,5 @@ interface SingleCategoryRepositoryInterface
      *
      * @return Category
      */
-    public function update(Category $category, array $data);
+    public function update(Category $category, array $data): Category;
 }

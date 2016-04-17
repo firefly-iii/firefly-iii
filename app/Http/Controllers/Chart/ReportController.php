@@ -54,7 +54,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
         $ids     = $accounts->pluck('id')->toArray();
         $current = clone $start;
@@ -102,7 +102,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         // spent per month, and earned per month. For a specific set of accounts
@@ -146,7 +146,7 @@ class ReportController extends Controller
         $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
         // spent per month, and earned per month. For a specific set of accounts
         // grouped by month

@@ -40,7 +40,7 @@ class ClearCategory implements ActionInterface
      *
      * @return bool
      */
-    public function act(TransactionJournal $journal)
+    public function act(TransactionJournal $journal): bool
     {
         $journal->categories()->detach();
 

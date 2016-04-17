@@ -158,7 +158,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function bill()
@@ -167,7 +166,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function budgets()
@@ -176,7 +174,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function categories()
@@ -185,7 +182,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -220,7 +216,7 @@ class TransactionJournal extends TransactionJournalSupport
      *
      * @return string
      */
-    public function getMeta($fieldName): string
+    public function getMeta($fieldName)
     {
         foreach ($this->transactionjournalmeta as $meta) {
             if ($meta->name == $fieldName) {
@@ -298,7 +294,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents()
@@ -322,7 +317,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param Carbon          $date
@@ -335,7 +329,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param Carbon          $date
@@ -391,7 +384,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param array           $types
@@ -406,7 +398,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */
@@ -417,7 +408,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()
@@ -426,7 +416,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionCurrency()
@@ -435,7 +424,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionType()
@@ -444,7 +432,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactiongroups()
@@ -461,7 +448,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions()
@@ -470,7 +456,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

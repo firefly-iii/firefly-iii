@@ -54,16 +54,18 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
+        var latitude;
         {% if Input.old('latitude') %}
-        var latitude = "{{ Input.old('latitude') }}";
+        latitude = "{{ Input.old('latitude') }}";
         {% else %}
-        var latitude = "52.3167";
+        latitude = "52.3167";
         {% endif %}
 
+        var doPlaceMarker;
         {% if Input.old('latitude') and Input.old('longitude') and Input.old('zoomLevel') %}
-        var doPlaceMarker = true;
+        doPlaceMarker = true;
         {% else %}
-        var doPlaceMarker = false;
+        doPlaceMarker = false;
         {% endif %}
 
         {% if Input.old('longitude') %}
@@ -80,5 +82,5 @@
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
-    <script src="js/tags.js"></script>
+    <script src="js/ff/tags/create.js"></script>
 {% endblock %}

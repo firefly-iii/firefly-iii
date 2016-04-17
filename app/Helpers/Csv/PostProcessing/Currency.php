@@ -19,7 +19,7 @@ class Currency implements PostProcessorInterface
     /**
      * @return array
      */
-    public function process()
+    public function process(): array
     {
 
         // fix currency

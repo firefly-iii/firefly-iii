@@ -39,7 +39,7 @@ class BasicExporter
     /**
      * @return Collection
      */
-    public function getEntries()
+    public function getEntries(): Collection
     {
         return $this->entries;
     }

@@ -3,6 +3,7 @@
 use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -83,7 +84,6 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -100,7 +100,6 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */
@@ -111,7 +110,6 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionjournals()
@@ -120,10 +118,9 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\User');
     }

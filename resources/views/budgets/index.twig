@@ -107,7 +107,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             <!-- link in header -->
-                            {% if budget.currentRep %}
+                            {% if budget.currentRep.id %}
                                 <a href="{{ route('budgets.show', [budget.id, budget.currentRep.id]) }}" class="budget-link"
                                    data-id="{{ budget.id }}">{{ budget.name }}</a>
                             {% else %}
@@ -166,9 +166,9 @@
                     <div class="box-body">
                         {% for index,budget in inactive %}
                             {% if index != inactive|length-1 %}
-                                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
-                            {% else %}
                                 <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
+                            {% else %}
+                                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -188,5 +188,5 @@
         var budgetIncomeTotal = {{ budgetIncomeTotal }};
     </script>
 
-    <script type="text/javascript" src="js/budgets.js"></script>
+    <script type="text/javascript" src="js/ff/budgets/index.js"></script>
 {% endblock %}

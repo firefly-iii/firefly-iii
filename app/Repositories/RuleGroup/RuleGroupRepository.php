@@ -33,7 +33,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->user->ruleGroups()->count();
     }
@@ -42,9 +42,9 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      * @param RuleGroup $ruleGroup
      * @param RuleGroup $moveTo
      *
-     * @return boolean
+     * @return bool
      */
-    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null)
+    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null): bool
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
@@ -72,7 +72,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @return Collection
      */
-    public function get()
+    public function get(): Collection
     {
         return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
     }
@@ -80,7 +80,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @return int
      */
-    public function getHighestOrderRuleGroup()
+    public function getHighestOrderRuleGroup(): int
     {
         $entry = $this->user->ruleGroups()->max('order');
 
@@ -119,7 +119,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function moveDown(RuleGroup $ruleGroup)
+    public function moveDown(RuleGroup $ruleGroup): bool
     {
         $order = $ruleGroup->order;
 
@@ -133,6 +133,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order + 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+        return true;
     }
 
     /**
@@ -140,7 +141,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function moveUp(RuleGroup $ruleGroup)
+    public function moveUp(RuleGroup $ruleGroup): bool
     {
         $order = $ruleGroup->order;
 
@@ -154,12 +155,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order - 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+        return true;
     }
 
     /**
      * @return bool
      */
-    public function resetRuleGroupOrder()
+    public function resetRuleGroupOrder(): bool
     {
         $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
 
@@ -181,7 +183,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup)
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
     {
         $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
 
@@ -206,7 +208,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function store(array $data)
+    public function store(array $data): RuleGroup
     {
         $order = $this->getHighestOrderRuleGroup();
 
@@ -233,7 +235,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return RuleGroup
      */
-    public function update(RuleGroup $ruleGroup, array $data)
+    public function update(RuleGroup $ruleGroup, array $data): RuleGroup
     {
         // update the account:
         $ruleGroup->title       = $data['title'];

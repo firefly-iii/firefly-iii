@@ -22,6 +22,25 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
  */
 class Kernel extends ConsoleKernel
 {
+
+    /**
+     * The bootstrap classes for the application.
+     *
+     * This needs to be for with the next upgrade.
+     *
+     * @var array
+     */
+    protected $bootstrappers = [
+        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+        'Illuminate\Foundation\Bootstrap\LoadConfiguration',
+        'FireflyIII\Bootstrap\ConfigureLogging',
+        'Illuminate\Foundation\Bootstrap\HandleExceptions',
+        'Illuminate\Foundation\Bootstrap\RegisterFacades',
+        'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
+        'Illuminate\Foundation\Bootstrap\RegisterProviders',
+        'Illuminate\Foundation\Bootstrap\BootProviders',
+    ];
+
     /**
      * The Artisan commands provided by your application.
      *

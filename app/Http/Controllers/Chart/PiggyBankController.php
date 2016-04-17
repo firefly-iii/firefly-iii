@@ -47,11 +47,10 @@ class PiggyBankController extends Controller
         $cache->addProperty('piggy-history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
-        /** @var Collection $set */
-        $set  = new Collection($repository->getEventSummarySet($piggyBank));
+        $set  = $repository->getEventSummarySet($piggyBank);
         $data = $this->generator->history($set);
         $cache->store($data);
 

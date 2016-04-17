@@ -171,7 +171,7 @@ class Entry
     /**
      * @return int
      */
-    public function getBillId()
+    public function getBillId(): int
     {
         return $this->billId;
     }
@@ -179,7 +179,7 @@ class Entry
     /**
      * @param int $billId
      */
-    public function setBillId($billId)
+    public function setBillId(int $billId)
     {
         $this->billId = $billId;
     }
@@ -187,7 +187,7 @@ class Entry
     /**
      * @return string
      */
-    public function getBillName()
+    public function getBillName(): string
     {
         return $this->billName;
     }
@@ -195,7 +195,7 @@ class Entry
     /**
      * @param string $billName
      */
-    public function setBillName($billName)
+    public function setBillName(string $billName)
     {
         $this->billName = $billName;
     }
@@ -203,7 +203,7 @@ class Entry
     /**
      * @return int
      */
-    public function getBudgetId()
+    public function getBudgetId(): int
     {
         return $this->budgetId;
     }
@@ -211,7 +211,7 @@ class Entry
     /**
      * @param int $budgetId
      */
-    public function setBudgetId($budgetId)
+    public function setBudgetId(int $budgetId)
     {
         $this->budgetId = $budgetId;
     }
@@ -219,7 +219,7 @@ class Entry
     /**
      * @return string
      */
-    public function getBudgetName()
+    public function getBudgetName(): string
     {
         return $this->budgetName;
     }
@@ -227,7 +227,7 @@ class Entry
     /**
      * @param string $budgetName
      */
-    public function setBudgetName($budgetName)
+    public function setBudgetName(string $budgetName)
     {
         $this->budgetName = $budgetName;
     }
@@ -235,7 +235,7 @@ class Entry
     /**
      * @return int
      */
-    public function getCategoryId()
+    public function getCategoryId(): int
     {
         return $this->categoryId;
     }
@@ -243,7 +243,7 @@ class Entry
     /**
      * @param int $categoryId
      */
-    public function setCategoryId($categoryId)
+    public function setCategoryId(int $categoryId)
     {
         $this->categoryId = $categoryId;
     }
@@ -251,7 +251,7 @@ class Entry
     /**
      * @return string
      */
-    public function getCategoryName()
+    public function getCategoryName(): string
     {
         return $this->categoryName;
     }
@@ -259,7 +259,7 @@ class Entry
     /**
      * @param string $categoryName
      */
-    public function setCategoryName($categoryName)
+    public function setCategoryName(string $categoryName)
     {
         $this->categoryName = $categoryName;
     }
@@ -267,7 +267,7 @@ class Entry
     /**
      * @return string
      */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->date;
     }
@@ -283,7 +283,7 @@ class Entry
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -299,7 +299,7 @@ class Entry
     /**
      * @return string
      */
-    public function getFromAccountIban()
+    public function getFromAccountIban(): string
     {
         return $this->fromAccountIban;
     }
@@ -307,7 +307,7 @@ class Entry
     /**
      * @param string $fromAccountIban
      */
-    public function setFromAccountIban($fromAccountIban)
+    public function setFromAccountIban(string $fromAccountIban)
     {
         $this->fromAccountIban = $fromAccountIban;
     }
@@ -315,7 +315,7 @@ class Entry
     /**
      * @return int
      */
-    public function getFromAccountId()
+    public function getFromAccountId():int
     {
         return $this->fromAccountId;
     }
@@ -323,7 +323,7 @@ class Entry
     /**
      * @param int $fromAccountId
      */
-    public function setFromAccountId($fromAccountId)
+    public function setFromAccountId(int $fromAccountId)
     {
         $this->fromAccountId = $fromAccountId;
     }
@@ -331,7 +331,7 @@ class Entry
     /**
      * @return string
      */
-    public function getFromAccountName()
+    public function getFromAccountName(): string
     {
         return $this->fromAccountName;
     }
@@ -339,23 +339,23 @@ class Entry
     /**
      * @param string $fromAccountName
      */
-    public function setFromAccountName($fromAccountName)
+    public function setFromAccountName(string $fromAccountName)
     {
         $this->fromAccountName = $fromAccountName;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getFromAccountNumber()
+    public function getFromAccountNumber(): string
     {
         return $this->fromAccountNumber;
     }
 
     /**
-     * @param mixed $fromAccountNumber
+     * @param string $fromAccountNumber
      */
-    public function setFromAccountNumber($fromAccountNumber)
+    public function setFromAccountNumber(string $fromAccountNumber)
     {
         $this->fromAccountNumber = $fromAccountNumber;
     }
@@ -363,7 +363,7 @@ class Entry
     /**
      * @return string
      */
-    public function getFromAccountType()
+    public function getFromAccountType(): string
     {
         return $this->fromAccountType;
     }
@@ -371,7 +371,7 @@ class Entry
     /**
      * @param string $fromAccountType
      */
-    public function setFromAccountType($fromAccountType)
+    public function setFromAccountType(string $fromAccountType)
     {
         $this->fromAccountType = $fromAccountType;
     }
@@ -379,7 +379,7 @@ class Entry
     /**
      * @return string
      */
-    public function getToAccountIban()
+    public function getToAccountIban(): string
     {
         return $this->toAccountIban;
     }
@@ -387,7 +387,7 @@ class Entry
     /**
      * @param string $toAccountIban
      */
-    public function setToAccountIban($toAccountIban)
+    public function setToAccountIban(string $toAccountIban)
     {
         $this->toAccountIban = $toAccountIban;
     }
@@ -395,7 +395,7 @@ class Entry
     /**
      * @return int
      */
-    public function getToAccountId()
+    public function getToAccountId(): int
     {
         return $this->toAccountId;
     }
@@ -403,7 +403,7 @@ class Entry
     /**
      * @param int $toAccountId
      */
-    public function setToAccountId($toAccountId)
+    public function setToAccountId(int $toAccountId)
     {
         $this->toAccountId = $toAccountId;
     }
@@ -411,7 +411,7 @@ class Entry
     /**
      * @return string
      */
-    public function getToAccountName()
+    public function getToAccountName(): string
     {
         return $this->toAccountName;
     }
@@ -419,23 +419,23 @@ class Entry
     /**
      * @param string $toAccountName
      */
-    public function setToAccountName($toAccountName)
+    public function setToAccountName(string $toAccountName)
     {
         $this->toAccountName = $toAccountName;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getToAccountNumber()
+    public function getToAccountNumber(): string
     {
         return $this->toAccountNumber;
     }
 
     /**
-     * @param mixed $toAccountNumber
+     * @param string $toAccountNumber
      */
-    public function setToAccountNumber($toAccountNumber)
+    public function setToAccountNumber(string $toAccountNumber)
     {
         $this->toAccountNumber = $toAccountNumber;
     }
@@ -443,7 +443,7 @@ class Entry
     /**
      * @return string
      */
-    public function getToAccountType()
+    public function getToAccountType(): string
     {
         return $this->toAccountType;
     }
@@ -451,7 +451,7 @@ class Entry
     /**
      * @param string $toAccountType
      */
-    public function setToAccountType($toAccountType)
+    public function setToAccountType(string $toAccountType)
     {
         $this->toAccountType = $toAccountType;
     }

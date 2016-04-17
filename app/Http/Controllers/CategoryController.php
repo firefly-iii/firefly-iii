@@ -115,7 +115,7 @@ class CategoryController extends Controller
      */
     public function index(CRI $repository, SCRI $singleRepository)
     {
-        $categories = $repository->listCategories();
+        $categories = $repository->getCategories();
 
         $categories->each(
             function (Category $category) use ($singleRepository) {

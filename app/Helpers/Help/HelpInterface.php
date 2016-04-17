@@ -41,7 +41,8 @@ interface HelpInterface
 
     /**
      * @param string $route
+     * @param string $language
      * @param array  $content
      */
-    public function putInCache(string $route, array $content);
+    public function putInCache(string $route, string $language, array $content);
 }

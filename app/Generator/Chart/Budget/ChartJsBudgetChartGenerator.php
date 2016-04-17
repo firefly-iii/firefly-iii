@@ -50,7 +50,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param Collection $entries
      *

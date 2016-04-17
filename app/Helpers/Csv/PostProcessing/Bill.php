@@ -16,7 +16,7 @@ class Bill implements PostProcessorInterface
     /**
      * @return array
      */
-    public function process()
+    public function process(): array
     {
 
         // get bill id.

@@ -57,7 +57,7 @@ class Data
      *
      * @return string
      */
-    public function getCsvFileContent()
+    public function getCsvFileContent(): string
     {
         return $this->csvFileContent ?? '';
     }
@@ -72,10 +72,10 @@ class Data
     }
 
     /**
-     *
+     * FIXME may return null
      * @return string
      */
-    public function getCsvFileLocation()
+    public function getCsvFileLocation(): string
     {
         return $this->csvFileLocation;
     }
@@ -91,10 +91,10 @@ class Data
     }
 
     /**
-     *
+     * FIXME may return null
      * @return string
      */
-    public function getDateFormat()
+    public function getDateFormat(): string
     {
         return $this->dateFormat;
     }
@@ -110,10 +110,10 @@ class Data
     }
 
     /**
-     *
+     * FIXME may return null
      * @return string
      */
-    public function getDelimiter()
+    public function getDelimiter(): string
     {
         return $this->delimiter;
     }
@@ -132,7 +132,7 @@ class Data
      *
      * @return array
      */
-    public function getMap()
+    public function getMap(): array
     {
         return $this->map;
     }
@@ -151,7 +151,7 @@ class Data
      *
      * @return array
      */
-    public function getMapped()
+    public function getMapped(): array
     {
         return $this->mapped;
     }
@@ -170,7 +170,7 @@ class Data
      *
      * @return Reader
      */
-    public function getReader()
+    public function getReader(): Reader
     {
         if (!is_null($this->csvFileContent) && strlen($this->csvFileContent) === 0) {
             $this->loadCsvFile();
@@ -188,7 +188,7 @@ class Data
      *
      * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
@@ -207,7 +207,7 @@ class Data
      *
      * @return array
      */
-    public function getSpecifix()
+    public function getSpecifix(): array
     {
         return is_array($this->specifix) ? $this->specifix : [];
     }
@@ -226,7 +226,7 @@ class Data
      *
      * @return bool
      */
-    public function hasHeaders()
+    public function hasHeaders(): bool
     {
         return $this->hasHeaders;
     }

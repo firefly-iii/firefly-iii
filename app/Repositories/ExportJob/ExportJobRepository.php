@@ -38,7 +38,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     /**
      * @return bool
      */
-    public function cleanup()
+    public function cleanup(): bool
     {
         $dayAgo = Carbon::create()->subDay();
         $set    = ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
@@ -66,7 +66,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     /**
      * @return ExportJob
      */
-    public function create()
+    public function create(): ExportJob
     {
         $exportJob = new ExportJob;
         $exportJob->user()->associate($this->user);
@@ -81,11 +81,14 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
+     *
+     * FIXME this may return null
+     * 
      * @param string $key
      *
      * @return ExportJob|null
      */
-    public function findByKey(string $key)
+    public function findByKey(string $key): ExportJob
     {
         return $this->user->exportJobs()->where('key', $key)->first();
     }

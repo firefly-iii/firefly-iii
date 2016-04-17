@@ -40,7 +40,7 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return boolean
+     * @return bool
      */
     public function destroy(Bill $bill): bool
     {
@@ -77,7 +77,7 @@ class BillRepository implements BillRepositoryInterface
                           ->get(
                               [
                                   'bills.*',
-                                  DB::raw('(`bills`.`amount_min` + `bills`.`amount_max` / 2) as `expectedAmount`'),
+                           DB::raw('((`bills`.`amount_min` + `bills`.`amount_max`) / 2) as `expectedAmount`'),
                               ]
                           )->sortBy('name');
 

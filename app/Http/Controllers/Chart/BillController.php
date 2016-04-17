@@ -78,7 +78,7 @@ class BillController extends Controller
         $cache->addProperty('bill');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         // get first transaction or today for start:

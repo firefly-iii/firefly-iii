@@ -22,17 +22,17 @@ interface ExporterInterface
     /**
      * @return Collection
      */
-    public function getEntries();
+    public function getEntries(): Collection;
 
     /**
      * @return string
      */
-    public function getFileName();
+    public function getFileName(): string;
 
     /**
-     *
+     * @return bool
      */
-    public function run();
+    public function run(): bool;
 
     /**
      * @param Collection $entries

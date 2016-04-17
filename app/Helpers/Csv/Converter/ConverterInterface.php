@@ -24,21 +24,21 @@ interface ConverterInterface
      * @param string $field
      *
      */
-    public function setField($field);
+    public function setField(string $field);
 
     /**
      * @param int $index
      */
-    public function setIndex($index);
+    public function setIndex(int $index);
 
     /**
      * @param array $mapped
      */
-    public function setMapped($mapped);
+    public function setMapped(array $mapped);
 
     /**
      * @param string $value
      */
-    public function setValue($value);
+    public function setValue(string $value);
 
 }

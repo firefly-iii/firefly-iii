@@ -50,7 +50,7 @@ final class TransactionType extends AbstractTrigger implements TriggerInterface
      *
      * @return bool
      */
-    public function triggered(TransactionJournal $journal)
+    public function triggered(TransactionJournal $journal): bool
     {
         $type   = !is_null($journal->transaction_type_type) ? $journal->transaction_type_type : strtolower($journal->transactionType->type);
         $search = strtolower($this->triggerValue);

@@ -16,7 +16,6 @@ use FireflyIII\Support\Events\BillScanner;
 /**
  * Class RescanJournal
  *
- * @codeCoverageIgnore
  * @package FireflyIII\Handlers\Events
  */
 class ScanForBillsAfterUpdate

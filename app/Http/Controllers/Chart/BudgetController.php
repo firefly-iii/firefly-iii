@@ -57,7 +57,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         if ($cache->has()) {
 
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $final = clone $last;
@@ -108,7 +108,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($repetition->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $set     = $repository->getExpensesPerDay($budget, $start, $end);
@@ -161,7 +161,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('all');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $budgets    = $repository->getBudgetsAndLimitsInRange($start, $end);
@@ -230,7 +230,7 @@ class BudgetController extends Controller
         $cache->addProperty('multiYearBudget');
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         /*
@@ -310,7 +310,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('year');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get());
         }
 
         $budgetInformation = $repository->getBudgetsAndExpensesPerMonth($accounts, $start, $end);
