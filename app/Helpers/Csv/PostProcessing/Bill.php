@@ -20,7 +20,7 @@ class Bill implements PostProcessorInterface
     {
 
         // get bill id.
-        if (!is_null($this->data['bill'])) {
+        if (!is_null($this->data['bill']->id)) {
             $this->data['bill-id'] = $this->data['bill']->id;
         }
 

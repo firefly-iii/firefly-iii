@@ -21,7 +21,7 @@ class BillName extends BasicConverter implements ConverterInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
 
-        $bill = null;
+        $bill = new Bill;
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $bill = $repository->find($this->mapped[$this->index][$this->value]);

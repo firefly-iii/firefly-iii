@@ -147,8 +147,15 @@ class Importer
         $transactionType = $this->getTransactionType(); // defaults to deposit
         $errors          = new MessageBag;
         $journal         = TransactionJournal::create(
-            ['user_id'     => Auth::user()->id, 'transaction_type_id' => $transactionType->id, 'transaction_currency_id' => $this->importData['currency']->id,
-             'description' => $this->importData['description'], 'completed' => 0, 'date' => $date, 'bill_id' => $this->importData['bill-id'],]
+            [
+                'user_id'                 => Auth::user()->id,
+                'transaction_type_id'     => $transactionType->id,
+                'transaction_currency_id' => $this->importData['currency']->id,
+                'description'             => $this->importData['description'],
+                'completed'               => 0,
+                'date'                    => $date,
+                'bill_id'                 => $this->importData['bill-id'],
+            ]
         );
         if ($journal->getErrors()->count() == 0) {
             // first transaction
