@@ -34,7 +34,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find($this->mapped[$this->index][$this->value]);
+            $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
 
             return $account;
         }
