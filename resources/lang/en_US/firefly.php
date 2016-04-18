@@ -69,6 +69,7 @@ return [
     'warning_much_data'                         => ':days days of data may take a while to load.',
     'registered'                                => 'You have registered successfully!',
     'search'                                    => 'Search',
+    'no_budget_pointer' => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
 
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
