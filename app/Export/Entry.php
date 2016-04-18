@@ -58,6 +58,7 @@ class Entry
     public $fromAccountId;
     /** @var  string */
     public $fromAccountName;
+    /** @var  int */
     public $fromAccountNumber;
     /** @var  string */
     public $fromAccountType;
@@ -132,23 +133,25 @@ class Entry
         // key = field name (see top of class)
         // value = field type (see csv.php under 'roles')
         return [
-            'amount'          => 'amount',
-            'date'            => 'date-transaction',
-            'description'     => 'description',
-            'billId'          => 'bill-id',
-            'billName'        => 'bill-name',
-            'budgetId'        => 'budget-id',
-            'budgetName'      => 'budget-name',
-            'categoryId'      => 'category-id',
-            'categoryName'    => 'category-name',
-            'fromAccountId'   => 'account-id',
-            'fromAccountName' => 'account-name',
-            'fromAccountIban' => 'account-iban',
-            'fromAccountType' => '_ignore', // no, Firefly cannot import what it exports. I know :D
-            'toAccountId'     => 'opposing-id',
-            'toAccountName'   => 'opposing-name',
-            'toAccountIban'   => 'opposing-iban',
-            'toAccountType'   => '_ignore',
+            'amount'            => 'amount',
+            'date'              => 'date-transaction',
+            'description'       => 'description',
+            'billId'            => 'bill-id',
+            'billName'          => 'bill-name',
+            'budgetId'          => 'budget-id',
+            'budgetName'        => 'budget-name',
+            'categoryId'        => 'category-id',
+            'categoryName'      => 'category-name',
+            'fromAccountId'     => 'account-id',
+            'fromAccountNumber' => 'account-number',
+            'fromAccountName'   => 'account-name',
+            'fromAccountIban'   => 'account-iban',
+            'fromAccountType'   => '_ignore', // no, Firefly cannot import what it exports. I know :D
+            'toAccountId'       => 'opposing-id',
+            'toAccountNumber'   => 'account-number',
+            'toAccountName'     => 'opposing-name',
+            'toAccountIban'     => 'opposing-iban',
+            'toAccountType'     => '_ignore',
         ];
     }
 
