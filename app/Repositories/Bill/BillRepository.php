@@ -370,8 +370,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getRanges(Bill $bill, Carbon $start, Carbon $end): array
     {
-        $startOfBill = $bill->date;
-        $startOfBill = Navigation::startOfPeriod($startOfBill, $bill->repeat_freq);
+        $startOfBill = Navigation::startOfPeriod($start, $bill->repeat_freq);
 
 
         // all periods of this bill up until the current period:
