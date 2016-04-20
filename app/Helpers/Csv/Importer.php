@@ -28,7 +28,7 @@ class Importer
     /** @var Data */
     protected $data;
     /** @var array */
-    protected $errors;
+    protected $errors = array();
     /** @var  array */
     protected $importData;
     /** @var  array */
