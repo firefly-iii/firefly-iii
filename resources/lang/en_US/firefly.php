@@ -69,7 +69,7 @@ return [
     'warning_much_data'                         => ':days days of data may take a while to load.',
     'registered'                                => 'You have registered successfully!',
     'search'                                    => 'Search',
-    'no_budget_pointer' => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
+    'no_budget_pointer'                         => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
 
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
@@ -462,9 +462,18 @@ return [
     'update_budget'                             => 'Update budget',
 
     // bills:
+    'matching_on'                               => 'Matching on',
+    'between_amounts'                           => 'between :low and :high.',
+    'repeats'                                   => 'Repeats',
+    'connected_journals'                        => 'Connected transaction journals',
+    'auto_match_on'                             => 'Automatically matched by Firefly',
+    'auto_match_off'                            => 'Not automatically matched by Firefly',
+    'next_expected_match'                       => 'Next expected match',
     'delete_bill'                               => 'Delete bill ":name"',
     'deleted_bill'                              => 'Deleted bill ":name"',
     'edit_bill'                                 => 'Edit bill ":name"',
+    'more'                                      => 'More',
+    'rescan_old'                                => 'Rescan old transactions',
     'update_bill'                               => 'Update bill',
     'updated_bill'                              => 'Updated bill ":name"',
     'store_new_bill'                            => 'Store new bill',
@@ -508,6 +517,7 @@ return [
     'save_transactions_by_moving'               => 'Save these transaction(s) by moving them to another account:',
     'stored_new_account'                        => 'New account ":name" stored!',
     'updated_account'                           => 'Updated account ":name"',
+    'credit_card_options'                       => 'Credit card options',
 
     // categories:
     'new_category'                              => 'New category',
@@ -642,6 +652,7 @@ return [
     'noCategory'                                => '(no category)',
     'notCharged'                                => 'Not charged (yet)',
     'inactive'                                  => 'Inactive',
+    'active'                                    => 'Active',
     'difference'                                => 'Difference',
     'in'                                        => 'In',
     'out'                                       => 'Out',
@@ -674,6 +685,7 @@ return [
     'audit_end_balance'                         => 'Account balance of <a href=":url" title=":account_name">:account_name</a> at the end of :end was: :balance',
 
     // charts:
+    'chart'                                     => 'Chart',
     'dayOfMonth'                                => 'Day of the month',
     'month'                                     => 'Month',
     'budget'                                    => 'Budget',

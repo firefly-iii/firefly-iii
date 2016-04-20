@@ -13,15 +13,15 @@
                     <h3 class="box-title">{{ bill.name }}</h3>
 
                     {% if bill.active %}
-                        <i class="fa fa-check fa-fw" title="Active"></i>
+                        <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i>
                     {% else %}
-                        <i class="fa fa-times fa-fw" title="Inactive"></i>
+                        <i class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></i>
                     {% endif %}
 
                     {% if bill.automatch %}
-                        <i class="fa fa-check fa-fw" title="Automatically matched by Firefly"></i>
+                        <i class="fa fa-check fa-fw" title="{{ 'auto_match_on'|_ }}"></i>
                     {% else %}
-                        <i class="fa fa-times fa-fw" title="Not automatically matched by Firefly"></i>
+                        <i class="fa fa-times fa-fw" title="{{ 'auto_match_off'|_ }}"></i>
                     {% endif %}
 
                     <!-- ACTIONS MENU -->
@@ -30,8 +30,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit',bill.id) }}"><i class="fa fa-fw fa-pencil"></i> edit</a></li>
-                                <li><a href="{{ route('bills.delete',bill.id) }}"><i class="fa fa-fw fa-trash-o"></i> delete</a></li>
+                                <li><a href="{{ route('bills.edit',bill.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('bills.delete',bill.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -41,17 +41,18 @@
                     <table class="table">
                         <tr>
                             <td colspan="2">
-                                Matching on
+                                {{ 'matching_on'|_ }}
                                 {% for word in bill.match|split(',') %}
                                     <span class="label label-info">{{ word }}</span>
                                 {% endfor %}
-                                between {{ bill.amount_min|formatAmount }} and {{ bill.amount_max|formatAmount }}.
-                                Repeats {{ bill.repeat_freq }}.
+                                {{ trans('firefly.between_amounts', {low: bill.amount_min|formatAmount, high: bill.amount_max|formatAmount }) }}
+                                {{ 'repeats'|_ }}
+                                {{ trans('firefly.repeat_freq_' ~bill.repeat_freq) }}.
                             </td>
 
                         </tr>
                         <tr>
-                            <td>Next expected match</td>
+                            <td>{{ 'next_expected_match'|_ }}</td>
                             <td>
                                 {% if bill.nextExpectedMatch %}
                                     {{ bill.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
@@ -67,11 +68,11 @@
         <div class="col-lg-6 col-sm-12 col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">More</h3>
+                    <h3 class="box-title">{{ 'more'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        <a href="{{ route('bills.rescan',bill.id) }}" class="btn btn-default">Rescan old transactions</a>
+                        <a href="{{ route('bills.rescan',bill.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
                     </p>
                 </div>
             </div>
@@ -82,7 +83,7 @@
         <div class="col-lg-12 col-sm-12 col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Chart</h3>
+                    <h3 class="box-title">{{ 'chart'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <canvas id="bill-overview" style="width:100%;" height="400"></canvas>
@@ -95,7 +96,7 @@
         <div class="col-lg-12 col-sm-12 col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Connected transaction journals</h3>
+                    <h3 class="box-title">{{ 'connected_journals' }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding">
                     {% include 'list/journals' %}
