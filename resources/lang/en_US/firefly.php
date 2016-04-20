@@ -71,6 +71,12 @@ return [
     'search'                                    => 'Search',
     'no_budget_pointer'                         => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
 
+    // repeat frequencies:
+    'repeat_freq_monthly'                       => 'monthly',
+    'weekly'                                    => 'weekly',
+    'quarterly'                                 => 'quarterly',
+    'half-year'                                 => 'every half year',
+    'yearly'                                    => 'yearly',
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
     'confirm_account_intro'                     => 'An email has been sent to the address you used during your registration. Please check it out for further instructions. If you did not get this message, you can have Firefly send it again.',

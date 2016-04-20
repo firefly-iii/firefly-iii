@@ -45,7 +45,7 @@
                                 {% for word in bill.match|split(',') %}
                                     <span class="label label-info">{{ word }}</span>
                                 {% endfor %}
-                                {{ trans('firefly.between_amounts', {low: bill.amount_min|formatAmount, high: bill.amount_max|formatAmount }) }}
+                                {{ trans('firefly.between_amounts', {low: bill.amount_min|formatAmount, high: bill.amount_max|formatAmount })|raw }}
                                 {{ 'repeats'|_ }}
                                 {{ trans('firefly.repeat_freq_' ~bill.repeat_freq) }}.
                             </td>
