@@ -3,7 +3,8 @@
 <table class="table table-hover table-compressed {% if sorting %}sortable-table{% endif %}">
     <thead>
     <tr class="ignore">
-        <th class="hidden-xs" colspan="2">&nbsp;</th>
+        <!--<th class="hidden-xs no_select_boxes" colspan="2">&nbsp;</th>-->
+        <th class="hidden-xs select_boxes" colspan="2" style="display: xnone;"><input name="select_all" class=""</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
@@ -100,5 +101,23 @@
     {% endfor %}
     </tbody>
 </table>
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="mass_button_options btn-group btn-group" style="display:none;">
+            <a href="#" class="btn btn-default mass_edit" style="display:none;"><i class="fa fa-fw fa-pencil"></i> Edit selected (5)</a>
+            <a href="#" class="btn btn-danger mass_delete" style="display:none;"><i class="fa fa-fw fa-trash"></i> Delete selected (6)</a>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
-{{ journals.render|raw }}
+        <div class="mass_buttons btn-group btn-group pull-right">
+            <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> Select transactions</a>
+            <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o" aria-hidden="true"></i> Stop selecting transactions</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        {{ journals.render|raw }}
+    </div>
+</div>
