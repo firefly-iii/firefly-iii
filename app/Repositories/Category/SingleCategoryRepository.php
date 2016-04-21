@@ -138,14 +138,15 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     /**
      * @param Category $category
      * @param int      $page
+     * @param int      $pageSize
      *
      * @return Collection
      */
-    public function getJournals(Category $category, $page): Collection
+    public function getJournals(Category $category, int $page, int $pageSize = 50): Collection
     {
-        $offset = $page > 0 ? $page * 50 : 0;
+        $offset = $page > 0 ? $page * $pageSize : 0;
 
-        return $category->transactionjournals()->expanded()->take(50)->offset($offset)
+        return $category->transactionjournals()->expanded()->take($pageSize)->offset($offset)
                         ->orderBy('transaction_journals.date', 'DESC')
                         ->orderBy('transaction_journals.order', 'ASC')
                         ->orderBy('transaction_journals.id', 'DESC')

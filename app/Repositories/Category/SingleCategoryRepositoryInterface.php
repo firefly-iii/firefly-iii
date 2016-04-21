@@ -74,10 +74,11 @@ interface SingleCategoryRepositoryInterface
     /**
      * @param Category $category
      * @param int      $page
+     * @param int      $pageSize
      *
      * @return Collection
      */
-    public function getJournals(Category $category, $page): Collection;
+    public function getJournals(Category $category, int $page, int $pageSize = 50): Collection;
 
     /**
      * @param Category   $category

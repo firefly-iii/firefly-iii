@@ -155,11 +155,12 @@ class CategoryController extends Controller
     public function show(SCRI $repository, Category $category)
     {
         $hideCategory = true; // used in list.
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $page         = intval(Input::get('page'));
-        $set          = $repository->getJournals($category, $page);
+        $set          = $repository->getJournals($category, $page, $pageSize);
         $count        = $repository->countJournals($category);
         $subTitle     = $category->name;
-        $journals     = new LengthAwarePaginator($set, $count, 50, $page);
+        $journals     = new LengthAwarePaginator($set, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id);
 
         // list of ranges for list of periods:
