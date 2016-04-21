@@ -13,6 +13,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Navigation;
 
@@ -77,7 +78,7 @@ class BillRepository implements BillRepositoryInterface
                           ->get(
                               [
                                   'bills.*',
-                           DB::raw('((`bills`.`amount_min` + `bills`.`amount_max`) / 2) as `expectedAmount`'),
+                                  DB::raw('((`bills`.`amount_min` + `bills`.`amount_max`) / 2) as `expectedAmount`'),
                               ]
                           )->sortBy('name');
 
@@ -304,18 +305,24 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param Bill $bill
      *
-     * @return Collection
+     * @param int  $page
+     * @param int  $pageSize
+     *
+     * @return LengthAwarePaginator|Collection
      */
-    public function getJournals(Bill $bill): Collection
+    public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator
     {
-        $set = $bill->transactionjournals()
-                    ->expanded()
-                    ->orderBy('transaction_journals.date', 'DESC')
-                    ->orderBy('transaction_journals.order', 'ASC')
-                    ->orderBy('transaction_journals.id', 'DESC')
-                    ->get(TransactionJournal::QUERYFIELDS);
+        $offset    = ($page - 1) * $pageSize;
+        $query     = $bill->transactionjournals()
+                          ->expanded()
+                          ->orderBy('transaction_journals.date', 'DESC')
+                          ->orderBy('transaction_journals.order', 'ASC')
+                          ->orderBy('transaction_journals.id', 'DESC');
+        $count     = $query->count();
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
-        return $set;
+        return $paginator;
     }
 
     /**

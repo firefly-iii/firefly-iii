@@ -6,6 +6,7 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -97,9 +98,12 @@ interface BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return Collection
+     * @param int  $page
+     * @param int  $pageSize
+     *
+     * @return LengthAwarePaginator
      */
-    public function getJournals(Bill $bill): Collection;
+    public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator;
 
     /**
      * Get all journals that were recorded on this bill between these dates.
