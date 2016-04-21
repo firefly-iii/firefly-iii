@@ -60,6 +60,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     {
         // delete limits with amount 0:
         BudgetLimit::where('amount', 0)->delete();
+
         return true;
 
     }
@@ -411,7 +412,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                        ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
                        ->where('limit_repetitions.enddate', $end->format('Y-m-d 00:00:00'))
                        ->first(['limit_repetitions.*']);
-        if(is_null($data)) {
+        if (is_null($data)) {
             return new LimitRepetition;
         }
 
@@ -540,20 +541,28 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @param int    $page
+     * @param int    $pageSize
      *
-     * @return Collection
+     * @return LengthAwarePaginator
      */
-    public function getWithoutBudget(Carbon $start, Carbon $end): Collection
+    public function getWithoutBudget(Carbon $start, Carbon $end, int $page, int $pageSize = 50): LengthAwarePaginator
     {
-        return $this->user
+        $offset = ($page - 1) * $pageSize;
+        $query  = $this->user
             ->transactionjournals()
             ->expanded()
             ->where('transaction_types.type', TransactionType::WITHDRAWAL)
             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNull('budget_transaction_journal.id')
             ->before($end)
-            ->after($start)
-            ->get(TransactionJournal::QUERYFIELDS);
+            ->after($start);
+
+        $count     = $query->count();
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
+
+        return $paginator;
     }
 
     /**
