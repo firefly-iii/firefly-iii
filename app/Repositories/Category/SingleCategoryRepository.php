@@ -178,21 +178,23 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
 
     /**
      * @param Category $category
-     * @param int      $page
      * @param Carbon   $start
      * @param Carbon   $end
+     * @param int      $page
+     * @param int      $pageSize
+     *
      *
      * @return Collection
      */
-    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end): Collection
+    public function getJournalsInRange(Category $category, Carbon $start, Carbon $end, int $page, int $pageSize = 50): Collection
     {
-        $offset = $page > 0 ? $page * 50 : 0;
+        $offset = $page > 0 ? $page * $pageSize : 0;
 
         return $category->transactionjournals()
                         ->after($start)
                         ->before($end)
                         ->expanded()
-                        ->take(50)
+                        ->take($pageSize)
                         ->offset($offset)
                         ->get(TransactionJournal::QUERYFIELDS);
     }

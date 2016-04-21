@@ -93,14 +93,15 @@ interface SingleCategoryRepositoryInterface
 
     /**
      * @param Category $category
-     * @param int      $page
-     *
      * @param Carbon   $start
      * @param Carbon   $end
+     * @param int      $page
+     * @param int      $pageSize
+     *
      *
      * @return Collection
      */
-    public function getJournalsInRange(Category $category, $page, Carbon $start, Carbon $end): Collection;
+    public function getJournalsInRange(Category $category, Carbon $start, Carbon $end, int $page, int $pageSize = 50): Collection;
 
     /**
      * @param Category $category

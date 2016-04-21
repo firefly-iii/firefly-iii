@@ -226,10 +226,11 @@ class CategoryController extends Controller
 
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
 
-        $set      = $repository->getJournalsInRange($category, $page, $start, $end);
+        $set      = $repository->getJournalsInRange($category, $start, $end, $page, $pageSize);
         $count    = $repository->countJournalsInRange($category, $start, $end);
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+        $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
         return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
