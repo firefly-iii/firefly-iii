@@ -64,25 +64,26 @@ class PreferencesController extends Controller
      */
     public function index(ARI $repository)
     {
-        $accounts           = $repository->getAccounts(['Default account', 'Asset account']);
-        $viewRangePref      = Preferences::get('viewRange', '1M');
-        $viewRange          = $viewRangePref->data;
-        $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
-        $budgetMax          = Preferences::get('budgetMaximum', 1000);
-        $language           = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $budgetMaximum      = $budgetMax->data;
-        $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
-        $is2faEnabled       = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
-        $has2faSecret       = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
-        $showIncomplete     = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
+        $accounts            = $repository->getAccounts(['Default account', 'Asset account']);
+        $viewRangePref       = Preferences::get('viewRange', '1M');
+        $viewRange           = $viewRangePref->data;
+        $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
+        $budgetMax           = Preferences::get('budgetMaximum', 1000);
+        $language            = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $budgetMaximum       = $budgetMax->data;
+        $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
+        $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart     = date('Y') . '-' . $fiscalYearStartStr;
+        $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
+        $has2faSecret        = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
+        $showIncomplete      = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
 
         return view(
             'preferences.index',
             compact(
                 'budgetMaximum', 'language', 'accounts', 'frontPageAccounts',
-                'viewRange', 'customFiscalYear', 'fiscalYearStart', 'is2faEnabled',
+                'viewRange', 'customFiscalYear', 'transactionPageSize', 'fiscalYearStart', 'is2faEnabled',
                 'has2faSecret', 'showIncomplete'
             )
         );
@@ -134,6 +135,14 @@ class PreferencesController extends Controller
         $fiscalYearStart  = date('m-d', strtotime(Input::get('fiscalYearStart')));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
+
+        // save page size:
+        $transactionPageSize = intval(Input::get('transactionPageSize'));
+        if($transactionPageSize > 0 && $transactionPageSize < 1337) {
+            Preferences::set('transactionPageSize', $transactionPageSize);
+        } else {
+            Preferences::set('transactionPageSize', 50);
+        }
 
         // two factor auth
         $twoFactorAuthEnabled   = intval(Input::get('twoFactorAuthEnabled'));
