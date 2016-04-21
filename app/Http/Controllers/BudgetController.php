@@ -201,6 +201,7 @@ class BudgetController extends Controller
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
+        $list->setPath('/budgets/list/noBudget');
 
         return view('budgets.noBudget', compact('list', 'subTitle'));
     }
