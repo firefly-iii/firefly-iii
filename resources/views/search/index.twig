@@ -14,7 +14,7 @@
                             <h3 class="box-title">Transactions</h3>
                         </div>
                         <div class="box-body no-padding">
-                            {% include 'list/journals-tiny' with {'transactions' : result.transactions} %}
+                            {% include 'list.journals-tiny' with {'transactions' : result.transactions} %}
                         </div>
                         <div class="box-footer">
                             <span class="pull-right">Results: {{ result.transactions|length }}</span>

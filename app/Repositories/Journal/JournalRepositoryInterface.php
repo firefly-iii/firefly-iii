@@ -57,12 +57,12 @@ interface JournalRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $offset
      * @param int   $page
+     * @param int   $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $offset, int $page): LengthAwarePaginator;
+    public function getJournalsOfTypes(array $types, int $page, int $pageSize = 50): LengthAwarePaginator;
 
     /**
      * @param string $type

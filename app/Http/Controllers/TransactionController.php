@@ -209,12 +209,12 @@ class TransactionController extends Controller
      */
     public function index(JournalRepositoryInterface $repository, string $what)
     {
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $subTitleIcon = Config::get('firefly.transactionIconsByWhat.' . $what);
         $types        = Config::get('firefly.transactionTypesByWhat.' . $what);
         $subTitle     = trans('firefly.title_' . $what);
         $page         = intval(Input::get('page'));
-        $offset       = $page > 0 ? ($page - 1) * 50 : 0;
-        $journals     = $repository->getJournalsOfTypes($types, $offset, $page);
+        $journals     = $repository->getJournalsOfTypes($types, $page, $pageSize);
 
         $journals->setPath('transactions/' . $what);
 
@@ -308,7 +308,7 @@ class TransactionController extends Controller
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
-        Log::debug('Triggered TransactionJournalStored with transaction journal #' . $journal->id.' and piggy #' . intval($request->get('piggy_bank_id')));
+        Log::debug('Triggered TransactionJournalStored with transaction journal #' . $journal->id . ' and piggy #' . intval($request->get('piggy_bank_id')));
         event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
 
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));

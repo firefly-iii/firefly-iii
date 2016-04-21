@@ -123,28 +123,23 @@ class JournalRepository implements JournalRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $offset
      * @param int   $page
-     *
-     * @param int   $pagesize
+     * @param int   $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50): LengthAwarePaginator
+    public function getJournalsOfTypes(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
     {
-        $set = $this->user
+        $offset = ($page - 1) * $pageSize;
+        $query = $this->user
             ->transactionJournals()
             ->expanded()
-            ->transactionTypes($types)
-            ->take($pagesize)
-            ->offset($offset)
-            ->orderBy('date', 'DESC')
-            ->orderBy('order', 'ASC')
-            ->orderBy('id', 'DESC')
-            ->get(TransactionJournal::QUERYFIELDS);
+            ->transactionTypes($types);
 
-        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
-        $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
+
+        $count    = $query->count();
+        $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $journals;
     }
