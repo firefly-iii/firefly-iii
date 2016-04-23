@@ -31,8 +31,8 @@ return [
     'bounced_error'                             => 'Het emailtje naar :email kwam nooit aan.',
     'deleted_error'                             => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                     => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
-    'expired_error'                             => 'Je account is verlopen, je kan helaas niet inloggen.',
-    'unbalanced_error'                          => 'Je kasboek is uit balans. Dat betekent dat er een uitgave, inkomsten of overschrijving niet netjes is opgeslagen. Kijk goed of je ergens een fout kan vinden (afwijkend bedrag: :amount).',
+    'expired_error'                             => 'Je account is verlopen en kan niet meer worden gebruikt.',
+    'unbalanced_error'                          => 'Je transacties zijn uit balans. Eén of meerdere overschrijvingen, uitgaves of inkomsten zijn niet goed opgeslagen. Controleer je rekeningen en transacties (je bent :amount uit balans).',
     'removed_amount'                            => ':amount weggehaald',
     'added_amount'                              => ':amount toegevoegd',
     'asset_account_role_help'                   => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
@@ -69,7 +69,14 @@ return [
     'warning_much_data'                         => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                => 'Je bent geregistreerd!',
     'search'                                    => 'Zoeken',
+    'no_budget_pointer'                         => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href="/budgets">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
 
+    // repeat frequencies:
+    'repeat_freq_monthly'                       => 'maandelijks',
+    'weekly'                                    => 'Wekelijks',
+    'quarterly'                                 => 'Elk kwartaal',
+    'half-year'                                 => 'Elk half jaar',
+    'yearly'                                    => 'Jaarlijks',
     // account confirmation:
     'confirm_account_header'                    => 'Bevestig je account',
     'confirm_account_intro'                     => 'TIjdens het registreren heb je een mailtje gehad. Kijk daar in voor instructies. Als je het mailtje niet hebt gehad, kan Firefly je een nieuwe sturen.',
@@ -311,6 +318,7 @@ return [
     'title_transfer'                            => 'Overboekingen',
     'title_transfers'                           => 'Overboekingen',
 
+
     // csv import:
     'csv_import'                                => 'Importeer CSV-bestand',
     'csv'                                       => 'CSV',
@@ -461,9 +469,18 @@ return [
     'update_budget'                             => 'Budget bijwerken',
 
     // bills:
+    'matching_on'                               => 'Wordt herkend',
+    'between_amounts'                           => 'tussen :low en :high.',
+    'repeats'                                   => 'Herhaalt',
+    'connected_journals'                        => 'Verbonden transacties',
+    'auto_match_on'                             => 'Automatisch herkend door Firefly',
+    'auto_match_off'                            => 'Niet automatisch herkend door Firefly',
+    'next_expected_match'                       => 'Volgende verwachte transactie',
     'delete_bill'                               => 'Verwijder contract ":name"',
     'deleted_bill'                              => 'Contract ":name" verwijderd',
     'edit_bill'                                 => 'Wijzig contract ":name"',
+    'more'                                      => 'Meer',
+    'rescan_old'                                => 'Scan oude transacties opnieuw',
     'update_bill'                               => 'Wijzig contract',
     'updated_bill'                              => 'Contract ":name" geüpdatet',
     'store_new_bill'                            => 'Sla nieuw contract op',
@@ -507,6 +524,7 @@ return [
     'save_transactions_by_moving'               => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
     'stored_new_account'                        => 'Nieuwe rekening ":name" opgeslagen!',
     'updated_account'                           => 'Rekening ":name" geüpdatet',
+    'credit_card_options'                       => 'Opties voor credit cards',
 
     // categories:
     'new_category'                              => 'Nieuwe categorie',
@@ -538,6 +556,13 @@ return [
     'deleted_deposit'                           => 'Inkomsten ":description" verwijderd',
     'deleted_transfer'                          => 'Overschrijving ":description" verwijderd',
     'stored_journal'                            => 'Nieuw transactie ":description" opgeslagen',
+    'select_transactions'                       => 'Selecteer transacties',
+    'stop_selection'                            => 'Stop met selecteren',
+    'edit_selected'                             => 'Wijzig geselecteerden',
+    'delete_selected'                           => 'Verwijder geselecteerden',
+    'mass_delete_journals'                      => 'Verwijder een aantal transacties',
+    'perm-delete-many'                          => 'Veel items in één keer verwijderen kan zeer storend zijn. Wees voorzichtig.',
+
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly!',
@@ -641,6 +666,7 @@ return [
     'noCategory'                                => '(zonder categorie)',
     'notCharged'                                => '(Nog) niet betaald',
     'inactive'                                  => 'Niet actief',
+    'active'                                    => 'Actief',
     'difference'                                => 'Verschil',
     'in'                                        => 'In',
     'out'                                       => 'Uit',
@@ -655,9 +681,9 @@ return [
     'categories_spent_in_year'                  => 'Categorieën (uitgaven)',
     'report_type'                               => 'Rapporttype',
     'report_type_default'                       => 'Standard financieel rapport',
-    'more_info_help'                            => 'Meer informatie over deze rapportages vind je in de helppagina\'s. Klik op de (?) in de rechterbovenhoek.',
     'report_type_audit'                         => 'Transactiehistorie-overzicht (audit)',
-    'report_type_meta-history'                  => 'Categorieën, budgetten en contractenoverzicht',
+    'report_type_meta-history'                  => 'Overzicht van categorieën, budgetten en contracten',
+    'more_info_help'                            => 'Meer informatie over deze rapporten vind je in de hulppagina\'s. Klik daarvoor op het (?) icoontje rechtsboven.',
     'report_included_accounts'                  => 'Accounts in rapport',
     'report_date_range'                         => 'Datumbereik',
     'report_include_help'                       => 'Overboekingen naar gedeelde rekeningen tellen als uitgave. Overboekingen van gedeelde rekeningen tellen als inkomsten.',
@@ -673,6 +699,7 @@ return [
     'audit_end_balance'                         => 'Aan het einde van de dag, :end, was het saldo van betaalrekening <a href=":url" title=":account_name">:account_name</a> :balance',
 
     // charts:
+    'chart'                                     => 'Diagram',
     'dayOfMonth'                                => 'Dag vd maand',
     'month'                                     => 'Maand',
     'budget'                                    => 'Budget',

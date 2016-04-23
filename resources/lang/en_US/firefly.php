@@ -472,7 +472,7 @@ return [
     'matching_on'                               => 'Matching on',
     'between_amounts'                           => 'between :low and :high.',
     'repeats'                                   => 'Repeats',
-    'connected_journals'                        => 'Connected transaction journals',
+    'connected_journals'                        => 'Connected transactions',
     'auto_match_on'                             => 'Automatically matched by Firefly',
     'auto_match_off'                            => 'Not automatically matched by Firefly',
     'next_expected_match'                       => 'Next expected match',
@@ -561,7 +561,7 @@ return [
     'edit_selected'                             => 'Edit selected',
     'delete_selected'                           => 'Delete selected',
     'mass_delete_journals'                      => 'Delete a number of transactions',
-    'perm-delete-many'                          => 'Deleting many items in one go can be very disruptive. Please be catious.',
+    'perm-delete-many'                          => 'Deleting many items in one go can be very disruptive. Please be cautious.',
 
 
     // new user:

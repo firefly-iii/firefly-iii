@@ -8,8 +8,8 @@
  */
 
 return [
-    'iban'                           => 'This is not a valid IBAN.',
-    'unique_account_number_for_user' => 'It looks like this account number is already in use.',
+    'iban'                           => 'Este não é um válido IBAN.',
+    'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
     'rule_trigger_value'             => 'Este valor é inválido para o disparo selecionado.',
     'rule_action_value'              => 'Este valor é inválido para a ação selecionada.',
     'invalid_domain'                 => 'Devido a restrições de segurança, você não pode registrar deste domínio.',
@@ -75,5 +75,5 @@ return [
     'string'                         => 'O campo :attribute deve ser uma string.',
     'url'                            => 'O formato do URL indicado para o campo :attribute é inválido.',
     'timezone'                       => 'O campo :attribute deverá ter um fuso horário válido.',
-    '2fa_code'                       => 'The :attribute field is invalid.',
+    '2fa_code'                       => 'O campo :attribute é inválido.',
 ];

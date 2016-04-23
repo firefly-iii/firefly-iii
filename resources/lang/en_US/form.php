@@ -116,7 +116,7 @@ return [
     'tag_areYouSure'              => 'Are you sure you want to delete the tag ":tag"?',
     'permDeleteWarning'           => 'Deleting stuff from Firely is permanent and cannot be undone.',
     'mass_make_selection'         => 'You can still prevent items from being deleted by removing the checkbox.',
-    'delete_all_permanently'      => 'Delete all permanently',
+    'delete_all_permanently'      => 'Delete selected permanently',
     'also_delete_transactions'    => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
     'also_delete_rules'           => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
     'also_delete_piggyBanks'      => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
