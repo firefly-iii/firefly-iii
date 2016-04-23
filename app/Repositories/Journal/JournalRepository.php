@@ -52,6 +52,21 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param int $journalId
+     *
+     * @return TransactionJournal
+     */
+    public function find(int $journalId) : TransactionJournal
+    {
+        $journal = $this->user->transactionjournals()->where('id', $journalId)->first();
+        if (is_null($journal)) {
+            return new TransactionJournal;
+        }
+
+        return $journal;
+    }
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
@@ -131,7 +146,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function getJournalsOfTypes(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
     {
         $offset = ($page - 1) * $pageSize;
-        $query = $this->user
+        $query  = $this->user
             ->transactionJournals()
             ->expanded()
             ->transactionTypes($types);

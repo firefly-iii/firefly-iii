@@ -1,7 +1,6 @@
 <?php
-declare(strict_types = 1);
 /**
- * CategoryList.php
+ * JournalList.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -10,17 +9,18 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Binder;
 
+
 use Auth;
-use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class CategoryList
+ * Class JournalList
  *
  * @package FireflyIII\Support\Binder
  */
-class CategoryList implements BinderInterface
+class JournalList implements BinderInterface
 {
 
     /**
@@ -34,14 +34,10 @@ class CategoryList implements BinderInterface
         if (Auth::check()) {
             $ids = explode(',', $value);
             /** @var \Illuminate\Support\Collection $object */
-            $object = Category::whereIn('id', $ids)
-                              ->where('user_id', Auth::user()->id)
-                              ->get();
-
-            // add empty category if applicable.
-            if (in_array('0', $ids)) {
-                $object->push(new Category);
-            }
+            $object = TransactionJournal::whereIn('transaction_journals.id', $ids)
+                                        ->expanded()
+                                        ->where('transaction_journals.user_id', Auth::user()->id)
+                                        ->get(TransactionJournal::QUERYFIELDS);
 
             if ($object->count() > 0) {
                 return $object;

@@ -25,6 +25,13 @@ interface JournalRepositoryInterface
     public function delete(TransactionJournal $journal): bool;
 
     /**
+     * @param int $journalId
+     *
+     * @return TransactionJournal
+     */
+    public function find(int $journalId) : TransactionJournal;
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal

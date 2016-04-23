@@ -560,6 +560,10 @@ return [
     'stop_selection'                            => 'Stop selecting transactions',
     'edit_selected'                             => 'Edit selected',
     'delete_selected'                           => 'Delete selected',
+    'mass_delete_journals'                      => 'Delete a number of transactions',
+    'perm-delete-many'                          => 'Deleting many items in one go can be very disruptive. Please be catious.',
+
+
     // new user:
     'welcome'                                   => 'Welcome to Firefly!',
     'createNewAsset'                            => 'Create a new asset account to get started. ' .

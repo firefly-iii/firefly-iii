@@ -29,7 +29,6 @@ $(document).ready(function () {
 function goToMassEdit() {
     "use strict";
     var checkedArray = getCheckboxes();
-    console.log('Journals: ' + checkedArray);
 
     // go to specially crafted URL:
     window.location.href = 'transactions/mass-edit/' + checkedArray;
@@ -39,7 +38,6 @@ function goToMassEdit() {
 function goToMassDelete() {
     "use strict";
     var checkedArray = getCheckboxes();
-    console.log('Journals: ' + checkedArray);
 
     // go to specially crafted URL:
     window.location.href = 'transactions/mass-delete/' + checkedArray;
@@ -63,7 +61,6 @@ function getCheckboxes() {
 function countChecked() {
     "use strict";
     var checked = $('.select_all_single:checked').length;
-    console.log("Now " + checked + " selected.");
     if (checked > 0) {
         $('.mass_edit span').text(edit_selected_txt + ' (' + checked + ')')
         $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')')
@@ -88,8 +85,10 @@ function stopMassSelect() {
     "use strict";
 
     // uncheck all:
+    $('input[name="select_all"]').prop('checked', false);
     uncheckAll();
     countChecked();
+
 
     // hide "select all" box in table header.
     $('.select_boxes').hide();

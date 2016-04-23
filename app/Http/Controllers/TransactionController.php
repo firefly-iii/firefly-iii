@@ -7,8 +7,10 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
+use FireflyIII\Http\Requests\MassJournalRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
@@ -219,6 +221,76 @@ class TransactionController extends Controller
         $journals->setPath('transactions/' . $what);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
+
+    }
+
+    /**
+     * @param Collection $journals
+     *
+     * @return View
+     */
+    public function massDelete(Collection $journals)
+    {
+        $subTitle = trans('firefly.mass_delete_journals');
+
+        // put previous url in session
+        Session::put('transactions.mass-delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'transactions');
+        Session::flash('gaEventAction', 'mass-delete');
+
+        return view('transactions.mass-delete', compact('journals', 'subTitle'));
+
+    }
+
+    /**
+     * @param MassJournalRequest         $request
+     * @param JournalRepositoryInterface $repository
+     *
+     * @return mixed
+     */
+    public function massDestroy(MassJournalRequest $request, JournalRepositoryInterface $repository)
+    {
+        $ids = $request->get('confirm_mass_delete');
+        $set = new Collection;
+        if (is_array($ids)) {
+            /** @var int $journalId */
+            foreach ($ids as $journalId) {
+                /** @var TransactionJournal $journal */
+                $journal = $repository->find($journalId);
+                if (!is_null($journal->id) && $journalId == $journal->id) {
+                    $set->push($journal);
+                }
+            }
+        }
+        unset($journal);
+        /** @var TransactionJournal $journal */
+        foreach ($set as $journal) {
+            $repository->delete($journal);
+        }
+
+        Preferences::mark();
+
+        Session::flash('success', trans('firefly.mass_deleted_transactions_success'));
+
+        // redirect to previous URL:
+        return redirect(session('transactions.mass-delete.url'));
+
+    }
+
+    /**
+     * @param Collection $journals
+     */
+    public function massEdit(Collection $journals)
+    {
+        throw new FireflyException('Mass editing of journals is not yet supported.');
+
+    }
+
+    /**
+     *
+     */
+    public function massUpdate()
+    {
 
     }
 

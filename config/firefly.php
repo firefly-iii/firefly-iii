@@ -173,6 +173,7 @@ return [
         // lists
         'accountList'     => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
+        'journalList'     => 'FireflyIII\Support\Binder\JournalList',
         'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
 
         // others
