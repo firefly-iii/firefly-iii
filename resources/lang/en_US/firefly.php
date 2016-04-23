@@ -318,6 +318,7 @@ return [
     'title_transfer'                            => 'Transfers',
     'title_transfers'                           => 'Transfers',
 
+
     // csv import:
     'csv_import'                                => 'Import CSV file',
     'csv'                                       => 'CSV',
@@ -555,7 +556,10 @@ return [
     'deleted_deposit'                           => 'Successfully deleted deposit ":description"',
     'deleted_transfer'                          => 'Successfully deleted transfer ":description"',
     'stored_journal'                            => 'Successfully created new transaction ":description"',
-
+    'select_transactions'                       => 'Select transactions',
+    'stop_selection'                            => 'Stop selecting transactions',
+    'edit_selected'                             => 'Edit selected',
+    'delete_selected'                           => 'Delete selected',
     // new user:
     'welcome'                                   => 'Welcome to Firefly!',
     'createNewAsset'                            => 'Create a new asset account to get started. ' .
