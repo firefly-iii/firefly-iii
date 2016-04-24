@@ -121,7 +121,7 @@ class HomeController extends Controller
         $sum = $repository->sumOfEverything();
 
         if (bccomp($sum, '0') !== 0) {
-            Session::flash('error', strval(trans('firefly.unbalanced_error', ['amount' => Amount::format($sum,false)])));
+            Session::flash('error', strval(trans('firefly.unbalanced_error', ['amount' => Amount::format($sum, false)])));
         }
 
         foreach ($accounts as $account) {
