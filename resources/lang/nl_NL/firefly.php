@@ -561,7 +561,11 @@ return [
     'edit_selected'                             => 'Wijzig geselecteerden',
     'delete_selected'                           => 'Verwijder geselecteerden',
     'mass_delete_journals'                      => 'Verwijder een aantal transacties',
+    'mass_edit_journals'                        => 'Wijzig een aantal transacties',
+    'cannot_edit_other_fields'                  => 'Je kan andere velden dan de velden die je hier ziet niet groepsgewijs wijzigen. Er is geen ruimte om ze te laten zien. Als je deze velden toch wilt wijzigen, volg dan de link naast de transactie en wijzig ze stuk voor stuk.',
     'perm-delete-many'                          => 'Veel items in één keer verwijderen kan zeer storend zijn. Wees voorzichtig.',
+    'mass_deleted_transactions_success'         => 'Verwijder :amount transactie(s).',
+    'mass_edited_transactions_success'          => 'Wijzig :amount transactie(s)',
 
 
     // new user:

@@ -117,6 +117,7 @@ return [
     'permDeleteWarning'           => 'Exclusão de dados do Firely são permanentes e não podem ser desfeitos.',
     'mass_make_selection'         => 'You can still prevent items from being deleted by removing the checkbox.',
     'delete_all_permanently'      => 'Delete selected permanently',
+    'update_all_journals'         => 'Update these transactions',
     'also_delete_transactions'    => 'A única transação ligada a essa conta será excluída também.|Todas as :count transações ligadas a esta conta serão excluídas também.',
     'also_delete_rules'           => 'A única regra que ligado a este grupo de regras será excluída também.|Todos as :count regras ligadas a este grupo de regras serão excluídas também.',
     'also_delete_piggyBanks'      => 'O único cofrinho conectado a essa conta será excluído também.|Todos os :count cofrinhos conectados a esta conta serão excluídos também.',

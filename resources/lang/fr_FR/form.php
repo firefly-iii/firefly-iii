@@ -117,6 +117,7 @@ return [
     'permDeleteWarning'           => 'Deleting stuff from Firely is permanent and cannot be undone.',
     'mass_make_selection'         => 'You can still prevent items from being deleted by removing the checkbox.',
     'delete_all_permanently'      => 'Delete selected permanently',
+    'update_all_journals'         => 'Update these transactions',
     'also_delete_transactions'    => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
     'also_delete_rules'           => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
     'also_delete_piggyBanks'      => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',

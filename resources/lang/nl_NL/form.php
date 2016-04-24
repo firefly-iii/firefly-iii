@@ -117,6 +117,7 @@ return [
     'permDeleteWarning'           => 'Dingen verwijderen uit Firefly is permanent en kan niet ongedaan gemaakt worden.',
     'mass_make_selection'         => 'Je kan items alsnog redden van de ondergang door het vinkje weg te halen.',
     'delete_all_permanently'      => 'Verwijder geselecteerde items permanent',
+    'update_all_journals'         => 'Wijzig deze transacties',
     'also_delete_transactions'    => 'Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle :count transacties verbonden aan deze rekening worden verwijderd.',
     'also_delete_rules'           => 'De enige regel in deze regelgroep wordt ook verwijderd.|Alle :count regels in deze regelgroep worden ook verwijderd.',
     'also_delete_piggyBanks'      => 'Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle :count spaarpotjes verbonden aan deze rekening worden verwijderd.',
