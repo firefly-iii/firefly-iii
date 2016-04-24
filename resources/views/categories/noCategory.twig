@@ -11,12 +11,15 @@
                 <div class="box-header with-border">
                     {{ subTitle }}
                 </div>
-                <div class="box-body no-padding">
-                    {% include 'list/journals.twig' with {'journals': list} %}
+                <div class="box-body">
+                    {% include 'list.journals' with {'journals': list} %}
                 </div>
             </div>
         </div>
     </div>
 
 
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/ff/transactions/list.js"></script>
 {% endblock %}

@@ -47,6 +47,7 @@ class JournalCollector
     }
 
     /**
+     * @deprecated
      * @return Collection
      */
     public function collect(): Collection

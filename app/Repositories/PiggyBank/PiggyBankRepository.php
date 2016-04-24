@@ -169,6 +169,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         $piggyBank->save();
 
+        // if the piggy bank is now smaller than the current relevant rep,
+        // remove money from the rep.
+        $repetition = $piggyBank->currentRelevantRep();
+        if ($repetition->currentamount > $piggyBank->targetamount) {
+            $repetition->currentamount = $piggyBank->targetamount;
+            $repetition->save();
+        }
+
         return $piggyBank;
     }
 }

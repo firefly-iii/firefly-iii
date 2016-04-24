@@ -82,7 +82,7 @@ class BillController extends Controller
         }
 
         // get first transaction or today for start:
-        $results = $repository->getJournals($bill);
+        $results = $repository->getJournals($bill, 1, 200);
 
         // resort:
         $results = $results->sortBy(

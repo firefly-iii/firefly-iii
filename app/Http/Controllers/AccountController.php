@@ -189,9 +189,10 @@ class AccountController extends Controller
     public function show(ARI $repository, Account $account)
     {
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $journals     = $repository->getJournals($account, $page);
+        $journals     = $repository->getJournals($account, $page, $pageSize);
         $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
         $journals->setPath('accounts/show/' . $account->id);
 

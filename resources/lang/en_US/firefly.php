@@ -69,7 +69,14 @@ return [
     'warning_much_data'                         => ':days days of data may take a while to load.',
     'registered'                                => 'You have registered successfully!',
     'search'                                    => 'Search',
+    'no_budget_pointer'                         => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
 
+    // repeat frequencies:
+    'repeat_freq_monthly'                       => 'monthly',
+    'weekly'                                    => 'weekly',
+    'quarterly'                                 => 'quarterly',
+    'half-year'                                 => 'every half year',
+    'yearly'                                    => 'yearly',
     // account confirmation:
     'confirm_account_header'                    => 'Please confirm your account',
     'confirm_account_intro'                     => 'An email has been sent to the address you used during your registration. Please check it out for further instructions. If you did not get this message, you can have Firefly send it again.',
@@ -268,6 +275,10 @@ return [
     'pref_two_factor_auth_remove_will_disable'  => '(this will also disable two-factor authentication)',
     'pref_save_settings'                        => 'Save settings',
     'saved_preferences'                         => 'Preferences saved!',
+    'transaction_page_size_title'               => 'Page size',
+    'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
+    'transaction_page_size_label'               => 'Page size',
+    'budget_maximum'                            => 'Budget maximum',
 
     // profile:
     'change_your_password'                      => 'Change your password',
@@ -310,6 +321,7 @@ return [
     'title_deposit'                             => 'Revenue / income',
     'title_transfer'                            => 'Transfers',
     'title_transfers'                           => 'Transfers',
+
 
     // csv import:
     'csv_import'                                => 'Import CSV file',
@@ -461,9 +473,18 @@ return [
     'update_budget'                             => 'Update budget',
 
     // bills:
+    'matching_on'                               => 'Matching on',
+    'between_amounts'                           => 'between :low and :high.',
+    'repeats'                                   => 'Repeats',
+    'connected_journals'                        => 'Connected transactions',
+    'auto_match_on'                             => 'Automatically matched by Firefly',
+    'auto_match_off'                            => 'Not automatically matched by Firefly',
+    'next_expected_match'                       => 'Next expected match',
     'delete_bill'                               => 'Delete bill ":name"',
     'deleted_bill'                              => 'Deleted bill ":name"',
     'edit_bill'                                 => 'Edit bill ":name"',
+    'more'                                      => 'More',
+    'rescan_old'                                => 'Rescan old transactions',
     'update_bill'                               => 'Update bill',
     'updated_bill'                              => 'Updated bill ":name"',
     'store_new_bill'                            => 'Store new bill',
@@ -507,6 +528,7 @@ return [
     'save_transactions_by_moving'               => 'Save these transaction(s) by moving them to another account:',
     'stored_new_account'                        => 'New account ":name" stored!',
     'updated_account'                           => 'Updated account ":name"',
+    'credit_card_options'                       => 'Credit card options',
 
     // categories:
     'new_category'                              => 'New category',
@@ -538,6 +560,17 @@ return [
     'deleted_deposit'                           => 'Successfully deleted deposit ":description"',
     'deleted_transfer'                          => 'Successfully deleted transfer ":description"',
     'stored_journal'                            => 'Successfully created new transaction ":description"',
+    'select_transactions'                       => 'Select transactions',
+    'stop_selection'                            => 'Stop selecting transactions',
+    'edit_selected'                             => 'Edit selected',
+    'delete_selected'                           => 'Delete selected',
+    'mass_delete_journals'                      => 'Delete a number of transactions',
+    'mass_edit_journals'                        => 'Edit a number of transactions',
+    'cannot_edit_other_fields'                  => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
+    'perm-delete-many'                          => 'Deleting many items in one go can be very disruptive. Please be cautious.',
+    'mass_deleted_transactions_success'         => 'Deleted :amount transaction(s).',
+    'mass_edited_transactions_success'          => 'Updated :amount transaction(s)',
+
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly!',
@@ -641,6 +674,7 @@ return [
     'noCategory'                                => '(no category)',
     'notCharged'                                => 'Not charged (yet)',
     'inactive'                                  => 'Inactive',
+    'active'                                    => 'Active',
     'difference'                                => 'Difference',
     'in'                                        => 'In',
     'out'                                       => 'Out',
@@ -673,6 +707,7 @@ return [
     'audit_end_balance'                         => 'Account balance of <a href=":url" title=":account_name">:account_name</a> at the end of :end was: :balance',
 
     // charts:
+    'chart'                                     => 'Chart',
     'dayOfMonth'                                => 'Day of the month',
     'month'                                     => 'Month',
     'budget'                                    => 'Budget',

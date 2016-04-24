@@ -204,10 +204,12 @@ interface BudgetRepositoryInterface
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @param int    $page
+     * @param int    $pageSize
      *
-     * @return Collection
+     * @return LengthAwarePaginator
      */
-    public function getWithoutBudget(Carbon $start, Carbon $end): Collection;
+    public function getWithoutBudget(Carbon $start, Carbon $end, int $page, int $pageSize = 50): LengthAwarePaginator;
 
     /**
      * @param Collection $accounts

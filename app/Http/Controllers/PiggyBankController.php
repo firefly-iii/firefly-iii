@@ -175,6 +175,7 @@ class PiggyBankController extends Controller
             $piggyBank->savedSoFar = round($piggyBank->currentRelevantRep()->currentamount, 2);
             $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = bcsub($piggyBank->targetamount, $piggyBank->savedSoFar);
+            $piggyBank->percentage = $piggyBank->percentage > 100 ? 100 : $piggyBank->percentage;
 
             /*
              * Fill account information:

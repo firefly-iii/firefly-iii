@@ -25,6 +25,13 @@ interface JournalRepositoryInterface
     public function delete(TransactionJournal $journal): bool;
 
     /**
+     * @param int $journalId
+     *
+     * @return TransactionJournal
+     */
+    public function find(int $journalId) : TransactionJournal;
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
@@ -57,12 +64,12 @@ interface JournalRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $offset
      * @param int   $page
+     * @param int   $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $offset, int $page): LengthAwarePaginator;
+    public function getJournalsOfTypes(array $types, int $page, int $pageSize = 50): LengthAwarePaginator;
 
     /**
      * @param string $type
@@ -78,12 +85,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function getWithDate(int $journalId, Carbon $date): TransactionJournal;
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return void
 
     /**
      *

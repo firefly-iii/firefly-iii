@@ -52,6 +52,21 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param int $journalId
+     *
+     * @return TransactionJournal
+     */
+    public function find(int $journalId) : TransactionJournal
+    {
+        $journal = $this->user->transactionjournals()->where('id', $journalId)->first();
+        if (is_null($journal)) {
+            return new TransactionJournal;
+        }
+
+        return $journal;
+    }
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
@@ -123,28 +138,23 @@ class JournalRepository implements JournalRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $offset
      * @param int   $page
-     *
-     * @param int   $pagesize
+     * @param int   $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $offset, int $page, int $pagesize = 50): LengthAwarePaginator
+    public function getJournalsOfTypes(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
     {
-        $set = $this->user
+        $offset = ($page - 1) * $pageSize;
+        $query  = $this->user
             ->transactionJournals()
             ->expanded()
-            ->transactionTypes($types)
-            ->take($pagesize)
-            ->offset($offset)
-            ->orderBy('date', 'DESC')
-            ->orderBy('order', 'ASC')
-            ->orderBy('id', 'DESC')
-            ->get(TransactionJournal::QUERYFIELDS);
+            ->transactionTypes($types);
 
-        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
-        $journals = new LengthAwarePaginator($set, $count, $pagesize, $page);
+
+        $count    = $query->count();
+        $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $journals;
     }
@@ -397,15 +407,17 @@ class JournalRepository implements JournalRepositoryInterface
                 $fromAccount = Account::find($data['account_from_id']);
                 $toAccount   = Account::find($data['account_to_id']);
                 break;
+            default:
+                throw new FireflyException('Did not recognise transaction type.');
         }
 
         if (is_null($toAccount)) {
-            Log::error('"to"-account is null, so we cannot continue!');
+            Log::error('"to"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"to"-account is null, so we cannot continue!');
         }
 
         if (is_null($fromAccount)) {
-            Log::error('"from"-account is null, so we cannot continue!');
+            Log::error('"from"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"from"-account is null, so we cannot continue!');
 
         }

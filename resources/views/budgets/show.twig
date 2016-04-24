@@ -35,7 +35,9 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
-                {% include 'list/journals.twig' %}
+                <div class="box-body">
+                    {% include 'list.journals' %}
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-5">
@@ -106,5 +108,5 @@
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="js/ff/charts.js"></script>
     <script type="text/javascript" src="js/ff/budgets/show.js"></script>
-
+    <script type="text/javascript" src="js/ff/transactions/list.js"></script>
 {% endblock %}

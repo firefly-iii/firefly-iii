@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Console;
 
 use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
+use FireflyIII\Console\Commands\VerifyDatabase;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,16 +31,17 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $bootstrappers = [
-        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
-        'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-        'FireflyIII\Bootstrap\ConfigureLogging',
-        'Illuminate\Foundation\Bootstrap\HandleExceptions',
-        'Illuminate\Foundation\Bootstrap\RegisterFacades',
-        'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
-        'Illuminate\Foundation\Bootstrap\RegisterProviders',
-        'Illuminate\Foundation\Bootstrap\BootProviders',
-    ];
+    protected $bootstrappers
+        = [
+            'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+            'Illuminate\Foundation\Bootstrap\LoadConfiguration',
+            'FireflyIII\Bootstrap\ConfigureLogging',
+            'Illuminate\Foundation\Bootstrap\HandleExceptions',
+            'Illuminate\Foundation\Bootstrap\RegisterFacades',
+            'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
+            'Illuminate\Foundation\Bootstrap\RegisterProviders',
+            'Illuminate\Foundation\Bootstrap\BootProviders',
+        ];
 
     /**
      * The Artisan commands provided by your application.
@@ -49,6 +51,7 @@ class Kernel extends ConsoleKernel
     protected $commands
         = [
             UpgradeFireflyInstructions::class,
+            VerifyDatabase::class,
         ];
 
     /**

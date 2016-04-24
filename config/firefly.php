@@ -2,7 +2,7 @@
 
 return [
     'chart'               => 'chartjs',
-    'version'             => '3.8.3',
+    'version'             => '3.8.4',
     'index_periods'       => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'      => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'csv_import_enabled'  => true,
@@ -173,6 +173,7 @@ return [
         // lists
         'accountList'     => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
+        'journalList'     => 'FireflyIII\Support\Binder\JournalList',
         'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
 
         // others

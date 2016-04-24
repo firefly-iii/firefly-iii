@@ -11,10 +11,13 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ subTitle }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body">
                     {% include 'list.journals' %}
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/ff/transactions/list.js"></script>
 {% endblock %}

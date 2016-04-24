@@ -1,7 +1,19 @@
 {
   "name": "grumpydictator/firefly-iii",
   "description": "Firefly III: a personal finances manager.",
-  "keywords": ["finance", "finances", "manager", "euro", "laravel", "money", "financials", "budgets", "transactions", "transfers", "management"],
+  "keywords": [
+    "finance",
+    "finances",
+    "manager",
+    "euro",
+    "laravel",
+    "money",
+    "financials",
+    "budgets",
+    "transactions",
+    "transfers",
+    "management"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/JC5/firefly-iii",
   "type": "project",
@@ -11,8 +23,8 @@
       "email": "thegrumpydictator@gmail.com",
       "homepage": "https://github.com/JC5",
       "role": "Developer"
-    }],
-
+    }
+  ],
   "require": {
     "laravel/framework": "5.2.*",
     "davejamesmiller/laravel-breadcrumbs": "~3.0",
@@ -68,7 +80,8 @@
     "post-update-cmd": [
       "php artisan cache:clear",
       "php artisan optimize",
-      "php artisan firefly:upgrade-instructions"
+      "php artisan firefly:upgrade-instructions",
+      "php artisan firefly:verify"
     ]
   },
   "config": {

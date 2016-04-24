@@ -7,6 +7,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 
@@ -97,7 +98,7 @@ class BillControllerTest extends TestCase
     public function testShow($range)
     {
         $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
-        $repository->shouldReceive('getJournals')->once()->andReturn(new Collection);
+        $repository->shouldReceive('getJournals')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
         $repository->shouldReceive('nextExpectedMatch')->once()->andReturn(new Carbon);
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

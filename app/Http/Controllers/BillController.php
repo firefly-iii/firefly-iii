@@ -174,7 +174,10 @@ class BillController extends Controller
      */
     public function show(BillRepositoryInterface $repository, Bill $bill)
     {
-        $journals                = $repository->getJournals($bill);
+        $page                    = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize                = Preferences::get('transactionPageSize', 50)->data;
+        $journals                = $repository->getJournals($bill, $page, $pageSize);
+        $journals->setPath('/bills/show/' . $bill->id);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
         $subTitle                = e($bill->name);

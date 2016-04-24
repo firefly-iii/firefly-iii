@@ -194,11 +194,14 @@ class BudgetController extends Controller
         /** @var Carbon $end */
         $end = session('end', Carbon::now()->endOfMonth());
 
-        $list     = $repository->getWithoutBudget($start, $end);
+        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $list     = $repository->getWithoutBudget($start, $end, $page, $pageSize);
         $subTitle = trans(
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
+        $list->setPath('/budgets/list/noBudget');
 
         return view('budgets.noBudget', compact('list', 'subTitle'));
     }
@@ -235,18 +238,21 @@ class BudgetController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        $journals = $repository->getJournals($budget, $repetition, 50);
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $journals = $repository->getJournals($budget, $repetition, $pageSize);
 
         if (is_null($repetition->id)) {
             $start    = $repository->firstActivity($budget);
             $end      = new Carbon;
             $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
             $subTitle = e($budget->name);
+            $journals->setPath('/budgets/show/' . $budget->id);
         } else {
             $start    = $repetition->startdate;
             $end      = $repetition->enddate;
             $set      = new Collection([$repetition]);
             $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+            $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
         }
 
         $spentArray = $repository->spentPerDay($budget, $start, $end);
@@ -258,7 +264,6 @@ class BudgetController extends Controller
             $limits->push($entry);
         }
 
-        $journals->setPath('/budgets/show/' . $budget->id);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }

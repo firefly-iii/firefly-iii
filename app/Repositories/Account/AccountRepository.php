@@ -282,12 +282,13 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param int     $page
+     * @param int     $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getJournals(Account $account, int $page): LengthAwarePaginator
+    public function getJournals(Account $account, int $page, int $pageSize = 50): LengthAwarePaginator
     {
-        $offset = ($page - 1) * 50;
+        $offset = ($page - 1) * $pageSize;
         $query  = $this->user
             ->transactionJournals()
             ->expanded()
@@ -298,8 +299,8 @@ class AccountRepository implements AccountRepositoryInterface
             ->orderBy('transaction_journals.id', 'DESC');
 
         $count     = $query->count();
-        $set       = $query->take(50)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
-        $paginator = new LengthAwarePaginator($set, $count, 50, $page);
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $paginator;
 

@@ -3,7 +3,8 @@
 <table class="table table-hover table-compressed {% if sorting %}sortable-table{% endif %}">
     <thead>
     <tr class="ignore">
-        <th class="hidden-xs" colspan="2">&nbsp;</th>
+        <th class="hidden-xs no_select_boxes" colspan="2">&nbsp;</th>
+        <th class="hidden-xs select_boxes" colspan="2" style="display: none;"><input name="select_all" class="select_all" type="checkbox"/></th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
@@ -29,7 +30,10 @@
     {% for journal in journals %}
         <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
             <td class="hidden-xs">
-                <div class="btn-group btn-group-xs">
+                <div class="select_single" style="display:none;">
+                    <input name="select_all_single[]" class="select_all_single" value="{{ journal.id }}" type="checkbox"/>
+                </div>
+                <div class="btn-group btn-group-xs edit_buttons">
                     {% if sorting %}
                         <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
                     {% endif %}
@@ -100,5 +104,28 @@
     {% endfor %}
     </tbody>
 </table>
+<div class="row mass_edit_all" style="display: none;">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="mass_button_options btn-group btn-group" style="display:none;">
+            <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit_selected'|_ }}</span></a>
+            <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete_selected'|_ }}</span></a>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
-{{ journals.render|raw }}
+        <div class="mass_buttons btn-group btn-group pull-right">
+            <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
+            <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
+                                                                                          aria-hidden="true"></i> {{ 'stop_selection'|_ }}</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        {{ journals.render|raw }}
+    </div>
+</div>
+<script type="text/javascript">
+    var edit_selected_txt = "{{ 'edit_selected'|_ }}";
+    var delete_selected_txt = "{{ 'delete_selected'|_ }}";
+</script>

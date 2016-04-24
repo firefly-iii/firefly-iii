@@ -1,4 +1,5 @@
 <?php
+
 /**
  * breadcrumbs.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

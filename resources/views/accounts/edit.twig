@@ -45,7 +45,7 @@
             {% if Session.get('preFilled').accountRole == 'ccAsset' %}
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Credit card options</h3>
+                        <h3 class="box-title">{{ 'credit_card_options'|_ }}</h3>
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.select('ccType',Config.get('firefly.ccTypes')) }}
