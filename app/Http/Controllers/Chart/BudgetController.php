@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -273,10 +274,20 @@ class BudgetController extends Controller
             $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
 
             // get all budget limits and their repetitions.
-            $reps      = $repository->getAllBudgetLimitRepetitions($currentStart, $currentEnd);
+            $reps      = $repository->getAllBudgetLimitRepetitions($currentStart, $currentEnd, $budget);
             $budgeted  = $reps->sum('amount');
             $perBudget = $repository->spentPerBudgetPerAccount(new Collection([$budget]), $accounts, $currentStart, $currentEnd);
-            $spent     = $perBudget->sum('spent');
+            // includes null, so filter!
+            $perBudget = $perBudget->filter(
+                function (TransactionJournal $journal) use ($budget) {
+                    if (intval($journal->budget_id) === $budget->id) {
+                        return $journal;
+                    }
+                }
+            );
+
+
+            $spent = $perBudget->sum('spent');
 
             $entry = [
                 'date'     => clone $currentStart,

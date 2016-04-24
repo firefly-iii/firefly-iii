@@ -78,10 +78,11 @@ interface BudgetRepositoryInterface
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @param Budget $budget
      *
      * @return Collection
      */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection;
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end, Budget $budget = null): Collection;
 
     /**
      * @param Account    $account

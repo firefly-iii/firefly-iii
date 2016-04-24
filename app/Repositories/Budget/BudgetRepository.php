@@ -146,19 +146,26 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @param Budget $budget
      *
      * @return Collection
      */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end, Budget $budget = null): Collection
     {
-        /** @var Collection $repetitions */
-        return LimitRepetition::
+        $query = LimitRepetition::
         leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                              ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                              ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
-                              ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-                              ->where('budgets.user_id', $this->user->id)
-                              ->get(['limit_repetitions.*', 'budget_limits.budget_id']);
+                                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                                ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                                ->where('budgets.user_id', $this->user->id);
+
+        if (!is_null($budget)) {
+            $query->where('budgets.id', $budget->id);
+        }
+
+        $set = $query->get(['limit_repetitions.*', 'budget_limits.budget_id']);
+
+        return $set;
     }
 
     /**
