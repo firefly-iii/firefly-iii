@@ -8,11 +8,13 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 use stdClass;
 
 /**
@@ -150,8 +152,35 @@ class VerifyDatabase extends Command
         }
     }
 
+    /**
+     * Reports on deleted accounts that still have not deleted transactions or journals attached to them.
+     */
     private function reportDeletedAccounts()
     {
+        $set = Account
+            ::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->whereNotNull('accounts.deleted_at')
+            ->whereNotNull('transactions.id')
+            ->where(
+                function (Builder $q) {
+                    $q->whereNull('transactions.deleted_at');
+                    $q->orWhereNull('transaction_journals.deleted_at');
+                }
+            )
+            ->get(
+                ['accounts.id as account_id', 'accounts.deleted_at as account_deleted_at', 'transactions.id as transaction_id',
+                 'transactions.deleted_at as transaction_deleted_at', 'transaction_journals.id as journal_id',
+                 'transaction_journals.deleted_at as journal_deleted_at']
+            );
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $date = is_null($entry->transaction_deleted_at) ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
+            $this->error(
+                'Account #' . $entry->account_id . ' should have been deleted, but has not.' .
+                ' Find it in the table called `accounts` and change the `deleted_at` field to: "' . $date . '"'
+            );
+        }
     }
 
     /**
@@ -176,7 +205,7 @@ class VerifyDatabase extends Command
         foreach ($set as $entry) {
             $this->error(
                 'Transaction #' . $entry->transaction_id . ' should have been deleted, but has not.' .
-                ' Find it in the table called `transactions` and change the `deleted_at` field to: "' . $entry->journal_deleted. '"'
+                ' Find it in the table called `transactions` and change the `deleted_at` field to: "' . $entry->journal_deleted . '"'
             );
         }
     }
@@ -219,7 +248,25 @@ class VerifyDatabase extends Command
         }
     }
 
+    /**
+     * Reports on deleted transactions that are connected to a not deleted journal.
+     */
     private function reportTransactions()
     {
+        $set = Transaction
+            ::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->whereNotNull('transactions.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->get(
+                ['transactions.id as transaction_id', 'transactions.deleted_at as transaction_deleted', 'transaction_journals.id as journal_id',
+                 'transaction_journals.deleted_at']
+            );
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $this->error(
+                'Transaction journal #' . $entry->journal_id . ' should have been deleted, but has not.' .
+                ' Find it in the table called `transaction_journals` and change the `deleted_at` field to: "' . $entry->transaction_deleted . '"'
+            );
+        }
     }
 }
