@@ -275,6 +275,10 @@ return [
     'pref_two_factor_auth_remove_will_disable'  => '(isso também irá desativar a autenticação de duas etapas)',
     'pref_save_settings'                        => 'Salvar definições',
     'saved_preferences'                         => 'Preferências salvas!',
+    'transaction_page_size_title'               => 'Page size',
+    'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
+    'transaction_page_size_label'               => 'Page size',
+    'budget_maximum'                            => 'Budget maximum',
 
     // profile:
     'change_your_password'                      => 'Alterar sua senha',

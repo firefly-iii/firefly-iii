@@ -275,6 +275,10 @@ return [
     'pref_two_factor_auth_remove_will_disable'  => '(hiermee zet je authenticatie in twee stappen ook uit)',
     'pref_save_settings'                        => 'Instellingen opslaan',
     'saved_preferences'                         => 'Voorkeuren opgeslagen!',
+    'transaction_page_size_title'               => 'Paginalengte',
+    'transaction_page_size_help'                => 'Elke lijst met transacties er op is zo lang',
+    'transaction_page_size_label'               => 'Paginalengte',
+    'budget_maximum'                            => 'Maximale budgetgrootte',
 
     // profile:
     'change_your_password'                      => 'Verander je wachtwoord',
