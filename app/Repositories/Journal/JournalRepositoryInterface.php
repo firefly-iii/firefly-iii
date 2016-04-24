@@ -87,12 +87,6 @@ interface JournalRepositoryInterface
     public function getWithDate(int $journalId, Carbon $date): TransactionJournal;
 
     /**
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return void
-
-    /**
      *
      * @param TransactionJournal $journal
      * @param array              $array

@@ -111,45 +111,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @deprecated
-     * This method scans the transaction journals from or to the given asset account
-     * and checks if these are part of a balancing act. If so, it will sum up the amounts
-     * transferred into the balancing act (if any) and return this amount.
-     *
-     * This method effectively tells you the amount of money that has been balanced out
-     * correctly in the given period for the given account.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return string
-     */
-    public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end): string
-    {
-        // the quickest way to do this is by scanning all balancingAct tags
-        // because there will be less of them any way.
-        $tags   = $this->user->tags()->where('tagMode', 'balancingAct')->get();
-        $amount = '0';
-
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes([TransactionType::TRANSFER])->get(
-                ['transaction_journals.*']
-            );
-
-            /** @var TransactionJournal $journal */
-            foreach ($journals as $journal) {
-                if (TransactionJournal::destinationAccount($journal)->id == $account->id) {
-                    $amount = bcadd($amount, TransactionJournal::amount($journal));
-                }
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
      * @param Tag $tag
      *
      * @return bool

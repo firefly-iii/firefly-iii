@@ -15,6 +15,7 @@ use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalCollector;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -89,6 +90,7 @@ class Processor
     public function collectJournals(): bool
     {
         $args             = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
+        /** @var JournalCollector $journalCollector */
         $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
         $this->journals   = $journalCollector->collect();
         Log::debug(
