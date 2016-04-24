@@ -30,4 +30,13 @@ interface BudgetReportHelperInterface
      * @return BudgetCollection
      */
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
 }

@@ -9,8 +9,6 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -313,6 +311,9 @@ class ReportController extends Controller
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
         $tags          = $this->helper->tagReport($start, $end, $accounts);
 
+        // find the budgets we've spent money on this period with these accounts:
+        $budgets = $this->budgetHelper->getBudgetsWithExpenses($start, $end, $accounts);
+
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
         Session::flash('gaEventLabel', $start->format('Y'));
@@ -329,7 +330,7 @@ class ReportController extends Controller
             'reports.default.year',
             compact(
                 'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
-                'expenses', 'incomeTopLength', 'expenseTopLength', 'tags'
+                'expenses', 'incomeTopLength', 'expenseTopLength', 'tags', 'budgets'
             )
         );
     }

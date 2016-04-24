@@ -14,6 +14,7 @@ namespace FireflyIII\Helpers\Report;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Support\Collection;
 
@@ -104,6 +105,32 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $object->addBudgetLine($budgetLine);
 
         return $object;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
+    {
+        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $budgets    = $repository->getActiveBudgets();
+
+        $set        = new Collection;
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $expenses = $repository->getExpensesPerDay($budget, $start, $end);
+            $total    = strval($expenses->sum('dailyAmount'));
+            if (bccomp($total, '0') === -1) {
+                $set->push($budget);
+            }
+        }
+
+        return $set;
     }
 
     /**

@@ -14,18 +14,16 @@ use Preferences;
  */
 class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 {
-
     /**
+     *
      * @param Collection $entries
-     * @param string     $dateFormat
      *
      * @return array
      */
-    public function budget(Collection $entries, $dateFormat = 'month'): array
+    public function budgetLimit(Collection $entries): array
     {
-        // language:
         $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
+        $format   = Config::get('firefly.monthAndDay.' . $language);
 
         $data = [
             'labels'   => [],
@@ -47,17 +45,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
         $data['count'] = count($data['datasets']);
 
         return $data;
-    }
-
-    /**
-     *
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function budgetLimit(Collection $entries): array
-    {
-        return $this->budget($entries, 'monthAndDay');
     }
 
     /**

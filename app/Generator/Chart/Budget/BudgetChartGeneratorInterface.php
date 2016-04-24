@@ -24,13 +24,6 @@ interface BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function budget(Collection $entries): array;
-
-    /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
     public function budgetLimit(Collection $entries): array;
 
     /**

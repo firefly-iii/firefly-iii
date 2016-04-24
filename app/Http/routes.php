@@ -200,9 +200,7 @@ Route::group(
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
 
     // this chart is used in reports:
-    Route::get('/chart/budget/year/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year']);
     Route::get('/chart/budget/multi-year/{reportType}/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
-
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
     Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
 
