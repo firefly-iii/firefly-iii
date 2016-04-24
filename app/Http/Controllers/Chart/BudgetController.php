@@ -255,6 +255,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($reportType);
         $cache->addProperty($accounts);
+        $cache->addProperty($budget->id);
         $cache->addProperty('budget');
         $cache->addProperty('period');
         if ($cache->has()) {
