@@ -407,15 +407,17 @@ class JournalRepository implements JournalRepositoryInterface
                 $fromAccount = Account::find($data['account_from_id']);
                 $toAccount   = Account::find($data['account_to_id']);
                 break;
+            default:
+                throw new FireflyException('Did not recognise transaction type.');
         }
 
         if (is_null($toAccount)) {
-            Log::error('"to"-account is null, so we cannot continue!');
+            Log::error('"to"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"to"-account is null, so we cannot continue!');
         }
 
         if (is_null($fromAccount)) {
-            Log::error('"from"-account is null, so we cannot continue!');
+            Log::error('"from"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"from"-account is null, so we cannot continue!');
 
         }

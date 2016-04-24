@@ -1,6 +1,6 @@
 <?php
 /**
- * MassJournalRequest.php
+ * MassEditJournalRequest.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -21,12 +21,12 @@ namespace FireflyIII\Http\Requests;
 use Auth;
 
 /**
- * Class MassJournalRequest
+ * Class MassEditJournalRequest
  *
  *
  * @package FireflyIII\Http\Requests
  */
-class MassJournalRequest extends Request
+class MassEditJournalRequest extends Request
 {
     /**
      * @return bool
@@ -43,7 +43,11 @@ class MassJournalRequest extends Request
     public function rules()
     {
         return [
-            'confirm_mass_delete.*' => 'required|belongsToUser:transaction_journals,id',
+            'description.*'            => 'required|min:1,max:255',
+            'source_account_id.*'      => 'numeric|belongsToUser:accounts,id',
+            'destination_account_id.*' => 'numeric|belongsToUser:accounts,id',
+            'revenue_account'          => 'max:255',
+            'expense_account'          => 'max:255',
         ];
     }
 }

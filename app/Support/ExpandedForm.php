@@ -27,6 +27,31 @@ class ExpandedForm
      *
      * @return string
      */
+    public function amountSmall(string $name, $value = null, array $options = []): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $options['min']  = '0.01';
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        $currencies      = Amt::getAllCurrencies();
+        unset($options['currency']);
+        unset($options['placeholder']);
+        $html = view('form.amount-small', compact('defaultCurrency', 'currencies', 'classes', 'name', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
     public function amount(string $name, $value = null, array $options = []): string
     {
         $label           = $this->label($name, $options);
@@ -261,6 +286,7 @@ class ExpandedForm
 
         return $html;
     }
+    
 
     /**
      * @param       $name

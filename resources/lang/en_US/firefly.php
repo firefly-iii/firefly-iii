@@ -561,7 +561,11 @@ return [
     'edit_selected'                             => 'Edit selected',
     'delete_selected'                           => 'Delete selected',
     'mass_delete_journals'                      => 'Delete a number of transactions',
+    'mass_edit_journals'                        => 'Edit a number of transactions',
+    'cannot_edit_other_fields'                  => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'perm-delete-many'                          => 'Deleting many items in one go can be very disruptive. Please be cautious.',
+    'mass_deleted_transactions_success'         => 'Deleted :amount transaction(s).',
+    'mass_edited_transactions_success'          => 'Updated :amount transaction(s)',
 
 
     // new user:
