@@ -123,7 +123,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $set        = new Collection;
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $expenses = $repository->getExpensesPerDay($budget, $start, $end);
+            $expenses = $repository->getExpensesPerDay($budget, $start, $end, $accounts);
             $total    = strval($expenses->sum('dailyAmount'));
             if (bccomp($total, '0') === -1) {
                 $set->push($budget);

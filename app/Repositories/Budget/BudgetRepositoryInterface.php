@@ -170,13 +170,14 @@ interface BudgetRepositoryInterface
      * Returns the expenses for this budget grouped per day, with the date
      * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
      *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return Collection
      */
-    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end):Collection;
+    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end, Collection $accounts = null) : Collection;
 
     /**
      * @param Budget $budget
