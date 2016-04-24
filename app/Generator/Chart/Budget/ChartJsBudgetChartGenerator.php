@@ -5,6 +5,7 @@ namespace FireflyIII\Generator\Chart\Budget;
 
 use Config;
 use Illuminate\Support\Collection;
+use Navigation;
 use Preferences;
 
 /**
@@ -121,6 +122,42 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
             $data['datasets'][] = ['label' => 'Budgeted for ' . $name, 'data' => array_values($budgeted)];
         }
         $data['count'] = count($data['datasets']);
+
+        return $data;
+
+    }
+
+    /**
+     * @param Collection $entries
+     * @param string     $viewRange
+     *
+     * @return array
+     */
+    public function period(Collection $entries, string $viewRange) : array
+    {
+        $data = [
+            'labels'   => [],
+            'datasets' => [
+                0 => [
+                    'label' => trans('firefly.budgeted'),
+                    'data'  => [],
+                ],
+                1 => [
+                    'label' => trans('firefly.spent'),
+                    'data'  => [],
+                ],
+            ],
+            'count'    => 2,
+        ];
+        foreach ($entries as $entry) {
+            $label            = Navigation::periodShow($entry['date'], $viewRange);
+            $data['labels'][] = $label;
+            // data set 0 is budgeted
+            // data set 1 is spent:
+            $data['datasets'][0]['data'][] = $entry['budgeted'];
+            $data['datasets'][1]['data'][] = round(($entry['spent'] * -1), 2);
+
+        }
 
         return $data;
 

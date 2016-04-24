@@ -56,18 +56,18 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $theCurrentEnd
+     * @param \Carbon\Carbon $end
      * @param                $repeatFreq
      *
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $theCurrentEnd, string $repeatFreq): Carbon
+    public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
-        $currentEnd = clone $theCurrentEnd;
+        $currentEnd = clone $end;
 
         $functionMap = [
-            '1D'   => 'addDay', 'daily' => 'addDay',
+            '1D'   => 'endOfDay', 'daily' => 'endOfDay',
             '1W'   => 'addWeek', 'week' => 'addWeek', 'weekly' => 'addWeek',
             '1M'   => 'addMonth', 'month' => 'addMonth', 'monthly' => 'addMonth',
             '3M'   => 'addMonths', 'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',

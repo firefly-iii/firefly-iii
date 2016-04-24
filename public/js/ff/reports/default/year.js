@@ -22,9 +22,8 @@ function drawChart() {
     // in a loop
     $.each($('.budget_year_chart'), function (i, v) {
         var holder = $(v);
-        var id = holder.id;
+        var id = holder.attr('id');
         var budgetId = holder.data('budget');
-        console.log('now at ' + id);
         columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, id);
 
     });

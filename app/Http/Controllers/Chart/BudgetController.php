@@ -241,6 +241,59 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Budget     $budget
+     * @param string     $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     */
+    public function period(Budget $budget, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($reportType);
+        $cache->addProperty($accounts);
+        $cache->addProperty('budget');
+        $cache->addProperty('period');
+        if ($cache->has()) {
+            //return Response::json($cache->get());
+        }
+
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        // loop over period, add by users range:
+        $current   = clone $start;
+        $viewRange = Preferences::get('viewRange', '1M')->data;
+        $set       = new Collection;
+        while ($current < $end) {
+            $currentStart = clone $current;
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
+
+            // get all budget limits and their repetitions.
+            $reps      = $repository->getAllBudgetLimitRepetitions($currentStart, $currentEnd);
+            $budgeted  = $reps->sum('amount');
+            $perBudget = $repository->spentPerBudgetPerAccount(new Collection([$budget]), $accounts, $currentStart, $currentEnd);
+            $spent     = $perBudget->sum('spent');
+
+            $entry = [
+                'date'     => clone $currentStart,
+                'budgeted' => $budgeted,
+                'spent'    => $spent,
+            ];
+            $set->push($entry);
+            $currentEnd->addDay();
+            $current = clone $currentEnd;
+        }
+        $data = $this->generator->period($set, $viewRange);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
      *
      * @param BudgetRepositoryInterface $repository
      * @param                           $reportType

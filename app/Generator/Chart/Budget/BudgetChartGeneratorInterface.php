@@ -19,6 +19,7 @@ use Illuminate\Support\Collection;
  */
 interface BudgetChartGeneratorInterface
 {
+
     /**
      * @param Collection $entries
      *
@@ -39,6 +40,14 @@ interface BudgetChartGeneratorInterface
      * @return array
      */
     public function multiYear(Collection $entries): array;
+
+    /**
+     * @param Collection $entries
+     * @param string     $viewRange
+     *
+     * @return array
+     */
+    public function period(Collection $entries, string $viewRange) : array;
 
     /**
      * @param Collection $budgets
