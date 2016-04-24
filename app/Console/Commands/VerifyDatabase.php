@@ -108,7 +108,7 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = 'User #' . $entry->user_id . ' (' . $entry->email . ') has budget #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
+            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has budget #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
                     . '") which has no budget limits.';
             $this->line($line);
         }
@@ -127,7 +127,7 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = 'User #' . $entry->user_id . ' (' . $entry->email . ') has budget #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
+            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has budget #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
                     . '") which has no transactions.';
             $this->line($line);
         }
@@ -146,7 +146,7 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = 'User #' . $entry->user_id . ' (' . $entry->email . ') has category #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
+            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has category #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
                     . '") which has no transactions.';
             $this->line($line);
         }
@@ -177,7 +177,7 @@ class VerifyDatabase extends Command
         foreach ($set as $entry) {
             $date = is_null($entry->transaction_deleted_at) ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
             $this->error(
-                'Account #' . $entry->account_id . ' should have been deleted, but has not.' .
+                'Error: Account #' . $entry->account_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called `accounts` and change the `deleted_at` field to: "' . $date . '"'
             );
         }
@@ -204,7 +204,7 @@ class VerifyDatabase extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->error(
-                'Transaction #' . $entry->transaction_id . ' should have been deleted, but has not.' .
+                'Error: Transaction #' . $entry->transaction_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called `transactions` and change the `deleted_at` field to: "' . $entry->journal_deleted . '"'
             );
         }
@@ -224,7 +224,7 @@ class VerifyDatabase extends Command
             $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface', [$user]);
             $sum        = $repository->sumOfEverything();
             if (bccomp($sum, '0') !== 0) {
-                $this->error('Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
+                $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
             }
         }
     }
@@ -242,7 +242,7 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = 'User #' . $entry->user_id . ' (' . $entry->email . ') has tag #' . $entry->id . ' ("' . $entry->tag
+            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has tag #' . $entry->id . ' ("' . $entry->tag
                     . '") which has no transactions.';
             $this->line($line);
         }
@@ -264,7 +264,7 @@ class VerifyDatabase extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->error(
-                'Transaction journal #' . $entry->journal_id . ' should have been deleted, but has not.' .
+                'Error: Transaction journal #' . $entry->journal_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called `transaction_journals` and change the `deleted_at` field to: "' . $entry->transaction_deleted . '"'
             );
         }
