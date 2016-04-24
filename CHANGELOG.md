@@ -5,6 +5,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+
+## [3.8.4] - 2016-04-24
+### Added
+- Lots of new translations.
+- Can now set page size.
+- Can now mass edit transactions.
+- Can now mass delete transactions.
+- Firefly will now attempt to verify the integrity of your database when updating.
+
+### Changed
+- New version of Charts library.
+
+### Fixed
+- Several CSV related bugs.
+- Several other bugs.
+- Bugs fixed by @Bonno.
+
 ## [3.8.3] - 2016-04-17
 ### Added
 - New audit report to see what happened.

@@ -275,6 +275,10 @@ return [
     'pref_two_factor_auth_remove_will_disable'  => '(this will also disable two-factor authentication)',
     'pref_save_settings'                        => 'Save settings',
     'saved_preferences'                         => 'Preferences saved!',
+    'transaction_page_size_title'               => 'Page size',
+    'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
+    'transaction_page_size_label'               => 'Page size',
+    'budget_maximum'                            => 'Budget maximum',
 
     // profile:
     'change_your_password'                      => 'Change your password',
