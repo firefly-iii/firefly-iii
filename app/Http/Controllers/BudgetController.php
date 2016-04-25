@@ -336,13 +336,15 @@ class BudgetController extends Controller
         $range = Preferences::get('viewRange', '1M')->data;
 
         /** @var Carbon $date */
-        $date   = session('start', new Carbon);
-        $start  = Navigation::startOfPeriod($date, $range);
-        $end    = Navigation::endOfPeriod($start, $range);
-        $key    = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
-        $amount = Preferences::get($key, 1000);
+        $date         = session('start', new Carbon);
+        $start        = Navigation::startOfPeriod($date, $range);
+        $end          = Navigation::endOfPeriod($start, $range);
+        $key          = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
+        $amount       = Preferences::get($key, 1000);
+        $displayStart = Navigation::periodShow($start, $range);
+        $displayEnd   = Navigation::periodShow($end, $range);
 
-        return view('budgets.income', compact('amount'));
+        return view('budgets.income', compact('amount', 'displayStart', 'displayEnd'));
     }
 
 }

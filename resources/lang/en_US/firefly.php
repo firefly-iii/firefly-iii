@@ -471,6 +471,7 @@ return [
     'updated_budget'                            => 'Updated budget ":name"',
     'update_amount'                             => 'Update amount',
     'update_budget'                             => 'Update budget',
+    'update_budget_amount_range'                => 'Update (expected) available amount between :start and :end',
 
     // bills:
     'matching_on'                               => 'Matching on',
