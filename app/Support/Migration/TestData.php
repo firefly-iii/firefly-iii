@@ -225,7 +225,7 @@ class TestData
         Budget::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
 
         // some empty budgets.
-        foreach (['A', 'B', 'C', 'D', 'E'] as $letter) {
+        foreach (['A'] as $letter) {
             Budget::firstOrCreateEncrypted(['name' => 'Empty budget ' . $letter, 'user_id' => $user->id]);
         }
 
