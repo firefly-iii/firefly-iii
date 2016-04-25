@@ -107,6 +107,13 @@
                             {{ 'pref_6M'|_ }}
                         </label>
                     </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="viewRange"
+                                   value="1Y" {% if viewRange == '1Y' %} checked {% endif %}>
+                            {{ 'pref_1Y'|_ }}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

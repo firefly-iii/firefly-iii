@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use Config;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
@@ -19,6 +20,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
+use Preferences;
 
 /**
  * Class BudgetRepository
@@ -555,6 +557,54 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     }
 
     /**
+     * Returns a list of budget limits that are valid in the current given range.
+     * $ignore is optional. Send an empty limit rep.
+     *
+     * @param Budget          $budget
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param LimitRepetition $ignore
+     *
+     * @return Collection
+     */
+    public function getValidRepetitions(Budget $budget, Carbon $start, Carbon $end, LimitRepetition $ignore) : Collection
+    {
+        $query = $budget->limitrepetitions()
+                        ->where( // valid when either of these are true:
+                            function ($q) use ($start, $end) {
+                                $q->where(
+                                    function ($query) use ($start, $end) {
+                                        // starts before start time, and the end also after start time.
+                                        $query->where('limit_repetitions.startdate', '<=', $start->format('Y-m-d 00:00:00'));
+                                        $query->where('limit_repetitions.enddate', '>=', $start->format('Y-m-d 00:00:00'));
+                                    }
+                                );
+                                $q->orWhere(
+                                    function ($query) use ($start, $end) {
+                                        // end after end time, and start is before end time
+                                        $query->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'));
+                                        $query->where('limit_repetitions.enddate', '>=', $end->format('Y-m-d 00:00:00'));
+                                    }
+                                );
+                                // start is after start and end is before end
+                                $q->orWhere(
+                                    function ($query) use ($start, $end) {
+                                        // end after end time, and start is before end time
+                                        $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'));
+                                        $query->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d 00:00:00'));
+                                    }
+                                );
+                            }
+                        );
+        if (!is_null($ignore->id)) {
+            $query->where('limit_repetitions.id', '!=', $ignore->id);
+        }
+        $data = $query->get(['limit_repetitions.*']);
+
+        return $data;
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      * @param int    $page
@@ -819,9 +869,12 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      */
     public function updateLimitAmount(Budget $budget, Carbon $date, int $amount): BudgetLimit
     {
-        // there should be a budget limit for this startdate:
+        // there might be a budget limit for this startdate:
+
+        $viewRange  = Preferences::get('viewRange', '1M')->data;
+        $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . $viewRange);
         /** @var BudgetLimit $limit */
-        $limit = $budget->budgetlimits()->where('budget_limits.startdate', $date)->first(['budget_limits.*']);
+        $limit = $budget->budgetlimits()->where('budget_limits.startdate', $date)->where('budget_limits.repeat_freq', $repeatFreq)->first(['budget_limits.*']);
 
         if (!$limit) {
             // if not, create one!
@@ -829,12 +882,13 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             $limit->budget()->associate($budget);
             $limit->startdate   = $date;
             $limit->amount      = $amount;
-            $limit->repeat_freq = 'monthly';
+            $limit->repeat_freq = $repeatFreq;
             $limit->repeats     = 0;
             $limit->save();
 
             // likewise, there should be a limit repetition to match the end date
             // (which is always the end of the month) but that is caught by an event.
+            // so handled automatically.
 
         } else {
             if ($amount > 0) {
@@ -846,53 +900,5 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         }
 
         return $limit;
-    }
-
-    /**
-     * Returns a list of budget limits that are valid in the current given range.
-     * $ignore is optional. Send an empty limit rep.
-     *
-     * @param Budget          $budget
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param LimitRepetition $ignore
-     *
-     * @return Collection
-     */
-    public function getValidRepetitions(Budget $budget, Carbon $start, Carbon $end, LimitRepetition $ignore) : Collection
-    {
-        $query = $budget->limitrepetitions()
-                        ->where( // valid when either of these are true:
-                            function ($q) use ($start, $end) {
-                                $q->where(
-                                    function ($query) use ($start, $end) {
-                                        // starts before start time, and the end also after start time.
-                                        $query->where('limit_repetitions.startdate', '<=', $start->format('Y-m-d 00:00:00'));
-                                        $query->where('limit_repetitions.enddate', '>=', $start->format('Y-m-d 00:00:00'));
-                                    }
-                                );
-                                $q->orWhere(
-                                    function ($query) use ($start, $end) {
-                                        // end after end time, and start is before end time
-                                        $query->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'));
-                                        $query->where('limit_repetitions.enddate', '>=', $end->format('Y-m-d 00:00:00'));
-                                    }
-                                );
-                                // start is after start and end is before end
-                                $q->orWhere(
-                                    function ($query) use ($start, $end) {
-                                        // end after end time, and start is before end time
-                                        $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'));
-                                        $query->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d 00:00:00'));
-                                    }
-                                );
-                            }
-                        );
-        if (!is_null($ignore->id)) {
-            $query->where('limit_repetitions.id', '!=', $ignore->id);
-        }
-        $data = $query->get(['limit_repetitions.*']);
-
-        return $data;
     }
 }

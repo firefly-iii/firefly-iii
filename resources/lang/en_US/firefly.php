@@ -257,6 +257,7 @@ return [
     'pref_1M'                                   => 'One month',
     'pref_3M'                                   => 'Three months (quarter)',
     'pref_6M'                                   => 'Six months',
+    'pref_1Y'                                   => 'One year',
     'pref_languages'                            => 'Languages',
     'pref_languages_help'                       => 'Firefly III supports several languages. Which one do you prefer?',
     'pref_custom_fiscal_year'                   => 'Fiscal year settings',
@@ -476,6 +477,12 @@ return [
     'update_amount'                             => 'Update amount',
     'update_budget'                             => 'Update budget',
     'update_budget_amount_range'                => 'Update (expected) available amount between :start and :end',
+    'warn_range_weekly'                         => 'You have selected a custom date range using the top right date range selection tool. Your preferences indicate you prefer a "weekly" view. Changes to the budgets below will be valid for exactly one week from now.',
+    'warn_range_monthly'                        => 'You have selected a custom date range using the top right date range selection tool. Your preferences indicate you prefer a "monthly" view. Changes to the budgets below will be valid for exactly one month from now.',
+    'warn_range_quarterly'                      => 'You have selected a custom date range using the top right date range selection tool. Your preferences indicate you prefer a "quarter" view. Changes to the budgets below will be valid for exactly three months from now.',
+    'warn_range_half-year'                      => 'You have selected a custom date range using the top right date range selection tool. Your preferences indicate you prefer the "six months" overview. Changes to the budgets below will be valid for exactly six months from now.',
+    'warn_range_custom'                         => 'You have selected a custom date range using the top right date range selection tool. Your preferences indicate you prefer a custom range. Changes to the budgets below will be valid for your custom range.',
+    'warn_range_yearly'                         => 'You have selected a custom date range using the top right date range selection tool. Your preferences indicate you prefer the "yearly" overview. Changes to the budgets below will be valid for exactly one year from now.',
 
     // bills:
     'matching_on'                               => 'Matching on',

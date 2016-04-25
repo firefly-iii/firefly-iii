@@ -161,6 +161,16 @@ class BudgetController extends Controller
         $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
         /**
+         * Warn user if necessary
+         */
+        $range       = Preferences::get('viewRange', '1M')->data;
+        $repeatFreq  = Config::get('firefly.range_to_repeat_freq.' . $range);
+        $userWarning = '';
+        if (session('is_custom_range', false) === true) {
+            $userWarning = strval(trans('firefly.warn_range_' . $repeatFreq));
+        }
+
+        /**
          * Do some cleanup:
          */
         $repository->cleanupBudgets();
@@ -187,7 +197,7 @@ class BudgetController extends Controller
                                'budgetMaximum', 'periodStart', 'periodEnd',
                                'period', 'range', 'budgetIncomeTotal',
                                'defaultCurrency', 'inactive', 'budgets',
-                               'spent', 'budgeted'
+                               'spent', 'budgeted', 'userWarning'
                            )
         );
     }

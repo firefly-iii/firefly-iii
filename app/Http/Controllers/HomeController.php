@@ -9,6 +9,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Input;
+use Log;
 use Preferences;
 use Route;
 use Session;
@@ -33,8 +34,17 @@ class HomeController extends Controller
     public function dateRange()
     {
 
-        $start = new Carbon(Input::get('start'));
-        $end   = new Carbon(Input::get('end'));
+        $start      = new Carbon(Input::get('start'));
+        $end        = new Carbon(Input::get('end'));
+        $label      = Input::get('label');
+
+        // check if the label is "everything" or "Custom range" which will betray
+        // a possible problem with the budgets.
+        if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
+            Session::put('is_custom_range', true);
+        } else {
+            Session::put('is_custom_range', false);
+        }
 
         $diff = $start->diffInDays($end);
 
