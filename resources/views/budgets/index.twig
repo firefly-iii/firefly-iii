@@ -99,10 +99,10 @@
 
         </div>
     </div>
-
+    <p>Bla bla bla</p>
     <div class="row">
         {% for budget in budgets %}
-            <div class="col-lg-3 col-sm-4 col-md-6" style="height:180px;">
+            <div class="col-lg-4 col-sm-6 col-md-6">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
@@ -130,7 +130,12 @@
                     <div class="box-body">
                         <table class="table">
                             <tr>
-                                <td style="width:40%;">{{ 'budgeted'|_ }}</td>
+                                <td style="width:40%;">
+                                    {{ 'budgeted'|_ }}
+                                    <span class="small"><br />
+                                        {{ session('start').formatLocalized(monthAndDayFormat) }} -
+                                        {{ session('start').formatLocalized(monthAndDayFormat) }}</span>
+                                </td>
                                 <td>
                                     <div class="form-group" style="margin-bottom:0;">
                                         <div class="input-group">
@@ -140,12 +145,39 @@
                                                    data-id="{{ budget.id }}" value="{{ budget.currentRep.amount|number_format(0,'','') }}" autocomplete="off"
                                                    step="1" min="0" max="{{ budgetMaximum }}" name="amount" type="number">
                                         </div>
+                                        <div class="small">
+                                                <ul class="list-inline">
+                                                    <li>Previously budgeted:</li>
+                                                    <li><a href="#">{{ 123|formatAmountPlain }}</a></li>
+                                                    <li><a href="#">{{ 456|formatAmountPlain }}</a></li>
+                                                </ul>
+
+                                            </div>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%;">{{ 'spent'|_ }}</td>
+                                <td style="width:40%;">
+                                    {{ 'spent'|_ }}
+                                    <span class="small"><br />
+                                        {{ session('start').formatLocalized(monthAndDayFormat) }} -
+                                        {{ session('start').formatLocalized(monthAndDayFormat) }}
+                                    </span>
+                                </td>
                                 <td>{{ budget.spent|formatAmount }}</a></td>
+                            </tr>
+                            <tr>
+                                <td style="width:40%">
+                                    <span class="text-danger">
+                                        Conflicts
+                                    </span>
+                                </td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <li>Also budgeted {{ 123|formatAmount }} between x and y.</li>
+                                        <li>Also budgeted {{ 123|formatAmount }} between x and y.</li>  
+                                    </ul>
+                                </td>
                             </tr>
                         </table>
                     </div>
