@@ -147,13 +147,26 @@ interface BudgetRepositoryInterface
     public function getBudgetsAndLimitsInRange(Carbon $start, Carbon $end): Collection;
 
     /**
+     * Returns a list of budget limits that are valid in the current given range.
+     *
+     * @param Budget          $budget
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param LimitRepetition $ignore
+     *
+     * @return Collection
+     */
+    public function getValidRepetitions(Budget $budget, Carbon $start, Carbon $end, LimitRepetition $ignore) : Collection;
+
+    /**
      * @param Budget $budget
+     * @param string $repeatFreq
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return LimitRepetition
      */
-    public function getCurrentRepetition(Budget $budget, Carbon $start, Carbon $end): LimitRepetition;
+    public function getCurrentRepetition(Budget $budget, string $repeatFreq, Carbon $start, Carbon $end): LimitRepetition;
 
     /**
      * Returns all expenses for the given budget and the given accounts, in the given period.

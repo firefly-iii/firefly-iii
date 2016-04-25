@@ -3,6 +3,7 @@
 use Amount;
 use Auth;
 use Carbon\Carbon;
+use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
@@ -142,18 +143,22 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository, ARI $accountRepository)
     {
-        $budgets  = $repository->getActiveBudgets();
-        $inactive = $repository->getInactiveBudgets();
-        $spent    = '0';
-        $budgeted = '0';
-        $range    = Preferences::get('viewRange', '1M')->data;
+        $budgets    = $repository->getActiveBudgets();
+        $inactive   = $repository->getInactiveBudgets();
+        $spent      = '0';
+        $budgeted   = '0';
+        $range      = Preferences::get('viewRange', '1M')->data;
+        $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . $range);
         /** @var Carbon $date */
-        $date              = session('start', new Carbon);
-        $start             = Navigation::startOfPeriod($date, $range);
-        $end               = Navigation::endOfPeriod($start, $range);
+        /** @var Carbon $start */
+        $start = session('start', new Carbon);
+        /** @var Carbon $end */
+        $end               = session('end', new Carbon);
         $key               = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $budgetIncomeTotal = Preferences::get($key, 1000)->data;
         $period            = Navigation::periodShow($start, $range);
+        $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
+        $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
         $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
         /**
@@ -164,8 +169,9 @@ class BudgetController extends Controller
         // loop the budgets:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budget->spent      = $repository->balanceInPeriod($budget, $start, $end, $accounts);
-            $budget->currentRep = $repository->getCurrentRepetition($budget, $start, $end);
+            $budget->spent            = $repository->balanceInPeriod($budget, $start, $end, $accounts);
+            $budget->currentRep       = $repository->getCurrentRepetition($budget, $repeatFreq, $start, $end);
+            $budget->otherRepetitions = $repository->getValidRepetitions($budget, $start, $end, $budget->currentRep);
             if (!is_null($budget->currentRep->id)) {
                 $budgeted = bcadd($budgeted, $budget->currentRep->amount);
             }
@@ -178,7 +184,12 @@ class BudgetController extends Controller
         $defaultCurrency = Amount::getDefaultCurrency();
 
         return view(
-            'budgets.index', compact('budgetMaximum', 'period', 'range', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
+            'budgets.index', compact(
+                               'budgetMaximum', 'periodStart', 'periodEnd',
+                               'period', 'range', 'budgetIncomeTotal',
+                               'defaultCurrency', 'inactive', 'budgets',
+                               'spent', 'budgeted'
+                           )
         );
     }
 
