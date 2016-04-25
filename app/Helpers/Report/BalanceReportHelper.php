@@ -95,6 +95,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     {
         $line = new BalanceLine;
         $line->setBudget($budget);
+        $line->setStartDate($budget->startdate); // returned by getBudgetsAndLimitsInRange
+        $line->setEndDate($budget->enddate); // returned by getBudgetsAndLimitsInRange
 
         // loop accounts:
         foreach ($accounts as $account) {

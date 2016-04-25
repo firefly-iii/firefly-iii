@@ -394,6 +394,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                     );
                 }
             )
+            ->orderBy('budgets.id', 'budget_limits.startdate', 'limit_repetitions.enddate')
             ->get(['budgets.*', 'limit_repetitions.startdate', 'limit_repetitions.enddate', 'limit_repetitions.amount']);
 
         $set = $set->sortBy(

@@ -71,7 +71,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses = $this->getSumOfRange($start, $end, $totalSpent);
+                $expenses = $this->getSumOfRange($repetition->startdate, $repetition->enddate, $totalSpent);
 
                 // 200 en -100 is 100, vergeleken met 0 === 1
                 // 200 en -200 is 0, vergeleken met 0 === 0
