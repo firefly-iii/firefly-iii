@@ -333,7 +333,8 @@ class BudgetController extends Controller
      */
     public function updateIncome()
     {
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range  = Preferences::get('viewRange', '1M')->data;
+        $format = strval(trans('config.month_and_day'));
 
         /** @var Carbon $date */
         $date         = session('start', new Carbon);
@@ -341,8 +342,8 @@ class BudgetController extends Controller
         $end          = Navigation::endOfPeriod($start, $range);
         $key          = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
         $amount       = Preferences::get($key, 1000);
-        $displayStart = Navigation::periodShow($start, $range);
-        $displayEnd   = Navigation::periodShow($end, $range);
+        $displayStart = $start->formatLocalized($format);
+        $displayEnd   = $end->formatLocalized($format);
 
         return view('budgets.income', compact('amount', 'displayStart', 'displayEnd'));
     }
