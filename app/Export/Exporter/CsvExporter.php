@@ -72,6 +72,7 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
         }
         $writer->insertAll($rows);
+
         return true;
     }
 

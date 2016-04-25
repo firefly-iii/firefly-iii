@@ -83,7 +83,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     /**
      *
      * FIXME this may return null
-     * 
+     *
      * @param string $key
      *
      * @return ExportJob|null

@@ -138,7 +138,7 @@ class PreferencesController extends Controller
 
         // save page size:
         $transactionPageSize = intval(Input::get('transactionPageSize'));
-        if($transactionPageSize > 0 && $transactionPageSize < 1337) {
+        if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
             Preferences::set('transactionPageSize', $transactionPageSize);
         } else {
             Preferences::set('transactionPageSize', 50);

@@ -6,7 +6,6 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;

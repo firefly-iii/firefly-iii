@@ -21,7 +21,7 @@ class UserEventListener
 {
     /**
      * Handle user logout events.
-     * 
+     *
      * @return bool
      */
     public function onUserLogout(): bool

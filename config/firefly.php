@@ -63,6 +63,7 @@ return [
         '1M'     => 'monthly',
         '3M'     => 'quarterly',
         '6M'     => 'half-year',
+        '1Y'     => 'yearly',
         'custom' => 'monthly',
     ],
     'subTitlesByIdentifier'    =>

@@ -60,6 +60,7 @@ class SendRegistrationMail
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
         }
+
         return true;
     }
 }

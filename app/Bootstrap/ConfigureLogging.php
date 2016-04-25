@@ -9,9 +9,9 @@
 
 namespace FireflyIII\Bootstrap;
 
-use Illuminate\Log\Writer;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Bootstrap\ConfigureLogging as IlluminateConfigureLogging;
+use Illuminate\Log\Writer;
 
 /**
  * Class ConfigureLogging
@@ -26,7 +26,7 @@ class ConfigureLogging extends IlluminateConfigureLogging
      */
     protected function configureSingleHandler(Application $app, Writer $log)
     {
-        $log->useFiles($app->storagePath().'/logs/firefly-iii.log');
+        $log->useFiles($app->storagePath() . '/logs/firefly-iii.log');
     }
 
     /**
@@ -36,7 +36,7 @@ class ConfigureLogging extends IlluminateConfigureLogging
     protected function configureDailyHandler(Application $app, Writer $log)
     {
         $log->useDailyFiles(
-            $app->storagePath().'/logs/firefly-iii.log',
+            $app->storagePath() . '/logs/firefly-iii.log',
             $app->make('config')->get('app.log_max_files', 5)
         );
     }

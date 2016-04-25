@@ -36,15 +36,16 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $bootstrappers = [
-        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
-        'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-        'FireflyIII\Bootstrap\ConfigureLogging',
-        'Illuminate\Foundation\Bootstrap\HandleExceptions',
-        'Illuminate\Foundation\Bootstrap\RegisterFacades',
-        'Illuminate\Foundation\Bootstrap\RegisterProviders',
-        'Illuminate\Foundation\Bootstrap\BootProviders',
-    ];
+    protected $bootstrappers
+        = [
+            'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+            'Illuminate\Foundation\Bootstrap\LoadConfiguration',
+            'FireflyIII\Bootstrap\ConfigureLogging',
+            'Illuminate\Foundation\Bootstrap\HandleExceptions',
+            'Illuminate\Foundation\Bootstrap\RegisterFacades',
+            'Illuminate\Foundation\Bootstrap\RegisterProviders',
+            'Illuminate\Foundation\Bootstrap\BootProviders',
+        ];
 
     /**
      * The application's global HTTP middleware stack.
@@ -144,7 +145,7 @@ class Kernel extends HttpKernel
             // MUST be confirmed.
             // MUST have owner role
             // (this group includes the other Firefly middleware)
-            'admin'                   => [
+            'admin'                            => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

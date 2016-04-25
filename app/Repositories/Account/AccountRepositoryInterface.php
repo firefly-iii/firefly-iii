@@ -124,7 +124,8 @@ interface AccountRepositoryInterface
     /**
      * @param Account $account
      * @param int     $page
-     * @param int $pageSize
+     * @param int     $pageSize
+     *
      * @return LengthAwarePaginator
      */
     public function getJournals(Account $account, int $page, int $pageSize = 50): LengthAwarePaginator;

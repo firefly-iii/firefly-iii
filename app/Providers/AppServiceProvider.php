@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
+use Config;
 use Illuminate\Support\ServiceProvider;
 use Log;
-use Config;
+
 /**
  * Class AppServiceProvider
  *

@@ -100,9 +100,9 @@ class ReportController extends Controller
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
                 // journals no budget, not corrected by a tag.
-                $journals = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $journals     = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
-                $journals = $journals->filter(
+                $journals     = $journals->filter(
                     function (TransactionJournal $journal) {
                         $tags = $journal->tags()->where('tagMode', 'balancingAct')->count();
                         if ($tags === 0) {

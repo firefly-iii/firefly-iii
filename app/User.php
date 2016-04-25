@@ -19,9 +19,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string                                                                                $password
  * @property string                                                                                $remember_token
  * @property string                                                                                $reset
- * @property bool $activated
- * @property bool $isAdmin
- * @property bool $has2FA
+ * @property bool                                                                                  $activated
+ * @property bool                                                                                  $isAdmin
+ * @property bool                                                                                  $has2FA
  * @property boolean                                                                               $blocked
  * @property string                                                                                $blocked_code
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[]            $accounts

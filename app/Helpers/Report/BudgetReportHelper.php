@@ -120,7 +120,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $budgets    = $repository->getActiveBudgets();
 
-        $set        = new Collection;
+        $set = new Collection;
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $expenses = $repository->getExpensesPerDay($budget, $start, $end, $accounts);

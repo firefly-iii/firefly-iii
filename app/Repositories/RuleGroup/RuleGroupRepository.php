@@ -133,6 +133,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order + 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+
         return true;
     }
 
@@ -155,6 +156,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order - 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+
         return true;
     }
 

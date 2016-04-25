@@ -70,6 +70,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         $this->exportDisk->put($file, $this->explanationString);
         Log::debug('Also put explanation file "' . $file . '" in the zip.');
         $this->getFiles()->push($file);
+
         return true;
     }
 

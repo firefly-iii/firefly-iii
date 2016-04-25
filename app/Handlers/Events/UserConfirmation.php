@@ -47,6 +47,7 @@ class UserConfirmation
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
         $this->doConfirm($user, $ipAddress);
+
         return true;
     }
 
@@ -62,6 +63,7 @@ class UserConfirmation
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
         $this->doConfirm($user, $ipAddress);
+
         return true;
     }
 

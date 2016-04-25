@@ -7,7 +7,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Illuminate\Support\Collection;
 use Response;
 
 

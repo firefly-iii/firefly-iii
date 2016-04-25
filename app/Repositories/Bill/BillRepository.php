@@ -327,6 +327,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * Get all journals that were recorded on this bill between these dates.
+     *
      * @param Bill   $bill
      * @param Carbon $start
      * @param Carbon $end

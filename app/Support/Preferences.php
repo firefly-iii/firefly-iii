@@ -111,9 +111,10 @@ class Preferences
         $user = Auth::user();
         if (is_null($user)) {
             // make new preference, return it:
-            $pref = new Preference;
+            $pref       = new Preference;
             $pref->name = $name;
             $pref->data = $value;
+
             return $pref;
         }
 

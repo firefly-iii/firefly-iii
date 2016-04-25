@@ -73,6 +73,7 @@ class Data
 
     /**
      * FIXME may return null
+     *
      * @return string
      */
     public function getCsvFileLocation(): string
@@ -92,6 +93,7 @@ class Data
 
     /**
      * FIXME may return null
+     *
      * @return string
      */
     public function getDateFormat(): string
@@ -111,6 +113,7 @@ class Data
 
     /**
      * FIXME may return null
+     *
      * @return string
      */
     public function getDelimiter(): string

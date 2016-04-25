@@ -81,6 +81,7 @@ class Processor
         $attachmentCollector = app('FireflyIII\Export\Collector\AttachmentCollector', [$this->job]);
         $attachmentCollector->run();
         $this->files = $this->files->merge($attachmentCollector->getFiles());
+
         return true;
     }
 
@@ -89,7 +90,7 @@ class Processor
      */
     public function collectJournals(): bool
     {
-        $args             = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
+        $args = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
         /** @var JournalCollector $journalCollector */
         $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
         $this->journals   = $journalCollector->collect();
@@ -100,6 +101,7 @@ class Processor
             $this->settings['endDate']->format('Y-m-d')
             . ').'
         );
+
         return true;
     }
 
@@ -112,6 +114,7 @@ class Processor
         $uploadCollector->run();
 
         $this->files = $this->files->merge($uploadCollector->getFiles());
+
         return true;
     }
 
@@ -127,6 +130,7 @@ class Processor
             $count++;
         }
         Log::debug('Converted ' . $count . ' journals to "Entry" objects.');
+
         return true;
     }
 
@@ -137,6 +141,7 @@ class Processor
     {
         $this->configurationMaker = app('FireflyIII\Export\ConfigurationFile', [$this->job]);
         $this->files->push($this->configurationMaker->make());
+
         return true;
     }
 
@@ -173,6 +178,7 @@ class Processor
             $disk->delete($file);
         }
         Log::debug('Done!');
+
         return true;
     }
 
@@ -188,6 +194,7 @@ class Processor
         $exporter->run();
         $this->files->push($exporter->getFileName());
         Log::debug('Added "' . $exporter->getFileName() . '" to the list of files to include in the zip.');
+
         return true;
     }
 

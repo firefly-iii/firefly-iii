@@ -31,14 +31,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereData($value)
  * @mixin \Eloquent
- * @property string $hash
+ * @property string                                     $hash
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereHash($value)
  */
 class TransactionJournalMeta extends Model
 {
 
     protected $dates    = ['created_at', 'updated_at'];
-    protected $fillable = ['transaction_journal_id', 'name', 'data','hash'];
+    protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
     protected $table    = 'journal_meta';
 
     /**

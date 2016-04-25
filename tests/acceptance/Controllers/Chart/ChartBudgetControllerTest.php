@@ -74,19 +74,4 @@ class ChartBudgetControllerTest extends TestCase
         $this->assertResponseStatus(200);
 
     }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::year
-     */
-    public function testYear()
-    {
-        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('getBudgetsAndExpensesPerMonth')->once()->andReturn([]);
-        $repository->shouldReceive('getWithoutBudgetSum')->times(12)->andReturn('0');
-
-        $this->be($this->user());
-        $this->call('GET', '/chart/budget/year/default/20150101/20151231/1');
-        $this->assertResponseStatus(200);
-
-    }
 }

@@ -119,6 +119,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order + 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+
         return true;
     }
 
@@ -141,6 +142,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order - 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+
         return true;
     }
 
@@ -342,6 +344,7 @@ class RuleRepository implements RuleRepositoryInterface
 
             $this->storeAction($rule, $actionValues);
         }
+
         return true;
 
     }
@@ -349,6 +352,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $data
+     *
      * @return bool
      */
     private function storeTriggers(Rule $rule, array $data): bool
@@ -378,6 +382,7 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeTrigger($rule, $triggerValues);
             $order++;
         }
+
         return true;
     }
 }
