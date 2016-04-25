@@ -168,6 +168,7 @@ class BudgetController extends Controller
         $budgets    = $repository->getBudgetsAndLimitsInRange($start, $end);
         $allEntries = new Collection;
         $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $format     = strval(trans('config.month_and_day'));
 
 
         /** @var Budget $budget */
@@ -185,6 +186,22 @@ class BudgetController extends Controller
                 $spent        = $expenses;
                 $overspent    = '0';
             } else {
+
+                // update the display name if the range
+                // of the limit repetition does not match
+                // the session's range (for clarity).
+                if (
+                    ($start->format('Y-m-d') != $budget->startdate->format('Y-m-d'))
+                    || ($end->format('Y-m-d') != $budget->enddate->format('Y-m-d'))
+                ) {
+                    $name .= ' ' . trans(
+                            'firefly.between_dates',
+                            [
+                                'start' => $budget->startdate->formatLocalized($format),
+                                'end'   => $budget->startdate->formatLocalized($format),
+                            ]
+                        );
+                }
                 $currentStart = clone $budget->startdate;
                 $currentEnd   = clone $budget->enddate;
                 $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);

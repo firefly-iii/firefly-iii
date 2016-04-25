@@ -279,6 +279,7 @@ return [
     'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
     'transaction_page_size_label'               => 'Page size',
     'budget_maximum'                            => 'Budget maximum',
+    'between_dates'                             => '(:start and :end)',
 
     // profile:
     'change_your_password'                      => 'Change your password',

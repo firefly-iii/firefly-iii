@@ -25,11 +25,13 @@
                     {% if balanceLine.getBudget.id %}
                         <td>
                             <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
+                            {% if balanceLine.getStartdate and balanceLine.getEnddate %}
                             <span class="small"><br>
                                 {{ balanceLine.getStartdate.formatLocalized(monthAndDayFormat) }}
                                 &mdash;
                                 {{ balanceLine.getEnddate.formatLocalized(monthAndDayFormat) }}
                             </span>
+                            {% endif %}
                         </td>
                         <td>
                             {% if(balanceLine.getBudget.amount) %}
