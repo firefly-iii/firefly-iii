@@ -18,13 +18,14 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
     /**
      *
      * @param Collection $entries
+     * @param string     $dateFormat
      *
      * @return array
      */
-    public function budgetLimit(Collection $entries): array
+    public function budgetLimit(Collection $entries, string $dateFormat = 'monthAndDay'): array
     {
         $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $format   = Config::get('firefly.monthAndDay.' . $language);
+        $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
             'labels'   => [],

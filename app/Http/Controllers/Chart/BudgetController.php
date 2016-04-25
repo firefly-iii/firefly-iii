@@ -38,6 +38,55 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function budget(BudgetRepositoryInterface $repository, Budget $budget)
+    {
+
+        // dates and times
+        $first = $repository->getFirstBudgetLimitDate($budget);
+        $range = Preferences::get('viewRange', '1M')->data;
+        $last  = session('end', new Carbon);
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($first);
+        $cache->addProperty($last);
+        $cache->addProperty('budget');
+        if ($cache->has()) {
+
+            return Response::json($cache->get());
+        }
+
+        $final = clone $last;
+        $final->addYears(2);
+        $last    = Navigation::endOfX($last, $range, $final);
+        $entries = new Collection;
+        // get all expenses:
+        $spentArray = $repository->spentPerDay($budget, $first, $last);
+
+        while ($first < $last) {
+
+            // periodspecific dates:
+            $currentStart = Navigation::startOfPeriod($first, $range);
+            $currentEnd   = Navigation::endOfPeriod($first, $range);
+            $spent        = $this->getSumOfRange($currentStart, $currentEnd, $spentArray);
+            $entry        = [$first, ($spent * -1)];
+
+            $entries->push($entry);
+            $first = Navigation::addPeriod($first, $range, 0);
+        }
+
+        $data = $this->generator->budgetLimit($entries, 'month');
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+    /**
      * Shows the amount left in a specific budget limit.
      *
      * @param BudgetRepositoryInterface $repository

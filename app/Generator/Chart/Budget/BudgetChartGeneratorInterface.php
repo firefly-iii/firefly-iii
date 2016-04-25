@@ -22,10 +22,11 @@ interface BudgetChartGeneratorInterface
 
     /**
      * @param Collection $entries
+     * @param string     $dateFormat
      *
      * @return array
      */
-    public function budgetLimit(Collection $entries): array;
+    public function budgetLimit(Collection $entries, string $dateFormat): array;
 
     /**
      * @param Collection $entries
