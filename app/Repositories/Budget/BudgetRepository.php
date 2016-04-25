@@ -878,6 +878,14 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                                         $query->where('limit_repetitions.enddate', '>=', $end->format('Y-m-d 00:00:00'));
                                     }
                                 );
+                                // start is after start and end is before end
+                                $q->orWhere(
+                                    function ($query) use ($start, $end) {
+                                        // end after end time, and start is before end time
+                                        $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'));
+                                        $query->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d 00:00:00'));
+                                    }
+                                );
                             }
                         );
         if (!is_null($ignore->id)) {
