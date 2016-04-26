@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
-use Config;
 use FireflyIII\Events\ResendConfirmation;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -48,7 +47,7 @@ class ConfirmationController extends Controller
         $database = Preferences::get('user_confirmed_code')->data;
         $time     = Preferences::get('user_confirmed_last_mail', 0)->data;
         $now      = time();
-        $maxDiff  = Config::get('firefly.confirmation_age');
+        $maxDiff  = config('firefly.confirmation_age');
 
         if ($database === $code && ($now - $time <= $maxDiff)) {
             Preferences::setForUser(Auth::user(), 'user_confirmed', true);
@@ -68,7 +67,7 @@ class ConfirmationController extends Controller
     {
         $time    = Preferences::get('user_confirmed_last_mail', 0)->data;
         $now     = time();
-        $maxDiff = Config::get('firefly.resend_confirmation');
+        $maxDiff = config('firefly.resend_confirmation');
         $owner   = env('SITE_OWNER', 'mail@example.com');
         if ($now - $time > $maxDiff) {
 

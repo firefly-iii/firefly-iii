@@ -163,8 +163,6 @@ class BudgetController extends Controller
         /**
          * Warn user if necessary
          */
-        $range       = Preferences::get('viewRange', '1M')->data;
-        $repeatFreq  = Config::get('firefly.range_to_repeat_freq.' . $range);
         $userWarning = '';
         if (session('is_custom_range', false) === true) {
             $userWarning = strval(trans('firefly.warn_range_' . $repeatFreq));

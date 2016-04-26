@@ -19,7 +19,7 @@ use FireflyIII\Models\Bill;
 class EntryBill
 {
     /** @var  string */
-    public $id = '';
+    public $billId = '';
     /** @var  string */
     public $name = '';
 
@@ -31,8 +31,8 @@ class EntryBill
     public function __construct(Bill $bill = null)
     {
         if (!is_null($bill)) {
-            $this->id   = $bill->id;
-            $this->name = $bill->name;
+            $this->billId = $bill->id;
+            $this->name   = $bill->name;
         }
     }
 

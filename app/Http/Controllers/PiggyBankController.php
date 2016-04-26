@@ -2,7 +2,6 @@
 
 use Amount;
 use Carbon\Carbon;
-use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\PiggyBank;
@@ -65,7 +64,7 @@ class PiggyBankController extends Controller
     public function create(ARI $repository)
     {
 
-        $periods      = Config::get('firefly.piggy_bank_periods');
+        $periods      = config('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
@@ -124,7 +123,7 @@ class PiggyBankController extends Controller
     public function edit(ARI $repository, PiggyBank $piggyBank)
     {
 
-        $periods      = Config::get('firefly.piggy_bank_periods');
+        $periods      = config('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';

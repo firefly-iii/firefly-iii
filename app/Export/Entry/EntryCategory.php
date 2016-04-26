@@ -19,7 +19,7 @@ use FireflyIII\Models\Category;
 class EntryCategory
 {
     /** @var  string */
-    public $id = '';
+    public $categoryId = '';
     /** @var  string */
     public $name = '';
 
@@ -31,8 +31,8 @@ class EntryCategory
     public function __construct(Category $category = null)
     {
         if (!is_null($category)) {
-            $this->id   = $category->id;
-            $this->name = $category->name;
+            $this->categoryId = $category->id;
+            $this->name       = $category->name;
         }
     }
 }

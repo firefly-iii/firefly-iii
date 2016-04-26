@@ -2,7 +2,6 @@
 
 use Amount;
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -36,7 +35,7 @@ class JsonController extends Controller
     public function action()
     {
         $count   = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
-        $keys    = array_keys(Config::get('firefly.rule-actions'));
+        $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
             $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
@@ -297,7 +296,7 @@ class JsonController extends Controller
     public function trigger()
     {
         $count    = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
-        $keys     = array_keys(Config::get('firefly.rule-triggers'));
+        $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {
             if ($key != 'user_action') {

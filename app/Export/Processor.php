@@ -11,12 +11,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Export;
 
 use Auth;
-use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCollector;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -174,10 +174,7 @@ class Processor
         $zip->close();
 
         // delete the files:
-        foreach ($this->getFiles() as $file) {
-            Log::debug('Will now delete file "' . $file . '".');
-            $disk->delete($file);
-        }
+        $this->deleteFiles($disk);
         Log::debug('Done!');
 
         return true;
@@ -188,7 +185,7 @@ class Processor
      */
     public function exportJournals(): bool
     {
-        $exporterClass = Config::get('firefly.export_formats.' . $this->exportFormat);
+        $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
         $exporter      = app($exporterClass, [$this->job]);
         Log::debug('Going to export ' . $this->exportEntries->count() . ' export entries into ' . $this->exportFormat . ' format.');
         $exporter->setEntries($this->exportEntries);
@@ -205,5 +202,17 @@ class Processor
     public function getFiles(): Collection
     {
         return $this->files;
+    }
+
+    /**
+     * @param FilesystemAdapter $disk
+     */
+    private function deleteFiles(FilesystemAdapter $disk)
+    {
+        Log::debug('Class of $disk: ' . get_class($disk));
+        foreach ($this->getFiles() as $file) {
+            Log::debug('Will now delete file "' . $file . '".');
+            $disk->delete($file);
+        }
     }
 }

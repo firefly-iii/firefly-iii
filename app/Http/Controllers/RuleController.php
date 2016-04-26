@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Config;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
@@ -292,8 +291,8 @@ class RuleController extends Controller
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
-        $limit = Config::get('firefly.test-triggers.limit');
-        $range = Config::get('firefly.test-triggers.range');
+        $limit = config('firefly.test-triggers.limit');
+        $range = config('firefly.test-triggers.range');
 
         /** @var TransactionMatcher $matcher */
         $matcher = app('FireflyIII\Rules\TransactionMatcher');

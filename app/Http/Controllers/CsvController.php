@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Config;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
@@ -39,7 +38,7 @@ class CsvController extends Controller
         View::share('title', trans('firefly.csv'));
         View::share('mainTitleIcon', 'fa-file-text-o');
 
-        if (Config::get('firefly.csv_import_enabled') === false) {
+        if (config('firefly.csv_import_enabled') === false) {
             throw new FireflyException('CSV Import is not enabled.');
         }
 
@@ -81,7 +80,7 @@ class CsvController extends Controller
         if ($this->data->hasHeaders()) {
             $headers = $firstRow;
         }
-        $keys = array_keys(Config::get('csv.roles'));
+        $keys = array_keys(config('csv.roles'));
         foreach ($keys as $name) {
             $availableRoles[$name] = trans('firefly.csv_column_' . $name);
         }
@@ -179,7 +178,7 @@ class CsvController extends Controller
 
         // get list of supported specifix
         $specifix = [];
-        foreach (Config::get('csv.specifix') as $entry) {
+        foreach (config('csv.specifix') as $entry) {
             $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
         }
 

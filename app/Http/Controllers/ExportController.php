@@ -11,7 +11,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Config;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Processor;
@@ -106,8 +105,8 @@ class ExportController extends Controller
         $accounts      = $repository->getAccounts(['Default account', 'Asset account']);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
-        $formats       = array_keys(Config::get('firefly.export_formats'));
-        $defaultFormat = Preferences::get('export_format', Config::get('firefly.default_export_format'))->data;
+        $formats       = array_keys(config('firefly.export_formats'));
+        $defaultFormat = Preferences::get('export_format', config('firefly.default_export_format'))->data;
         $first         = session('first')->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 

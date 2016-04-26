@@ -20,8 +20,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      */
     public function all(Collection $entries): array
     {
-
-
         $data = [
             'count'    => 2,
             'labels'   => [],
@@ -116,18 +114,9 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      */
     public function multiYear(Collection $entries): array
     {
-        // dataset:
-        $data = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
         // get labels from one of the categories (assuming there's at least one):
         $first = $entries->first();
-        $keys  = array_keys($first['spent']);
-        foreach ($keys as $year) {
-            $data['labels'][] = strval($year);
-        }
+        $data  = ['count' => 0, 'labels' => array_keys($first['spent']), 'datasets' => [],];
 
         // then, loop all entries and create datasets:
         foreach ($entries as $entry) {
@@ -144,7 +133,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
         $data['count'] = count($data['datasets']);
 
         return $data;
-
     }
 
     /**

@@ -10,8 +10,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
-use Config;
-
 /**
  * Class Domain
  *
@@ -24,7 +22,7 @@ class Domain
      */
     public static function getBindables(): array
     {
-        return Config::get('firefly.bindables');
+        return config('firefly.bindables');
 
     }
 
@@ -33,7 +31,7 @@ class Domain
      */
     public static function getRuleActions(): array
     {
-        return Config::get('firefly.rule-actions');
+        return config('firefly.rule-actions');
     }
 
     /**
@@ -41,6 +39,6 @@ class Domain
      */
     public static function getRuleTriggers(): array
     {
-        return Config::get('firefly.rule-triggers');
+        return config('firefly.rule-triggers');
     }
 }

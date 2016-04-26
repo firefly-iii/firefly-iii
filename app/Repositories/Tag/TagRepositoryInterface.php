@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Tag;
 
-use Carbon\Carbon;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;

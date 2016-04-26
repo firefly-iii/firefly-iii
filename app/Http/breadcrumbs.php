@@ -55,7 +55,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
 
-    $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+    $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
 
     $breadcrumbs->parent('accounts.index', $what);
@@ -73,7 +73,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.edit', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+    $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
     $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));
 }

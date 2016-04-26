@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Auth;
-use Config;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
@@ -219,8 +218,8 @@ class Importer
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
             $role  = $this->roles[$index] ?? '_ignore';
-            $class = Config::get('csv.roles.' . $role . '.converter');
-            $field = Config::get('csv.roles.' . $role . '.field');
+            $class = config('csv.roles.' . $role . '.converter');
+            $field = config('csv.roles.' . $role . '.field');
 
             Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
 
@@ -282,7 +281,7 @@ class Importer
         }
 
 
-        $set = Config::get('csv.post_processors');
+        $set = config('csv.post_processors');
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
             $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
@@ -356,7 +355,7 @@ class Importer
     private function getFiller()
     {
         $filler = [];
-        foreach (Config::get('csv.roles') as $role) {
+        foreach (config('csv.roles') as $role) {
             if (isset($role['field'])) {
                 $fieldName          = $role['field'];
                 $filler[$fieldName] = null;

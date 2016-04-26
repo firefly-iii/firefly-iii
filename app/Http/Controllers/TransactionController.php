@@ -3,7 +3,6 @@
 use Amount;
 use Auth;
 use Carbon\Carbon;
-use Config;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
@@ -212,8 +211,8 @@ class TransactionController extends Controller
     public function index(JournalRepositoryInterface $repository, string $what)
     {
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $subTitleIcon = Config::get('firefly.transactionIconsByWhat.' . $what);
-        $types        = Config::get('firefly.transactionTypesByWhat.' . $what);
+        $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
+        $types        = config('firefly.transactionTypesByWhat.' . $what);
         $subTitle     = trans('firefly.title_' . $what);
         $page         = intval(Input::get('page'));
         $journals     = $repository->getJournalsOfTypes($types, $page, $pageSize);

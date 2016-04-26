@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Config;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
@@ -34,7 +33,7 @@ class BillController extends Controller
      */
     public function create()
     {
-        $periods  = Config::get('firefly.periods_to_text');
+        $periods  = config('firefly.periods_to_text');
         $subTitle = trans('firefly.create_new_bill');
 
 
@@ -89,7 +88,7 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        $periods  = Config::get('firefly.periods_to_text');
+        $periods  = config('firefly.periods_to_text');
         $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").

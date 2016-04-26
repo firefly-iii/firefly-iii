@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Auth;
-use Config;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Mapper\MapperInterface;
@@ -61,7 +60,7 @@ class Wizard implements WizardInterface
      */
     public function processSelectedMapping(array $roles, array $map): array
     {
-        $configRoles = Config::get('csv.roles');
+        $configRoles = config('csv.roles');
         $maps        = [];
 
 
@@ -134,7 +133,7 @@ class Wizard implements WizardInterface
         $options = [];
         foreach ($map as $index => $columnRole) {
 
-            $mapper = Config::get('csv.roles.' . $columnRole . '.mapper');
+            $mapper = config('csv.roles.' . $columnRole . '.mapper');
             if (is_null($mapper)) {
                 throw new FireflyException('Cannot map field of type "' . $columnRole . '".');
             }

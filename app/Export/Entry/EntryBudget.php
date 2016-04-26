@@ -19,7 +19,7 @@ use FireflyIII\Models\Budget;
 class EntryBudget
 {
     /** @var  string */
-    public $id = '';
+    public $budgetId = '';
     /** @var  string */
     public $name = '';
 
@@ -31,8 +31,8 @@ class EntryBudget
     public function __construct(Budget $budget = null)
     {
         if (!is_null($budget)) {
-            $this->id   = $budget->id;
-            $this->name = $budget->name;
+            $this->budgetId = $budget->id;
+            $this->name     = $budget->name;
         }
     }
 

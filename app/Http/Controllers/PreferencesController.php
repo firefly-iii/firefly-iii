@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Config;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Input;
@@ -155,7 +154,7 @@ class PreferencesController extends Controller
 
         // language:
         $lang = Input::get('language');
-        if (in_array($lang, array_keys(Config::get('firefly.languages')))) {
+        if (in_array($lang, array_keys(config('firefly.languages')))) {
             Preferences::set('language', $lang);
         }
 

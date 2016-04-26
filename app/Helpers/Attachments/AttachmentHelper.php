@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Attachments;
 
 use Auth;
-use Config;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
@@ -39,8 +38,8 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function __construct()
     {
-        $this->maxUploadSize = Config::get('firefly.maxUploadSize');
-        $this->allowedMimes  = Config::get('firefly.allowedMimes');
+        $this->maxUploadSize = config('firefly.maxUploadSize');
+        $this->allowedMimes  = config('firefly.allowedMimes');
         $this->errors        = new MessageBag;
         $this->messages      = new MessageBag;
         $this->uploadDisk    = Storage::disk('upload');
@@ -81,26 +80,14 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentsForModel(Model $model): bool
     {
-        $files = null;
-        try {
-            if (Input::hasFile('attachments')) {
-                $files = Input::file('attachments');
-            }
-        } catch (TypeError $e) {
-            // Log it, do nothing else.
-            Log::error($e->getMessage());
+        $files = $this->getFiles();
+
+        if (!is_null($files) && !is_array($files)) {
+            $this->processFile($files, $model);
         }
 
         if (is_array($files)) {
-            foreach ($files as $entry) {
-                if (!is_null($entry)) {
-                    $this->processFile($entry, $model);
-                }
-            }
-        } else {
-            if (!is_null($files)) {
-                $this->processFile($files, $model);
-            }
+            $this->processFiles($files, $model);
         }
 
         return true;
@@ -232,6 +219,38 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         return true;
+    }
+
+    /**
+     * @return array|null|UploadedFile
+     */
+    private function getFiles()
+    {
+        $files = null;
+        try {
+            if (Input::hasFile('attachments')) {
+                $files = Input::file('attachments');
+            }
+        } catch (TypeError $e) {
+            // Log it, do nothing else.
+            Log::error($e->getMessage());
+        }
+
+        return $files;
+    }
+
+    /**
+     * @param array $files
+     *
+     * @return bool
+     */
+    private function processFiles(array $files, Model $model): bool
+    {
+        foreach ($files as $entry) {
+            if (!is_null($entry)) {
+                $this->processFile($entry, $model);
+            }
+        }
     }
 
 

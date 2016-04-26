@@ -2,7 +2,6 @@
 
 use Auth;
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Preferences;
@@ -36,7 +35,7 @@ class NewUserController extends Controller
         View::share('mainTitleIcon', 'fa-fire');
 
 
-        $types = Config::get('firefly.accountTypesByIdentifier.asset');
+        $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 
         if ($count > 0) {

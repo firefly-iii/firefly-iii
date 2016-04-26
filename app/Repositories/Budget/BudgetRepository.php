@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use Config;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
@@ -870,7 +869,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         // there might be a budget limit for this startdate:
 
         $viewRange  = Preferences::get('viewRange', '1M')->data;
-        $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . $viewRange);
+        $repeatFreq = config('firefly.range_to_repeat_freq.' . $viewRange);
         /** @var BudgetLimit $limit */
         $limit = $budget->budgetlimits()->where('budget_limits.startdate', $date)->where('budget_limits.repeat_freq', $repeatFreq)->first(['budget_limits.*']);
 

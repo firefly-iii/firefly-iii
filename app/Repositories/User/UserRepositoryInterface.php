@@ -40,7 +40,7 @@ interface UserRepositoryInterface
 
     /**
      * Returns a count of all users.
-     * 
+     *
      * @return int
      */
     public function count(): int;

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Budget;
 
 
-use Config;
 use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
@@ -25,7 +24,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
     public function budgetLimit(Collection $entries, string $dateFormat = 'monthAndDay'): array
     {
         $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
+        $format   = config('firefly.' . $dateFormat . '.' . $language);
 
         $data = [
             'labels'   => [],

@@ -54,11 +54,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
     public function single(Bill $bill, Collection $entries): array
     {
         $format       = (string)trans('config.month');
-        $data         = [
-            'count'    => 3,
-            'labels'   => [],
-            'datasets' => [],
-        ];
+        $data         = ['count' => 3, 'labels' => [], 'datasets' => [],];
         $minAmount    = [];
         $maxAmount    = [];
         $actualAmount = [];
@@ -67,9 +63,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
             $data['labels'][] = $entry->date->formatLocalized($format);
             $minAmount[]      = round($bill->amount_min, 2);
             $maxAmount[]      = round($bill->amount_max, 2);
-            /*
-             * journalAmount has been collected in BillRepository::getJournals
-             */
+            // journalAmount has been collected in BillRepository::getJournals
             $actualAmount[] = round(TransactionJournal::amountPositive($entry), 2);
         }
 

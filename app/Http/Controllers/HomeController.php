@@ -3,13 +3,11 @@
 use Amount;
 use Artisan;
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Input;
-use Log;
 use Preferences;
 use Route;
 use Session;
@@ -34,9 +32,9 @@ class HomeController extends Controller
     public function dateRange()
     {
 
-        $start      = new Carbon(Input::get('start'));
-        $end        = new Carbon(Input::get('end'));
-        $label      = Input::get('label');
+        $start = new Carbon(Input::get('start'));
+        $end   = new Carbon(Input::get('end'));
+        $label = Input::get('label');
 
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
@@ -101,7 +99,7 @@ class HomeController extends Controller
      */
     public function index(ARI $repository)
     {
-        $types = Config::get('firefly.accountTypesByIdentifier.asset');
+        $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 
         if ($count == 0) {
@@ -168,7 +166,7 @@ class HomeController extends Controller
             $methods = $route->getMethods();
 
             if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                foreach (array_keys(Config::get('firefly.languages')) as $lang) {
+                foreach (array_keys(config('firefly.languages')) as $lang) {
                     echo 'touch ' . $lang . '/' . $name . '.md<br>';
                 }
 

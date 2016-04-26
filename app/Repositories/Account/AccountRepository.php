@@ -3,7 +3,6 @@
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use Config;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -614,7 +613,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeAccount(array $data): Account
     {
-        $type        = Config::get('firefly.accountTypeByIdentifier.' . $data['accountType']);
+        $type        = config('firefly.accountTypeByIdentifier.' . $data['accountType']);
         $accountType = AccountType::whereType($type)->first();
         $newAccount  = new Account(
             [

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use Config;
 
 /**
  * Class RuleFormRequest
@@ -45,7 +44,7 @@ class TestRuleFormRequest extends Request
     public function rules()
     {
 
-        $validTriggers = array_keys(Config::get('firefly.rule-triggers'));
+        $validTriggers = array_keys(config('firefly.rule-triggers'));
         $rules         = [
             'rule-trigger.*'       => 'required|min:1|in:' . join(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',

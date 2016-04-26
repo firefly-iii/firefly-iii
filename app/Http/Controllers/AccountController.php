@@ -2,7 +2,6 @@
 
 use Auth;
 use Carbon\Carbon;
-use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
@@ -40,7 +39,7 @@ class AccountController extends Controller
     {
 
 
-        $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
         Session::flash('preFilled', []);
 
@@ -64,7 +63,7 @@ class AccountController extends Controller
      */
     public function delete(ARI $repository, Account $account)
     {
-        $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
         $accountList = ExpandedForm::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
         unset($accountList[$account->id]);
@@ -86,7 +85,7 @@ class AccountController extends Controller
     public function destroy(ARI $repository, Account $account)
     {
         $type     = $account->accountType->type;
-        $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
+        $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
         $moveTo   = $repository->find(intval(Input::get('move_account_before_delete')));
 
@@ -107,9 +106,9 @@ class AccountController extends Controller
     public function edit(ARI $repository, Account $account)
     {
 
-        $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
+        $what           = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle       = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $subTitleIcon   = config('firefly.subIconsByIdentifier.' . $what);
         $openingBalance = $repository->openingBalanceTransaction($account);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -155,8 +154,8 @@ class AccountController extends Controller
         $what = $what ?? 'asset';
 
         $subTitle     = trans('firefly.' . $what . '_accounts');
-        $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
-        $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
+        $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
@@ -190,8 +189,8 @@ class AccountController extends Controller
     {
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
-        $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $subTitleIcon = config('firefly.subTitlesByIdentifier.' . $account->accountType->type);
+        $what         = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $journals     = $repository->getJournals($account, $page, $pageSize);
         $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
         $journals->setPath('accounts/show/' . $account->id);

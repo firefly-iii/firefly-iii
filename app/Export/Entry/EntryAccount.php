@@ -18,10 +18,10 @@ use FireflyIII\Models\Account;
  */
 class EntryAccount
 {
+    /** @var  int */
+    public $accountId;
     /** @var  string */
     public $iban;
-    /** @var  int */
-    public $id;
     /** @var  string */
     public $name;
     /** @var  int */
@@ -36,10 +36,10 @@ class EntryAccount
      */
     public function __construct(Account $account)
     {
-        $this->id     = $account->id;
-        $this->name   = $account->name;
-        $this->iban   = $account->iban;
-        $this->type   = $account->accountType->type;
-        $this->number = $account->getMeta('accountNumber');
+        $this->accountId = $account->id;
+        $this->name      = $account->name;
+        $this->iban      = $account->iban;
+        $this->type      = $account->accountType->type;
+        $this->number    = $account->getMeta('accountNumber');
     }
 }

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Console\Commands;
 
-use Config;
 use Illuminate\Console\Command;
 
 /**
@@ -43,8 +42,9 @@ class UpgradeFireflyInstructions extends Command
     public function handle()
     {
         //
-        $version = Config::get('firefly.version');
-        $config  = Config::get('upgrade.text');
+        /** @var string $version */
+        $version = config('firefly.version');
+        $config  = config('upgrade.text');
         $text    = $config[$version] ?? null;
 
         $this->line('+------------------------------------------------------------------------------+');
