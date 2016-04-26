@@ -10,7 +10,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Report;
 
+use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
@@ -19,8 +21,10 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 
@@ -99,7 +103,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     private function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
-        $set = $this->user->tags()
+        $set = Auth::user()->tags()
                           ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
                           ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
@@ -109,8 +113,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                           }
                           )
                           ->leftJoin(
-                              'transactions AS t_to', function (JoinClause $join) {
-                              $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
+                              'transactions AS t_destination', function (JoinClause $join) {
+                              $join->on('transaction_journals.id', '=', 't_destination.transaction_journal_id')->where('t_destination.amount', '>', 0);
                           }
                           )
                           ->where('tags.tagMode', 'balancingAct')

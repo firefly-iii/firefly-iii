@@ -4,13 +4,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Tag;
 
 
-use Carbon\Carbon;
-use DB;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
