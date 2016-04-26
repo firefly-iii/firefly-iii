@@ -470,8 +470,8 @@ class CategoryController extends Controller
             $currentStart = clone $current;
             $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
 
-            $spent  = strval(array_sum($repository->spentPerDay($category, $currentStart, $currentEnd, new Collection)));
-            $earned = strval(array_sum($repository->earnedPerDay($category, $currentStart, $currentEnd, new Collection)));
+            $spent  = strval(array_sum($repository->spentPerDay($category, $currentStart, $currentEnd, $accounts)));
+            $earned = strval(array_sum($repository->earnedPerDay($category, $currentStart, $currentEnd, $accounts)));
 
             $entry = [
                 $category->name,
