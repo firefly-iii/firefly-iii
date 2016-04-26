@@ -256,7 +256,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
         }
 
 
-        $result = $query->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        $result = $query->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`source`.`amount`) AS `sum`')]);
 
         $return = [];
         foreach ($result->toArray() as $entry) {
