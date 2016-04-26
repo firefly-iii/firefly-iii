@@ -313,6 +313,8 @@ class BudgetController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function period(Budget $budget, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {

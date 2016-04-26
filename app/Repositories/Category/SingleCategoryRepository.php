@@ -23,7 +23,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     private $user;
 
     /**
-     * BillRepository constructor.
+     * SingleCategoryRepository constructor.
      *
      * @param User $user
      */

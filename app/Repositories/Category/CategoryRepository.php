@@ -26,7 +26,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * CategoryRepository constructor.
      *
      * @param User $user
      */

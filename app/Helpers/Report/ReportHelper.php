@@ -11,6 +11,7 @@ use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -310,5 +311,31 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
+    {
+        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $collection = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
+        $second     = $repository->spentForAccountsPerMonth($accounts, $start, $end);
+        $collection = $collection->merge($second);
+        $array      = [];
+        /** @var Category $category */
+        foreach ($collection as $category) {
+            $id         = $category->id;
+            $array[$id] = $category;
+
+        }
+        $set = new Collection($array);
+
+        return $set;
     }
 }

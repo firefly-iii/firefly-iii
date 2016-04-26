@@ -33,7 +33,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     private $user;
 
     /**
-     * BillRepository constructor.
+     * BudgetRepository constructor.
      *
      * @param User $user
      */

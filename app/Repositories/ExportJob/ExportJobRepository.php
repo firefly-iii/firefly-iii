@@ -26,7 +26,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * ExportJobRepository constructor.
      *
      * @param User $user
      */

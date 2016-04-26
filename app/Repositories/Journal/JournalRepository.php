@@ -30,7 +30,7 @@ class JournalRepository implements JournalRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * JournalRepository constructor.
      *
      * @param User $user
      */

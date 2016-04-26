@@ -42,8 +42,8 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
             $spent            = $entry[2];
             $earned           = $entry[3];
 
-            $data['datasets'][0]['data'][] = bccomp($spent, '0') === 0 ? null : bcmul($spent, '-1');
-            $data['datasets'][1]['data'][] = bccomp($earned, '0') === 0 ? null : $earned;
+            $data['datasets'][0]['data'][] = bccomp($spent, '0') === 0 ? null : round(bcmul($spent, '-1'), 4);
+            $data['datasets'][1]['data'][] = bccomp($earned, '0') === 0 ? null : round($earned, 4);
         }
 
         return $data;

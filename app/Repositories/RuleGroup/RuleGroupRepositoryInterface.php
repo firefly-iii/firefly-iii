@@ -18,6 +18,8 @@ interface RuleGroupRepositoryInterface
 
 
     /**
+     * 
+     * 
      * @return int
      */
     public function count(): int;

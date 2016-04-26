@@ -81,4 +81,14 @@ interface ReportHelperInterface
      */
     public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
+
 }
