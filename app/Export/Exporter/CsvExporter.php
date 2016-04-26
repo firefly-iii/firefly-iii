@@ -62,6 +62,7 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         $rows = [];
 
         // add header:
+        /** @var Entry $first */
         $first  = $this->getEntries()->first();
         $rows[] = array_keys(get_object_vars($first));
 
