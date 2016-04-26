@@ -43,8 +43,8 @@ class ConfigurationFile
      */
     public function make(): string
     {
-        $fields = array_keys(get_class_vars(Entry::class));
-        $types  = Entry::getTypes();
+        $fields = array_keys(Entry::getFieldsAndTypes());
+        $types  = Entry::getFieldsAndTypes();
 
         $configuration = [
             'date-format' => 'Y-m-d', // unfortunately, this is hard-coded.

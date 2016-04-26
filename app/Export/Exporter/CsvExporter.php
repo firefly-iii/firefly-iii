@@ -62,14 +62,18 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         $rows = [];
 
         // add header:
-        /** @var Entry $first */
-        $first  = $this->getEntries()->first();
-        $rows[] = array_keys(get_object_vars($first));
+        $rows[] = array_keys(Entry::getFieldsAndTypes());
 
         // then the rest:
         /** @var Entry $entry */
         foreach ($this->getEntries() as $entry) {
-            $rows[] = array_values(get_object_vars($entry));
+            // order is defined in Entry::getFieldsAndTypes.
+            $rows[] = [
+                $entry->description, $entry->amount, $entry->date, $entry->sourceAccount->id, $entry->sourceAccount->name, $entry->sourceAccount->iban,
+                $entry->sourceAccount->type, $entry->sourceAccount->number, $entry->destinationAccount->id, $entry->destinationAccount->name,
+                $entry->destinationAccount->iban, $entry->destinationAccount->type, $entry->destinationAccount->number, $entry->budget->id,
+                $entry->budget->name, $entry->category->id, $entry->category->name, $entry->bill->id, $entry->bill->name,
+            ];
 
         }
         $writer->insertAll($rows);
