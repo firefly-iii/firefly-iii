@@ -181,8 +181,8 @@ class CategoryController extends Controller
 
         // get all spent and earned data:
         // get amount earned in period, grouped by day.
-        $spentArray  = $repository->spentPerDay($category, $start, $end);
-        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+        $spentArray  = $repository->spentPerDay($category, $start, $end, new Collection);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end, new Collection);
 
         if ($cache->has()) {
             $entries = $cache->get();

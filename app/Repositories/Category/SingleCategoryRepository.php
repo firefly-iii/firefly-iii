@@ -76,25 +76,32 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      * Where yyyy-mm-dd is the date and <amount> is the money earned using DEPOSITS in the $category
      * from all the users $accounts.
      *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
-    public function earnedPerDay(Category $category, Carbon $start, Carbon $end): array
+    public function earnedPerDay(Category $category, Carbon $start, Carbon $end, Collection $accounts): array
     {
         /** @var Collection $query */
         $query = $category->transactionjournals()
+                          ->expanded()
                           ->transactionTypes([TransactionType::DEPOSIT])
-                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->where('transactions.amount', '>', 0)
                           ->before($end)
                           ->after($start)
-                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                          ->groupBy('transaction_journals.date');
+
+        if ($accounts->count() > 0) {
+            $ids = $accounts->pluck('id')->toArray();
+            $query->whereIn('destination_account.id', $ids);
+        }
+
+        $result = $query->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`destination`.`amount`) AS `sum`')]);
 
         $return = [];
-        foreach ($query->toArray() as $entry) {
+        foreach ($result->toArray() as $entry) {
             $return[$entry['dateFormatted']] = $entry['sum'];
         }
 
@@ -226,25 +233,33 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
      * Where yyyy-mm-dd is the date and <amount> is the money spent using DEPOSITS in the $category
      * from all the users accounts.
      *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
-    public function spentPerDay(Category $category, Carbon $start, Carbon $end): array
+    public function spentPerDay(Category $category, Carbon $start, Carbon $end, Collection $accounts): array
     {
         /** @var Collection $query */
         $query = $category->transactionjournals()
+                          ->expanded()
                           ->transactionTypes([TransactionType::WITHDRAWAL])
-                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->where('transactions.amount', '<', 0)
                           ->before($end)
                           ->after($start)
-                          ->groupBy('date')->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                          ->groupBy('transaction_journals.date');
+
+        if ($accounts->count() > 0) {
+            $ids = $accounts->pluck('id')->toArray();
+            $query->whereIn('source_account.id', $ids);
+        }
+
+
+        $result = $query->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         $return = [];
-        foreach ($query->toArray() as $entry) {
+        foreach ($result->toArray() as $entry) {
             $return[$entry['dateFormatted']] = $entry['sum'];
         }
 

@@ -68,8 +68,8 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $spentArray  = $repository->spentPerDay($category, $start, $end);
-        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+        $spentArray  = $repository->spentPerDay($category, $start, $end, new Collection);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end, new Collection);
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
@@ -417,8 +417,8 @@ class CategoryController extends Controller
 
         // get amount earned in period, grouped by day.
         // get amount spent in period, grouped by day.
-        $spentArray  = $repository->spentPerDay($category, $start, $end);
-        $earnedArray = $repository->earnedPerDay($category, $start, $end);
+        $spentArray  = $repository->spentPerDay($category, $start, $end, new Collection);
+        $earnedArray = $repository->earnedPerDay($category, $start, $end, new Collection);
 
         while ($start <= $end) {
             $str    = $start->format('Y-m-d');
@@ -470,8 +470,8 @@ class CategoryController extends Controller
             $currentStart = clone $current;
             $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
 
-            $spent  = strval(array_sum($repository->spentPerDay($category, $currentStart, $currentEnd)));
-            $earned = strval(array_sum($repository->earnedPerDay($category, $currentStart, $currentEnd)));
+            $spent  = strval(array_sum($repository->spentPerDay($category, $currentStart, $currentEnd, new Collection)));
+            $earned = strval(array_sum($repository->earnedPerDay($category, $currentStart, $currentEnd, new Collection)));
 
             $entry = [
                 $category->name,

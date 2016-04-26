@@ -47,13 +47,14 @@ interface SingleCategoryRepositoryInterface
      * Where yyyy-mm-dd is the date and <amount> is the money earned using DEPOSITS in the $category
      * from all the users accounts.
      *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
-    public function earnedPerDay(Category $category, Carbon $start, Carbon $end): array;
+    public function earnedPerDay(Category $category, Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
      * Find a category
@@ -118,13 +119,14 @@ interface SingleCategoryRepositoryInterface
      * Where yyyy-mm-dd is the date and <amount> is the money spent using WITHDRAWALS in the $category
      * from all the users accounts.
      *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
-    public function spentPerDay(Category $category, Carbon $start, Carbon $end): array;
+    public function spentPerDay(Category $category, Carbon $start, Carbon $end, Collection $accounts): array;
 
 
     /**
