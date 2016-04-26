@@ -117,6 +117,7 @@ class ReportControllerTest extends TestCase
 
         $accountHelper->shouldReceive('getAccountReport')->once()->andReturn(new AccountCollection);
         $defaultHelper->shouldReceive('getIncomeReport')->once()->andReturn(new Income);
+        $defaultHelper->shouldReceive('getCategoriesWithExpenses')->andReturn(new Collection);
         $defaultHelper->shouldReceive('getExpenseReport')->once()->andReturn(new Expense);
         $defaultHelper->shouldReceive('tagReport')->once()->andReturn([]);
 
