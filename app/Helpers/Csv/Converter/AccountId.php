@@ -20,15 +20,9 @@ class AccountId extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-
-        // is mapped? Then it's easy!
-        if (isset($this->mapped[$this->index][$this->value])) {
-            /** @var Account $account */
-            $account = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            /** @var Account $account */
-            $account = $repository->find($this->value);
-        }
+        $account    = isset($this->mapped[$this->index][$this->value])
+            ? $repository->find($this->mapped[$this->index][$this->value])
+            : $repository->find($this->value);
 
         return $account;
     }

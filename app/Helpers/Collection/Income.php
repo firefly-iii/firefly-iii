@@ -34,21 +34,21 @@ class Income
      */
     public function addOrCreateIncome(TransactionJournal $entry)
     {
-
         $accountId = $entry->account_id;
-        if (!$this->incomes->has($accountId)) {
-            $newObject         = new stdClass;
-            $newObject->amount = strval(round($entry->journalAmount, 2));
-            $newObject->name   = Crypt::decrypt($entry->account_name);
-            $newObject->count  = 1;
-            $newObject->id     = $accountId;
-            $this->incomes->put($accountId, $newObject);
-        } else {
-            $existing         = $this->incomes->get($accountId);
-            $existing->amount = bcadd($existing->amount, $entry->journalAmount);
-            $existing->count++;
-            $this->incomes->put($accountId, $existing);
+
+        $object         = new stdClass;
+        $object->amount = strval(round($entry->journalAmount, 2));
+        $object->name   = Crypt::decrypt($entry->account_name);
+        $object->count  = 1;
+        $object->id     = $accountId;
+
+        // overrule some properties:
+        if ($this->incomes->has($accountId)) {
+            $object         = $this->incomes->get($accountId);
+            $object->amount = bcadd($object->amount, $entry->journalAmount);
+            $object->count++;
         }
+        $this->incomes->put($accountId, $object);
     }
 
     /**

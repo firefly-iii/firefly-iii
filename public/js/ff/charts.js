@@ -156,8 +156,8 @@ var defaultColumnOptions = {
                 callback: function (tickValue, index, ticks) {
                     "use strict";
                     return accounting.formatMoney(tickValue);
-
-                }
+                },
+                beginAtZero: true
             }
         }]
     },
