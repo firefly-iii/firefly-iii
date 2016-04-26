@@ -25,55 +25,13 @@ class TagRepository implements TagRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * TagRepository constructor.
      *
      * @param User $user
      */
     public function __construct(User $user)
     {
         $this->user = $user;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $ids = $accounts->pluck('id')->toArray();
-        $set = $this->user->tags()
-                          ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                          ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                          ->leftJoin(
-                              'transactions AS t_from', function (JoinClause $join) {
-                              $join->on('transaction_journals.id', '=', 't_from.transaction_journal_id')->where('t_from.amount', '<', 0);
-                          }
-                          )
-                          ->leftJoin(
-                              'transactions AS t_to', function (JoinClause $join) {
-                              $join->on('transaction_journals.id', '=', 't_to.transaction_journal_id')->where('t_to.amount', '>', 0);
-                          }
-                          )
-                          ->where('tags.tagMode', 'balancingAct')
-                          ->where('transaction_types.type', TransactionType::TRANSFER)
-                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                          ->whereNull('transaction_journals.deleted_at')
-                          ->whereIn('t_from.account_id', $ids)
-                          ->whereIn('t_to.account_id', $ids)
-                          ->groupBy('t_to.account_id')
-                          ->get(
-                              [
-                                  't_to.account_id',
-                                  DB::raw('SUM(`t_to`.`amount`) as `sum`'),
-                              ]
-                          );
-
-        return $set;
     }
 
     /**
@@ -159,74 +117,6 @@ class TagRepository implements TagRepositoryInterface
 
 
     }
-
-    /**
-     * Can a tag become an advance payment?
-     *
-     * @param Tag $tag
-     *
-     * @return bool
-     */
-    public function tagAllowAdvance(Tag $tag): bool
-    {
-        /*
-         * If this tag is a balancing act, and it contains transfers, it cannot be
-         * changes to an advancePayment.
-         */
-
-        if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
-            foreach ($tag->transactionjournals as $journal) {
-                if ($journal->isTransfer()) {
-                    return false;
-                }
-            }
-        }
-
-        /*
-         * If this tag contains more than one expenses, it cannot become an advance payment.
-         */
-        $count = 0;
-        foreach ($tag->transactionjournals as $journal) {
-            if ($journal->isWithdrawal()) {
-                $count++;
-            }
-        }
-        if ($count > 1) {
-            return false;
-        }
-
-        return true;
-
-    }
-
-    /**
-     * Can a tag become a balancing act?
-     *
-     * @param Tag $tag
-     *
-     * @return bool
-     */
-    public function tagAllowBalancing(Tag $tag): bool
-    {
-        /*
-         * If has more than two transactions already, cannot become a balancing act:
-         */
-        if ($tag->transactionjournals->count() > 2) {
-            return false;
-        }
-
-        /*
-         * If any transaction is a deposit, cannot become a balancing act.
-         */
-        foreach ($tag->transactionjournals as $journal) {
-            if ($journal->isDeposit()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 
     /**
      * @param Tag   $tag
