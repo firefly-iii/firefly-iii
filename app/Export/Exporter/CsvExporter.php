@@ -10,7 +10,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export\Exporter;
 
-use FireflyIII\Export\Entry;
+use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use League\Csv\Writer;
 use SplFileObject;

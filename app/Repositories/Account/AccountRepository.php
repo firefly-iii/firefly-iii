@@ -566,8 +566,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // need the complexity.
-     *
      * @return Account
      */
     public function update(Account $account, array $data): Account

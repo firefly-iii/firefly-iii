@@ -178,7 +178,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * 
      *
      * @return BalanceLine
      */

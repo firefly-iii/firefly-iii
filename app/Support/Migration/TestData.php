@@ -237,7 +237,6 @@ class TestData
      * @param Carbon $date
      *
      * @return TransactionJournal
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function createCar(User $user, Carbon $date): TransactionJournal
     {
@@ -283,7 +282,6 @@ class TestData
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function createDrinksAndOthers(User $user, Carbon $date): bool
     {
@@ -350,7 +348,6 @@ class TestData
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function createGroceries(User $user, Carbon $date): bool
     {
@@ -453,7 +450,6 @@ class TestData
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function createPiggybanks(User $user): bool
     {

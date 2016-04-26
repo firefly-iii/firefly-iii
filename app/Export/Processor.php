@@ -13,6 +13,7 @@ namespace FireflyIII\Export;
 use Auth;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCollector;

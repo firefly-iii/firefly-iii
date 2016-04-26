@@ -8,7 +8,7 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Export;
+namespace FireflyIII\Export\Entry;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
@@ -30,7 +30,7 @@ use FireflyIII\Models\TransactionJournal;
  *
  * Class Entry
  *
- * @package FireflyIII\Export
+ * @package FireflyIII\Export\Entry
  */
 class Entry
 {

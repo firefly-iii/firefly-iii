@@ -388,7 +388,6 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return array
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function storeAccounts(TransactionType $type, array $data): array
     {

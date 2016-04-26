@@ -232,7 +232,6 @@ class BudgetController extends Controller
      * @param Collection                $accounts
      * @param Collection                $budgets
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
      *
      * @return \Illuminate\Http\JsonResponse
      */

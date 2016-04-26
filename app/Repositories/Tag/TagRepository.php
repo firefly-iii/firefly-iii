@@ -36,8 +36,6 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
-     *
      * @return bool
      */
     public function connect(TransactionJournal $journal, Tag $tag): bool
@@ -139,8 +137,6 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      * @return bool
      */
     protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag): bool
@@ -222,7 +218,6 @@ class TagRepository implements TagRepositoryInterface
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's complex but nothing can be done.
      *
      * @return bool
      */

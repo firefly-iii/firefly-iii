@@ -61,7 +61,6 @@ class Kernel extends ConsoleKernel
      *
      * @return void
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
     protected function schedule(Schedule $schedule)
     {

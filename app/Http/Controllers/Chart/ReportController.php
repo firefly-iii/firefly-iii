@@ -88,7 +88,6 @@ class ReportController extends Controller
      * @param Carbon               $end
      * @param Collection           $accounts
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
      *
      * @return \Illuminate\Http\JsonResponse
      */

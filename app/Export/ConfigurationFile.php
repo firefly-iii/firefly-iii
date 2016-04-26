@@ -10,6 +10,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export;
 
+use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use Log;
 use Storage;

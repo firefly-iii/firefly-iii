@@ -49,8 +49,6 @@ class CategoryController extends Controller
      * @param SCRI     $repository
      * @param Category $category
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function all(SCRI $repository, Category $category)
@@ -114,10 +112,6 @@ class CategoryController extends Controller
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // cant avoid it.
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // it's long but ok.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -307,8 +301,6 @@ class CategoryController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // need all parameters
-     * @SuppressWarnings(PHPMD.ExcessuveMethodLength) // need the length
      *
      * @return \Illuminate\Http\JsonResponse
      */
