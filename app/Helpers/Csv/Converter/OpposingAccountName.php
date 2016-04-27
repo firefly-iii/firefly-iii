@@ -27,8 +27,9 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
             $account = $repository->find($this->mapped[$this->index][$this->value]);
 
             return $account;
-        } else {
-            return $this->value;
         }
+
+        return $this->value;
+
     }
 }

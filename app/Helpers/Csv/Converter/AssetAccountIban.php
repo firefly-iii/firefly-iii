@@ -32,41 +32,55 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             return $account;
         }
 
+
         if (strlen($this->value) > 0) {
-            // find or create new account:
-            $set = $repository->getAccounts(['Default account', 'Asset account']);
-            /** @var Account $entry */
-            foreach ($set as $entry) {
-                if ($entry->iban == $this->value) {
-                    Log::debug('Found an account with the same IBAN ("' . $this->value . '"). It is account #' . $entry->id);
-
-                    return $entry;
-                }
-            }
-
-            Log::debug('Found no account with the same IBAN ("' . $this->value . '"), so will create a new one.');
-
-            // create it if doesn't exist.
-            $accountData = [
-                'name'                   => $this->value,
-                'accountType'            => 'asset',
-                'virtualBalance'         => 0,
-                'virtualBalanceCurrency' => 1, // hard coded.
-                'active'                 => true,
-                'user'                   => Auth::user()->id,
-                'iban'                   => $this->value,
-                'accountNumber'          => $this->value,
-                'accountRole'            => null,
-                'openingBalance'         => 0,
-                'openingBalanceDate'     => new Carbon,
-                'openingBalanceCurrency' => 1, // hard coded.
-            ];
-
-            $account = $repository->store($accountData);
+            $account = $this->searchOrCreate($repository);
 
             return $account;
         }
 
         return new Account;
+    }
+
+    /**
+     * @param AccountRepositoryInterface $repository
+     * @param                            $value
+     *
+     * @return Account
+     */
+    private function searchOrCreate(AccountRepositoryInterface $repository)
+    {
+        // find or create new account:
+        $set = $repository->getAccounts(['Default account', 'Asset account']);
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->iban == $this->value) {
+                Log::debug('Found an account with the same IBAN ("' . $this->value . '"). It is account #' . $entry->id);
+
+                return $entry;
+            }
+        }
+
+        Log::debug('Found no account with the same IBAN ("' . $this->value . '"), so will create a new one.');
+
+        // create it if doesn't exist.
+        $accountData = [
+            'name'                   => $this->value,
+            'accountType'            => 'asset',
+            'virtualBalance'         => 0,
+            'virtualBalanceCurrency' => 1, // hard coded.
+            'active'                 => true,
+            'user'                   => Auth::user()->id,
+            'iban'                   => $this->value,
+            'accountNumber'          => $this->value,
+            'accountRole'            => null,
+            'openingBalance'         => 0,
+            'openingBalanceDate'     => new Carbon,
+            'openingBalanceCurrency' => 1, // hard coded.
+        ];
+
+        $account = $repository->store($accountData);
+
+        return $account;
     }
 }

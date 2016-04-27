@@ -25,15 +25,16 @@ class CategoryName extends BasicConverter implements ConverterInterface
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $category = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
 
-            $data = [
-                'name' => $this->value,
-                'user' => Auth::user()->id,
-            ];
-
-            $category = $repository->store($data);
+            return $category;
         }
+
+        $data = [
+            'name' => $this->value,
+            'user' => Auth::user()->id,
+        ];
+
+        $category = $repository->store($data);
 
         return $category;
     }

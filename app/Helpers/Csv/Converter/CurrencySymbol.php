@@ -23,9 +23,12 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
 
         if (isset($this->mapped[$this->index][$this->value])) {
             $currency = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $currency = $repository->findBySymbol($this->value);
+
+            return $currency;
         }
+        
+        $currency = $repository->findBySymbol($this->value);
+
 
         return $currency;
     }

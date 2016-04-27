@@ -21,12 +21,14 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
 
-
         if (isset($this->mapped[$this->index][$this->value])) {
             $currency = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $currency = $repository->findByCode($this->value);
+
+            return $currency;
         }
+        
+        $currency = $repository->findByCode($this->value);
+
 
         return $currency;
     }

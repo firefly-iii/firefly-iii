@@ -27,21 +27,22 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
             $account = $repository->find($this->mapped[$this->index][$this->value]);
 
             return $account;
-        } else {
-            if (strlen($this->value) > 0) {
+        }
+        
+        if (strlen($this->value) > 0) {
 
-                $set = $repository->getAccounts([]);
-                /** @var Account $account */
-                foreach ($set as $account) {
-                    if ($account->iban == $this->value) {
+            $set = $repository->getAccounts([]);
+            /** @var Account $account */
+            foreach ($set as $account) {
+                if ($account->iban == $this->value) {
 
-                        return $account;
-                    }
+                    return $account;
                 }
             }
-
-            return $this->value;
         }
+
+        return $this->value;
+
     }
 
 }

@@ -20,13 +20,8 @@ class CategoryId extends BasicConverter implements ConverterInterface
     {
         /** @var SingleCategoryRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
-
-        // is mapped? Then it's easy!
-        if (isset($this->mapped[$this->index][$this->value])) {
-            $category = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $category = $repository->find($this->value);
-        }
+        $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
+        $category   = $repository->find($value);
 
         return $category;
     }

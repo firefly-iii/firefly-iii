@@ -25,9 +25,11 @@ class BudgetName extends BasicConverter implements ConverterInterface
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $budget = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $budget = $repository->store(['name' => $this->value, 'user' => Auth::user()->id]);
+
+            return $budget;
         }
+        $budget = $repository->store(['name' => $this->value, 'user' => Auth::user()->id]);
+
 
         return $budget;
     }

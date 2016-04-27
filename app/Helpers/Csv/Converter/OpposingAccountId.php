@@ -21,15 +21,9 @@ class OpposingAccountId extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-
-        if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find($this->mapped[$this->index][$this->value]);
-
-        } else {
-            $account = $repository->find($this->value);
-        }
+        $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
+        $account    = $repository->find($value);
 
         return $account;
-
     }
 }

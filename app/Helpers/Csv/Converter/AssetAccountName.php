@@ -22,16 +22,12 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-
-        // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
 
             return $account;
         }
 
-
-        // find or create new account:
         $set = $repository->getAccounts(['Default account', 'Asset account']);
         /** @var Account $entry */
         foreach ($set as $entry) {
@@ -39,8 +35,6 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
                 return $entry;
             }
         }
-
-        // create it if doesnt exist.
         $accountData = [
             'name'                   => $this->value,
             'accountType'            => 'asset',
@@ -54,7 +48,6 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             'openingBalance'         => 0,
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => 1, // hard coded.
-
         ];
 
         $account = $repository->store($accountData);

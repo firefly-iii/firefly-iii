@@ -22,11 +22,12 @@ class CurrencyName extends BasicConverter implements ConverterInterface
         $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
 
         if (isset($this->mapped[$this->index][$this->value])) {
-
             $currency = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $currency = $repository->findByName($this->value);
+
+            return $currency;
         }
+        $currency = $repository->findByName($this->value);
+        
 
         return $currency;
     }

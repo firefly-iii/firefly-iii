@@ -5,6 +5,8 @@ namespace FireflyIII\Helpers\Csv\Converter;
 /**
  * Class BasicConverter
  *
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  * @package FireflyIII\Helpers\Csv\Converter
  */
 class BasicConverter

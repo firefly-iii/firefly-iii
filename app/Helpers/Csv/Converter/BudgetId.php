@@ -20,14 +20,8 @@ class BudgetId extends BasicConverter implements ConverterInterface
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-
-
-        // is mapped? Then it's easy!
-        if (isset($this->mapped[$this->index][$this->value])) {
-            $budget = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $budget = $repository->find($this->value);
-        }
+        $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
+        $budget     = $repository->find($value);
 
         return $budget;
     }
