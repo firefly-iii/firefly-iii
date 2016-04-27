@@ -40,44 +40,20 @@ class AccountReportHelper implements AccountReportHelperInterface
         $endAmount   = '0';
         $diff        = '0';
         $ids         = $accounts->pluck('id')->toArray();
-
-        $yesterday = clone $start;
+        $yesterday   = clone $start;
         $yesterday->subDay();
 
-
         // get balances for start.
-        $startSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                           ->whereIn('accounts.id', $ids)
-                           ->whereNull('transaction_journals.deleted_at')
-                           ->whereNull('transactions.deleted_at')
-                           ->where('transaction_journals.date', '<=', $yesterday->format('Y-m-d'))
-                           ->groupBy('accounts.id')
-                           ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
+        $startSet = $this->getSet($ids, $yesterday);
 
         // a special consideration for accounts that did exist on this exact day.
         // we also grab the balance from today just in case, to see if that changes things.
         // it's a fall back for users who (rightly so) start keeping score at the first of
         // the month and find the first report lacking / broken.
-        $backupSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->whereIn('accounts.id', $ids)
-                            ->whereNull('transaction_journals.deleted_at')
-                            ->whereNull('transactions.deleted_at')
-                            ->where('transaction_journals.date', '<=', $start->format('Y-m-d'))
-                            ->groupBy('accounts.id')
-                            ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
+        $backupSet = $this->getSet($ids, $start);
 
         // and end:
-        $endSet = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                         ->whereIn('accounts.id', $ids)
-                         ->whereNull('transaction_journals.deleted_at')
-                         ->whereNull('transactions.deleted_at')
-                         ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                         ->groupBy('accounts.id')
-                         ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
-
+        $endSet = $this->getSet($ids, $end);
 
         $accounts->each(
             function (Account $account) use ($startSet, $endSet, $backupSet) {
@@ -86,7 +62,6 @@ class AccountReportHelper implements AccountReportHelperInterface
                  * made on today. So to get todays "start" balance, we sub one
                  * day.
                  */
-                //
                 $account->startBalance = '0';
                 $account->endBalance   = '0';
                 $currentStart          = $startSet->filter(
@@ -121,7 +96,6 @@ class AccountReportHelper implements AccountReportHelperInterface
             }
         );
 
-
         // summarize:
         foreach ($accounts as $account) {
             $startAmount = bcadd($startAmount, $account->startBalance);
@@ -136,5 +110,23 @@ class AccountReportHelper implements AccountReportHelperInterface
         $object->setAccounts($accounts);
 
         return $object;
+    }
+
+    /**
+     * @param array  $ids
+     * @param Carbon $date
+     *
+     * @return Collection
+     */
+    private function getSet(array $ids, Carbon $date): Collection
+    {
+        Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+               ->whereIn('accounts.id', $ids)
+               ->whereNull('transaction_journals.deleted_at')
+               ->whereNull('transactions.deleted_at')
+               ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+               ->groupBy('accounts.id')
+               ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
     }
 }

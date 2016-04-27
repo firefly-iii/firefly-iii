@@ -125,7 +125,7 @@ class ReportHelper implements ReportHelperInterface
         }
         $set = new Collection($array);
 
-        $set = $set->sort(
+        $set = $set->sortBy(
             function (Category $category) {
                 return $category->name;
             }

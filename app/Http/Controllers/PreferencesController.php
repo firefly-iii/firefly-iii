@@ -130,7 +130,7 @@ class PreferencesController extends Controller
         Preferences::set('budgetMaximum', $budgetMaximum);
 
         // custom fiscal year
-        $customFiscalYear = (int)Input::get('customFiscalYear');
+        $customFiscalYear = intval(Input::get('customFiscalYear')) === 1;
         $fiscalYearStart  = date('m-d', strtotime(Input::get('fiscalYearStart')));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);

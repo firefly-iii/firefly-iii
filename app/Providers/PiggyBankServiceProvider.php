@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Providers;
 
-use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -35,10 +34,10 @@ class PiggyBankServiceProvider extends ServiceProvider
         $this->app->bind(
             'FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface',
             function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && Auth::check()) {
-                    return app('FireflyIII\Repositories\PiggyBank\PiggyBankRepository', [Auth::user()]);
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\PiggyBank\PiggyBankRepository', [$app->auth->user()]);
                 } else {
-                    if (!isset($arguments[0]) && !Auth::check()) {
+                    if (!isset($arguments[0]) && !$app->auth->check()) {
                         throw new FireflyException('There is no user present.');
                     }
                 }

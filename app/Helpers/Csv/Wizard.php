@@ -62,16 +62,12 @@ class Wizard implements WizardInterface
     {
         $configRoles = config('csv.roles');
         $maps        = [];
-
-
-        if (is_array($map)) {
-            $keys = array_keys($map);
-            foreach ($keys as $index) {
-                if (isset($roles[$index])) {
-                    $name = $roles[$index];
-                    if ($configRoles[$name]['mappable']) {
-                        $maps[$index] = $name;
-                    }
+        $keys        = array_keys($map);
+        foreach ($keys as $index) {
+            if (isset($roles[$index])) {
+                $name = $roles[$index];
+                if ($configRoles[$name]['mappable']) {
+                    $maps[$index] = $name;
                 }
             }
         }

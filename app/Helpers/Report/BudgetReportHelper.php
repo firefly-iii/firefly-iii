@@ -129,6 +129,11 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $set->push($budget);
             }
         }
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return $budget->name;
+            }
+        );
 
         return $set;
     }

@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Providers;
 
-use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -34,10 +33,10 @@ class BudgetServiceProvider extends ServiceProvider
         $this->app->bind(
             'FireflyIII\Repositories\Budget\BudgetRepositoryInterface',
             function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && Auth::check()) {
-                    return app('FireflyIII\Repositories\Budget\BudgetRepository', [Auth::user()]);
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\Budget\BudgetRepository', [$app->auth->user()]);
                 } else {
-                    if (!isset($arguments[0]) && !Auth::check()) {
+                    if (!isset($arguments[0]) && !$app->auth->check()) {
                         throw new FireflyException('There is no user present.');
                     }
                 }

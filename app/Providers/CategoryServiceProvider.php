@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Providers;
 
-use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -34,10 +33,10 @@ class CategoryServiceProvider extends ServiceProvider
         $this->app->bind(
             'FireflyIII\Repositories\Category\CategoryRepositoryInterface',
             function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && Auth::check()) {
-                    return app('FireflyIII\Repositories\Category\CategoryRepository', [Auth::user()]);
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\Category\CategoryRepository', [$app->auth->user()]);
                 } else {
-                    if (!isset($arguments[0]) && !Auth::check()) {
+                    if (!isset($arguments[0]) && !$app->auth->check()) {
                         throw new FireflyException('There is no user present.');
                     }
                 }
@@ -49,10 +48,10 @@ class CategoryServiceProvider extends ServiceProvider
         $this->app->bind(
             'FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface',
             function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && Auth::check()) {
-                    return app('FireflyIII\Repositories\Category\SingleCategoryRepository', [Auth::user()]);
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\Category\SingleCategoryRepository', [$app->auth->user()]);
                 } else {
-                    if (!isset($arguments[0]) && !Auth::check()) {
+                    if (!isset($arguments[0]) && !$app->auth->check()) {
                         throw new FireflyException('There is no user present.');
                     }
                 }
