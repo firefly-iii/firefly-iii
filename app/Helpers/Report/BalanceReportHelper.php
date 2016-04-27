@@ -17,6 +17,7 @@ use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\Tag;
@@ -173,6 +174,43 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * @param Account    $account
+     * @param Collection $spentData
+     * @param Collection $tagsLeft
+     *
+     * @return BalanceEntry
+     */
+    private function createDifferenceBalanceEntry(Account $account, Collection $spentData, Collection $tagsLeft): BalanceEntry
+    {
+        $entry = $spentData->filter(
+            function (TransactionJournal $model) use ($account) {
+                return $model->account_id == $account->id && is_null($model->budget_id);
+            }
+        );
+        $spent = '0';
+        if (!is_null($entry->first())) {
+            $spent = $entry->first()->spent;
+        }
+        $leftEntry = $tagsLeft->filter(
+            function (Tag $tag) use ($account) {
+                return $tag->account_id == $account->id;
+            }
+        );
+        $left      = '0';
+        if (!is_null($leftEntry->first())) {
+            $left = $leftEntry->first()->sum;
+        }
+        $diffValue = bcadd($spent, $left);
+
+        // difference:
+        $diffEntry = new BalanceEntry;
+        $diffEntry->setAccount($account);
+        $diffEntry->setSpent($diffValue);
+
+        return $diffEntry;
+    }
+
+    /**
      * @param Collection $accounts
      * @param Collection $spentData
      * @param Carbon     $start
@@ -189,31 +227,9 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         $diff->setRole(BalanceLine::ROLE_DIFFROLE);
 
+        /** @var Account $account */
         foreach ($accounts as $account) {
-            $entry = $spentData->filter(
-                function (TransactionJournal $model) use ($account) {
-                    return $model->account_id == $account->id && is_null($model->budget_id);
-                }
-            );
-            $spent = '0';
-            if (!is_null($entry->first())) {
-                $spent = $entry->first()->spent;
-            }
-            $leftEntry = $tagsLeft->filter(
-                function (Tag $tag) use ($account) {
-                    return $tag->account_id == $account->id;
-                }
-            );
-            $left      = '0';
-            if (!is_null($leftEntry->first())) {
-                $left = $leftEntry->first()->sum;
-            }
-            $diffValue = bcadd($spent, $left);
-
-            // difference:
-            $diffEntry = new BalanceEntry;
-            $diffEntry->setAccount($account);
-            $diffEntry->setSpent($diffValue);
+            $diffEntry = $this->createDifferenceBalanceEntry($account, $spentData, $tagsLeft);
             $diff->addBalanceEntry($diffEntry);
 
         }

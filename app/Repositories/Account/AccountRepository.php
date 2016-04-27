@@ -352,8 +352,8 @@ class AccountRepository implements AccountRepositoryInterface
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
-                $account->startBalance = Steam::balance($account, $start, true);
-                $account->endBalance   = Steam::balance($account, $end, true);
+                $account->startBalance = Steam::balanceIgnoreVirtual($account, $start);
+                $account->endBalance   = Steam::balanceIgnoreVirtual($account, $end);
                 $account->piggyBalance = 0;
                 /** @var PiggyBank $piggyBank */
                 foreach ($account->piggyBanks as $piggyBank) {
@@ -426,7 +426,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function leftOnAccount(Account $account, Carbon $date): string
     {
 
-        $balance = Steam::balance($account, $date, true);
+        $balance = Steam::balanceIgnoreVirtual($account, $date);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;

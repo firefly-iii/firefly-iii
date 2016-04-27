@@ -77,7 +77,7 @@ class ReportHelper implements ReportHelperInterface
             $billLine->setActive(intval($bill->active) == 1);
             $billLine->setMin($bill->amount_min);
             $billLine->setMax($bill->amount_max);
-
+            $billLine->setHit(false);
             // is hit in period?
 
             $entry = $journals->filter(
@@ -90,8 +90,6 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setTransactionJournalId($first->id);
                 $billLine->setAmount($first->journalAmount);
                 $billLine->setHit(true);
-            } else {
-                $billLine->setHit(false);
             }
             if (!(!$billLine->isHit() && !$billLine->isActive())) {
                 $collection->addBill($billLine);
@@ -219,9 +217,7 @@ class ReportHelper implements ReportHelperInterface
         $months = [];
 
         while ($start <= $end) {
-            // current year:
-            $year = $fiscalHelper->endOfFiscalYear($start)->year;
-
+            $year = $fiscalHelper->endOfFiscalYear($start)->year; // current year
             if (!isset($months[$year])) {
                 $months[$year] = [
                     'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
@@ -234,7 +230,6 @@ class ReportHelper implements ReportHelperInterface
 
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
-
             $months[$year]['months'][] = [
                 'formatted' => $start->formatLocalized('%B %Y'),
                 'start'     => $start->format('Y-m-d'),
@@ -243,8 +238,7 @@ class ReportHelper implements ReportHelperInterface
                 'year'      => $year,
             ];
 
-            // to make the hop to the next month properly:
-            $start = clone $currentEnd;
+            $start = clone $currentEnd; // to make the hop to the next month properly
             $start->addDay();
         }
 

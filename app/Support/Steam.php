@@ -16,7 +16,6 @@ use FireflyIII\Models\Transaction;
  */
 class Steam
 {
-
     /**
      *
      * @param \FireflyIII\Models\Account $account
@@ -43,10 +42,39 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
+        $balance = bcadd($balance, $account->virtual_balance);
+        $cache->store($balance);
 
-        if (!$ignoreVirtualBalance) {
-            $balance = bcadd($balance, $account->virtual_balance);
+        return $balance;
+    }
+
+    /**
+     *
+     * @param \FireflyIII\Models\Account $account
+     * @param \Carbon\Carbon             $date
+     * @param bool                       $ignoreVirtualBalance
+     *
+     * @return string
+     */
+    public function balanceIgnoreVirtual(Account $account, Carbon $date, $ignoreVirtualBalance = false): string
+    {
+
+        // abuse chart properties:
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance-no-virtual');
+        $cache->addProperty($date);
+        $cache->addProperty($ignoreVirtualBalance);
+        if ($cache->has()) {
+            return $cache->get();
         }
+
+        $balance = strval(
+            $account->transactions()->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+        );
+
         $cache->store($balance);
 
         return $balance;
