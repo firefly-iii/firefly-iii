@@ -107,6 +107,38 @@ class ReportHelper implements ReportHelperInterface
      * @param Carbon     $end
      * @param Collection $accounts
      *
+     * @return Collection
+     */
+    public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
+    {
+        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $collection = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
+        $second     = $repository->spentForAccountsPerMonth($accounts, $start, $end);
+        $collection = $collection->merge($second);
+        $array      = [];
+        /** @var Category $category */
+        foreach ($collection as $category) {
+            $id         = $category->id;
+            $array[$id] = $category;
+
+        }
+        $set = new Collection($array);
+
+        $set = $set->sort(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
      * @return CategoryCollection
      */
     public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection
@@ -311,31 +343,5 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $sum;
-    }
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
-    {
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-        $collection = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
-        $second     = $repository->spentForAccountsPerMonth($accounts, $start, $end);
-        $collection = $collection->merge($second);
-        $array      = [];
-        /** @var Category $category */
-        foreach ($collection as $category) {
-            $id         = $category->id;
-            $array[$id] = $category;
-
-        }
-        $set = new Collection($array);
-
-        return $set;
     }
 }
