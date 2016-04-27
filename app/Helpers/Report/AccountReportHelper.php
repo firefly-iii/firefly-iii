@@ -120,7 +120,7 @@ class AccountReportHelper implements AccountReportHelperInterface
      */
     private function getSet(array $ids, Carbon $date): Collection
     {
-        Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+        return Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                ->whereIn('accounts.id', $ids)
                ->whereNull('transaction_journals.deleted_at')
