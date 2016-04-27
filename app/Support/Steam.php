@@ -20,11 +20,10 @@ class Steam
      *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
-     * @param bool                       $ignoreVirtualBalance
      *
      * @return string
      */
-    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false): string
+    public function balance(Account $account, Carbon $date): string
     {
 
         // abuse chart properties:
@@ -32,7 +31,6 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
-        $cache->addProperty($ignoreVirtualBalance);
         if ($cache->has()) {
             return $cache->get();
         }
@@ -56,7 +54,7 @@ class Steam
      *
      * @return string
      */
-    public function balanceIgnoreVirtual(Account $account, Carbon $date, $ignoreVirtualBalance = false): string
+    public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
 
         // abuse chart properties:
@@ -64,7 +62,6 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance-no-virtual');
         $cache->addProperty($date);
-        $cache->addProperty($ignoreVirtualBalance);
         if ($cache->has()) {
             return $cache->get();
         }
