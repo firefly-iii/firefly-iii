@@ -28,7 +28,17 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
 
             return $account;
         }
-        
+
+        return $this->findAccount($repository);
+    }
+
+    /**
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return Account|string
+     */
+    private function findAccount(AccountRepositoryInterface $repository)
+    {
         if (strlen($this->value) > 0) {
 
             $set = $repository->getAccounts([]);
@@ -42,7 +52,6 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
         }
 
         return $this->value;
-
     }
 
 }

@@ -55,6 +55,26 @@ class OpposingAccount implements PostProcessorInterface
     }
 
     /**
+     * @return array|null
+     */
+    protected function checkIbanString()
+    {
+        $rules     = ['iban' => 'iban'];
+        $iban      = $this->data['opposing-account-iban'];
+        $check     = ['iban' => $iban];
+        $validator = Validator::make($check, $rules);
+        if (is_string($iban) && strlen($iban) > 0 && !$validator->fails()) {
+
+            Log::debug('OpposingAccountPostProcession: opposing-account-iban is a string (******).');
+            $this->data['opposing-account-object'] = $this->parseIbanString();
+
+            return $this->data;
+        }
+
+        return null;
+    }
+
+    /**
      * @return array
      */
     protected function checkIdNameObject()
@@ -78,41 +98,22 @@ class OpposingAccount implements PostProcessorInterface
     /**
      * @return array|null
      */
-    protected function checkIbanString()
+    protected function checkNameString()
     {
-        $rules     = ['iban' => 'iban'];
-        $iban      = $this->data['opposing-account-iban'];
-        $check     = ['iban' => $iban];
-        $validator = Validator::make($check, $rules);
-        if (is_string($iban) && strlen($iban) > 0 && !$validator->fails()) {
+        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
+            Log::debug('OpposingAccountPostProcession: opposing-account-name is an Account.');
+            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
 
-            Log::debug('OpposingAccountPostProcession: opposing-account-iban is a string (******).');
-            $this->data['opposing-account-object'] = $this->parseIbanString();
+            return $this->data;
+        }
+        if (is_string($this->data['opposing-account-name'])) {
+
+            $this->data['opposing-account-object'] = $this->parseNameString();
 
             return $this->data;
         }
 
         return null;
-    }
-
-    /**
-     * @return Account|null
-     */
-    protected function parseIbanString()
-    {
-        // create by name and/or iban.
-        $accounts = Auth::user()->accounts()->get();
-        foreach ($accounts as $entry) {
-            if ($entry->iban == $this->data['opposing-account-iban']) {
-                Log::debug('OpposingAccountPostProcession: opposing-account-iban matches an Account.');
-
-                return $entry;
-            }
-        }
-        $account = $this->createAccount();
-
-
-        return $account;
     }
 
     /**
@@ -150,34 +151,33 @@ class OpposingAccount implements PostProcessorInterface
             // create expense account:
 
             return AccountType::where('type', 'Expense account')->first();
-        } else {
-            // create revenue account:
-
-            return AccountType::where('type', 'Revenue account')->first();
-
-
         }
+
+        // create revenue account:
+
+        return AccountType::where('type', 'Revenue account')->first();
+
+
     }
 
     /**
-     * @return array|null
+     * @return Account|null
      */
-    protected function checkNameString()
+    protected function parseIbanString()
     {
-        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
-            Log::debug('OpposingAccountPostProcession: opposing-account-name is an Account.');
-            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
+        // create by name and/or iban.
+        $accounts = Auth::user()->accounts()->get();
+        foreach ($accounts as $entry) {
+            if ($entry->iban == $this->data['opposing-account-iban']) {
+                Log::debug('OpposingAccountPostProcession: opposing-account-iban matches an Account.');
 
-            return $this->data;
+                return $entry;
+            }
         }
-        if (is_string($this->data['opposing-account-name'])) {
+        $account = $this->createAccount();
 
-            $this->data['opposing-account-object'] = $this->parseNameString();
 
-            return $this->data;
-        }
-
-        return null;
+        return $account;
     }
 
     /**
