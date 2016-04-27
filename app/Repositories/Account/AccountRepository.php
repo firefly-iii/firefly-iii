@@ -421,7 +421,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param Carbon  $date
      *
-     * @return float
+     * @return string
      */
     public function leftOnAccount(Account $account, Carbon $date): string
     {
