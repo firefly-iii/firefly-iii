@@ -138,6 +138,7 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
                             break;
                         case 'NAAM':
                             $this->data['opposing-account-name'] = $value;
+                            $name                                = $value;
                             break;
                         case 'KENMERK':
                             $reference = $value;
