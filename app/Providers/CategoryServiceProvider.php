@@ -35,10 +35,9 @@ class CategoryServiceProvider extends ServiceProvider
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
                     return app('FireflyIII\Repositories\Category\CategoryRepository', [$app->auth->user()]);
-                } else {
-                    if (!isset($arguments[0]) && !$app->auth->check()) {
-                        throw new FireflyException('There is no user present.');
-                    }
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
                 }
 
                 return app('FireflyIII\Repositories\Category\CategoryRepository', $arguments);
@@ -50,10 +49,9 @@ class CategoryServiceProvider extends ServiceProvider
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
                     return app('FireflyIII\Repositories\Category\SingleCategoryRepository', [$app->auth->user()]);
-                } else {
-                    if (!isset($arguments[0]) && !$app->auth->check()) {
-                        throw new FireflyException('There is no user present.');
-                    }
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
                 }
 
                 return app('FireflyIII\Repositories\Category\SingleCategoryRepository', $arguments);

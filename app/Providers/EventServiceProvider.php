@@ -86,13 +86,13 @@ class EventServiceProvider extends ServiceProvider
                     } catch (QueryException $e) {
                         Log::error('Trying to save new LimitRepetition failed: ' . $e->getMessage());
                     }
-                } else {
-                    if ($set->count() == 1) {
-                        $repetition         = $set->first();
-                        $repetition->amount = $budgetLimit->amount;
-                        $repetition->save();
+                }
+                
+                if ($set->count() == 1) {
+                    $repetition         = $set->first();
+                    $repetition->amount = $budgetLimit->amount;
+                    $repetition->save();
 
-                    }
                 }
             }
         );
