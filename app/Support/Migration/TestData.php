@@ -12,6 +12,7 @@ namespace FireflyIII\Support\Migration;
 
 use Carbon\Carbon;
 use Crypt;
+use FireflyIII\Events\BudgetLimitStored;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Attachment;
@@ -30,6 +31,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
+use Navigation;
 use Storage;
 
 /**
@@ -209,6 +211,10 @@ class TestData
                 'repeat_freq' => 'monthly',
             ]
         );
+        // also trigger event.
+        $thisEnd = Navigation::addPeriod($start, 'monthly', 0);
+        $thisEnd->subDay();
+        event(new BudgetLimitStored($limit, $thisEnd));
 
         return $limit;
     }

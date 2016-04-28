@@ -25,6 +25,54 @@ use Illuminate\Support\Collection;
 class AccountReportHelper implements AccountReportHelperInterface
 {
     /**
+     * @param Account    $account
+     * @param Collection $startSet
+     * @param Collection $endSet
+     * @param Collection $backupSet
+     *
+     * @return Account
+     */
+    public static function reportFilter(Account $account, Collection $startSet, Collection $endSet, Collection $backupSet)
+    {
+        // The balance for today always incorporates transactions made on today. So to get todays "start" balance, we sub one day.
+        $account->startBalance = '0';
+        $account->endBalance   = '0';
+        $currentStart          = $startSet->filter(
+            function (Account $entry) use ($account) {
+                return $account->id == $entry->id;
+            }
+        );
+
+        $currentBackup = $backupSet->filter( // grab entry from current backup as well:
+            function (Account $entry) use ($account) {
+                return $account->id == $entry->id;
+            }
+        );
+
+        // first try to set from backup
+        if (!is_null($currentBackup->first())) {
+            $account->startBalance = $currentBackup->first()->balance;
+        }
+
+        // overrule with data from start
+        if (!is_null($currentStart->first())) {
+            $account->startBalance = $currentStart->first()->balance;
+        }
+
+        $currentEnd = $endSet->filter(
+            function (Account $entry) use ($account) {
+                return $account->id == $entry->id;
+            }
+        );
+        
+        if (!is_null($currentEnd->first())) {
+            $account->endBalance = $currentEnd->first()->balance;
+        }
+
+        return $account;
+    }
+
+    /**
      * This method generates a full report for the given period on all
      * given accounts.
      *
@@ -53,34 +101,7 @@ class AccountReportHelper implements AccountReportHelperInterface
 
         $accounts->each(
             function (Account $account) use ($startSet, $endSet, $backupSet) {
-                // The balance for today always incorporates transactions made on today. So to get todays "start" balance, we sub one day.
-                $account->startBalance = '0';
-                $account->endBalance   = '0';
-                $currentStart          = $startSet->filter(
-                    function (Account $entry) use ($account) {
-                        return $account->id == $entry->id;
-                    }
-                );
-
-                $currentBackup = $backupSet->filter( // grab entry from current backup as well:
-                    function (Account $entry) use ($account) {
-                        return $account->id == $entry->id;
-                    }
-                );
-                if (!is_null($currentStart->first())) {
-                    $account->startBalance = $currentStart->first()->balance;
-                }
-                if (is_null($currentStart->first()) && !is_null($currentBackup->first())) {
-                    $account->startBalance = $currentBackup->first()->balance;
-                }
-                $currentEnd = $endSet->filter(
-                    function (Account $entry) use ($account) {
-                        return $account->id == $entry->id;
-                    }
-                );
-                if (!is_null($currentEnd->first())) {
-                    $account->endBalance = $currentEnd->first()->balance;
-                }
+                return self::reportFilter($account, $startSet, $endSet, $backupSet);
             }
         );
 

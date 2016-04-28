@@ -36,6 +36,12 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
+            'FireflyIII\Events\BudgetLimitStored'         => [
+                'FireflyIII\Handlers\Events\BudgetLimitEventHandler@store',
+            ],
+            'FireflyIII\Events\BudgetLimitUpdated'        => [
+                'FireflyIII\Handlers\Events\BudgetLimitEventHandler@update',
+            ],
             'FireflyIII\Events\TransactionJournalStored'  => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
@@ -66,39 +72,6 @@ class EventServiceProvider extends ServiceProvider
         parent::boot($events);
         $this->registerDeleteEvents();
         $this->registerCreateEvents();
-        BudgetLimit::saved(
-            function (BudgetLimit $budgetLimit) {
-                $end = Navigation::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
-                $end->subDay();
-                $set = $budgetLimit->limitrepetitions()
-                                   ->where('startdate', $budgetLimit->startdate->format('Y-m-d 00:00:00'))
-                                   ->where('enddate', $end->format('Y-m-d 00:00:00'))
-                                   ->get();
-                if ($set->count() == 0) {
-                    $repetition            = new LimitRepetition;
-                    $repetition->startdate = $budgetLimit->startdate;
-                    $repetition->enddate   = $end;
-                    $repetition->amount    = $budgetLimit->amount;
-                    $repetition->budgetLimit()->associate($budgetLimit);
-
-                    try {
-                        $repetition->save();
-                    } catch (QueryException $e) {
-                        Log::error('Trying to save new LimitRepetition failed: ' . $e->getMessage());
-                    }
-                }
-                
-                if ($set->count() == 1) {
-                    $repetition         = $set->first();
-                    $repetition->amount = $budgetLimit->amount;
-                    $repetition->save();
-
-                }
-            }
-        );
-
-
-        //
     }
 
     /**

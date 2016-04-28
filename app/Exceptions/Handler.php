@@ -6,7 +6,6 @@ use Auth;
 use ErrorException;
 use Exception;
 use FireflyIII\Jobs\MailError;
-use FireflyIII\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -66,9 +65,14 @@ class Handler extends ExceptionHandler
     {
 
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
-
-            $user = Auth::check() ? Auth::user() : new User;
-
+            $userData = [
+                'id'    => 0,
+                'email' => 'unknown@example.com',
+            ];
+            if (Auth::check()) {
+                $userData['id']    = Auth::user()->id;
+                $userData['email'] = Auth::user()->email;
+            }
             $data = [
                 'class'        => get_class($exception),
                 'errorMessage' => $exception->getMessage(),
@@ -80,7 +84,7 @@ class Handler extends ExceptionHandler
             ];
 
             // create job that will mail.
-            $job = new MailError($user, env('SITE_OWNER'), Request::ip(), $data);
+            $job = new MailError($userData, env('SITE_OWNER'), Request::ip(), $data);
             dispatch($job);
         }
 

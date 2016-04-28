@@ -74,7 +74,7 @@ class ReportHelper implements ReportHelperInterface
         foreach ($bills as $bill) {
             $billLine = new BillLine;
             $billLine->setBill($bill);
-            $billLine->setActive(intval($bill->active) == 1);
+            $billLine->setActive(intval($bill->active) === 1);
             $billLine->setMin($bill->amount_min);
             $billLine->setMax($bill->amount_max);
             $billLine->setHit(false);
@@ -91,10 +91,10 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setAmount($first->journalAmount);
                 $billLine->setHit(true);
             }
-            if (!(!$billLine->isHit() && !$billLine->isActive())) {
+
+            if ($billLine->isHitAndActive()) {
                 $collection->addBill($billLine);
             }
-
         }
 
         return $collection;

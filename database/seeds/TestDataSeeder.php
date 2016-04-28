@@ -9,6 +9,7 @@ declare(strict_types = 1);
  */
 
 use Carbon\Carbon;
+use FireflyIII\Events\BudgetLimitStored;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Support\Migration\TestData;
 use Illuminate\Database\Seeder;
@@ -94,19 +95,24 @@ class TestDataSeeder extends Seeder
 
         // create some special budget limits to test stuff with multiple budget limits
         // for a range of dates:
-        $this->end->startOfMonth();
+        $this->end->startOfMonth()->addDay();
+
         $budget = TestData::findBudget($user, 'Bills');
-        $ranges = ['daily','weekly','monthly','quarterly','half-year','yearly'];
-        foreach($ranges as $range) {
-            BudgetLimit::create(
+        $ranges = ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'];
+        foreach ($ranges as $range) {
+            $limit = BudgetLimit::create(
                 [
                     'budget_id'   => $budget->id,
                     'startdate'   => $this->end->format('Y-m-d'),
-                    'amount'      => rand(100,200),
+                    'amount'      => rand(100, 200),
                     'repeats'     => 0,
                     'repeat_freq' => $range,
                 ]
             );
+            // also trigger event.
+            $thisEnd = Navigation::addPeriod($this->end, $range, 0);
+            $thisEnd->subDay();
+            event(new BudgetLimitStored($limit, $thisEnd));
             $this->end->addDay();
         }
 

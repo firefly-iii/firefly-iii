@@ -5,6 +5,8 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Events\BudgetLimitStored;
+use FireflyIII\Events\BudgetLimitUpdated;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -19,7 +21,6 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
-use Preferences;
 
 /**
  * Class BudgetRepository
@@ -859,42 +860,53 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
     /**
      * @param Budget $budget
-     * @param Carbon $date
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $range
      * @param int    $amount
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $date, int $amount): BudgetLimit
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount) : BudgetLimit
     {
         // there might be a budget limit for this startdate:
-
-        $viewRange  = Preferences::get('viewRange', '1M')->data;
-        $repeatFreq = config('firefly.range_to_repeat_freq.' . $viewRange);
+        $repeatFreq = config('firefly.range_to_repeat_freq.' . $range);
         /** @var BudgetLimit $limit */
-        $limit = $budget->budgetlimits()->where('budget_limits.startdate', $date)->where('budget_limits.repeat_freq', $repeatFreq)->first(['budget_limits.*']);
+        $limit = $budget->budgetlimits()
+                        ->where('budget_limits.startdate', $start)
+                        ->where('budget_limits.repeat_freq', $repeatFreq)->first(['budget_limits.*']);
 
-        if (!$limit) {
-            // if not, create one!
-            $limit = new BudgetLimit;
-            $limit->budget()->associate($budget);
-            $limit->startdate   = $date;
-            $limit->amount      = $amount;
-            $limit->repeat_freq = $repeatFreq;
-            $limit->repeats     = 0;
+        // delete if amount is zero.
+        if (!is_null($limit) && $amount <= 0.0) {
+            $limit->delete();
+
+            return new BudgetLimit;
+        }
+        // update if exists:
+        if (!is_null($limit)) {
+            $limit->amount = $amount;
             $limit->save();
 
-            // likewise, there should be a limit repetition to match the end date
-            // (which is always the end of the month) but that is caught by an event.
-            // so handled automatically.
+            // fire event to create or update LimitRepetition.
+            event(new BudgetLimitUpdated($limit, $end));
 
-        } else {
-            if ($amount > 0) {
-                $limit->amount = $amount;
-                $limit->save();
-            } else {
-                $limit->delete();
-            }
+            return $limit;
         }
+
+        // create one and return it.
+        $limit = new BudgetLimit;
+        $limit->budget()->associate($budget);
+        $limit->startdate   = $start;
+        $limit->amount      = $amount;
+        $limit->repeat_freq = $repeatFreq;
+        $limit->repeats     = 0;
+        $limit->save();
+        event(new BudgetLimitStored($limit, $end));
+
+
+        // likewise, there should be a limit repetition to match the end date
+        // (which is always the end of the month) but that is caught by an event.
+        // so handled automatically.
 
         return $limit;
     }

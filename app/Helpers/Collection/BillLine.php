@@ -141,5 +141,13 @@ class BillLine
         $this->hit = $hit;
     }
 
+    /**
+     * @return bool
+     */
+    public function isHitAndActive():bool
+    {
+        return $this->hit && $this->active;
+    }
+
 
 }

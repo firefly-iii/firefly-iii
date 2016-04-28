@@ -47,9 +47,18 @@ class BudgetController extends Controller
     public function amount(BudgetRepositoryInterface $repository, Budget $budget)
     {
         $amount = intval(Input::get('amount'));
-        /** @var Carbon $date */
-        $date            = session('start', Carbon::now()->startOfMonth());
-        $limitRepetition = $repository->updateLimitAmount($budget, $date, $amount);
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end       = session('end', Carbon::now()->endOfMonth());
+        $viewRange = Preferences::get('viewRange', '1M')->data;
+
+        // is custom view range?
+        if (session('is_custom_range') === true) {
+            $viewRange = 'custom';
+        }
+
+        $limitRepetition = $repository->updateLimitAmount($budget, $start, $end, $viewRange, $amount);
         if ($amount == 0) {
             $limitRepetition = null;
         }
@@ -161,14 +170,6 @@ class BudgetController extends Controller
         $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
         /**
-         * Warn user if necessary
-         */
-        $userWarning = '';
-        if (session('is_custom_range', false) === true) {
-            $userWarning = strval(trans('firefly.warn_range_' . $repeatFreq));
-        }
-
-        /**
          * Do some cleanup:
          */
         $repository->cleanupBudgets();
@@ -195,7 +196,7 @@ class BudgetController extends Controller
                                'budgetMaximum', 'periodStart', 'periodEnd',
                                'period', 'range', 'budgetIncomeTotal',
                                'defaultCurrency', 'inactive', 'budgets',
-                               'spent', 'budgeted', 'userWarning'
+                               'spent', 'budgeted'
                            )
         );
     }
