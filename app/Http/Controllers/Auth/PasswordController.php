@@ -53,11 +53,14 @@ class PasswordController extends Controller
     {
         $this->validate($request, ['email' => 'required|email']);
 
-        $user = User::whereEmail($request->get('email'))->first();
+        $user     = User::whereEmail($request->get('email'))->first();
+        $response = 'passwords.blocked';
 
-        if (!is_null($user) && intval($user->blocked) === 1) {
-            $response = 'passwords.blocked';
-        } else {
+        if (is_null($user)) {
+            $response = Password::INVALID_USER;
+        }
+
+        if (!is_null($user) && intval($user->blocked) === 0) {
             $response = Password::sendResetLink(
                 $request->only('email'), function (Message $message) {
                 $message->subject($this->getEmailSubject());

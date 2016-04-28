@@ -158,6 +158,11 @@ class BudgetController extends Controller
         $budgeted   = '0';
         $range      = Preferences::get('viewRange', '1M')->data;
         $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . $range);
+
+        if (session('is_custom_range') === true) {
+            $repeatFreq = 'custom';
+        }
+
         /** @var Carbon $start */
         $start = session('start', new Carbon);
         /** @var Carbon $end */

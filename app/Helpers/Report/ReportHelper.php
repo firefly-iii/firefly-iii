@@ -286,17 +286,14 @@ class ReportHelper implements ReportHelperInterface
         /** @var Tag $entry */
         foreach ($set as $entry) {
             // less than zero? multiply to be above zero.
-            $amount = $entry->amount;
-            $id     = intval($entry->id);
-            if (!isset($collection[$id])) {
-                $collection[$id] = [
-                    'id'     => $id,
-                    'tag'    => $entry->tag,
-                    'amount' => $amount,
-                ];
-            } else {
-                $collection[$id]['amount'] = bcadd($collection[$id]['amount'], $amount);
-            }
+            $amount          = $entry->amount;
+            $id              = intval($entry->id);
+            $previousAmount  = $collection[$id]['amount'] ?? '0';
+            $collection[$id] = [
+                'id'     => $id,
+                'tag'    => $entry->tag,
+                'amount' => bcadd($previousAmount, $amount),
+            ];
         }
 
         // cleanup collection (match "fonts")

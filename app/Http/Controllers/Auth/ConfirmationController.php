@@ -69,14 +69,13 @@ class ConfirmationController extends Controller
         $now     = time();
         $maxDiff = config('firefly.resend_confirmation');
         $owner   = env('SITE_OWNER', 'mail@example.com');
+        $view    = 'auth.confirmation.no-resent';
         if ($now - $time > $maxDiff) {
-
             event(new ResendConfirmation(Auth::user(), $request->ip()));
-
-            return view('auth.confirmation.resent', ['owner' => $owner]);
-        } else {
-            return view('auth.confirmation.no-resent', ['owner' => $owner]);
+            $view = 'auth.confirmation.resent';
         }
+
+        return view($view, ['owner' => $owner]);
     }
 
 }
