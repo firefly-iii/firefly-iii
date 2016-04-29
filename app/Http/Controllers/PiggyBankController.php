@@ -127,16 +127,15 @@ class PiggyBankController extends Controller
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
-
+        $targetDate   = null;
         /*
          * Flash some data to fill the form.
          */
-        if (is_null($piggyBank->targetdate) || $piggyBank->targetdate == '') {
-            $targetDate = null;
-        } else {
+        if (!is_null($piggyBank->targetdate) || !$piggyBank->targetdate == '') {
             $targetDate = new Carbon($piggyBank->targetdate);
             $targetDate = $targetDate->format('Y-m-d');
         }
+
         $preFilled = ['name'         => $piggyBank->name,
                       'account_id'   => $piggyBank->account_id,
                       'targetamount' => $piggyBank->targetamount,
@@ -246,12 +245,12 @@ class PiggyBankController extends Controller
                 'success', strval(trans('firefly.added_amount_to_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
             );
             Preferences::mark();
-        } else {
-            Log::error('Cannot add ' . $amount . ' because max amount is ' . $maxAmount . ' (left on account is ' . $leftOnAccount . ')');
-            Session::flash(
-                'error', strval(trans('firefly.cannot_add_amount_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
-            );
+
+            return redirect(route('piggy-banks.index'));
         }
+
+        Log::error('Cannot add ' . $amount . ' because max amount is ' . $maxAmount . ' (left on account is ' . $leftOnAccount . ')');
+        Session::flash('error', strval(trans('firefly.cannot_add_amount_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)])));
 
         return redirect(route('piggy-banks.index'));
     }
@@ -280,11 +279,11 @@ class PiggyBankController extends Controller
                 'success', strval(trans('firefly.removed_amount_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
             );
             Preferences::mark();
-        } else {
-            Session::flash(
-                'error', strval(trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
-            );
+
+            return redirect(route('piggy-banks.index'));
         }
+
+        Session::flash('error', strval(trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)])));
 
         return redirect(route('piggy-banks.index'));
     }

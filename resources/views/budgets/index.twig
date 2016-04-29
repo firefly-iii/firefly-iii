@@ -107,7 +107,7 @@
                     <h3 class="box-title">
                         <!-- link in header -->
                         {% if budget.currentRep.id %}
-                            <a href="{{ route('budgets.show', [budget.id, budget.currentRep.id]) }}" class="budget-link"
+                            <a href="{{ route('budgets.showWithRepetition', [budget.id, budget.currentRep.id]) }}" class="budget-link"
                                data-id="{{ budget.id }}">{{ budget.name }}</a>
                         {% else %}
                             <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
@@ -173,7 +173,7 @@
                                         {% for other in budget.otherRepetitions %}
                                             {% if other.id != budget.currentRep.id %}
                                                 <li>Budgeted
-                                                    <a href="{{ route('budgets.show', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
+                                                    <a href="{{ route('budgets.showWithRepetition', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
                                                     between
                                                     {{ other.startdate.formatLocalized(monthAndDayFormat) }}
                                                     and {{ other.enddate.formatLocalized(monthAndDayFormat) }}.

@@ -51,9 +51,11 @@ class BillController extends Controller
             // expenses are negative (bill not yet paid),
             $creditCardDue = bcmul($creditCardDue, '-1');
             $unpaid        = bcadd($unpaid, $creditCardDue);
-        } else {
-            // if more than zero, the bill has been paid: (transfer = positive).
-            // amount must be negative to be added to $paid:
+        }
+
+        // if $creditCardDue more than zero, the bill has been paid: (transfer = positive).
+        // amount must be negative to be added to $paid:
+        if ($creditCardDue >= 0) {
             $paid = bcadd($paid, $creditCardDue);
         }
 

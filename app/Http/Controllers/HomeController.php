@@ -32,16 +32,15 @@ class HomeController extends Controller
     public function dateRange()
     {
 
-        $start = new Carbon(Input::get('start'));
-        $end   = new Carbon(Input::get('end'));
-        $label = Input::get('label');
+        $start         = new Carbon(Input::get('start'));
+        $end           = new Carbon(Input::get('end'));
+        $label         = Input::get('label');
+        $isCustomRange = false;
 
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
-            Session::put('is_custom_range', true);
-        } else {
-            Session::put('is_custom_range', false);
+            $isCustomRange = true;
         }
 
         $diff = $start->diffInDays($end);
@@ -50,6 +49,7 @@ class HomeController extends Controller
             Session::flash('warning', strval(trans('firefly.warning_much_data', ['days' => $diff])));
         }
 
+        Session::put('is_custom_range', $isCustomRange);
         Session::put('start', $start);
         Session::put('end', $end);
     }

@@ -111,12 +111,12 @@ class NewUserController extends Controller
             $repository->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
             $count++;
         }
+        $message = strval(trans('firefly.stored_new_accounts_new_user'));
         if ($count == 1) {
-            Session::flash('success', strval(trans('firefly.stored_new_account_new_user')));
-        } else {
-            Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
+            $message = strval(trans('firefly.stored_new_account_new_user'));
         }
 
+        Session::flash('success', $message);
         Preferences::mark();
 
         return redirect(route('index'));

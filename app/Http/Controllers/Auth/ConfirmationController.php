@@ -55,9 +55,8 @@ class ConfirmationController extends Controller
             Session::flash('success', strval(trans('firefly.account_is_confirmed')));
 
             return redirect(route('home'));
-        } else {
-            throw new FireflyException(trans('firefly.invalid_activation_code'));
         }
+        throw new FireflyException(trans('firefly.invalid_activation_code'));
     }
 
     /**

@@ -186,24 +186,25 @@ class CategoryController extends Controller
 
         if ($cache->has()) {
             $entries = $cache->get();
-        } else {
 
-            while ($end >= $start) {
-                $end        = Navigation::startOfPeriod($end, $range);
-                $currentEnd = Navigation::endOfPeriod($end, $range);
-
-                // get data from spentArray:
-                $spent    = $this->getSumOfRange($end, $currentEnd, $spentArray);
-                $earned   = $this->getSumOfRange($end, $currentEnd, $earnedArray);
-                $dateStr  = $end->format('Y-m-d');
-                $dateName = Navigation::periodShow($end, $range);
-                $entries->push([$dateStr, $dateName, $spent, $earned]);
-
-                $end = Navigation::subtractPeriod($end, $range, 1);
-
-            }
-            $cache->store($entries);
+            return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
         }
+
+        while ($end >= $start) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+
+            // get data from spentArray:
+            $spent    = $this->getSumOfRange($end, $currentEnd, $spentArray);
+            $earned   = $this->getSumOfRange($end, $currentEnd, $earnedArray);
+            $dateStr  = $end->format('Y-m-d');
+            $dateName = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned]);
+
+            $end = Navigation::subtractPeriod($end, $range, 1);
+
+        }
+        $cache->store($entries);
 
         return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
     }

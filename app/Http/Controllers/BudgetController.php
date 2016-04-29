@@ -251,34 +251,19 @@ class BudgetController extends Controller
     /**
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
-     * @param LimitRepetition|null      $repetition
      *
      * @return View
      * @throws FireflyException
      */
-    public function show(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition = null)
+    public function show(BudgetRepositoryInterface $repository, Budget $budget)
     {
-        if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
-            throw new FireflyException('This budget limit is not part of this budget.');
-        }
-
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $journals = $repository->getJournals($budget, $repetition, $pageSize);
-
-        if (is_null($repetition->id)) {
-            $start    = $repository->firstActivity($budget);
-            $end      = new Carbon;
-            $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
-            $subTitle = e($budget->name);
-            $journals->setPath('/budgets/show/' . $budget->id);
-        } else {
-            $start    = $repetition->startdate;
-            $end      = $repetition->enddate;
-            $set      = new Collection([$repetition]);
-            $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
-            $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
-        }
-
+        $journals = $repository->getJournals($budget, new LimitRepetition, $pageSize);
+        $start    = $repository->firstActivity($budget);
+        $end      = new Carbon;
+        $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
+        $subTitle = e($budget->name);
+        $journals->setPath('/budgets/show/' . $budget->id);
         $spentArray = $repository->spentPerDay($budget, $start, $end);
         $limits     = new Collection();
 
@@ -290,6 +275,41 @@ class BudgetController extends Controller
 
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
+    }
+
+    /**
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param LimitRepetition           $repetition
+     *
+     * @return View
+     * @throws FireflyException
+     */
+    public function showWithRepetition(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition)
+    {
+        if ($repetition->budgetLimit->budget->id != $budget->id) {
+            throw new FireflyException('This budget limit is not part of this budget.');
+        }
+
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $journals = $repository->getJournals($budget, $repetition, $pageSize);
+        $start    = $repetition->startdate;
+        $end      = $repetition->enddate;
+        $set      = new Collection([$repetition]);
+        $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+        $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
+        $spentArray = $repository->spentPerDay($budget, $start, $end);
+        $limits     = new Collection();
+
+        /** @var LimitRepetition $entry */
+        foreach ($set as $entry) {
+            $entry->spent = $this->getSumOfRange($entry->startdate, $entry->enddate, $spentArray);
+            $limits->push($entry);
+        }
+
+
+        return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
+
     }
 
     /**
