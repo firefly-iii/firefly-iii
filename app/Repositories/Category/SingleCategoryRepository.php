@@ -157,7 +157,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                         ->orderBy('transaction_journals.date', 'DESC')
                         ->orderBy('transaction_journals.order', 'ASC')
                         ->orderBy('transaction_journals.id', 'DESC')
-                        ->get(TransactionJournal::QUERYFIELDS);
+                        ->get(TransactionJournal::queryFields());
 
     }
 
@@ -180,7 +180,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                         ->expanded()
                         ->whereIn('source_account.id', $ids)
                         ->whereNotIn('destination_account.id', $ids)
-                        ->get(TransactionJournal::QUERYFIELDS);
+                        ->get(TransactionJournal::queryFields());
     }
 
     /**
@@ -203,7 +203,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                         ->expanded()
                         ->take($pageSize)
                         ->offset($offset)
-                        ->get(TransactionJournal::QUERYFIELDS);
+                        ->get(TransactionJournal::queryFields());
     }
 
     /**

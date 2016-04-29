@@ -37,7 +37,7 @@ class JournalList implements BinderInterface
             $object = TransactionJournal::whereIn('transaction_journals.id', $ids)
                                         ->expanded()
                                         ->where('transaction_journals.user_id', Auth::user()->id)
-                                        ->get(TransactionJournal::QUERYFIELDS);
+                                        ->get(TransactionJournal::queryFields());
 
             if ($object->count() > 0) {
                 return $object;

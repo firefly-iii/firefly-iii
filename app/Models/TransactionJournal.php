@@ -85,28 +85,6 @@ class TransactionJournal extends TransactionJournalSupport
 {
     use SoftDeletes, ValidatingTrait;
 
-    /**
-     * Fields which queries must load.
-     * ['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']
-     */
-    const QUERYFIELDS
-        = [
-            'transaction_journals.*',
-            'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
-            'transaction_currencies.code AS transaction_currency_code',
-            // all for destination:
-            //'destination.amount AS destination_amount', // is always positive
-            // DB::raw('SUM(`destination`.`amount`) as `destination_amount`'),
-            'destination_account.id AS destination_account_id',
-            'destination_account.name AS destination_account_name',
-            'destination_acct_type.type AS destination_account_type',
-            // all for source:
-            'source.amount AS source_amount', // is always negative
-            'source_account.id AS source_account_id',
-            'source_account.name AS source_account_name',
-            'source_acct_type.type AS source_account_type',
-
-        ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date', 'process_date'];
     /** @var array */

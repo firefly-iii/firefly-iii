@@ -319,7 +319,7 @@ class BillRepository implements BillRepositoryInterface
                           ->orderBy('transaction_journals.order', 'ASC')
                           ->orderBy('transaction_journals.id', 'DESC');
         $count     = $query->count();
-        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $paginator;

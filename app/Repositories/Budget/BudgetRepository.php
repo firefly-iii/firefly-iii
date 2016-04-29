@@ -93,7 +93,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                       ->before($end)
                       ->after($start)
                       ->where('source_account.id', $account->id)
-                      ->get(TransactionJournal::QUERYFIELDS);
+                      ->get(TransactionJournal::queryFields());
     }
 
     /**
@@ -191,7 +191,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             ->whereNull('budget_transaction_journal.id')
             ->before($end)
             ->after($start)
-            ->get(TransactionJournal::QUERYFIELDS);
+            ->get(TransactionJournal::queryFields());
     }
 
     /**
@@ -448,7 +448,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                       ->expanded()
                       ->where('transaction_types.type', TransactionType::WITHDRAWAL)
                       ->whereIn('source_account.id', $ids)
-                      ->get(TransactionJournal::QUERYFIELDS);
+                      ->get(TransactionJournal::queryFields());
 
         return $set;
     }
@@ -545,7 +545,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         }
 
 
-        $set   = $setQuery->get(TransactionJournal::QUERYFIELDS);
+        $set   = $setQuery->get(TransactionJournal::queryFields());
         $count = $countQuery->count();
 
 
@@ -623,7 +623,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             ->after($start);
 
         $count     = $query->count();
-        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $paginator;
@@ -649,7 +649,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             ->whereNull('budget_transaction_journal.id')
             ->before($end)
             ->after($start)
-            ->get(TransactionJournal::QUERYFIELDS);
+            ->get(TransactionJournal::queryFields());
     }
 
     /**

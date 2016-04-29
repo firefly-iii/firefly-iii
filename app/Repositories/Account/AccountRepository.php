@@ -183,7 +183,7 @@ class AccountRepository implements AccountRepositoryInterface
                                ->where('destination_account.id', $account->id)
                                ->whereIn('source_account.id', $ids)
                                ->after($start)
-                               ->get(TransactionJournal::QUERYFIELDS);
+                               ->get(TransactionJournal::queryFields());
 
         return $journals;
     }
@@ -273,7 +273,7 @@ class AccountRepository implements AccountRepositoryInterface
                                ->where('source_account.id', $account->id)
                                ->whereIn('destination_account.id', $ids)
                                ->after($start)
-                               ->get(TransactionJournal::QUERYFIELDS);
+                               ->get(TransactionJournal::queryFields());
 
         return $journals;
     }
@@ -328,7 +328,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->after($start)
             ->before($end);
 
-        $set = $query->get(TransactionJournal::QUERYFIELDS);
+        $set = $query->get(TransactionJournal::queryFields());
 
         return $set;
     }

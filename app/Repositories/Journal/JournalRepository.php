@@ -121,7 +121,7 @@ class JournalRepository implements JournalRepositoryInterface
                           ->orderBy('date', 'DESC')
                           ->orderBy('order', 'ASC')
                           ->orderBy('id', 'DESC')
-                          ->get(TransactionJournal::QUERYFIELDS);
+                          ->get(TransactionJournal::queryFields());
 
         return $set;
     }
@@ -153,7 +153,7 @@ class JournalRepository implements JournalRepositoryInterface
 
 
         $count    = $query->count();
-        $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $journals;
