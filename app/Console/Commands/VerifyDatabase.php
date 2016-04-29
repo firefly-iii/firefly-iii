@@ -72,6 +72,9 @@ class VerifyDatabase extends Command
         $this->reportTransactions();
         // deleted accounts that still have not deleted transactions or journals attached to them.
         $this->reportDeletedAccounts();
+
+        // report on journals with no transactions at all.
+        $this->reportNoTransactions();
     }
 
     /**
@@ -208,6 +211,28 @@ class VerifyDatabase extends Command
                 ' Find it in the table called `transactions` and change the `deleted_at` field to: "' . $entry->journal_deleted . '"'
             );
         }
+    }
+
+    private function reportNoTransactions()
+    {
+        /*
+         * select transaction_journals.id, count(transactions.id) as transaction_count from transaction_journals
+left join transactions ON transaction_journals.id = transactions.transaction_journal_id
+group by transaction_journals.id
+having transaction_count = 0
+         */
+        $set = TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->groupBy('transaction_journals.id')
+            ->having('transaction_count', '=', 0)
+            ->get(['transaction_journals.id', DB::raw('COUNT(`transactions`.`id`) as `transaction_count`')]);
+
+        foreach ($set as $entry) {
+            $this->error(
+                'Error: Journal #' . $entry->id . ' has zero transactions. Open table `transaction_journals` and delete the entry with id #' . $entry->id
+            );
+        }
+
     }
 
     /**
