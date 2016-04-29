@@ -3,6 +3,7 @@
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use DB;
 use FireflyIII\Support\Models\TransactionJournalSupport;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -94,7 +95,8 @@ class TransactionJournal extends TransactionJournalSupport
             'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
             'transaction_currencies.code AS transaction_currency_code',
             // all for destination:
-            'destination.amount AS destination_amount', // is always positive
+            //'destination.amount AS destination_amount', // is always positive
+            // DB::raw('SUM(`destination`.`amount`) as `destination_amount`'),
             'destination_account.id AS destination_account_id',
             'destination_account.name AS destination_account_name',
             'destination_acct_type.type AS destination_account_type',
@@ -377,6 +379,12 @@ class TransactionJournal extends TransactionJournalSupport
         // join destination account type
         $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id')
               ->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.order', 'ASC')->orderBy('transaction_journals.id', 'DESC');
+
+        // something else:
+        $query->where(DB::raw('`destination`.`amount` * -1'),'=',DB::raw('`source`.`amount`'));
+
+        // group:
+        $query->groupBy('transaction_journals.id');
 
         $query->with(['categories', 'budgets', 'attachments', 'bill']);
 

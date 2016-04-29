@@ -223,9 +223,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * This method is used on the front page where (in turn) its viewed journals-tiny.php which (in turn)
-     * is almost the only place where formatJournal is used. Aka, we can use some custom querying to get some specific.
-     * fields using left joins.
      *
      * @param Account $account
      * @param Carbon  $start
@@ -237,18 +234,21 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $set = $this->user
             ->transactionjournals()
-            ->with(['transactions'])
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->expanded()
+            ->where('source_account.id', $account->id)
+            //            ->with(['transactions'])
+            //            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            //            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+            //            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
+            //            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->before($end)
             ->after($start)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
+            //            ->orderBy('transaction_journals.date', 'DESC')
+            //            ->orderBy('transaction_journals.order', 'ASC')
+            //            ->orderBy('transaction_journals.id', 'DESC')
             ->take(10)
-            ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+            //            ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+            ->get(TransactionJournal::queryFields());
 
         return $set;
     }
@@ -291,14 +291,15 @@ class AccountRepository implements AccountRepositoryInterface
         $query  = $this->user
             ->transactionJournals()
             ->expanded()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC');
+            ->where(
+                function (Builder $q) use ($account) {
+                    $q->where('source_account.id', $account->id);
+                    $q->orWhere('destination_account.id', $account->id);
+                }
+            );
 
         $count     = $query->count();
-        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $paginator;

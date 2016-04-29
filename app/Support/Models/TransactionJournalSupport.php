@@ -12,6 +12,7 @@ namespace FireflyIII\Support\Models;
 
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -33,6 +34,7 @@ class TransactionJournalSupport extends Model
      * @param TransactionJournal $journal
      *
      * @return string
+     * @throws FireflyException
      */
     public static function amount(TransactionJournal $journal): string
     {
@@ -44,6 +46,14 @@ class TransactionJournalSupport extends Model
             return $cache->get();
         }
 
+        if ($journal->isWithdrawal() && !is_null($journal->source_amount)) {
+            return $journal->source_amount;
+        }
+        if ($journal->isDeposit() && !is_null($journal->destination_amount)) {
+            return $journal->destination_amount;
+        }
+
+        // breaks if > 2
         $transaction = $journal->transactions->sortByDesc('amount')->first();
         if (is_null($transaction)) {
             Log::error('Transaction journal #' . $journal->id . ' has ZERO transactions (or they have been deleted).');
@@ -217,6 +227,31 @@ class TransactionJournalSupport extends Model
         }
 
         return 0;
+    }
+
+    /**
+     * @return array
+     */
+    public static function queryFields(): array
+    {
+        return [
+            'transaction_journals.*',
+            'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
+            'transaction_currencies.code AS transaction_currency_code',
+            // all for destination:
+            //'destination.amount AS destination_amount', // is always positive
+            DB::raw('SUM(`destination`.`amount`) as `destination_amount`'),
+            'destination_account.id AS destination_account_id',
+            'destination_account.name AS destination_account_name',
+            'destination_acct_type.type AS destination_account_type',
+            // all for source:
+            //'source.amount AS source_amount', // is always negative
+            DB::raw('SUM(`source`.`amount`) as `source_amount`'),
+            'source_account.id AS source_account_id',
+            'source_account.name AS source_account_name',
+            'source_acct_type.type AS source_account_type',
+            DB::raw('COUNT(`destination`.`id`) + COUNT(`source`.`id`) as `count_transactions`')
+        ];
     }
 
     /**
