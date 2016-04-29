@@ -12,12 +12,14 @@ namespace FireflyIII\Support\Models;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Log;
 
 /**
  * Class TransactionJournalSupport
@@ -43,7 +45,11 @@ class TransactionJournalSupport extends Model
         }
 
         $transaction = $journal->transactions->sortByDesc('amount')->first();
-        $amount      = $transaction->amount;
+        if (is_null($transaction)) {
+            Log::error('Transaction journal #' . $journal->id . ' has ZERO transactions (or they have been deleted).');
+            throw new FireflyException('Transaction journal #' . $journal->id . ' has ZERO transactions. Visit this page for a solution: https://git.io/vwPFY');
+        }
+        $amount = $transaction->amount;
         if ($journal->isWithdrawal()) {
             $amount = bcmul($amount, '-1');
         }
