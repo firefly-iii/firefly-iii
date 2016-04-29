@@ -15,7 +15,6 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Lang;
 use Log;
 use Mail;
-use Request as Rq;
 use Session;
 use Swift_TransportException;
 use Validator;
@@ -143,9 +142,9 @@ class AuthController extends Controller
      */
     public function showRegistrationForm()
     {
-        $host = Rq::getHttpHost();
+        $showDemoWarning = env('SHOW_DEMO_WARNING', false);
 
-        return view('auth.register', compact('host'));
+        return view('auth.register', compact('showDemoWarning'));
     }
 
     /**

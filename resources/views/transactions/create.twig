@@ -63,7 +63,7 @@
                     </div>
                     <div class="box-body">
                         <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
-                        {% if budgets|length > 0 %}
+                        {% if budgets|length > 1 %}
                             {{ ExpandedForm.select('budget_id',budgets,0) }}
                         {% else %}
                             {{ ExpandedForm.select('budget_id',budgets,0, {helpText: trans('firefly.no_budget_pointer')}) }}
