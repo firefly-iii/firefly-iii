@@ -96,19 +96,5 @@ function currencySelect(e) {
 
 
     return false;
-
-    //var code = target.data('code');
-    //var fieldType = target.data('field');
-    //var menu = $('.' + fieldType + 'CurrencyDropdown');
-    //
-    //var symbolHolder = $('#' + fieldType + 'CurrentSymbol');
-    //symbolHolder.text(symbol);
-    //$('input[name="' + fieldType + '_currency_id"]').val(id);
-    //
-    // close dropdown (hack hack)
-    //menu.click();
-
-
-    //return false;
 }
 

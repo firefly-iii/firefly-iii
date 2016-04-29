@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-12">
-            <div class="box">
+            <div class="box" id="year-inc-exp">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <div class="box">
+            <div class="box" id="year-inc-exp-sum">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
@@ -61,42 +61,17 @@
         </div>
     </div>
 
-    <!--
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'categories_spent_in_year'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <canvas height="400" id="categories-spent-in-period" style="width:100%;height:400px;"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-
-    <!--
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'categories_earned_in_year'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <canvas height="400" id="categories-earned-in-period" style="width:100%;height:400px;"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-
     {% for category in categories %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="box">
+                <div class="box" id="year-cat-{{ category.id }}">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'category'|_ }} {{ category.name }}</h3>
+
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
                     </div>
                     <div class="box-body">
                         <canvas height="400" id="categories_{{ category.id }}" class="category_year_chart" data-category="{{ category.id }}"
@@ -110,9 +85,14 @@
     {% for budget in budgets %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="box">
+                <div class="box" id="year-budget-{{ budget.id }}">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'budget'|_ }} {{ budget.name }}</h3>
+
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
                     </div>
                     <div class="box-body">
                         <canvas height="400" id="budgets_{{ budget.id }}" class="budget_year_chart" data-budget="{{ budget.id }}"
