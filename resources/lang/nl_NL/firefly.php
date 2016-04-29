@@ -257,6 +257,7 @@ return [
     'pref_1M'                                   => 'Eén maand',
     'pref_3M'                                   => 'Drie maanden (kwartaal)',
     'pref_6M'                                   => 'Zes maanden',
+    'pref_1Y'                                   => 'Eén jaar',
     'pref_languages'                            => 'Talen',
     'pref_languages_help'                       => 'Firefly III ondersteunt meerdere talen. Welke heeft jouw voorkeur?',
     'pref_custom_fiscal_year'                   => 'Instellingen voor boekjaar',
@@ -279,6 +280,7 @@ return [
     'transaction_page_size_help'                => 'Elke lijst met transacties er op is zo lang',
     'transaction_page_size_label'               => 'Paginalengte',
     'budget_maximum'                            => 'Maximale budgetgrootte',
+    'between_dates'                             => '(:start en :end)',
 
     // profile:
     'change_your_password'                      => 'Verander je wachtwoord',
@@ -459,8 +461,11 @@ return [
     'store_new_budget'                          => 'Sla nieuw budget op',
     'stored_new_budget'                         => 'Nieuw budget ":name" opgeslagen',
     'availableIn'                               => 'Beschikbaar in :date',
+    'available_between'                         => 'Beschikbaar tussen :start en :end',
     'transactionsWithoutBudget'                 => 'Uitgaven zonder budget',
     'transactionsWithoutBudgetDate'             => 'Uitgaven zonder budget in :date',
+    'transactions_no_budget'                    => 'Uitgaven zonder budget tussen :start en :end',
+    'spent_between'                             => 'Uitgegeven tussen :start en :end',
     'createBudget'                              => 'Maak nieuw budget',
     'inactiveBudgets'                           => 'Inactieve budgetten',
     'without_budget_between'                    => 'Transacties zonder budget tussen :start en :end',
@@ -471,6 +476,7 @@ return [
     'updated_budget'                            => 'Budget ":name" geüpdatet',
     'update_amount'                             => 'Bedrag bijwerken',
     'update_budget'                             => 'Budget bijwerken',
+    'update_budget_amount_range'                => 'Update het verwacht beschikbare bedrag tussen :start en :end',
 
     // bills:
     'matching_on'                               => 'Wordt herkend',

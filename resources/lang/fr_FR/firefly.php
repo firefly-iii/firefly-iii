@@ -257,6 +257,7 @@ return [
     'pref_1M'                                   => 'One month',
     'pref_3M'                                   => 'Three months (quarter)',
     'pref_6M'                                   => 'Six months',
+    'pref_1Y'                                   => 'One year',
     'pref_languages'                            => 'Languages',
     'pref_languages_help'                       => 'Firefly III supports several languages. Which one do you prefer?',
     'pref_custom_fiscal_year'                   => 'Fiscal year settings',
@@ -279,6 +280,7 @@ return [
     'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
     'transaction_page_size_label'               => 'Page size',
     'budget_maximum'                            => 'Budget maximum',
+    'between_dates'                             => '(:start and :end)',
 
     // profile:
     'change_your_password'                      => 'Change your password',
@@ -459,8 +461,11 @@ return [
     'store_new_budget'                          => 'Store new budget',
     'stored_new_budget'                         => 'Stored new budget ":name"',
     'availableIn'                               => 'Available in :date',
+    'available_between'                         => 'Available between :start and :end',
     'transactionsWithoutBudget'                 => 'Expenses without budget',
     'transactionsWithoutBudgetDate'             => 'Expenses without budget in :date',
+    'transactions_no_budget'                    => 'Expenses without budget between :start and :end',
+    'spent_between'                             => 'Spent between :start and :end',
     'createBudget'                              => 'New budget',
     'inactiveBudgets'                           => 'Inactive budgets',
     'without_budget_between'                    => 'Transactions without a budget between :start and :end',
@@ -471,6 +476,7 @@ return [
     'updated_budget'                            => 'Updated budget ":name"',
     'update_amount'                             => 'Update amount',
     'update_budget'                             => 'Update budget',
+    'update_budget_amount_range'                => 'Update (expected) available amount between :start and :end',
 
     // bills:
     'matching_on'                               => 'Matching on',
