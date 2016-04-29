@@ -32,20 +32,17 @@
                         <!-- DESCRIPTION ALWAYS AVAILABLE -->
                         {{ ExpandedForm.text('description') }}
 
-                        <!-- ACCOUNT ONLY FOR DEPOSITS AND WITHDRAWALS -->
-                        {{ ExpandedForm.select('account_id',accounts) }}
+                        <!-- SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS -->
+                        {{ ExpandedForm.select('source_account_id',assetAccounts, null, {label: trans('form.asset_source_account')}) }}
 
+                        <!-- FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS -->
+                        {{ ExpandedForm.text('source_account_name',null, {label: trans('form.revenue_account')}) }}
 
-                        <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
-                        {{ ExpandedForm.text('expense_account') }}
+                        <!-- FREE FORMAT DESTINATION ACCOUNT ONLY FOR EXPENSES -->
+                        {{ ExpandedForm.text('destination_account_name',null, {label: trans('form.expense_account')}) }}
 
-                        <!-- SHOW REVENUE ACCOUNT ONLY FOR DEPOSITS -->
-                        {{ ExpandedForm.text('revenue_account') }}
-
-
-                        <!-- ONLY SHOW FROM/TO ACCOUNT WHEN CREATING TRANSFER -->
-                        {{ ExpandedForm.select('account_from_id',accounts) }}
-                        {{ ExpandedForm.select('account_to_id',accounts) }}
+                        <!-- SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS -->
+                        {{ ExpandedForm.select('destination_account_id',assetAccounts, null, {label: trans('form.asset_destination_account')} ) }}
 
 
                         <!-- ALWAYS SHOW AMOUNT -->

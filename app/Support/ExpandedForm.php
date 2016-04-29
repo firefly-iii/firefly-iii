@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support;
 
 use Amount as Amt;
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -220,7 +221,7 @@ class ExpandedForm
     }
 
     /**
-     * @param Collection $set
+     * @param \Illuminate\Support\Collection $set
      *
      * @return array
      */
@@ -442,6 +443,9 @@ class ExpandedForm
             }
         } catch (RuntimeException $e) {
             // don't care about session errors.
+        }
+        if ($value instanceof Carbon) {
+            $value = $value->format('Y-m-d');
         }
 
 

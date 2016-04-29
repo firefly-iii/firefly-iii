@@ -33,43 +33,60 @@ function updateForm() {
     "use strict";
 
     $('input[name="what"]').val(what);
-
     switch (what) {
         case 'withdrawal':
-            $('#account_id_holder').show();
-            $('#expense_account_holder').show();
-            $('#revenue_account_holder').hide();
-            $('#account_from_id_holder').hide();
-            $('#account_to_id_holder').hide();
+            // show source_id and dest_name:
+            $('#source_account_id_holder').show();
+            $('#destination_account_name_holder').show();
+
+            // hide others:
+            $('#source_account_name_holder').hide();
+            $('#destination_account_id_holder').hide();
+
+            // show budget:
             $('#budget_id_holder').show();
+
+            // hide piggy bank:
             $('#piggy_bank_id_holder').hide();
 
-
-            if ($('#ffInput_revenue_account').val().length > 0) {
-                $('#ffInput_expense_account').val($('#ffInput_revenue_account').val());
+            // copy destination account name to
+            // source account name:
+            if ($('#ffInput_destination_account_name').val().length > 0) {
+                $('#ffInput_source_account_name').val($('#ffInput_destination_account_name').val());
             }
 
             break;
         case 'deposit':
-            $('#account_id_holder').show();
-            $('#expense_account_holder').hide();
-            $('#revenue_account_holder').show();
-            $('#account_from_id_holder').hide();
-            $('#account_to_id_holder').hide();
+            // show source_name and dest_id:
+            $('#source_account_name_holder').show();
+            $('#destination_account_id_holder').show();
+
+            // hide others:
+            $('#source_account_id_holder').hide();
+            $('#destination_account_name_holder').hide();
+
+            // hide budget
             $('#budget_id_holder').hide();
+
+            // hide piggy bank
             $('#piggy_bank_id_holder').hide();
 
-            if ($('#ffInput_expense_account').val().length > 0) {
-                $('#ffInput_revenue_account').val($('#ffInput_expense_account').val());
+            if ($('#ffInput_source_account_name').val().length > 0) {
+                $('#ffInput_destination_account_name').val($('#ffInput_source_account_name').val());
             }
 
             break;
         case 'transfer':
-            $('#account_id_holder').hide();
-            $('#expense_account_holder').hide();
-            $('#revenue_account_holder').hide();
-            $('#account_from_id_holder').show();
-            $('#account_to_id_holder').show();
+            // show source_id and dest_id:
+            $('#source_account_id_holder').show();
+            $('#destination_account_id_holder').show();
+
+            // hide others:
+            $('#source_account_name_holder').hide();
+            $('#destination_account_name_holder').hide();
+
+
+            // hide budget
             $('#budget_id_holder').hide();
             if (piggiesLength === 0) {
                 $('#piggy_bank_id_holder').hide();

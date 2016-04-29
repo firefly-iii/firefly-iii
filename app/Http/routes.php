@@ -343,6 +343,11 @@ Route::group(
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 
     /**
+     * Split controller
+     */
+    Route::get('/transaction/split', ['uses' => 'Transaction\SplitController@journalFromStore', 'as' => 'split.journal.from-store']);
+
+    /**
      * Tag Controller
      */
     Route::get('/tags', ['uses' => 'TagController@index', 'as' => 'tags.index']);

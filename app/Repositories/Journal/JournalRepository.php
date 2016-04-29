@@ -248,19 +248,19 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        list($fromAccount, $toAccount) = $this->storeAccounts($transactionType, $data);
+        list($sourceAccount, $destinationAccount) = $this->storeAccounts($transactionType, $data);
 
         // store accompanying transactions.
         Transaction::create( // first transaction.
             [
-                'account_id'             => $fromAccount->id,
+                'account_id'             => $sourceAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $data['amount'] * -1,
             ]
         );
         Transaction::create( // second transaction.
             [
-                'account_id'             => $toAccount->id,
+                'account_id'             => $destinationAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $data['amount'],
             ]
@@ -391,38 +391,38 @@ class JournalRepository implements JournalRepositoryInterface
      */
     protected function storeAccounts(TransactionType $type, array $data): array
     {
-        $fromAccount = null;
-        $toAccount   = null;
+        $sourceAccount      = null;
+        $destinationAccount = null;
         switch ($type->type) {
             case TransactionType::WITHDRAWAL:
-                list($fromAccount, $toAccount) = $this->storeWithdrawalAccounts($data);
+                list($sourceAccount, $destinationAccount) = $this->storeWithdrawalAccounts($data);
                 break;
 
             case TransactionType::DEPOSIT:
-                list($fromAccount, $toAccount) = $this->storeDepositAccounts($data);
+                list($sourceAccount, $destinationAccount) = $this->storeDepositAccounts($data);
 
                 break;
             case TransactionType::TRANSFER:
-                $fromAccount = Account::find($data['account_from_id']);
-                $toAccount   = Account::find($data['account_to_id']);
+                $sourceAccount      = Account::find($data['account_from_id']);
+                $destinationAccount = Account::find($data['account_to_id']);
                 break;
             default:
                 throw new FireflyException('Did not recognise transaction type.');
         }
 
-        if (is_null($toAccount)) {
+        if (is_null($destinationAccount)) {
             Log::error('"to"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"to"-account is null, so we cannot continue!');
         }
 
-        if (is_null($fromAccount)) {
+        if (is_null($sourceAccount)) {
             Log::error('"from"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"from"-account is null, so we cannot continue!');
 
         }
 
 
-        return [$fromAccount, $toAccount];
+        return [$sourceAccount, $destinationAccount];
     }
 
     /**
@@ -432,21 +432,22 @@ class JournalRepository implements JournalRepositoryInterface
      */
     protected function storeDepositAccounts(array $data): array
     {
-        $toAccount = Account::find($data['account_id']);
+        $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['account_destination_id'])->first(['accounts.*']);
 
-        if (strlen($data['revenue_account']) > 0) {
+        if (strlen($data['source_account_name']) > 0) {
             $fromType    = AccountType::where('type', 'Revenue account')->first();
             $fromAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
+                ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['source_account_name'], 'active' => 1]
             );
+            return [$fromAccount, $destinationAccount];
         } else {
-            $toType      = AccountType::where('type', 'Cash account')->first();
+            $fromType      = AccountType::where('type', 'Cash account')->first();
             $fromAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => 'Cash account', 'active' => 1]
             );
         }
 
-        return [$fromAccount, $toAccount];
+        return [$fromAccount, $destinationAccount];
     }
 
     /**
@@ -456,20 +457,28 @@ class JournalRepository implements JournalRepositoryInterface
      */
     protected function storeWithdrawalAccounts(array $data): array
     {
-        $fromAccount = Account::find($data['account_id']);
+        $sourceAccount = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first(['accounts.*']);
 
-        if (strlen($data['expense_account']) > 0) {
-            $toType    = AccountType::where('type', 'Expense account')->first();
-            $toAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
+        if (strlen($data['destination_account_name']) > 0) {
+            $destinationType    = AccountType::where('type', 'Expense account')->first();
+            $destinationAccount = Account::firstOrCreateEncrypted(
+                [
+                    'user_id'         => $data['user'],
+                    'account_type_id' => $destinationType->id,
+                    'name'            => $data['destination_account_name'],
+                    'active'          => 1,
+                ]
             );
-        } else {
-            $toType    = AccountType::where('type', 'Cash account')->first();
-            $toAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
-            );
+
+            return [$sourceAccount, $destinationAccount];
         }
+        $destinationType    = AccountType::where('type', 'Cash account')->first();
+        $destinationAccount = Account::firstOrCreateEncrypted(
+            ['user_id' => $data['user'], 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
+        );
 
-        return [$fromAccount, $toAccount];
+        return [$sourceAccount, $destinationAccount];
+
+
     }
 }

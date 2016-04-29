@@ -24,6 +24,8 @@ return [
     'repeat_freq'                 => 'Repeats',
     'account_from_id'             => 'From account',
     'account_to_id'               => 'To account',
+    'asset_destination_account'   => 'Asset account (destination)',
+    'asset_source_account'        => 'Asset account (source)',
     'account_id'                  => 'Asset account',
     'budget_id'                   => 'Budget',
     'openingBalance'              => 'Opening balance',

@@ -31,3 +31,18 @@
         </div>
     </div>
 {% endif %}
+{% if type == 'create' and name == 'transaction' %}
+<div class="form-group">
+    <label for="{{ name }}_split" class="col-sm-4 control-label">
+        {{ trans('form.split_journal') }}
+    </label>
+
+    <div class="col-sm-8">
+        <div class="radio"><label>
+                {{ Form.checkbox('split_journal', '1', Input.old('split_journal') == '1', {'id': name ~ 'split'}) }}
+                {{ trans('form.split_journal_explanation') }}
+            </label>
+        </div>
+    </div>
+</div>
+{% endif %}

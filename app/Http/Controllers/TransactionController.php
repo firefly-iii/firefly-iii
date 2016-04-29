@@ -54,28 +54,26 @@ class TransactionController extends Controller
      */
     public function create(ARI $repository, string $what = TransactionType::DEPOSIT)
     {
-        $what        = strtolower($what);
-        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize  = min($maxFileSize, $maxPostSize);
-        $accounts    = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets     = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0]  = trans('firefly.no_budget');
-        $piggyBanks  = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+
+        /** @var PiggyBankRepositoryInterface $piggyRepository */
+        $piggyRepository = app(PiggyBankRepositoryInterface::class);
+
+        $what          = strtolower($what);
+        $uploadSize    = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $assetAccounts = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks    = $piggyRepository->getPiggyBanks();
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
             $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
         }
 
-        $piggies    = ExpandedForm::makeSelectList($piggyBanks);
-        $piggies[0] = trans('form.noPiggybank');
-        $preFilled  = Session::has('preFilled') ? session('preFilled') : [];
-        $respondTo  = ['account_id', 'account_from_id'];
-        $subTitle   = trans('form.add_new_' . $what);
+        $piggies   = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
+        $preFilled = Session::has('preFilled') ? session('preFilled') : [];
+        $subTitle  = trans('form.add_new_' . $what);
 
-        foreach ($respondTo as $r) {
-            $preFilled[$r] = Input::get($r);
-        }
         Session::put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
@@ -89,7 +87,7 @@ class TransactionController extends Controller
         asort($piggies);
 
 
-        return view('transactions.create', compact('accounts', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
+        return view('transactions.create', compact('assetAccounts', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
     }
 
     /**
@@ -430,7 +428,14 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
     {
+        $doSplit     = intval($request->get('split_journal')) === 1;
         $journalData = $request->getJournalData();
+        if ($doSplit) {
+            // put all journal data in the session and redirect to split routine.
+            Session::put('temporary_split_data', $journalData);
+
+            return redirect(route('split.journal.from-store'));
+        }
 
         // if not withdrawal, unset budgetid.
         if ($journalData['what'] != strtolower(TransactionType::WITHDRAWAL)) {

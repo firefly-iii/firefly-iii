@@ -1,0 +1,166 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <form method="POST" action="bla" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Split your new [type]</h3>
+
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            Firefly supports the "splitting" of an [expense / withdrawal / transfer].
+
+                            It means that the amount of money you've spent/earned/transfered is divided between
+                            several source accounts, destination accounts or budgets.
+
+                            Example for withdrawals: split your 20,- groceries so you pay 15,- from your "daily groceries" budget
+                            and 5,- from your "cigarettes" budget.
+
+                            Example for deposits: split your 500,- salary so that 450,- is categorized "salary" and 50,- is categorized "reimbursed expenses".
+
+                            Example for transfers: split your 100,- transfer so that 50,- is put in the piggy bank "new couch" and 50,- is not.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Transaction meta-data</h3>
+
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.text('journal_description', data.description) }}
+                        {{ ExpandedForm.staticText('amount', data.amount|formatAmount) }}
+                        <!-- show static source if withdrawal or transfer -->
+                        {% if data.what == 'withdrawal' or data.what == 'transfer' %}
+                            {{ ExpandedForm.staticText('asset_source_account', assetAccounts[data.source_account_id]) }}
+                        {% endif %}
+                        <!-- show static destination if deposit or transfer -->
+                        {% if data.what == 'deposit' or data.what == 'transfer' %}
+                            {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[data.destination_account_id]) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Transaction dates</h3>
+
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.date('date', data.date) }}
+
+                        {{ ExpandedForm.date('interest_date', data.interest_date) }}
+
+                        {{ ExpandedForm.date('book_date', data.book_date) }}
+
+                        {{ ExpandedForm.date('process_date', data.process_date) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Splits</h3>
+
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            Split your [x] in as many things as you want. By default the transaction will not split, there is just one entry.
+                            Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you
+                            do, Firefly will warn you but not correct you.
+                        </p>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Split #</th>
+                                <th>Description</th>
+                                <!-- split the source of a deposit -->
+                                {% if data.what == 'deposit' %}
+                                    <th>Source</th>
+                                {% endif %}
+                                <!-- split where a withdrawal is going -->
+                                {% if data.what == 'withdrawal' %}
+                                    <th>Destination</th>
+                                {% endif %}
+                                <th>Amount</th>
+                                {% if data.what == 'withdrawal' %}
+                                    <th>Budget</th>
+                                {% endif %}
+                                <th>Category</th>
+                                {% if data.what == 'transfer' %}
+                                    <th>Piggy bank</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="initial-row">
+                                <td>#1</td>
+                                <td>{{ Form.input('text', 'description[]', data.description, {class: 'form-control'}) }}</td>
+                                {% if data.what == 'deposit' %}
+                                    <td>
+                                        {{ Form.input('text', 'source_account_name[]', data.source_account_name, {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
+                                {% if data.what == 'withdrawal' %}
+                                    <td>
+                                        {{ Form.input('text', 'destination_account_name[]', data.destination_account_name, {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
+                                <td style="width:10%;">
+                                    {{ ExpandedForm.amountSmall('amount[]', data.amount) }}
+                                </td>
+                                {% if data.what == 'withdrawal' %}
+                                    <td>
+                                        {{ Form.select('budget[]', budgets, data.budget_id, {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
+                                <td>
+                                    {{ Form.input('text', 'category[]', data.category, {class: 'form-control'}) }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            <a href="#" class="btn btn-success btn-do-split"><i class="fa fa-plus-circle"></i> Add another split</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var what = "{{ data.what }}";
+    </script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/ff/transactions/create-edit.js"></script>
+{% endblock %}
+{% block styles %}
+{% endblock %}
