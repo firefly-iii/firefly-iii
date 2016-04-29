@@ -209,20 +209,36 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     /**
      * @param Category $category
      *
-     * @return Carbon|null
+     * @return Carbon
      */
     public function getLatestActivity(Category $category): Carbon
     {
+        $first  = new Carbon('1900-01-01');
+        $second = new Carbon('1900-01-01');
         $latest = $category->transactionjournals()
                            ->orderBy('transaction_journals.date', 'DESC')
                            ->orderBy('transaction_journals.order', 'ASC')
                            ->orderBy('transaction_journals.id', 'DESC')
                            ->first();
         if ($latest) {
-            return $latest->date;
+            $first = $latest->date;
         }
 
-        return new Carbon('1900-01-01');
+        // could also be a transaction, nowadays:
+        $latestTransaction = $category->transactions()
+                                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                      ->orderBy('transaction_journals.date', 'DESC')
+                                      ->orderBy('transaction_journals.order', 'ASC')
+                                      ->orderBy('transaction_journals.id', 'DESC')
+                                      ->first(['transactions.*', 'transaction_journals.date']);
+        if ($latestTransaction) {
+            $second = new Carbon($latestTransaction->date);
+        }
+        if ($first > $second) {
+            return $first;
+        }
+
+        return $second;
     }
 
     /**
