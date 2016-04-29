@@ -59,5 +59,13 @@ class Balance
         return $this->balanceLines;
     }
 
+    /**
+     * @param Collection $balanceLines
+     */
+    public function setBalanceLines(Collection $balanceLines)
+    {
+        $this->balanceLines = $balanceLines;
+    }
+
 
 }

@@ -28,7 +28,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
-
 /**
  * Class BalanceReportHelper
  *
@@ -84,6 +83,9 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $balance->addBalanceLine($this->createTagsBalanceLine($accounts, $start, $end));
         $balance->addBalanceLine($this->createDifferenceBalanceLine($accounts, $spentData, $start, $end));
         $balance->setBalanceHeader($header);
+
+        // remove budgets without expenses from balance lines:
+        $balance = $this->removeUnusedBudgets($balance);
 
         return $balance;
     }
@@ -303,6 +305,38 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         }
 
         return $tags;
+    }
+
+    /**
+     * @param Balance $balance
+     *
+     * @return Balance
+     */
+    private function removeUnusedBudgets(Balance $balance): Balance
+    {
+        $set    = $balance->getBalanceLines();
+        $newSet = new Collection;
+        /** @var BalanceLine $entry */
+        foreach ($set as $entry) {
+            if (!is_null($entry->getBudget()->id)) {
+                $sum = '0';
+                /** @var BalanceEntry $balanceEntry */
+                foreach ($entry->getBalanceEntries() as $balanceEntry) {
+                    $sum = bcadd($sum, $balanceEntry->getSpent());
+                }
+                if (bccomp($sum, '0') === -1) {
+                    $newSet->push($entry);
+                }
+                continue;
+            }
+            $newSet->push($entry);
+        }
+
+
+        $balance->setBalanceLines($newSet);
+
+        return $balance;
+
     }
 
 }
