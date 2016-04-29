@@ -346,6 +346,7 @@ Route::group(
      * Split controller
      */
     Route::get('/transaction/split', ['uses' => 'Transaction\SplitController@journalFromStore', 'as' => 'split.journal.from-store']);
+    Route::post('/transaction/split', ['uses' => 'Transaction\SplitController@postJournalFromStore', 'as' => 'split.journal.from-store.post']);
 
     /**
      * Tag Controller

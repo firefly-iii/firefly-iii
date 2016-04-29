@@ -11,11 +11,14 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use ExpandedForm;
+use FireflyIII\Crud\Split\JournalInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Session;
 
 /**
  * Class SplitController
@@ -39,26 +42,45 @@ class SplitController extends Controller
 
         // expect data to be in session or in post?
         $journalData   = session('temporary_split_data');
-        $currency      = $currencyRepository->find(intval($journalData['amount_currency_id_amount']));
+        $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
         $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
         $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         if (!is_array($journalData)) {
             throw new FireflyException('Could not find transaction data in your session. Please go back and try again.'); // translate me.
         }
-        //        echo '<pre>';
-        //        var_dump($journalData);
-        //        echo '</pre>';
-        //        exit;
 
-        return view('split.journals.from-store', compact('currency', 'assetAccounts', 'budgets'))->with('data', $journalData);
+        return view('split.journals.from-store', compact('currencies', 'assetAccounts', 'budgets'))->with('data', $journalData);
 
 
     }
 
-    public function postJournalFromStore()
+    /**
+     * @param SplitJournalFormRequest $request
+     * @param JournalInterface        $repository
+     *
+     * @return mixed
+     */
+    public function postJournalFromStore(SplitJournalFormRequest $request, JournalInterface $repository)
     {
+        $data = $request->getSplitData();
+
+        // store an empty journal first. This will be the place holder.
+        $journal = $repository->storeJournal($data);
+        // Then, store each transaction individually.
+
+        foreach ($data['transactions'] as $transaction) {
+            $transactions = $repository->storeTransaction($journal, $transaction);
+        }
+
+        // TODO move to repository.
+        $journal->completed = true;
+        $journal->save();
+
         // forget temp journal data
-        // Session::forget('temporary_split_data');
+        Session::forget('temporary_split_data');
+
+        // this is where we originally came from.
+        return redirect(session('transactions.create.url'));
     }
 
 }

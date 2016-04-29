@@ -24,6 +24,8 @@ return [
     'matchesOn'           => 'Matched on',
     'matchingAmount'      => 'Amount',
     'lastMatch'           => 'Last match',
+    'split_number'        => 'Split #',
+    'destination'         => 'Destination',
     'expectedMatch'       => 'Expected match',
     'automatch'           => 'Auto match?',
     'repeat_freq'         => 'Repeats',

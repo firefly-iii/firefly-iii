@@ -32,6 +32,13 @@ class ChangesForV385 extends Migration
 
         // restore backup. Change unknowns to "monthly".
         $this->restoreRepeatFreqsToEnum($backup);
+
+        // drop budget <> transaction table:
+        Schema::dropIfExists('budget_transaction');
+
+        // drop category <> transaction table:
+        Schema::dropIfExists('category_transaction');
+
     }
 
     /**
@@ -82,6 +89,30 @@ class ChangesForV385 extends Migration
         Schema::table(
             'budget_limits', function (Blueprint $table) {
             $table->unique(['budget_id', 'startdate', 'repeat_freq'], 'unique_limit');
+        }
+        );
+
+        // create NEW table for transactions <> budgets
+        Schema::create(
+            'budget_transaction', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('budget_id')->unsigned();
+            $table->integer('transaction_id')->unsigned();
+            $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->unique(['budget_id', 'transaction_id'], 'budid_tid_unique');
+        }
+        );
+
+        // create NEW table for transactions <> categories
+        Schema::create(
+            'category_transaction', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('category_id')->unsigned();
+            $table->integer('transaction_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->unique(['category_id', 'transaction_id'], 'catid_tid_unique');
         }
         );
     }

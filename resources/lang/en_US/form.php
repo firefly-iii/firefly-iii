@@ -26,6 +26,8 @@ return [
     'account_to_id'               => 'To account',
     'asset_destination_account'   => 'Asset account (destination)',
     'asset_source_account'        => 'Asset account (source)',
+    'journal_description'         => 'Description',
+    'currency'                    => 'Currency',
     'account_id'                  => 'Asset account',
     'budget_id'                   => 'Budget',
     'openingBalance'              => 'Opening balance',

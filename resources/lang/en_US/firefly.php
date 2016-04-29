@@ -800,4 +800,16 @@ return [
     'user_administration'                       => 'User administration',
     'list_all_users'                            => 'All users',
     'all_users'                                 => 'All users',
+
+    // split a transaction:
+    'transaction_meta_data'                     => 'Transaction meta-data',
+    'transaction_dates'                         => 'Transaction dates',
+    'splits'                                    => 'Splits',
+    'split_title_withdrawal'                    => 'Split your new withdrawal',
+    'split_intro_one_withdrawal'                => 'Firefly supports the "splitting" of a withdrawal.',
+    'split_intro_two_withdrawal'                => 'It means that the amount of money you\'ve spent is divided between several destination expense accounts, budgets or categories.',
+    'split_intro_three_withdrawal'              => 'For example: you could split your :total groceries so you pay :split_one from your "daily groceries" budget and :split_two from your "cigarettes" budget.',
+    'split_table_intro_withdrawal'              => 'Split your withdrawal in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'add_another_split'                         => 'Add another split',
+    'store_splitted_withdrawal'                 => 'Store splitted withdrawal',
 ];

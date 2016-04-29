@@ -233,7 +233,6 @@ class JournalRepository implements JournalRepositoryInterface
         );
         $journal->save();
 
-
         // store or get category
         if (strlen($data['category']) > 0) {
             $category = Category::firstOrCreateEncrypted(['name' => $data['category'], 'user_id' => $data['user']]);
@@ -403,8 +402,8 @@ class JournalRepository implements JournalRepositoryInterface
 
                 break;
             case TransactionType::TRANSFER:
-                $sourceAccount      = Account::find($data['account_from_id']);
-                $destinationAccount = Account::find($data['account_to_id']);
+                $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $data['account_from_id'])->first();
+                $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['account_to_id'])->first();
                 break;
             default:
                 throw new FireflyException('Did not recognise transaction type.');
@@ -439,9 +438,10 @@ class JournalRepository implements JournalRepositoryInterface
             $fromAccount = Account::firstOrCreateEncrypted(
                 ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['source_account_name'], 'active' => 1]
             );
+
             return [$fromAccount, $destinationAccount];
         } else {
-            $fromType      = AccountType::where('type', 'Cash account')->first();
+            $fromType    = AccountType::where('type', 'Cash account')->first();
             $fromAccount = Account::firstOrCreateEncrypted(
                 ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => 'Cash account', 'active' => 1]
             );

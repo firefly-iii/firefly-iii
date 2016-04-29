@@ -6,6 +6,11 @@ namespace FireflyIII\Support\Models;
 use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * FireflyIII\Support\Models\TagSupport
+ *
+ * @mixin \Eloquent
+ */
 class TagSupport extends Model
 {
     /**

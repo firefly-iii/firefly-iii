@@ -32,6 +32,8 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmount($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
  */
 class Transaction extends Model
 {
@@ -103,5 +105,21 @@ class Transaction extends Model
     public function transactionJournal()
     {
         return $this->belongsTo('FireflyIII\Models\TransactionJournal');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function budgets()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Budget');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Category');
     }
 }

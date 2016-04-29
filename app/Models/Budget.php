@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereActive($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereEncrypted($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  */
 class Budget extends Model
 {
@@ -134,6 +135,14 @@ class Budget extends Model
     public function transactionjournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'budget_transaction_journal', 'budget_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactions()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Transaction', 'budget_transaction', 'budget_id');
     }
 
     /**

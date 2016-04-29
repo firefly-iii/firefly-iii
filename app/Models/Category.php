@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereEncrypted($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  */
 class Category extends Model
 {
@@ -115,6 +116,13 @@ class Category extends Model
     public function transactionjournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
+    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactions()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Transaction', 'category_transaction', 'category_id');
     }
 
     /**
