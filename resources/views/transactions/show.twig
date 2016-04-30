@@ -160,9 +160,9 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ t.account.name }}</h3>
                     </div>
-                    <table class="table table-hover sortable">
+                    <table class="table table-bordered table-striped">
                         <tr>
-                            <td>{{ 'account'|_ }}</td>
+                            <td style="width:30%;">{{ 'account'|_ }}</td>
                             <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
                         </tr>
                         <tr>
@@ -179,8 +179,24 @@
                         </tr>
                         {% if t.description %}
                             <tr>
-                                <td>Description</td>
+                                <td>{{ trans('form.description') }}</td>
                                 <td>{{ t.description }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if t.categories[0] %}
+                            <tr>
+                                <td>{{ 'category'|_ }}</td>
+                                <td>
+                                    <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if t.budgets[0] %}
+                            <tr>
+                                <td>{{ 'budget'|_ }}</td>
+                                <td>
+                                    <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
+                                </td>
                             </tr>
                         {% endif %}
                     </table>
