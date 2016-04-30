@@ -284,7 +284,9 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->before($end)
             ->after($start)
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->having('transaction_count', '=', 1)
             ->transactionTypes($types);
+
         if (count($accountIds) > 0) {
             $query->whereIn('transactions.account_id', $accountIds);
         }
@@ -293,6 +295,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $single = $query->first(
             [
                 DB::raw('SUM(`transactions`.`amount`) as `sum`'),
+                DB::raw('COUNT(`transactions`.`id`) as `transaction_count`'),
             ]
         );
         if (!is_null($single)) {
