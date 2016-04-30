@@ -305,7 +305,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->budgets()->detach();
         if (intval($data['budget_id']) > 0) {
             /** @var \FireflyIII\Models\Budget $budget */
-            $budget = Budget::find($data['budget_id']);
+            $budget = Budget::where('user_id', $this->user->id)->where('id', $data['budget_id'])->first();
             $journal->budgets()->save($budget);
         }
 
@@ -402,8 +402,8 @@ class JournalRepository implements JournalRepositoryInterface
 
                 break;
             case TransactionType::TRANSFER:
-                $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $data['account_from_id'])->first();
-                $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['account_to_id'])->first();
+                $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first();
+                $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first();
                 break;
             default:
                 throw new FireflyException('Did not recognise transaction type.');

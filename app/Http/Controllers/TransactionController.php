@@ -145,42 +145,37 @@ class TransactionController extends Controller
         /** @var PiggyBankRepositoryInterface $piggyRepository */
         $piggyRepository = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
 
-        $accountList      = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
-        $budgetList       = ExpandedForm::makeSelectList($budgetRepository->getActiveBudgets());
-        $piggyBankList    = ExpandedForm::makeSelectList($piggyRepository->getPiggyBanks());
-        $budgetList[0]    = trans('firefly.no_budget');
-        $piggyBankList[0] = trans('form.noPiggybank');
-        $maxFileSize      = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize      = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize       = min($maxFileSize, $maxPostSize);
-        $what             = strtolower(TransactionJournal::transactionTypeStr($journal));
-        $subTitle         = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $budgetList    = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
+        $maxFileSize   = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize   = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize    = min($maxFileSize, $maxPostSize);
+        $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $subTitle      = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
 
         $preFilled = [
-            'date'            => TransactionJournal::dateAsString($journal),
-            'interest_date'   => TransactionJournal::dateAsString($journal, 'interest_date'),
-            'book_date'       => TransactionJournal::dateAsString($journal, 'book_date'),
-            'process_date'    => TransactionJournal::dateAsString($journal, 'process_date'),
-            'category'        => TransactionJournal::categoryAsString($journal),
-            'budget_id'       => TransactionJournal::budgetId($journal),
-            'piggy_bank_id'   => TransactionJournal::piggyBankId($journal),
-            'tags'            => join(',', $journal->tags->pluck('tag')->toArray()),
-            'account_from_id' => TransactionJournal::sourceAccount($journal)->id,
-            'account_to_id'   => TransactionJournal::destinationAccount($journal)->id,
-            'amount'          => TransactionJournal::amountPositive($journal),
+            'date'                     => TransactionJournal::dateAsString($journal),
+            'interest_date'            => TransactionJournal::dateAsString($journal, 'interest_date'),
+            'book_date'                => TransactionJournal::dateAsString($journal, 'book_date'),
+            'process_date'             => TransactionJournal::dateAsString($journal, 'process_date'),
+            'category'                 => TransactionJournal::categoryAsString($journal),
+            'budget_id'                => TransactionJournal::budgetId($journal),
+            'piggy_bank_id'            => TransactionJournal::piggyBankId($journal),
+            'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
+            'source_account_id'        => TransactionJournal::sourceAccount($journal)->id,
+            'source_account_name'      => TransactionJournal::sourceAccount($journal)->name,
+            'destination_account_id'   => TransactionJournal::destinationAccount($journal)->id,
+            'destination_account_name' => TransactionJournal::destinationAccount($journal)->name,
+            'amount'                   => TransactionJournal::amountPositive($journal),
         ];
 
-        if ($journal->isWithdrawal()) {
-            $preFilled['account_id'] = TransactionJournal::sourceAccount($journal)->id;
-            if (TransactionJournal::destinationAccountTypeStr($journal) != 'Cash account') {
-                $preFilled['expense_account'] = TransactionJournal::destinationAccount($journal)->name;
-            }
-        } else {
-            $preFilled['account_id'] = TransactionJournal::destinationAccount($journal)->id;
-            if (TransactionJournal::sourceAccountTypeStr($journal) != 'Cash account') {
-                $preFilled['revenue_account'] = TransactionJournal::sourceAccount($journal)->name;
-            }
+        if ($journal->isWithdrawal() && TransactionJournal::destinationAccountTypeStr($journal) == 'Cash account') {
+            $preFilled['destination_account_name'] = '';
+        }
+        if ($journal->isDeposit() && TransactionJournal::sourceAccountTypeStr($journal) == 'Cash account') {
+            $preFilled['source_account_name'] = '';
         }
 
 
@@ -195,7 +190,7 @@ class TransactionController extends Controller
         Session::forget('transactions.edit.fromUpdate');
 
 
-        return view('transactions.edit', compact('journal', 'uploadSize', 'accountList', 'what', 'budgetList', 'piggyBankList', 'subTitle'))->with(
+        return view('transactions.edit', compact('journal', 'uploadSize', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle'))->with(
             'data', $preFilled
         );
     }
@@ -484,7 +479,6 @@ class TransactionController extends Controller
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
-
         $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);
 
