@@ -683,8 +683,17 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             }
             )
             ->whereIn('transactions.account_id', $ids)
+            ->having('transaction_count', '=', 1)
             ->transactionTypes([TransactionType::WITHDRAWAL])
-            ->first([DB::raw('SUM(`transactions`.`amount`) as `journalAmount`')]);
+            ->first(
+                [
+                    DB::raw('SUM(`transactions`.`amount`) as `journalAmount`'),
+                    DB::raw('COUNT(`transactions`.`id`) as `transaction_count`'),
+                ]
+            );
+        if (is_null($entry)) {
+            return '0';
+        }
         if (is_null($entry->journalAmount)) {
             return '0';
         }
