@@ -5,9 +5,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV385
+ * Class ChangesForV390
  */
-class ChangesForV385 extends Migration
+class ChangesForV390 extends Migration
 {
     /**
      * Reverse the migrations.
@@ -16,6 +16,14 @@ class ChangesForV385 extends Migration
      */
     public function down()
     {
+        // restore removed unique index. Recreate it the correct way:
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->unique(['budget_id', 'startdate', 'repeat_freq'], 'unique_bl_combi');
+        }
+        );
+
+
         $backup = $this->backupRepeatFreqsFromString();
 
         // drop string and create enum field
@@ -48,14 +56,20 @@ class ChangesForV385 extends Migration
      */
     public function up()
     {
-        // remove an index.
+        //        // remove an index.
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropForeign('bid_foreign');
+        }
+        );
+
         Schema::table(
             'budget_limits', function (Blueprint $table) {
             $table->dropUnique('unique_limit');
-            $table->dropForeign('bid_foreign');
             $table->dropUnique('unique_bl_combi');
         }
         );
+
 
         // recreate foreign key:
         Schema::table(
@@ -63,7 +77,6 @@ class ChangesForV385 extends Migration
             $table->foreign('budget_id', 'bid_foreign')->references('id')->on('budgets')->onDelete('cascade');
         }
         );
-
 
 
         // backup values
