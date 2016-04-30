@@ -36,6 +36,7 @@ return [
     'book_date'           => 'Book date',
     'process_date'        => 'Processing date',
     'from'                => 'From',
+    'piggy_bank'          => 'Piggy bank',
     'to'                  => 'To',
     'budget'              => 'Budget',
     'category'            => 'Category',

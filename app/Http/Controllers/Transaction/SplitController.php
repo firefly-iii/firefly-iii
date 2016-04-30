@@ -18,6 +18,7 @@ use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
 use Session;
 
@@ -41,12 +42,15 @@ class SplitController extends Controller
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
 
+        /** @var PiggyBankRepositoryInterface $piggyBankRepository */
+        $piggyBankRepository = app(PiggyBankRepositoryInterface::class);
 
         // expect data to be in session or in post?
-        $journalData = session('temporary_split_data');
+        $journalData   = session('temporary_split_data');
         $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
         $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
         $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks    = ExpandedForm::makeSelectListWithEmpty($piggyBankRepository->getPiggyBanks());
         if (!is_array($journalData)) {
             throw new FireflyException('Could not find transaction data in your session. Please go back and try again.'); // translate me.
         }
@@ -54,7 +58,7 @@ class SplitController extends Controller
         Log::debug('Journal data', $journalData);
 
 
-        return view('split.journals.from-store', compact('currencies', 'assetAccounts', 'budgets'))->with('data', $journalData);
+        return view('split.journals.from-store', compact('currencies', 'piggyBanks', 'assetAccounts', 'budgets'))->with('data', $journalData);
 
 
     }

@@ -818,6 +818,15 @@ return [
     'split_intro_three_deposit' => 'For example: you could split your :total salary so you get :split_one as your base salary and :split_two as a reimbursment for expenses made.',
     'split_table_intro_deposit' => 'Split your deposit in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
     'store_splitted_deposit'    => 'Store splitted deposit',
-    'add_another_split'         => 'Add another split',
+
+    'split_title_transfer'       => 'Split your new transfer',
+    'split_intro_one_transfer'   => 'Firefly supports the "splitting" of a transfer.',
+    'split_intro_two_transfer'   => 'It means that the amount of money you\'re moving is divided between several categories or piggy banks.',
+    'split_intro_three_transfer' => 'For example: you could split your :total move so you get :split_one in one piggy bank and :split_two in another.',
+    'split_table_intro_transfer' => 'Split your transfer in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_transfer'    => 'Store splitted transfer',
+
+
+    'add_another_split' => 'Add another split',
 
 ];

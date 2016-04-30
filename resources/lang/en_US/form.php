@@ -27,6 +27,8 @@ return [
     'asset_destination_account'   => 'Asset account (destination)',
     'asset_source_account'        => 'Asset account (source)',
     'journal_description'         => 'Description',
+    'split_journal'               => 'Split this transaction',
+    'split_journal_explanation'   => 'Split this transaction in multiple parts',
     'currency'                    => 'Currency',
     'account_id'                  => 'Asset account',
     'budget_id'                   => 'Budget',

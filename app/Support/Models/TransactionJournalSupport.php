@@ -20,7 +20,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Log;
 
 /**
  * Class TransactionJournalSupport
@@ -47,27 +46,24 @@ class TransactionJournalSupport extends Model
         }
 
         if ($journal->isWithdrawal() && !is_null($journal->source_amount)) {
+            $cache->store($journal->source_amount);
+
             return $journal->source_amount;
         }
         if ($journal->isDeposit() && !is_null($journal->destination_amount)) {
+            $cache->store($journal->destination_amount);
+
             return $journal->destination_amount;
         }
 
-        // breaks if > 2
-        $transaction = $journal->transactions->sortByDesc('amount')->first();
-        if (is_null($transaction)) {
-            Log::error('Transaction journal #' . $journal->id . ' has ZERO transactions (or they have been deleted).');
-            throw new FireflyException('Transaction journal #' . $journal->id . ' has ZERO transactions. Visit this page for a solution: https://git.io/vwPFY');
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+        if ($journal->isDeposit()) {
+            $amount = $amount * -1;
         }
-        $amount = $transaction->amount;
-        if ($journal->isWithdrawal()) {
-            $amount = bcmul($amount, '-1');
-        }
+        $amount = strval($amount);
         $cache->store($amount);
 
         return $amount;
-
-
     }
 
     /**
@@ -250,7 +246,7 @@ class TransactionJournalSupport extends Model
             'source_account.id AS source_account_id',
             'source_account.name AS source_account_name',
             'source_acct_type.type AS source_account_type',
-            DB::raw('COUNT(`destination`.`id`) + COUNT(`source`.`id`) as `count_transactions`')
+            DB::raw('COUNT(`destination`.`id`) + COUNT(`source`.`id`) as `count_transactions`'),
         ];
     }
 

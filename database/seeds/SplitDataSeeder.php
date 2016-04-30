@@ -51,5 +51,6 @@ class SplitDataSeeder extends Seeder
         TestData::createCategories($user);
         TestData::createExpenseAccounts($user);
         TestData::createRevenueAccounts($user);
+        TestData::createPiggybanks($user);
     }
 }
