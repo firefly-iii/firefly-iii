@@ -39,7 +39,7 @@ class JournalFormRequest extends Request
             'description'               => $this->get('description'),
             'source_account_id'         => intval($this->get('source_account_id')),
             'source_account_name'       => $this->get('source_account_name') ?? '',
-            'account_destination_id'    => intval($this->get('account_destination_id')),
+            'destination_account_id'    => intval($this->get('destination_account_id')),
             'destination_account_name'  => $this->get('destination_account_name') ?? '',
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => Auth::user()->id,

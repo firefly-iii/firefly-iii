@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
         if (App::environment() == 'testing' || App::environment() == 'local') {
             $this->call('TestDataSeeder');
         }
+        // set up basic test data (as little as possible):
+        if (App::environment() == 'split') {
+            $this->call('SplitDataSeeder');
+        }
     }
 
 }

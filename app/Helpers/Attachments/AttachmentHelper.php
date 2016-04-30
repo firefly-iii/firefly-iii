@@ -251,6 +251,7 @@ class AttachmentHelper implements AttachmentHelperInterface
                 $this->processFile($entry, $model);
             }
         }
+        return true;
     }
 
 

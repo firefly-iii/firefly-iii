@@ -24,7 +24,11 @@
                         {{ ('split_intro_two_'~data.what)|_ }}
                     </p>
                     <p>
-                        {{ trans(('firefly.split_intro_three_'~data.what), {total: 20|formatAmount, split_one: 15|formatAmount, split_two: 5|formatAmount})|raw }}
+                        {% if data.what =='deposit' %}
+                            {{ trans(('firefly.split_intro_three_'~data.what), {total: 500|formatAmount, split_one: 425|formatAmount, split_two: 75|formatAmount})|raw }}
+                        {% else %}
+                            {{ trans(('firefly.split_intro_three_'~data.what), {total: 20|formatAmount, split_one: 15|formatAmount, split_two: 5|formatAmount})|raw }}
+                        {% endif %}
                     </p>
                     <!--
                     <p>
@@ -64,8 +68,13 @@
                         {{ ExpandedForm.staticText('asset_source_account', assetAccounts[data.source_account_id]) }}
                         <input type="hidden" name="source_account_id" value="{{ data.source_account_id }}"/>
                     {% endif %}
-                    <!-- show static destination if deposit or transfer -->
-                    {% if data.what == 'deposit' or data.what == 'transfer' %}
+                    <!-- show static source if deposit: -->
+                    {% if data.what == 'deposit' %}
+                    {{ ExpandedForm.staticText('revenue_account', data.source_account_name) }}
+                        <input type="hidden" name="source_account_name" value="{{ data.source_account_name }}"/>
+                    {% endif %}
+                    <!-- show static destination if transfer -->
+                    {% if data.what == 'transfer' %}
                         {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[data.destination_account_id]) }}
                         <input type="hidden" name="destination_account_id" value="{{ data.destination_account_id }}"/>
                     {% endif %}
@@ -113,11 +122,14 @@
                             <th>{{ trans('list.split_number') }}</th>
                             <th>{{ trans('list.description') }}</th>
                             <!-- split the source of a deposit -->
+                            <!--
                             {% if data.what == 'deposit' %}
                                 <th>{{ trans('list.source') }}</th>
                             {% endif %}
+                            -->
                             <!-- split where a withdrawal is going -->
-                            {% if data.what == 'withdrawal' %}
+                            <!-- split where a deposit is going -->
+                            {% if data.what == 'withdrawal' or data.what == 'deposit' %}
                                 <th>{{ trans('list.destination') }}</th>
                             {% endif %}
                             <th>{{ trans('list.amount') }}</th>
@@ -134,16 +146,23 @@
                         <tr class="initial-row">
                             <td class="count">#1</td>
                             <td>{{ Form.input('text', 'description[]', data.description, {class: 'form-control'}) }}</td>
-                            {% if data.what == 'deposit' %}
-                                <td>
-                                    {{ Form.input('text', 'source_account_name[]', data.source_account_name, {class: 'form-control'}) }}
-                                </td>
-                            {% endif %}
+
+                            <!-- withdrawal has several destination names. -->
                             {% if data.what == 'withdrawal' %}
                                 <td>
                                     {{ Form.input('text', 'destination_account_name[]', data.destination_account_name, {class: 'form-control'}) }}
                                 </td>
                             {% endif %}
+
+                            <!-- deposit has several destination id's -->
+                            {% if data.what == 'deposit' %}
+                                <td>
+                                    {{ Form.select('destination_account_id[]', assetAccounts, data.destination_account_id, {class: 'form-control'}) }}
+                                </td>
+                            {% endif %}
+
+
+
                             <td style="width:10%;">
                                 {{ Form.input('number', 'amount[]', data.amount, {class: 'form-control', autocomplete: 'off', step: 'any', min:'0.01'}) }}
                             </td>

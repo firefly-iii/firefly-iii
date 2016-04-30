@@ -431,7 +431,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     protected function storeDepositAccounts(array $data): array
     {
-        $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['account_destination_id'])->first(['accounts.*']);
+        $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first(['accounts.*']);
 
         if (strlen($data['source_account_name']) > 0) {
             $fromType    = AccountType::where('type', 'Revenue account')->first();

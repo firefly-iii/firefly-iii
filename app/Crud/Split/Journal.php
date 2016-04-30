@@ -85,6 +85,7 @@ class Journal implements JournalInterface
                 'account_id'             => $sourceAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $transaction['amount'] * -1,
+                'description'            => $transaction['description'],
             ]
         );
 
@@ -94,6 +95,7 @@ class Journal implements JournalInterface
                 'account_id'             => $destinationAccount->id,
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $transaction['amount'],
+                'description'            => $transaction['description'],
             ]
         );
 
@@ -133,8 +135,8 @@ class Journal implements JournalInterface
                 list($sourceAccount, $destinationAccount) = $this->storeDepositAccounts($transaction);
                 break;
             case TransactionType::TRANSFER:
-                $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $data['account_from_id'])->first();
-                $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['account_to_id'])->first();
+                $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $transaction['source_account_id'])->first();
+                $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $transaction['destination_account_id'])->first();
                 break;
             default:
                 throw new FireflyException('Cannot handle ' . e($type));
@@ -150,7 +152,7 @@ class Journal implements JournalInterface
      */
     private function storeDepositAccounts(array $data): array
     {
-        $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['account_destination_id'])->first(['accounts.*']);
+        $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first(['accounts.*']);
 
         if (strlen($data['source_account_name']) > 0) {
             $fromType    = AccountType::where('type', 'Revenue account')->first();

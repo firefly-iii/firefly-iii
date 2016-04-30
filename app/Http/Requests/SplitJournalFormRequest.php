@@ -35,25 +35,28 @@ class SplitJournalFormRequest extends Request
     public function getSplitData(): array
     {
         $data = [
-            'description'       => $this->get('journal_description'),
-            'currency_id'       => intval($this->get('currency')),
-            'source_account_id' => intval($this->get('source_account_id')),
-            'date'              => new Carbon($this->get('date')),
-            'what'              => $this->get('what'),
-            'interest_date'     => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
-            'book_date'         => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
-            'process_date'      => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
-            'transactions'      => [],
+            'description'         => $this->get('journal_description'),
+            'currency_id'         => intval($this->get('currency')),
+            'source_account_id'   => intval($this->get('source_account_id')),
+            'source_account_name' => $this->get('source_account_name'),
+            'date'                => new Carbon($this->get('date')),
+            'what'                => $this->get('what'),
+            'interest_date'       => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
+            'book_date'           => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
+            'process_date'        => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
+            'transactions'        => [],
         ];
         // description is leading because it is one of the mandatory fields.
         foreach ($this->get('description') as $index => $description) {
             $transaction            = [
                 'description'              => $description,
                 'amount'                   => round($this->get('amount')[$index], 2),
-                'budget_id'                => $this->get('budget')[$index] ? $this->get('budget')[$index] : 0,
+                'budget_id'                => $this->get('budget')[$index] ? intval($this->get('budget')[$index]) : 0,
                 'category'                 => $this->get('category')[$index] ?? '',
                 'source_account_id'        => intval($this->get('source_account_id')),
-                'destination_account_name' => $this->get('destination_account_name')[$index] ?? ''
+                'source_account_name'      => $this->get('source_account_name'),
+                'destination_account_id'   => $this->get('destination_account_id')[$index] ? intval($this->get('destination_account_id')[$index]) : 0,
+                'destination_account_name' => $this->get('destination_account_name')[$index] ?? '',
             ];
             $data['transactions'][] = $transaction;
         }
@@ -70,12 +73,14 @@ class SplitJournalFormRequest extends Request
             'journal_description'        => 'required|between:1,255',
             'currency'                   => 'required|exists:transaction_currencies,id',
             'source_account_id'          => 'numeric|belongsToUser:accounts,id',
+            'source_account_name.*'      => 'between:1,255',
             'what'                       => 'required|in:withdrawal,deposit,transfer',
             'date'                       => 'required|date',
             'interest_date'              => 'date',
             'book_date'                  => 'date',
             'process_date'               => 'date',
             'description.*'              => 'required|between:1,255',
+            'destination_account_id.*'   => 'numeric|belongsToUser:accounts,id',
             'destination_account_name.*' => 'between:1,255',
             'amount.*'                   => 'required|numeric',
             'budget.*'                   => 'belongsToUser:budgets,id',

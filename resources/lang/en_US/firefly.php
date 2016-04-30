@@ -810,6 +810,14 @@ return [
     'split_intro_two_withdrawal'                => 'It means that the amount of money you\'ve spent is divided between several destination expense accounts, budgets or categories.',
     'split_intro_three_withdrawal'              => 'For example: you could split your :total groceries so you pay :split_one from your "daily groceries" budget and :split_two from your "cigarettes" budget.',
     'split_table_intro_withdrawal'              => 'Split your withdrawal in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
-    'add_another_split'                         => 'Add another split',
     'store_splitted_withdrawal'                 => 'Store splitted withdrawal',
+
+    'split_title_deposit'       => 'Split your new deposit',
+    'split_intro_one_deposit'   => 'Firefly supports the "splitting" of a deposit.',
+    'split_intro_two_deposit'   => 'It means that the amount of money you\'ve earned is divided between several source revenue accounts or categories.',
+    'split_intro_three_deposit' => 'For example: you could split your :total salary so you get :split_one as your base salary and :split_two as a reimbursment for expenses made.',
+    'split_table_intro_deposit' => 'Split your deposit in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_deposit'    => 'Store splitted deposit',
+    'add_another_split'         => 'Add another split',
+
 ];
