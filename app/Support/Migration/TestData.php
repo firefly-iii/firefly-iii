@@ -44,38 +44,76 @@ class TestData
 
 
     /**
-     * @param User $user
+     * @param User  $user
+     * @param array $assets
      *
      * @return bool
      */
-    public static function createAssetAccounts(User $user): bool
+    public static function createAssetAccounts(User $user, array $assets): bool
     {
-        $assets = ['TestData Checking Account', 'TestData Savings', 'TestData Shared', 'TestData Creditcard', 'Emergencies', 'STE'];
-        // first two ibans match test-upload.csv
-        $ibans     = ['NL11XOLA6707795988', 'NL96DZCO4665940223', 'NL81RCQZ7160379858', 'NL19NRAP2367994221', 'NL40UKBK3619908726', 'NL38SRMN4325934708'];
-        $assetMeta = [
-            ['accountRole' => 'defaultAsset'],
-            ['accountRole' => 'savingAsset',],
-            ['accountRole' => 'sharedAsset',],
-            ['accountRole' => 'ccAsset', 'ccMonthlyPaymentDate' => '2015-05-27', 'ccType' => 'monthlyFull',],
-            ['accountRole' => 'savingAsset',],
-            ['accountRole' => 'savingAsset',],
-        ];
+        if (count($assets) == 0) {
+            $assets = [
+                [
+                    'name' => 'TestData Checking Account',
+                    'iban' => 'NL11XOLA6707795988',
+                    'meta' => [
+                        'accountRole' => 'defaultAsset',
+                    ],
+                ],
+                [
+                    'name' => 'TestData Savings',
+                    'iban' => 'NL96DZCO4665940223',
+                    'meta' => [
+                        'accountRole' => 'savingAsset',
+                    ],
+                ],
+                [
+                    'name' => 'TestData Shared',
+                    'iban' => 'NL81RCQZ7160379858',
+                    'meta' => [
+                        'accountRole' => 'sharedAsset',
+                    ],
+                ],
+                [
+                    'name' => 'TestData Creditcard',
+                    'iban' => 'NL19NRAP2367994221',
+                    'meta' => [
+                        'accountRole'          => 'ccAsset',
+                        'ccMonthlyPaymentDate' => '2015-05-27',
+                        'ccType'               => 'monthlyFull',
+                    ],
+                ],
+                [
+                    'name' => 'Emergencies',
+                    'iban' => 'NL40UKBK3619908726',
+                    'meta' => [
+                        'accountRole' => 'savingAsset',
+                    ],
+                ],
+                [
+                    'name' => 'STE',
+                    'iban' => 'NL38SRMN4325934708',
+                    'meta' => [
+                        'accountRole' => 'savingAsset',
+                    ],
+                ],
+            ];
+        }
 
-        foreach ($assets as $index => $name) {
+        foreach ($assets as $index => $entry) {
             // create account:
             $account = Account::create(
                 [
                     'user_id'         => $user->id,
                     'account_type_id' => 3,
-                    'name'            => $name,
+                    'name'            => $entry['name'],
                     'active'          => 1,
                     'encrypted'       => 1,
-                    'iban'            => $ibans[$index],
+                    'iban'            => $entry['iban'],
                 ]
             );
-            foreach ($assetMeta[$index] as $name => $value) {
-                AccountMeta::create(['account_id' => $account->id, 'name' => $name, 'data' => $value,]);
+            foreach ($entry['meta'] as $name => $value) {
+                AccountMeta::create(['account_id' => $account->id, 'name' => $name, 'data' => $value]);
             }
         }
 
@@ -452,15 +490,16 @@ class TestData
     }
 
     /**
-     * @param User $user
+     * @param User   $user
+     * @param string $accountName
      *
      * @return bool
      *
      */
-    public static function createPiggybanks(User $user): bool
+    public static function createPiggybanks(User $user, string $accountName): bool
     {
-        $account = self::findAccount($user, 'TestData Savings');
 
+        $account                   = self::findAccount($user, $accountName);
         $camera                    = PiggyBank::create(
             [
                 'account_id'    => $account->id,

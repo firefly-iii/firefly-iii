@@ -32,8 +32,6 @@ class SplitDataSeeder extends Seeder
      */
     public function __construct()
     {
-
-
     }
 
     /**
@@ -43,18 +41,50 @@ class SplitDataSeeder extends Seeder
      */
     public function run()
     {
+        $skipWithdrawal = false;
+        $skipDeposit    = true;
+        $skipTransfer   = true;
         // start by creating all users:
         // method will return the first user.
         $user = TestData::createUsers();
 
-
         // create all kinds of static data:
-        TestData::createAssetAccounts($user);
+        $assets = [
+            [
+                'name' => 'Checking Account',
+                'iban' => 'NL11XOLA6707795988',
+                'meta' => [
+                    'accountRole' => 'defaultAsset',
+                ],
+            ],
+            [
+                'name' => 'Alternate Checking Account',
+                'iban' => 'NL40UKBK3619908726',
+                'meta' => [
+                    'accountRole' => 'defaultAsset',
+                ],
+            ],
+            [
+                'name' => 'Savings Account',
+                'iban' => 'NL96DZCO4665940223',
+                'meta' => [
+                    'accountRole' => 'savingAsset',
+                ],
+            ],
+            [
+                'name' => 'Shared Checking Account',
+                'iban' => 'NL81RCQZ7160379858',
+                'meta' => [
+                    'accountRole' => 'sharedAsset',
+                ],
+            ],
+        ];
+        TestData::createAssetAccounts($user, $assets);
         TestData::createBudgets($user);
         TestData::createCategories($user);
         TestData::createExpenseAccounts($user);
         TestData::createRevenueAccounts($user);
-        TestData::createPiggybanks($user);
+        TestData::createPiggybanks($user, 'Savings Account');
 
         /*
          * Create splitted expense of 66,-
@@ -62,154 +92,156 @@ class SplitDataSeeder extends Seeder
         $today = new Carbon;
         $today->subDays(6);
 
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 1, // withdrawal
-                'transaction_currency_id' => 1,
-                'description'             => 'Split Expense (journal)',
-                'completed'               => 1,
-                'date'                    => $today->format('Y-m-d'),
-            ]
-        );
-
-        // split in 6 transactions (multiple destinations). 22,- each
-        // source is TestData Checking Account.
-        // also attach some budgets and stuff.
-        $destinations = ['Albert Heijn', 'PLUS', 'Apple'];
-        $budgets      = ['Groceries', 'Groceries', 'Car'];
-        $categories   = ['Bills', 'Bills', 'Car'];
-        $source       = TestData::findAccount($user, 'TestData Checking Account');
-        foreach ($destinations as $index => $dest) {
-            $bud         = $budgets[$index];
-            $cat         = $categories[$index];
-            $destination = TestData::findAccount($user, $dest);
-
-            $one = Transaction::create(
+        if (!$skipWithdrawal) {
+            $journal = TransactionJournal::create(
                 [
-                    'account_id'             => $source->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => '-22',
-
+                    'user_id'                 => $user->id,
+                    'transaction_type_id'     => 1, // withdrawal
+                    'transaction_currency_id' => 1,
+                    'description'             => 'Split Expense (journal)',
+                    'completed'               => 1,
+                    'date'                    => $today->format('Y-m-d'),
                 ]
             );
 
-            $two = Transaction::create(
-                [
-                    'account_id'             => $destination->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => '22',
+            // split in 6 transactions (multiple destinations). 22,- each
+            // source is TestData Checking Account.
+            // also attach some budgets and stuff.
+            $destinations = ['Albert Heijn', 'PLUS', 'Apple'];
+            $budgets      = ['Groceries', 'Groceries', 'Car'];
+            $categories   = ['Bills', 'Bills', 'Car'];
+            $source       = TestData::findAccount($user, 'Checking Account');
+            foreach ($destinations as $index => $dest) {
+                $bud         = $budgets[$index];
+                $cat         = $categories[$index];
+                $destination = TestData::findAccount($user, $dest);
 
-                ]
-            );
+                $one = Transaction::create(
+                    [
+                        'account_id'             => $source->id,
+                        'transaction_journal_id' => $journal->id,
+                        'amount'                 => '-22',
 
-            $one->budgets()->save(TestData::findBudget($user, $bud));
-            $two->budgets()->save(TestData::findBudget($user, $bud));
+                    ]
+                );
 
-            $one->categories()->save(TestData::findCategory($user, $cat));
-            $two->categories()->save(TestData::findCategory($user, $cat));
+                $two = Transaction::create(
+                    [
+                        'account_id'             => $destination->id,
+                        'transaction_journal_id' => $journal->id,
+                        'amount'                 => '22',
+
+                    ]
+                );
+
+                $one->budgets()->save(TestData::findBudget($user, $bud));
+                $two->budgets()->save(TestData::findBudget($user, $bud));
+
+                $one->categories()->save(TestData::findCategory($user, $cat));
+                $two->categories()->save(TestData::findCategory($user, $cat));
+            }
         }
-
         // create splitted income of 99,-
         $today->addDay();
 
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 2, // expense
-                'transaction_currency_id' => 1,
-                'description'             => 'Split Income (journal)',
-                'completed'               => 1,
-                'date'                    => $today->format('Y-m-d'),
-            ]
-        );
-
-        // split in 6 transactions (multiple destinations). 22,- each
-        // source is TestData Checking Account.
-        // also attach some budgets and stuff.
-        $destinations = ['TestData Checking Account', 'TestData Savings', 'TestData Shared'];
-        $source       = TestData::findAccount($user, 'Belastingdienst');
-        $budgets      = ['Groceries', 'Groceries', 'Car'];
-        $categories   = ['Bills', 'Bills', 'Car'];
-        foreach ($destinations as $index => $dest) {
-            $bud         = $budgets[$index];
-            $cat         = $categories[$index];
-            $destination = TestData::findAccount($user, $dest);
-
-            $one = Transaction::create(
+        if (!$skipDeposit) {
+            $journal = TransactionJournal::create(
                 [
-                    'account_id'             => $source->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => '-33',
-
+                    'user_id'                 => $user->id,
+                    'transaction_type_id'     => 2, // expense
+                    'transaction_currency_id' => 1,
+                    'description'             => 'Split Income (journal)',
+                    'completed'               => 1,
+                    'date'                    => $today->format('Y-m-d'),
                 ]
             );
 
-            $two = Transaction::create(
-                [
-                    'account_id'             => $destination->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => '33',
+            // split in 6 transactions (multiple destinations). 22,- each
+            // source is TestData Checking Account.
+            // also attach some budgets and stuff.
+            $destinations = ['Checking Account', 'Savings Account', 'Shared Checking Account'];
+            $source       = TestData::findAccount($user, 'Belastingdienst');
+            $budgets      = ['Groceries', 'Groceries', 'Car'];
+            $categories   = ['Bills', 'Bills', 'Car'];
+            foreach ($destinations as $index => $dest) {
+                $bud         = $budgets[$index];
+                $cat         = $categories[$index];
+                $destination = TestData::findAccount($user, $dest);
 
-                ]
-            );
+                $one = Transaction::create(
+                    [
+                        'account_id'             => $source->id,
+                        'transaction_journal_id' => $journal->id,
+                        'amount'                 => '-33',
 
-            $one->budgets()->save(TestData::findBudget($user, $bud));
-            $two->budgets()->save(TestData::findBudget($user, $bud));
+                    ]
+                );
 
-            $one->categories()->save(TestData::findCategory($user, $cat));
-            $two->categories()->save(TestData::findCategory($user, $cat));
+                $two = Transaction::create(
+                    [
+                        'account_id'             => $destination->id,
+                        'transaction_journal_id' => $journal->id,
+                        'amount'                 => '33',
+
+                    ]
+                );
+
+                $one->budgets()->save(TestData::findBudget($user, $bud));
+                $two->budgets()->save(TestData::findBudget($user, $bud));
+
+                $one->categories()->save(TestData::findCategory($user, $cat));
+                $two->categories()->save(TestData::findCategory($user, $cat));
+            }
         }
-
         // create a splitted transfer of 57,- (19)
         $today->addDay();
 
-        $journal = TransactionJournal::create(
-            [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => 3, // transfer
-                'transaction_currency_id' => 1,
-                'description'             => 'Split Transfer (journal)',
-                'completed'               => 1,
-                'date'                    => $today->format('Y-m-d'),
-            ]
-        );
-
-
-        $source       = TestData::findAccount($user, 'Emergencies');
-        $destinations = ['TestData Checking Account', 'TestData Savings', 'TestData Shared'];
-        $budgets      = ['Groceries', 'Groceries', 'Car'];
-        $categories   = ['Bills', 'Bills', 'Car'];
-        foreach ($destinations as $index => $dest) {
-            $bud         = $budgets[$index];
-            $cat         = $categories[$index];
-            $destination = TestData::findAccount($user, $dest);
-
-            $one = Transaction::create(
+        if (!$skipTransfer) {
+            $journal = TransactionJournal::create(
                 [
-                    'account_id'             => $source->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => '-19',
-
+                    'user_id'                 => $user->id,
+                    'transaction_type_id'     => 3, // transfer
+                    'transaction_currency_id' => 1,
+                    'description'             => 'Split Transfer (journal)',
+                    'completed'               => 1,
+                    'date'                    => $today->format('Y-m-d'),
                 ]
             );
 
-            $two = Transaction::create(
-                [
-                    'account_id'             => $destination->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => '19',
 
-                ]
-            );
+            $source       = TestData::findAccount($user, 'Alternate Checking Account');
+            $destinations = ['Checking Account', 'Savings Account', 'Shared Checking Account'];
+            $budgets      = ['Groceries', 'Groceries', 'Car'];
+            $categories   = ['Bills', 'Bills', 'Car'];
+            foreach ($destinations as $index => $dest) {
+                $bud         = $budgets[$index];
+                $cat         = $categories[$index];
+                $destination = TestData::findAccount($user, $dest);
 
-            $one->budgets()->save(TestData::findBudget($user, $bud));
-            $two->budgets()->save(TestData::findBudget($user, $bud));
+                $one = Transaction::create(
+                    [
+                        'account_id'             => $source->id,
+                        'transaction_journal_id' => $journal->id,
+                        'amount'                 => '-19',
 
-            $one->categories()->save(TestData::findCategory($user, $cat));
-            $two->categories()->save(TestData::findCategory($user, $cat));
+                    ]
+                );
+
+                $two = Transaction::create(
+                    [
+                        'account_id'             => $destination->id,
+                        'transaction_journal_id' => $journal->id,
+                        'amount'                 => '19',
+
+                    ]
+                );
+
+                $one->budgets()->save(TestData::findBudget($user, $bud));
+                $two->budgets()->save(TestData::findBudget($user, $bud));
+
+                $one->categories()->save(TestData::findCategory($user, $cat));
+                $two->categories()->save(TestData::findCategory($user, $cat));
+            }
         }
-
-
     }
 }

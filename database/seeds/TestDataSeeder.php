@@ -46,11 +46,11 @@ class TestDataSeeder extends Seeder
         $user = TestData::createUsers();
 
         // create all kinds of static data:
-        TestData::createAssetAccounts($user);
+        TestData::createAssetAccounts($user, []);
         TestData::createBills($user);
         TestData::createBudgets($user);
         TestData::createCategories($user);
-        TestData::createPiggybanks($user);
+        TestData::createPiggybanks($user, 'TestData Savings');
         TestData::createExpenseAccounts($user);
         TestData::createRevenueAccounts($user);
         TestData::createAttachments($user, $this->start);
