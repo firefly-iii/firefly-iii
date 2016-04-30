@@ -325,6 +325,7 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public function scopeExpanded(EloquentBuilder $query)
     {
+        $query->distinct();
         // left join transaction type:
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
@@ -363,6 +364,7 @@ class TransactionJournal extends TransactionJournalSupport
 
         // group:
         $query->groupBy('transaction_journals.id');
+        $query->groupBy('source.id');
 
         $query->with(['categories', 'budgets', 'attachments', 'bill']);
 
