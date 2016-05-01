@@ -99,16 +99,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected function registerDeleteEvents()
     {
-        TransactionJournal::deleted(
-            function (TransactionJournal $journal) {
-
-                /** @var Transaction $transaction */
-                foreach ($journal->transactions()->get() as $transaction) {
-                    $transaction->delete();
-                }
-            }
-        );
-
         Account::deleted(
             function (Account $account) {
 

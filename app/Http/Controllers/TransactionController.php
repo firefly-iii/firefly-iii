@@ -216,7 +216,7 @@ class TransactionController extends Controller
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $subTitle     = trans('firefly.title_' . $what);
         $page         = intval(Input::get('page'));
-        $journals     = $repository->getJournalsOfTypes($types, $page, $pageSize);
+        $journals     = $repository->getJournals($types, $page, $pageSize);
 
         $journals->setPath('transactions/' . $what);
 
@@ -384,8 +384,8 @@ class TransactionController extends Controller
             $order = 0;
             foreach ($ids as $id) {
 
-                $journal = $repository->getWithDate($id, $date);
-                if ($journal) {
+                $journal = $repository->find($id);
+                if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {
                     $journal->order = $order;
                     $order++;
                     $journal->save();

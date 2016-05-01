@@ -46,6 +46,11 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function delete(TransactionJournal $journal): bool
     {
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            $transaction->delete();
+        }
+
         $journal->delete();
 
         return true;
@@ -82,6 +87,8 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @deprecated
+     *
      * @param TransactionJournal $journal
      * @param Transaction        $transaction
      *
@@ -107,104 +114,24 @@ class JournalRepository implements JournalRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $offset
-     * @param int   $count
-     *
-     * @return Collection
-     */
-    public function getCollectionOfTypes(array $types, int $offset, int $count): Collection
-    {
-        $set = $this->user->transactionJournals()
-                          ->expanded()
-                          ->transactionTypes($types)
-                          ->take($count)->offset($offset)
-                          ->orderBy('date', 'DESC')
-                          ->orderBy('order', 'ASC')
-                          ->orderBy('id', 'DESC')
-                          ->get(TransactionJournal::queryFields());
-
-        return $set;
-    }
-
-    /**
-     * @param TransactionType $dbType
-     *
-     * @return Collection
-     */
-    public function getJournalsOfType(TransactionType $dbType): Collection
-    {
-        return $this->user->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
-    }
-
-    /**
-     * @param array $types
      * @param int   $page
      * @param int   $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getJournalsOfTypes(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
+    public function getJournals(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
     {
         $offset = ($page - 1) * $pageSize;
-        $query  = $this->user
-            ->transactionJournals()
-            ->expanded()
-            ->transactionTypes($types);
-
+        $query  = $this->user->transactionJournals()->expanded();
+        if (count($types) > 0) {
+            $query->transactionTypes($types);
+        }
 
         $count    = $query->count();
         $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $journals;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return TransactionType
-     */
-    public function getTransactionType(string $type): TransactionType
-    {
-        return TransactionType::whereType($type)->first();
-    }
-
-    /**
-     * @param int    $journalId
-     * @param Carbon $date
-     *
-     * @return TransactionJournal
-     */
-    public function getWithDate(int $journalId, Carbon $date): TransactionJournal
-    {
-        return $this->user->transactionjournals()->where('id', $journalId)->where('date', $date->format('Y-m-d 00:00:00'))->first();
-    }
-
-    /**
-     *
-     * * Remember: a balancingAct takes at most one expense and one transfer.
-     *            an advancePayment takes at most one expense, infinite deposits and NO transfers.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return bool
-     */
-    public function saveTags(TransactionJournal $journal, array $array): bool
-    {
-        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
-
-        foreach ($array as $name) {
-            if (strlen(trim($name)) > 0) {
-                $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                if (!is_null($tag)) {
-                    $tagRepository->connect($journal, $tag);
-                }
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -340,42 +267,27 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     *
+     * * Remember: a balancingAct takes at most one expense and one transfer.
+     *            an advancePayment takes at most one expense, infinite deposits and NO transfers.
+     *
      * @param TransactionJournal $journal
      * @param array              $array
      *
      * @return bool
      */
-    public function updateTags(TransactionJournal $journal, array $array): bool
+    private function saveTags(TransactionJournal $journal, array $array): bool
     {
-        // create tag repository
         /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
         $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
 
-
-        // find or create all tags:
-        $tags = [];
-        $ids  = [];
         foreach ($array as $name) {
             if (strlen(trim($name)) > 0) {
-                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                $tags[] = $tag;
-                $ids[]  = $tag->id;
+                $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                if (!is_null($tag)) {
+                    $tagRepository->connect($journal, $tag);
+                }
             }
-        }
-
-        // delete all tags connected to journal not in this array:
-        if (count($ids) > 0) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
-        }
-        // if count is zero, delete them all:
-        if (count($ids) == 0) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
-        }
-
-        // connect each tag to journal (if not yet connected):
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $tagRepository->connect($journal, $tag);
         }
 
         return true;
@@ -388,7 +300,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @return array
      * @throws FireflyException
      */
-    protected function storeAccounts(TransactionType $type, array $data): array
+    private function storeAccounts(TransactionType $type, array $data): array
     {
         $sourceAccount      = null;
         $destinationAccount = null;
@@ -429,7 +341,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return array
      */
-    protected function storeDepositAccounts(array $data): array
+    private function storeDepositAccounts(array $data): array
     {
         $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first(['accounts.*']);
 
@@ -455,7 +367,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return array
      */
-    protected function storeWithdrawalAccounts(array $data): array
+    private function storeWithdrawalAccounts(array $data): array
     {
         $sourceAccount = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first(['accounts.*']);
 
@@ -480,5 +392,47 @@ class JournalRepository implements JournalRepositoryInterface
         return [$sourceAccount, $destinationAccount];
 
 
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return bool
+     */
+    private function updateTags(TransactionJournal $journal, array $array): bool
+    {
+        // create tag repository
+        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
+        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+
+
+        // find or create all tags:
+        $tags = [];
+        $ids  = [];
+        foreach ($array as $name) {
+            if (strlen(trim($name)) > 0) {
+                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                $tags[] = $tag;
+                $ids[]  = $tag->id;
+            }
+        }
+
+        // delete all tags connected to journal not in this array:
+        if (count($ids) > 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
+        }
+        // if count is zero, delete them all:
+        if (count($ids) == 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
+        }
+
+        // connect each tag to journal (if not yet connected):
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $tagRepository->connect($journal, $tag);
+        }
+
+        return true;
     }
 }

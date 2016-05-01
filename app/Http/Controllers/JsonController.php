@@ -275,9 +275,9 @@ class JsonController extends Controller
     public function transactionJournals(JournalRepositoryInterface $repository, $what)
     {
         $descriptions = [];
-        $dbType       = $repository->getTransactionType($what);
-
-        $journals = $repository->getJournalsOfType($dbType);
+        $type         = config('firefly.transactionTypesByWhat.' . $what);
+        $types        = [$type];
+        $journals     = $repository->getJournals($types, 1, 50);
         foreach ($journals as $j) {
             $descriptions[] = $j->description;
         }
