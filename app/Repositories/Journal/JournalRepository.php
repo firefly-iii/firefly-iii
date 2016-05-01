@@ -15,6 +15,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -132,6 +133,36 @@ class JournalRepository implements JournalRepositoryInterface
         $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $journals;
+    }
+
+    /**
+     * Returns a collection of ALL journals, given a specific account and a date range.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection
+    {
+        $query = $this->user->transactionJournals()->expanded();
+        $query->before($end);
+        $query->after($start);
+
+        if ($accounts->count() > 0) {
+            $ids = $accounts->pluck('id')->toArray();
+            $query->where(
+                function (Builder $q) use ($ids) {
+                    $q->whereIn('destination.account_id', $ids);
+                    $q->orWhereIn('source.account_id', $ids);
+                }
+            );
+        }
+
+        $set = $query->get(TransactionJournal::queryFields());
+
+        return $set;
     }
 
     /**

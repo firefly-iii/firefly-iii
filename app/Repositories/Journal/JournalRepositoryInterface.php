@@ -6,7 +6,6 @@ namespace FireflyIII\Repositories\Journal;
 use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -55,6 +54,8 @@ interface JournalRepositoryInterface
     public function getAmountBefore(TransactionJournal $journal, Transaction $transaction): string;
 
     /**
+     * Returns a page of a specific type(s) of journal.
+     *
      * @param array $types
      * @param int   $page
      * @param int   $pageSize
@@ -62,6 +63,17 @@ interface JournalRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function getJournals(array $types, int $page, int $pageSize = 50): LengthAwarePaginator;
+
+    /**
+     * Returns a collection of ALL journals, given a specific account and a date range.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param array $data

@@ -10,12 +10,11 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export;
 
-use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalCollector;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Log;
@@ -91,10 +90,10 @@ class Processor
      */
     public function collectJournals(): bool
     {
-        $args = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
-        /** @var JournalCollector $journalCollector */
-        $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
-        $this->journals   = $journalCollector->collect();
+        /** @var JournalRepositoryInterface $repository */
+        $repository     = app(JournalRepositoryInterface::class);
+        $this->journals = $repository->getJournalsInRange($this->accounts, $this->settings['startDate'], $this->settings['endDate']);
+
         Log::debug(
             'Collected ' .
             $this->journals->count() . ' journals (between ' .
