@@ -147,7 +147,7 @@ class ReportController extends Controller
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         /** @var ARI $repos */
-        $repos     = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repos     = app(ARI::class);
         $auditData = [];
         $dayBefore = clone $start;
         $dayBefore->subDay();

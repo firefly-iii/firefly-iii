@@ -19,7 +19,7 @@ class BudgetId extends BasicConverter implements ConverterInterface
     public function convert(): Budget
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app(BudgetRepositoryInterface::class);
         $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
         $budget     = $repository->find($value);
 

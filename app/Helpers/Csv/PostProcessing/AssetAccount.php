@@ -6,6 +6,7 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 use Validator;
 
@@ -244,8 +245,8 @@ class AssetAccount implements PostProcessorInterface
             }
         }
         // create new if not exists and return that one:
-        /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
-        $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        /** @var AccountRepositoryInterface $repository */
+        $repository  = app(AccountRepositoryInterface::class);
         $accountData = [
             'name'                   => $accountNumber,
             'accountType'            => 'asset',

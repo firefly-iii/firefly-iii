@@ -20,7 +20,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
     public function convert(): Budget
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app(BudgetRepositoryInterface::class);
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {

@@ -289,7 +289,7 @@ class TransactionController extends Controller
     {
         $subTitle = trans('firefly.mass_edit_journals');
         /** @var ARI $accountRepository */
-        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $accountRepository = app(ARI::class);
         $accountList       = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
 
         // put previous url in session

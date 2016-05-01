@@ -40,7 +40,7 @@ class AttachUserRole
     {
         Log::debug('Trigger attachuserrole');
         /** @var UserRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\User\UserRepositoryInterface');
+        $repository = app(UserRepositoryInterface::class);
 
         // first user ever?
         if ($repository->count() == 1) {

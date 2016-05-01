@@ -44,7 +44,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     public function __construct(ExportJob $job)
     {
-        $this->repository = app('FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface');
+        /** @var AttachmentRepositoryInterface repository */
+        $this->repository = app(AttachmentRepositoryInterface::class);
         // make storage:
         $this->uploadDisk = Storage::disk('upload');
         $this->exportDisk = Storage::disk('export');

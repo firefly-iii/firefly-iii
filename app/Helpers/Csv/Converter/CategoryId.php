@@ -19,7 +19,7 @@ class CategoryId extends BasicConverter implements ConverterInterface
     public function convert(): Category
     {
         /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+        $repository = app(SingleCategoryRepositoryInterface::class);
         $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
         $category   = $repository->find($value);
 

@@ -87,7 +87,7 @@ class ReportController extends Controller
         $budget           = $budgetRepository->find(intval($attributes['budgetId']));
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $accountRepository = app(AccountRepositoryInterface::class);
         $account           = $accountRepository->find(intval($attributes['accountId']));
 
         switch (true) {
@@ -177,7 +177,7 @@ class ReportController extends Controller
     private function expenseEntry(array $attributes): string
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
         $journals   = $repository->getExpensesByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.expense-entry', compact('journals', 'account'))->render();
@@ -196,7 +196,7 @@ class ReportController extends Controller
     private function incomeEntry(array $attributes): string
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
         $journals   = $repository->getIncomeByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.income-entry', compact('journals', 'account'))->render();

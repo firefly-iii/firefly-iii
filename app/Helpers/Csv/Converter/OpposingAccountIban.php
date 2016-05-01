@@ -21,7 +21,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
     public function convert()
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository = app(AccountRepositoryInterface::class);
 
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = $repository->find($this->mapped[$this->index][$this->value]);

@@ -20,7 +20,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
     public function convert(): Category
     {
         /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+        $repository = app(SingleCategoryRepositoryInterface::class);
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {

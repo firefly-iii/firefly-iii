@@ -263,7 +263,7 @@ class BillRepository implements BillRepositoryInterface
     {
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $accountRepository = app(AccountRepositoryInterface::class);
         $amount            = '0';
         $creditCards       = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
         /** @var Account $creditCard */

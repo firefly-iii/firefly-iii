@@ -19,7 +19,7 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
     public function convert(): TransactionCurrency
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
+        $repository = app(CurrencyRepositoryInterface::class);
 
         if (isset($this->mapped[$this->index][$this->value])) {
             $currency = $repository->find($this->mapped[$this->index][$this->value]);

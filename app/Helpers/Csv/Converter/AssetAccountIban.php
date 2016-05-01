@@ -22,7 +22,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
     public function convert(): Account
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository = app(AccountRepositoryInterface::class);
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
@@ -44,7 +44,6 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 
     /**
      * @param AccountRepositoryInterface $repository
-     * @param                            $value
      *
      * @return Account
      */

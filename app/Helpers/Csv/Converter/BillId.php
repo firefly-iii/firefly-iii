@@ -19,7 +19,7 @@ class BillId extends BasicConverter implements ConverterInterface
     public function convert(): Bill
     {
         /** @var BillRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $repository = app(BillRepositoryInterface::class);
         $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
         $bill       = $repository->find($value);
 

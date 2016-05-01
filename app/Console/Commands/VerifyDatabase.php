@@ -241,12 +241,12 @@ having transaction_count = 0
     private function reportSum()
     {
         /** @var UserRepositoryInterface $userRepository */
-        $userRepository = app('FireflyIII\Repositories\User\UserRepositoryInterface');
+        $userRepository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
             /** @var AccountRepositoryInterface $repository */
-            $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface', [$user]);
+            $repository = app(AccountRepositoryInterface::class, [$user]);
             $sum        = $repository->sumOfEverything();
             if (bccomp($sum, '0') !== 0) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');

@@ -19,7 +19,7 @@ class CurrencyId extends BasicConverter implements ConverterInterface
     public function convert(): TransactionCurrency
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
+        $repository = app(CurrencyRepositoryInterface::class);
         $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
         $currency   = $repository->find($value);
 

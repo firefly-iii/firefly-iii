@@ -19,7 +19,7 @@ class TagsComma extends BasicConverter implements ConverterInterface
     public function convert(): Collection
     {
         /** @var TagRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $repository = app(TagRepositoryInterface::class);
         $tags       = new Collection;
 
         $strings = explode(',', $this->value);

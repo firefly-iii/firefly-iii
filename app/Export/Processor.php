@@ -11,6 +11,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Export;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Export\Collector\AttachmentCollector;
+use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
@@ -78,7 +80,8 @@ class Processor
      */
     public function collectAttachments(): bool
     {
-        $attachmentCollector = app('FireflyIII\Export\Collector\AttachmentCollector', [$this->job]);
+        /** @var AttachmentCollector $attachmentCollector */
+        $attachmentCollector = app(AttachmentCollector::class, [$this->job]);
         $attachmentCollector->run();
         $this->files = $this->files->merge($attachmentCollector->getFiles());
 
@@ -110,7 +113,8 @@ class Processor
      */
     public function collectOldUploads(): bool
     {
-        $uploadCollector = app('FireflyIII\Export\Collector\UploadCollector', [$this->job]);
+        /** @var UploadCollector $uploadCollector */
+        $uploadCollector = app(UploadCollector::class, [$this->job]);
         $uploadCollector->run();
 
         $this->files = $this->files->merge($uploadCollector->getFiles());
@@ -139,7 +143,7 @@ class Processor
      */
     public function createConfigFile(): bool
     {
-        $this->configurationMaker = app('FireflyIII\Export\ConfigurationFile', [$this->job]);
+        $this->configurationMaker = app(ConfigurationFile::class, [$this->job]);
         $this->files->push($this->configurationMaker->make());
 
         return true;
