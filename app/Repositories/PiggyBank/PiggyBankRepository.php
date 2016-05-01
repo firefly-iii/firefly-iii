@@ -22,7 +22,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * PiggyBankRepository constructor.
      *
      * @param User $user
      */
@@ -48,24 +48,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
         $piggyBank->delete();
 
         return true;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return Collection
-     */
-    public function getEventSummarySet(PiggyBank $piggyBank): Collection
-    {
-        $var = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::raw('SUM(`amount`) AS `sum`')]);
-
-        return new Collection($var);
     }
 
     /**

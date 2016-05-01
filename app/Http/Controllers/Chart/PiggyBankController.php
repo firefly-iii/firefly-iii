@@ -5,8 +5,10 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Support\Collection;
 use Response;
 
 
@@ -49,8 +51,20 @@ class PiggyBankController extends Controller
             return Response::json($cache->get());
         }
 
-        $set  = $repository->getEventSummarySet($piggyBank);
-        $data = $this->generator->history($set);
+        $set        = $repository->getEvents($piggyBank);
+        $set        = $set->reverse();
+        $collection = [];
+        /** @var PiggyBankEvent $entry */
+        foreach ($set as $entry) {
+            $date   = $entry->date->format('Y-m-d');
+            $amount = $entry->amount;
+            if (isset($collection[$date])) {
+                $amount = bcadd($amount, $collection[$date]);
+            }
+            $collection[$date] = $amount;
+        }
+
+        $data = $this->generator->history(new Collection($collection));
         $cache->store($data);
 
         return Response::json($data);

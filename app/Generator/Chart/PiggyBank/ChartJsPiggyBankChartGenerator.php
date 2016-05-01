@@ -36,9 +36,9 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
             ],
         ];
         $sum  = '0';
-        foreach ($set as $entry) {
-            $date                          = new Carbon($entry->date);
-            $sum                           = bcadd($sum, $entry->sum);
+        foreach ($set as $key => $value) {
+            $date                          = new Carbon($key);
+            $sum                           = bcadd($sum, $value);
             $data['labels'][]              = $date->formatLocalized($format);
             $data['datasets'][0]['data'][] = round($sum, 2);
         }
