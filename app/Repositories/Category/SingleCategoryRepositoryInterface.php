@@ -16,21 +16,13 @@ interface SingleCategoryRepositoryInterface
 {
 
     /**
-     * @param Category $category
+     * @param Category    $category
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return int
      */
-    public function countJournals(Category $category): int;
-
-    /**
-     * @param Category $category
-     *
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return int
-     */
-    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end): int;
+    public function countJournals(Category $category, Carbon $start = null, Carbon $end = null): int;
 
     /**
      * @param Category $category

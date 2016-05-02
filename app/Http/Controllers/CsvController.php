@@ -42,8 +42,8 @@ class CsvController extends Controller
             throw new FireflyException('CSV Import is not enabled.');
         }
 
-        $this->wizard = app('FireflyIII\Helpers\Csv\WizardInterface');
-        $this->data   = app('FireflyIII\Helpers\Csv\Data');
+        $this->wizard = app(WizardInterface::class);
+        $this->data   = app(Data::class);
 
     }
 
@@ -313,7 +313,7 @@ class CsvController extends Controller
 
         Log::debug('Created importer');
         /** @var Importer $importer */
-        $importer = app('FireflyIII\Helpers\Csv\Importer');
+        $importer = app(Importer::class);
         $importer->setData($this->data);
         $importer->run();
         Log::debug('Done importing!');

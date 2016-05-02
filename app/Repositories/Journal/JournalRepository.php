@@ -14,6 +14,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -309,8 +310,8 @@ class JournalRepository implements JournalRepositoryInterface
      */
     private function saveTags(TransactionJournal $journal, array $array): bool
     {
-        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        /** @var TagRepositoryInterface $tagRepository */
+        $tagRepository = app(TagRepositoryInterface::class);
 
         foreach ($array as $name) {
             if (strlen(trim($name)) > 0) {
@@ -434,8 +435,8 @@ class JournalRepository implements JournalRepositoryInterface
     private function updateTags(TransactionJournal $journal, array $array): bool
     {
         // create tag repository
-        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
-        $tagRepository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        /** @var TagRepositoryInterface $tagRepository */
+        $tagRepository = app(TagRepositoryInterface::class);
 
 
         // find or create all tags:

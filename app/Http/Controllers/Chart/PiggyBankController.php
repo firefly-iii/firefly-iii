@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
@@ -20,7 +21,7 @@ use Response;
 class PiggyBankController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface */
+    /** @var PiggyBankChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -30,7 +31,7 @@ class PiggyBankController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface');
+        $this->generator = app(PiggyBankChartGeneratorInterface::class);
     }
 
     /**

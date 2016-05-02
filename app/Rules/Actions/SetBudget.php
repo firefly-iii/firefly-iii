@@ -46,7 +46,7 @@ class SetBudget implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app(BudgetRepositoryInterface::class);
         $search     = $this->action->action_value;
         $budgets    = $repository->getActiveBudgets();
         $budget     = $budgets->filter(

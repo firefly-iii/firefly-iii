@@ -6,6 +6,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,8 +67,8 @@ class Range
                 Session::put('end', $end);
             }
             if (!Session::has('first')) {
-                /** @var \FireflyIII\Repositories\Journal\JournalRepositoryInterface $repository */
-                $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+                /** @var JournalRepositoryInterface $repository */
+                $repository = app(JournalRepositoryInterface::class);
                 $journal    = $repository->first();
                 if (!is_null($journal->id)) {
                     Session::put('first', $journal->date);

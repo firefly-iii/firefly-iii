@@ -230,7 +230,7 @@ class CategoryController extends Controller
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
 
         $set      = $repository->getJournalsInRange($category, $start, $end, $page, $pageSize);
-        $count    = $repository->countJournalsInRange($category, $start, $end);
+        $count    = $repository->countJournals($category, $start, $end);
         $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 

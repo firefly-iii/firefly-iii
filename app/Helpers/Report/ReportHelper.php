@@ -14,7 +14,9 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
@@ -64,8 +66,8 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection
     {
-        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
         $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
         $collection = new BillCollection;
@@ -109,8 +111,8 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
     {
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
         $collection = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
         $second     = $repository->spentForAccountsPerMonth($accounts, $start, $end);
         $collection = $collection->merge($second);
@@ -147,7 +149,7 @@ class ReportHelper implements ReportHelperInterface
          * GET CATEGORIES:
          */
         /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = app(CategoryRepositoryInterface::class);
 
         $set = $repository->spentForAccountsPerMonth($accounts, $start, $end);
         foreach ($set as $category) {
@@ -209,7 +211,7 @@ class ReportHelper implements ReportHelperInterface
     public function listOfMonths(Carbon $date): array
     {
         /** @var FiscalHelperInterface $fiscalHelper */
-        $fiscalHelper = app('FireflyIII\Helpers\FiscalHelperInterface');
+        $fiscalHelper = app(FiscalHelperInterface::class);
         $start        = clone $date;
         $start->startOfMonth();
         $end = Carbon::now();

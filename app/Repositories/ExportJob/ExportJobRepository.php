@@ -68,16 +68,26 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function create(): ExportJob
     {
-        $exportJob = new ExportJob;
-        $exportJob->user()->associate($this->user);
-        /*
-         * In theory this random string could give db error.
-         */
-        $exportJob->key    = Str::random(12);
-        $exportJob->status = 'export_status_never_started';
-        $exportJob->save();
+        $count = 0;
+        while ($count < 30) {
+            $key      = Str::random(12);
+            $existing = $this->findByKey($key);
+            if (is_null($existing->id)) {
+                $exportJob = new ExportJob;
+                $exportJob->user()->associate($this->user);
+                $exportJob->key    = Str::random(12);
+                $exportJob->status = 'export_status_never_started';
+                $exportJob->save();
+                // breaks the loop:
 
-        return $exportJob;
+                return $exportJob;
+            }
+            $count++;
+
+        }
+
+        return new ExportJob;
+
     }
 
     /**
@@ -90,7 +100,12 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function findByKey(string $key): ExportJob
     {
-        return $this->user->exportJobs()->where('key', $key)->first();
+        $result = $this->user->exportJobs()->where('key', $key)->first();
+        if (is_null($result)) {
+            return new ExportJob;
+        }
+
+        return $result;
     }
 
 }

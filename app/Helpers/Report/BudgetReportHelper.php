@@ -16,6 +16,7 @@ use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -36,8 +37,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection
     {
         $object = new BudgetCollection;
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository     = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        /** @var BudgetRepositoryInterface $repository */
+        $repository     = app(BudgetRepositoryInterface::class);
         $set            = $repository->getBudgets();
         $allRepetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
         $allTotalSpent  = $repository->spentAllPerDayForAccounts($accounts, $start, $end);
@@ -116,8 +117,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      */
     public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
     {
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
         $budgets    = $repository->getActiveBudgets();
 
         $set = new Collection;

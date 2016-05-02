@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
@@ -29,7 +30,7 @@ class BillController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface');
+        $this->generator = app(BillChartGeneratorInterface::class);
     }
 
     /**

@@ -60,7 +60,7 @@ class FireflyValidator extends Validator
 
         $secret = Session::get('two-factor-secret');
         /** @var Google2FA $google2fa */
-        $google2fa = app('PragmaRX\Google2FA\Google2FA');
+        $google2fa = app(Google2FA::class);
 
         return $google2fa->verifyKey($secret, $value);
     }
@@ -138,7 +138,7 @@ class FireflyValidator extends Validator
                     return true;
                 case 'set_budget':
                     /** @var BudgetRepositoryInterface $repository */
-                    $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+                    $repository = app(BudgetRepositoryInterface::class);
                     $budgets    = $repository->getBudgets();
                     // count budgets, should have at least one
                     $count = $budgets->filter(

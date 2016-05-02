@@ -14,6 +14,7 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
+use FireflyIII\Helpers\Csv\Mapper\Budget;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -83,7 +84,7 @@ class ReportController extends Controller
         $role = intval($attributes['role']);
 
         /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $budgetRepository = app(BudgetRepositoryInterface::class);
         $budget           = $budgetRepository->find(intval($attributes['budgetId']));
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -133,7 +134,7 @@ class ReportController extends Controller
         // then search for expenses in the given period
         // list them in some table format.
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app(BudgetRepositoryInterface::class);
         $budget     = $repository->find(intval($attributes['budgetId']));
         if (is_null($budget->id)) {
             $journals = $repository->getWithoutBudgetForAccounts($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
@@ -158,7 +159,7 @@ class ReportController extends Controller
     private function categoryEntry(array $attributes): string
     {
         /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+        $repository = app(SingleCategoryRepositoryInterface::class);
         $category   = $repository->find(intval($attributes['categoryId']));
         $journals   = $repository->getJournalsForAccountsInRange($category, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.category-entry', compact('journals', 'category'))->render();

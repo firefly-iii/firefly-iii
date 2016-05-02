@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
@@ -20,7 +21,7 @@ use Steam;
 class ReportController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface */
+    /** @var ReportChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -30,7 +31,7 @@ class ReportController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface');
+        $this->generator = app(ReportChartGeneratorInterface::class);
     }
 
     /**

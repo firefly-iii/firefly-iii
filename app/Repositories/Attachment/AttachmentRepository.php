@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -34,8 +35,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function destroy(Attachment $attachment): bool
     {
-        /** @var \FireflyIII\Helpers\Attachments\AttachmentHelperInterface $helper */
-        $helper = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
+        /** @var AttachmentHelperInterface $helper */
+        $helper = app(AttachmentHelperInterface::class);
 
         $file = $helper->getAttachmentLocation($attachment);
         unlink($file);

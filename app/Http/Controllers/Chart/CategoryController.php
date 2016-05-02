@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -29,7 +30,7 @@ class CategoryController extends Controller
     const KEEP_POSITIVE = 1;
 
 
-    /** @var  \FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface */
+    /** @var  CategoryChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -39,7 +40,7 @@ class CategoryController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface');
+        $this->generator = app(CategoryChartGeneratorInterface::class);
     }
 
 
@@ -198,7 +199,7 @@ class CategoryController extends Controller
     public function multiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
         /** @var CRI $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository = app(CRI::class);
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -295,7 +296,7 @@ class CategoryController extends Controller
         }
 
         /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface');
+        $repository = app(SingleCategoryRepositoryInterface::class);
         // loop over period, add by users range:
         $current   = clone $start;
         $viewRange = Preferences::get('viewRange', '1M')->data;

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -34,7 +35,7 @@ class BudgetController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface');
+        $this->generator = app(BudgetChartGeneratorInterface::class);
     }
 
     /**
@@ -331,7 +332,7 @@ class BudgetController extends Controller
         }
 
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app(BudgetRepositoryInterface::class);
         // loop over period, add by users range:
         $current   = clone $start;
         $viewRange = Preferences::get('viewRange', '1M')->data;

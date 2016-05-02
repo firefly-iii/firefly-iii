@@ -33,27 +33,24 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     }
 
     /**
-     * @param Category $category
+     * @param Category    $category
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return int
      */
-    public function countJournals(Category $category): int
+    public function countJournals(Category $category, Carbon $start = null, Carbon $end = null): int
     {
-        return $category->transactionjournals()->count();
+        $query = $category->transactionjournals();
+        if (!is_null($start)) {
+            $query->after($start);
+        }
+        if (!is_null($end)) {
+            $query->before($end);
+        }
 
-    }
+        return $query->count();
 
-    /**
-     * @param Category $category
-     *
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return int
-     */
-    public function countJournalsInRange(Category $category, Carbon $start, Carbon $end): int
-    {
-        return $category->transactionjournals()->before($end)->after($start)->count();
     }
 
     /**
@@ -153,11 +150,7 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
     {
         $offset = $page > 0 ? $page * $pageSize : 0;
 
-        return $category->transactionjournals()->expanded()->take($pageSize)->offset($offset)
-                        ->orderBy('transaction_journals.date', 'DESC')
-                        ->orderBy('transaction_journals.order', 'ASC')
-                        ->orderBy('transaction_journals.id', 'DESC')
-                        ->get(TransactionJournal::queryFields());
+        return $category->transactionjournals()->expanded()->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
 
     }
 

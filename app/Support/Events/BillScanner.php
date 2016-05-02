@@ -12,6 +12,7 @@ namespace FireflyIII\Support\Events;
 
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 
 /**
  * Class BillScanner
@@ -25,8 +26,8 @@ class BillScanner
      */
     public static function scan(TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
         $list       = $journal->user->bills()->where('active', 1)->where('automatch', 1)->get();
 
         /** @var \FireflyIII\Models\Bill $bill */

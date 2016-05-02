@@ -9,6 +9,8 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -44,9 +46,9 @@ class ReportController extends Controller
         parent::__construct();
 
         $this->helper        = $helper;
-        $this->accountHelper = app('FireflyIII\Helpers\Report\AccountReportHelperInterface');
-        $this->budgetHelper  = app('FireflyIII\Helpers\Report\BudgetReportHelperInterface');
-        $this->balanceHelper = app('FireflyIII\Helpers\Report\BalanceReportHelperInterface');
+        $this->accountHelper = app(AccountReportHelperInterface::class);
+        $this->budgetHelper  = app(BudgetReportHelperInterface::class);
+        $this->balanceHelper = app(BalanceReportHelperInterface::class);
 
         View::share('title', trans('firefly.reports'));
         View::share('mainTitleIcon', 'fa-line-chart');
@@ -269,8 +271,8 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
         // list of users stuff:
-        $budgets       = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface')->getActiveBudgets();
-        $categories    = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface')->getCategories();
+        $budgets       = app(BudgetRepositoryInterface::class)->getActiveBudgets();
+        $categories    = app(CategoryRepositoryInterface::class)->getCategories();
         $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
