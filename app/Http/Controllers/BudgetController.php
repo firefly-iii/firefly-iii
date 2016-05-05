@@ -264,7 +264,7 @@ class BudgetController extends Controller
         $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
         $subTitle = e($budget->name);
         $journals->setPath('/budgets/show/' . $budget->id);
-        $spentArray = $repository->spentPerDay($budget, $start, $end);
+        $spentArray = $repository->spentPerDay($budget, $start, $end, new Collection);
         $limits     = new Collection();
 
         /** @var LimitRepetition $entry */
@@ -298,7 +298,7 @@ class BudgetController extends Controller
         $set      = new Collection([$repetition]);
         $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
-        $spentArray = $repository->spentPerDay($budget, $start, $end);
+        $spentArray = $repository->spentPerDay($budget, $start, $end, new Collection);
         $limits     = new Collection();
 
         /** @var LimitRepetition $entry */

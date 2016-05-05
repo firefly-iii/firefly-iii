@@ -81,9 +81,13 @@ class JournalRepository implements JournalRepositoryInterface
     public function first(): TransactionJournal
     {
         $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+
         if (is_null($entry)) {
+            Log::debug('Could not find first transaction journal.');
+
             return new TransactionJournal;
         }
+        Log::debug('Found first journal: ', ['date' => $entry->date->format('Y-m-d')]);
 
         return $entry;
     }

@@ -100,7 +100,7 @@ class ReportController extends Controller
 
         // lower threshold
         if ($start < session('first')) {
-            Log::debug('Start is ' . $start . ' but sessionfirst is ' . session('first'));
+            Log::debug('Start is ' . $start . ' but session first is ' . session('first'));
             $start = session('first');
         }
 

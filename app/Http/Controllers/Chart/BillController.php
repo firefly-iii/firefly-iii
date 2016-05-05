@@ -24,7 +24,7 @@ class BillController extends Controller
     protected $generator;
 
     /**
-     *
+     * checked
      */
     public function __construct()
     {

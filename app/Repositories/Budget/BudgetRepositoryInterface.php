@@ -131,6 +131,8 @@ interface BudgetRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @deprecated 
+     *
      * @return array
      */
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
@@ -179,19 +181,6 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getExpenses(Budget $budget, Collection $accounts, Carbon $start, Carbon $end):Collection;
-
-    /**
-     * Returns the expenses for this budget grouped per day, with the date
-     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
-     *
-     * @param Budget     $budget
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end, Collection $accounts = null) : Collection;
 
     /**
      * @param Budget $budget
@@ -287,10 +276,11 @@ interface BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
+     * @param Collection $accounts
      *
      * @return array
      */
-    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end): array;
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
      * @param array $data

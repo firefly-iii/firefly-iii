@@ -21,6 +21,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 
 /**
  * Class BudgetRepository
@@ -310,16 +311,19 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @deprecated
+     *
      * @return array
      */
     public function getBudgetsAndExpensesPerYear(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
+        // get budgets,
         $ids       = $accounts->pluck('id')->toArray();
         $budgetIds = $budgets->pluck('id')->toArray();
 
         /** @var Collection $set */
         $set = $this->user->budgets()
-                          ->leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                          ->join('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
                           ->leftJoin(
                               'transactions', function (JoinClause $join) {
@@ -340,6 +344,27 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                               ]
                           );
 
+        // run it again, for transactions this time.
+        /** @var Collection $secondSet */
+        $secondSet = $this->user->budgets()
+                                ->join('budget_transaction', 'budgets.id', '=', 'budget_transaction.budget_id')
+                                ->leftJoin('transactions', 'transactions.id', '=', 'budget_transaction.transaction_id')
+                                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                ->where('transactions.amount', '<', 0)
+                                ->groupBy('budgets.id')
+                                ->groupBy('dateFormatted')
+                                ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                ->whereIn('transactions.account_id', $ids)
+                                ->whereIn('budgets.id', $budgetIds)
+                                ->get(
+                                    [
+                                        'budgets.*',
+                                        DB::raw('DATE_FORMAT(`transaction_journals`.`date`, "%Y") AS `dateFormatted`'),
+                                        DB::raw('SUM(`transactions`.`amount`) AS `sumAmount`'),
+                                    ]
+                                );
+
         $set = $set->sortBy(
             function (Budget $budget) {
                 return strtolower($budget->name);
@@ -348,15 +373,35 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
 
         $return = [];
         foreach ($set as $budget) {
+            Log::debug('First set, budget #' . $budget->id . ' (' . $budget->name . ')');
             $id = $budget->id;
             if (!isset($return[$id])) {
+                Log::debug('$return[$id] is not set, now created.');
                 $return[$id] = [
                     'budget'  => $budget,
                     'entries' => [],
                 ];
             }
+            Log::debug('Add new entry to entries, for ' . $budget->dateFormatted . ' and amount ' . $budget->sumAmount);
             // store each entry:
             $return[$id]['entries'][$budget->dateFormatted] = $budget->sumAmount;
+        }
+        unset($budget);
+
+        // run the second set:
+        foreach ($secondSet as $entry) {
+            $id = $entry->id;
+            // create it if it still does not exist (not really likely)
+            if (!isset($return[$id])) {
+                $return[$id] = [
+                    'budget'  => $entry,
+                    'entries' => [],
+                ];
+            }
+            // this one might be filled too:
+            $startAmount = $return[$id]['entries'][$entry->dateFormatted] ?? '0';
+            // store each entry:
+            $return[$id]['entries'][$entry->dateFormatted] = bcadd($startAmount, $entry->sumAmount);
         }
 
         return $return;
@@ -449,40 +494,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
                       ->where('transaction_types.type', TransactionType::WITHDRAWAL)
                       ->whereIn('source_account.id', $ids)
                       ->get(TransactionJournal::queryFields());
-
-        return $set;
-    }
-
-    /**
-     * Returns the expenses for this budget grouped per day, with the date
-     * in "date" (a string, not a Carbon) and the amount in "dailyAmount".
-     *
-     * @param Budget     $budget
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getExpensesPerDay(Budget $budget, Carbon $start, Carbon $end, Collection $accounts = null): Collection
-    {
-        $query = $this->user->budgets()
-                            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
-                            ->leftJoin('transaction_journals', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                            ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                            ->whereNull('transaction_journals.deleted_at')
-                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                            ->where('budgets.id', $budget->id)
-                            ->where('transactions.amount', '<', 0)
-                            ->groupBy('transaction_journals.date')
-                            ->orderBy('transaction_journals.date');
-        if (!is_null($accounts) && $accounts->count() > 0) {
-            $ids = $accounts->pluck('id')->toArray();
-            $query->whereIn('transactions.account_id', $ids);
-        }
-        $set
-            = $query->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `dailyAmount`')]);
 
         return $set;
     }
@@ -785,13 +796,14 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
      * Where yyyy-mm-dd is the date and <amount> is the money spent using DEPOSITS in the $budget
      * from all the users accounts.
      *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
-    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end): array
+    public function spentPerDay(Budget $budget, Carbon $start, Carbon $end, Collection $accounts): array
     {
         /** @var Collection $query */
         $query = $budget->transactionjournals()
@@ -805,6 +817,24 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
         $return = [];
         foreach ($query->toArray() as $entry) {
             $return[$entry['dateFormatted']] = $entry['sum'];
+        }
+
+        // also search transactions:
+        $query = $budget->transactions()
+                        ->transactionTypes([TransactionType::WITHDRAWAL])
+                        ->where('transactions.amount', '<', 0)
+                        ->before($end)
+                        ->after($start)
+                        ->groupBy('dateFormatted')->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        foreach ($query as $newEntry) {
+            // add to return array.
+            $date = $newEntry['dateFormatted'];
+            if (isset($return[$date])) {
+                $return[$date] = bcadd($newEntry['sum'], $return[$date]);
+                continue;
+            }
+
+            $return[$date] = $newEntry['sum'];
         }
 
         return $return;

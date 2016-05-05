@@ -39,6 +39,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * checked
+     *
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
@@ -59,7 +61,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         if ($cache->has()) {
 
-            return Response::json($cache->get());
+            //return Response::json($cache->get());
         }
 
         $final = clone $last;
@@ -67,7 +69,7 @@ class BudgetController extends Controller
         $last    = Navigation::endOfX($last, $range, $final);
         $entries = new Collection;
         // get all expenses:
-        $spentArray = $repository->spentPerDay($budget, $first, $last);
+        $spentArray = $repository->spentPerDay($budget, $first, $last, new Collection);
 
         while ($first < $last) {
 
@@ -113,19 +115,14 @@ class BudgetController extends Controller
             return Response::json($cache->get());
         }
 
-        $set     = $repository->getExpensesPerDay($budget, $start, $end);
+        $set     = $repository->spentPerDay($budget, $start, $end, new Collection);
         $entries = new Collection;
         $amount  = $repetition->amount;
 
         // get sum (har har)!
         while ($start <= $end) {
             $formatted = $start->format('Y-m-d');
-            $filtered  = $set->filter(
-                function (Budget $obj) use ($formatted) {
-                    return $obj->date == $formatted;
-                }
-            );
-            $sum       = is_null($filtered->first()) ? '0' : $filtered->first()->dailyAmount;
+            $sum       = $set[$formatted] ?? '0';
 
             /*
              * Sum of expenses on this day:
@@ -135,7 +132,7 @@ class BudgetController extends Controller
             $start->addDay();
         }
 
-        $data = $this->generator->budgetLimit($entries);
+        $data = $this->generator->budgetLimit($entries, 'monthAndDay');
         $cache->store($data);
 
         return Response::json($data);

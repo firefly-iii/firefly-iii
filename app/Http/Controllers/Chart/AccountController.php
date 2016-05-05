@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 
-/**
+/** checked
  * Class AccountController
  *
  * @package FireflyIII\Http\Controllers\Chart
