@@ -41,7 +41,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $repository     = app(BudgetRepositoryInterface::class);
         $set            = $repository->getBudgets();
         $allRepetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
-        $allTotalSpent  = $repository->spentAllPerDayForAccounts($accounts, $start, $end);
+        $allTotalSpent  = '0'; //$repository->spentAllPerDayForAccounts($accounts, $start, $end);// TODO BUDGET MASSIVELY STUPID SPECIFIC METHOD
 
         foreach ($set as $budget) {
 
@@ -98,7 +98,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         // stuff outside of budgets:
-        $noBudget   = $repository->getWithoutBudgetSum($accounts, $start, $end);
+        $noBudget   = '0'; //$repository->getWithoutBudgetSum($accounts, $start, $end); // TODO BUDGET journalsInPeriodWithoutBudget
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
         $budgetLine->setSpent($noBudget);
@@ -124,7 +124,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $set = new Collection;
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $expenses = $repository->spentPerDay($budget, $start, $end, $accounts);
+            $expenses = [0]; // $repository->spentPerDay($budget, $start, $end, $accounts); // TODO BUDGET spentInPeriod
             $total    = strval(array_sum($expenses));
             if (bccomp($total, '0') === -1) {
                 $set->push($budget);

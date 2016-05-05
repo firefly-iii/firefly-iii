@@ -22,6 +22,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Response;
 use View;
@@ -93,15 +94,15 @@ class ReportController extends Controller
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
-                $journals = $budgetRepository->expensesSplit($budget, $account, $attributes['startDate'], $attributes['endDate']);
+                $journals = new Collection;// $budgetRepository->expensesSplit($budget, $account, $attributes['startDate'], $attributes['endDate']);// TODO BUDGET journalsInPeriod
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
                 $budget->name = strval(trans('firefly.no_budget'));
-                $journals     = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $journals     = new Collection;// $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriodWithoutBudget
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
                 // journals no budget, not corrected by a tag.
-                $journals     = $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $journals     = new Collection; //$budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriodWithoutBudget
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
                 $journals     = $journals->filter(
                     function (TransactionJournal $journal) {
@@ -137,10 +138,10 @@ class ReportController extends Controller
         $repository = app(BudgetRepositoryInterface::class);
         $budget     = $repository->find(intval($attributes['budgetId']));
         if (is_null($budget->id)) {
-            $journals = $repository->getWithoutBudgetForAccounts($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+            $journals = new Collection;// $repository->getWithoutBudgetForAccounts($attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriodWithoutBudget
         } else {
             // get all expenses in budget in period:
-            $journals = $repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+            $journals = new Collection; //$repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriod
         }
 
         $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
