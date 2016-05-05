@@ -150,7 +150,7 @@ class TransactionControllerTest extends TestCase
             'date'                      => '2015-01-01',
         ];
         $this->be($this->user());
-        $this->call('POST', '/transaction/update/1', $args);
+        $this->call('POST', '/transaction/update/4', $args);
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
     }
