@@ -343,7 +343,7 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        //$value   = $this->fillFieldValue($name, $value);
         $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
