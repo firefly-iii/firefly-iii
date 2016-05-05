@@ -42,7 +42,7 @@ function calculateSum() {
     $('.amount-warning').remove();
     if (sum != originalSum) {
         console.log(sum + ' does not match ' + originalSum);
-        var holder = $('#amount_holder');
+        var holder = $('#journal_amount_holder');
         var par = holder.find('p.form-control-static');
         var amount = $('<span>').text(' (' + accounting.formatMoney(sum) + ')').addClass('text-danger amount-warning').appendTo(par);
     }
