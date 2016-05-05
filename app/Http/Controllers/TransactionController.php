@@ -464,7 +464,7 @@ class TransactionController extends Controller
             Session::flash('info', $att->getMessages()->get('attachments'));
         }
 
-        event(new TransactionJournalStored($journal, intval($request->get('piggy_bank_id'))));
+        event(new TransactionJournalStored($journal, intval($journalData['piggy_bank_id'])));
 
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();

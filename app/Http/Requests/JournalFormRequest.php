@@ -51,6 +51,7 @@ class JournalFormRequest extends Request
             'budget_id'                 => intval($this->get('budget_id')),
             'category'                  => $this->get('category') ?? '',
             'tags'                      => explode(',', $tags),
+            'piggy_bank_id'             => $this->get('piggy_bank_id') ? intval($this->get('piggy_bank_id')) : 0,
         ];
     }
 
@@ -71,7 +72,7 @@ class JournalFormRequest extends Request
             'interest_date'             => 'date',
             'category'                  => 'between:1,255',
             'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
-
+            'piggy_bank_id'             => 'numeric',
         ];
 
         switch ($what) {
