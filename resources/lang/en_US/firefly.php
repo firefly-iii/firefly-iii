@@ -826,7 +826,9 @@ return [
     'split_table_intro_transfer' => 'Split your transfer in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
     'store_splitted_transfer'    => 'Store splitted transfer',
 
+    'add_another_split'     => 'Add another split',
+    'split-transactions'    => 'Split transactions',
+    'split-new-transaction' => 'Split a new transaction',
 
-    'add_another_split' => 'Add another split',
 
 ];
