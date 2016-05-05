@@ -68,7 +68,7 @@ class TransactionControllerTest extends TestCase
     public function testIndex($range)
     {
         $journals = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
-        $journals->shouldReceive('getJournalsOfTypes')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
+        $journals->shouldReceive('getJournals')->once()->andReturn(new LengthAwarePaginator([], 0, 50));
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -117,8 +117,8 @@ class TransactionControllerTest extends TestCase
         $args = [
             'what'                      => 'withdrawal',
             'description'               => 'Something',
-            'account_id'                => '1',
-            'expense_account'           => 'Some expense',
+            'source_account_id'         => '1',
+            'destination_account_name'  => 'Some expense',
             'amount'                    => 100,
             'amount_currency_id_amount' => 1,
             'date'                      => '2015-01-01',
@@ -141,10 +141,10 @@ class TransactionControllerTest extends TestCase
 
         $args = [
             'what'                      => 'withdrawal',
-            'id'                        => 2,
+            'id'                        => 4,
             'description'               => 'Something new',
-            'account_id'                => '1',
-            'expense_account'           => 'Some expense',
+            'source_account_id'         => '1',
+            'destination_account_name'  => 'Some expense account',
             'amount'                    => 100,
             'amount_currency_id_amount' => 1,
             'date'                      => '2015-01-01',

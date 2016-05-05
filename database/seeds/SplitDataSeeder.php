@@ -90,7 +90,7 @@ class SplitDataSeeder extends Seeder
          * Create splitted expense of 66,-
          */
         $today = new Carbon;
-        $today->subDays(6);
+        $today->subDays(2);
 
         if (!$skipWithdrawal) {
             $journal = TransactionJournal::create(
@@ -98,7 +98,7 @@ class SplitDataSeeder extends Seeder
                     'user_id'                 => $user->id,
                     'transaction_type_id'     => 1, // withdrawal
                     'transaction_currency_id' => 1,
-                    'description'             => 'Split Expense (journal)',
+                    'description'             => 'Split Even Expense (journal (50/50))',
                     'completed'               => 1,
                     'date'                    => $today->format('Y-m-d'),
                 ]
@@ -107,10 +107,11 @@ class SplitDataSeeder extends Seeder
             // split in 6 transactions (multiple destinations). 22,- each
             // source is TestData Checking Account.
             // also attach some budgets and stuff.
-            $destinations = ['Albert Heijn', 'PLUS', 'Apple'];
-            $budgets      = ['Groceries', 'Groceries', 'Car'];
-            $categories   = ['Bills', 'Bills', 'Car'];
-            $source       = TestData::findAccount($user, 'Checking Account');
+            $destinations = ['SixtyFive', 'EightyFour'];
+            $budgets      = ['Groceries', 'Car'];
+            $categories   = ['Bills', 'Bills'];
+            $amounts      = [50, 50];
+            $source       = TestData::findAccount($user, 'Alternate Checking Account');
             foreach ($destinations as $index => $dest) {
                 $bud         = $budgets[$index];
                 $cat         = $categories[$index];
@@ -120,7 +121,7 @@ class SplitDataSeeder extends Seeder
                     [
                         'account_id'             => $source->id,
                         'transaction_journal_id' => $journal->id,
-                        'amount'                 => '-22',
+                        'amount'                 => $amounts[$index] * -1,
 
                     ]
                 );
@@ -129,7 +130,7 @@ class SplitDataSeeder extends Seeder
                     [
                         'account_id'             => $destination->id,
                         'transaction_journal_id' => $journal->id,
-                        'amount'                 => '22',
+                        'amount'                 => $amounts[$index],
 
                     ]
                 );
@@ -141,6 +142,57 @@ class SplitDataSeeder extends Seeder
                 $two->categories()->save(TestData::findCategory($user, $cat));
             }
         }
+        // AND ANOTHER ONE
+        $today->addDay();
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => 1, // withdrawal
+                'transaction_currency_id' => 1,
+                'description'             => 'Split Uneven Expense (journal (15/34/51=100))',
+                'completed'               => 1,
+                'date'                    => $today->format('Y-m-d'),
+            ]
+        );
+
+        // split in 6 transactions (multiple destinations). 22,- each
+        // source is TestData Checking Account.
+        // also attach some budgets and stuff.
+        $destinations = ['SixtyFive', 'EightyFour', 'Fiftyone'];
+        $budgets      = ['Groceries', 'Groceries', 'Car'];
+        $categories   = ['Bills', 'Bills', 'Car'];
+        $amounts      = [15, 34, 51];
+        $source       = TestData::findAccount($user, 'Checking Account');
+        foreach ($destinations as $index => $dest) {
+            $bud         = $budgets[$index];
+            $cat         = $categories[$index];
+            $destination = TestData::findAccount($user, $dest);
+
+            $one = Transaction::create(
+                [
+                    'account_id'             => $source->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => $amounts[$index] * -1,
+
+                ]
+            );
+
+            $two = Transaction::create(
+                [
+                    'account_id'             => $destination->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => $amounts[$index],
+
+                ]
+            );
+
+            $one->budgets()->save(TestData::findBudget($user, $bud));
+            $two->budgets()->save(TestData::findBudget($user, $bud));
+
+            $one->categories()->save(TestData::findCategory($user, $cat));
+            $two->categories()->save(TestData::findCategory($user, $cat));
+        }
+
         // create splitted income of 99,-
         $today->addDay();
 

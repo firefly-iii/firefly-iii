@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -437,6 +438,7 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
     {
+        Log::debug('Start of store.');
         $doSplit     = intval($request->get('split_journal')) === 1;
         $journalData = $request->getJournalData();
         if ($doSplit) {
@@ -445,6 +447,7 @@ class TransactionController extends Controller
 
             return redirect(route('split.journal.from-store'));
         }
+        Log::debug('Not in split.');
 
         // if not withdrawal, unset budgetid.
         if ($journalData['what'] != strtolower(TransactionType::WITHDRAWAL)) {
@@ -493,6 +496,8 @@ class TransactionController extends Controller
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
         $journalData = $request->getJournalData();
+        Log::debug('Will update journal ', $journal->toArray());
+        Log::debug('Update related data ', $journalData);
         $repository->update($journal, $journalData);
 
         // save attachments:

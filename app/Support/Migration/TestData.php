@@ -367,7 +367,7 @@ class TestData
     public static function createExpenseAccounts(User $user): bool
     {
         $expenses = ['Adobe', 'Google', 'Vitens', 'Albert Heijn', 'PLUS', 'Apple', 'Bakker', 'Belastingdienst', 'bol.com', 'Cafe Central', 'conrad.nl',
-                     'Coolblue', 'Shell',
+                     'Coolblue', 'Shell', 'SixtyFive', 'EightyFour', 'Fiftyone',
                      'DUO', 'Etos', 'FEBO', 'Greenchoice', 'Halfords', 'XS4All', 'iCentre', 'Jumper', 'Land lord'];
         foreach ($expenses as $name) {
             // create account:

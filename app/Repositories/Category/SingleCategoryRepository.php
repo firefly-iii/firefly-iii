@@ -10,6 +10,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 use FireflyIII\User;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -90,9 +91,16 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                           ->after($start)
                           ->groupBy('transaction_journals.date');
 
+        $query->leftJoin(
+            'transactions as destination', function (JoinClause $join) {
+            $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+        }
+        );
+
+
         if ($accounts->count() > 0) {
             $ids = $accounts->pluck('id')->toArray();
-            $query->whereIn('destination_account.id', $ids);
+            $query->whereIn('destination.account.id', $ids);
         }
 
         $result = $query->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`destination`.`amount`) AS `sum`')]);
@@ -258,12 +266,16 @@ class SingleCategoryRepository extends ComponentRepository implements SingleCate
                           ->before($end)
                           ->after($start)
                           ->groupBy('transaction_journals.date');
+        $query->leftJoin(
+            'transactions as source', function (JoinClause $join) {
+            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+        }
+        );
 
         if ($accounts->count() > 0) {
             $ids = $accounts->pluck('id')->toArray();
-            $query->whereIn('source_account.id', $ids);
+            $query->whereIn('source.account_id', $ids);
         }
-
 
         $result = $query->get(['transaction_journals.date as dateFormatted', DB::raw('SUM(`source`.`amount`) AS `sum`')]);
 

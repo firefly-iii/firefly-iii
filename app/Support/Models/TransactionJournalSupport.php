@@ -56,8 +56,21 @@ class TransactionJournalSupport extends Model
             return $journal->destination_amount;
         }
 
-        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
-        if ($journal->isDeposit()) {
+        // saves on queries:
+        $amount = '0';
+        if (count($journal->transactions) === 0) {
+            $amount = '0';
+            foreach ($journal->transactions as $t) {
+                if ($t->amount > 0) {
+                    $amount = bcadd($amount, $t->amount);
+                }
+            }
+        }
+        if ($amount === '0') {
+            $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+        }
+
+        if ($journal->isWithdrawal()) {
             $amount = $amount * -1;
         }
         $amount = strval($amount);
@@ -234,19 +247,8 @@ class TransactionJournalSupport extends Model
             'transaction_journals.*',
             'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
             'transaction_currencies.code AS transaction_currency_code',
-            // all for destination:
-            //'destination.amount AS destination_amount', // is always positive
-            DB::raw('SUM(`destination`.`amount`) as `destination_amount`'),
-            'destination_account.id AS destination_account_id',
-            'destination_account.name AS destination_account_name',
-            'destination_acct_type.type AS destination_account_type',
-            // all for source:
-            //'source.amount AS source_amount', // is always negative
-            DB::raw('SUM(`source`.`amount`) as `source_amount`'),
-            'source_account.id AS source_account_id',
-            'source_account.name AS source_account_name',
-            'source_acct_type.type AS source_account_type',
-            DB::raw('COUNT(`destination`.`id`) + COUNT(`source`.`id`) as `count_transactions`'),
+            DB::raw('SUM(`transactions`.`amount`) as `amount`'),
+            DB::raw('(COUNT(`transactions`.`id`) * 2) as `count_transactions`'),
         ];
     }
 

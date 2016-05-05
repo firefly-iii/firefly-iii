@@ -568,32 +568,9 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getValidRepetitions(Budget $budget, Carbon $start, Carbon $end, LimitRepetition $ignore) : Collection
     {
         $query = $budget->limitrepetitions()
-                        ->where( // valid when either of these are true:
-                            function ($q) use ($start, $end) {
-                                $q->where(
-                                    function ($query) use ($start, $end) {
-                                        // starts before start time, and the end also after start time.
-                                        $query->where('limit_repetitions.startdate', '<=', $start->format('Y-m-d 00:00:00'));
-                                        $query->where('limit_repetitions.enddate', '>=', $start->format('Y-m-d 00:00:00'));
-                                    }
-                                );
-                                $q->orWhere(
-                                    function ($query) use ($start, $end) {
-                                        // end after end time, and start is before end time
-                                        $query->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'));
-                                        $query->where('limit_repetitions.enddate', '>=', $end->format('Y-m-d 00:00:00'));
-                                    }
-                                );
-                                // start is after start and end is before end
-                                $q->orWhere(
-                                    function ($query) use ($start, $end) {
-                                        // end after end time, and start is before end time
-                                        $query->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'));
-                                        $query->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d 00:00:00'));
-                                    }
-                                );
-                            }
-                        );
+            // starts before start time, and the end also after start time.
+                        ->where('limit_repetitions.enddate', '>=', $start->format('Y-m-d 00:00:00'))
+                        ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'));
         if (!is_null($ignore->id)) {
             $query->where('limit_repetitions.id', '!=', $ignore->id);
         }
@@ -683,7 +660,7 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
             }
             )
             ->whereIn('transactions.account_id', $ids)
-            ->having('transaction_count', '=', 1)
+            //->having('transaction_count', '=', 1) TODO check if this still works
             ->transactionTypes([TransactionType::WITHDRAWAL])
             ->first(
                 [

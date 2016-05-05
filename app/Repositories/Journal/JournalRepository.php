@@ -336,31 +336,36 @@ class JournalRepository implements JournalRepositoryInterface
     {
         $sourceAccount      = null;
         $destinationAccount = null;
+        Log::debug('Now in storeAccounts()');
         switch ($type->type) {
             case TransactionType::WITHDRAWAL:
+                Log::debug('Now in storeAccounts()::withdrawal');
                 list($sourceAccount, $destinationAccount) = $this->storeWithdrawalAccounts($data);
                 break;
 
             case TransactionType::DEPOSIT:
+                Log::debug('Now in storeAccounts()::deposit');
                 list($sourceAccount, $destinationAccount) = $this->storeDepositAccounts($data);
 
                 break;
             case TransactionType::TRANSFER:
+                Log::debug('Now in storeAccounts()::transfer');
                 $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first();
                 $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first();
                 break;
             default:
                 throw new FireflyException('Did not recognise transaction type.');
         }
+        Log::debug('Now in storeAccounts(), continued.');
 
         if (is_null($destinationAccount)) {
-            Log::error('"to"-account is null, so we cannot continue!', ['data' => $data]);
-            throw new FireflyException('"to"-account is null, so we cannot continue!');
+            Log::error('"destination"-account is null, so we cannot continue!', ['data' => $data]);
+            throw new FireflyException('"destination"-account is null, so we cannot continue!');
         }
 
         if (is_null($sourceAccount)) {
-            Log::error('"from"-account is null, so we cannot continue!', ['data' => $data]);
-            throw new FireflyException('"from"-account is null, so we cannot continue!');
+            Log::error('"source"-account is null, so we cannot continue!', ['data' => $data]);
+            throw new FireflyException('"source"-account is null, so we cannot continue!');
 
         }
 
@@ -402,8 +407,10 @@ class JournalRepository implements JournalRepositoryInterface
     private function storeWithdrawalAccounts(array $data): array
     {
         $sourceAccount = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first(['accounts.*']);
+        Log::debug('Now in storeWithdrawalAccounts() with ', ['name' => $data['destination_account_name'], 'len' => strlen($data['destination_account_name'])]);
 
         if (strlen($data['destination_account_name']) > 0) {
+            Log::debug('Now in storeWithdrawalAccounts()');
             $destinationType    = AccountType::where('type', 'Expense account')->first();
             $destinationAccount = Account::firstOrCreateEncrypted(
                 [
@@ -413,6 +420,7 @@ class JournalRepository implements JournalRepositoryInterface
                     'active'          => 1,
                 ]
             );
+            Log::debug('Errors: ', ['err' => $destinationAccount->getErrors()->toArray(), 'id' => $destinationAccount->id]);
 
             return [$sourceAccount, $destinationAccount];
         }

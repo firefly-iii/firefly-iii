@@ -76,7 +76,9 @@ class FireflyValidator extends Validator
     {
         $field = $parameters[1] ?? 'id';
 
-
+        if (intval($value) === 0) {
+            return true;
+        }
         $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where($field, $value)->count();
         if ($count === 1) {
             return true;

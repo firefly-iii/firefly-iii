@@ -155,11 +155,9 @@ class JsonControllerTest extends TestCase
      */
     public function testTransactionJournals($range)
     {
-        $type       = factory(FireflyIII\Models\TransactionType::class)->make();
         $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
-
-        $repository->shouldReceive('getTransactionType')->with('deposit')->once()->andReturn($type);
-        $repository->shouldReceive('getJournalsOfType')->with($type)->once()->andReturn(new Collection);
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(new Collection, 0, 40);
+        $repository->shouldReceive('getJournals')->withAnyArgs()->once()->andReturn($paginator);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

@@ -15,6 +15,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -232,23 +233,20 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection
     {
-        $set = $this->user
+        $query = $this->user
             ->transactionjournals()
             ->expanded()
-            ->where('source_account.id', $account->id)
-            //            ->with(['transactions'])
-            //            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            //            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-            //            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
-            //            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->before($end)
-            ->after($start)
-            //            ->orderBy('transaction_journals.date', 'DESC')
-            //            ->orderBy('transaction_journals.order', 'ASC')
-            //            ->orderBy('transaction_journals.id', 'DESC')
-            ->take(10)
-            //            ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
-            ->get(TransactionJournal::queryFields());
+            ->after($start);
+
+        // expand query:
+        $query->leftJoin(
+            'transactions as source', function (JoinClause $join) {
+            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id');
+        }
+        )->where('source.account_id', $account->id);
+
+        $set = $query->get(TransactionJournal::queryFields());
 
         return $set;
     }
@@ -290,13 +288,15 @@ class AccountRepository implements AccountRepositoryInterface
         $offset = ($page - 1) * $pageSize;
         $query  = $this->user
             ->transactionJournals()
-            ->expanded()
-            ->where(
-                function (Builder $q) use ($account) {
-                    $q->where('source_account.id', $account->id);
-                    $q->orWhere('destination_account.id', $account->id);
-                }
-            );
+            ->expanded();
+
+        // expand query:
+        $query->leftJoin(
+            'transactions as source', function (JoinClause $join) {
+            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id');
+        }
+        )->where('source.account_id', $account->id);
+
 
         $count     = $query->count();
         $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());

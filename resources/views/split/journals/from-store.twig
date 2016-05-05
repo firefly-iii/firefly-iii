@@ -73,18 +73,18 @@
                     <input type="hidden" name="journal_amount" value="{{ data.journal_amount }}"/>
                     <!-- show static source if withdrawal or transfer -->
                     {% if data.what == 'withdrawal' or data.what == 'transfer' %}
-                        {{ ExpandedForm.staticText('asset_source_account', assetAccounts[data.journal_source_account_id]) }}
-                        <input type="hidden" name="source_account_id" value="{{ data.journal_source_account_id }}"/>
+                        {{ ExpandedForm.staticText('journal_asset_source_account', assetAccounts[data.journal_source_account_id]) }}
+                        <input type="hidden" name="journal_source_account_id" value="{{ data.journal_source_account_id }}"/>
                     {% endif %}
                     <!-- show static source if deposit: -->
                     {% if data.what == 'deposit' %}
                         {{ ExpandedForm.staticText('revenue_account', data.journal_source_account_name) }}
-                        <input type="hidden" name="source_account_name" value="{{ data.journal_source_account_name }}"/>
+                        <input type="hidden" name="journal_source_account_name" value="{{ data.journal_source_account_name }}"/>
                     {% endif %}
                     <!-- show static destination if transfer -->
                     {% if data.what == 'transfer' %}
                         {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[data.journal_destination_account_id]) }}
-                        <input type="hidden" name="destination_account_id" value="{{ data.journal_destination_account_id }}"/>
+                        <input type="hidden" name="journal_destination_account_id" value="{{ data.journal_destination_account_id }}"/>
                     {% endif %}
                 </div>
             </div>

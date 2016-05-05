@@ -53,8 +53,8 @@ class Journal implements JournalInterface
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['currency_id'],
-                'description'             => $data['description'],
+                'transaction_currency_id' => $data['journal_currency_id'],
+                'description'             => $data['journal_description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
                 'interest_date'           => $data['interest_date'],

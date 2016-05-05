@@ -19,8 +19,10 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Http\Request;
 use Log;
 use Session;
+use View;
 
 /**
  * Class SplitController
@@ -32,8 +34,31 @@ class SplitController extends Controller
     /**
      *
      */
-    public function journalFromStore()
+    public function __construct()
     {
+        parent::__construct();
+        View::share('mainTitleIcon', 'fa-share-alt');
+        View::share('title', trans('firefly.split-transactions'));
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     * @throws FireflyException
+     */
+    public function journalFromStore(Request $request)
+    {
+        if ($request->old('journal_currency_id')) {
+            $preFilled = $this->arrayFromOldData($request->old());
+        } else {
+            $preFilled = $this->arrayFromSession();
+        }
+
+        Session::flash('preFilled', $preFilled);
+        View::share('subTitle', trans('firefly.split-new-transaction'));
+
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
         /** @var AccountRepositoryInterface $accountRepository */
@@ -45,20 +70,16 @@ class SplitController extends Controller
         /** @var PiggyBankRepositoryInterface $piggyBankRepository */
         $piggyBankRepository = app(PiggyBankRepositoryInterface::class);
 
-        // expect data to be in session or in post?
-        $journalData   = session('temporary_split_data');
+
         $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
         $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
         $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $piggyBanks    = ExpandedForm::makeSelectListWithEmpty($piggyBankRepository->getPiggyBanks());
-        if (!is_array($journalData)) {
-            throw new FireflyException('Could not find transaction data in your session. Please go back and try again.'); // translate me.
-        }
 
-        Log::debug('Journal data', $journalData);
+        //Session::flash('warning', 'This feature is very experimental. Beware.');
 
 
-        return view('split.journals.from-store', compact('currencies', 'piggyBanks', 'assetAccounts', 'budgets'))->with('data', $journalData);
+        return view('split.journals.from-store', compact('currencies', 'piggyBanks', 'assetAccounts', 'budgets'))->with('data', $preFilled);
 
 
     }
@@ -77,6 +98,9 @@ class SplitController extends Controller
         $journal = $repository->storeJournal($data);
         // Then, store each transaction individually.
 
+        if (is_null($journal->id)) {
+            throw new FireflyException('Could not store transaction.');
+        }
         foreach ($data['transactions'] as $transaction) {
             $transactions = $repository->storeTransaction($journal, $transaction);
         }
@@ -90,6 +114,76 @@ class SplitController extends Controller
 
         // this is where we originally came from.
         return redirect(session('transactions.create.url'));
+    }
+
+    /**
+     * @param array $old
+     *
+     * @return array
+     */
+    private function arrayFromOldData(array $old): array
+    {
+        // this array is pretty much equal to what we expect it to be.
+        Log::debug('Prefilled', $old);
+
+        return $old;
+    }
+
+    /**
+     * @return array
+     * @throws FireflyException
+     */
+    private function arrayFromSession(): array
+    {
+        // expect data to be in session or in post?
+        $data = session('temporary_split_data');
+
+        if (!is_array($data)) {
+            Log::error('Could not find transaction data in your session. Please go back and try again.', ['data' => $data]); // translate me.
+            throw new FireflyException('Could not find transaction data in your session. Please go back and try again.'); // translate me.
+        }
+
+        Log::debug('Journal data', $data);
+
+        $preFilled = [
+            'what'                             => $data['what'],
+            'journal_description'              => $data['description'],
+            'journal_source_account_id'        => $data['source_account_id'],
+            'journal_source_account_name'      => $data['source_account_name'],
+            'journal_destination_account_id'   => $data['destination_account_id'],
+            'journal_destination_account_name' => $data['destination_account_name'],
+            'journal_amount'                   => $data['amount'],
+            'journal_currency_id'              => $data['amount_currency_id_amount'],
+            'date'                             => $data['date'],
+            'interest_date'                    => $data['interest_date'],
+            'book_date'                        => $data['book_date'],
+            'process_date'                     => $data['process_date'],
+
+            'description'              => [],
+            'destination_account_id'   => [],
+            'destination_account_name' => [],
+            'amount'                   => [],
+            'budget_id'                => [],
+            'category'                 => [],
+            'piggy_bank_id'            => [],
+        ];
+
+        // create the first transaction:
+        $preFilled['description'][]              = $data['description'];
+        $preFilled['destination_account_id'][]   = $data['destination_account_id'];
+        $preFilled['destination_account_name'][] = $data['destination_account_name'];
+        $preFilled['amount'][]                   = $data['amount'];
+        $preFilled['budget_id'][]                = $data['budget_id'];
+        $preFilled['category'][]                 = $data['category'];
+        $preFilled['piggy_bank_id'][]            = $data['piggy_bank_id'];
+
+        //        echo '<pre>';
+        //        var_dump($data);
+        //        var_dump($preFilled);
+        //        exit;
+        Log::debug('Prefilled', $preFilled);
+
+        return $preFilled;
     }
 
 }

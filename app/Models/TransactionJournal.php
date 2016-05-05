@@ -3,7 +3,6 @@
 use Auth;
 use Carbon\Carbon;
 use Crypt;
-use DB;
 use FireflyIII\Support\Models\TransactionJournalSupport;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -325,7 +324,6 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public function scopeExpanded(EloquentBuilder $query)
     {
-        $query->distinct();
         // left join transaction type:
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
@@ -336,39 +334,12 @@ class TransactionJournal extends TransactionJournalSupport
 
         // left join destination (for amount and account info).
         $query->leftJoin(
-            'transactions as destination', function (JoinClause $join) {
-            $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                 ->where('destination.amount', '>', 0);
+            'transactions', function (JoinClause $join) {
+            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
         }
         );
-        // join destination account
-        $query->leftJoin('accounts as destination_account', 'destination_account.id', '=', 'destination.account_id');
-        // join destination account type
-        $query->leftJoin('account_types as destination_acct_type', 'destination_account.account_type_id', '=', 'destination_acct_type.id');
-
-        // left join source (for amount and account info).
-        $query->leftJoin(
-            'transactions as source', function (JoinClause $join) {
-            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                 ->where('source.amount', '<', 0);
-        }
-        );
-        // join destination account
-        $query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
-        // join destination account type
-        $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id')
-              ->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.order', 'ASC')->orderBy('transaction_journals.id', 'DESC');
-
-        // something else:
-        $query->where(DB::raw('`destination`.`amount` * -1'),'=',DB::raw('`source`.`amount`'));
-
-        // group:
         $query->groupBy('transaction_journals.id');
-        $query->groupBy('source.id');
-
-        $query->with(['categories', 'budgets', 'attachments', 'bill']);
-
-
+        $query->with(['categories', 'budgets', 'attachments', 'bill','transactions']);
     }
 
     /**
