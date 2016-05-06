@@ -50,6 +50,15 @@ interface BudgetRepositoryInterface
      */
     public function find(int $budgetId): Budget;
 
+    /**
+     * This method returns the oldest journal or transaction date known to this budget.
+     * Will cache result.
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Budget $budget): Carbon;
+
     //    /**
     //     * @param Budget  $budget
     //     * @param Account $account

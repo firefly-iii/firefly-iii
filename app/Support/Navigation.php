@@ -5,6 +5,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use Log;
 
 /**
  * Class Navigation
@@ -107,7 +108,9 @@ class Navigation
             $currentEnd->$function();
         }
         if (in_array($repeatFreq, $subDay)) {
+            Log::debug('Before subday: ' . $currentEnd->format('Y-m-d'));
             $currentEnd->subDay();
+            Log::debug('After subday: ' . $currentEnd->format('Y-m-d'));
         }
 
         return $currentEnd;

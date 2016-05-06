@@ -4,7 +4,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -16,6 +18,39 @@ use Twig_SimpleFunction;
  */
 class Journal extends Twig_Extension
 {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function getDestinationAccount(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'destinationAccount', function (TransactionJournal $journal) {
+            $cache = new CacheProperties;
+            $cache->addProperty($journal->id);
+            $cache->addProperty('transaction-journal');
+            $cache->addProperty('destination-account-string');
+            if ($cache->has()) {
+                return $cache->get();
+            }
+
+            $list  = TransactionJournal::destinationAccountList($journal);
+            $array = [];
+            /** @var Account $entry */
+            foreach ($list as $entry) {
+                if ($entry->accountType->type == 'Cash account') {
+                    $array[] = '<span class="text-success">(cash)</span>';
+                    continue;
+                }
+                $array[] = '<a title="' . e($entry->name) . '" href="' . route('accounts.show', $entry->id) . '">' . e($entry->name) . '</a>';
+            }
+            $result = join(', ', $array);
+            $cache->store($result);
+
+            return $result;
+
+        }
+        );
+    }
 
     /**
      * @return array
@@ -33,7 +68,8 @@ class Journal extends Twig_Extension
     public function getFunctions(): array
     {
         $functions = [
-            $this->invalidJournal(),
+            $this->getSourceAccount(),
+            $this->getDestinationAccount(),
         ];
 
         return $functions;
@@ -52,15 +88,35 @@ class Journal extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function invalidJournal(): Twig_SimpleFunction
+    public function getSourceAccount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'invalidJournal', function (TransactionJournal $journal): bool {
-            if (!isset($journal->transactions[1]) || !isset($journal->transactions[0])) {
-                return true;
+            'sourceAccount', function (TransactionJournal $journal): string {
+
+            $cache = new CacheProperties;
+            $cache->addProperty($journal->id);
+            $cache->addProperty('transaction-journal');
+            $cache->addProperty('source-account-string');
+            if ($cache->has()) {
+                return $cache->get();
             }
 
-            return false;
+            $list  = TransactionJournal::sourceAccountList($journal);
+            $array = [];
+            /** @var Account $entry */
+            foreach ($list as $entry) {
+                if ($entry->accountType->type == 'Cash account') {
+                    $array[] = '<span class="text-success">(cash)</span>';
+                    continue;
+                }
+                $array[] = '<a title="' . e($entry->name) . '" href="' . route('accounts.show', $entry->id) . '">' . e($entry->name) . '</a>';
+            }
+            $result = join(', ', $array);
+            $cache->store($result);
+
+            return $result;
+
+
         }
         );
     }

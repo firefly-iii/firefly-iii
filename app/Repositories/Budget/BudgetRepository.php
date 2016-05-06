@@ -12,7 +12,6 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Log;
@@ -124,6 +123,34 @@ class BudgetRepository implements BudgetRepositoryInterface
     //    }
 
     /**
+     * This method returns the oldest journal or transaction date known to this budget.
+     * Will cache result.
+     *
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Budget $budget): Carbon
+    {
+        $oldest  = Carbon::create()->startOfYear();
+        $journal = $budget->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($journal) {
+            $oldest = $journal->date < $oldest ? $journal->date : $oldest;
+        }
+
+        $transaction = $budget
+            ->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.id')
+            ->orderBy('transaction_journals.date', 'ASC')->first(['transactions.*', 'transaction_journals.date']);
+        if ($transaction) {
+            $oldest = $transaction->date < $oldest ? $transaction->date : $oldest;
+        }
+
+        return $oldest;
+
+    }
+
+    /**
      * @return Collection
      */
     public function getActiveBudgets(): Collection
@@ -136,26 +163,6 @@ class BudgetRepository implements BudgetRepositoryInterface
                 return strtolower($budget->name);
             }
         );
-
-        return $set;
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection
-    {
-        $query = LimitRepetition::
-        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
-                                ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-                                ->where('budgets.user_id', $this->user->id);
-
-        $set = $query->get(['limit_repetitions.*', 'budget_limits.budget_id']);
 
         return $set;
     }
@@ -217,18 +224,21 @@ class BudgetRepository implements BudgetRepositoryInterface
     //    }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
      * @return Collection
      */
-    public function getBudgets(): Collection
+    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->budgets()->get();
+        $query = LimitRepetition::
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                                ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                                ->where('budgets.user_id', $this->user->id);
 
-        $set = $set->sortBy(
-            function (Budget $budget) {
-                return strtolower($budget->name);
-            }
-        );
+        $set = $query->get(['limit_repetitions.*', 'budget_limits.budget_id']);
 
         return $set;
     }
@@ -505,10 +515,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @return Collection
      */
-    public function getInactiveBudgets(): Collection
+    public function getBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->where('active', 0)->get();
+        $set = $this->user->budgets()->get();
 
         $set = $set->sortBy(
             function (Budget $budget) {
@@ -660,7 +670,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     //            }
     //            )
     //            ->whereIn('transactions.account_id', $ids)
-    //            //->having('transaction_count', '=', 1) TODO check if this still works
+    //            //->having('transaction_count', '=', 1) TO DO check if this still works
     //            ->transactionTypes([TransactionType::WITHDRAWAL])
     //            ->first(
     //                [
@@ -830,6 +840,23 @@ class BudgetRepository implements BudgetRepositoryInterface
     //    }
 
     /**
+     * @return Collection
+     */
+    public function getInactiveBudgets(): Collection
+    {
+        /** @var Collection $set */
+        $set = $this->user->budgets()->where('active', 0)->get();
+
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return strtolower($budget->name);
+            }
+        );
+
+        return $set;
+    }
+
+    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
@@ -918,6 +945,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                 }
             }
         );
+
         return $set;
     }
 
@@ -932,12 +960,14 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string
     {
         $set = $this->journalsInPeriod($budgets, $accounts, $start, $end);
-        Log::debug('spentInPeriod set count is ' . $set->count());
+        //Log::debug('spentInPeriod set count is ' . $set->count());
         $sum = '0';
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             $sum = bcadd($sum, TransactionJournal::amount($journal));
         }
+
+        Log::debug('spentInPeriod between ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d') . ' is ' . $sum);
 
         return $sum;
     }

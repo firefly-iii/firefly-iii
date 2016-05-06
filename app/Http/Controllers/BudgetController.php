@@ -289,7 +289,7 @@ class BudgetController extends Controller
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end);
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $journals = new LengthAwarePaginator($journals, $count, $pageSize);
@@ -328,17 +328,15 @@ class BudgetController extends Controller
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end);
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $journals = new LengthAwarePaginator($journals, $count, $pageSize);
+        $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
 
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
 
 
-        $subTitle          = trans(
-            'firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]
-        );
         $repetition->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
         $limits            = new Collection([$repetition]);
 

@@ -245,7 +245,7 @@ class AccountRepository implements AccountRepositoryInterface
             $join->on('source.transaction_journal_id', '=', 'transaction_journals.id');
         }
         )->where('source.account_id', $account->id);
-
+        $query->take(10);
         $set = $query->get(TransactionJournal::queryFields());
 
         return $set;

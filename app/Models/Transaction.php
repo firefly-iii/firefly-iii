@@ -130,7 +130,7 @@ class Transaction extends Model
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
         }
-        $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
+        $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'));
     }
 
     /**

@@ -6,6 +6,7 @@ use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Session;

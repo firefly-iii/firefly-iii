@@ -20,6 +20,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Class TransactionJournalSupport
@@ -157,6 +158,8 @@ class TransactionJournalSupport extends Model
     }
 
     /**
+     * @deprecated
+     *
      * @param TransactionJournal $journal
      *
      * @return Account
@@ -179,6 +182,31 @@ class TransactionJournalSupport extends Model
         }
 
         return $account;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public static function destinationAccountList(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('destination-account-list');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $transactions = $journal->transactions()->where('amount', '>', 0)->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $cache->store($list);
+
+        return $list;
     }
 
     /**
@@ -253,6 +281,8 @@ class TransactionJournalSupport extends Model
     }
 
     /**
+     * @deprecated
+     *
      * @param TransactionJournal $journal
      *
      * @return Account
@@ -275,6 +305,32 @@ class TransactionJournalSupport extends Model
         }
 
         return $account;
+    }
+
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public static function sourceAccountList(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('source-account-list');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $transactions = $journal->transactions()->where('amount', '<', 0)->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $cache->store($list);
+
+        return $list;
     }
 
     /**

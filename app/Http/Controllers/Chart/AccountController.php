@@ -139,8 +139,8 @@ class AccountController extends Controller
     {
 
 
-        $start = session('start', Carbon::now()->startOfMonth());
-        $end   = session('end', Carbon::now()->endOfMonth());
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        $end   = clone session('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();
