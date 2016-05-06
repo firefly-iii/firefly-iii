@@ -13,6 +13,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -174,6 +175,8 @@ class BudgetController extends Controller
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
         $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $startAsString     = $start->format('Y-m-d');
+        $endAsString       = $end->format('Y-m-d');
 
         /**
          * Do some cleanup:
@@ -183,12 +186,28 @@ class BudgetController extends Controller
         // loop the budgets:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budget->spent            = '0';//$repository->balanceInPeriod($budget, $start, $end, $accounts); // TODO BUDGET spentInPeriod
-            $budget->currentRep       = new LimitRepetition(
-            ); // $repository->getCurrentRepetition($budget, $repeatFreq, $start, $end); // TODO BUDGET getBudgetLimitRepetitions
-            $budget->otherRepetitions = new Collection(
-            );//$repository->getValidRepetitions($budget, $start, $end, $budget->currentRep); // TODO BUDGET getBudgetLimitRepetitions
-            if (!is_null($budget->currentRep->id)) {
+            $budget->spent    = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
+            $allRepetitions   = $repository->getAllBudgetLimitRepetitions($start, $end);
+            $otherRepetitions = new Collection;
+
+            /** @var LimitRepetition $repetition */
+            foreach ($allRepetitions as $repetition) {
+                if ($repetition->budget_id == $budget->id) {
+                    Log::debug('Repetition #' . $repetition->id . ' with budget #' . $repetition->budget_id . ' (current = ' . $budget->id . ')');
+                    if ($repetition->budgetLimit->repeat_freq == $repeatFreq
+                        && $repetition->startdate->format('Y-m-d') == $startAsString
+                        && $repetition->enddate->format('Y-m-d') == $endAsString
+                    ) {
+                        // do something
+                        $budget->currentRep = $repetition;
+                        continue;
+                    }
+                    $otherRepetitions->push($repetition);
+                }
+            }
+            $budget->otherRepetitions = $otherRepetitions;
+
+            if (!is_null($budget->currentRep) && !is_null($budget->currentRep->id)) {
                 $budgeted = bcadd($budgeted, $budget->currentRep->amount);
             }
             $spent = bcadd($spent, $budget->spent);
@@ -223,7 +242,11 @@ class BudgetController extends Controller
 
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $list     = new LengthAwarePaginator([], 0, $pageSize); // $repository->getWithoutBudget($start, $end, $page, $pageSize); // TODO BUDGET journalsInPeriodWithoutBudget
+        $offset   = ($page - 1) * $pageSize;
+        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $count    = $journals->count();
+        $journals = $journals->slice($offset, $pageSize);
+        $list     = new LengthAwarePaginator($journals, $count, $pageSize);
         $subTitle = trans(
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -260,24 +283,29 @@ class BudgetController extends Controller
      */
     public function show(BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $journals = new LengthAwarePaginator(
-            [], 0, $pageSize
-        ); //$repository->getJournals($budget, new LimitRepetition, $pageSize); // TODO BUDGET journalsInPeriod
-        $start    = new Carbon; //$repository->firstActivity($budget); // TODO BUDGET getOldestJournal
+        /** @var Carbon $start */
+        $start    = session('first', Carbon::create()->startOfYear());
         $end      = new Carbon;
+        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $offset   = ($page - 1) * $pageSize;
+        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $count    = $journals->count();
+        $journals = $journals->slice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($journals, $count, $pageSize);
+
+        $journals->setPath('/budgets/show/' . $budget->id);
+
+
         $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
         $subTitle = e($budget->name);
-        $journals->setPath('/budgets/show/' . $budget->id);
-        $spentArray = []; //$repository->spentPerDay($budget, $start, $end, new Collection); // TODO BUDGET spentInPeriod
-        $limits     = new Collection();
+        $limits   = new Collection();
 
         /** @var LimitRepetition $entry */
         foreach ($set as $entry) {
-            $entry->spent = $this->getSumOfRange($entry->startdate, $entry->enddate, $spentArray);
+            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $entry->startdate, $entry->enddate);
             $limits->push($entry);
         }
-
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }
@@ -295,23 +323,24 @@ class BudgetController extends Controller
         if ($repetition->budgetLimit->budget->id != $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
-
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $journals = new LengthAwarePaginator([], 0, $pageSize); // $repository->getJournals($budget, $repetition, $pageSize); // TODO BUDGET journalsInPeriod
         $start    = $repetition->startdate;
         $end      = $repetition->enddate;
-        $set      = new Collection([$repetition]);
-        $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $offset   = ($page - 1) * $pageSize;
+        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $count    = $journals->count();
+        $journals = $journals->slice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($journals, $count, $pageSize);
+
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
-        $spentArray = []; //$repository->spentPerDay($budget, $start, $end, new Collection); // TODO BUDGET spentInPeriod
-        $limits     = new Collection();
 
-        /** @var LimitRepetition $entry */
-        foreach ($set as $entry) {
-            $entry->spent = $this->getSumOfRange($entry->startdate, $entry->enddate, $spentArray);
-            $limits->push($entry);
-        }
 
+        $subTitle          = trans(
+            'firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]
+        );
+        $repetition->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
+        $limits            = new Collection([$repetition]);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
 

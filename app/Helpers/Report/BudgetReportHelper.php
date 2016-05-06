@@ -16,8 +16,10 @@ use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BudgetReportHelper
@@ -38,24 +40,21 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     {
         $object = new BudgetCollection;
         /** @var BudgetRepositoryInterface $repository */
-        $repository     = app(BudgetRepositoryInterface::class);
-        $set            = $repository->getBudgets();
-        $allRepetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
-        $allTotalSpent  = '0'; //$repository->spentAllPerDayForAccounts($accounts, $start, $end);// TODO BUDGET MASSIVELY STUPID SPECIFIC METHOD
+        $repository = app(BudgetRepositoryInterface::class);
+        $set        = $repository->getBudgets();
 
+        /** @var Budget $budget */
         foreach ($set as $budget) {
-
-            $repetitions = $allRepetitions->filter(
-                function (LimitRepetition $rep) use ($budget) {
-                    return $rep->budget_id == $budget->id;
-                }
-            );
-            $totalSpent  = $allTotalSpent[$budget->id] ?? [];
+            Log::debug('Now at budget #' . $budget->id . ' (' . $budget->name . ')');
+            $repetitions = $budget->limitrepetitions()->before($end)->after($start)->get();
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
+                Log::debug('Found zero repetitions.');
+                // spent for budget in time range:
+                $spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
 
-                $spent = array_sum($totalSpent);
+                // $spent = array_sum($totalSpent);
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
                     $budgetLine->setBudget($budget);
@@ -65,18 +64,16 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 }
                 continue;
             }
-
+            Log::debug('Found ' . $repetitions->count() . ' repetitions.');
             // one or more repetitions for budget:
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
+
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses = $this->getSumOfRange($repetition->startdate, $repetition->enddate, $totalSpent);
-
-                // 200 en -100 is 100, vergeleken met 0 === 1
-                // 200 en -200 is 0, vergeleken met 0 === 0
-                // 200 en -300 is -100, vergeleken met 0 === -1
+                $expenses = $repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
+                Log::debug('Spent in p. [' . $repetition->startdate->format('Y-m-d') . '] to [' . $repetition->enddate->format('Y-m-d') . '] is ' . $expenses);
 
                 $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
                 $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
@@ -98,7 +95,12 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         // stuff outside of budgets:
-        $noBudget   = '0'; //$repository->getWithoutBudgetSum($accounts, $start, $end); // TODO BUDGET journalsInPeriodWithoutBudget
+        $outsideBudget = $repository->journalsInPeriodWithoutBudget($accounts, $start, $end);
+        $noBudget      = '0';
+        /** @var TransactionJournal $journal */
+        foreach ($outsideBudget as $journal) {
+            $noBudget = bcadd($noBudget, TransactionJournal::amount($journal));
+        }
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
         $budgetLine->setSpent($noBudget);

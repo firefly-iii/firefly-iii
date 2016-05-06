@@ -132,8 +132,8 @@ class JournalRepository implements JournalRepositoryInterface
         if (count($types) > 0) {
             $query->transactionTypes($types);
         }
-
-        $count    = $query->count();
+        $count = $this->user->transactionJournals()->transactionTypes($types)->count();
+        Log::debug('getJournals() count: ' . $count);
         $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 

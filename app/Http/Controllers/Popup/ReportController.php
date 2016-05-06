@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Helpers\Csv\Mapper\Budget;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -94,15 +93,17 @@ class ReportController extends Controller
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
-                $journals = new Collection;// $budgetRepository->expensesSplit($budget, $account, $attributes['startDate'], $attributes['endDate']);// TODO BUDGET journalsInPeriod
+                $journals = $budgetRepository->journalsInPeriod(
+                    new Collection([$budget]), new Collection([$account]), $attributes['startDate'], $attributes['endDate']
+                );
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
                 $budget->name = strval(trans('firefly.no_budget'));
-                $journals     = new Collection;// $budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriodWithoutBudget
+                $journals     = $budgetRepository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
                 // journals no budget, not corrected by a tag.
-                $journals     = new Collection; //$budgetRepository->getAllWithoutBudget($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriodWithoutBudget
+                $journals     = $budgetRepository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
                 $journals     = $journals->filter(
                     function (TransactionJournal $journal) {
@@ -138,10 +139,10 @@ class ReportController extends Controller
         $repository = app(BudgetRepositoryInterface::class);
         $budget     = $repository->find(intval($attributes['budgetId']));
         if (is_null($budget->id)) {
-            $journals = new Collection;// $repository->getWithoutBudgetForAccounts($attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriodWithoutBudget
+            $journals = $repository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         } else {
             // get all expenses in budget in period:
-            $journals = new Collection; //$repository->getExpenses($budget, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']); // TODO BUDGET journalsInPeriod
+            $journals = $repository->journalsInPeriod(new Collection([$budget]), $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
         }
 
         $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();

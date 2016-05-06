@@ -1,6 +1,8 @@
 <?php namespace FireflyIII\Models;
 
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -57,6 +59,28 @@ class LimitRepetition extends Model
     public function budgetLimit()
     {
         return $this->belongsTo('FireflyIII\Models\BudgetLimit');
+    }
+
+    /**
+     *
+     * @param Builder $query
+     * @param Carbon  $date
+     *
+     */
+    public function scopeAfter(Builder $query, Carbon $date)
+    {
+        $query->where('limit_repetitions.startdate', '>=', $date->format('Y-m-d 00:00:00'));
+    }
+
+    /**
+     *
+     * @param Builder $query
+     * @param Carbon  $date
+     *
+     */
+    public function scopeBefore(Builder $query, Carbon $date)
+    {
+        $query->where('limit_repetitions.enddate', '<=', $date->format('Y-m-d 00:00:00'));
     }
 
     /**

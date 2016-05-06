@@ -68,8 +68,10 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         // build a balance header:
         $header    = new BalanceHeader;
-        $budgets   = new Collection;// $this->budgetRepository->getBudgetsAndLimitsInRange($start, $end); // TODO BUDGET getBudgets
-        $spentData = new Collection; // $this->budgetRepository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end); TODO BUDGET journalsInPeriod
+        //  new Collection;// $this->budgetRepository->getBudgetsAndLimitsInRange($start, $end); // TO DO BUDGET getBudgets
+        $budgets   = $this->budgetRepository->getBudgets();
+        //  new Collection; // $this->budgetRepository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end); TO DO BUDGET journalsInPeriod
+        $spentData = $this->budgetRepository->journalsInPeriod($budgets, $accounts, $start, $end);
         foreach ($accounts as $account) {
             $header->addAccount($account);
         }

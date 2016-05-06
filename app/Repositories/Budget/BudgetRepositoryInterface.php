@@ -16,6 +16,13 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
 
+    /**
+     * @param Budget $budget
+     *
+     * @return bool
+     */
+    public function destroy(Budget $budget): bool;
+
     //    /**
     //     *
     //     * Same as ::spentInPeriod but corrects journals for a set of accounts
@@ -35,11 +42,13 @@ interface BudgetRepositoryInterface
     //    public function cleanupBudgets(): bool;
 
     /**
-     * @param Budget $budget
+     * Find a budget.
      *
-     * @return bool
+     * @param int $budgetId
+     *
+     * @return Budget
      */
-    public function destroy(Budget $budget): bool;
+    public function find(int $budgetId): Budget;
 
     //    /**
     //     * @param Budget  $budget
@@ -52,13 +61,9 @@ interface BudgetRepositoryInterface
     //    public function expensesSplit(Budget $budget, Account $account, Carbon $start, Carbon $end): Collection;
 
     /**
-     * Find a budget.
-     *
-     * @param int $budgetId
-     *
-     * @return Budget
+     * @return Collection
      */
-    public function find(int $budgetId): Budget;
+    public function getActiveBudgets(): Collection;
 
     //    /**
     //     * @param Budget $budget
@@ -68,17 +73,17 @@ interface BudgetRepositoryInterface
     //    public function firstActivity(Budget $budget): Carbon;
 
     /**
-     * @return Collection
-     */
-    public function getActiveBudgets(): Collection;
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return Collection
      */
     public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function getBudgets(): Collection;
 
     //    /**
     //     * @param Account    $account
@@ -104,7 +109,7 @@ interface BudgetRepositoryInterface
     /**
      * @return Collection
      */
-    public function getBudgets(): Collection;
+    public function getInactiveBudgets(): Collection;
 
     //    /**
     //     * Returns an array with every budget in it and the expenses for each budget
@@ -186,9 +191,33 @@ interface BudgetRepositoryInterface
     //    public function getFirstBudgetLimitDate(Budget $budget):Carbon;
 
     /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
      * @return Collection
      */
-    public function getInactiveBudgets(): Collection;
+    public function journalsInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function journalsInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string;
 
     //    /**
     //     * Returns all the transaction journals for a limit, possibly limited by a limit repetition.
