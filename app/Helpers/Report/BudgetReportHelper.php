@@ -126,8 +126,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $set = new Collection;
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $expenses = [0]; // $repository->spentPerDay($budget, $start, $end, $accounts); // TODO BUDGET spentInPeriod
-            $total    = strval(array_sum($expenses));
+            $total = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
             if (bccomp($total, '0') === -1) {
                 $set->push($budget);
             }

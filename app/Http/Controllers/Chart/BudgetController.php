@@ -59,7 +59,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
 
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         $final = clone $last;
@@ -76,8 +76,8 @@ class BudgetController extends Controller
             $currentEnd   = Navigation::endOfPeriod($first, $range);
             // sub another day because reasons.
             $currentEnd->subDay();
-            $spent        = $repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
-            $entry        = [$first, ($spent * -1)];
+            $spent = $repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
+            $entry = [$first, ($spent * -1)];
 
             $entries->push($entry);
             $first = Navigation::addPeriod($first, $range, 0);
@@ -87,33 +87,6 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
-
-        /**
-         * $final = clone $last;
-         * $final->addYears(2);
-         * $last    = Navigation::endOfX($last, $range, $final);
-         * $entries = new Collection;
-         * // get all expenses:
-         * $spentArray = $repository->spentPerDay($budget, $first, $last, new Collection);
-         *
-         * while ($first < $last) {
-         *
-         * // periodspecific dates:
-         * $currentStart = Navigation::startOfPeriod($first, $range);
-         * $currentEnd   = Navigation::endOfPeriod($first, $range);
-         * $spent        = $this->getSumOfRange($currentStart, $currentEnd, $spentArray);
-         * $entry        = [$first, ($spent * -1)];
-         *
-         * $entries->push($entry);
-         * $first = Navigation::addPeriod($first, $range, 0);
-         * }
-         *
-         * $data = $this->generator->budgetLimit($entries, 'month');
-         * $cache->store($data);
-         *
-         * return Response::json($data);
-         * **/
     }
 
     /**
@@ -231,76 +204,11 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
-
-        /**
-         *
-         *
-         *
-         *
-         * $budgets    = $repository->getBudgetsAndLimitsInRange($start, $end);
-         * $allEntries = new Collection;
-         * $accounts   = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-         * $format     = strval(trans('config.month_and_day'));
-         *
-         *
-         * // @var Budget $budget
-         * foreach ($budgets as $budget) {
-         * // we already have amount, startdate and enddate.
-         * // if this "is" a limit repetition (as opposed to a budget without one entirely)
-         * // depends on whether startdate and enddate are null.
-         * $name = $budget->name;
-         * if (is_null($budget->startdate) && is_null($budget->enddate)) {
-         * $currentStart = clone $start;
-         * $currentEnd   = clone $end;
-         * $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
-         * $amount       = '0';
-         * $left         = '0';
-         * $spent        = $expenses;
-         * $overspent    = '0';
-         * } else {
-         *
-         * // update the display name if the range
-         * // of the limit repetition does not match
-         * // the session's range (for clarity).
-         * if (
-         * ($start->format('Y-m-d') != $budget->startdate->format('Y-m-d'))
-         * || ($end->format('Y-m-d') != $budget->enddate->format('Y-m-d'))
-         * ) {
-         * $name .= ' ' . trans(
-         * 'firefly.between_dates',
-         * [
-         * 'start' => $budget->startdate->formatLocalized($format),
-         * 'end'   => $budget->startdate->formatLocalized($format),
-         * ]
-         * );
-         * }
-         * $currentStart = clone $budget->startdate;
-         * $currentEnd   = clone $budget->enddate;
-         * $expenses     = $repository->balanceInPeriod($budget, $currentStart, $currentEnd, $accounts);
-         * $amount       = $budget->amount;
-         * // smaller than 1 means spent MORE than budget allows.
-         * $left      = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? '0' : bcadd($budget->amount, $expenses);
-         * $spent     = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcmul($amount, '-1') : $expenses;
-         * $overspent = bccomp(bcadd($budget->amount, $expenses), '0') < 1 ? bcadd($budget->amount, $expenses) : '0';
-         * }
-         *
-         * $allEntries->push([$name, $left, $spent, $overspent, $amount, $expenses]);
-         * }
-         *
-         * $noBudgetExpenses = $repository->getWithoutBudgetSum($accounts, $start, $end);
-         * $allEntries->push([trans('firefly.no_budget'), '0', '0', $noBudgetExpenses, '0', '0']);
-         * $data = $this->generator->frontpage($allEntries);
-         * $cache->store($data);
-         *
-         * return Response::json($data);
-         **/
     }
 
     /**
      *
      * @param BudgetRepositoryInterface $repository
-     * @param                           $reportType
      * @param Carbon                    $start
      * @param Carbon                    $end
      * @param Collection                $accounts
@@ -309,141 +217,122 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear(BudgetRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
+    public function multiYear(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end, Collection $accounts, Collection $budgets)
     {
-        /**
-         * // chart properties for cache:
-         * $cache = new CacheProperties();
-         * $cache->addProperty($reportType);
-         * $cache->addProperty($start);
-         * $cache->addProperty($end);
-         * $cache->addProperty($accounts);
-         * $cache->addProperty($budgets);
-         * $cache->addProperty('multiYearBudget');
-         *
-         * if ($cache->has()) {
-         * return Response::json($cache->get());
-         * }
-         *
-         * // Get the budgeted amounts for each budgets in each year.
-         * $budgetedSet   = $repository->getBudgetedPerYear($budgets, $start, $end);
-         * $budgetedArray = [];
-         * // @var Budget $entry
-         * foreach ($budgetedSet as $entry) {
-         * $budgetedArray[$entry->id][$entry->dateFormatted] = $entry->budgeted;
-         * }
-         *
-         * $set     = $repository->getBudgetsAndExpensesPerYear($budgets, $accounts, $start, $end);
-         * $entries = new Collection;
-         * // go by budget, not by year.
-         * // @var Budget $budget
-         * foreach ($budgets as $budget) {
-         * $entry        = ['name' => '', 'spent' => [], 'budgeted' => []];
-         * $id           = $budget->id;
-         * $currentStart = clone $start;
-         * while ($currentStart < $end) {
-         * // fix the date:
-         * $currentEnd = clone $currentStart;
-         * $currentEnd->endOfYear();
-         *
-         * // basic information:
-         * $year          = $currentStart->year;
-         * $entry['name'] = $budget->name ?? (string)trans('firefly.no_budget');
-         * $spent         = 0;
-         * // this might be a good moment to collect no budget stuff.
-         * if (is_null($budget->id)) {
-         * // get without budget sum in range:
-         * $spent = $repository->getWithoutBudgetSum($accounts, $currentStart, $currentEnd) * -1;
-         * } else {
-         * if (isset($set[$id]['entries'][$year])) {
-         * $spent = $set[$id]['entries'][$year] * -1;
-         * }
-         * }
-         *
-         * $budgeted                 = $budgetedArray[$id][$year] ?? '0';
-         * $entry['spent'][$year]    = $spent;
-         * $entry['budgeted'][$year] = round($budgeted, 2);
-         *
-         *
-         * // jump to next year.
-         * $currentStart = clone $currentEnd;
-         * $currentStart->addDay();
-         * }
-         * $entries->push($entry);
-         * }
-         * // generate chart with data:
-         * $data = $this->generator->multiYear($entries);
-         * $cache->store($data);
-         *
-         * return Response::json($data);
-         **/
+
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($budgets);
+        $cache->addProperty('multiYearBudget');
+
+        if ($cache->has()) {
+            //return Response::json($cache->get());
+        }
+        $budgetIds   = $budgets->pluck('id')->toArray();
+        $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
+        $budgeted    = [];
+        $entries     = new Collection;
+        // filter budgets once:
+        $repetitions = $repetitions->filter(
+            function (LimitRepetition $repetition) use ($budgetIds) {
+                if (in_array(strval($repetition->budget_id), $budgetIds)) {
+                    return $repetition;
+                }
+            }
+        );
+        /** @var LimitRepetition $repetition */
+        foreach ($repetitions as $repetition) {
+            $year = $repetition->startdate->year;
+            if (isset($budgeted[$repetition->budget_id][$year])) {
+                $budgeted[$repetition->budget_id][$year] = bcadd($budgeted[$repetition->budget_id][$year], $repetition->amount);
+                continue;
+            }
+            $budgeted[$repetition->budget_id][$year] = $repetition->amount;
+        }
+
+        foreach ($budgets as $budget) {
+            $currentStart = clone $start;
+            $entry        = ['name' => $budget->name, 'spent' => [], 'budgeted' => []];
+            while ($currentStart < $end) {
+                // fix the date:
+                $currentEnd = clone $currentStart;
+                $year       = $currentStart->year;
+                $currentEnd->endOfYear();
+
+                $spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $currentStart, $currentEnd);
+
+                // jump to next year.
+                $currentStart = clone $currentEnd;
+                $currentStart->addDay();
+
+                $entry['spent'][$year]    = round($spent * -1, 2);
+                $entry['budgeted'][$year] = isset($budgeted[$budget->id][$year]) ? round($budgeted[$budget->id][$year], 2) : 0;
+            }
+            $entries->push($entry);
+        }
+        $data = $this->generator->multiYear($entries);
+        $cache->store($data);
+
+        return Response::json($data);
     }
 
     /**
-     * @param Budget     $budget
-     * @param string     $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     * @param Collection                $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function period(Budget $budget, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function period(BudgetRepositoryInterface $repository, Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
     {
-        /**
-         * // chart properties for cache:
-         * $cache = new CacheProperties();
-         * $cache->addProperty($start);
-         * $cache->addProperty($end);
-         * $cache->addProperty($reportType);
-         * $cache->addProperty($accounts);
-         * $cache->addProperty($budget->id);
-         * $cache->addProperty('budget');
-         * $cache->addProperty('period');
-         * if ($cache->has()) {
-         * return Response::json($cache->get());
-         * }
-         *
-         * // @var BudgetRepositoryInterface $repository
-         * $repository = app(BudgetRepositoryInterface::class);
-         * // loop over period, add by users range:
-         * $current   = clone $start;
-         * $viewRange = Preferences::get('viewRange', '1M')->data;
-         * $set       = new Collection;
-         * while ($current < $end) {
-         * $currentStart = clone $current;
-         * $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
-         *
-         * // get all budget limits and their repetitions.
-         * $reps      = $repository->getAllBudgetLimitRepetitions($currentStart, $currentEnd, $budget);
-         * $budgeted  = $reps->sum('amount');
-         * $perBudget = $repository->spentPerBudgetPerAccount(new Collection([$budget]), $accounts, $currentStart, $currentEnd);
-         * // includes null, so filter!
-         * $perBudget = $perBudget->filter(
-         * function (TransactionJournal $journal) use ($budget) {
-         * if (intval($journal->budget_id) === $budget->id) {
-         * return $journal;
-         * }
-         * }
-         * );
-         *
-         *
-         * $spent = $perBudget->sum('spent');
-         *
-         * $entry = [
-         * 'date'     => clone $currentStart,
-         * 'budgeted' => $budgeted,
-         * 'spent'    => $spent,
-         * ];
-         * $set->push($entry);
-         * $currentEnd->addDay();
-         * $current = clone $currentEnd;
-         * }
-         * $data = $this->generator->period($set, $viewRange);
-         * $cache->store($data);
-         *
-         * return Response::json($data);
-         */
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($budget->id);
+        $cache->addProperty('budget');
+        $cache->addProperty('period');
+        if ($cache->has()) {
+            //return Response::json($cache->get());
+        }
+        // loop over period, add by users range:
+        $current     = clone $start;
+        $viewRange   = Preferences::get('viewRange', '1M')->data;
+        $set         = new Collection;
+        $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
+
+
+        while ($current < $end) {
+            $currentStart = clone $current;
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
+            $reps         = $repetitions->filter(
+                function (LimitRepetition $repetition) use ($budget, $currentStart) {
+                    if ($repetition->budget_id === $budget->id && $repetition->startdate == $currentStart) {
+                        return $repetition;
+                    }
+                }
+            );
+            $budgeted     = $reps->sum('amount');
+            $spent        = $repository->spentInPeriod(new Collection([$budget]), $accounts, $currentStart, $currentEnd);
+            $entry        = [
+                'date'     => clone $currentStart,
+                'budgeted' => $budgeted,
+                'spent'    => $spent,
+            ];
+            $set->push($entry);
+            $currentEnd->addDay();
+            $current = clone $currentEnd;
+
+        }
+        $data = $this->generator->period($set, $viewRange);
+        $cache->store($data);
+
+        return Response::json($data);
 
     }
 
@@ -457,10 +346,9 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public
-    function year(
-        BudgetRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts
-    ) {
+    public function year(BudgetRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        
         /**
          * // chart properties for cache:
          * $cache = new CacheProperties();
