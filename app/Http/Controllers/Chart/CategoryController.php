@@ -10,8 +10,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -47,13 +45,14 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
-     * @param SCRI     $repository
+     * @param CRI     $repository
      * @param Category $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(SCRI $repository, Category $category)
+    public function all(CRI $repository, Category $category)
     {
+        /**
         // oldest transaction in category:
         $start   = $repository->getFirstActivityDate($category);
         $range   = Preferences::get('viewRange', '1M')->data;
@@ -87,21 +86,24 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+         * **/
     }
 
     /**
-     * @param SCRI     $repository
+     * @param CRI     $repository
      * @param Category $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function currentPeriod(SCRI $repository, Category $category)
+    public function currentPeriod(CRI $repository, Category $category)
     {
+        /**
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
         $data  = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
+         * **/
     }
 
     /**
@@ -118,6 +120,7 @@ class CategoryController extends Controller
      */
     public function earnedInPeriod(CRI $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
+        /**
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -140,7 +143,7 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return $data;
-
+        **/
     }
 
     /**
@@ -154,7 +157,7 @@ class CategoryController extends Controller
      */
     public function frontpage(CRI $repository, ARI $accountRepository)
     {
-
+        /**
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
 
@@ -184,7 +187,7 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
+        **/
     }
 
     /**
@@ -198,8 +201,9 @@ class CategoryController extends Controller
      */
     public function multiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
-        /** @var CRI $repository */
-        $repository = app(CRI::class);
+        /**
+        // /** @var CRI $repository
+        // $repository = app(CRI::class);
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -217,7 +221,7 @@ class CategoryController extends Controller
         $entries = new Collection;
         $set     = $repository->listMultiYear($categories, $accounts, $start, $end);
 
-        /** @var Category $category */
+        /** @var Category $category
         foreach ($categories as $category) {
             $entry = ['name' => '', 'spent' => [], 'earned' => []];
 
@@ -268,6 +272,8 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+         *
+         */
 
     }
 
@@ -282,6 +288,7 @@ class CategoryController extends Controller
      */
     public function period(Category $category, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
+        /**
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -295,8 +302,8 @@ class CategoryController extends Controller
             return Response::json($cache->get());
         }
 
-        /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app(SingleCategoryRepositoryInterface::class);
+        /** @var CategoryRepositoryInterface $repository
+        $repository = app(CategoryRepositoryInterface::class);
         // loop over period, add by users range:
         $current   = clone $start;
         $viewRange = Preferences::get('viewRange', '1M')->data;
@@ -324,19 +331,21 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+         * **/
 
     }
 
     /**
-     * @param SCRI                        $repository
+     * @param CRI                        $repository
      * @param Category                    $category
      *
      * @param                             $date
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function specificPeriod(SCRI $repository, Category $category, $date)
+    public function specificPeriod(CRI $repository, Category $category, $date)
     {
+        /**
         $carbon = new Carbon($date);
         $range  = Preferences::get('viewRange', '1M')->data;
         $start  = Navigation::startOfPeriod($carbon, $range);
@@ -345,7 +354,7 @@ class CategoryController extends Controller
 
         return Response::json($data);
 
-
+        **/
     }
 
     /**
@@ -363,6 +372,7 @@ class CategoryController extends Controller
      */
     public function spentInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
+        /**
         $cache = new CacheProperties; // chart properties for cache:
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -387,6 +397,7 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return $data;
+         * */
     }
 
     /**
@@ -399,6 +410,7 @@ class CategoryController extends Controller
      */
     private function filterCollection(Carbon $start, Carbon $end, Collection $set, Collection $categories): Collection
     {
+        /**
         $entries = new Collection;
 
         while ($start < $end) { // filter the set:
@@ -408,7 +420,7 @@ class CategoryController extends Controller
                     return $category->dateFormatted == $start->format('Y-m');
                 }
             );
-            /** @var Category $category */
+            /** @var Category $category
             foreach ($categories as $category) { // check for each category if its in the current set.
                 $entry = $currentSet->filter( // if its in there, use the value.
                     function (Category $cat) use ($category) {
@@ -426,6 +438,7 @@ class CategoryController extends Controller
         }
 
         return $entries;
+         * */
     }
 
     /**
@@ -437,6 +450,7 @@ class CategoryController extends Controller
      */
     private function invertSelection(Collection $entries): Collection
     {
+        /**
         $result = new Collection;
         foreach ($entries as $entry) {
             $new   = [$entry[0]];
@@ -448,19 +462,21 @@ class CategoryController extends Controller
         }
 
         return $result;
+         * **/
 
     }
 
     /**
-     * @param SCRI     $repository
+     * @param CRI     $repository
      * @param Category $category
      * @param Carbon   $start
      * @param Carbon   $end
      *
      * @return array
      */
-    private function makePeriodChart(SCRI $repository, Category $category, Carbon $start, Carbon $end)
+    private function makePeriodChart(CRI $repository, Category $category, Carbon $start, Carbon $end)
     {
+        /**
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -490,6 +506,7 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return $data;
+         */ 
     }
 
 }

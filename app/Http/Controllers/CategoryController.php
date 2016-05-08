@@ -3,9 +3,9 @@
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests\CategoryFormRequest;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface as SCRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -69,12 +69,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SCRI     $repository
+     * @param CRI      $repository
      * @param Category $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(SCRI $repository, Category $category)
+    public function destroy(CRI $repository, Category $category)
     {
 
         $name = $category->name;
@@ -108,18 +108,17 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI  $repository
-     * @param SCRI $singleRepository
+     * @param CRI $repository
      *
      * @return \Illuminate\View\View
      */
-    public function index(CRI $repository, SCRI $singleRepository)
+    public function index(CRI $repository)
     {
         $categories = $repository->getCategories();
 
         $categories->each(
-            function (Category $category) use ($singleRepository) {
-                $category->lastActivity = $singleRepository->getLatestActivity($category);
+            function (Category $category) use ($repository) {
+                $category->lastActivity = $repository->lastUseDate($category, new Collection);
             }
         );
 
@@ -137,7 +136,7 @@ class CategoryController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->startOfMonth());
-        $list     = $repository->listNoCategory($start, $end);
+        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), $start, $end);
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -147,26 +146,24 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SCRI     $repository
+     * @param CRI      $repository
      * @param Category $category
      *
      * @return \Illuminate\View\View
      */
-    public function show(SCRI $repository, Category $category)
+    public function show(CRI $repository, Category $category)
     {
         $hideCategory = true; // used in list.
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $page         = intval(Input::get('page'));
-        $set          = $repository->getJournals($category, $page, $pageSize);
-        $count        = $repository->countJournals($category);
-        $subTitle     = $category->name;
-        $journals     = new LengthAwarePaginator($set, $count, $pageSize, $page);
+        $journals     = $repository->getJournals($category, $page, $pageSize);
         $journals->setPath('categories/show/' . $category->id);
 
         // list of ranges for list of periods:
 
         // oldest transaction in category:
-        $start   = $repository->getFirstActivityDate($category);
+        //$start   = $repository->getFirstActivityDate($category);
+        $start   = $repository->firstUseDate($category, new Account);
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = Navigation::endOfX(new Carbon, $range);
@@ -179,26 +176,22 @@ class CategoryController extends Controller
         $cache->addProperty('category-show');
         $cache->addProperty($category->id);
 
-        // get all spent and earned data:
-        // get amount earned in period, grouped by day.
-        $spentArray  = $repository->spentPerDay($category, $start, $end, new Collection);
-        $earnedArray = $repository->earnedPerDay($category, $start, $end, new Collection);
 
         if ($cache->has()) {
-            $entries = $cache->get();
-
-            return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+            //$entries = $cache->get();
+            //return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
         }
 
+
+        $categoryCollection = new Collection([$category]);
+        $empty              = new Collection;
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-
-            // get data from spentArray:
-            $spent    = $this->getSumOfRange($end, $currentEnd, $spentArray);
-            $earned   = $this->getSumOfRange($end, $currentEnd, $earnedArray);
-            $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $spent      = $repository->spentInPeriod($categoryCollection, $empty, $end, $currentEnd);
+            $earned     = $repository->earnedInPeriod($categoryCollection, $empty, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
             $entries->push([$dateStr, $dateName, $spent, $earned]);
 
             $end = Navigation::subtractPeriod($end, $range, 1);
@@ -210,28 +203,28 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param SCRI                              $repository
+     * @param CRI                               $repository
      * @param Category                          $category
      *
      * @param                                   $date
      *
      * @return \Illuminate\View\View
      */
-    public function showWithDate(SCRI $repository, Category $category, string $date)
+    public function showWithDate(CRI $repository, Category $category, string $date)
     {
-        $carbon   = new Carbon($date);
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = Navigation::startOfPeriod($carbon, $range);
-        $end      = Navigation::endOfPeriod($carbon, $range);
-        $subTitle = $category->name;
-
+        $carbon       = new Carbon($date);
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = Navigation::startOfPeriod($carbon, $range);
+        $end          = Navigation::endOfPeriod($carbon, $range);
+        $subTitle     = $category->name;
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-
-        $set      = $repository->getJournalsInRange($category, $start, $end, $page, $pageSize);
-        $count    = $repository->countJournals($category, $start, $end);
-        $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
+        $offset       = ($page - 1) * $pageSize;
+        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
+        $count        = $set->count();
+        $subSet       = $set->splice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
         return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
@@ -239,11 +232,11 @@ class CategoryController extends Controller
 
     /**
      * @param CategoryFormRequest $request
-     * @param SCRI                $repository
+     * @param CRI                 $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(CategoryFormRequest $request, SCRI $repository)
+    public function store(CategoryFormRequest $request, CRI $repository)
     {
         $categoryData = [
             'name' => $request->input('name'),
@@ -266,12 +259,12 @@ class CategoryController extends Controller
 
     /**
      * @param CategoryFormRequest $request
-     * @param SCRI                $repository
+     * @param CRI                 $repository
      * @param Category            $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CategoryFormRequest $request, SCRI $repository, Category $category)
+    public function update(CategoryFormRequest $request, CRI $repository, Category $category)
     {
         $categoryData = [
             'name' => $request->input('name'),

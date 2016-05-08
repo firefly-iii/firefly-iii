@@ -317,7 +317,7 @@ class ReportController extends Controller
         $budgets = $this->budgetHelper->getBudgetsWithExpenses($start, $end, $accounts);
 
         // find the categories we've spent money on this period with these accounts:
-        $categories = $this->helper->getCategoriesWithExpenses($start, $end, $accounts);
+        $categories = $this->helper->getCategoriesWithTransactions($start, $end, $accounts);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');

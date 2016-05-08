@@ -44,19 +44,5 @@ class CategoryServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app->bind(
-            'FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Category\SingleCategoryRepository', [$app->auth->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
-                }
-
-                return app('FireflyIII\Repositories\Category\SingleCategoryRepository', $arguments);
-            }
-        );
-
     }
 }

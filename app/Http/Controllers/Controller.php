@@ -73,7 +73,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
      * and sum up everything in the array in the given range.
      *
      * @param Carbon $start

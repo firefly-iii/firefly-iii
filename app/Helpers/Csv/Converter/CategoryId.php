@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 
 /**
  * Class CategoryId
@@ -18,8 +18,8 @@ class CategoryId extends BasicConverter implements ConverterInterface
      */
     public function convert(): Category
     {
-        /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app(SingleCategoryRepositoryInterface::class);
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
         $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
         $category   = $repository->find($value);
 

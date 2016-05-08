@@ -103,35 +103,35 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
+     * Find all transactions and IF we have spent money in them
+     * with either transactions or journals.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return Collection
      */
-    public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
+    public function getCategoriesWithTransactions(Carbon $start, Carbon $end, Collection $accounts): Collection
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
-        $collection = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
-        $second     = $repository->spentForAccountsPerMonth($accounts, $start, $end);
-        $collection = $collection->merge($second);
-        $array      = [];
-        /** @var Category $category */
-        foreach ($collection as $category) {
-            $id         = $category->id;
-            $array[$id] = $category;
-
+        $categories = $repository->getCategories();
+        $return     = new Collection;
+        foreach ($categories as $category) {
+            $lastUseDate = $repository->lastUseDate($category, $accounts);
+            if ($lastUseDate >= $start && $lastUseDate <= $end) {
+                $return->push($category);
+            }
         }
-        $set = new Collection($array);
 
-        $set = $set->sortBy(
+        $return = $return->sortBy(
             function (Category $category) {
                 return $category->name;
             }
         );
 
-        return $set;
+        return $return;
     }
 
     /**
@@ -144,15 +144,15 @@ class ReportHelper implements ReportHelperInterface
     public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection
     {
         $object = new CategoryCollection;
-
-        /**
-         * GET CATEGORIES:
-         */
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
 
-        $set = $repository->spentForAccountsPerMonth($accounts, $start, $end);
-        foreach ($set as $category) {
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
+            // CategoryCollection expects the amount in $spent:
+            $category->spent = $spent;
             $object->addCategory($category);
         }
 
@@ -312,7 +312,7 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
      * and sum up everything in the array in the given range.
      *
      * @param Carbon $start

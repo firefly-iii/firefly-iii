@@ -18,7 +18,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\SingleCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -160,10 +160,10 @@ class ReportController extends Controller
      */
     private function categoryEntry(array $attributes): string
     {
-        /** @var SingleCategoryRepositoryInterface $repository */
-        $repository = app(SingleCategoryRepositoryInterface::class);
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
         $category   = $repository->find(intval($attributes['categoryId']));
-        $journals   = $repository->getJournalsForAccountsInRange($category, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $journals   = $repository->journalsInPeriod(new Collection([$category]), $attributes['accounts'], [], $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
         return $view;
