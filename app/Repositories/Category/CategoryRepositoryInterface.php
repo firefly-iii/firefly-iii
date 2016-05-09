@@ -198,6 +198,8 @@ interface CategoryRepositoryInterface
     public function journalsInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : Collection;
 
     /**
+     * Return most recent transaction(journal) date.
+     *
      * @param Category   $category
      * @param Collection $accounts
      *

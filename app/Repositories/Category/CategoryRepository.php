@@ -573,7 +573,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $first = null;
 
         /** @var TransactionJournal $first */
-        $firstJournalQuery = $category->transactionjournals()->orderBy('date', 'DESC');
+        $firstJournalQuery = $category->transactionjournals()->orderBy('date', 'ASC');
 
         if ($accounts->count() > 0) {
             // filter journals:
@@ -643,17 +643,21 @@ class CategoryRepository implements CategoryRepositoryInterface
         $first = $query->get(TransactionJournal::queryFields());
 
         // then collection transactions (harder)
-        $query = $this->user->transactions()
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.id');
+        $query = $this->user->transactions();
         $query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
         $query->where('category_transaction.category_id', $category->id);
-        $second = $query->get('transaction_journals.*');
+        $second = $query->get(['transaction_journals.*']);
 
 
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);
 
-        return $complete;
+        // create paginator
+        $offset    = ($page - 1) * $pageSize;
+        $subSet    = $complete->slice($offset, $pageSize);
+        $paginator = new LengthAwarePaginator($subSet, $complete->count(), $pageSize, $page);
+
+        return $paginator;
     }
 
     /**
@@ -696,7 +700,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         // then collection transactions (harder)
         $query = $this->user->transactions()
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.id')
                             ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
                             ->where('transaction_journals.date', '<=', $end->format('Y-m-d 23:59:59'));
         if (count($types) > 0) {
@@ -712,7 +715,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
             $query->whereIn('category_transaction.category_id', $categoryIds);
         }
-        $second   = $query->get('transaction_journals.*');
+        $second   = $query->get(['transaction_journals.*']);
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);
 
@@ -785,7 +788,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $last = null;
 
         /** @var TransactionJournal $first */
-        $lastJournalQuery = $category->transactionjournals()->orderBy('date', 'ASC');
+        $lastJournalQuery = $category->transactionjournals()->orderBy('date', 'DESC');
 
         if ($accounts->count() > 0) {
             // filter journals:
@@ -804,7 +807,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         $lastTransactionQuery = $category->transactions()
                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                         ->orderBy('transaction_journals.date', 'ASC');
+                                         ->orderBy('transaction_journals.date', 'DESC');
         if ($accounts->count() > 0) {
             // filter journals:
             $ids = $accounts->pluck('id')->toArray();

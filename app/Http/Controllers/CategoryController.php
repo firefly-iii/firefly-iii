@@ -163,7 +163,7 @@ class CategoryController extends Controller
 
         // oldest transaction in category:
         //$start   = $repository->getFirstActivityDate($category);
-        $start   = $repository->firstUseDate($category, new Account);
+        $start   = $repository->firstUseDate($category, new Collection);
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = Navigation::endOfX(new Carbon, $range);
