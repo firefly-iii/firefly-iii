@@ -378,7 +378,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $journals = $this->journalsInPeriod($categories, $accounts, $types, $start, $end);
         $sum      = '0';
         foreach ($journals as $journal) {
@@ -652,6 +652,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);
 
+        // sort:
+        $complete = $complete->sortByDesc(
+            function (TransactionJournal $journal) {
+                return $journal->date->format('Ymd');
+            }
+        );
+
         // create paginator
         $offset    = ($page - 1) * $pageSize;
         $subSet    = $complete->slice($offset, $pageSize);
@@ -677,7 +684,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         // first collect actual transaction journals (fairly easy)
         $query = $this->user->transactionjournals()->expanded();
 
-        if ($end > $start) {
+        if ($end >= $start) {
             $query->before($end)->after($start);
         }
 
@@ -833,8 +840,26 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $journals = $this->journalsInPeriod($categories, $accounts, $types, $start, $end);
+        $sum      = '0';
+        foreach ($journals as $journal) {
+            $sum = bcadd(TransactionJournal::amount($journal), $sum);
+        }
+
+        return $sum;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string
+    {
+        $journals = $this->journalsInPeriodWithoutCategory($accounts, $start, $end);
         $sum      = '0';
         foreach ($journals as $journal) {
             $sum = bcadd(TransactionJournal::amount($journal), $sum);

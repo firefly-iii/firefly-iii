@@ -193,6 +193,15 @@ interface CategoryRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @return string
+     */
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
      * @return Collection
      */
     public function journalsInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : Collection;

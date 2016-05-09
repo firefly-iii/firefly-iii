@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
  * @property-read \FireflyIII\User                                              $user
  * @property string                                                             $dateFormatted
- * @property float                                                              $spent
+ * @property string                                                              $spent
  * @property \Carbon\Carbon                                                     $lastActivity
  * @property string                                                             $type
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereId($value)
