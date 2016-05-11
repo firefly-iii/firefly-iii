@@ -15,7 +15,6 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class BudgetRepository
@@ -78,7 +77,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $oldest  = Carbon::create()->startOfYear();
         $journal = $budget->transactionjournals()->orderBy('date', 'ASC')->first();
-        if ($journal) {
+        if (!is_null($journal)) {
             $oldest = $journal->date < $oldest ? $journal->date : $oldest;
         }
 
@@ -86,8 +85,9 @@ class BudgetRepository implements BudgetRepositoryInterface
             ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.id')
             ->orderBy('transaction_journals.date', 'ASC')->first(['transactions.*', 'transaction_journals.date']);
-        if ($transaction) {
-            $oldest = $transaction->date < $oldest ? $transaction->date : $oldest;
+        if (!is_null($transaction)) {
+            $carbon = new Carbon($transaction->date);
+            $oldest = $carbon < $oldest ? $carbon : $oldest;
         }
 
         return $oldest;
@@ -187,8 +187,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // first get all journals for all budget(s):
         $journalQuery = $this->user->transactionjournals()
                                    ->expanded()
-                                   ->before($end)
                                    ->sortCorrectly()
+                                   ->before($end)
                                    ->after($start)
                                    ->leftJoin(
                                        'transactions as source',
@@ -204,6 +204,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         // get them:
         $journals = $journalQuery->get(TransactionJournal::queryFields());
+
         //Log::debug('journalsInPeriod journal count is ' . $journals->count());
 
         // then get transactions themselves.
@@ -302,15 +303,80 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string
     {
-        $set = $this->journalsInPeriod($budgets, $accounts, $start, $end);
-        //Log::debug('spentInPeriod set count is ' . $set->count());
-        $sum = '0';
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $sum = bcadd($sum, TransactionJournal::amount($journal));
+        // first collect actual transaction journals (fairly easy)
+        $query = $this->user
+            ->transactionjournals()
+            ->distinct()
+            ->leftJoin(
+                'transactions as t', function (JoinClause $join) {
+                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+            }
+            );
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->whereIn('t.account_id', $accountIds);
+        }
+        if ($budgets->count() > 0) {
+            $budgetIds = $budgets->pluck('id')->toArray();
+            $query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('budget_transaction_journal.budget_id', $budgetIds);
         }
 
-        Log::debug('spentInPeriod between ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d') . ' is ' . $sum);
+        // that should do it:
+        $first = strval($query->sum('t.amount'));
+
+        // then collection transactions (harder)
+        $query = $this->user->transactions()
+                            ->where('transactions.amount', '<', 0)
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 23:59:59'));
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->whereIn('transactions.account_id', $accountIds);
+        }
+        if ($budgets->count() > 0) {
+            $budgetIds = $budgets->pluck('id')->toArray();
+            $query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
+            $query->whereIn('budget_transaction.budget_id', $budgetIds);
+        }
+        $second = strval($query->sum('transactions.amount'));
+
+        return bcadd($first, $second);
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        $query = $this->user->transactionjournals()
+                            ->distinct()
+                            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                            ->leftJoin(
+                                'transactions as t', function (JoinClause $join) {
+                                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                            }
+                            )
+                            ->leftJoin('budget_transaction', 't.id', '=', 'budget_transaction.transaction_id')
+                            ->whereNull('budget_transaction_journal.id')
+                            ->whereNull('budget_transaction.id')
+                            ->before($end)
+                            ->after($start);
+
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+
+            $query->whereIn('t.account_id', $accountIds);
+        }
+        $sum = strval($query->sum('t.amount'));
 
         return $sum;
     }
@@ -402,25 +468,4 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $limit;
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        $set = $this->journalsInPeriodWithoutBudget($accounts, $start, $end);
-        //Log::debug('spentInPeriod set count is ' . $set->count());
-        $sum = '0';
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $sum = bcadd($sum, TransactionJournal::amount($journal));
-        }
-
-        Log::debug('spentInPeriodWithoutBudget between ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d') . ' is ' . $sum);
-
-        return $sum;
-    }
 }

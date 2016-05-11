@@ -9,7 +9,6 @@ use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -148,10 +147,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     * @param Collection                  $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     * @param Collection $categories
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -241,8 +240,8 @@ class CategoryController extends Controller
             // return Response::json($cache->get());
         }
 
-        /** @var CategoryRepositoryInterface $repository */
-        $repository         = app(CategoryRepositoryInterface::class);
+        /** @var CRI $repository */
+        $repository         = app(CRI::class);
         $categoryCollection = new Collection([$category]);
         // loop over period, add by users range:
         $current   = clone $start;

@@ -162,7 +162,6 @@ class CategoryController extends Controller
         // list of ranges for list of periods:
 
         // oldest transaction in category:
-        //$start   = $repository->getFirstActivityDate($category);
         $start   = $repository->firstUseDate($category, new Collection);
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = Navigation::startOfPeriod($start, $range);

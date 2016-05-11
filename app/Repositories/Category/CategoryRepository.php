@@ -8,8 +8,10 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class CategoryRepository
@@ -53,12 +55,24 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals = $this->journalsInPeriod($categories, $accounts, $types, $start, $end);
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd(TransactionJournal::amount($journal), $sum);
-        }
+        $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $sum   = bcmul($this->sumInPeriod($categories, $accounts, $types, $start, $end), '-1');
+
+        return $sum;
+
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) :string
+    {
+        $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $sum   = $this->sumInPeriodWithoutCategory($accounts, $types, $start, $end);
 
         return $sum;
     }
@@ -79,7 +93,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $category;
     }
-
 
     /**
      * @param Category   $category
@@ -118,10 +131,13 @@ class CategoryRepository implements CategoryRepositoryInterface
             $firstTransactionQuery->whereIn('transactions.account_id', $ids);
         }
 
-        $firstTransaction = $firstJournalQuery->first(['transaction_journals.*']);
+        $firstTransaction = $firstTransactionQuery->first(['transaction_journals.*']);
 
-        if (!is_null($firstTransaction) && !is_null($first) && $firstTransaction->date < $first) {
-            $first = $firstTransaction->date;
+        if (!is_null($firstTransaction) && ((!is_null($first) && $firstTransaction->date < $first) || is_null($first))) {
+            $first = new Carbon($firstTransaction->date);
+        }
+        if (is_null($first)) {
+            return new Carbon('1900-01-01');
         }
 
         return $first;
@@ -162,25 +178,30 @@ class CategoryRepository implements CategoryRepositoryInterface
         $first = $query->get(TransactionJournal::queryFields());
 
         // then collection transactions (harder)
-        $query = $this->user->transactions();
-        $query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
-        $query->where('category_transaction.category_id', $category->id);
+        $query  = $this->user->transactionjournals()->distinct()
+                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                             ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id')
+                             ->where('category_transaction.category_id', $category->id);
         $second = $query->get(['transaction_journals.*']);
-
 
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);
 
         // sort:
+        /** @var Collection $complete */
         $complete = $complete->sortByDesc(
-            function (TransactionJournal $journal) {
-                return $journal->date->format('Ymd');
+            function ($model) {
+                $date = new Carbon($model->date);
+
+                return intval($date->format('U'));
             }
         );
-
         // create paginator
-        $offset    = ($page - 1) * $pageSize;
-        $subSet    = $complete->slice($offset, $pageSize);
+        $offset = ($page - 1) * $pageSize;
+        Log::debug('Page is ' . $page);
+        Log::debug('Offset is ' . $offset);
+        Log::debug('pagesize is ' . $pageSize);
+        $subSet    = $complete->slice($offset, $pageSize)->all();
         $paginator = new LengthAwarePaginator($subSet, $complete->count(), $pageSize, $page);
 
         return $paginator;
@@ -322,6 +343,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         /** @var TransactionJournal $first */
         $lastJournalQuery = $category->transactionjournals()->orderBy('date', 'DESC');
+        Log::debug('lastUseDate ' . $category->name . ' (' . $category->id . ')');
 
         if ($accounts->count() > 0) {
             // filter journals:
@@ -334,6 +356,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         if ($lastJournal) {
             $last = $lastJournal->date;
+            Log::debug('last is now ' . $last);
         }
 
         // check transactions:
@@ -347,10 +370,15 @@ class CategoryRepository implements CategoryRepositoryInterface
             $lastTransactionQuery->whereIn('transactions.account_id', $ids);
         }
 
-        $lastTransaction = $lastJournalQuery->first(['transaction_journals.*']);
+        $lastTransaction = $lastTransactionQuery->first(['transaction_journals.*']);
+        if (!is_null($lastTransaction)) {
+        }
+        if (!is_null($lastTransaction) && ((!is_null($last) && $lastTransaction->date < $last) || is_null($last))) {
+            $last = new Carbon($lastTransaction->date);
+        }
 
-        if (!is_null($lastTransaction) && !is_null($last) && $lastTransaction->date < $last) {
-            $last = $lastTransaction->date;
+        if (is_null($last)) {
+            return new Carbon('1900-01-01');
         }
 
         return $last;
@@ -366,12 +394,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals = $this->journalsInPeriod($categories, $accounts, $types, $start, $end);
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd(TransactionJournal::amount($journal), $sum);
-        }
+        $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $sum   = $this->sumInPeriod($categories, $accounts, $types, $start, $end);
 
         return $sum;
     }
@@ -385,12 +409,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string
     {
-        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals = $this->journalsInPeriodWithoutCategory($accounts, $types, $start, $end);
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd(TransactionJournal::amount($journal), $sum);
-        }
+        $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $sum   = $this->sumInPeriodWithoutCategory($accounts, $types, $start, $end);
 
         return $sum;
     }
@@ -429,21 +449,100 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Collection $categories
      * @param Collection $accounts
+     * @param array      $types
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return string
      */
-    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) :string
+    private function sumInPeriod(Collection $categories, Collection $accounts, array $types, Carbon $start, Carbon $end): string
     {
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals = $this->journalsInPeriodWithoutCategory($accounts, $types, $start, $end);
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd(TransactionJournal::amount($journal), $sum);
+        // first collect actual transaction journals (fairly easy)
+        $query = $this->user
+            ->transactionjournals()
+            ->distinct()
+            ->transactionTypes($types)
+            ->leftJoin(
+                'transactions as t', function (JoinClause $join) {
+                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+            }
+            );
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->whereIn('t.account_id', $accountIds);
+        }
+        if ($categories->count() > 0) {
+            $categoryIds = $categories->pluck('id')->toArray();
+            $query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('category_transaction_journal.category_id', $categoryIds);
         }
 
+        // that should do it:
+        $first = strval($query->sum('t.amount'));
+
+        // then collection transactions (harder)
+        $query = $this->user->transactions()
+                            ->where('transactions.amount', '<', 0)
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 23:59:59'));
+        if (count($types) > 0) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+            $query->whereIn('transaction_types.type', $types);
+        }
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->whereIn('transactions.account_id', $accountIds);
+        }
+        if ($categories->count() > 0) {
+            $categoryIds = $categories->pluck('id')->toArray();
+            $query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+            $query->whereIn('category_transaction.category_id', $categoryIds);
+        }
+        $second = strval($query->sum('transactions.amount'));
+
+        return bcadd($first, $second);
+
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    private function sumInPeriodWithoutCategory(Collection $accounts, array $types, Carbon $start, Carbon $end): string
+    {
+        $query = $this->user->transactionjournals()
+                            ->distinct()
+                            ->transactionTypes($types)
+                            ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                            ->leftJoin(
+                                'transactions as t', function (JoinClause $join) {
+                                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                            }
+                            )
+                            ->leftJoin('category_transaction', 't.id', '=', 'category_transaction.transaction_id')
+                            ->whereNull('category_transaction_journal.id')
+                            ->whereNull('category_transaction.id')
+                            ->before($end)
+                            ->after($start);
+
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+
+            $query->whereIn('t.account_id', $accountIds);
+        }
+        $sum = strval($query->sum('t.amount'));
+
         return $sum;
+
     }
 }

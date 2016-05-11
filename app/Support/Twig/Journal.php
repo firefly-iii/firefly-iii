@@ -43,6 +43,7 @@ class Journal extends Twig_Extension
                 }
                 $array[] = '<a title="' . e($entry->name) . '" href="' . route('accounts.show', $entry->id) . '">' . e($entry->name) . '</a>';
             }
+            $array  = array_unique($array);
             $result = join(', ', $array);
             $cache->store($result);
 
@@ -111,6 +112,7 @@ class Journal extends Twig_Extension
                 }
                 $array[] = '<a title="' . e($entry->name) . '" href="' . route('accounts.show', $entry->id) . '">' . e($entry->name) . '</a>';
             }
+            $array  = array_unique($array);
             $result = join(', ', $array);
             $cache->store($result);
 

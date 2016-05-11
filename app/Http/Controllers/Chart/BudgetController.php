@@ -150,7 +150,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('all');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            //return Response::json($cache->get());
         }
         $budgets     = $repository->getActiveBudgets();
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
@@ -202,6 +202,8 @@ class BudgetController extends Controller
         $allEntries->push([trans('firefly.no_budget'), '0', '0', $sum, '0', '0']);
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
+
+        return ' ' . json_encode($data);
 
         return Response::json($data);
     }
