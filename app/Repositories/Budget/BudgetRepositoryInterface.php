@@ -53,6 +53,7 @@ interface BudgetRepositoryInterface
     /**
      * This method returns the oldest journal or transaction date known to this budget.
      * Will cache result.
+     *
      * @param Budget $budget
      *
      * @return Carbon
@@ -217,6 +218,15 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function journalsInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param Collection $budgets

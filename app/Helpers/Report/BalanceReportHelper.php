@@ -84,10 +84,13 @@ class BalanceReportHelper implements BalanceReportHelperInterface
             Log::debug('Create and add balance line for budget #' . $budget->id);
             $balance->addBalanceLine($this->createBalanceLine($budget, $repetition, $accounts));
         }
+        $noBudgetLine       = $this->createNoBudgetLine($accounts, $start, $end);
+        $coveredByTagLine   = $this->createTagsBalanceLine($accounts, $start, $end);
+        $leftUnbalancedLine = $this->createLeftUnbalancedLine($noBudgetLine, $coveredByTagLine);
 
-        $balance->addBalanceLine($this->createEmptyBalanceLine($accounts, $spentData));
-        $balance->addBalanceLine($this->createTagsBalanceLine($accounts, $start, $end));
-        $balance->addBalanceLine($this->createDifferenceBalanceLine($accounts, $spentData, $start, $end));
+        $balance->addBalanceLine($noBudgetLine);
+        $balance->addBalanceLine($coveredByTagLine);
+        $balance->addBalanceLine($leftUnbalancedLine);
         $balance->setBalanceHeader($header);
 
         // remove budgets without expenses from balance lines:
@@ -155,7 +158,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     private function createBalanceLine(BudgetModel $budget, LimitRepetition $repetition, Collection $accounts): BalanceLine
     {
         Log::debug('Create line for budget #' . $budget->id . ' and repetition #' . $repetition->id);
-        $line = new BalanceLine;
+        $line           = new BalanceLine;
         $budget->amount = $repetition->amount;
         $line->setBudget($budget);
 
@@ -178,90 +181,55 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
-     * @param Account    $account
-     * @param Collection $spentData
-     * @param Collection $tagsLeft
+     * @param BalanceLine $noBudgetLine
+     * @param BalanceLine $coveredByTagLine
      *
-     * @return BalanceEntry
+     * @return BalanceLine
      */
-    private function createDifferenceBalanceEntry(Account $account, Collection $spentData, Collection $tagsLeft): BalanceEntry
+    private function createLeftUnbalancedLine(BalanceLine $noBudgetLine, BalanceLine $coveredByTagLine): BalanceLine
     {
-        $entry = $spentData->filter(
-            function (TransactionJournal $model) use ($account) {
-                return $model->account_id == $account->id && is_null($model->budget_id);
-            }
-        );
-        $spent = '0';
-        if (!is_null($entry->first())) {
-            $spent = $entry->first()->spent;
-        }
-        $leftEntry = $tagsLeft->filter(
-            function (Tag $tag) use ($account) {
-                return $tag->account_id == $account->id;
-            }
-        );
-        $left      = '0';
-        if (!is_null($leftEntry->first())) {
-            $left = $leftEntry->first()->sum;
-        }
-        $diffValue = bcadd($spent, $left);
+        $line = new BalanceLine;
+        $line->setRole(BalanceLine::ROLE_DIFFROLE);
+        $noBudgetEntries = $noBudgetLine->getBalanceEntries();
+        $tagEntries      = $coveredByTagLine->getBalanceEntries();
 
-        // difference:
-        $diffEntry = new BalanceEntry;
-        $diffEntry->setAccount($account);
-        $diffEntry->setSpent($diffValue);
+        /** @var BalanceEntry $entry */
+        foreach ($noBudgetEntries as $entry) {
+            $account  = $entry->getAccount();
+            $tagEntry = $tagEntries->filter(
+                function (BalanceEntry $current) use ($account) {
+                    return $current->getAccount()->id === $account->id;
+                }
+            );
+            if ($tagEntry->first()) {
+                // found corresponding entry. As we should:
+                $newEntry = new BalanceEntry;
+                $newEntry->setAccount($account);
+                $spent = bcadd($tagEntry->first()->getLeft(), $entry->getSpent());
+                $newEntry->setSpent($spent);
+                $line->addBalanceEntry($newEntry);
+            }
+        }
 
-        return $diffEntry;
+        return $line;
+
+
     }
 
     /**
      * @param Collection $accounts
-     * @param Collection $spentData
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     *
-     *
      * @return BalanceLine
      */
-    private function createDifferenceBalanceLine(Collection $accounts, Collection $spentData, Carbon $start, Carbon $end): BalanceLine
-    {
-        $diff     = new BalanceLine;
-        $tagsLeft = $this->allCoveredByBalancingActs($accounts, $start, $end);
-
-        $diff->setRole(BalanceLine::ROLE_DIFFROLE);
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $diffEntry = $this->createDifferenceBalanceEntry($account, $spentData, $tagsLeft);
-            $diff->addBalanceEntry($diffEntry);
-
-        }
-
-        return $diff;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $spentData
-     *
-     * @return BalanceLine
-     */
-    private function createEmptyBalanceLine(Collection $accounts, Collection $spentData): BalanceLine
+    private function createNoBudgetLine(Collection $accounts, Carbon $start, Carbon $end): BalanceLine
     {
         $empty = new BalanceLine;
 
         foreach ($accounts as $account) {
-            $entry = $spentData->filter(
-                function (TransactionJournal $model) use ($account) {
-                    return $model->account_id == $account->id && is_null($model->budget_id);
-                }
-            );
-            $spent = '0';
-            if (!is_null($entry->first())) {
-                $spent = $entry->first()->spent;
-            }
-
+            $spent = $this->budgetRepository->spentInPeriodWithoutBudget(new Collection([$account]), $start, $end);
+            //$spent ='0';
             // budget
             $budgetEntry = new BalanceEntry;
             $budgetEntry->setAccount($account);
