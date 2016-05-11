@@ -132,7 +132,7 @@
                                         {% endif %}
                                     </td>
                                     <td style="width:100px;">
-                                        <img src="{{ route('attachments.preview', att.id) }}" />
+                                        <img src="{{ route('attachments.preview', att.id) }}"/>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -154,54 +154,103 @@
             {% endif %}
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
-
-            {% for t in journal.transactions %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ t.account.name }}</h3>
+            {% if transactions.count == 2 %}
+                {% for t in transactions %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ t.account.name }}</h3>
+                        </div>
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <td style="width:30%;">{{ 'account'|_ }}</td>
+                                <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'account_type'|_ }}</td>
+                                <td>{{ t.account.accounttype.type|_ }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'amount'|_ }}</td>
+                                <td>{{ t|formatTransaction }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'newBalance'|_ }}</td>
+                                <td>null</td>
+                            </tr>
+                            {% if t.description %}
+                                <tr>
+                                    <td>{{ trans('form.description') }}</td>
+                                    <td>{{ t.description }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if t.categories[0] %}
+                                <tr>
+                                    <td>{{ 'category'|_ }}</td>
+                                    <td>
+                                        <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if t.budgets[0] %}
+                                <tr>
+                                    <td>{{ 'budget'|_ }}</td>
+                                    <td>
+                                        <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </table>
                     </div>
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <td style="width:30%;">{{ 'account'|_ }}</td>
-                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'account_type'|_ }}</td>
-                            <td>{{ t.account.accounttype.type|_ }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'amount'|_ }}</td>
-                            <td>{{ t|formatTransaction }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'newBalance'|_ }}</td>
-                            <td>{{ t.before|formatAmount }} &rarr; {{ t.after|formatAmount }}</td>
-                        </tr>
-                        {% if t.description %}
-                            <tr>
-                                <td>{{ trans('form.description') }}</td>
-                                <td>{{ t.description }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if t.categories[0] %}
-                            <tr>
-                                <td>{{ 'category'|_ }}</td>
-                                <td>
-                                    <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
-                                </td>
-                            </tr>
-                        {% endif %}
-                        {% if t.budgets[0] %}
-                            <tr>
-                                <td>{{ 'budget'|_ }}</td>
-                                <td>
-                                    <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
+
+    <!-- more than two start-->
+    {% if transactions.count > 2 %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Transactions</h3>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>{{ trans('list.account') }}</th>
+                            <th>{{ trans('list.account_type') }}</th>
+                            <th>{{ trans('list.amount') }}</th>
+                            <th>{{ trans('list.new_balance') }}</th>
+                            <th>{{ trans('list.description') }}</th>
+                            <th>{{ trans('list.category') }}</th>
+                            <th>{{ trans('list.budget') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for t in transactions %}
+                        <tr>
+                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
+                            <td>{{ t.account.accounttype.type|_ }}</td>
+                            <td>{{ t.sum|formatAmount }}</td>
+                            <td>null</td>
+                            <td>{{ t.description }}</td>
+                            <td>
+                                {% if t.categories[0] %}
+                                    <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.budgets[0] %}
+                                    <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end -->
 {% endblock %}

@@ -15,6 +15,7 @@ use FireflyIII\Crud\Split\JournalInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -41,6 +42,13 @@ class SplitController extends Controller
         View::share('title', trans('firefly.split-transactions'));
     }
 
+    public function edit(TransactionJournal $journal)
+    {
+        $count = $journal->transactions()->count();
+        if ($count === 2) {
+            return redirect(route('transactions.edit', [$journal->id]));
+        }
+    }
 
     /**
      * @param Request $request
@@ -88,7 +96,8 @@ class SplitController extends Controller
      * @param SplitJournalFormRequest $request
      * @param JournalInterface        $repository
      *
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
      */
     public function postJournalFromStore(SplitJournalFormRequest $request, JournalInterface $repository)
     {

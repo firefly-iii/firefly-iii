@@ -12,6 +12,7 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Auth;
 use Carbon\Carbon;
+use DB;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
@@ -21,7 +22,6 @@ use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -147,6 +147,10 @@ class TransactionController extends Controller
      */
     public function edit(TransactionJournal $journal)
     {
+        $count = $journal->transactions()->count();
+        if ($count > 2) {
+            return redirect(route('split.journal.edit', [$journal->id]));
+        }
         /** @var ARI $accountRepository */
         $accountRepository = app(ARI::class);
         /** @var BudgetRepositoryInterface $budgetRepository */
@@ -400,12 +404,11 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionJournal         $journal
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\View\View
      */
-    public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function show(TransactionJournal $journal)
     {
 
         /** @var Collection $set */
@@ -415,17 +418,13 @@ class TransactionController extends Controller
                 $event->piggyBank = $event->piggyBank()->withTrashed()->first();
             }
         );
-
-        $journal->transactions->each(
-            function (Transaction $t) use ($journal, $repository) {
-                $t->before = $repository->getAmountBefore($journal, $t);
-                $t->after  = bcadd($t->before, $t->amount);
-            }
+        $transactions = $journal->transactions()->groupBy('transactions.account_id')->orderBy('amount', 'ASC')->get(
+            ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
         );
-        $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
     }
 
     /**
