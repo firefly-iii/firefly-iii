@@ -36,11 +36,6 @@ function drawChart() {
         columnChart('chart/category/period/' + categoryId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, id);
 
     });
-
-    //stackedColumnChart('chart/budget/year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budgets');
-    stackedColumnChart('chart/category/spent-in-period/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-spent-in-period');
-    stackedColumnChart('chart/category/earned-in-period/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-earned-in-period');
-
 }
 
 

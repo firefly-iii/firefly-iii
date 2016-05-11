@@ -103,46 +103,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Returns a chart of what has been earned in this period in each category
-     * grouped by month.
-     *
-     * @param CRI                         $repository
-     * @param                             $reportType
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function earnedInPeriod(CRI $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        /**
-         * $cache = new CacheProperties; // chart properties for cache:
-         * $cache->addProperty($start);
-         * $cache->addProperty($end);
-         * $cache->addProperty($reportType);
-         * $cache->addProperty($accounts);
-         * $cache->addProperty('category');
-         * $cache->addProperty('earned-in-period');
-         * if ($cache->has()) {
-         * return Response::json($cache->get());
-         * }
-         *
-         * $set        = $repository->earnedForAccountsPerMonth($accounts, $start, $end);
-         * $categories = $set->unique('id')->sortBy(
-         * function (Category $category) {
-         * return $category->name;
-         * }
-         * );
-         * $entries    = $this->filterCollection($start, $end, $set, $categories);
-         * $data       = $this->generator->earnedInPeriod($categories, $entries);
-         * $cache->store($data);
-         *
-         * return $data;
-         **/
-    }
-
-    /**
      * Show this month's category overview.
      *
      * @param CRI $repository
@@ -196,82 +156,67 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function multiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function multiYear(Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
-        /**
-         * // /** @var CRI $repository
-         * // $repository = app(CRI::class);
-         *
-         * // chart properties for cache:
-         * $cache = new CacheProperties();
-         * $cache->addProperty($reportType);
-         * $cache->addProperty($start);
-         * $cache->addProperty($end);
-         * $cache->addProperty($accounts);
-         * $cache->addProperty($categories);
-         * $cache->addProperty('multiYearCategory');
-         *
-         * if ($cache->has()) {
-         * return Response::json($cache->get());
-         * }
-         *
-         * $entries = new Collection;
-         * $set     = $repository->listMultiYear($categories, $accounts, $start, $end);
-         *
-         * /** @var Category $category
-         * foreach ($categories as $category) {
-         * $entry = ['name' => '', 'spent' => [], 'earned' => []];
-         *
-         * $currentStart = clone $start;
-         * while ($currentStart < $end) {
-         * // fix the date:
-         * $year       = $currentStart->year;
-         * $currentEnd = clone $currentStart;
-         * $currentEnd->endOfYear();
-         *
-         *
-         * // get data:
-         * if (is_null($category->id)) {
-         * $name   = trans('firefly.noCategory');
-         * $spent  = $repository->sumSpentNoCategory($accounts, $currentStart, $currentEnd);
-         * $earned = $repository->sumEarnedNoCategory($accounts, $currentStart, $currentEnd);
-         * } else {
-         * // get from set:
-         * $entrySpent  = $set->filter(
-         * function (Category $cat) use ($year, $category) {
-         * return ($cat->type == 'Withdrawal' && $cat->dateFormatted == $year && $cat->id == $category->id);
-         * }
-         * )->first();
-         * $entryEarned = $set->filter(
-         * function (Category $cat) use ($year, $category) {
-         * return ($cat->type == 'Deposit' && $cat->dateFormatted == $year && $cat->id == $category->id);
-         * }
-         * )->first();
-         *
-         * $name   = $category->name;
-         * $spent  = !is_null($entrySpent) ? $entrySpent->sum : 0;
-         * $earned = !is_null($entryEarned) ? $entryEarned->sum : 0;
-         * }
-         *
-         * // save to array:
-         * $entry['name']          = $name;
-         * $entry['spent'][$year]  = ($spent * -1);
-         * $entry['earned'][$year] = $earned;
-         *
-         * // jump to next year.
-         * $currentStart = clone $currentEnd;
-         * $currentStart->addDay();
-         * }
-         * $entries->push($entry);
-         * }
-         * // generate chart with data:
-         *
-         * $data = $this->generator->multiYear($entries);
-         * $cache->store($data);
-         *
-         * return Response::json($data);
-         *
-         */
+
+        /** @var CRI $repository */
+        $repository = app(CRI::class);
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($categories);
+        $cache->addProperty('multiYearCategory');
+
+        if ($cache->has()) {
+            //return Response::json($cache->get());
+        }
+
+        $entries = new Collection;
+
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $entry = ['name' => '', 'spent' => [], 'earned' => []];
+
+            $currentStart = clone $start;
+            while ($currentStart < $end) {
+                // fix the date:
+                $year       = $currentStart->year;
+                $currentEnd = clone $currentStart;
+                $currentEnd->endOfYear();
+
+                // get data:
+                if (is_null($category->id)) {
+                    $name   = trans('firefly.noCategory');
+                    $spent  = $repository->spentInPeriodWithoutCategory($accounts, $currentStart, $currentEnd);
+                    $earned = $repository->earnedInPeriodWithoutCategory($accounts, $currentStart, $currentEnd);
+                } else {
+
+                    $name   = $category->name;
+                    $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd);
+                    $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd);
+                }
+
+                // save to array:
+                $entry['name']          = $name;
+                $entry['spent'][$year]  = ($spent * -1);
+                $entry['earned'][$year] = $earned;
+
+                // jump to next year.
+                $currentStart = clone $currentEnd;
+                $currentStart->addDay();
+            }
+            $entries->push($entry);
+        }
+        // generate chart with data:
+
+        $data = $this->generator->multiYear($entries);
+        $cache->store($data);
+
+        return Response::json($data);
+
 
     }
 
@@ -345,49 +290,6 @@ class CategoryController extends Controller
         $data   = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
-    }
-
-    /**
-     * Returns a chart of what has been spent in this period in each category
-     * grouped by month.
-     *
-     * @param CRI                         $repository
-     * @param                             $reportType
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     *
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function spentInPeriod(CRI $repository, $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        /**
-         * $cache = new CacheProperties; // chart properties for cache:
-         * $cache->addProperty($start);
-         * $cache->addProperty($end);
-         * $cache->addProperty($reportType);
-         * $cache->addProperty($accounts);
-         * $cache->addProperty('category');
-         * $cache->addProperty('spent-in-period');
-         * if ($cache->has()) {
-         * return Response::json($cache->get());
-         * }
-         *
-         *
-         * $set        = $repository->spentForAccountsPerMonth($accounts, $start, $end);
-         * $categories = $set->unique('id')->sortBy(
-         * function (Category $category) {
-         * return $category->name;
-         * }
-         * );
-         * $entries    = $this->filterCollection($start, $end, $set, $categories);
-         * $entries    = $this->invertSelection($entries);
-         * $data       = $this->generator->spentInPeriod($categories, $entries);
-         * $cache->store($data);
-         *
-         * return $data;
-         * */
     }
 
     /**

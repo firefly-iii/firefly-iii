@@ -211,11 +211,7 @@ Route::group(
     Route::get('/chart/category/period/{category}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@period']);
 
     // these three charts are for reports:
-    Route::get('/chart/category/earned-in-period/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInPeriod']);
-    Route::get('/chart/category/spent-in-period/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInPeriod']);
-    Route::get(
-        '/chart/category/multi-year/{reportType}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
-    );
+    Route::get('/chart/category/multi-year/default/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']);
 
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
     Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);

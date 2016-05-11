@@ -136,7 +136,7 @@ class CategoryController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->startOfMonth());
-        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), $start, $end);
+        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end);
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
