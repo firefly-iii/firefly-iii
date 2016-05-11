@@ -868,6 +868,9 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $return     = new Collection;
         $accountIds = [];
+        // expand the number of grabbed fields:
+        $fields   = TransactionJournal::queryFields();
+        $fields[] = 'source.account_id';
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
         }
@@ -878,16 +881,16 @@ class BudgetRepository implements BudgetRepositoryInterface
                                    ->before($end)
                                    ->sortCorrectly()
                                    ->after($start)
+                                   ->leftJoin('transactions as source', 'source.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->whereIn('budget_transaction_journal.budget_id', $budgets->pluck('id')->toArray());
         // add account id's, if relevant:
         if (count($accountIds) > 0) {
-            $journalQuery->leftJoin('transactions as source', 'source.transaction_journal_id', '=', 'transaction_journals.id');
             $journalQuery->whereIn('source.account_id', $accountIds);
         }
         // get them:
         $journals = $journalQuery->get(TransactionJournal::queryFields());
-        Log::debug('journalsInPeriod journal count is ' . $journals->count());
+        //Log::debug('journalsInPeriod journal count is ' . $journals->count());
 
         // then get transactions themselves.
         $transactionQuery = $this->user->transactionjournals()
@@ -897,13 +900,14 @@ class BudgetRepository implements BudgetRepositoryInterface
                                        ->after($start)
                                        ->leftJoin('transactions as related', 'related.transaction_journal_id', '=', 'transaction_journals.id')
                                        ->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'related.id')
+                                       ->leftJoin('transactions as source', 'source.transaction_journal_id', '=', 'transaction_journals.id')
                                        ->whereIn('budget_transaction.budget_id', $budgets->pluck('id')->toArray());
 
         if (count($accountIds) > 0) {
-            $transactionQuery->leftJoin('transactions as source', 'source.transaction_journal_id', '=', 'transaction_journals.id');
             $transactionQuery->whereIn('source.account_id', $accountIds);
         }
-        $transactions = $transactionQuery->get(TransactionJournal::queryFields());
+
+        $transactions = $transactionQuery->get($fields);
 
         // return complete set:
         $return = $return->merge($transactions);

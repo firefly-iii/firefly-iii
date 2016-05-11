@@ -20,6 +20,7 @@ use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Budget as BudgetModel;
+use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -27,6 +28,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BalanceReportHelper
@@ -65,20 +67,22 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts): Balance
     {
         $balance = new Balance;
-
+        Log::debug('Build new report.');
         // build a balance header:
-        $header    = new BalanceHeader;
-        //  new Collection;// $this->budgetRepository->getBudgetsAndLimitsInRange($start, $end); // TO DO BUDGET getBudgets
-        $budgets   = $this->budgetRepository->getBudgets();
-        //  new Collection; // $this->budgetRepository->spentPerBudgetPerAccount($budgets, $accounts, $start, $end); TO DO BUDGET journalsInPeriod
-        $spentData = $this->budgetRepository->journalsInPeriod($budgets, $accounts, $start, $end);
+        $header           = new BalanceHeader;
+        $budgets          = $this->budgetRepository->getBudgets();
+        $limitRepetitions = $this->budgetRepository->getAllBudgetLimitRepetitions($start, $end);
+        $spentData        = $this->budgetRepository->journalsInPeriod($budgets, $accounts, $start, $end);
         foreach ($accounts as $account) {
             $header->addAccount($account);
+            Log::debug('Add account #' . $account->id . ' to header.');
         }
 
-        /** @var BudgetModel $budget */
-        foreach ($budgets as $budget) {
-            $balance->addBalanceLine($this->createBalanceLine($budget, $accounts, $spentData));
+        /** @var LimitRepetition $repetition */
+        foreach ($limitRepetitions as $repetition) {
+            $budget = $this->budgetRepository->find($repetition->budget_id);
+            Log::debug('Create and add balance line for budget #' . $budget->id);
+            $balance->addBalanceLine($this->createBalanceLine($budget, $repetition, $accounts));
         }
 
         $balance->addBalanceLine($this->createEmptyBalanceLine($accounts, $spentData));
@@ -142,34 +146,30 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
 
     /**
-     * @param Budget     $budget
-     * @param Collection $accounts
-     * @param Collection $spentData
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     * @param Collection      $accounts
      *
      * @return BalanceLine
      */
-    private function createBalanceLine(BudgetModel $budget, Collection $accounts, Collection $spentData): BalanceLine
+    private function createBalanceLine(BudgetModel $budget, LimitRepetition $repetition, Collection $accounts): BalanceLine
     {
+        Log::debug('Create line for budget #' . $budget->id . ' and repetition #' . $repetition->id);
         $line = new BalanceLine;
+        $budget->amount = $repetition->amount;
         $line->setBudget($budget);
-        $line->setStartDate($budget->startdate); // returned by getBudgetsAndLimitsInRange()
-        $line->setEndDate($budget->enddate); // returned by getBudgetsAndLimitsInRange()
+
+
+        $line->setStartDate($repetition->startdate);
+        $line->setEndDate($repetition->enddate);
 
         // loop accounts:
         foreach ($accounts as $account) {
             $balanceEntry = new BalanceEntry;
             $balanceEntry->setAccount($account);
-
-            // get spent:
-            $entry = $spentData->filter(
-                function (TransactionJournal $model) use ($budget, $account) {
-                    return $model->account_id == $account->id && $model->budget_id == $budget->id;
-                }
+            $spent = $this->budgetRepository->spentInPeriod(
+                new Collection([$budget]), new Collection([$account]), $repetition->startdate, $repetition->enddate
             );
-            $spent = '0';
-            if (!is_null($entry->first())) {
-                $spent = $entry->first()->spent;
-            }
             $balanceEntry->setSpent($spent);
             $line->addBalanceEntry($balanceEntry);
         }
@@ -333,7 +333,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
             }
             $newSet->push($entry);
         }
-
 
         $balance->setBalanceLines($newSet);
 

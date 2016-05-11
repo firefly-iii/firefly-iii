@@ -126,7 +126,9 @@ class VerifyDatabase extends Command
             ::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
             ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
             ->distinct()
-            ->get(['budgets.id', 'budgets.name', 'budget_transaction_journal.budget_id', 'budgets.user_id', 'users.email']);
+            ->whereNull('budget_transaction_journal.budget_id')
+            ->whereNull('budgets.deleted_at')
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -145,7 +147,9 @@ class VerifyDatabase extends Command
             ::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
             ->leftJoin('users', 'categories.user_id', '=', 'users.id')
             ->distinct()
-            ->get(['categories.id', 'categories.name', 'category_transaction_journal.category_id', 'categories.user_id', 'users.email']);
+            ->whereNull('category_transaction_journal.category_id')
+            ->whereNull('categories.deleted_at')
+            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -263,7 +267,9 @@ having transaction_count = 0
             ::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
             ->leftJoin('users', 'tags.user_id', '=', 'users.id')
             ->distinct()
-            ->get(['tags.id', 'tags.tag', 'tag_transaction_journal.tag_id', 'tags.user_id', 'users.email']);
+            ->whereNull('tag_transaction_journal.tag_id')
+            ->whereNull('tags.deleted_at')
+            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
