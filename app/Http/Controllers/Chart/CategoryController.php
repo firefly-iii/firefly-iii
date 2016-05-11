@@ -9,6 +9,7 @@ use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -264,6 +265,7 @@ class CategoryController extends Controller
          * $entries->push($entry);
          * }
          * // generate chart with data:
+         *
          * $data = $this->generator->multiYear($entries);
          * $cache->store($data);
          *
@@ -275,60 +277,55 @@ class CategoryController extends Controller
 
     /**
      * @param Category   $category
-     * @param string     $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function period(Category $category, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function period(Category $category, Carbon $start, Carbon $end, Collection $accounts)
     {
-        /**
-         * // chart properties for cache:
-         * $cache = new CacheProperties();
-         * $cache->addProperty($start);
-         * $cache->addProperty($end);
-         * $cache->addProperty($reportType);
-         * $cache->addProperty($accounts);
-         * $cache->addProperty($category->id);
-         * $cache->addProperty('category');
-         * $cache->addProperty('period');
-         * if ($cache->has()) {
-         * return Response::json($cache->get());
-         * }
-         *
-         * /** @var CategoryRepositoryInterface $repository
-         * $repository = app(CategoryRepositoryInterface::class);
-         * // loop over period, add by users range:
-         * $current   = clone $start;
-         * $viewRange = Preferences::get('viewRange', '1M')->data;
-         * $format    = strval(trans('config.month'));
-         * $set       = new Collection;
-         * while ($current < $end) {
-         * $currentStart = clone $current;
-         * $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
-         *
-         * $spent  = strval(array_sum($repository->spentPerDay($category, $currentStart, $currentEnd, $accounts)));
-         * $earned = strval(array_sum($repository->earnedPerDay($category, $currentStart, $currentEnd, $accounts)));
-         *
-         * $entry = [
-         * $category->name,
-         * $currentStart->formatLocalized($format),
-         * $spent,
-         * $earned,
-         *
-         * ];
-         * $set->push($entry);
-         * $currentEnd->addDay();
-         * $current = clone $currentEnd;
-         * }
-         * $data = $this->generator->period($set);
-         * $cache->store($data);
-         *
-         * return Response::json($data);
-         * **/
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty($category->id);
+        $cache->addProperty('category');
+        $cache->addProperty('period');
+        if ($cache->has()) {
+            // return Response::json($cache->get());
+        }
 
+        /** @var CategoryRepositoryInterface $repository */
+        $repository         = app(CategoryRepositoryInterface::class);
+        $categoryCollection = new Collection([$category]);
+        // loop over period, add by users range:
+        $current   = clone $start;
+        $viewRange = Preferences::get('viewRange', '1M')->data;
+        $format    = strval(trans('config.month'));
+        $set       = new Collection;
+        while ($current < $end) {
+            $currentStart = clone $current;
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
+            $spent        = $repository->spentInPeriod($categoryCollection, $accounts, $currentStart, $currentEnd);
+            $earned       = $repository->earnedInPeriod($categoryCollection, $accounts, $currentStart, $currentEnd);
+
+            $entry = [
+                $category->name,
+                $currentStart->formatLocalized($format),
+                $spent,
+                $earned,
+
+            ];
+            $set->push($entry);
+            $currentEnd->addDay();
+            $current = clone $currentEnd;
+        }
+        $data = $this->generator->period($set);
+        $cache->store($data);
+
+        return Response::json($data);
     }
 
     /**
