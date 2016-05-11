@@ -319,6 +319,14 @@ class TransactionJournal extends TransactionJournalSupport
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
     }
 
+    public function scopeSortCorrectly(EloquentBuilder $query)
+    {
+        $query->orderBy('transaction_journals.date', 'DESC');
+        $query->orderBy('transaction_journals.order', 'ASC');
+        $query->orderBy('transaction_journals.id', 'DESC');
+
+    }
+
     /**
      * @param EloquentBuilder $query
      */
@@ -339,7 +347,7 @@ class TransactionJournal extends TransactionJournalSupport
         }
         );
         $query->groupBy('transaction_journals.id');
-        $query->with(['categories', 'budgets', 'attachments', 'bill','transactions']);
+        $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
     }
 
     /**

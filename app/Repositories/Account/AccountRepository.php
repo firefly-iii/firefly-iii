@@ -236,8 +236,10 @@ class AccountRepository implements AccountRepositoryInterface
         $query = $this->user
             ->transactionjournals()
             ->expanded()
+            ->sortCorrectly()
             ->before($end)
-            ->after($start);
+            ->after($start)
+        ->take(10);
 
         // expand query:
         $query->leftJoin(
@@ -450,7 +452,7 @@ class AccountRepository implements AccountRepositoryInterface
         $journal = TransactionJournal::
         leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $account->id)
-                                     ->orderBy('transaction_journals.date', 'ASC')
+                                     ->sortCorrectly()
                                      ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             $date = new Carbon;
@@ -495,11 +497,10 @@ class AccountRepository implements AccountRepositoryInterface
     public function openingBalanceTransaction(Account $account): TransactionJournal
     {
         $journal = TransactionJournal
-            ::orderBy('transaction_journals.date', 'ASC')
+            ::sortCorrectly()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->orderBy('created_at', 'ASC')
             ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             return new TransactionJournal;
