@@ -148,7 +148,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param                             $reportType
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
@@ -293,72 +292,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $set
-     * @param Collection $categories
-     *
-     * @return Collection
-     */
-    private function filterCollection(Carbon $start, Carbon $end, Collection $set, Collection $categories): Collection
-    {
-        /**
-         * $entries = new Collection;
-         *
-         * while ($start < $end) { // filter the set:
-         * $row        = [clone $start];
-         * $currentSet = $set->filter( // get possibly relevant entries from the big $set
-         * function (Category $category) use ($start) {
-         * return $category->dateFormatted == $start->format('Y-m');
-         * }
-         * );
-         * /** @var Category $category
-         * foreach ($categories as $category) { // check for each category if its in the current set.
-         * $entry = $currentSet->filter( // if its in there, use the value.
-         * function (Category $cat) use ($category) {
-         * return ($cat->id == $category->id);
-         * }
-         * )->first();
-         * if (!is_null($entry)) {
-         * $row[] = $entry->earned ? round($entry->earned, 2) : round($entry->spent, 2);
-         * } else {
-         * $row[] = 0;
-         * }
-         * }
-         * $entries->push($row);
-         * $start->addMonth();
-         * }
-         *
-         * return $entries;
-         * */
-    }
-
-    /**
-     * Not the most elegant solution but it works.
-     *
-     * @param Collection $entries
-     *
-     * @return Collection
-     */
-    private function invertSelection(Collection $entries): Collection
-    {
-        /**
-         * $result = new Collection;
-         * foreach ($entries as $entry) {
-         * $new   = [$entry[0]];
-         * $count = count($entry);
-         * for ($i = 1; $i < $count; $i++) {
-         * $new[$i] = ($entry[$i] * -1);
-         * }
-         * $result->push($new);
-         * }
-         *
-         * return $result;
-         * **/
-
-    }
-
-    /**
      * @param CRI      $repository
      * @param Category $category
      * @param Carbon   $start
@@ -396,26 +329,6 @@ class CategoryController extends Controller
 
         return $data;
 
-        /**
-         * // get amount earned in period, grouped by day.
-         * // get amount spent in period, grouped by day.
-         * $spentArray  = $repository->spentPerDay($category, $start, $end, new Collection);
-         * $earnedArray = $repository->earnedPerDay($category, $start, $end, new Collection);
-         *
-         * while ($start <= $end) {
-         * $str    = $start->format('Y-m-d');
-         * $spent  = $spentArray[$str] ?? '0';
-         * $earned = $earnedArray[$str] ?? '0';
-         * $date   = Navigation::periodShow($start, '1D');
-         * $entries->push([clone $start, $date, $spent, $earned]);
-         * $start->addDay();
-         * }
-         *
-         * $data = $this->generator->period($entries);
-         * $cache->store($data);
-         *
-         * return $data;
-         */
     }
 
 }
