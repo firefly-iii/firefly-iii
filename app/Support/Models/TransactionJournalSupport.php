@@ -12,7 +12,6 @@ namespace FireflyIII\Support\Models;
 
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -46,30 +45,8 @@ class TransactionJournalSupport extends Model
             return $cache->get();
         }
 
-        if ($journal->isWithdrawal() && !is_null($journal->source_amount)) {
-            $cache->store($journal->source_amount);
-
-            return $journal->source_amount;
-        }
-        if ($journal->isDeposit() && !is_null($journal->destination_amount)) {
-            $cache->store($journal->destination_amount);
-
-            return $journal->destination_amount;
-        }
-
         // saves on queries:
-        $amount = '0';
-        if (count($journal->transactions) === 0) {
-            $amount = '0';
-            foreach ($journal->transactions as $t) {
-                if ($t->amount > 0) {
-                    $amount = bcadd($amount, $t->amount);
-                }
-            }
-        }
-        if ($amount === '0') {
-            $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
-        }
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
 
         if ($journal->isWithdrawal()) {
             $amount = $amount * -1;
@@ -275,8 +252,6 @@ class TransactionJournalSupport extends Model
             'transaction_journals.*',
             'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
             'transaction_currencies.code AS transaction_currency_code',
-            DB::raw('SUM(`transactions`.`amount`) as `amount`'),
-            DB::raw('(COUNT(`transactions`.`id`) * 2) as `count_transactions`'),
         ];
     }
 

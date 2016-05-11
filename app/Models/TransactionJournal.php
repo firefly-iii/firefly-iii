@@ -341,11 +341,6 @@ class TransactionJournal extends TransactionJournalSupport
         $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
 
         // left join destination (for amount and account info).
-        $query->leftJoin(
-            'transactions', function (JoinClause $join) {
-            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-        }
-        );
         $query->groupBy('transaction_journals.id');
         $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
     }
@@ -362,7 +357,7 @@ class TransactionJournal extends TransactionJournalSupport
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
         $query->whereIn('transaction_types.type', $types);
-    }
+    }   
 
     /**
      *
