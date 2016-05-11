@@ -82,8 +82,6 @@ class CategoryController extends Controller
         $data    = $this->generator->all($entries);
         $cache->store($data);
 
-        return ' ' . json_encode($data);
-
         return Response::json($data);
 
     }

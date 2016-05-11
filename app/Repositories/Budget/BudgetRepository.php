@@ -876,6 +876,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $journalQuery = $this->user->transactionjournals()
                                    ->expanded()
                                    ->before($end)
+                                   ->sortCorrectly()
                                    ->after($start)
                                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->whereIn('budget_transaction_journal.budget_id', $budgets->pluck('id')->toArray());
@@ -892,6 +893,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $transactionQuery = $this->user->transactionjournals()
                                        ->expanded()
                                        ->before($end)
+                                       ->sortCorrectly()
                                        ->after($start)
                                        ->leftJoin('transactions as related', 'related.transaction_journal_id', '=', 'transaction_journals.id')
                                        ->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'related.id')
@@ -923,6 +925,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $set = $this->user
             ->transactionjournals()
             ->expanded()
+            ->sortCorrectly()
             ->transactionTypes([TransactionType::WITHDRAWAL])
             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNull('budget_transaction_journal.id')

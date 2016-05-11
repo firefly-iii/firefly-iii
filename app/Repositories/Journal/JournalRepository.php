@@ -128,7 +128,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function getJournals(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
     {
         $offset = ($page - 1) * $pageSize;
-        $query  = $this->user->transactionJournals()->expanded();
+        $query  = $this->user->transactionJournals()->expanded()->sortCorrectly();
         if (count($types) > 0) {
             $query->transactionTypes($types);
         }
@@ -151,7 +151,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
-        $query = $this->user->transactionJournals()->expanded();
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
         $query->before($end);
         $query->after($start);
 

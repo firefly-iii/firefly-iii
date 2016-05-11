@@ -637,7 +637,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $complete = new Collection;
         // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionjournals()->expanded();
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly();
         $query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
         $query->where('category_transaction_journal.category_id', $category->id);
         $first = $query->get(TransactionJournal::queryFields());
@@ -682,7 +682,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $complete = new Collection;
         // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionjournals()->expanded();
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly();
 
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -777,7 +777,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         // this second set REALLY doesn't have any categories.
         $secondSet = $secondQuery->get(['transactions.transaction_journal_id']);
         $allIds    = $secondSet->pluck('transaction_journal_id')->toArray();
-        $return    = $this->user->transactionjournals()->expanded()->whereIn('transaction_journals.id', $allIds)->get(TransactionJournal::queryFields());
+        $return    = $this->user->transactionjournals()->sortCorrectly()->expanded()->whereIn('transaction_journals.id', $allIds)->get(TransactionJournal::queryFields());
 
         return $return;
 

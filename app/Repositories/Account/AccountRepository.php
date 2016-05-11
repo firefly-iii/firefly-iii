@@ -180,6 +180,7 @@ class AccountRepository implements AccountRepositoryInterface
         $ids      = $accounts->pluck('id')->toArray();
         $journals = $this->user->transactionjournals()
                                ->expanded()
+                               ->sortCorrectly()
                                ->before($end)
                                ->where('destination_account.id', $account->id)
                                ->whereIn('source_account.id', $ids)
@@ -239,7 +240,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->sortCorrectly()
             ->before($end)
             ->after($start)
-        ->take(10);
+            ->take(10);
 
         // expand query:
         $query->leftJoin(
@@ -269,6 +270,7 @@ class AccountRepository implements AccountRepositoryInterface
         $ids      = $accounts->pluck('id')->toArray();
         $journals = $this->user->transactionjournals()
                                ->expanded()
+                               ->sortCorrectly()
                                ->before($end)
                                ->where('source_account.id', $account->id)
                                ->whereIn('destination_account.id', $ids)
@@ -290,6 +292,7 @@ class AccountRepository implements AccountRepositoryInterface
         $offset = ($page - 1) * $pageSize;
         $query  = $this->user
             ->transactionJournals()
+            ->sortCorrectly()
             ->expanded();
 
         // expand query:
@@ -321,6 +324,7 @@ class AccountRepository implements AccountRepositoryInterface
         $query = $this->user
             ->transactionJournals()
             ->expanded()
+            ->sortCorrectly()
             ->where(
                 function (Builder $q) use ($account) {
                     $q->where('destination_account.id', $account->id);
