@@ -37,6 +37,15 @@ interface ReportHelperInterface
      * @param Carbon     $end
      * @param Collection $accounts
      *
+     * @return Collection
+     */
+    public function getCategoriesWithTransactions(Carbon $start, Carbon $end, Collection $accounts): Collection;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
      * @return CategoryCollection
      */
     public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection;
@@ -80,15 +89,5 @@ interface ReportHelperInterface
      * @return array
      */
     public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array;
-
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getCategoriesWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
 
 }

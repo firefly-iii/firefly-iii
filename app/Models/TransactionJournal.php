@@ -338,10 +338,6 @@ class TransactionJournal extends TransactionJournalSupport
             $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
         }
         );
-
-        // order
-        $query->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.order', 'ASC')->orderBy('transaction_journals.id', 'DESC');
-
         $query->groupBy('transaction_journals.id');
         $query->with(['categories', 'budgets', 'attachments', 'bill','transactions']);
     }
