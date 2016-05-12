@@ -5,12 +5,12 @@
 {% endblock %}
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('split.journal.from-store.post')}) }}
-    <input type="hidden" name="what" value="{{ data.what }}"/>
+    <input type="hidden" name="what" value="{{ preFilled.what }}"/>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ ('split_title_'~data.what)|_ }}</h3>
+                    <h3 class="box-title">{{ ('split_title_'~preFilled.what)|_ }}</h3>
 
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -18,16 +18,16 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ ('split_intro_one_'~data.what)|_ }}
+                        {{ ('split_intro_one_'~preFilled.what)|_ }}
                     </p>
                     <p>
-                        {{ ('split_intro_two_'~data.what)|_ }}
+                        {{ ('split_intro_two_'~preFilled.what)|_ }}
                     </p>
                     <p>
-                        {% if data.what =='deposit' %}
-                            {{ trans(('firefly.split_intro_three_'~data.what), {total: 500|formatAmount, split_one: 425|formatAmount, split_two: 75|formatAmount})|raw }}
+                        {% if preFilled.what =='deposit' %}
+                            {{ trans(('firefly.split_intro_three_'~preFilled.what), {total: 500|formatAmount, split_one: 425|formatAmount, split_two: 75|formatAmount})|raw }}
                         {% else %}
-                            {{ trans(('firefly.split_intro_three_'~data.what), {total: 20|formatAmount, split_one: 15|formatAmount, split_two: 5|formatAmount})|raw }}
+                            {{ trans(('firefly.split_intro_three_'~preFilled.what), {total: 20|formatAmount, split_one: 15|formatAmount, split_two: 5|formatAmount})|raw }}
                         {% endif %}
                     </p>
                     <p class="text-danger">This feature is experimental.</p>
@@ -68,23 +68,21 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('journal_description') }}
-                    {{ ExpandedForm.select('journal_currency_id', currencies, data.journal_currency_id) }}
-                    {{ ExpandedForm.staticText('journal_amount', data.journal_amount|formatAmount) }}
-                    <input type="hidden" name="journal_amount" value="{{ data.journal_amount }}"/>
-                    <!-- show static source if withdrawal or transfer -->
-                    {% if data.what == 'withdrawal' or data.what == 'transfer' %}
-                        {{ ExpandedForm.staticText('journal_asset_source_account', assetAccounts[data.journal_source_account_id]) }}
-                        <input type="hidden" name="journal_source_account_id" value="{{ data.journal_source_account_id }}"/>
+                    {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.journal_currency_id) }}
+                    {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount) }}
+                    <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+
+                    <!-- show source drop down box if withdrawal or transfer -->
+                    {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
+                        {{ ExpandedForm.select('journal_asset_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                     {% endif %}
-                    <!-- show static source if deposit: -->
-                    {% if data.what == 'deposit' %}
-                        {{ ExpandedForm.staticText('revenue_account', data.journal_source_account_name) }}
-                        <input type="hidden" name="journal_source_account_name" value="{{ data.journal_source_account_name }}"/>
+                    <!-- show source text input if deposit: -->
+                    {% if preFilled.what == 'deposit' %}
+                        {{ ExpandedForm.text('journal_source_account_name', preFilled.journal_source_account_name) }}
                     {% endif %}
-                    <!-- show static destination if transfer -->
-                    {% if data.what == 'transfer' %}
-                        {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[data.journal_destination_account_id]) }}
-                        <input type="hidden" name="journal_destination_account_id" value="{{ data.journal_destination_account_id }}"/>
+                    <!-- show destination drop down if transfer -->
+                    {% if preFilled.what == 'transfer' %}
+                        {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
                     {% endif %}
                 </div>
             </div>
@@ -99,13 +97,13 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.date('date', data.date) }}
+                    {{ ExpandedForm.date('date', preFilled.date) }}
 
-                    {{ ExpandedForm.date('interest_date', data.interest_date) }}
+                    {{ ExpandedForm.date('interest_date', preFilled.interest_date) }}
 
-                    {{ ExpandedForm.date('book_date', data.book_date) }}
+                    {{ ExpandedForm.date('book_date', preFilled.book_date) }}
 
-                    {{ ExpandedForm.date('process_date', data.process_date) }}
+                    {{ ExpandedForm.date('process_date', preFilled.process_date) }}
                 </div>
             </div>
         </div>
@@ -122,7 +120,7 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ ('split_table_intro_'~data.what)|_ }}
+                        {{ ('split_table_intro_'~preFilled.what)|_ }}
                     </p>
                     <table class="table table-bordered table-condensed table-striped split-table">
                         <thead>
@@ -131,27 +129,24 @@
                             <th>{{ trans('list.description') }}</th>
                             <!-- split the source of a deposit -->
                             <!--
-                            {% if data.what == 'deposit' %}
+                            {% if preFilled.what == 'deposit' %}
                                 <th>{{ trans('list.source') }}</th>
                             {% endif %}
                             -->
                             <!-- split where a withdrawal is going -->
                             <!-- split where a deposit is going -->
-                            {% if data.what == 'withdrawal' or data.what == 'deposit' %}
+                            {% if preFilled.what == 'withdrawal' or preFilled.what == 'deposit' %}
                                 <th>{{ trans('list.destination') }}</th>
                             {% endif %}
                             <th>{{ trans('list.amount') }}</th>
-                            {% if data.what == 'withdrawal' %}
+                            {% if preFilled.what == 'withdrawal' %}
                                 <th>{{ trans('list.budget') }}</th>
                             {% endif %}
                             <th>{{ trans('list.category') }}</th>
-                            {% if data.what == 'transfer' %}
-                                <th>{{ trans('list.piggy_bank') }}</th>
-                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
-                        {% for index, descr in data.description %}
+                        {% for index, descr in preFilled.description %}
                             <tr class="{% if loop.index == 1 %}initial-row{% else %}not-initial-row{% endif %}">
                                 <td class="count">#{{ loop.index }}</td>
                                 <td>
@@ -159,38 +154,33 @@
                                 </td>
 
                                 <!-- withdrawal has several destination names. -->
-                                {% if data.what == 'withdrawal' %}
+                                {% if preFilled.what == 'withdrawal' %}
                                     <td>
-                                        <input type="text" name="destination_account_name[]" value="{{ data.destination_account_name[index] }}"
+                                        <input type="text" name="destination_account_name[]" value="{{ preFilled.destination_account_name[index] }}"
                                                class="form-control"/>
                                     </td>
                                 {% endif %}
 
                                 <!-- deposit has several destination id's -->
-                                {% if data.what == 'deposit' %}
+                                {% if preFilled.what == 'deposit' %}
                                     <td>
-                                        {{ Form.select('destination_account_id[]', assetAccounts, data.destination_account_id[index], {class: 'form-control'}) }}
+                                        {{ Form.select('destination_account_id[]', assetAccounts, preFilled.destination_account_id[index], {class: 'form-control'}) }}
                                     </td>
                                 {% endif %}
 
 
                                 <td style="width:10%;">
-                                    <input type="number" name="amount[]" value="{{ data.amount[index] }}"
+                                    <input type="number" name="amount[]" value="{{ preFilled.amount[index] }}"
                                            class="form-control" autocomplete="off" step="any" min="0.01">
                                 </td>
-                                {% if data.what == 'withdrawal' %}
+                                {% if preFilled.what == 'withdrawal' %}
                                     <td>
-                                        {{ Form.select('budget_id[]', budgets, data.budget_id[index], {class: 'form-control'}) }}
+                                        {{ Form.select('budget_id[]', budgets, preFilled.budget_id[index], {class: 'form-control'}) }}
                                     </td>
                                 {% endif %}
                                 <td>
-                                    <input type="text" name="category[]" value="{{ data.category[index] }}" class="form-control"/>
+                                    <input type="text" name="category[]" value="{{ preFilled.category[index] }}" class="form-control"/>
                                 </td>
-                                {% if data.what == 'transfer' %}
-                                    <td>
-                                        {{ Form.select('piggy_bank_id[]', piggyBanks, data.piggy_bank_id[index], {class: 'form-control'}) }}
-                                    </td>
-                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -201,7 +191,7 @@
                     </p>
                     <p class="pull-right">
                         <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
-                            {{ ('store_splitted_'~data.what)|_ }}
+                            {{ ('store_splitted_'~preFilled.what)|_ }}
                         </button>
                     </p>
                 </div>
@@ -213,8 +203,8 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var originalSum = {{ data.journal_amount }};
-        var what = "{{ data.what }}";
+        var originalSum = {{ preFilled.journal_amount }};
+        var what = "{{ preFilled.what }}";
     </script>
     <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
     <script type="text/javascript" src="js/ff/transactions/create-edit.js"></script>

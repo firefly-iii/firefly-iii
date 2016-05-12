@@ -48,6 +48,13 @@ $(document).ready(function () {
             $('input[name="source_account_name[]"]').typeahead({source: data});
         });
     }
+    // and for split:
+    if ($('input[name="journal_source_account_name"]').length > 0) {
+        $.getJSON('json/revenue-accounts').done(function (data) {
+            $('input[name="journal_source_account_name"]').typeahead({source: data});
+        });
+    }
+
 
     if ($('input[name="description"]').length > 0 && what !== undefined) {
         $.getJSON('json/transaction-journals/' + what).done(function (data) {

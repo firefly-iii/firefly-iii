@@ -77,6 +77,7 @@ class SplitJournalFormRequest extends Request
         return [
             'what'                          => 'required|in:withdrawal,deposit,transfer',
             'journal_description'           => 'required|between:1,255',
+            'id'                            => 'numeric|belongsToUser:transaction_journals,id',
             'journal_source_account_id'     => 'numeric|belongsToUser:accounts,id',
             'journal_source_account_name.*' => 'between:1,255',
             'journal_currency_id'           => 'required|exists:transaction_currencies,id',

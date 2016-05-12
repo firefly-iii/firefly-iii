@@ -8,7 +8,7 @@
 
     <input name="_token" type="hidden" value="{{ csrf_token() }}">
     <input type="hidden" name="id" value="{{ journal.id }}"/>
-    <input type="hidden" name="what" value="{{ what }}"/>
+    <input type="hidden" name="what" value="{{ preFilled.what }}"/>
 
     {% if errors.all()|length > 0 %}
         <div class="row">
@@ -42,24 +42,23 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.text('journal_description') }}
-                    {{ ExpandedForm.select('journal_currency_id', currencies, journal.transaction_currency_id) }}
-                    {{ ExpandedForm.staticText('journal_amount', amount|formatAmount ) }}
-                    <input type="hidden" name="journal_amount" value="{{ amount }}"/>
+                    {{ ExpandedForm.text('journal_description', journal.description) }}
+                    {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.transaction_currency_id) }}
+                    {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
+                    <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
                     <!-- show static source if withdrawal or transfer -->
                     {% if what == 'withdrawal' or what == 'transfer' %}
-                            {{ ExpandedForm.staticText('journal_asset_source_account', assetAccounts[sourceAccounts.first.id]) }}
-                        <input type="hidden" name="journal_source_account_id" value="{{ sourceAccounts.first.id }}"/>
+                        {{ ExpandedForm.select('journal_asset_source_account_id', assetAccounts, preFilled.sourceAccounts.first.id) }}
                     {% endif %}
                     <!-- show static source if deposit: -->
                     {% if what == 'deposit' %}
                         {{ ExpandedForm.staticText('revenue_account', sourceAccounts.first.name) }}
-                        <input type="hidden" name="journal_source_account_name" value="{{ sourceAccounts.first.name }}"/>
+                        <input type="hidden" name="journal_source_account_name" value="{{ preFilled.sourceAccounts.first.name }}"/>
                     {% endif %}
                     <!-- show static destination if transfer -->
                     {% if what == 'transfer' %}
-                        {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[sourceAccounts.first.id]) }}
-                        <input type="hidden" name="journal_destination_account_id" value="{{ sourceAccounts.first.id }}"/>
+                        {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[preFilled.destinationAccounts.first.id]) }}
+                        <input type="hidden" name="journal_destination_account_id" value="{{ preFilled.destinationAccounts.first.id }}"/>
                     {% endif %}
                 </div>
             </div>
@@ -103,27 +102,27 @@
                             <th>{{ trans('list.description') }}</th>
                             <!-- split the source of a deposit -->
                             <!--
-                            {% if data.what == 'deposit' %}
+                            {% if preFilled.what == 'deposit' %}
                                 <th>{{ trans('list.source') }}</th>
                             {% endif %}
                             -->
                             <!-- split where a withdrawal is going -->
                             <!-- split where a deposit is going -->
-                            {% if data.what == 'withdrawal' or data.what == 'deposit' %}
+                            {% if preFilled.what == 'withdrawal' or preFilled.what == 'deposit' %}
                                 <th>{{ trans('list.destination') }}</th>
                             {% endif %}
                             <th>{{ trans('list.amount') }}</th>
-                            {% if data.what == 'withdrawal' %}
+                            {% if preFilled.what == 'withdrawal' %}
                                 <th>{{ trans('list.budget') }}</th>
                             {% endif %}
                             <th>{{ trans('list.category') }}</th>
-                            {% if data.what == 'transfer' %}
+                            {% if preFilled.what == 'transfer' %}
                                 <th>{{ trans('list.piggy_bank') }}</th>
                             {% endif %}
                         </tr>
                         </thead>
                         <tbody>
-                        {% for index, descr in data.description %}
+                        {% for index, descr in preFilled.description %}
                             <tr class="{% if loop.index == 1 %}initial-row{% else %}not-initial-row{% endif %}">
                                 <td class="count">#{{ loop.index }}</td>
                                 <td>
@@ -131,36 +130,36 @@
                                 </td>
 
                                 <!-- withdrawal has several destination names. -->
-                                {% if data.what == 'withdrawal' %}
+                                {% if preFilled.what == 'withdrawal' %}
                                     <td>
-                                        <input type="text" name="destination_account_name[]" value="{{ data.destination_account_name[index] }}"
+                                        <input type="text" name="destination_account_name[]" value="{{ preFilled.destination_account_name[index] }}"
                                                class="form-control"/>
                                     </td>
                                 {% endif %}
 
                                 <!-- deposit has several destination id's -->
-                                {% if data.what == 'deposit' %}
+                                {% if preFilled.what == 'deposit' %}
                                     <td>
-                                        {{ Form.select('destination_account_id[]', assetAccounts, data.destination_account_id[index], {class: 'form-control'}) }}
+                                        {{ Form.select('destination_account_id[]', assetAccounts, preFilled.destination_account_id[index], {class: 'form-control'}) }}
                                     </td>
                                 {% endif %}
 
 
                                 <td style="width:10%;">
-                                    <input type="number" name="amount[]" value="{{ data.amount[index] }}"
+                                    <input type="number" name="amount[]" value="{{ preFilled.amount[index] }}"
                                            class="form-control" autocomplete="off" step="any" min="0.01">
                                 </td>
-                                {% if data.what == 'withdrawal' %}
+                                {% if preFilled.what == 'withdrawal' %}
                                     <td>
-                                        {{ Form.select('budget_id[]', budgets, data.budget_id[index], {class: 'form-control'}) }}
+                                        {{ Form.select('budget_id[]', budgets, preFilled.budget_id[index], {class: 'form-control'}) }}
                                     </td>
                                 {% endif %}
                                 <td>
-                                    <input type="text" name="category[]" value="{{ data.category[index] }}" class="form-control"/>
+                                    <input type="text" name="category[]" value="{{ preFilled.category[index] }}" class="form-control"/>
                                 </td>
-                                {% if data.what == 'transfer' %}
+                                {% if preFilled.what == 'transfer' %}
                                     <td>
-                                        {{ Form.select('piggy_bank_id[]', piggyBanks, data.piggy_bank_id[index], {class: 'form-control'}) }}
+                                        {{ Form.select('piggy_bank_id[]', piggyBanks, preFilled.piggy_bank_id[index], {class: 'form-control'}) }}
                                     </td>
                                 {% endif %}
                             </tr>
@@ -173,7 +172,7 @@
                     </p>
                     <p class="pull-right">
                         <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
-                            {{ ('store_splitted_'~data.what)|_ }}
+                            {{ ('update_splitted_'~preFilled.what)|_ }}
                         </button>
                     </p>
                 </div>
@@ -185,8 +184,8 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var originalSum = {{ data.journal_amount }};
-        var what = "{{ data.what }}";
+        var originalSum = {{ preFilled.journal_amount }};
+        var what = "{{ preFilled.what }}";
     </script>
     <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
     <script type="text/javascript" src="js/ff/transactions/create-edit.js"></script>

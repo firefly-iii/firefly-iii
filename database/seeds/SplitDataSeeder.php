@@ -225,6 +225,7 @@ class SplitDataSeeder extends Seeder
                     'account_id'             => $source->id,
                     'transaction_journal_id' => $journal->id,
                     'amount'                 => $amounts[$index] * -1,
+                    'description'            => 'Split Even Expense #' . $index,
 
                 ]
             );
@@ -234,6 +235,7 @@ class SplitDataSeeder extends Seeder
                     'account_id'             => $destination->id,
                     'transaction_journal_id' => $journal->id,
                     'amount'                 => $amounts[$index],
+                    'description'            => 'Split Even Expense #' . $index,
 
                 ]
             );
@@ -279,6 +281,7 @@ class SplitDataSeeder extends Seeder
                     'account_id'             => $source->id,
                     'transaction_journal_id' => $journal->id,
                     'amount'                 => $amounts[$index] * -1,
+                    'description'            => 'Split Uneven Expense #' . $index,
 
                 ]
             );
@@ -288,7 +291,7 @@ class SplitDataSeeder extends Seeder
                     'account_id'             => $destination->id,
                     'transaction_journal_id' => $journal->id,
                     'amount'                 => $amounts[$index],
-
+                    'description'            => 'Split Uneven Expense #' . $index,
                 ]
             );
 
