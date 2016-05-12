@@ -72,13 +72,10 @@ class TransactionJournalSupport extends Model
             return $cache->get();
         }
 
-        $amount = '0';
-        /** @var Transaction $t */
-        foreach ($journal->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
+        // saves on queries:
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+
+        $amount = strval($amount);
         $cache->store($amount);
 
         return $amount;

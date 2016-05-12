@@ -182,8 +182,18 @@ class AccountRepository implements AccountRepositoryInterface
                                ->expanded()
                                ->sortCorrectly()
                                ->before($end)
-                               ->where('destination_account.id', $account->id)
-                               ->whereIn('source_account.id', $ids)
+                               ->leftJoin(
+                                   'transactions as dest', function (JoinClause $join) {
+                                   $join->on('dest.transaction_journal_id', '=', 'transaction_journals.id')->where('dest.amount', '>', 0);
+                               }
+                               )
+                               ->leftJoin(
+                                   'transactions as source', function (JoinClause $join) {
+                                   $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+                               }
+                               )
+                               ->where('dest.account_id', $account->id)
+                               ->whereIn('source.account_id', $ids)
                                ->after($start)
                                ->get(TransactionJournal::queryFields());
 

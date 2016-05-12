@@ -418,6 +418,8 @@ class TransactionController extends Controller
                 $event->piggyBank = $event->piggyBank()->withTrashed()->first();
             }
         );
+
+        // TODO different for each transaction type!
         $transactions = $journal->transactions()->groupBy('transactions.account_id')->orderBy('amount', 'ASC')->get(
             ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
         );

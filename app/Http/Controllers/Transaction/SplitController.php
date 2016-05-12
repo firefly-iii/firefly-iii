@@ -48,6 +48,35 @@ class SplitController extends Controller
         if ($count === 2) {
             return redirect(route('transactions.edit', [$journal->id]));
         }
+
+        /** @var CurrencyRepositoryInterface $currencyRepository */
+        $currencyRepository = app(CurrencyRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+
+        /** @var PiggyBankRepositoryInterface $piggyBankRepository */
+        $piggyBankRepository = app(PiggyBankRepositoryInterface::class);
+
+        $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
+        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks    = ExpandedForm::makeSelectListWithEmpty($piggyBankRepository->getPiggyBanks());
+        $amount        = TransactionJournal::amountPositive($journal);
+
+        // get source account:
+        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
+        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+
+        // get the transactions:
+
+        return view(
+            'split.journals.edit',
+            compact('currencies', 'amount', 'piggyBanks', 'sourceAccounts', 'destinationAccounts', 'assetAccounts', 'budgets', 'what', 'journal')
+        );
     }
 
     /**
