@@ -1,0 +1,196 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    {{ Form.model(journal, {'class' : 'form-horizontal','id' : 'update','url' : route('split.journal.update',journal.id) } ) }}
+
+    <input name="_token" type="hidden" value="{{ csrf_token() }}">
+    <input type="hidden" name="id" value="{{ journal.id }}"/>
+    <input type="hidden" name="what" value="{{ what }}"/>
+
+    {% if errors.all()|length > 0 %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'errors'|_ }}</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <ul>
+                            {% for key, err in errors.all() %}
+                                <li class="text-danger">{{ err }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transaction_meta_data'|_ }}</h3>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('journal_description') }}
+                    {{ ExpandedForm.select('journal_currency_id', currencies, journal.transaction_currency_id) }}
+                    {{ ExpandedForm.staticText('journal_amount', amount|formatAmount ) }}
+                    <input type="hidden" name="journal_amount" value="{{ amount }}"/>
+                    <!-- show static source if withdrawal or transfer -->
+                    {% if what == 'withdrawal' or what == 'transfer' %}
+                            {{ ExpandedForm.staticText('journal_asset_source_account', assetAccounts[sourceAccounts.first.id]) }}
+                        <input type="hidden" name="journal_source_account_id" value="{{ sourceAccounts.first.id }}"/>
+                    {% endif %}
+                    <!-- show static source if deposit: -->
+                    {% if what == 'deposit' %}
+                        {{ ExpandedForm.staticText('revenue_account', sourceAccounts.first.name) }}
+                        <input type="hidden" name="journal_source_account_name" value="{{ sourceAccounts.first.name }}"/>
+                    {% endif %}
+                    <!-- show static destination if transfer -->
+                    {% if what == 'transfer' %}
+                        {{ ExpandedForm.staticText('asset_destination_account', assetAccounts[sourceAccounts.first.id]) }}
+                        <input type="hidden" name="journal_destination_account_id" value="{{ sourceAccounts.first.id }}"/>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transaction_dates'|_ }}</h3>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.date('date', journal.date) }}
+
+                    {{ ExpandedForm.date('interest_date', journal.interest_date) }}
+
+                    {{ ExpandedForm.date('book_date', journal.book_date) }}
+
+                    {{ ExpandedForm.date('process_date', journal.process_date) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'splits'|_ }}</h3>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-condensed table-striped split-table">
+                        <thead>
+                        <tr>
+                            <th>{{ trans('list.split_number') }}</th>
+                            <th>{{ trans('list.description') }}</th>
+                            <!-- split the source of a deposit -->
+                            <!--
+                            {% if data.what == 'deposit' %}
+                                <th>{{ trans('list.source') }}</th>
+                            {% endif %}
+                            -->
+                            <!-- split where a withdrawal is going -->
+                            <!-- split where a deposit is going -->
+                            {% if data.what == 'withdrawal' or data.what == 'deposit' %}
+                                <th>{{ trans('list.destination') }}</th>
+                            {% endif %}
+                            <th>{{ trans('list.amount') }}</th>
+                            {% if data.what == 'withdrawal' %}
+                                <th>{{ trans('list.budget') }}</th>
+                            {% endif %}
+                            <th>{{ trans('list.category') }}</th>
+                            {% if data.what == 'transfer' %}
+                                <th>{{ trans('list.piggy_bank') }}</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for index, descr in data.description %}
+                            <tr class="{% if loop.index == 1 %}initial-row{% else %}not-initial-row{% endif %}">
+                                <td class="count">#{{ loop.index }}</td>
+                                <td>
+                                    <input type="text" name="description[]" value="{{ descr }}" class="form-control"/>
+                                </td>
+
+                                <!-- withdrawal has several destination names. -->
+                                {% if data.what == 'withdrawal' %}
+                                    <td>
+                                        <input type="text" name="destination_account_name[]" value="{{ data.destination_account_name[index] }}"
+                                               class="form-control"/>
+                                    </td>
+                                {% endif %}
+
+                                <!-- deposit has several destination id's -->
+                                {% if data.what == 'deposit' %}
+                                    <td>
+                                        {{ Form.select('destination_account_id[]', assetAccounts, data.destination_account_id[index], {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
+
+
+                                <td style="width:10%;">
+                                    <input type="number" name="amount[]" value="{{ data.amount[index] }}"
+                                           class="form-control" autocomplete="off" step="any" min="0.01">
+                                </td>
+                                {% if data.what == 'withdrawal' %}
+                                    <td>
+                                        {{ Form.select('budget_id[]', budgets, data.budget_id[index], {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
+                                <td>
+                                    <input type="text" name="category[]" value="{{ data.category[index] }}" class="form-control"/>
+                                </td>
+                                {% if data.what == 'transfer' %}
+                                    <td>
+                                        {{ Form.select('piggy_bank_id[]', piggyBanks, data.piggy_bank_id[index], {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <p>
+                        <br/>
+                        <a href="#" class="btn btn-default btn-do-split"><i class="fa fa-plus-circle"></i> {{ 'add_another_split'|_ }}</a>
+                    </p>
+                    <p class="pull-right">
+                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                            {{ ('store_splitted_'~data.what)|_ }}
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var originalSum = {{ data.journal_amount }};
+        var what = "{{ data.what }}";
+    </script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/ff/transactions/create-edit.js"></script>
+    <script type="text/javascript" src="js/ff/split/journal/from-store.js"></script>
+{% endblock %}
+{% block styles %}
+{% endblock %}
