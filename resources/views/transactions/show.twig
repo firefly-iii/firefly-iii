@@ -161,6 +161,7 @@
                             <h3 class="box-title">{{ t.account.name }}</h3>
                         </div>
                         <table class="table table-bordered table-striped">
+
                             <tr>
                                 <td style="width:30%;">{{ 'account'|_ }}</td>
                                 <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
@@ -260,33 +261,32 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr>
+                            <th>{{ trans('list.description') }}</th>
                             <th>{{ trans('list.account') }}</th>
-                            <th>{{ trans('list.account_type') }}</th>
                             <th>{{ trans('list.amount') }}</th>
                             <th>{{ trans('list.new_balance') }}</th>
-                            <th>{{ trans('list.description') }}</th>
-                            <th>{{ trans('list.category') }}</th>
                             <th>{{ trans('list.budget') }}</th>
+                            <th>{{ trans('list.category') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for t in transactions %}
                         <tr>
-                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
-                            <td>{{ t.account.accounttype.type|_ }}</td>
+                            <td>{{ t.description }}</td>
+                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a> ({{ t.account.accounttype.type|_ }})</td>
                             <td>{{ t.sum|formatAmount }}</td>
                             <td>{{ t.before|formatAmount }} &rarr; {{ (t.sum+t.before)|formatAmount }}</td>
-                            <td>{{ t.description }}</td>
-                            <td>
-                                {% if t.categories[0] %}
-                                    <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
-                                {% endif %}
-                            </td>
                             <td>
                                 {% if t.budgets[0] %}
                                     <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
                                 {% endif %}
                             </td>
+                            <td>
+                                {% if t.categories[0] %}
+                                    <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
+                                {% endif %}
+                            </td>
+
                             {% endfor %}
                         </tbody>
                     </table>
