@@ -14,6 +14,7 @@ use ExpandedForm;
 use FireflyIII\Crud\Split\JournalInterface;
 use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Transaction;
@@ -150,20 +151,30 @@ class SplitController extends Controller
     }
 
     /**
-     * @param TransactionJournal      $journal
-     * @param SplitJournalFormRequest $request
-     * @param JournalInterface        $repository
+     * @param TransactionJournal        $journal
+     * @param SplitJournalFormRequest   $request
+     * @param JournalInterface          $repository
+     * @param AttachmentHelperInterface $att
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(TransactionJournal $journal, SplitJournalFormRequest $request, JournalInterface $repository)
+    public function update(TransactionJournal $journal, SplitJournalFormRequest $request, JournalInterface $repository, AttachmentHelperInterface $att)
     {
 
         $data    = $request->getSplitData();
         $journal = $repository->updateJournal($journal, $data);
 
+        // save attachments:
+        $att->saveAttachmentsForModel($journal);
+
         event(new TransactionJournalUpdated($journal));
         // update, get events by date and sort DESC
+
+        // flash messages
+        if (count($att->getMessages()->get('attachments')) > 0) {
+            Session::flash('info', $att->getMessages()->get('attachments'));
+        }
+
 
         $type = strtolower($journal->transaction_type_type ?? TransactionJournal::transactionTypeStr($journal));
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));

@@ -42,6 +42,44 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Returns the amount in the account before the specified transaction took place.
+     *
+     * @param Transaction $transaction
+     *
+     * @return string
+     */
+    public function balanceBeforeTransaction(Transaction $transaction): string
+    {
+        // some dates from journal
+        $journal = $transaction->transactionJournal;
+        $query   = Transaction::
+        leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->where('transactions.account_id', $transaction->account_id)
+                              ->where('transaction_journals.user_id', $this->user->id)
+                              ->where(
+                                  function (Builder $q) use ($journal) {
+                                      $q->where('transaction_journals.date', '<', $journal->date->format('Y-m-d'));
+                                      $q->orWhere(
+                                          function (Builder $qq) use ($journal) {
+                                              $qq->where('transaction_journals.date', '=', $journal->date->format('Y-m-d'));
+                                              $qq->where('transaction_journals.order', '>', $journal->order);
+                                          }
+                                      );
+
+                                  }
+                              )
+                              ->where('transactions.id', '!=', $transaction->id)
+                              ->whereNull('transactions.deleted_at')
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->orderBy('transaction_journals.date', 'DESC')
+                              ->orderBy('transaction_journals.order', 'ASC')
+                              ->orderBy('transaction_journals.id', 'DESC');
+        $sum     = $query->sum('transactions.amount');
+
+        return strval($sum);
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return bool

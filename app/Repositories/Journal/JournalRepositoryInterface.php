@@ -41,6 +41,16 @@ interface JournalRepositoryInterface
      */
     public function first(): TransactionJournal;
 
+
+    /**
+     * Returns the amount in the account before the specified transaction took place.
+     * 
+     * @param Transaction $transaction
+     *
+     * @return string
+     */
+    public function balanceBeforeTransaction(Transaction $transaction): string;
+
     /**
      * Returns the amount in the account before the specified transaction took place.
      *

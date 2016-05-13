@@ -22,6 +22,7 @@ use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -408,7 +409,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show(TransactionJournal $journal)
+    public function show(TransactionJournal $journal, JournalRepositoryInterface $repository)
     {
 
         /** @var Collection $set */
@@ -420,11 +421,21 @@ class TransactionController extends Controller
         );
 
         // TODO different for each transaction type!
+        /** @var Collection $transactions */
         $transactions = $journal->transactions()->groupBy('transactions.account_id')->orderBy('amount', 'ASC')->get(
             ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
         );
-        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+
+        // foreach do balance thing
+        $transactions->each(
+            function (Transaction $t) use ($repository) {
+                $t->before = $repository->balanceBeforeTransaction($t);
+            }
+        );
+
+
+        $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
     }

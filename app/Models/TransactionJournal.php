@@ -319,6 +319,9 @@ class TransactionJournal extends TransactionJournalSupport
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
     }
 
+    /**
+     * @param EloquentBuilder $query
+     */
     public function scopeSortCorrectly(EloquentBuilder $query)
     {
         $query->orderBy('transaction_journals.date', 'DESC');

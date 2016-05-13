@@ -4,7 +4,8 @@
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
-    {{ Form.model(journal, {'class' : 'form-horizontal','id' : 'update','url' : route('split.journal.update',journal.id) } ) }}
+    <form method="POST" action="{{ route('split.journal.update',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
+          enctype="multipart/form-data">
 
     <input name="_token" type="hidden" value="{{ csrf_token() }}">
     <input type="hidden" name="id" value="{{ journal.id }}"/>

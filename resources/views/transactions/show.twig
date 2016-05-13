@@ -100,8 +100,8 @@
                 </div>
             </div>
 
-            <!-- attachments -->
-            {% if journal.attachments|length > 0 %}
+            <!-- attachments for unsplitted journals -->
+            {% if journal.attachments|length > 0 and transactions.count == 2 %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'attachments'|_ }}</h3>
@@ -171,11 +171,11 @@
                             </tr>
                             <tr>
                                 <td>{{ 'amount'|_ }}</td>
-                                <td>{{ t|formatTransaction }}</td>
+                                <td>{{ t.before|formatAmount}}</td>
                             </tr>
                             <tr>
                                 <td>{{ 'newBalance'|_ }}</td>
-                                <td>null</td>
+                                <td>{{ (t.before+t.amount)|formatAmount }}</td>
                             </tr>
                             {% if t.description %}
                                 <tr>
@@ -203,6 +203,48 @@
                     </div>
                 {% endfor %}
             {% endif %}
+
+            <!-- attachments for splitted journals -->
+            {% if journal.attachments|length > 0 and transactions.count > 2 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            {% for att in journal.attachments %}
+                                <tr>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
+                                        <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
+                                            {% if att.title %}
+                                                {{ att.title }}
+                                            {% else %}
+                                                {{ att.filename }}
+                                            {% endif %}
+                                        </a>
+                                        ({{ att.size|filesize }})
+                                        {% if att.description %}
+                                            <br/>
+                                            <em>{{ att.description }}</em>
+                                        {% endif %}
+                                    </td>
+                                    <td style="width:100px;">
+                                        <img src="{{ route('attachments.preview', att.id) }}"/>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
         </div>
     </div>
 
@@ -233,7 +275,7 @@
                             <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
                             <td>{{ t.account.accounttype.type|_ }}</td>
                             <td>{{ t.sum|formatAmount }}</td>
-                            <td>null</td>
+                            <td>{{ t.before|formatAmount }} &rarr; {{ (t.sum+t.before)|formatAmount }}</td>
                             <td>{{ t.description }}</td>
                             <td>
                                 {% if t.categories[0] %}
