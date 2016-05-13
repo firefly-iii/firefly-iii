@@ -57,7 +57,11 @@
 
             </td>
             <td>
-                {{ journal|formatJournal }}
+                {% if not accountPerspective %}
+                    {{ journal|formatJournal }}
+                    {% else %}
+                    {{ formatPerspective(journal, accountPerspective)|raw }}
+                {% endif %}
             </td>
             <td class="hidden-sm hidden-xs">
                 {{ journal.date.formatLocalized(monthAndDayFormat) }}

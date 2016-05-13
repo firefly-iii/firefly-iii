@@ -368,13 +368,10 @@ class AccountRepository implements AccountRepositoryInterface
                                      ->sortCorrectly()
                                      ->first(['transaction_journals.*']);
         if (is_null($journal)) {
-            $date = new Carbon;
-            $date->addYear(); // in the future.
-        } else {
-            $date = $journal->date;
+            return new Carbon('1900-01-01');
         }
 
-        return $date;
+        return $journal->date;
     }
 
     /**
@@ -390,16 +387,15 @@ class AccountRepository implements AccountRepositoryInterface
         $journal = TransactionJournal::
         leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $account->id)
-                                     ->orderBy('transaction_journals.date', 'DESC')
+                                     ->orderBy('transaction_journals.date', 'ASC')
+                                     ->orderBy('transaction_journals.order', 'DESC')
+                                     ->orderBy('transaction_journals.id', 'ÅSC')
                                      ->first(['transaction_journals.*']);
         if (is_null($journal)) {
-            $date = new Carbon;
-            $date->addYear(); // in the future.
-        } else {
-            $date = $journal->date;
+            return new Carbon('1900-01-01');
         }
 
-        return $date;
+        return $journal->date;
     }
 
     /**

@@ -163,12 +163,11 @@ class ReportController extends Controller
             $exists           = false;
             $journals         = new Collection;
             $dayBeforeBalance = Steam::balance($account, $dayBefore);
-
             /*
              * Is there even activity on this account between the requested dates?
              */
             if ($start->between($first, $last) || $end->between($first, $last)) {
-                $exists   = true;
+                $exists = true;
                 $journals = $repos->journalsInPeriod($accounts, [], $start, $end);
 
             }
@@ -202,7 +201,6 @@ class ReportController extends Controller
             $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(trans('config.month_and_day'));
             $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
         }
-
 
         $reportType = 'audit';
         $accountIds = join(',', $accounts->pluck('id')->toArray());

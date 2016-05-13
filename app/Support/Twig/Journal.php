@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 
+use Amount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
@@ -18,6 +19,28 @@ use Twig_SimpleFunction;
  */
 class Journal extends Twig_Extension
 {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function formatPerspective(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatPerspective', function (TransactionJournal $journal, Account $account) {
+
+            // get the account amount:
+            $transaction = $journal->transactions()->where('transactions.account_id', $account->id)->first();
+            $amount      = $transaction->amount;
+            if ($journal->isWithdrawal()) {
+                $amount = bcmul($amount, '-1');
+            }
+
+            $formatted = Amount::format($amount, true);
+
+            return $formatted . ' (' . Amount::formatJournal($journal) . ')';
+        }
+        );
+    }
+
     /**
      * @return Twig_SimpleFunction
      */
@@ -71,6 +94,7 @@ class Journal extends Twig_Extension
         $functions = [
             $this->getSourceAccount(),
             $this->getDestinationAccount(),
+            $this->formatPerspective(),
         ];
 
         return $functions;
