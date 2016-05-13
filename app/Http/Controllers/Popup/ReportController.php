@@ -16,6 +16,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -182,7 +183,8 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
-        $journals   = $repository->getExpensesByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $journals   = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.expense-entry', compact('journals', 'account'))->render();
 
         return $view;
@@ -201,9 +203,9 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
-        $journals   = $repository->getIncomeByDestination($account, $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $journals   = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $view       = view('popup.report.income-entry', compact('journals', 'account'))->render();
-
 
         return $view;
     }

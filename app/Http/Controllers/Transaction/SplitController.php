@@ -71,7 +71,7 @@ class SplitController extends Controller
 
         $uploadSize    = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
         $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $preFilled     = $this->arrayFromJournal($request, $journal);
 
@@ -116,7 +116,7 @@ class SplitController extends Controller
         $budgetRepository = app(BudgetRepositoryInterface::class);
 
         $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
         $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
 
         return view('split.journals.from-store', compact('currencies', 'assetAccounts', 'budgets', 'preFilled'));

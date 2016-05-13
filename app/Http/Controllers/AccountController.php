@@ -6,8 +6,11 @@ use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Support\CacheProperties;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
+use Navigation;
 use Preferences;
 use Session;
 use Steam;
@@ -66,7 +69,7 @@ class AccountController extends Controller
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectListWithEmpty($repository->getAccounts([$account->accountType->type]));
+        $accountList = ExpandedForm::makeSelectListWithEmpty($repository->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -157,7 +160,7 @@ class AccountController extends Controller
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = $repository->getAccounts($types);
+        $accounts     = $repository->getAccountsByType($types);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -183,21 +186,90 @@ class AccountController extends Controller
     /**
      * @param ARI     $repository
      * @param Account $account
+     * @param string  $date
+     *
+     * @return View
+     */
+    public function showWithDate(ARI $repository, Account $account, string $date)
+    {
+        $carbon       = new Carbon($date);
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = Navigation::startOfPeriod($carbon, $range);
+        $end          = Navigation::endOfPeriod($carbon, $range);
+        $subTitle     = $account->name;
+        $page         = intval(Input::get('page'));
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
+        $offset       = ($page - 1) * $pageSize;
+        $set          = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count        = $set->count();
+        $subSet       = $set->splice($offset, $pageSize);
+        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $journals->setPath('categories/show/' . $account->id . '/' . $date);
+
+        return view('accounts.show_with_date', compact('category', 'journals', 'subTitle', 'carbon'));
+    }
+
+    /**
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\View\View
      */
     public function show(ARI $repository, Account $account)
     {
-        $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $subTitleIcon = config('firefly.subTitlesByIdentifier.' . $account->accountType->type);
-        $what         = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $journals     = $repository->getJournals($account, $page, $pageSize);
-        $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
+        // show journals from current period only:
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page     = intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $offset   = ($page - 1) * $pageSize;
+        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count    = $set->count();
+        $subSet   = $set->splice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('accounts/show/' . $account->id);
 
+        // grouped other months thing:
+        // oldest transaction in account:
+        $start = $repository->firstUseDate($account);
+        if ($start->year == 1900) {
+            $start = new Carbon;
+        }
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $start   = Navigation::startOfPeriod($start, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
 
-        return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('account-show');
+        $cache->addProperty($account->id);
+
+
+        if ($cache->has()) {
+            //$entries = $cache->get();
+            //return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+        }
+
+
+        $accountCollection = new Collection([$account]);
+        while ($end >= $start) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $spent      = $repository->spentInPeriod($accountCollection, $end, $currentEnd);
+            $earned     = $repository->earnedInPeriod($accountCollection, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+
+        }
+        $cache->store($entries);
+
+        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
     /**

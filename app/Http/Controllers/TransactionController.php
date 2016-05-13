@@ -72,7 +72,7 @@ class TransactionController extends Controller
 
         $what          = strtolower($what);
         $uploadSize    = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $assetAccounts = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
         $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $piggyBanks    = $piggyRepository->getPiggyBanks();
         /** @var PiggyBank $piggy */
@@ -159,7 +159,7 @@ class TransactionController extends Controller
         /** @var PiggyBankRepositoryInterface $piggyRepository */
         $piggyRepository = app(PiggyBankRepositoryInterface::class);
 
-        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $piggyBankList = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
         $maxFileSize   = Steam::phpBytes(ini_get('upload_max_filesize'));
@@ -296,7 +296,7 @@ class TransactionController extends Controller
         $subTitle = trans('firefly.mass_edit_journals');
         /** @var ARI $accountRepository */
         $accountRepository = app(ARI::class);
-        $accountList       = ExpandedForm::makeSelectList($accountRepository->getAccounts(['Default account', 'Asset account']));
+        $accountList       = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
 
         // put previous url in session
         Session::put('transactions.mass-edit.url', URL::previous());

@@ -42,26 +42,11 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository)
     {
-        $start         = session('start', Carbon::now()->startOfMonth());
-        $end           = session('end', Carbon::now()->endOfMonth());
-        $paid          = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $unpaid        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $creditCardDue = $repository->getCreditCardBill($start, $end);
-
-        if ($creditCardDue < 0) {
-            // expenses are negative (bill not yet paid),
-            $creditCardDue = bcmul($creditCardDue, '-1');
-            $unpaid        = bcadd($unpaid, $creditCardDue);
-        }
-
-        // if $creditCardDue more than zero, the bill has been paid: (transfer = positive).
-        // amount must be negative to be added to $paid:
-        if ($creditCardDue >= 0) {
-            $paid = bcadd($paid, $creditCardDue);
-        }
-
-        // build chart:
-        $data = $this->generator->frontpage($paid, $unpaid);
+        $start  = session('start', Carbon::now()->startOfMonth());
+        $end    = session('end', Carbon::now()->endOfMonth());
+        $paid   = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $unpaid = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $data   = $this->generator->frontpage($paid, $unpaid);
 
         return Response::json($data);
     }

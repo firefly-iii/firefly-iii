@@ -28,7 +28,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             return $account;
         }
 
-        $set = $repository->getAccounts(['Default account', 'Asset account']);
+        $set = $repository->getAccountsByType(['Default account', 'Asset account']);
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $this->value) {

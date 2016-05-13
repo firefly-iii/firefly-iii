@@ -7,6 +7,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Route;
@@ -116,7 +117,7 @@ class HomeController extends Controller
         /** @var Carbon $end */
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
-        $accounts          = $repository->getFrontpageAccounts($frontPage);
+        $accounts          = $repository->getAccountsById($frontPage->data);
         $savings           = $repository->getSavingsAccounts();
         $piggyBankAccounts = $repository->getPiggyBankAccounts();
 
@@ -133,7 +134,8 @@ class HomeController extends Controller
         }
 
         foreach ($accounts as $account) {
-            $set = $repository->getFrontpageTransactions($account, $start, $end);
+            $set = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+            $set = $set->splice(0, 10);
 
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
@@ -153,10 +155,10 @@ class HomeController extends Controller
     {
         // these routes are not relevant for the help pages:
         $ignore = [
-//            'logout', 'register', 'bills.rescan', 'attachments.download', 'attachments.preview',
-//            'budgets.income', 'csv.download-config', 'currency.default', 'export.status', 'export.download',
-//            'json.', 'help.', 'piggy-banks.addMoney', 'piggy-banks.removeMoney', 'rules.rule.up', 'rules.rule.down',
-//            'rules.rule-group.up', 'rules.rule-group.down', 'debugbar',
+            //            'logout', 'register', 'bills.rescan', 'attachments.download', 'attachments.preview',
+            //            'budgets.income', 'csv.download-config', 'currency.default', 'export.status', 'export.download',
+            //            'json.', 'help.', 'piggy-banks.addMoney', 'piggy-banks.removeMoney', 'rules.rule.up', 'rules.rule.down',
+            //            'rules.rule-group.up', 'rules.rule-group.down', 'debugbar',
         ];
         $routes = Route::getRoutes();
         /** @var \Illuminate\Routing\Route $route */

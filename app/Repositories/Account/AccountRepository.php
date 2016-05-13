@@ -8,7 +8,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -78,6 +77,23 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        Log::debug('earnedinperiod');
+        $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $sum   = bcmul($this->sumInPeriod($accounts, $types, $start, $end), '-1');
+
+        return $sum;
+
+    }
+
+    /**
      * @param $accountId
      *
      * @return Account
@@ -93,6 +109,29 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Account $account): Carbon
+    {
+        $first = new Carbon('1900-01-01');
+
+        /** @var Transaction $first */
+        $date = $account->transactions()
+                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                        ->orderBy('transaction_journals.date', 'ASC')
+                        ->orderBy('transaction_journals.order', 'DESC')
+                        ->orderBy('transaction_journals.id', 'ASC')
+                        ->first(['transaction_journals.date']);
+        if (!is_null($date)) {
+            $first = new Carbon($date->date);
+        }
+
+        return $first;
+    }
+
+    /**
      * Gets all the accounts by ID, for a given set.
      *
      * @param array $ids
@@ -105,11 +144,11 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param array $types
+     * @param array $accountIds
      *
      * @return Collection
      */
-    public function getAccounts(array $types): Collection
+    public function getAccountsById(array $accountIds): Collection
     {
         /** @var Collection $result */
         $query = $this->user->accounts()->with(
@@ -117,9 +156,11 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('name', 'accountRole');
             }]
         );
-        if (count($types) > 0) {
-            $query->accountTypeIn($types);
+
+        if (count($accountIds) > 0) {
+            $query->whereIn('accounts.id', $accountIds);
         }
+
         $result = $query->get(['accounts.*']);
 
         $result = $result->sortBy(
@@ -132,72 +173,31 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * This method returns the users credit cards, along with some basic information about the
-     * balance they have on their CC. To be used in the JSON boxes on the front page that say
-     * how many bills there are still left to pay. The balance will be saved in field "balance".
-     *
-     * To get the balance, the field "date" is necessary.
-     *
-     * @param Carbon $date
+     * @param array $types
      *
      * @return Collection
      */
-    public function getCreditCards(Carbon $date): Collection
+    public function getAccountsByType(array $types): Collection
     {
-        $set = $this->user->accounts()
-                          ->hasMetaValue('accountRole', 'ccAsset')
-                          ->hasMetaValue('ccType', 'monthlyFull')
-                          ->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->whereNull('transactions.deleted_at')
-                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                          ->groupBy('accounts.id')
-                          ->get(
-                              [
-                                  'accounts.*',
-                                  'ccType.data as ccType',
-                                  'accountRole.data as accountRole',
-                                  DB::Raw('SUM(`transactions`.`amount`) AS `balance`'),
-                              ]
-                          );
+        /** @var Collection $result */
+        $query = $this->user->accounts()->with(
+            ['accountmeta' => function (HasMany $query) {
+                $query->where('name', 'accountRole');
+            }]
+        );
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
 
-        return $set;
-    }
+        $result = $query->get(['accounts.*']);
 
-    /**
-     * Returns a list of transactions TO the $account, not including transfers
-     * and/or expenses in the $accounts list.
-     *
-     * @param Account    $account
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $ids      = $accounts->pluck('id')->toArray();
-        $journals = $this->user->transactionjournals()
-                               ->expanded()
-                               ->sortCorrectly()
-                               ->before($end)
-                               ->leftJoin(
-                                   'transactions as dest', function (JoinClause $join) {
-                                   $join->on('dest.transaction_journal_id', '=', 'transaction_journals.id')->where('dest.amount', '>', 0);
-                               }
-                               )
-                               ->leftJoin(
-                                   'transactions as source', function (JoinClause $join) {
-                                   $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-                               }
-                               )
-                               ->where('dest.account_id', $account->id)
-                               ->whereIn('source.account_id', $ids)
-                               ->after($start)
-                               ->get(TransactionJournal::queryFields());
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
+            }
+        );
 
-        return $journals;
+        return $result;
     }
 
     /**
@@ -214,80 +214,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $transaction;
-    }
-
-    /**
-     * @param Preference $preference
-     *
-     * @return Collection
-     */
-    public function getFrontpageAccounts(Preference $preference): Collection
-    {
-        $query = $this->user->accounts()->accountTypeIn(['Default account', 'Asset account']);
-
-        if (count($preference->data) > 0) {
-            $query->whereIn('accounts.id', $preference->data);
-        }
-
-        $result = $query->get(['accounts.*']);
-
-        return $result;
-    }
-
-    /**
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return mixed
-     */
-    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection
-    {
-        $query = $this->user
-            ->transactionjournals()
-            ->expanded()
-            ->sortCorrectly()
-            ->before($end)
-            ->after($start)
-            ->take(10);
-
-        // expand query:
-        $query->leftJoin(
-            'transactions as source', function (JoinClause $join) {
-            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id');
-        }
-        )->where('source.account_id', $account->id);
-        $query->take(10);
-        $set = $query->get(TransactionJournal::queryFields());
-
-        return $set;
-    }
-
-    /**
-     * Returns a list of transactions TO the given (asset) $account, but none from the
-     * given list of accounts
-     *
-     * @param Account    $account
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $ids      = $accounts->pluck('id')->toArray();
-        $journals = $this->user->transactionjournals()
-                               ->expanded()
-                               ->sortCorrectly()
-                               ->before($end)
-                               ->where('source_account.id', $account->id)
-                               ->whereIn('destination_account.id', $ids)
-                               ->after($start)
-                               ->get(TransactionJournal::queryFields());
-
-        return $journals;
     }
 
     /**
@@ -435,7 +361,38 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * 
+     * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
+    {
+        // first collect actual transaction journals (fairly easy)
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly();
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+
+        if (count($types) > 0) {
+            $query->transactionTypes($types);
+        }
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('t.account_id', $accountIds);
+        }
+        // that should do it:
+        $complete = $query->get(TransactionJournal::queryFields());
+
+        return $complete;
+    }
+
+    /**
+     *
      * @param Account $account
      * @param Carbon  $date
      *
@@ -522,6 +479,22 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        Log::debug('spentinperiod');
+        $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $sum   = $this->sumInPeriod($accounts, $types, $start, $end);
+
+        return $sum;
     }
 
     /**
@@ -787,5 +760,65 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
 
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    private function sumInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): string
+    {
+        // first collect incoming transaction journals (where the $accounts receive the money).
+        $query = $this->user
+            ->transactionjournals()
+            ->distinct()
+            ->transactionTypes($types)
+            ->leftJoin(
+                'transactions as t', function (JoinClause $join) {
+                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '>', 0);
+            }
+            );
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->whereIn('t.account_id', $accountIds);
+        }
+
+        // that should do it:
+        $first = strval($query->sum('t.amount'));
+
+        // the the other way around:
+        $query = $this->user
+            ->transactionjournals()
+            ->distinct()
+            ->transactionTypes($types)
+            ->leftJoin(
+                'transactions as t', function (JoinClause $join) {
+                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+            }
+            );
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->whereIn('t.account_id', $accountIds);
+        }
+
+        // that should do it:
+        $second = strval($query->sum('t.amount'));
+        $sum    = bcadd($first, $second);
+
+        Log::debug('SumInPeriodData ', ['accounts' => $accountIds, 'first' => $first, 'second' => $second, 'sum' => $sum]);
+
+        return $sum;
     }
 }

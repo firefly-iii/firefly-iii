@@ -50,7 +50,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
     private function searchOrCreate(AccountRepositoryInterface $repository)
     {
         // find or create new account:
-        $set = $repository->getAccounts(['Default account', 'Asset account']);
+        $set = $repository->getAccountsByType(['Default account', 'Asset account']);
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->iban == $this->value) {

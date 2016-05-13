@@ -65,7 +65,7 @@ class PiggyBankController extends Controller
     {
 
         $periods      = config('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
@@ -124,7 +124,7 @@ class PiggyBankController extends Controller
     {
 
         $periods      = config('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;

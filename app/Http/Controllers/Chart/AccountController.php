@@ -8,10 +8,7 @@ use FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Preferences;
-use Response;
 
 /** checked
  * Class AccountController
@@ -34,39 +31,6 @@ class AccountController extends Controller
         $this->generator = app(AccountChartGeneratorInterface::class);
     }
 
-
-    /**
-     * Shows the balances for a given set of dates and accounts.
-     *
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('all');
-        $cache->addProperty('accounts');
-        $cache->addProperty('default');
-        $cache->addProperty($reportType);
-        $cache->addProperty($accounts);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        // make chart:
-        $data = $this->generator->frontpage($accounts, $start, $end);
-        $cache->store($data);
-
-        return Response::json($data);
-    }
-
     /**
      * Shows the balances for all the user's expense accounts.
      *
@@ -76,6 +40,7 @@ class AccountController extends Controller
      */
     public function expenseAccounts(ARI $repository)
     {
+        /*
         $start    = clone session('start', Carbon::now()->startOfMonth());
         $end      = clone session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccounts(['Expense account', 'Beneficiary account']);
@@ -94,7 +59,7 @@ class AccountController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
+*/
     }
 
     /**
@@ -106,6 +71,7 @@ class AccountController extends Controller
      */
     public function frontpage(ARI $repository)
     {
+        /*
         $frontPage = Preferences::get('frontPageAccounts', []);
         $start     = clone session('start', Carbon::now()->startOfMonth());
         $end       = clone session('end', Carbon::now()->endOfMonth());
@@ -125,7 +91,41 @@ class AccountController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+*/
+    }
 
+    /**
+     * Shows the balances for a given set of dates and accounts.
+     *
+     * @param            $reportType
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        /*
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('all');
+        $cache->addProperty('accounts');
+        $cache->addProperty('default');
+        $cache->addProperty($reportType);
+        $cache->addProperty($accounts);
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+
+        // make chart:
+        $data = $this->generator->frontpage($accounts, $start, $end);
+        $cache->store($data);
+
+        return Response::json($data);
+        */
     }
 
     /**
@@ -137,7 +137,7 @@ class AccountController extends Controller
      */
     public function single(Account $account)
     {
-
+        /*
 
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -157,5 +157,6 @@ class AccountController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+        */
     }
 }

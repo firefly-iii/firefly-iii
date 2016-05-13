@@ -110,7 +110,7 @@ class BudgetController extends Controller
         $cache->addProperty($repetition->id);
 
         if ($cache->has()) {
-            // return Response::json($cache->get());
+             return Response::json($cache->get());
         }
 
         $entries          = new Collection;
@@ -150,7 +150,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('all');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
         $budgets     = $repository->getActiveBudgets();
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
@@ -203,8 +203,6 @@ class BudgetController extends Controller
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
 
-        return ' ' . json_encode($data);
-
         return Response::json($data);
     }
 
@@ -230,7 +228,7 @@ class BudgetController extends Controller
         $cache->addProperty('multiYearBudget');
 
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
         $budgetIds   = $budgets->pluck('id')->toArray();
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
@@ -300,7 +298,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('period');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
         // loop over period, add by users range:
         $current     = clone $start;

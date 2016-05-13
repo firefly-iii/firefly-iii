@@ -3,7 +3,6 @@
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests\CategoryFormRequest;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
@@ -153,16 +152,25 @@ class CategoryController extends Controller
      */
     public function show(CRI $repository, Category $category)
     {
+        /** @var Carbon $carbon */
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $hideCategory = true; // used in list.
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $page         = intval(Input::get('page'));
-        $journals     = $repository->getJournals($category, $page, $pageSize);
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
+        $offset       = ($page - 1) * $pageSize;
+        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
+        $count        = $set->count();
+        $subSet       = $set->splice($offset, $pageSize);
+        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id);
 
-        // list of ranges for list of periods:
-
         // oldest transaction in category:
-        $start   = $repository->firstUseDate($category, new Collection);
+        $start = $repository->firstUseDate($category, new Collection);
+        if ($start->year == 1900) {
+            $start = new Carbon;
+        }
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = Navigation::endOfX(new Carbon, $range);
@@ -177,8 +185,9 @@ class CategoryController extends Controller
 
 
         if ($cache->has()) {
-            //$entries = $cache->get();
-            //return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+            $entries = $cache->get();
+
+            return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
         }
 
 
@@ -223,7 +232,7 @@ class CategoryController extends Controller
         $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
         $count        = $set->count();
         $subSet       = $set->splice($offset, $pageSize);
-        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
         return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));

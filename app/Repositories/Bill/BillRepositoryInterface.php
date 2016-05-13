@@ -85,17 +85,6 @@ interface BillRepositoryInterface
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
 
     /**
-     * This method will tell you if you still have a CC bill to pay. Amount will be negative if the amount
-     * has been paid
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getCreditCardBill(Carbon $start, Carbon $end): string;
-
-    /**
      * @param Bill $bill
      *
      * @param int  $page

@@ -60,11 +60,7 @@ class JsonController extends Controller
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
-        $amount        = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $creditCardDue = $repository->getCreditCardBill($start, $end);
-        if ($creditCardDue >= 0) {
-            $amount = bcadd($amount, $creditCardDue);
-        }
+        $amount = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
         $amount = bcmul($amount, '-1');
 
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
@@ -79,18 +75,10 @@ class JsonController extends Controller
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
-        $start         = session('start', Carbon::now()->startOfMonth());
-        $end           = session('end', Carbon::now()->endOfMonth());
-        $amount        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $creditCardDue = $repository->getCreditCardBill($start, $end);
-
-        if ($creditCardDue < 0) {
-            // expenses are negative (bill not yet paid),
-            $creditCardDue = bcmul($creditCardDue, '-1');
-            $amount        = bcadd($amount, $creditCardDue);
-        }
-
-        $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $start  = session('start', Carbon::now()->startOfMonth());
+        $end    = session('end', Carbon::now()->endOfMonth());
+        $amount = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $data   = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
 
         return Response::json($data);
     }
@@ -115,7 +103,7 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
         $amount   = $reportQuery->income($accounts, $start, $end)->sum('journalAmount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
@@ -136,7 +124,7 @@ class JsonController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
 
-        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
 
         // works for json too!
         $cache = new CacheProperties;
@@ -192,7 +180,7 @@ class JsonController extends Controller
      */
     public function expenseAccounts(ARI $accountRepository)
     {
-        $list   = $accountRepository->getAccounts(['Expense account', 'Beneficiary account']);
+        $list   = $accountRepository->getAccountsByType(['Expense account', 'Beneficiary account']);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -209,7 +197,7 @@ class JsonController extends Controller
      */
     public function revenueAccounts(ARI $accountRepository)
     {
-        $list   = $accountRepository->getAccounts(['Revenue account']);
+        $list   = $accountRepository->getAccountsByType(['Revenue account']);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;

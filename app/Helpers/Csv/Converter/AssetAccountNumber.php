@@ -42,7 +42,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         $value = $this->value ?? '';
         if (strlen($value) > 0) {
             // find or create new account:
-            $set = $repository->getAccounts(['Default account', 'Asset account']);
+            $set = $repository->getAccountsByType(['Default account', 'Asset account']);
             /** @var Account $entry */
             foreach ($set as $entry) {
                 $accountNumber = $entry->getMeta('accountNumber');

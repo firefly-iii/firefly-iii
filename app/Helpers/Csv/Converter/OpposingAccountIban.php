@@ -41,7 +41,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
     {
         if (strlen($this->value) > 0) {
 
-            $set = $repository->getAccounts([]);
+            $set = $repository->getAccountsByType([]);
             /** @var Account $account */
             foreach ($set as $account) {
                 if ($account->iban == $this->value) {

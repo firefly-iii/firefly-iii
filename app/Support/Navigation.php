@@ -108,9 +108,7 @@ class Navigation
             $currentEnd->$function();
         }
         if (in_array($repeatFreq, $subDay)) {
-            Log::debug('Before subday: ' . $currentEnd->format('Y-m-d'));
             $currentEnd->subDay();
-            Log::debug('After subday: ' . $currentEnd->format('Y-m-d'));
         }
 
         return $currentEnd;

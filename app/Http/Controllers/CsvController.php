@@ -190,7 +190,7 @@ class CsvController extends Controller
         ];
 
         // get a list of asset accounts:
-        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
+        $accounts = ExpandedForm::makeSelectList($repository->getAccountsByType(['Asset account', 'Default account']));
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));

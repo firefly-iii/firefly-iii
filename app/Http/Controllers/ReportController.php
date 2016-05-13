@@ -69,7 +69,7 @@ class ReportController extends Controller
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
 
         // does the user have shared accounts?
-        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts = $repository->getAccountsByType(['Default account', 'Asset account']);
         // get id's for quick links:
         $accountIds = [];
         /** @var Account $account */

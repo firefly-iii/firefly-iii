@@ -251,55 +251,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * This method will tell you if you still have a CC bill to pay. Amount will be positive if the amount
-     * has been paid, otherwise it will be negative.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getCreditCardBill(Carbon $start, Carbon $end): string
-    {
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $amount            = '0';
-        $creditCards       = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
-        /** @var Account $creditCard */
-        foreach ($creditCards as $creditCard) {
-            if ($creditCard->balance == 0) {
-                // find a transfer TO the credit card which should account for anything paid. If not, the CC is not yet used.
-                $set       = TransactionJournal::whereIn(
-                    'transaction_journals.id', function (Builder $q) use ($creditCard, $start, $end) {
-                    $q->select('transaction_journals.id')
-                      ->from('transactions')
-                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                      ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                      ->where('transactions.account_id', $creditCard->id)
-                      ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-                      ->where('transaction_journals.user_id', $this->user->id)
-                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                      ->where('transaction_types.type', TransactionType::TRANSFER);
-                }
-                )->leftJoin(
-                    'transactions', function (JoinClause $join) {
-                    $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-                }
-                )->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $sumAmount = $set->sum_amount ?? '0';
-                $amount    = bcadd($amount, $sumAmount);
-            } else {
-                $amount = bcadd($amount, $creditCard->balance);
-            }
-        }
-
-        return $amount;
-
-    }
-
-    /**
      * This method also returns the amount of the journal in "journalAmount"
      * for easy access.
      *

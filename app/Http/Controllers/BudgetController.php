@@ -174,7 +174,7 @@ class BudgetController extends Controller
         $period            = Navigation::periodShow($start, $range);
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $accounts          = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
+        $accounts          = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
         $startAsString     = $start->format('Y-m-d');
         $endAsString       = $end->format('Y-m-d');
 

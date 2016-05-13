@@ -64,7 +64,7 @@ class CategoryController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('categories');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         while ($start <= $end) {
@@ -119,7 +119,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
         $categories = $repository->getCategories();
         $set        = new Collection;
@@ -169,7 +169,7 @@ class CategoryController extends Controller
         $cache->addProperty('multiYearCategory');
 
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         $entries = new Collection;
@@ -237,7 +237,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('period');
         if ($cache->has()) {
-            // return Response::json($cache->get());
+             return Response::json($cache->get());
         }
 
         /** @var CRI $repository */

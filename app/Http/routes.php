@@ -83,7 +83,9 @@ Route::group(
     Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])->where('what', 'revenue|asset|expense');
     Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
     Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
-    Route::get('/accounts/show/{account}/{view?}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+    Route::get('/accounts/show/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+    Route::get('/accounts/show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'accounts.show.date']);
+
 
     Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
     Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);

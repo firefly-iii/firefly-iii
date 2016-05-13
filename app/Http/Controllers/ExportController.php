@@ -102,7 +102,7 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts      = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts      = $repository->getAccountsByType(['Default account', 'Asset account']);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));

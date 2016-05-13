@@ -63,7 +63,7 @@ class PreferencesController extends Controller
      */
     public function index(ARI $repository)
     {
-        $accounts            = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts            = $repository->getAccountsByType(['Default account', 'Asset account']);
         $viewRangePref       = Preferences::get('viewRange', '1M');
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
