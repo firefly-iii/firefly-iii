@@ -42,10 +42,10 @@ interface AccountChartGeneratorInterface
 
     /**
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param array   $labels
+     * @param array   $dataSet
      *
      * @return array
      */
-    public function single(Account $account, Carbon $start, Carbon $end): array;
+    public function single(Account $account, array $labels, array $dataSet): array;
 }

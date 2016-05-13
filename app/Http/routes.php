@@ -191,7 +191,7 @@ Route::group(
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
     Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
-    Route::get('/chart/account/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
+    Route::get('/chart/account/report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
 

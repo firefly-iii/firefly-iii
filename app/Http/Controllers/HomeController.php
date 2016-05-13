@@ -1,9 +1,9 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Amount;
 use Artisan;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -111,15 +111,17 @@ class HomeController extends Controller
         $subTitle      = trans('firefly.welcomeBack');
         $mainTitleIcon = 'fa-fire';
         $transactions  = [];
-        $frontPage     = Preferences::get('frontPageAccounts', []);
+        $frontPage     = Preferences::get(
+            'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+        );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
         $accounts          = $repository->getAccountsById($frontPage->data);
-        $savings           = $repository->getSavingsAccounts();
-        $piggyBankAccounts = $repository->getPiggyBankAccounts();
+        $savings           = $repository->getSavingsAccounts($start, $end);
+        $piggyBankAccounts = $repository->getPiggyBankAccounts($start, $end);
 
 
         $savingsTotal = 0;

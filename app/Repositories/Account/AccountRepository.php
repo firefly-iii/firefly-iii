@@ -216,9 +216,12 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
      * @return Collection
      */
-    public function getPiggyBankAccounts(): Collection
+    public function getPiggyBankAccounts(Carbon $start, Carbon $end): Collection
     {
         $collection = new Collection(DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']));
         $accountIds = $collection->pluck('account_id')->toArray();
@@ -228,16 +231,39 @@ class AccountRepository implements AccountRepositoryInterface
             $accounts = $this->user->accounts()->whereIn('id', $accountIds)->where('accounts.active', 1)->get();
         }
 
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                $account->startBalance = Steam::balanceIgnoreVirtual($account, $start);
+                $account->endBalance   = Steam::balanceIgnoreVirtual($account, $end);
+                $account->piggyBalance = 0;
+                /** @var PiggyBank $piggyBank */
+                foreach ($account->piggyBanks as $piggyBank) {
+                    $account->piggyBalance += $piggyBank->currentRelevantRep()->currentamount;
+                }
+                // sum of piggy bank amounts on this account:
+                // diff between endBalance and piggyBalance.
+                // then, percentage.
+                $difference          = bcsub($account->endBalance, $account->piggyBalance);
+                $account->difference = $difference;
+                $account->percentage = $difference != 0 && $account->endBalance != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
+
+            }
+        );
+
+
         return $accounts;
 
     }
 
     /**
-     * Get savings accounts and the balance difference in the period.
+     * Get savings accounts.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
-    public function getSavingsAccounts(): Collection
+    public function getSavingsAccounts(Carbon $start, Carbon $end): Collection
     {
         $accounts = $this->user->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
                                ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
@@ -245,6 +271,32 @@ class AccountRepository implements AccountRepositoryInterface
                                ->where('accounts.active', 1)
                                ->where('account_meta.data', '"savingAsset"')
                                ->get(['accounts.*']);
+
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                $account->startBalance = Steam::balance($account, $start);
+                $account->endBalance   = Steam::balance($account, $end);
+
+                // diff (negative when lost, positive when gained)
+                $diff = bcsub($account->endBalance, $account->startBalance);
+
+                if ($diff < 0 && $account->startBalance > 0) {
+                    // percentage lost compared to start.
+                    $pct = (($diff * -1) / $account->startBalance) * 100;
+                } else {
+                    if ($diff >= 0 && $account->startBalance > 0) {
+                        $pct = ($diff / $account->startBalance) * 100;
+                    } else {
+                        $pct = 100;
+                    }
+                }
+                $pct                 = $pct > 100 ? 100 : $pct;
+                $account->difference = $diff;
+                $account->percentage = round($pct);
+
+            }
+        );
+
 
         return $accounts;
     }

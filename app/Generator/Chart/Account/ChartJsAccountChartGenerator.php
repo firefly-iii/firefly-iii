@@ -29,28 +29,6 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
             'labels' => [], 'datasets' => [[
                                                'label' => trans('firefly.spent'),
                                                'data'  => []]]];
-
-        $start->subDay();
-        $ids           = $this->getIdsFromCollection($accounts);
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
-
-        $accounts->each(
-            function (Account $account) use ($startBalances, $endBalances) {
-                $id                  = $account->id;
-                $startBalance        = $this->isInArray($startBalances, $id);
-                $endBalance          = $this->isInArray($endBalances, $id);
-                $diff                = bcsub($endBalance, $startBalance);
-                $account->difference = round($diff, 2);
-            }
-        );
-
-        $accounts = $accounts->sortByDesc(
-            function (Account $account) {
-                return $account->difference;
-            }
-        );
-
         foreach ($accounts as $account) {
             if ($account->difference > 0) {
                 $data['labels'][]              = $account->name;
@@ -80,7 +58,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
         }
 
         foreach ($accounts as $account) {
-            $set      = [
+            $data['datasets'][] = [
                 'label'                => $account->name,
                 'fillColor'            => 'rgba(220,220,220,0.2)',
                 'strokeColor'          => 'rgba(220,220,220,1)',
@@ -88,20 +66,8 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
                 'pointStrokeColor'     => '#fff',
                 'pointHighlightFill'   => '#fff',
                 'pointHighlightStroke' => 'rgba(220,220,220,1)',
-                'data'                 => [],
+                'data'                 => $account->balances,
             ];
-            $current  = clone $start;
-            $range    = Steam::balanceInRange($account, $start, clone $end);
-            $previous = round(array_values($range)[0], 2);
-            while ($current <= $end) {
-                $format  = $current->format('Y-m-d');
-                $balance = isset($range[$format]) ? round($range[$format], 2) : $previous;
-
-                $set['data'][] = $balance;
-                $previous      = $balance;
-                $current->addDay();
-            }
-            $data['datasets'][] = $set;
         }
         $data['count'] = count($data['datasets']);
 
@@ -110,71 +76,27 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
 
     /**
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param array   $labels
+     * @param array   $dataSet
      *
      * @return array
      */
-    public function single(Account $account, Carbon $start, Carbon $end): array
+    public function single(Account $account, array $labels, array $dataSet): array
     {
         // language:
         $format = (string)trans('config.month_and_day');
 
         $data     = [
             'count'    => 1,
-            'labels'   => [],
+            'labels'   => $labels,
             'datasets' => [
                 [
                     'label' => $account->name,
-                    'data'  => [],
+                    'data'  => $dataSet,
                 ],
             ],
         ];
-        $range    = Steam::balanceInRange($account, $start, $end);
-        $current  = clone $start;
-        $previous = array_values($range)[0];
-
-        while ($end >= $current) {
-            $theDate = $current->format('Y-m-d');
-            $balance = $range[$theDate] ?? $previous;
-
-            $data['labels'][]              = $current->formatLocalized($format);
-            $data['datasets'][0]['data'][] = $balance;
-            $previous                      = $balance;
-            $current->addDay();
-        }
-
         return $data;
     }
 
-    /**
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    protected function getIdsFromCollection(Collection $collection): array
-    {
-        $ids = [];
-        foreach ($collection as $entry) {
-            $ids[] = $entry->id;
-        }
-
-        return array_unique($ids);
-
-    }
-
-    /**
-     * @param $array
-     * @param $entryId
-     *
-     * @return string
-     */
-    protected function isInArray($array, $entryId): string
-    {
-        if (isset($array[$entryId])) {
-            return $array[$entryId];
-        }
-
-        return '0';
-    }
 }

@@ -91,16 +91,22 @@ interface AccountRepositoryInterface
     /**
      * Get the accounts of a user that have piggy banks connected to them.
      *
-     * @return Collection
-     */
-    public function getPiggyBankAccounts(): Collection;
-
-    /**
-     * Get savings accounts and the balance difference in the period.
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
-    public function getSavingsAccounts() : Collection;
+    public function getPiggyBankAccounts(Carbon $start, Carbon $end): Collection;
+
+    /**
+     * Get savings accounts.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getSavingsAccounts(Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Collection $accounts
