@@ -127,12 +127,6 @@ class HomeController extends Controller
             $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
         }
 
-        $sum = $repository->sumOfEverything();
-
-        if (bccomp($sum, '0') !== 0) {
-            Session::flash('error', strval(trans('firefly.unbalanced_error', ['amount' => Amount::format($sum, false)])));
-        }
-
         foreach ($accounts as $account) {
             $set = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
             $set = $set->splice(0, 10);

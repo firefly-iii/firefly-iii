@@ -10,7 +10,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
@@ -249,9 +248,7 @@ having transaction_count = 0
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            /** @var AccountRepositoryInterface $repository */
-            $repository = app(AccountRepositoryInterface::class, [$user]);
-            $sum        = $repository->sumOfEverything();
+            $sum = $user->transactions()->sum('amount');
             if (bccomp($sum, '0') !== 0) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
             }

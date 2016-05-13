@@ -89,34 +89,6 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 
     /**
-     * @deprecated
-     *
-     * SEE OTHER GETJOURNALS METHODS.
-     *
-     * @param Account $account
-     * @param int     $page
-     * @param int     $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(Account $account, int $page, int $pageSize = 50): LengthAwarePaginator;
-
-    /**
-     * @deprecated
-     *
-     * SEE OTHER GETJOURNALS METHODS.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection;
-
-    /**
-     * @deprecated
-     *
      * Get the accounts of a user that have piggy banks connected to them.
      *
      * @return Collection
@@ -124,8 +96,6 @@ interface AccountRepositoryInterface
     public function getPiggyBankAccounts(): Collection;
 
     /**
-     * @deprecated
-     *
      * Get savings accounts and the balance difference in the period.
      *
      * @return Collection
@@ -143,7 +113,6 @@ interface AccountRepositoryInterface
     public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
 
     /**
-     * @deprecated
      *
      * @param Account $account
      * @param Carbon  $date
@@ -171,7 +140,6 @@ interface AccountRepositoryInterface
     public function oldestJournalDate(Account $account): Carbon;
 
     /**
-     *
      *
      * @param Account $account
      *
@@ -203,13 +171,6 @@ interface AccountRepositoryInterface
      * @return AccountMeta
      */
     public function storeMeta(Account $account, string $name, $value): AccountMeta;
-
-    /**
-     * @deprecated
-     *
-     * @return string
-     */
-    public function sumOfEverything() : string;
 
     /**
      * @param Account $account
