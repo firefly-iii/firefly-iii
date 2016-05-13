@@ -64,6 +64,13 @@ class Journal implements JournalInterface
         );
         $journal->save();
 
+        foreach ($data['transactions'] as $transaction) {
+            $this->storeTransaction($journal, $transaction);
+        }
+
+        $journal->completed = true;
+        $journal->save();
+
         return $journal;
     }
 
@@ -114,6 +121,38 @@ class Journal implements JournalInterface
 
         return new Collection([$one, $two]);
 
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    public function updateJournal(TransactionJournal $journal, array $data): TransactionJournal
+    {
+        echo '<pre>';
+        print_r($data);
+
+        $journal->description             = $data['journal_description'];
+        $journal->transaction_currency_id = $data['journal_currency_id'];
+        $journal->date                    = $data['date'];
+        $journal->interest_date           = $data['interest_date'];
+        $journal->book_date               = $data['book_date'];
+        $journal->process_date            = $data['process_date'];
+        $journal->save();
+
+        // delete original transactions, and recreate them.
+        $journal->transactions()->delete();
+
+        foreach ($data['transactions'] as $transaction) {
+            $this->storeTransaction($journal, $transaction);
+        }
+
+        $journal->completed = true;
+        $journal->save();
+
+        return $journal;
     }
 
     /**

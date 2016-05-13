@@ -36,4 +36,12 @@ interface JournalInterface
      * @return Collection
      */
     public function storeTransaction(TransactionJournal $journal, array $transaction): Collection;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    public function updateJournal(TransactionJournal $journal, array $data): TransactionJournal;
 }

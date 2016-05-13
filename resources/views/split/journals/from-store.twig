@@ -74,7 +74,7 @@
 
                     <!-- show source drop down box if withdrawal or transfer -->
                     {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
-                        {{ ExpandedForm.select('journal_asset_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
+                        {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                     {% endif %}
                     <!-- show source text input if deposit: -->
                     {% if preFilled.what == 'deposit' %}

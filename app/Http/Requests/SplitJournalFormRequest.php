@@ -35,6 +35,7 @@ class SplitJournalFormRequest extends Request
     public function getSplitData(): array
     {
         $data = [
+            'id'                               => $this->get('id') ?? 0,
             'journal_description'              => $this->get('journal_description'),
             'journal_currency_id'              => intval($this->get('journal_currency_id')),
             'journal_source_account_id'        => intval($this->get('journal_source_account_id')),

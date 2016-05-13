@@ -25,6 +25,7 @@ return [
     'journal_currency_id'          => 'Currency',
     'journal_amount'               => 'Amount',
     'journal_asset_source_account' => 'Asset account (source)',
+    'journal_source_account_id'    => 'Asset account (source)',
     'account_from_id'              => 'From account',
     'account_to_id'                => 'To account',
     'asset_destination_account'    => 'Asset account (destination)',
