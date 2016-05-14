@@ -9,8 +9,6 @@ declare(strict_types = 1);
  */
 
 use Carbon\Carbon;
-use FireflyIII\Events\BudgetLimitStored;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Support\Migration\TestData;
 use Illuminate\Database\Seeder;
 
@@ -19,19 +17,11 @@ use Illuminate\Database\Seeder;
  */
 class TestDataSeeder extends Seeder
 {
-    /** @var  Carbon */
-    public $end;
-    /** @var  Carbon */
-    public $start;
-
     /**
      * TestDataSeeder constructor.
      */
     public function __construct()
     {
-        $this->start = Carbon::create()->subYears(2)->startOfYear();
-        $this->end   = Carbon::now();
-
     }
 
     /**
@@ -41,12 +31,13 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-
-        $current = clone $this->start;
-        while ($current < $this->end) {
-            $month = $current->format('F Y');
-
-            $current->addMonth();
+        $disk     = Storage::disk('database');
+        $env      = App::environment();
+        $fileName = 'seed.' . $env . '.json';
+        if ($disk->exists($fileName)) {
+            $file = json_decode($disk->get($fileName), true);
+            // run the file:
+            TestData::run($file);
         }
     }
 }

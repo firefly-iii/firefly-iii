@@ -16,7 +16,7 @@
   "roles": [
     {
       "user_id": 1,
-      "role": "owner"
+      "role": 1
     }
   ],
   "accounts": [
@@ -73,8 +73,7 @@
     {
       "user_id": 1,
       "account_type_id": 4,
-      "name": "PLUS",
-      "0": "Apple"
+      "name": "PLUS"
     },
     {
       "user_id": 1,
@@ -290,69 +289,81 @@
     {
       "name": "Another Empty Budget",
       "user_id": 1
+    },
+    {
+      "name": "Going out",
+      "user_id": 1
     }
   ],
   "budget-limits": [
     {
       "budget_id": 1,
-      "startdate": "2016-05-01",
-      "amount": 196,
-      "repeats": 0,
+      "startdate": "2016-04-01",
+      "amount_min": 100,
+      "amount_max": 200,
       "repeat_freq": "daily"
     },
     {
       "budget_id": 1,
       "startdate": "2016-05-01",
-      "amount": 154,
-      "repeats": 0,
+      "amount_min": 100,
+      "amount_max": 200,
       "repeat_freq": "weekly"
     },
     {
       "budget_id": 1,
-      "startdate": "2016-05-01",
-      "amount": 159,
-      "repeats": 0,
+      "startdate": "2016-06-01",
+      "amount_min": 100,
+      "amount_max": 200,
       "repeat_freq": "monthly"
     },
     {
       "budget_id": 1,
-      "startdate": "2016-05-01",
-      "amount": 157,
-      "repeats": 0,
+      "startdate": "2016-07-01",
+      "amount_min": 100,
+      "amount_max": 200,
       "repeat_freq": "quarterly"
     },
     {
       "budget_id": 1,
-      "startdate": "2016-05-01",
-      "amount": 190,
-      "repeats": 0,
+      "startdate": "2016-08-01",
+      "amount_min": 100,
+      "amount_max": 200,
       "repeat_freq": "half-year"
     },
     {
       "budget_id": 1,
-      "startdate": "2016-05-01",
-      "amount": 145,
-      "repeats": 0,
+      "startdate": "2016-09-01",
+      "amount_min": 100,
+      "amount_max": 200,
       "repeat_freq": "yearly"
     }
   ],
   "monthly-limits": [
     {
       "budget_id": 1,
-      "amount": 100
+      "amount_min": 200,
+      "amount_max": 200
     },
     {
       "budget_id": 2,
-      "amount": 100
+      "amount_min": 1000,
+      "amount_max": 1000
     },
     {
       "budget_id": 3,
-      "amount": 100
+      "amount_min": 200,
+      "amount_max": 200
+    },
+    {
+      "budget_id": 6,
+      "amount_min": 100,
+      "amount_max": 100
     }
   ],
   "categories": [
     {
-      "name": "Groceries",
+      "name": "Daily groceries",
       "user_id": 1
     },
     {
@@ -365,6 +376,14 @@
     },
     {
       "name": "Salary",
+      "user_id": 1
+    },
+    {
+      "name": "Bills",
+      "user_id": 1
+    },
+    {
+      "name": "Going out",
       "user_id": 1
     }
   ],
@@ -497,6 +516,7 @@
       "rule_id": 1,
       "order": 1,
       "active": 1,
+      "stop_processing": 0,
       "action_type": "prepend_description",
       "action_value": "Bought the world from "
     },
@@ -504,6 +524,7 @@
       "rule_id": 1,
       "order": 2,
       "active": 1,
+      "stop_processing": 0,
       "action_type": "set_category",
       "action_value": "Large expenses"
     }
@@ -584,179 +605,214 @@
   ],
   "monthly-deposits": [
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 24,
       "description": "Salary in :month",
-      "source": "Job",
-      "destination": "Checking Account",
-      "min_amount": 2000,
-      "max_amount": 2100
+      "source_id": 30,
+      "destination_id": 1,
+      "min_amount": 1500,
+      "max_amount": 1700,
+      "category_id": 4
     }
   ],
   "monthly-transfers": [
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 28,
       "description": "Saving money for :month",
-      "source": "Checking Account",
-      "destination": "Savings Account",
+      "source_id": 1,
+      "destination_id": 3,
       "min_amount": 150,
       "max_amount": 150
     }
   ],
   "monthly-withdrawals": [
     {
-      "user": 1,
-      "day-of-month": 2,
+      "user_id": 1,
+      "day-of-month": "02",
       "description": "Rent for :month",
-      "source": "Checking Account",
-      "destination": "Land lord",
+      "source_id": 1,
+      "destination_id": 29,
       "min_amount": 800,
-      "max_amount": 800
+      "max_amount": 800,
+      "category_id": 5,
+      "budget_id": 2
     },
     {
-      "user": 1,
-      "day-of-month": 4,
+      "user_id": 1,
+      "day-of-month": "04",
       "description": "Water bill :month",
-      "source": "Checking Account",
-      "destination": "Land lord",
-      "min_amount": 800,
-      "max_amount": 800
+      "source_id": 1,
+      "destination_id": 8,
+      "min_amount": 8,
+      "max_amount": 12,
+      "category_id": 5,
+      "budget_id": 2
     },
     {
-      "user": 1,
-      "day-of-month": 6,
+      "user_id": 1,
+      "day-of-month": "06",
       "description": "TV bill :month",
-      "source": "Checking Account",
-      "destination": "Land lord",
-      "min_amount": 800,
-      "max_amount": 800
+      "source_id": 1,
+      "destination_id": 26,
+      "min_amount": 50,
+      "max_amount": 60,
+      "category_id": 5,
+      "budget_id": 2
     },
     {
-      "user": 1,
-      "day-of-month": 8,
+      "user_id": 1,
+      "day-of-month": "08",
       "description": "Power bill :month",
-      "source": "Checking Account",
-      "destination": "Land lord",
-      "min_amount": 800,
-      "max_amount": 800
+      "source_id": 1,
+      "destination_id": 24,
+      "min_amount": 75,
+      "max_amount": 90,
+      "category_id": 5,
+      "budget_id": 2
     },
     {
-      "user": 1,
-      "day-of-month": 7,
+      "user_id": 1,
+      "day-of-month": "07",
       "description": "Bought gas",
-      "source": "Checking Account",
-      "destination": "Shell",
+      "source_id": 1,
+      "destination_id": 17,
       "min_amount": 40,
-      "max_amount": 50
+      "max_amount": 50,
+      "category_id": 2,
+      "budget_id": 3
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 17,
       "description": "Filled the car up again",
-      "source": "Checking Account",
-      "destination": "Shell",
+      "source_id": 1,
+      "destination_id": 17,
       "min_amount": 40,
-      "max_amount": 50
+      "max_amount": 50,
+      "category_id": 2,
+      "budget_id": 3
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 27,
       "description": "Needed gas again",
-      "source": "Checking Account",
-      "destination": "Shell",
+      "source_id": 1,
+      "destination_id": 17,
       "min_amount": 45,
-      "max_amount": 55
+      "max_amount": 55,
+      "category_id": 2,
+      "budget_id": 3
     },
     {
-      "user": 1,
-      "day-of-month": 2,
+      "user_id": 1,
+      "day-of-month": "02",
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "Albert Heijn",
+      "source_id": 1,
+      "destination_id": 9,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
-      "day-of-month": 6,
+      "user_id": 1,
+      "day-of-month": "06",
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "PLUS",
+      "source_id": 1,
+      "destination_id": 10,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
-      "day-of-month": 8,
+      "user_id": 1,
+      "day-of-month": "08",
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "Bakker",
+      "source_id": 1,
+      "destination_id": 11,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 11,
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "Albert Heijn",
+      "source_id": 1,
+      "destination_id": 9,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 15,
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "PLUS",
+      "source_id": 1,
+      "destination_id": 10,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 19,
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "Albert Heijn",
+      "source_id": 1,
+      "destination_id": 11,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 23,
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "Bakker",
+      "source_id": 1,
+      "destination_id": 9,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 26,
       "description": "Groceries",
-      "source": "Checking Account",
-      "destination": "Albert Heijn",
+      "source_id": 1,
+      "destination_id": 10,
       "min_amount": 15,
-      "max_amount": 25
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
     },
     {
-      "user": 1,
-      "day-of-month": 23,
+      "user_id": 1,
+      "day-of-month": 13,
       "description": "Going out for drinks",
-      "source": "Checking Account",
-      "destination": "Cafe Central",
+      "source_id": 1,
+      "destination_id": 14,
       "min_amount": 15,
-      "max_amount": 36
+      "max_amount": 36,
+      "category_id": 6,
+      "budget_id": 6
     },
     {
-      "user": 1,
+      "user_id": 1,
       "day-of-month": 26,
       "description": "Going out for drinks again",
-      "source": "Checking Account",
-      "destination": "Cafe Central",
+      "source_id": 1,
+      "destination_id": 14,
       "min_amount": 15,
-      "max_amount": 36
+      "max_amount": 36,
+      "category_id": 6,
+      "budget_id": 6
     }
   ],
   "attachments": [
@@ -777,7 +833,7 @@
       "attachable_type": "FireflyIII\\Models\\TransactionJournal",
       "user_id": 1,
       "content": "This is attachment number two.",
-      "filename": "empty-file.txt",
+      "filename": "empty-file2.txt",
       "title": "Empty file",
       "description": "This file is empty",
       "notes": "Some notes",

@@ -21,10 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
         $this->call('PermissionSeeder');
-
-        if (App::environment() == 'testing') {
-            $this->call('TestDataSeeder');
-        }
+        $this->call('TestDataSeeder');
     }
 
 }
