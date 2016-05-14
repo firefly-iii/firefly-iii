@@ -13,7 +13,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
@@ -326,22 +325,16 @@ class AccountRepository implements AccountRepositoryInterface
             $accountIds = $accounts->pluck('id')->toArray();
             $query->leftJoin(
                 'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
             }
             );
             $query->leftJoin(
                 'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '>', 0);
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
             }
             );
-
-            // XOR. must be either.
-            $query->where(
-                function (Builder $query) use ($accountIds) {
-                    $query->whereIn('source.account_id', $accountIds, 'xor')
-                          ->whereIn('destination.account_id', $accountIds, 'xor');
-                }
-            );
+            $set = join(', ', $accountIds);
+            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
 
         }
         // that should do it:
