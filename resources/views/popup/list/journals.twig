@@ -39,27 +39,23 @@
                 <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
             </td>
             <td>
-                {{ journal|formatJournal }}
+                {% if not accountPerspective %}
+                    {{ journal|formatJournal }}
+                {% else %}
+                    {{ formatPerspective(journal, accountPerspective)|raw }}
+                {% endif %}
             </td>
             <td class="hidden-sm hidden-xs">
                 {{ journal.date.formatLocalized(monthAndDayFormat) }}
             </td>
             {% if not hideSource %}
                 <td class="hidden-xs">
-                    {% if journal.source_account_type == 'Cash account' %}
-                        <span class="text-success">(cash)</span>
-                    {% else %}
-                        <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
-                    {% endif %}
+                    {{ sourceAccount(journal)|raw }}
                 </td>
             {% endif %}
             {% if not hideDestination %}
                 <td class="hidden-xs">
-                    {% if journal.destination_account_type == 'Cash account' %}
-                        <span class="text-success">(cash)</span>
-                    {% else %}
-                        <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
-                    {% endif %}
+                    {{ destinationAccount(journal)|raw }}
                 </td>
             {% endif %}
 

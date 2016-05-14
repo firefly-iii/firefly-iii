@@ -8,6 +8,7 @@
         <div class="modal-body">
             {% set hideBudget = true %}
             {% set hideSource = true %}
+            {% set accountPerspective = account %}
             {% include 'popup/list/journals.twig' %}
         </div>
         <div class="modal-footer">
