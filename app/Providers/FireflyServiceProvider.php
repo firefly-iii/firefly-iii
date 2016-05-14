@@ -95,7 +95,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface', 'FireflyIII\Generator\Chart\Report\ChartJsReportChartGenerator');
         $this->app->bind('FireflyIII\Helpers\Help\HelpInterface', 'FireflyIII\Helpers\Help\Help');
         $this->app->bind('FireflyIII\Helpers\Report\ReportHelperInterface', 'FireflyIII\Helpers\Report\ReportHelper');
-        $this->app->bind('FireflyIII\Helpers\Report\ReportQueryInterface', 'FireflyIII\Helpers\Report\ReportQuery');
         $this->app->bind('FireflyIII\Helpers\FiscalHelperInterface', 'FireflyIII\Helpers\FiscalHelper');
         $this->app->bind('FireflyIII\Helpers\Report\AccountReportHelperInterface', 'FireflyIII\Helpers\Report\AccountReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\BalanceReportHelperInterface', 'FireflyIII\Helpers\Report\BalanceReportHelper');

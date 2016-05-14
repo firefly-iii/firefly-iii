@@ -34,8 +34,6 @@ class ReportHelper implements ReportHelperInterface
 
     /** @var  BudgetRepositoryInterface */
     protected $budgetRepository;
-    /** @var ReportQueryInterface */
-    protected $query;
     /** @var  TagRepositoryInterface */
     protected $tagRepository;
 
@@ -43,13 +41,11 @@ class ReportHelper implements ReportHelperInterface
      * ReportHelper constructor.
      *
      *
-     * @param ReportQueryInterface      $query
      * @param BudgetRepositoryInterface $budgetRepository
      * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(ReportQueryInterface $query, BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
+    public function __construct(BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
     {
-        $this->query            = $query;
         $this->budgetRepository = $budgetRepository;
         $this->tagRepository    = $tagRepository;
     }
