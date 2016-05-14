@@ -22,13 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionTypeSeeder');
         $this->call('PermissionSeeder');
 
-        // set up basic test data (as little as possible):
-        if (App::environment() == 'testing' || App::environment() == 'local') {
+        if (App::environment() == 'testing') {
             $this->call('TestDataSeeder');
-        }
-        // set up basic test data (as little as possible):
-        if (App::environment() == 'split') {
-            $this->call('SplitDataSeeder');
         }
     }
 

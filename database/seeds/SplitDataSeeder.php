@@ -102,7 +102,7 @@ class SplitDataSeeder extends Seeder
         $categories  = ['Salary', 'Reimbursements'];
         $amounts     = [50, 50];
         $destination = TestData::findAccount($user, 'Alternate Checking Account');
-        $date        = new Carbon('2012-03-15');
+        $date        = new Carbon('2012-03-12');
         $journal     = TransactionJournal::create(
             ['user_id'   => $user->id, 'transaction_type_id' => 2, 'transaction_currency_id' => 1, 'description' => 'Split Even Income (journal (50/50))',
              'completed' => 1, 'date' => $date->format('Y-m-d'),]
@@ -134,6 +134,7 @@ class SplitDataSeeder extends Seeder
         $amounts     = [15, 34, 51];
         $destination = TestData::findAccount($user, 'Checking Account');
         $date        = new Carbon;
+        $date->subDays(3);
         $journal     = TransactionJournal::create(
             ['user_id'     => $user->id, 'transaction_type_id' => 2, 'transaction_currency_id' => 1,
              'description' => 'Split Uneven Income (journal (15/34/51=100))', 'completed' => 1, 'date' => $date->format('Y-m-d'),]

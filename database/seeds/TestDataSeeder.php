@@ -41,81 +41,12 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-        // start by creating all users:
-        // method will return the first user.
-        $user = TestData::createUsers();
 
-        // create all kinds of static data:
-        TestData::createAssetAccounts($user, []);
-        TestData::createBills($user);
-        TestData::createBudgets($user);
-        TestData::createCategories($user);
-        TestData::createPiggybanks($user, 'TestData Savings');
-        TestData::createExpenseAccounts($user);
-        TestData::createRevenueAccounts($user);
-        TestData::createAttachments($user, $this->start);
-        TestData::openingBalanceSavings($user, $this->start);
-        TestData::createRules($user);
-
-        // loop from start to end, create dynamic info.
         $current = clone $this->start;
         while ($current < $this->end) {
             $month = $current->format('F Y');
-            // create salaries:
-            TestData::createIncome($user, 'Salary ' . $month, $current, strval(rand(2000, 2100)));
-
-            // pay bills:
-            TestData::createRent($user, 'Rent for ' . $month, $current, '800');
-            TestData::createWater($user, 'Water bill for ' . $month, $current, '15');
-            TestData::createTV($user, 'TV bill for ' . $month, $current, '60');
-            TestData::createPower($user, 'Power bill for ' . $month, $current, '120');
-
-            // pay daily groceries:
-            TestData::createGroceries($user, $current);
-
-            // create tag (each type of tag, for date):
-            TestData::createTags($user, $current);
-
-            // go out for drinks:
-            TestData::createDrinksAndOthers($user, $current);
-
-            // save money every month:
-            TestData::createSavings($user, $current);
-
-            // buy gas for the car every month:
-            TestData::createCar($user, $current);
-
-            // create budget limits.
-            TestData::createBudgetLimit($user, $current, 'Groceries', '400');
-            TestData::createBudgetLimit($user, $current, 'Bills', '1000');
-            TestData::createBudgetLimit($user, $current, 'Car', '100');
 
             $current->addMonth();
         }
-
-        // create some special budget limits to test stuff with multiple budget limits
-        // for a range of dates:
-        $this->end->startOfMonth()->addDay();
-
-        $budget = TestData::findBudget($user, 'Bills');
-        $ranges = ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'];
-        foreach ($ranges as $range) {
-            $limit = BudgetLimit::create(
-                [
-                    'budget_id'   => $budget->id,
-                    'startdate'   => $this->end->format('Y-m-d'),
-                    'amount'      => rand(100, 200),
-                    'repeats'     => 0,
-                    'repeat_freq' => $range,
-                ]
-            );
-            // also trigger event.
-            $thisEnd = Navigation::addPeriod($this->end, $range, 0);
-            $thisEnd->subDay();
-            event(new BudgetLimitStored($limit, $thisEnd));
-            $this->end->addDay();
-        }
-
-        // b
     }
 }
