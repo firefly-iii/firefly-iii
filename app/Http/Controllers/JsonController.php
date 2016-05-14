@@ -3,7 +3,6 @@
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
@@ -84,13 +83,11 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
-     *
-     * @param ARI                  $accountRepository
+     * @param ARI $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxIn(ReportQueryInterface $reportQuery, ARI $accountRepository)
+    public function boxIn(ARI $accountRepository)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -104,27 +101,22 @@ class JsonController extends Controller
             return Response::json($cache->get());
         }
         $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
-        $amount   = $reportQuery->income($accounts, $start, $end)->sum('journalAmount');
-
-        $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $amount   = $accountRepository->earnedInPeriod($accounts, $start, $end);
+        $data     = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
 
         return Response::json($data);
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
-     *
-     * @param ARI                  $accountRepository
+     * @param ARI $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxOut(ReportQueryInterface $reportQuery, ARI $accountRepository)
+    public function boxOut(ARI $accountRepository)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
-
-        $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
 
         // works for json too!
         $cache = new CacheProperties;
@@ -135,7 +127,8 @@ class JsonController extends Controller
             return Response::json($cache->get());
         }
 
-        $amount = $reportQuery->expense($accounts, $start, $end)->sum('journalAmount');
+        $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
+        $amount   = $accountRepository->spentInPeriod($accounts, $start, $end);
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);

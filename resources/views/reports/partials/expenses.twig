@@ -21,7 +21,9 @@
                         </small>
                     {% endif %}
                 </td>
-                <td>{{ (expense.amount)|formatAmount }}</td>
+                <td>
+                    {{ (expense.amount)|formatAmount }}
+                </td>
                 </tr>
             {% endfor %}
             </tbody>

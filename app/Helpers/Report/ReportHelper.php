@@ -14,6 +14,8 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -171,10 +173,15 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense
     {
         $object = new Expense;
-        $set    = $this->query->expense($accounts, $start, $end);
+        /** @var AccountRepositoryInterface $repos */
+        $repos    = app(AccountRepositoryInterface::class);
+        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $journals = $repos->journalsInPeriod($accounts, $types, $start, $end);
 
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer
+        /** @var TransactionJournal $entry */
+        foreach ($journals as $entry) {
+            $amount = TransactionJournal::amount($entry);
+            $object->addToTotal($amount);
             $object->addOrCreateExpense($entry);
         }
 
@@ -193,10 +200,14 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income
     {
         $object = new Income;
-        $set    = $this->query->income($accounts, $start, $end);
+        /** @var AccountRepositoryInterface $repos */
+        $repos    = app(AccountRepositoryInterface::class);
+        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $journals = $repos->journalsInPeriod($accounts, $types, $start, $end);
 
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->journalAmount);
+        foreach ($journals as $entry) {
+            $amount = TransactionJournal::amount($entry);
+            $object->addToTotal($amount);
             $object->addOrCreateIncome($entry);
         }
 

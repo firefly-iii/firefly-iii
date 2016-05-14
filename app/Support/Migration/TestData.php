@@ -316,6 +316,8 @@ class TestData
     {
         Category::firstOrCreateEncrypted(['name' => 'Groceries', 'user_id' => $user->id]);
         Category::firstOrCreateEncrypted(['name' => 'Car', 'user_id' => $user->id]);
+        Category::firstOrCreateEncrypted(['name' => 'Reimbursements', 'user_id' => $user->id]);
+        Category::firstOrCreateEncrypted(['name' => 'Salary', 'user_id' => $user->id]);
 
         return true;
     }
@@ -690,7 +692,7 @@ class TestData
      */
     public static function createRevenueAccounts(User $user): bool
     {
-        $revenues = ['Job', 'Belastingdienst', 'Bank', 'KPN', 'Google'];
+        $revenues = ['Job', 'Belastingdienst', 'Bank', 'KPN', 'Google', 'Work SixtyFive', 'Work EightyFour','Work Fiftyone'];
         foreach ($revenues as $name) {
             // create account:
             Account::create(

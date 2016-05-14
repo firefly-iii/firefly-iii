@@ -16,6 +16,7 @@ use DB;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
@@ -420,11 +421,46 @@ class TransactionController extends Controller
             }
         );
 
-        // TODO different for each transaction type!
-        /** @var Collection $transactions */
-        $transactions = $journal->transactions()->groupBy('transactions.account_id')->orderBy('amount', 'ASC')->get(
-            ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
-        );
+        switch ($journal->transactionType->type) {
+            case TransactionType::DEPOSIT:
+                /** @var Collection $transactions */
+                $transactions       = $journal->transactions()
+                                              ->groupBy('transactions.account_id')
+                                              ->where('amount', '<', 0)
+                                              ->orderBy('amount', 'ASC')->get(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $final              = $journal->transactions()
+                                              ->groupBy('transactions.account_id')
+                                              ->where('amount', '>', 0)
+                                              ->orderBy('amount', 'ASC')->first(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $final->description = '';
+                $transactions->push($final);
+                break;
+            case TransactionType::WITHDRAWAL:
+                /** @var Collection $transactions */
+                $transactions       = $journal->transactions()
+                                              ->groupBy('transactions.account_id')
+                                              ->where('amount', '>', 0)
+                                              ->orderBy('amount', 'ASC')->get(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $final              = $journal->transactions()
+                                              ->groupBy('transactions.account_id')
+                                              ->where('amount', '<', 0)
+                                              ->orderBy('amount', 'ASC')->first(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $final->description = '';
+                $transactions->push($final);
+                break;
+            default:
+                throw new FireflyException('Cannot handle ' . $journal->transactionType->type);
+                break;
+        }
+
 
         // foreach do balance thing
         $transactions->each(

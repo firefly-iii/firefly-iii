@@ -1,2 +1,4 @@
 *
 !.gitignore
+!seed.local.json
+!seed.split.json

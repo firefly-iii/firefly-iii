@@ -279,7 +279,6 @@ class TransactionJournalSupport extends Model
         return $account;
     }
 
-
     /**
      * @param TransactionJournal $journal
      *
@@ -325,6 +324,46 @@ class TransactionJournalSupport extends Model
         $cache->store($type);
 
         return $type;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public static function sourceTransactionList(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('source-transaction-list');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $list = $journal->transactions()->where('amount', '<', 0)->with('account')->get();
+        $cache->store($list);
+
+        return $list;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public static function destinationTransactionList(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('destination-transaction-list');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $list = $journal->transactions()->where('amount', '>', 0)->with('account')->get();
+        $cache->store($list);
+
+        return $list;
     }
 
     /**
