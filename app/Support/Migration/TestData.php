@@ -73,7 +73,7 @@ class TestData
                     'active'          => 1,
                     'encrypted'       => 1,
                     'virtual_balance' => 0,
-                    'iban'            => $account['iban'] ?? null,
+                    'iban'            => isset($account['iban']) ? Crypt::encrypt($account['iban']) : null,
                 ];
             }
             DB::table('accounts')->insert($insert);
