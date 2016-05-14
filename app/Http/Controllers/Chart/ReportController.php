@@ -6,10 +6,11 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface;
-use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Navigation;
 use Response;
 use Steam;
 
@@ -81,18 +82,15 @@ class ReportController extends Controller
 
 
     /**
-     * Summarizes all income and expenses, per month, for a given year.
-     *
-     * @param ReportQueryInterface $query
-     * @param                      $reportType
-     * @param Carbon               $start
-     * @param Carbon               $end
-     * @param Collection           $accounts
-     *
+     * @param AccountRepositoryInterface $repository
+     * @param string                     $reportType
+     * @param Carbon                     $start
+     * @param Carbon                     $end
+     * @param Collection                 $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOut(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOut(AccountRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -102,13 +100,22 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            // return Response::json($cache->get());
         }
 
-        // spent per month, and earned per month. For a specific set of accounts
-        // grouped by month
-        $spentArray  = $query->spentPerMonth($accounts, $start, $end);
-        $earnedArray = $query->earnedPerMonth($accounts, $start, $end);
+        // always per month.
+        $currentStart = clone $start;
+        $spentArray   = [];
+        $earnedArray  = [];
+        while ($currentStart <= $end) {
+            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
+            $date               = $currentStart->format('Y-m');
+            $spent              = $repository->spentInPeriod($accounts, $currentStart, $currentEnd);
+            $earned             = $repository->earnedInPeriod($accounts, $currentStart, $currentEnd);
+            $spentArray[$date]  = $spent;
+            $earnedArray[$date] = $earned;
+            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
+        }
 
         if ($start->diffInMonths($end) > 12) {
             // data = method X
@@ -125,17 +132,15 @@ class ReportController extends Controller
     }
 
     /**
-     * Summarizes all income and expenses for a given year. Gives a total and an average.
-     *
-     * @param ReportQueryInterface $query
-     * @param                      $reportType
-     * @param Carbon               $start
-     * @param Carbon               $end
-     * @param Collection           $accounts
+     * @param AccountRepositoryInterface $repository
+     * @param string                     $reportType
+     * @param Carbon                     $start
+     * @param Carbon                     $end
+     * @param Collection                 $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOutSummarized(ReportQueryInterface $query, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOutSummarized(AccountRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:
@@ -148,10 +153,22 @@ class ReportController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        // spent per month, and earned per month. For a specific set of accounts
-        // grouped by month
-        $spentArray  = $query->spentPerMonth($accounts, $start, $end);
-        $earnedArray = $query->earnedPerMonth($accounts, $start, $end);
+
+        // always per month.
+        $currentStart = clone $start;
+        $spentArray   = [];
+        $earnedArray  = [];
+        while ($currentStart <= $end) {
+            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
+            $date               = $currentStart->format('Y-m');
+            $spent              = $repository->spentInPeriod($accounts, $currentStart, $currentEnd);
+            $earned             = $repository->earnedInPeriod($accounts, $currentStart, $currentEnd);
+            $spentArray[$date]  = $spent;
+            $earnedArray[$date] = $earned;
+            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
+        }
+
+
         if ($start->diffInMonths($end) > 12) {
             // per year
             $data = $this->multiYearInOutSummarized($earnedArray, $spentArray, $start, $end);
@@ -253,8 +270,8 @@ class ReportController extends Controller
         while ($start < $end) {
             // total income and total expenses:
             $date       = $start->format('Y-m');
-            $incomeSum  = $earned[$date] ?? 0;
-            $expenseSum = isset($spent[$date]) ? ($spent[$date] * -1) : 0;
+            $incomeSum  = isset($earned[$date]) ? $earned[$date] * -1 : 0;
+            $expenseSum = isset($spent[$date]) ? $spent[$date] * -1 : 0;
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addMonth();
@@ -281,7 +298,7 @@ class ReportController extends Controller
         while ($start < $end) {
             $date           = $start->format('Y-m');
             $currentIncome  = $earned[$date] ?? '0';
-            $currentExpense = isset($spent[$date]) ? bcmul($spent[$date], '-1') : '0';
+            $currentExpense = $spent[$date] ??'0';
             $income         = bcadd($income, $currentIncome);
             $expense        = bcadd($expense, $currentExpense);
 
