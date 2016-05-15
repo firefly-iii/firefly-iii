@@ -482,6 +482,70 @@ class TestData
         }
     }
 
+    private function createMultiTransfers()
+    {
+        foreach ($this->data['multi-transfers'] as $transfer) {
+            $journalId = DB::table('transaction_journals')->insertGetId(
+                [
+                    'created_at'              => DB::raw('NOW()'),
+                    'updated_at'              => DB::raw('NOW()'),
+                    'user_id'                 => $transfer['user_id'],
+                    'transaction_type_id'     => 3,
+                    'transaction_currency_id' => 1,
+                    'description'             => Crypt::encrypt($transfer['description']),
+                    'completed'               => 1,
+                    'date'                    => $transfer['date'],
+                    'interest_date'           => $transfer['interest_date'] ?? null,
+                    'book_date'               => $transfer['book_date'] ?? null,
+                    'process_date'            => $transfer['process_date'] ?? null,
+                    'encrypted'               => 1,
+                    'order'                   => 0,
+                    'tag_count'               => 0,
+                ]
+            );
+            foreach ($transfer['destination_ids'] as $index => $destination) {
+                $description = $transfer['description'] . ' (#' . ($index + 1) . ')';
+                $amount      = $transfer['amounts'][$index];
+                $source      = $transfer['source_ids'][$index];
+                $first       = DB::table('transactions')->insertGetId(
+                    [
+                        'created_at'             => DB::raw('NOW()'),
+                        'updated_at'             => DB::raw('NOW()'),
+                        'account_id'             => $source,
+                        'transaction_journal_id' => $journalId,
+                        'description'            => $description,
+                        'amount'                 => $amount * -1,
+                    ]
+                );
+                $second      = DB::table('transactions')->insertGetId(
+                    [
+                        'created_at'             => DB::raw('NOW()'),
+                        'updated_at'             => DB::raw('NOW()'),
+                        'account_id'             => $destination,
+                        'transaction_journal_id' => $journalId,
+                        'description'            => $description,
+                        'amount'                 => $amount,
+                    ]
+                );
+
+                if (isset($transfer['category_ids'][$index])) {
+                    DB::table('category_transaction')->insert(
+                        [
+                            'category_id'    => $transfer['category_ids'][$index],
+                            'transaction_id' => $first,
+                        ]
+                    );
+                    DB::table('category_transaction')->insert(
+                        [
+                            'category_id'    => $transfer['category_ids'][$index],
+                            'transaction_id' => $second,
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
     /**
      *
      */
@@ -728,6 +792,7 @@ class TestData
         $this->createAttachments();
         $this->createMultiWithdrawals();
         $this->createMultiDeposits();
+        $this->createMultiTransfers();
     }
 
 }

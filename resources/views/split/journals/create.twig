@@ -1,7 +1,7 @@
 {% extends "./layout/default.twig" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, preFilled.what) }}
 {% endblock %}
 {% block content %}
     <form method="POST" action="{{ route('split.journal.store',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"

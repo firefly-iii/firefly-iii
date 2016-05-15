@@ -502,6 +502,7 @@ Breadcrumbs::register(
 }
 );
 
+
 /**
  * TAGS
  */
@@ -577,5 +578,22 @@ Breadcrumbs::register(
     $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
 
+}
+);
+
+/**
+ * SPLIT
+ */
+Breadcrumbs::register(
+    'split.journal.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+    $breadcrumbs->parent('transactions.show', $journal);
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('split.journal.edit', [$journal->id]));
+}
+);
+
+Breadcrumbs::register(
+    'split.journal.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
+    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('split.journal.create', [$what]));
 }
 );

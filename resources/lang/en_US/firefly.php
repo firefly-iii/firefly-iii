@@ -70,6 +70,8 @@ return [
     'registered'                                => 'You have registered successfully!',
     'search'                                    => 'Search',
     'no_budget_pointer'                         => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
+    'source_accounts'                           => 'Source account(s)',
+    'destination_accounts'                      => 'Destination account(s)',
 
     // repeat frequencies:
     'repeat_freq_monthly'                       => 'monthly',
@@ -811,7 +813,7 @@ return [
     'split_intro_three_withdrawal'              => 'For example: you could split your :total groceries so you pay :split_one from your "daily groceries" budget and :split_two from your "cigarettes" budget.',
     'split_table_intro_withdrawal'              => 'Split your withdrawal in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
     'store_splitted_withdrawal'                 => 'Store splitted withdrawal',
-    'update_splitted_withdrawal'                 => 'Update splitted withdrawal',
+    'update_splitted_withdrawal'                => 'Update splitted withdrawal',
 
     'split_title_deposit'       => 'Split your new deposit',
     'split_intro_one_deposit'   => 'Firefly supports the "splitting" of a deposit.',

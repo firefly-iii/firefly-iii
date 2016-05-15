@@ -959,5 +959,52 @@
       ]
     }
   ],
-  "multi-transfers": []
+  "multi-transfers": [
+    {
+      "user_id": 1,
+      "date": "2016-03-02",
+      "description": "Even multi-transfer (50, 50)",
+      "source_ids": [
+        4,
+        4
+      ],
+      "destination_ids": [
+        5,
+        5
+      ],
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        7,
+        8
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-02",
+      "description": "Uneven multi-transfer (15,34,51)",
+      "source_ids": [
+        4,
+        4,
+        4
+      ],
+      "destination_ids": [
+        5,
+        5,
+        5
+      ],
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ]
+    }
+  ]
 }

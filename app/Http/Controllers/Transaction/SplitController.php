@@ -58,6 +58,8 @@ class SplitController extends Controller
         $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
         $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $subTitle           = trans('form.add_new_' . $sessionData['what']);
+        $subTitleIcon       = 'fa-plus';
         $preFilled          = [
             'what'                        => $sessionData['what'] ?? 'withdrawal',
             'journal_amount'              => $sessionData['amount'] ?? 0,
@@ -71,7 +73,9 @@ class SplitController extends Controller
             'category'                    => [$sessionData['category']],
         ];
 
-        return view('split.journals.create', compact('journal', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize'));
+        return view(
+            'split.journals.create', compact('journal', 'subTitle', 'subTitleIcon', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize')
+        );
     }
 
     /**
@@ -90,6 +94,8 @@ class SplitController extends Controller
         $assetAccounts      = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
         $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $preFilled          = $this->arrayFromJournal($request, $journal);
+        $subTitle           = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitleIcon       = 'fa-pencil';
 
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
@@ -102,7 +108,10 @@ class SplitController extends Controller
 
         return view(
             'split.journals.edit',
-            compact('currencies', 'preFilled', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts', 'budgets', 'journal')
+            compact(
+                'subTitleIcon', 'currencies', 'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
+                'budgets', 'journal'
+            )
         );
     }
 

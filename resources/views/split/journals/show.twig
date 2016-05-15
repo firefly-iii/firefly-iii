@@ -12,9 +12,9 @@
                     <h3 class="box-title">Metadata</h3>
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover sortable">
+                    <table class="table table-hover">
                         <tr>
-                            <td>{{ trans('list.date') }}</td>
+                            <td style="width:30%;">{{ trans('list.date') }}</td>
                             <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
                         </tr>
                         {% if journal.interest_date %}
@@ -50,18 +50,22 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% for budget in journal.budgets %}
-                            <tr>
-                                <td>{{ 'budget'|_ }}</td>
-                                <td><a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a></td>
-                            </tr>
-                        {% endfor %}
-                        {% for category in journal.categories %}
-                            <tr>
-                                <td>{{ 'category'|_ }}</td>
-                                <td><a href="{{ route('categories.show',category.id) }}">{{ category.name }}</a></td>
-                            </tr>
-                        {% endfor %}
+                        <tr>
+                            <td>{{ 'budgets'|_ }}</td>
+                            <td>{{ journalBudgets(journal)|raw }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'categories'|_ }}</td>
+                            <td>{{ journalCategories(journal)|raw }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'source_accounts'|_ }}</td>
+                            <td>{{ sourceAccount(journal)|raw }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'destination_accounts'|_ }}</td>
+                            <td>{{ destinationAccount(journal)|raw }}</td>
+                        </tr>
                         {% if journal.bill %}
                             <tr>
                                 <td>{{ 'bill'|_ }}</td>
@@ -114,43 +118,43 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
             {% if journal.attachments|length > 0 %}
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'attachments'|_ }}</h3>
-                </div>
-                <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover">
-                        {% for att in journal.attachments %}
-                            <tr>
-                                <td>
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                        <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                    <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
-                                        {% if att.title %}
-                                            {{ att.title }}
-                                        {% else %}
-                                            {{ att.filename }}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            {% for att in journal.attachments %}
+                                <tr>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
+                                        <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
+                                            {% if att.title %}
+                                                {{ att.title }}
+                                            {% else %}
+                                                {{ att.filename }}
+                                            {% endif %}
+                                        </a>
+                                        ({{ att.size|filesize }})
+                                        {% if att.description %}
+                                            <br/>
+                                            <em>{{ att.description }}</em>
                                         {% endif %}
-                                    </a>
-                                    ({{ att.size|filesize }})
-                                    {% if att.description %}
-                                        <br/>
-                                        <em>{{ att.description }}</em>
-                                    {% endif %}
-                                </td>
-                                <td style="width:100px;">
-                                    <img src="{{ route('attachments.preview', att.id) }}"/>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
+                                    </td>
+                                    <td style="width:100px;">
+                                        <img src="{{ route('attachments.preview', att.id) }}"/>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
-            </div>
             {% endif %}
         </div>
     </div>

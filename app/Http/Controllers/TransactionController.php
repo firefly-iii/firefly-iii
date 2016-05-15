@@ -68,6 +68,7 @@ class TransactionController extends Controller
         $piggies          = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
         $preFilled        = Session::has('preFilled') ? session('preFilled') : [];
         $subTitle         = trans('form.add_new_' . $what);
+        $subTitleIcon     = 'fa-plus';
 
         Session::put('preFilled', $preFilled);
 
@@ -84,7 +85,7 @@ class TransactionController extends Controller
         asort($piggies);
 
 
-        return view('transactions.create', compact('assetAccounts', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
+        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
     }
 
     /**
