@@ -161,10 +161,8 @@ class AccountController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccountsByType($types);
-        /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end = clone session('end', Carbon::now()->endOfMonth());
+        $start        = clone session('start', Carbon::now()->startOfMonth());
+        $end          = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -181,32 +179,6 @@ class AccountController extends Controller
         );
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
-    }
-
-    /**
-     * @param ARI     $repository
-     * @param Account $account
-     * @param string  $date
-     *
-     * @return View
-     */
-    public function showWithDate(ARI $repository, Account $account, string $date)
-    {
-        $carbon       = new Carbon($date);
-        $range        = Preferences::get('viewRange', '1M')->data;
-        $start        = Navigation::startOfPeriod($carbon, $range);
-        $end          = Navigation::endOfPeriod($carbon, $range);
-        $subTitle     = $account->name;
-        $page         = intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
-        $count        = $set->count();
-        $subSet       = $set->splice($offset, $pageSize);
-        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
-        $journals->setPath('categories/show/' . $account->id . '/' . $date);
-
-        return view('accounts.show_with_date', compact('category', 'journals', 'subTitle', 'carbon'));
     }
 
     /**
@@ -251,6 +223,7 @@ class AccountController extends Controller
 
         if ($cache->has()) {
             $entries = $cache->get();
+
             return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
         }
 
@@ -270,6 +243,32 @@ class AccountController extends Controller
         $cache->store($entries);
 
         return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+    }
+
+    /**
+     * @param ARI     $repository
+     * @param Account $account
+     * @param string  $date
+     *
+     * @return View
+     */
+    public function showWithDate(ARI $repository, Account $account, string $date)
+    {
+        $carbon   = new Carbon($date);
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = Navigation::startOfPeriod($carbon, $range);
+        $end      = Navigation::endOfPeriod($carbon, $range);
+        $subTitle = $account->name;
+        $page     = intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $offset   = ($page - 1) * $pageSize;
+        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count    = $set->count();
+        $subSet   = $set->splice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $journals->setPath('categories/show/' . $account->id . '/' . $date);
+
+        return view('accounts.show_with_date', compact('category', 'journals', 'subTitle', 'carbon'));
     }
 
     /**

@@ -114,7 +114,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $firstJournalQuery->whereIn('t.account_id', $ids);
         }
 
-        $firstJournal = $firstJournalQuery->first(['transaction_journals.*']);
+        $firstJournal = $firstJournalQuery->first(['transaction_journals.date']);
 
         if ($firstJournal) {
             $first = $firstJournal->date;
@@ -131,7 +131,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $firstTransactionQuery->whereIn('transactions.account_id', $ids);
         }
 
-        $firstTransaction = $firstTransactionQuery->first(['transaction_journals.*']);
+        $firstTransaction = $firstTransactionQuery->first(['transaction_journals.date']);
 
         if (!is_null($firstTransaction) && ((!is_null($first) && $firstTransaction->date < $first) || is_null($first))) {
             $first = new Carbon($firstTransaction->date);

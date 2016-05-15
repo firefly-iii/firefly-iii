@@ -14,18 +14,15 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences;
 use Response;
 use Session;
@@ -51,31 +48,30 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param ARI    $repository
      * @param string $what
      *
      * @return \Illuminate\View\View
      */
-    public function create(ARI $repository, string $what = TransactionType::DEPOSIT)
+    public function create(string $what = TransactionType::DEPOSIT)
     {
-        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $what             = strtolower($what);
-        $uploadSize       = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts    = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
-        $budgets          = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBanks       = $piggyRepository->getPiggyBanksWithAmount();
-        $piggies          = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
-        $preFilled        = Session::has('preFilled') ? session('preFilled') : [];
-        $subTitle         = trans('form.add_new_' . $what);
-        $subTitleIcon     = 'fa-plus';
+        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $budgetRepository  = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $piggyRepository   = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+        $what              = strtolower($what);
+        $uploadSize        = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $assetAccounts     = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $budgets           = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks        = $piggyRepository->getPiggyBanksWithAmount();
+        $piggies           = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
+        $preFilled         = Session::has('preFilled') ? session('preFilled') : [];
+        $subTitle          = trans('form.add_new_' . $what);
+        $subTitleIcon      = 'fa-plus';
 
         Session::put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('transactions.create.fromStore') !== true) {
             $url = URL::previous();
-            Log::debug('TransactionController::create. Previous URL is ' . $url);
             Session::put('transactions.create.url', $url);
         }
         Session::forget('transactions.create.fromStore');
@@ -388,7 +384,6 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      *
      * @return View
-     * @throws FireflyException
      */
     public function show(TransactionJournal $journal, JournalRepositoryInterface $repository)
     {
@@ -410,12 +405,11 @@ class TransactionController extends Controller
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
-     * @param AttachmentHelperInterface  $att
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att)
+    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
+        $att         = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
         $doSplit     = intval($request->get('split_journal')) === 1;
         $journalData = $request->getJournalData();
 
@@ -487,8 +481,6 @@ class TransactionController extends Controller
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {
         $journalData = $request->getJournalData();
-        Log::debug('Will update journal ', $journal->toArray());
-        Log::debug('Update related data ', $journalData);
         $repository->update($journal, $journalData);
 
         // save attachments:
