@@ -170,12 +170,8 @@
                                 <td>{{ t.account.accounttype.type|_ }}</td>
                             </tr>
                             <tr>
-                                <td>{{ 'amount'|_ }}</td>
-                                <td>{{ t.before|formatAmount }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{ 'newBalance'|_ }}</td>
-                                <td>{{ (t.before+t.amount)|formatAmount }}</td>
+                                <td>{{ 'balance'|_ }}</td>
+                                <td>{{ t.before|formatAmount }} &rarr; {{ (t.before+t.amount)|formatAmount }}</td>
                             </tr>
                             {% if t.description %}
                                 <tr>
