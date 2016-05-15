@@ -172,7 +172,7 @@
                             </tr>
                             <tr>
                                 <td>{{ 'amount'|_ }}</td>
-                                <td>{{ t.before|formatAmount}}</td>
+                                <td>{{ t.before|formatAmount }}</td>
                             </tr>
                             <tr>
                                 <td>{{ 'newBalance'|_ }}</td>
@@ -184,22 +184,18 @@
                                     <td>{{ t.description }}</td>
                                 </tr>
                             {% endif %}
-                            {% if t.categories[0] %}
-                                <tr>
-                                    <td>{{ 'category'|_ }}</td>
-                                    <td>
-                                        <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            {% if t.budgets[0] %}
-                                <tr>
-                                    <td>{{ 'budget'|_ }}</td>
-                                    <td>
-                                        <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
-                                    </td>
-                                </tr>
-                            {% endif %}
+                            <tr>
+                                <td>{{ 'category'|_ }}</td>
+                                <td>
+                                    {{ transactionCategories(t)|raw }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'budget'|_ }}</td>
+                                <td>
+                                    {{ transactionBudgets(t)|raw }}
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 {% endfor %}
@@ -249,7 +245,7 @@
         </div>
     </div>
 
-    <!-- more than two start-->
+    <!-- more than two transactions-->
     {% if transactions.count > 2 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -270,20 +266,24 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for t in transactions %}
+                        {% for index, t in transactions %}
                         <tr>
-                            <td>{{ t.description }}</td>
+                            <td>
+                                {% if (index+1) != transactions|length %}
+                                    {{ t.description }}
+                                {% endif %}
+                            </td>
                             <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a> ({{ t.account.accounttype.type|_ }})</td>
                             <td>{{ t.sum|formatAmount }}</td>
                             <td>{{ t.before|formatAmount }} &rarr; {{ (t.sum+t.before)|formatAmount }}</td>
                             <td>
-                                {% if t.budgets[0] %}
-                                    <a href="{{ route('budgets.show',t.budgets[0].id) }}">{{ t.budgets[0].name }}</a>
+                                {% if (index+1) != transactions|length %}
+                                    {{ transactionBudgets(t)|raw }}
                                 {% endif %}
                             </td>
                             <td>
-                                {% if t.categories[0] %}
-                                    <a href="{{ route('categories.show',t.categories[0].id) }}">{{ t.categories[0].name }}</a>
+                                {% if (index+1) != transactions|length %}
+                                    {{ transactionCategories(t)|raw }}
                                 {% endif %}
                             </td>
 

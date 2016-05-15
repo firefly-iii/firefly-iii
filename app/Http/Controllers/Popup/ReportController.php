@@ -38,6 +38,7 @@ class ReportController extends Controller
     /**
      * @param Request $request
      *
+     * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException
      */
     public function info(Request $request)

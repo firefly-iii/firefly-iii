@@ -6,6 +6,7 @@ namespace FireflyIII\Support\Twig;
 
 use Amount;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
@@ -19,6 +20,7 @@ use Twig_SimpleFunction;
  */
 class Journal extends Twig_Extension
 {
+
     /**
      * @return Twig_SimpleFunction
      */
@@ -95,6 +97,10 @@ class Journal extends Twig_Extension
             $this->getSourceAccount(),
             $this->getDestinationAccount(),
             $this->formatPerspective(),
+            $this->journalBudgets(),
+            $this->journalCategories(),
+            $this->transactionBudgets(),
+            $this->transactionCategories(),
         ];
 
         return $functions;
@@ -141,6 +147,143 @@ class Journal extends Twig_Extension
             $cache->store($result);
 
             return $result;
+
+
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalBudgets(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalBudgets', function (TransactionJournal $journal): string {
+            $cache = new CacheProperties;
+            $cache->addProperty($journal->id);
+            $cache->addProperty('transaction-journal');
+            $cache->addProperty('budget-string');
+            if ($cache->has()) {
+                //return $cache->get();
+            }
+
+
+            $budgets = [];
+            // get all budgets:
+            foreach ($journal->budgets as $budget) {
+                $budgets[] = '<a href="' . route('budgets.show', [$budget->id]) . '" title="' . e($budget->name) . '">' . e($budget->name) . '</a>';
+            }
+            // and more!
+            foreach ($journal->transactions as $transaction) {
+                foreach ($transaction->budgets as $budget) {
+                    $budgets[] = '<a href="' . route('budgets.show', [$budget->id]) . '" title="' . e($budget->name) . '">' . e($budget->name) . '</a>';
+                }
+            }
+            $string = join(', ', array_unique($budgets));
+            $cache->store($string);
+
+            return $string;
+
+
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalCategories(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalCategories', function (TransactionJournal $journal): string {
+            $cache = new CacheProperties;
+            $cache->addProperty($journal->id);
+            $cache->addProperty('transaction-journal');
+            $cache->addProperty('category-string');
+            if ($cache->has()) {
+                return $cache->get();
+            }
+
+
+            $categories = [];
+            // get all budgets:
+            foreach ($journal->categories as $category) {
+                $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name) . '</a>';
+            }
+            // and more!
+            foreach ($journal->transactions as $transaction) {
+                foreach ($transaction->categories as $category) {
+                    $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name)
+                                    . '</a>';
+                }
+            }
+            $string = join(', ', array_unique($categories));
+            $cache->store($string);
+
+            return $string;
+
+
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function transactionBudgets(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'transactionBudgets', function (Transaction $transaction): string {
+            $cache = new CacheProperties;
+            $cache->addProperty($transaction->id);
+            $cache->addProperty('transaction');
+            $cache->addProperty('budget-string');
+            if ($cache->has()) {
+                //  return $cache->get();
+            }
+
+            $budgets = [];
+            // get all budgets:
+            foreach ($transaction->budgets as $budget) {
+                $budgets[] = '<a href="' . route('budgets.show', [$budget->id]) . '" title="' . e($budget->name) . '">' . e($budget->name) . '</a>';
+            }
+            $string = join(', ', array_unique($budgets));
+            $cache->store($string);
+
+            return $string;
+
+
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function transactionCategories(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'transactionCategories', function (Transaction $transaction): string {
+            $cache = new CacheProperties;
+            $cache->addProperty($transaction->id);
+            $cache->addProperty('transaction');
+            $cache->addProperty('category-string');
+            if ($cache->has()) {
+                // return $cache->get();
+            }
+
+
+            $categories = [];
+            // get all budgets:
+            foreach ($transaction->categories as $category) {
+                $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name) . '</a>';
+            }
+
+            $string = join(', ', array_unique($categories));
+            $cache->store($string);
+
+            return $string;
 
 
         }

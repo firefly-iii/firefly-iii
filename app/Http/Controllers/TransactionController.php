@@ -436,7 +436,6 @@ class TransactionController extends Controller
                                               ->orderBy('amount', 'ASC')->first(
                         ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
                     );
-                $final->description = '';
                 $transactions->push($final);
                 break;
             case TransactionType::WITHDRAWAL:
@@ -453,7 +452,6 @@ class TransactionController extends Controller
                                               ->orderBy('amount', 'ASC')->first(
                         ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
                     );
-                $final->description = '';
                 $transactions->push($final);
                 break;
             default:

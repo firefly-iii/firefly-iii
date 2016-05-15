@@ -76,18 +76,14 @@
             <!-- Do NOT hide the budget? -->
             {% if not hideBudgets %}
                 <td class="hidden-xs">
-                    {% if journal.budgets[0] %}
-                        <a href="{{ route('budgets.show',journal.budgets[0].id) }}">{{ journal.budgets[0].name }}</a>
-                    {% endif %}
+                    {{ journalBudgets(journal)|raw }}
                 </td>
             {% endif %}
 
             <!-- Do NOT hide the category? -->
             {% if not hideCategories %}
                 <td class="hidden-xs">
-                    {% if journal.categories[0] %}
-                        <a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a>
-                    {% endif %}
+                    {{ journalCategories(journal)|raw }}
                 </td>
             {% endif %}
 

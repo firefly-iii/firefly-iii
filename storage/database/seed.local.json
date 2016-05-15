@@ -293,6 +293,18 @@
     {
       "name": "Going out",
       "user_id": 1
+    },
+    {
+      "name": "Multi budget A",
+      "user_id": 1
+    },
+    {
+      "name": "Multi budget B",
+      "user_id": 1
+    },
+    {
+      "name": "Multi budget C",
+      "user_id": 1
     }
   ],
   "budget-limits": [
@@ -384,6 +396,18 @@
     },
     {
       "name": "Going out",
+      "user_id": 1
+    },
+    {
+      "name": "Multi category A",
+      "user_id": 1
+    },
+    {
+      "name": "Multi category B",
+      "user_id": 1
+    },
+    {
+      "name": "Multi category C",
       "user_id": 1
     }
   ],
@@ -840,5 +864,59 @@
       "mime": "text\/plain",
       "uploaded": 1
     }
-  ]
+  ],
+  "multi-withdrawals": [
+    {
+      "user_id": 1,
+      "date": "2016-03-12",
+      "description": "Even multi-withdrawal (50, 50)",
+      "destination_ids": [
+        18,
+        19
+      ],
+      "source_id": 1,
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ],
+      "budget_ids": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-12",
+      "description": "Uneven multi-withdrawal (15,34,51)",
+      "destination_ids": [
+        18,
+        19,
+        20
+      ],
+      "source_id": 1,
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ],
+      "budget_ids": [
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "multi-deposits": [],
+  "multi-transfers": []
 }

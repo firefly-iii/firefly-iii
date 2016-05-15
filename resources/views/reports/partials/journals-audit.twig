@@ -62,17 +62,12 @@
                 {% endif %}
             </td>
 
-
-            {% if journal.budgets[0] %}
-                <td class="hide-budget"><a href="{{ route('budgets.show',journal.budgets[0].id) }}">{{ journal.budgets[0].name }}</a></td>
-            {% else %}
-                <td class="hide-budget"><em>{{ 'no_budget'|_ }}</em></td>
-            {% endif %}
-            {% if journal.categories[0] %}
-                <td class="hide-category"><a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a></td>
-            {% else %}
-                <td class="hide-category"><em>{{ 'no_category'|_ }}</em></td>
-            {% endif %}
+            <td class="hide-budget">
+                {{ journalBudgets(journal)|raw }}
+            </td>
+            <td class="hide-category">
+                {{ journalCategories(journal)|raw }}
+            </td>
             {% if journal.bill_id %}
                 <td class="hide-bill"><i class="fa fa-fw fa-rotate-right" title="{{ trans('list.bill') }}"></i>&nbsp;<a
                             href="{{ route('bills.show',journal.bill_id) }}">{{ journal.bill.name }}</a></td>
