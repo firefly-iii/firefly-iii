@@ -185,8 +185,18 @@ class ReportController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals   = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
-        $view       = view('popup.report.expense-entry', compact('journals', 'account'))->render();
+        $journals   = $repository->journalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
+
+        // filter for transfers and withdrawals TO the given $account
+        $journals = $journals->filter(
+            function (TransactionJournal $journal) use ($account) {
+                if ($journal->destination_account_id === $account->id) {
+                    return $journal;
+                }
+            }
+        );
+
+        $view = view('popup.report.expense-entry', compact('journals', 'account'))->render();
 
         return $view;
     }
@@ -206,6 +216,16 @@ class ReportController extends Controller
         $account    = $repository->find(intval($attributes['accountId']));
         $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $journals   = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
+
+        // filter for transfers and withdrawals FROM the given $account
+        $journals = $journals->filter(
+            function (TransactionJournal $journal) use ($account) {
+                if ($journal->source_account_id === $account->id) {
+                    return $journal;
+                }
+            }
+        );
+
         $view       = view('popup.report.income-entry', compact('journals', 'account'))->render();
 
         return $view;
