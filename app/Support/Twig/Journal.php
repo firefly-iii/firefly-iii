@@ -165,7 +165,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('budget-string');
             if ($cache->has()) {
-                //return $cache->get();
+                return $cache->get();
             }
 
 
@@ -240,7 +240,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction');
             $cache->addProperty('budget-string');
             if ($cache->has()) {
-                //  return $cache->get();
+                  return $cache->get();
             }
 
             $budgets = [];
@@ -270,7 +270,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction');
             $cache->addProperty('category-string');
             if ($cache->has()) {
-                // return $cache->get();
+                 return $cache->get();
             }
 
 
