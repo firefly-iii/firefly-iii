@@ -52,6 +52,7 @@ final class ToAccountEnds extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
+        // TODO support split journals
         $toAccountName       = strtolower($journal->destination_account_name ?? TransactionJournal::destinationAccount($journal)->name);
         $toAccountNameLength = strlen($toAccountName);
         $search              = strtolower($this->triggerValue);

@@ -10,7 +10,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export\Entry;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -66,13 +65,11 @@ class Entry
         $entry->category = new EntryCategory($journal->categories->first());
         $entry->bill     = new EntryBill($journal->bill);
 
-        /** @var Account $sourceAccount */
-        $sourceAccount        = TransactionJournal::sourceAccount($journal);
-        $entry->sourceAccount = new EntryAccount($sourceAccount);
-
-        /** @var Account $destination */
-        $destination               = TransactionJournal::destinationAccount($journal);
-        $entry->destinationAccount = new EntryAccount($destination);
+        // TODO support split journals
+        $sources                   = TransactionJournal::sourceAccountList($journal);
+        $entry->sourceAccount      = new EntryAccount($sources->first());
+        $destinations              = TransactionJournal::destinationAccountList($journal);
+        $entry->destinationAccount = new EntryAccount($destinations->first());
 
         return $entry;
 

@@ -30,6 +30,8 @@ use View;
  * Class SplitController
  *
  * @package FireflyIII\Http\Controllers\Transaction
+ *
+ * TODO support piggy banks
  */
 class SplitController extends Controller
 {

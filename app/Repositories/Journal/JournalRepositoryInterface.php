@@ -51,18 +51,6 @@ interface JournalRepositoryInterface
     public function first(): TransactionJournal;
 
     /**
-     * Returns the amount in the account before the specified transaction took place.
-     *
-     * @deprecated
-     *
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
-     *
-     * @return string
-     */
-    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction): string;
-
-    /**
      * Returns a page of a specific type(s) of journal.
      *
      * @param array $types

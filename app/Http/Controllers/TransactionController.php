@@ -136,18 +136,20 @@ class TransactionController extends Controller
         if ($count > 2) {
             return redirect(route('split.journal.edit', [$journal->id]));
         }
-        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $budgetRepository  = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository   = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $assetAccounts     = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
-        $budgetList        = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBankList     = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
-        $maxFileSize       = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize       = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize        = min($maxFileSize, $maxPostSize);
-        $what              = strtolower(TransactionJournal::transactionTypeStr($journal));
-        $subTitle          = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $preFilled         = [
+        $accountRepository   = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $budgetRepository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $piggyRepository     = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+        $assetAccounts       = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $budgetList          = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBankList       = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
+        $maxFileSize         = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize         = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize          = min($maxFileSize, $maxPostSize);
+        $what                = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $subTitle            = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
+        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $preFilled           = [
             'date'                     => TransactionJournal::dateAsString($journal),
             'interest_date'            => TransactionJournal::dateAsString($journal, 'interest_date'),
             'book_date'                => TransactionJournal::dateAsString($journal, 'book_date'),
@@ -156,16 +158,19 @@ class TransactionController extends Controller
             'budget_id'                => TransactionJournal::budgetId($journal),
             'piggy_bank_id'            => TransactionJournal::piggyBankId($journal),
             'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
-            'source_account_id'        => TransactionJournal::sourceAccount($journal)->id,
-            'source_account_name'      => TransactionJournal::sourceAccount($journal)->name,
-            'destination_account_id'   => TransactionJournal::destinationAccount($journal)->id,
-            'destination_account_name' => TransactionJournal::destinationAccount($journal)->name,
+            'source_account_id'        => $sourceAccounts->first()->id,
+            'source_account_name'      => $sourceAccounts->first()->name,
+            'destination_account_id'   => $destinationAccounts->first()->id,
+            'destination_account_name' => $destinationAccounts->first()->name,
             'amount'                   => TransactionJournal::amountPositive($journal),
         ];
 
+        // TODO support split withdrawal
         if ($journal->isWithdrawal() && TransactionJournal::destinationAccountTypeStr($journal) == 'Cash account') {
             $preFilled['destination_account_name'] = '';
         }
+
+        // TODO support split withdrawal
         if ($journal->isDeposit() && TransactionJournal::sourceAccountTypeStr($journal) == 'Cash account') {
             $preFilled['source_account_name'] = '';
         }

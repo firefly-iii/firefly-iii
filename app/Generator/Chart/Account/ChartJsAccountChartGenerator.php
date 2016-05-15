@@ -83,9 +83,6 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      */
     public function single(Account $account, array $labels, array $dataSet): array
     {
-        // language:
-        $format = (string)trans('config.month_and_day');
-
         $data     = [
             'count'    => 1,
             'labels'   => $labels,

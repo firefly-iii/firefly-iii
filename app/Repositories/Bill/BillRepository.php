@@ -5,13 +5,10 @@ namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -431,12 +428,12 @@ class BillRepository implements BillRepositoryInterface
         if (false === $journal->isWithdrawal()) {
             return false;
         }
-
-        $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower(TransactionJournal::destinationAccount($journal)->name);
-
-        // new: add source to word match:
-        $description .= ' ' . strtolower(TransactionJournal::sourceAccount($journal)->name);
+        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
+        $matches             = explode(',', $bill->match);
+        $description         = strtolower($journal->description) . ' ';
+        $description .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
+        $description .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
 
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch(TransactionJournal::amountPositive($journal), $bill->amount_min, $bill->amount_max);
