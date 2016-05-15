@@ -1,5 +1,5 @@
 /vendor
 /node_modules
 .env
-
+_development
 .env.local
