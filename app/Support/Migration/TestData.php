@@ -30,6 +30,9 @@ class TestData
     /** @var Carbon */
     private $start;
 
+    /** @var  string */
+    private $time;
+
     /**
      * TestData constructor.
      *
@@ -45,6 +48,7 @@ class TestData
 
         $this->start = $start;
         $this->end   = $end;
+        $this->time  = $end->format('Y-m-d H:i:s');
     }
 
     /**
@@ -64,8 +68,8 @@ class TestData
         $insert = [];
         foreach ($this->data['accounts'] as $account) {
             $insert[] = [
-                'created_at'      => DB::raw('NOW()'),
-                'updated_at'      => DB::raw('NOW()'),
+                'created_at'      => $this->time,
+                'updated_at'      => $this->time,
                 'user_id'         => $account['user_id'],
                 'account_type_id' => $account['account_type_id'],
                 'name'            => Crypt::encrypt($account['name']),
@@ -79,8 +83,8 @@ class TestData
         $insert = [];
         foreach ($this->data['account-meta'] as $meta) {
             $insert[] = [
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
                 'account_id' => $meta['account_id'],
                 'name'       => $meta['name'],
                 'data'       => $meta['data'],
@@ -100,8 +104,8 @@ class TestData
             $data         = Crypt::encrypt($attachment['content']);
             $attachmentId = DB::table('attachments')->insertGetId(
                 [
-                    'created_at'      => DB::raw('NOW()'),
-                    'updated_at'      => DB::raw('NOW()'),
+                    'created_at'      => $this->time,
+                    'updated_at'      => $this->time,
                     'attachable_id'   => $attachment['attachable_id'],
                     'attachable_type' => $attachment['attachable_type'],
                     'user_id'         => $attachment['user_id'],
@@ -128,8 +132,8 @@ class TestData
         $insert = [];
         foreach ($this->data['bills'] as $bill) {
             $insert[] = [
-                'created_at'      => DB::raw('NOW()'),
-                'updated_at'      => DB::raw('NOW()'),
+                'created_at'      => $this->time,
+                'updated_at'      => $this->time,
                 'user_id'         => $bill['user_id'],
                 'name'            => Crypt::encrypt($bill['name']),
                 'match'           => Crypt::encrypt($bill['match']),
@@ -155,8 +159,8 @@ class TestData
         $insert = [];
         foreach ($this->data['budgets'] as $budget) {
             $insert[] = [
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
                 'user_id'    => $budget['user_id'],
                 'name'       => Crypt::encrypt($budget['name']),
                 'encrypted'  => 1,
@@ -168,8 +172,8 @@ class TestData
             $amount  = rand($limit['amount_min'], $limit['amount_max']);
             $limitId = DB::table('budget_limits')->insertGetId(
                 [
-                    'created_at'  => DB::raw('NOW()'),
-                    'updated_at'  => DB::raw('NOW()'),
+                    'created_at'  => $this->time,
+                    'updated_at'  => $this->time,
                     'budget_id'   => $limit['budget_id'],
                     'startdate'   => $limit['startdate'],
                     'amount'      => $amount,
@@ -180,8 +184,8 @@ class TestData
 
             DB::table('limit_repetitions')->insert(
                 [
-                    'created_at'      => DB::raw('NOW()'),
-                    'updated_at'      => DB::raw('NOW()'),
+                    'created_at'      => $this->time,
+                    'updated_at'      => $this->time,
                     'budget_limit_id' => $limitId,
                     'startdate'       => $limit['startdate'],
                     'enddate'         => Navigation::endOfPeriod(new Carbon($limit['startdate']), $limit['repeat_freq'])->format('Y-m-d'),
@@ -195,8 +199,8 @@ class TestData
                 $amount  = rand($limit['amount_min'], $limit['amount_max']);
                 $limitId = DB::table('budget_limits')->insertGetId(
                     [
-                        'created_at'  => DB::raw('NOW()'),
-                        'updated_at'  => DB::raw('NOW()'),
+                        'created_at'  => $this->time,
+                        'updated_at'  => $this->time,
                         'budget_id'   => $limit['budget_id'],
                         'startdate'   => $current->format('Y-m-d'),
                         'amount'      => $amount,
@@ -207,8 +211,8 @@ class TestData
 
                 DB::table('limit_repetitions')->insert(
                     [
-                        'created_at'      => DB::raw('NOW()'),
-                        'updated_at'      => DB::raw('NOW()'),
+                        'created_at'      => $this->time,
+                        'updated_at'      => $this->time,
                         'budget_limit_id' => $limitId,
                         'startdate'       => $current->format('Y-m-d'),
                         'enddate'         => Navigation::endOfPeriod($current, 'monthly')->format('Y-m-d'),
@@ -230,8 +234,8 @@ class TestData
         $insert = [];
         foreach ($this->data['categories'] as $category) {
             $insert[] = [
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
                 'user_id'    => $category['user_id'],
                 'name'       => Crypt::encrypt($category['name']),
                 'encrypted'  => 1,
@@ -256,8 +260,8 @@ class TestData
                 $description    = str_replace(':month', $month, $withdrawal['description']);
                 $journalId      = DB::table('transaction_journals')->insertGetId(
                     [
-                        'created_at'              => DB::raw('NOW()'),
-                        'updated_at'              => DB::raw('NOW()'),
+                        'created_at'              => $this->time,
+                        'updated_at'              => $this->time,
                         'user_id'                 => $withdrawal['user_id'],
                         'transaction_type_id'     => 1,
                         'bill_id'                 => $withdrawal['bill_id'] ?? null,
@@ -275,15 +279,15 @@ class TestData
                 );
                 $amount         = (rand($withdrawal['min_amount'] * 100, $withdrawal['max_amount'] * 100)) / 100;
                 $transactions[] = [
-                    'created_at'             => DB::raw('NOW()'),
-                    'updated_at'             => DB::raw('NOW()'),
+                    'created_at'             => $this->time,
+                    'updated_at'             => $this->time,
                     'transaction_journal_id' => $journalId,
                     'account_id'             => $withdrawal['source_id'],
                     'amount'                 => $amount * -1,
                 ];
                 $transactions[] = [
-                    'created_at'             => DB::raw('NOW()'),
-                    'updated_at'             => DB::raw('NOW()'),
+                    'created_at'             => $this->time,
+                    'updated_at'             => $this->time,
                     'transaction_journal_id' => $journalId,
                     'account_id'             => $withdrawal['destination_id'],
                     'amount'                 => $amount,
@@ -316,8 +320,8 @@ class TestData
                 $description    = str_replace(':month', $month, $deposit['description']);
                 $journalId      = DB::table('transaction_journals')->insertGetId(
                     [
-                        'created_at'              => DB::raw('NOW()'),
-                        'updated_at'              => DB::raw('NOW()'),
+                        'created_at'              => $this->time,
+                        'updated_at'              => $this->time,
                         'user_id'                 => $deposit['user_id'],
                         'transaction_type_id'     => 2,
                         'bill_id'                 => $deposit['bill_id'] ?? null,
@@ -335,15 +339,15 @@ class TestData
                 );
                 $amount         = (rand($deposit['min_amount'] * 100, $deposit['max_amount'] * 100)) / 100;
                 $transactions[] = [
-                    'created_at'             => DB::raw('NOW()'),
-                    'updated_at'             => DB::raw('NOW()'),
+                    'created_at'             => $this->time,
+                    'updated_at'             => $this->time,
                     'transaction_journal_id' => $journalId,
                     'account_id'             => $deposit['source_id'],
                     'amount'                 => $amount * -1,
                 ];
                 $transactions[] = [
-                    'created_at'             => DB::raw('NOW()'),
-                    'updated_at'             => DB::raw('NOW()'),
+                    'created_at'             => $this->time,
+                    'updated_at'             => $this->time,
                     'transaction_journal_id' => $journalId,
                     'account_id'             => $deposit['destination_id'],
                     'amount'                 => $amount,
@@ -365,8 +369,8 @@ class TestData
                 $description    = str_replace(':month', $month, $transfer['description']);
                 $journalId      = DB::table('transaction_journals')->insertGetId(
                     [
-                        'created_at'              => DB::raw('NOW()'),
-                        'updated_at'              => DB::raw('NOW()'),
+                        'created_at'              => $this->time,
+                        'updated_at'              => $this->time,
                         'user_id'                 => $transfer['user_id'],
                         'transaction_type_id'     => 3,
                         'bill_id'                 => $transfer['bill_id'] ?? null,
@@ -384,15 +388,15 @@ class TestData
                 );
                 $amount         = (rand($transfer['min_amount'] * 100, $transfer['max_amount'] * 100)) / 100;
                 $transactions[] = [
-                    'created_at'             => DB::raw('NOW()'),
-                    'updated_at'             => DB::raw('NOW()'),
+                    'created_at'             => $this->time,
+                    'updated_at'             => $this->time,
                     'transaction_journal_id' => $journalId,
                     'account_id'             => $transfer['source_id'],
                     'amount'                 => $amount * -1,
                 ];
                 $transactions[] = [
-                    'created_at'             => DB::raw('NOW()'),
-                    'updated_at'             => DB::raw('NOW()'),
+                    'created_at'             => $this->time,
+                    'updated_at'             => $this->time,
                     'transaction_journal_id' => $journalId,
                     'account_id'             => $transfer['destination_id'],
                     'amount'                 => $amount,
@@ -408,11 +412,12 @@ class TestData
                     );
                 }
             }
-
+            DB::table('transactions')->insert($transactions);
+            $transactions = [];
             $current->addMonth();
         }
 
-        DB::table('transactions')->insert($transactions);
+
     }
 
     /**
@@ -423,8 +428,8 @@ class TestData
         foreach ($this->data['multi-deposits'] as $deposit) {
             $journalId = DB::table('transaction_journals')->insertGetId(
                 [
-                    'created_at'              => DB::raw('NOW()'),
-                    'updated_at'              => DB::raw('NOW()'),
+                    'created_at'              => $this->time,
+                    'updated_at'              => $this->time,
                     'user_id'                 => $deposit['user_id'],
                     'transaction_type_id'     => 2,
                     'transaction_currency_id' => 1,
@@ -444,8 +449,8 @@ class TestData
                 $amount      = $deposit['amounts'][$index];
                 $first       = DB::table('transactions')->insertGetId(
                     [
-                        'created_at'             => DB::raw('NOW()'),
-                        'updated_at'             => DB::raw('NOW()'),
+                        'created_at'             => $this->time,
+                        'updated_at'             => $this->time,
                         'account_id'             => $deposit['destination_id'],
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
@@ -454,8 +459,8 @@ class TestData
                 );
                 $second      = DB::table('transactions')->insertGetId(
                     [
-                        'created_at'             => DB::raw('NOW()'),
-                        'updated_at'             => DB::raw('NOW()'),
+                        'created_at'             => $this->time,
+                        'updated_at'             => $this->time,
                         'account_id'             => $source,
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
@@ -487,8 +492,8 @@ class TestData
         foreach ($this->data['multi-transfers'] as $transfer) {
             $journalId = DB::table('transaction_journals')->insertGetId(
                 [
-                    'created_at'              => DB::raw('NOW()'),
-                    'updated_at'              => DB::raw('NOW()'),
+                    'created_at'              => $this->time,
+                    'updated_at'              => $this->time,
                     'user_id'                 => $transfer['user_id'],
                     'transaction_type_id'     => 3,
                     'transaction_currency_id' => 1,
@@ -509,8 +514,8 @@ class TestData
                 $source      = $transfer['source_ids'][$index];
                 $first       = DB::table('transactions')->insertGetId(
                     [
-                        'created_at'             => DB::raw('NOW()'),
-                        'updated_at'             => DB::raw('NOW()'),
+                        'created_at'             => $this->time,
+                        'updated_at'             => $this->time,
                         'account_id'             => $source,
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
@@ -519,8 +524,8 @@ class TestData
                 );
                 $second      = DB::table('transactions')->insertGetId(
                     [
-                        'created_at'             => DB::raw('NOW()'),
-                        'updated_at'             => DB::raw('NOW()'),
+                        'created_at'             => $this->time,
+                        'updated_at'             => $this->time,
                         'account_id'             => $destination,
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
@@ -554,8 +559,8 @@ class TestData
         foreach ($this->data['multi-withdrawals'] as $withdrawal) {
             $journalId = DB::table('transaction_journals')->insertGetId(
                 [
-                    'created_at'              => DB::raw('NOW()'),
-                    'updated_at'              => DB::raw('NOW()'),
+                    'created_at'              => $this->time,
+                    'updated_at'              => $this->time,
                     'user_id'                 => $withdrawal['user_id'],
                     'transaction_type_id'     => 1,
                     'transaction_currency_id' => 1,
@@ -575,8 +580,8 @@ class TestData
                 $amount      = $withdrawal['amounts'][$index];
                 $first       = DB::table('transactions')->insertGetId(
                     [
-                        'created_at'             => DB::raw('NOW()'),
-                        'updated_at'             => DB::raw('NOW()'),
+                        'created_at'             => $this->time,
+                        'updated_at'             => $this->time,
                         'account_id'             => $withdrawal['source_id'],
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
@@ -585,8 +590,8 @@ class TestData
                 );
                 $second      = DB::table('transactions')->insertGetId(
                     [
-                        'created_at'             => DB::raw('NOW()'),
-                        'updated_at'             => DB::raw('NOW()'),
+                        'created_at'             => $this->time,
+                        'updated_at'             => $this->time,
                         'account_id'             => $destination,
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
@@ -635,8 +640,8 @@ class TestData
         foreach ($this->data['piggy-banks'] as $piggyBank) {
             $piggyId = DB::table('piggy_banks')->insertGetId(
                 [
-                    'created_at'    => DB::raw('NOW()'),
-                    'updated_at'    => DB::raw('NOW()'),
+                    'created_at'    => $this->time,
+                    'updated_at'    => $this->time,
                     'account_id'    => $piggyBank['account_id'],
                     'name'          => Crypt::encrypt($piggyBank['name']),
                     'targetamount'  => $piggyBank['targetamount'],
@@ -650,8 +655,8 @@ class TestData
             if (isset($piggyBank['currentamount'])) {
                 DB::table('piggy_bank_repetitions')->insert(
                     [
-                        'created_at'    => DB::raw('NOW()'),
-                        'updated_at'    => DB::raw('NOW()'),
+                        'created_at'    => $this->time,
+                        'updated_at'    => $this->time,
                         'piggy_bank_id' => $piggyId,
                         'startdate'     => $piggyBank['startdate'],
                         'currentamount' => $piggyBank['currentamount'],
@@ -669,8 +674,8 @@ class TestData
         $insert = [];
         foreach ($this->data['rule-groups'] as $group) {
             $insert[] = [
-                'created_at'  => DB::raw('NOW()'),
-                'updated_at'  => DB::raw('NOW()'),
+                'created_at'  => $this->time,
+                'updated_at'  => $this->time,
                 'user_id'     => $group['user_id'],
                 'order'       => $group['order'],
                 'title'       => $group['title'],
@@ -682,8 +687,8 @@ class TestData
         $insert = [];
         foreach ($this->data['rules'] as $rule) {
             $insert[] = [
-                'created_at'      => DB::raw('NOW()'),
-                'updated_at'      => DB::raw('NOW()'),
+                'created_at'      => $this->time,
+                'updated_at'      => $this->time,
                 'user_id'         => $rule['user_id'],
                 'rule_group_id'   => $rule['rule_group_id'],
                 'order'           => $rule['order'],
@@ -698,8 +703,8 @@ class TestData
         $insert = [];
         foreach ($this->data['rule-triggers'] as $trigger) {
             $insert[] = [
-                'created_at'      => DB::raw('NOW()'),
-                'updated_at'      => DB::raw('NOW()'),
+                'created_at'      => $this->time,
+                'updated_at'      => $this->time,
                 'rule_id'         => $trigger['rule_id'],
                 'order'           => $trigger['order'],
                 'active'          => $trigger['active'],
@@ -713,8 +718,8 @@ class TestData
         $insert = [];
         foreach ($this->data['rule-actions'] as $action) {
             $insert[] = [
-                'created_at'      => DB::raw('NOW()'),
-                'updated_at'      => DB::raw('NOW()'),
+                'created_at'      => $this->time,
+                'updated_at'      => $this->time,
                 'rule_id'         => $action['rule_id'],
                 'order'           => $action['order'],
                 'active'          => $action['active'],
@@ -735,8 +740,8 @@ class TestData
         foreach ($this->data['tags'] as $tag) {
             $insert[]
                 = [
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
                 'user_id'    => $tag['user_id'],
                 'tag'        => Crypt::encrypt($tag['tag']),
                 'tagMode'    => $tag['tagMode'],
@@ -756,8 +761,8 @@ class TestData
         foreach ($this->data['users'] as $user) {
             $insert[]
                 = [
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
                 'email'      => $user['email'],
                 'password'   => bcrypt($user['password']),
             ];

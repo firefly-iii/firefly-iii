@@ -15,34 +15,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     protected $baseUrl = 'http://localhost';
 
-    /**
-     * @param User   $user
-     * @param string $range
-     */
-    public function changeDateRange(User $user, $range)
-    {
-        $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
-        if (in_array($range, $valid)) {
-            Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
-            Preference::create(
-                [
-                    'user_id' => $user->id,
-                    'name'    => 'viewRange',
-                    'data'    => $range,
-                ]
-            );
-            // set period to match?
-
-        }
-        if ($range === 'custom') {
-            $this->session(
-                [
-                    'start' => Carbon::now()->subDays(20),
-                    'end'   => Carbon::now(),
-                ]
-            );
-        }
-    }
 
     /**
      * Creates the application.
@@ -56,30 +28,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         return $app;
-    }
-
-    /**
-     * @return array
-     */
-    public function dateRangeProvider()
-    {
-        return [
-            'one day'      => ['1D'],
-            'one week'     => ['1W'],
-            'one month'    => ['1M'],
-            'three months' => ['3M'],
-            'six months'   => ['6M'],
-            'one year'     => ['1Y'],
-            'custom range' => ['custom'],
-        ];
-    }
-
-    /**
-     * @return User
-     */
-    public function emptyUser()
-    {
-        return User::find(2);
     }
 
     /**
@@ -111,16 +59,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         }
         // if the database copy does exists, copy back as original.
 
-
-        $this->session(
-            [
-                'start' => Carbon::now()->startOfMonth(),
-                'end'   => Carbon::now()->endOfMonth(),
-                'first' => Carbon::now()->startOfYear(),
-            ]
-        );
-
-
     }
 
     /**
@@ -132,23 +70,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return User
-     */
-    public function toBeDeletedUser()
-    {
-        return User::find(3);
-    }
-
-    /**
-     * @return User
-     */
-    public function user()
-    {
-        $user = User::find(1);
-
-        return $user;
-    }
 
     /**
      * @param string $class

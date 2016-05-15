@@ -8,7 +8,6 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-use Carbon\Carbon;
 use FireflyIII\Support\Migration\TestData;
 use Illuminate\Database\Seeder;
 
@@ -31,13 +30,18 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-        $disk     = Storage::disk('database');
-        $env      = App::environment();
+        $disk = Storage::disk('database');
+        $env  = App::environment();
+        Log::debug('Environment is ' . $env);
         $fileName = 'seed.' . $env . '.json';
         if ($disk->exists($fileName)) {
+            Log::debug('Now seeding ' . $fileName);
             $file = json_decode($disk->get($fileName), true);
             // run the file:
             TestData::run($file);
+
+            return;
         }
+        Log::info('No seed file (' . $fileName . ') for environment ' . $env);
     }
 }
