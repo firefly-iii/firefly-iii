@@ -164,7 +164,7 @@ class Account extends Model
     }
 
     /**
-     * FIXME can return null
+     * FIxxME can return null
      *
      * @param $value
      *

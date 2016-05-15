@@ -52,7 +52,6 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        // TODO support split withdrawals
         $name   = strtolower($journal->source_account_name ?? TransactionJournal::sourceAccount($journal)->name);
         $search = strtolower($this->triggerValue);
 

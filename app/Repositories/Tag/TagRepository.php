@@ -229,11 +229,9 @@ class TagRepository implements TagRepositoryInterface
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
 
-            // TODO match split journals
             if ($check->isWithdrawal() && TransactionJournal::sourceAccount($check)->id != TransactionJournal::destinationAccount($journal)->id) {
                 $match = false;
             }
-            // TODO match split journals
             if ($check->isDeposit() && TransactionJournal::destinationAccount($check)->id != TransactionJournal::destinationAccount($journal)->id) {
                 $match = false;
             }

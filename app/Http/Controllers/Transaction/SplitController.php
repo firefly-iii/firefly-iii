@@ -31,7 +31,6 @@ use View;
  *
  * @package FireflyIII\Http\Controllers\Transaction
  *
- * TODO support piggy banks
  */
 class SplitController extends Controller
 {
@@ -132,9 +131,7 @@ class SplitController extends Controller
             $repository->storeTransaction($journal, $transaction);
         }
 
-        // TODO move to repository
-        $journal->completed = 1;
-        $journal->save();
+        $repository->markAsComplete($journal);
 
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();

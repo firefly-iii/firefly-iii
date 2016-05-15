@@ -64,7 +64,7 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * FIXME can return null
+     * FIxXME can return null
      *
      * @return RuleGroup
      */

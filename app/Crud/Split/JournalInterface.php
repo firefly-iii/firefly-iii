@@ -21,6 +21,12 @@ use Illuminate\Support\Collection;
  */
 interface JournalInterface
 {
+    /**
+     * @param $journal
+     *
+     * @return bool
+     */
+    public function markAsComplete(TransactionJournal $journal);
 
     /**
      * @param array $data

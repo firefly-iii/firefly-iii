@@ -65,7 +65,6 @@ class Entry
         $entry->category = new EntryCategory($journal->categories->first());
         $entry->bill     = new EntryBill($journal->bill);
 
-        // TODO support split journals
         $sources                   = TransactionJournal::sourceAccountList($journal);
         $entry->sourceAccount      = new EntryAccount($sources->first());
         $destinations              = TransactionJournal::destinationAccountList($journal);

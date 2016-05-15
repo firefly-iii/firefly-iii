@@ -44,7 +44,6 @@ class ConnectJournalToPiggyBank
 
         $amount = TransactionJournal::amountPositive($journal);
         // if piggy account matches source account, the amount is positive
-        // TODO support split journals
         if ($piggyBank->account_id == TransactionJournal::sourceAccount($journal)->id) {
             $amount = bcmul($amount, '-1');
         }

@@ -18,6 +18,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -165,13 +166,11 @@ class TransactionController extends Controller
             'amount'                   => TransactionJournal::amountPositive($journal),
         ];
 
-        // TODO support split withdrawal
-        if ($journal->isWithdrawal() && TransactionJournal::destinationAccountTypeStr($journal) == 'Cash account') {
+        if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
             $preFilled['destination_account_name'] = '';
         }
 
-        // TODO support split withdrawal
-        if ($journal->isDeposit() && TransactionJournal::sourceAccountTypeStr($journal) == 'Cash account') {
+        if ($journal->isDeposit() && $sourceAccounts->first()->accountType->type == AccountType::CASH) {
             $preFilled['source_account_name'] = '';
         }
 

@@ -41,6 +41,19 @@ class Journal implements JournalInterface
     }
 
     /**
+     * @param $journal
+     *
+     * @return bool
+     */
+    public function markAsComplete(TransactionJournal $journal)
+    {
+        $journal->completed = 1;
+        $journal->save();
+
+        return true;
+    }
+
+    /**
      * @param array $data
      *
      * @return TransactionJournal

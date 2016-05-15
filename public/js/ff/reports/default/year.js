@@ -27,15 +27,6 @@ function drawChart() {
         columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, id);
 
     });
-
-    // and another loop
-    $.each($('.category_year_chart'), function (i, v) {
-        var holder = $(v);
-        var id = holder.attr('id');
-        var categoryId = holder.data('category');
-        columnChart('chart/category/period/' + categoryId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, id);
-
-    });
 }
 
 

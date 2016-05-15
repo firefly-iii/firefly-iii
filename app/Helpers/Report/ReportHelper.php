@@ -101,38 +101,6 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * Find all transactions and IF we have spent money in them
-     * with either transactions or journals.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getCategoriesWithTransactions(Carbon $start, Carbon $end, Collection $accounts): Collection
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-        $return     = new Collection;
-        foreach ($categories as $category) {
-            $lastUseDate = $repository->lastUseDate($category, $accounts);
-            if ($lastUseDate >= $start && $lastUseDate <= $end) {
-                $return->push($category);
-            }
-        }
-
-        $return = $return->sortBy(
-            function (Category $category) {
-                return $category->name;
-            }
-        );
-
-        return $return;
-    }
-
-    /**
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts

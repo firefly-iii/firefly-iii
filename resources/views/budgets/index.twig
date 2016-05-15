@@ -10,12 +10,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ periodStart }} &mdash; {{ periodEnd }}</h3>
-
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-
                 </div>
                 <div class="box-body">
                     <div class="row">
@@ -68,11 +62,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactionsWithoutBudget'|_ }}</h3>
-
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <p>
@@ -86,11 +75,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
-
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
@@ -116,7 +100,6 @@
 
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
@@ -200,10 +183,6 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'inactiveBudgets'|_ }}</h3>
-                        <!-- ACTIONS MENU -->
-                        <div class="box-tools pull-right">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
                     </div>
                     <div class="box-body">
                         {% for index,budget in inactive %}

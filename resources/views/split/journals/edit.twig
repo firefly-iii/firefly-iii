@@ -17,9 +17,6 @@
                 <div class="box box-danger">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'errors'|_ }}</h3>
-                        <div class="box-tools pull-right">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
                     </div>
                     <div class="box-body">
                         <ul>
@@ -37,10 +34,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_meta_data'|_ }}</h3>
-
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('journal_description', journal.description) }}
@@ -69,10 +62,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_dates'|_ }}</h3>
-
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.date('date', journal.date) }}
@@ -92,10 +81,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'splits'|_ }}</h3>
-
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <table class="table table-bordered table-condensed table-striped split-table">
