@@ -268,19 +268,6 @@ function areaChart(URL, container, options) {
 function columnChart(URL, container, options) {
     "use strict";
 
-    // find the parent box:
-    var cont = $('#' + container);
-    var box = cont.parents(".box").first();
-    var boxId = box.attr('id');
-    if (boxId) {
-        var state = getBoxState(boxId);
-        if (state == 'closed') {
-            console.log('Will not draw columnChart(' + URL + ') because ' + boxId + ' is closed.');
-            return;
-        }
-    }
-
-
     options = options || {};
 
     $.getJSON(URL).done(function (data) {
