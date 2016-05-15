@@ -8,7 +8,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -107,6 +106,21 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function getSavingsAccounts(Carbon $start, Carbon $end): Collection;
+
+    /**
+     * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made by the given $accounts,
+     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
+     * than made by journalsInPeriod itself.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountRepositoryInterface::journalsInPeriod
+     *
+     * @return Collection
+     */
+    public function incomesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Collection $accounts

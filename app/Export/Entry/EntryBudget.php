@@ -18,7 +18,7 @@ use FireflyIII\Models\Budget;
  */
 class EntryBudget
 {
-    /** @var  string */
+    /** @var  int */
     public $budgetId = '';
     /** @var  string */
     public $name = '';

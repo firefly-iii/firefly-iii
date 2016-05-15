@@ -301,6 +301,44 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made by the given $accounts,
+     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
+     * than made by journalsInPeriod itself.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountRepositoryInterface::journalsInPeriod
+     *
+     * @return Collection
+     */
+    public function incomesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection
+    {
+        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $journals   = $this->journalsInPeriod($accounts, $types, $start, $end);
+        $accountIds = $accounts->pluck('id')->toArray();
+
+        // filter because some of these journals are
+        $journals = $journals->filter(
+            function (TransactionJournal $journal) use ($accountIds) {
+                if ($journal->transaction_type_type == TransactionType::DEPOSIT) {
+                    return $journal;
+                }
+                /*
+                 * The destination of a transfer must be one of the $accounts in order to
+                 * be included. Otherwise, it would not be income.
+                 */
+                if (in_array($journal->destination_account_id, $accountIds)) {
+                    return $journal;
+                }
+            }
+        );
+
+        return $journals;
+    }
+
+    /**
      * @param Collection $accounts
      * @param array      $types
      * @param Carbon     $start
@@ -337,7 +375,10 @@ class AccountRepository implements AccountRepositoryInterface
 
         }
         // that should do it:
-        $complete = $query->get(TransactionJournal::queryFields());
+        $fields   = TransactionJournal::queryFields();
+        $fields[] = 'source.account_id as source_account_id';
+        $fields[] = 'destination.account_id as destination_account_id';
+        $complete = $query->get($fields);
 
         return $complete;
     }

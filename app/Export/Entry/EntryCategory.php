@@ -18,7 +18,7 @@ use FireflyIII\Models\Category;
  */
 class EntryCategory
 {
-    /** @var  string */
+    /** @var  int */
     public $categoryId = '';
     /** @var  string */
     public $name = '';

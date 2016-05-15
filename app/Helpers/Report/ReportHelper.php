@@ -166,8 +166,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Income;
         /** @var AccountRepositoryInterface $repos */
         $repos    = app(AccountRepositoryInterface::class);
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals = $repos->journalsInPeriod($accounts, $types, $start, $end);
+        $journals = $repos->incomesInPeriod($accounts, $start, $end);
 
         foreach ($journals as $entry) {
             $amount = TransactionJournal::amount($entry);

@@ -24,7 +24,7 @@ class EntryAccount
     public $iban;
     /** @var  string */
     public $name;
-    /** @var  int */
+    /** @var  string */
     public $number;
     /** @var  string */
     public $type;

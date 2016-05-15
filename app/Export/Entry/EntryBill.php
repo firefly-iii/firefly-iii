@@ -18,7 +18,7 @@ use FireflyIII\Models\Bill;
  */
 class EntryBill
 {
-    /** @var  string */
+    /** @var  int */
     public $billId = '';
     /** @var  string */
     public $name = '';
