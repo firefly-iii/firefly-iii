@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
+use Amount;
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\User;
@@ -82,6 +82,21 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
+
+        return $set;
+    }
+
+    /**
+     * Also add amount in name.
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksWithAmount() : Collection
+    {
+        $set = $this->getPiggyBanks();
+        foreach ($set as $piggy) {
+            $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
+        }
 
         return $set;
     }

@@ -47,14 +47,17 @@
                     {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.transaction_currency_id) }}
                     {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
                     <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+
                     <!-- show  source if withdrawal or transfer -->
                     {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
                         {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                     {% endif %}
+
                     <!-- show static source if deposit: -->
                     {% if preFilled.what == 'deposit' %}
                         {{ ExpandedForm.text('journal_source_account_name', preFilled.journal_source_account_name) }}
                     {% endif %}
+
                     <!-- show static destination if transfer -->
                     {% if preFilled.what == 'transfer' %}
                         {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
@@ -100,25 +103,19 @@
                         <tr>
                             <th>{{ trans('list.split_number') }}</th>
                             <th>{{ trans('list.description') }}</th>
-                            <!-- split the source of a deposit -->
-                            <!--
-                            {% if preFilled.what == 'deposit' %}
-                                <th>{{ trans('list.source') }}</th>
-                            {% endif %}
-                            -->
-                            <!-- split where a withdrawal is going -->
-                            <!-- split where a deposit is going -->
+
+                            <!-- withdrawal and deposit have a destination. -->
                             {% if preFilled.what == 'withdrawal' or preFilled.what == 'deposit' %}
                                 <th>{{ trans('list.destination') }}</th>
                             {% endif %}
+
                             <th>{{ trans('list.amount') }}</th>
+
+                            <!-- only withdrawal has budget -->
                             {% if preFilled.what == 'withdrawal' %}
                                 <th>{{ trans('list.budget') }}</th>
                             {% endif %}
                             <th>{{ trans('list.category') }}</th>
-                            {% if preFilled.what == 'transfer' %}
-                                <th>{{ trans('list.piggy_bank') }}</th>
-                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -165,11 +162,6 @@
                                 <td>
                                     <input type="text" name="category[]" value="{{ preFilled.category[index] }}" class="form-control"/>
                                 </td>
-                                {% if preFilled.what == 'transfer' %}
-                                    <td>
-                                        {{ Form.select('piggy_bank_id[]', piggyBanks, preFilled.piggy_bank_id[index], {class: 'form-control'}) }}
-                                    </td>
-                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

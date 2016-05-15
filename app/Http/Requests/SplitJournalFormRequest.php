@@ -40,7 +40,7 @@ class SplitJournalFormRequest extends Request
             'journal_currency_id'              => intval($this->get('journal_currency_id')),
             'journal_source_account_id'        => intval($this->get('journal_source_account_id')),
             'journal_source_account_name'      => $this->get('journal_source_account_name'),
-            'journal_destination_account_id'   => intval($this->get('journal_source_destination_id')),
+            'journal_destination_account_id'   => intval($this->get('journal_destination_account_id')),
             'journal_destination_account_name' => $this->get('journal_source_destination_name'),
             'date'                             => new Carbon($this->get('date')),
             'what'                             => $this->get('what'),
@@ -61,7 +61,7 @@ class SplitJournalFormRequest extends Request
                 'source_account_name'      => $this->get('journal_source_account_name'),
                 'destination_account_id'   => isset($this->get('destination_account_id')[$index])
                     ? intval($this->get('destination_account_id')[$index])
-                    : intval($this->get('destination_account_id')),
+                    : intval($this->get('journal_destination_account_id')),
                 'destination_account_name' => $this->get('destination_account_name')[$index] ?? '',
             ];
             $data['transactions'][] = $transaction;

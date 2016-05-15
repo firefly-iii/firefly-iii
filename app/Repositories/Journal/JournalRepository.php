@@ -10,6 +10,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -209,6 +210,91 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection
+    {
+        /** @var Collection $set */
+        $events = $journal->piggyBankEvents()->get();
+        $events->each(
+            function (PiggyBankEvent $event) {
+                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
+            }
+        );
+
+        return $events;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     * @throws FireflyException
+     */
+    public function getTransactions(TransactionJournal $journal): Collection
+    {
+        switch ($journal->transactionType->type) {
+            case TransactionType::DEPOSIT:
+                /** @var Collection $transactions */
+                $transactions = $journal->transactions()
+                                        ->groupBy('transactions.account_id')
+                                        ->where('amount', '<', 0)
+                                        ->groupBy('transactions.id')
+                                        ->orderBy('amount', 'ASC')->get(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $final        = $journal->transactions()
+                                        ->groupBy('transactions.account_id')
+                                        ->where('amount', '>', 0)
+                                        ->orderBy('amount', 'ASC')->first(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $transactions->push($final);
+                break;
+            case TransactionType::TRANSFER:
+
+                /** @var Collection $transactions */
+                $transactions = $journal->transactions()
+                    ->groupBy('transactions.id')
+                    ->orderBy('transactions.id')->get(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                break;
+            case TransactionType::WITHDRAWAL:
+
+                /** @var Collection $transactions */
+                $transactions = $journal->transactions()
+                                        ->where('amount', '>', 0)
+                                        ->groupBy('transactions.id')
+                                        ->orderBy('amount', 'ASC')->get(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $final        = $journal->transactions()
+                                        ->where('amount', '<', 0)
+                                        ->groupBy('transactions.account_id')
+                                        ->orderBy('amount', 'ASC')->first(
+                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
+                    );
+                $transactions->push($final);
+                break;
+            default:
+
+                throw new FireflyException('Cannot handle ' . $journal->transactionType->type);
+                break;
+        }
+        // foreach do balance thing
+        $transactions->each(
+            function (Transaction $t) {
+                $t->before = $this->balanceBeforeTransaction($t);
+            }
+        );
+
+        return $transactions;
+    }
+
+    /**
      * @param array $data
      *
      * @return TransactionJournal
@@ -276,6 +362,37 @@ class JournalRepository implements JournalRepositoryInterface
         return $journal;
 
 
+    }
+
+    /**
+     * Store journal only, uncompleted, with attachments if necessary.
+     *
+     * @param array $data
+     *
+     * @return TransactionJournal
+     */
+    public function storeJournal(array $data): TransactionJournal
+    {
+        // find transaction type.
+        $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
+
+        // store actual journal.
+        $journal = new TransactionJournal(
+            [
+                'user_id'                 => $data['user'],
+                'transaction_type_id'     => $transactionType->id,
+                'transaction_currency_id' => $data['amount_currency_id_amount'],
+                'description'             => $data['description'],
+                'completed'               => 0,
+                'date'                    => $data['date'],
+                'interest_date'           => $data['interest_date'],
+                'book_date'               => $data['book_date'],
+                'process_date'            => $data['process_date'],
+            ]
+        );
+        $journal->save();
+
+        return $journal;
     }
 
     /**

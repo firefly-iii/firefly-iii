@@ -17,6 +17,15 @@ use Illuminate\Support\Collection;
 interface JournalRepositoryInterface
 {
     /**
+     * Returns the amount in the account before the specified transaction took place.
+     *
+     * @param Transaction $transaction
+     *
+     * @return string
+     */
+    public function balanceBeforeTransaction(Transaction $transaction): string;
+
+    /**
      * Deletes a journal.
      *
      * @param TransactionJournal $journal
@@ -40,16 +49,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function first(): TransactionJournal;
-
-
-    /**
-     * Returns the amount in the account before the specified transaction took place.
-     * 
-     * @param Transaction $transaction
-     *
-     * @return string
-     */
-    public function balanceBeforeTransaction(Transaction $transaction): string;
 
     /**
      * Returns the amount in the account before the specified transaction took place.
@@ -86,11 +85,34 @@ interface JournalRepositoryInterface
     public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getTransactions(TransactionJournal $journal): Collection;
+
+    /**
      * @param array $data
      *
      * @return TransactionJournal
      */
     public function store(array $data): TransactionJournal;
+
+    /**
+     * Store journal only, uncompleted, with attachments if necessary.
+     *
+     * @param array $data
+     *
+     * @return TransactionJournal
+     */
+    public function storeJournal(array $data): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal

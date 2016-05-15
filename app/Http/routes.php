@@ -343,10 +343,11 @@ Route::group(
     /**
      * Split controller
      */
-    Route::get('/transaction/split', ['uses' => 'Transaction\SplitController@journalFromStore', 'as' => 'split.journal.from-store']);
-    Route::post('/transaction/split', ['uses' => 'Transaction\SplitController@postJournalFromStore', 'as' => 'split.journal.from-store.post']);
-    Route::get('/transaction/edit-split/{journal}',['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
-    Route::post('/transaction/edit-split/{journal}',['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
+
+    Route::get('/transaction/create-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@create', 'as' => 'split.journal.create']);
+    Route::post('/transaction/store-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@store', 'as' => 'split.journal.store']);
+    Route::get('/transaction/edit-split/{journal}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
+    Route::post('/transaction/edit-split/{journal}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
     /**
      * Tag Controller
      */

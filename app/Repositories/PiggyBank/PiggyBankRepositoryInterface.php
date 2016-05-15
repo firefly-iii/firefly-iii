@@ -58,6 +58,13 @@ interface PiggyBankRepositoryInterface
     public function getPiggyBanks() : Collection;
 
     /**
+     * Also add amount in name.
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksWithAmount() : Collection;
+
+    /**
      * Set all piggy banks to order 0.
      *
      * @return bool
@@ -86,7 +93,7 @@ interface PiggyBankRepositoryInterface
 
     /**
      * Update existing piggy bank.
-     * 
+     *
      * @param PiggyBank $piggyBank
      * @param array     $data
      *

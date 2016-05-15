@@ -13,17 +13,12 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use ExpandedForm;
 use FireflyIII\Crud\Split\JournalInterface;
 use FireflyIII\Events\TransactionJournalUpdated;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
-use Input;
 use Log;
 use Preferences;
 use Session;
@@ -49,6 +44,37 @@ class SplitController extends Controller
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return View
+     */
+    public function create(TransactionJournal $journal)
+    {
+        $accountRepository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
+        $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $assetAccounts      = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $sessionData        = session('journal-data', []);
+        $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
+        $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $preFilled          = [
+            'what'                        => $sessionData['what'] ?? 'withdrawal',
+            'journal_amount'              => $sessionData['amount'] ?? 0,
+            'journal_source_account_id'   => $sessionData['source_account_id'] ?? 0,
+            'journal_source_account_name' => $sessionData['source_account_name'] ?? '',
+            'description'                 => [$journal->description],
+            'destination_account_name'    => [$sessionData['destination_account_name']],
+            'destination_account_id'      => [$sessionData['destination_account_id']],
+            'amount'                      => [$sessionData['amount']],
+            'budget_id'                   => [$sessionData['budget_id']],
+            'category'                    => [$sessionData['category']],
+        ];
+
+        return view('split.journals.create', compact('journal', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize'));
+    }
+
+    /**
      * @param Request            $request
      * @param TransactionJournal $journal
      *
@@ -56,24 +82,14 @@ class SplitController extends Controller
      */
     public function edit(Request $request, TransactionJournal $journal)
     {
-        $count = $journal->transactions()->count();
-        if ($count === 2) {
-            return redirect(route('transactions.edit', [$journal->id]));
-        }
-
-        /** @var CurrencyRepositoryInterface $currencyRepository */
-        $currencyRepository = app(CurrencyRepositoryInterface::class);
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-
-        /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app(BudgetRepositoryInterface::class);
-
-        $uploadSize    = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
-        $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $preFilled     = $this->arrayFromJournal($request, $journal);
+        $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
+        $accountRepository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
+        $assetAccounts      = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $preFilled          = $this->arrayFromJournal($request, $journal);
 
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
@@ -91,62 +107,35 @@ class SplitController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
-     * @return mixed
-     * @throws FireflyException
-     */
-    public function journalFromStore(Request $request)
-    {
-        if ($request->old('journal_currency_id')) {
-            $preFilled = $this->arrayFromOldData($request->old());
-        } else {
-            $preFilled = $this->arrayFromSession();
-        }
-
-        Session::flash('preFilled', $preFilled);
-        View::share('subTitle', trans('firefly.split-new-transaction'));
-
-        /** @var CurrencyRepositoryInterface $currencyRepository */
-        $currencyRepository = app(CurrencyRepositoryInterface::class);
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-
-        /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app(BudgetRepositoryInterface::class);
-
-        $currencies    = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
-        $budgets       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-
-        return view('split.journals.from-store', compact('currencies', 'assetAccounts', 'budgets', 'preFilled'));
-
-
-    }
-
-    /**
-     * @param SplitJournalFormRequest $request
      * @param JournalInterface        $repository
+     * @param SplitJournalFormRequest $request
+     * @param TransactionJournal      $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws FireflyException
      */
-    public function postJournalFromStore(SplitJournalFormRequest $request, JournalInterface $repository)
+    public function store(JournalInterface $repository, SplitJournalFormRequest $request, TransactionJournal $journal)
     {
         $data = $request->getSplitData();
 
-        // store an empty journal first. This will be the place holder.
-        $journal = $repository->storeJournal($data);
-        // Then, store each transaction individually.
-
-        if (is_null($journal->id)) {
-            throw new FireflyException('Could not store transaction.');
+        foreach ($data['transactions'] as $transaction) {
+            $repository->storeTransaction($journal, $transaction);
         }
 
-        // forget temp journal data
-        Session::forget('temporary_split_data');
+        // TODO move to repository
+        $journal->completed = 1;
+        $journal->save();
 
-        // this is where we originally came from.
+        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
+        Preferences::mark();
+
+        if (intval($request->get('create_another')) === 1) {
+            // set value so create routine will not overwrite URL:
+            Session::put('transactions.create.fromStore', true);
+
+            return redirect(route('transactions.create', [$request->input('what')]))->withInput();
+        }
+
+        // redirect to previous URL.
         return redirect(session('transactions.create.url'));
     }
 
@@ -180,7 +169,7 @@ class SplitController extends Controller
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
@@ -189,9 +178,6 @@ class SplitController extends Controller
 
         // redirect to previous URL.
         return redirect(session('transactions.edit-split.url'));
-
-
-        // update all:
 
     }
 
@@ -206,27 +192,32 @@ class SplitController extends Controller
         if (Session::has('_old_input')) {
             Log::debug('Old input: ', session('_old_input'));
         }
-        $sourceAccounts = TransactionJournal::sourceAccountList($journal);
-        $firstSourceId  = $sourceAccounts->first()->id;
-        $array          = [
-            'journal_description'      => $request->old('journal_description', $journal->description),
-            'journal_amount'           => TransactionJournal::amountPositive($journal),
-            'sourceAccounts'           => $sourceAccounts,
-            'transaction_currency_id'  => $request->old('transaction_currency_id', $journal->transaction_currency_id),
-            'destinationAccounts'      => TransactionJournal::destinationAccountList($journal),
-            'what'                     => strtolower(TransactionJournal::transactionTypeStr($journal)),
-            'date'                     => $request->old('date', $journal->date),
-            'interest_date'            => $request->old('interest_date', $journal->interest_date),
-            'book_date'                => $request->old('book_date', $journal->book_date),
-            'process_date'             => $request->old('process_date', $journal->process_date),
-            'description'              => [],
-            'destination_account_id'   => [],
-            'destination_account_name' => [],
-            'amount'                   => [],
-            'budget_id'                => [],
-            'category'                 => [],
+        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
+        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $array               = [
+            'journal_description'            => $request->old('journal_description', $journal->description),
+            'journal_amount'                 => TransactionJournal::amountPositive($journal),
+            'sourceAccounts'                 => $sourceAccounts,
+            'journal_source_account_id'      => $sourceAccounts->first()->id,
+            'journal_source_account_name'    => $sourceAccounts->first()->name,
+            'journal_destination_account_id' => $destinationAccounts->first()->id,
+            'transaction_currency_id'        => $request->old('transaction_currency_id', $journal->transaction_currency_id),
+            'destinationAccounts'            => $destinationAccounts,
+            'what'                           => strtolower(TransactionJournal::transactionTypeStr($journal)),
+            'date'                           => $request->old('date', $journal->date),
+            'interest_date'                  => $request->old('interest_date', $journal->interest_date),
+            'book_date'                      => $request->old('book_date', $journal->book_date),
+            'process_date'                   => $request->old('process_date', $journal->process_date),
+            'description'                    => [],
+            'source_account_id'              => [],
+            'source_account_name'            => [],
+            'destination_account_id'         => [],
+            'destination_account_name'       => [],
+            'amount'                         => [],
+            'budget_id'                      => [],
+            'category'                       => [],
         ];
-        $index          = 0;
+        $index               = 0;
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             $budget       = $transaction->budgets()->first();
@@ -245,10 +236,10 @@ class SplitController extends Controller
             $categoryName    = $request->old('category')[$index] ?? $categoryName;
             $amount          = $request->old('amount')[$index] ?? $transaction->amount;
             $description     = $request->old('description')[$index] ?? $transaction->description;
-            $destinationName = $request->old('destination_account_name')[$index] ??$transaction->account->name;
+            $destinationName = $request->old('destination_account_name')[$index] ?? $transaction->account->name;
 
-
-            if ($journal->isWithdrawal() && $transaction->account_id !== $firstSourceId) {
+            // any transfer not from the source:
+            if (($journal->isWithdrawal() || $journal->isDeposit()) && $transaction->account_id !== $sourceAccounts->first()->id) {
                 $array['description'][]              = $description;
                 $array['destination_account_id'][]   = $transaction->account_id;
                 $array['destination_account_name'][] = $destinationName;
@@ -258,79 +249,10 @@ class SplitController extends Controller
                 // only add one when "valid" transaction
                 $index++;
             }
-
-
         }
+
 
         return $array;
-    }
-
-    /**
-     * @param array $old
-     *
-     * @return array
-     */
-    private function arrayFromOldData(array $old): array
-    {
-        // this array is pretty much equal to what we expect it to be.
-        Log::debug('Prefilled', $old);
-
-        return $old;
-    }
-
-    /**
-     * @return array
-     * @throws FireflyException
-     */
-    private function arrayFromSession(): array
-    {
-        // expect data to be in session or in post?
-        $data = session('temporary_split_data');
-
-        if (!is_array($data)) {
-            Log::error('Could not find transaction data in your session. Please go back and try again.', ['data' => $data]); // translate me.
-            throw new FireflyException('Could not find transaction data in your session. Please go back and try again.'); // translate me.
-        }
-
-        Log::debug('Journal data', $data);
-
-        $preFilled = [
-            'what'                             => $data['what'],
-            'journal_description'              => $data['description'],
-            'journal_source_account_id'        => $data['source_account_id'],
-            'journal_source_account_name'      => $data['source_account_name'],
-            'journal_destination_account_id'   => $data['destination_account_id'],
-            'journal_destination_account_name' => $data['destination_account_name'],
-            'journal_amount'                   => $data['amount'],
-            'journal_currency_id'              => $data['amount_currency_id_amount'],
-            'date'                             => $data['date'],
-            'interest_date'                    => $data['interest_date'],
-            'book_date'                        => $data['book_date'],
-            'process_date'                     => $data['process_date'],
-
-            'description'              => [],
-            'destination_account_id'   => [],
-            'destination_account_name' => [],
-            'amount'                   => [],
-            'budget_id'                => [],
-            'category'                 => [],
-        ];
-
-        // create the first transaction:
-        $preFilled['description'][]              = $data['description'];
-        $preFilled['destination_account_id'][]   = $data['destination_account_id'];
-        $preFilled['destination_account_name'][] = $data['destination_account_name'];
-        $preFilled['amount'][]                   = $data['amount'];
-        $preFilled['budget_id'][]                = $data['budget_id'];
-        $preFilled['category'][]                 = $data['category'];
-
-        //        echo '<pre>';
-        //        var_dump($data);
-        //        var_dump($preFilled);
-        //        exit;
-        Log::debug('Prefilled', $preFilled);
-
-        return $preFilled;
     }
 
 }

@@ -4,37 +4,13 @@
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
-    {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('split.journal.from-store.post')}) }}
-    <input type="hidden" name="what" value="{{ preFilled.what }}"/>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ ('split_title_'~preFilled.what)|_ }}</h3>
+    <form method="POST" action="{{ route('split.journal.store',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
+          enctype="multipart/form-data">
 
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <p>
-                        {{ ('split_intro_one_'~preFilled.what)|_ }}
-                    </p>
-                    <p>
-                        {{ ('split_intro_two_'~preFilled.what)|_ }}
-                    </p>
-                    <p>
-                        {% if preFilled.what =='deposit' %}
-                            {{ trans(('firefly.split_intro_three_'~preFilled.what), {total: 500|formatAmount, split_one: 425|formatAmount, split_two: 75|formatAmount})|raw }}
-                        {% else %}
-                            {{ trans(('firefly.split_intro_three_'~preFilled.what), {total: 20|formatAmount, split_one: 15|formatAmount, split_two: 5|formatAmount})|raw }}
-                        {% endif %}
-                    </p>
-                    <p class="text-danger">This feature is experimental.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <input name="_token" type="hidden" value="{{ csrf_token() }}">
+    <input type="hidden" name="id" value="{{ journal.id }}"/>
+    <input type="hidden" name="what" value="{{ preFilled.what }}"/>
+
     {% if errors.all()|length > 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -67,20 +43,19 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.text('journal_description') }}
-                    {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.journal_currency_id) }}
-                    {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount) }}
+                    {{ ExpandedForm.text('journal_description', journal.description) }}
+                    {{ ExpandedForm.select('journal_currency_id', currencies, journal.transaction_currency_id) }}
+                    {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
                     <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
-
-                    <!-- show source drop down box if withdrawal or transfer -->
+                    <!-- show  source if withdrawal or transfer -->
                     {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
                         {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                     {% endif %}
-                    <!-- show source text input if deposit: -->
+                    <!-- show static source if deposit: -->
                     {% if preFilled.what == 'deposit' %}
                         {{ ExpandedForm.text('journal_source_account_name', preFilled.journal_source_account_name) }}
                     {% endif %}
-                    <!-- show destination drop down if transfer -->
+                    <!-- show static destination if transfer -->
                     {% if preFilled.what == 'transfer' %}
                         {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
                     {% endif %}
@@ -97,15 +72,16 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.date('date', preFilled.date) }}
+                    {{ ExpandedForm.date('date', journal.date) }}
 
-                    {{ ExpandedForm.date('interest_date', preFilled.interest_date) }}
+                    {{ ExpandedForm.date('interest_date', journal.interest_date) }}
 
-                    {{ ExpandedForm.date('book_date', preFilled.book_date) }}
+                    {{ ExpandedForm.date('book_date', journal.book_date) }}
 
-                    {{ ExpandedForm.date('process_date', preFilled.process_date) }}
+                    {{ ExpandedForm.date('process_date', journal.process_date) }}
                 </div>
             </div>
+
         </div>
     </div>
     <div class="row">
@@ -119,22 +95,11 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <p>
-                        {{ ('split_table_intro_'~preFilled.what)|_ }}
-                    </p>
                     <table class="table table-bordered table-condensed table-striped split-table">
                         <thead>
                         <tr>
                             <th>{{ trans('list.split_number') }}</th>
                             <th>{{ trans('list.description') }}</th>
-                            <!-- split the source of a deposit -->
-                            <!--
-                            {% if preFilled.what == 'deposit' %}
-                                <th>{{ trans('list.source') }}</th>
-                            {% endif %}
-                            -->
-                            <!-- split where a withdrawal is going -->
-                            <!-- split where a deposit is going -->
                             {% if preFilled.what == 'withdrawal' or preFilled.what == 'deposit' %}
                                 <th>{{ trans('list.destination') }}</th>
                             {% endif %}
@@ -175,7 +140,15 @@
                                 </td>
                                 {% if preFilled.what == 'withdrawal' %}
                                     <td>
-                                        {{ Form.select('budget_id[]', budgets, preFilled.budget_id[index], {class: 'form-control'}) }}
+                                        <select class="form-control" name="budget_id[]">
+                                            {% for key, budget in budgets %}
+                                                <option label="{{ budget }}" value="{{ key }}"
+                                                        {% if preFilled.budget_id[index] == key %}
+                                                            selected="selected"
+                                                        {% endif %}
+                                                >{{ budget }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </td>
                                 {% endif %}
                                 <td>
@@ -189,11 +162,40 @@
                         <br/>
                         <a href="#" class="btn btn-default btn-do-split"><i class="fa fa-plus-circle"></i> {{ 'add_another_split'|_ }}</a>
                     </p>
-                    <p class="pull-right">
+                    <!--<p class="pull-right">
                         <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
-                            {{ ('store_splitted_'~preFilled.what)|_ }}
+                            {{ ('update_splitted_'~preFilled.what)|_ }}
                         </button>
                     </p>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <!-- ATTACHMENTS -->
+                    {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <!-- panel for options -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('create','split-transaction') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="pull-right btn btn-success">{{ ('store_' ~ preFilled.what)|_ }}</button>
                 </div>
             </div>
         </div>

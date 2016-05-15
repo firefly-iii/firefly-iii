@@ -917,6 +917,47 @@
       ]
     }
   ],
-  "multi-deposits": [],
+  "multi-deposits": [
+    {
+      "user_id": 1,
+      "date": "2016-03-02",
+      "description": "Even multi-deposit (50, 50)",
+      "source_ids": [
+        35,
+        36
+      ],
+      "destination_id": 1,
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-02",
+      "description": "Uneven multi-deposit (15,34,51)",
+      "source_ids": [
+        35,
+        36,
+        37
+      ],
+      "destination_id": 1,
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ]
+    }
+  ],
   "multi-transfers": []
 }

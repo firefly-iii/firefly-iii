@@ -418,6 +418,73 @@ class TestData
     /**
      *
      */
+    private function createMultiDeposits()
+    {
+        foreach ($this->data['multi-deposits'] as $deposit) {
+            $journalId = DB::table('transaction_journals')->insertGetId(
+                [
+                    'created_at'              => DB::raw('NOW()'),
+                    'updated_at'              => DB::raw('NOW()'),
+                    'user_id'                 => $deposit['user_id'],
+                    'transaction_type_id'     => 2,
+                    'transaction_currency_id' => 1,
+                    'description'             => Crypt::encrypt($deposit['description']),
+                    'completed'               => 1,
+                    'date'                    => $deposit['date'],
+                    'interest_date'           => $deposit['interest_date'] ?? null,
+                    'book_date'               => $deposit['book_date'] ?? null,
+                    'process_date'            => $deposit['process_date'] ?? null,
+                    'encrypted'               => 1,
+                    'order'                   => 0,
+                    'tag_count'               => 0,
+                ]
+            );
+            foreach ($deposit['source_ids'] as $index => $source) {
+                $description = $deposit['description'] . ' (#' . ($index + 1) . ')';
+                $amount      = $deposit['amounts'][$index];
+                $first       = DB::table('transactions')->insertGetId(
+                    [
+                        'created_at'             => DB::raw('NOW()'),
+                        'updated_at'             => DB::raw('NOW()'),
+                        'account_id'             => $deposit['destination_id'],
+                        'transaction_journal_id' => $journalId,
+                        'description'            => $description,
+                        'amount'                 => $amount,
+                    ]
+                );
+                $second      = DB::table('transactions')->insertGetId(
+                    [
+                        'created_at'             => DB::raw('NOW()'),
+                        'updated_at'             => DB::raw('NOW()'),
+                        'account_id'             => $source,
+                        'transaction_journal_id' => $journalId,
+                        'description'            => $description,
+                        'amount'                 => $amount * -1,
+                    ]
+                );
+                // link first and second to budget and category, if present.
+
+                if (isset($deposit['category_ids'][$index])) {
+                    DB::table('category_transaction')->insert(
+                        [
+                            'category_id'    => $deposit['category_ids'][$index],
+                            'transaction_id' => $first,
+                        ]
+                    );
+                    DB::table('category_transaction')->insert(
+                        [
+                            'category_id'    => $deposit['category_ids'][$index],
+                            'transaction_id' => $second,
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     */
     private function createMultiWithdrawals()
     {
         foreach ($this->data['multi-withdrawals'] as $withdrawal) {
@@ -660,6 +727,7 @@ class TestData
         $this->createJournals();
         $this->createAttachments();
         $this->createMultiWithdrawals();
+        $this->createMultiDeposits();
     }
 
 }
