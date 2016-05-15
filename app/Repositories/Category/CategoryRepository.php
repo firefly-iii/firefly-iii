@@ -454,7 +454,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         // first collect actual transaction journals (fairly easy)
         $query = $this->user
             ->transactionjournals()
-            ->distinct()
             ->transactionTypes($types)
             ->leftJoin(
                 'transactions as source', function (JoinClause $join) {

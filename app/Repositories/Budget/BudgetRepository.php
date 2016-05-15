@@ -304,10 +304,14 @@ class BudgetRepository implements BudgetRepositoryInterface
         // first collect actual transaction journals (fairly easy)
         $query = $this->user
             ->transactionjournals()
-            ->distinct()
             ->leftJoin(
-                'transactions as t', function (JoinClause $join) {
-                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            }
+            )
+            ->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
             }
             );
 
@@ -316,7 +320,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $query->whereIn('t.account_id', $accountIds);
+            $set        = join(', ', $accountIds);
+            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
         }
         if ($budgets->count() > 0) {
             $budgetIds = $budgets->pluck('id')->toArray();
@@ -325,7 +330,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // that should do it:
-        $first = strval($query->sum('t.amount'));
+        $first = strval($query->sum('source.amount'));
 
         // then collection transactions (harder)
         $query = $this->user->transactions()
