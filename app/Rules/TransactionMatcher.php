@@ -72,8 +72,6 @@ class TransactionMatcher
         //   - the maximum number of transactions to search in have been searched 
         do {
             // Fetch a batch of transactions from the database
-            //$offset = $page > 0 ? ($page - 1) * $pagesize : 0;
-            //$set    = $this->repository->getCollectionOfTypes($this->transactionTypes, $offset, $pagesize);
             $paginator = $this->repository->getJournals($this->transactionTypes, $page, $pagesize);
             $set       = $paginator->getCollection();
 

@@ -70,9 +70,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         Log::debug('Build new report.');
         // build a balance header:
         $header           = new BalanceHeader;
-        $budgets          = $this->budgetRepository->getBudgets();
         $limitRepetitions = $this->budgetRepository->getAllBudgetLimitRepetitions($start, $end);
-        $spentData        = $this->budgetRepository->journalsInPeriod($budgets, $accounts, $start, $end);
         foreach ($accounts as $account) {
             $header->addAccount($account);
             Log::debug('Add account #' . $account->id . ' to header.');

@@ -205,8 +205,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         // get them:
         $journals = $journalQuery->get(TransactionJournal::queryFields());
 
-        //Log::debug('journalsInPeriod journal count is ' . $journals->count());
-
         // then get transactions themselves.
         $transactionQuery = $this->user->transactionjournals()
                                        ->expanded()

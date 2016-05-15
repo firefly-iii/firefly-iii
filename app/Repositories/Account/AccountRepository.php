@@ -82,7 +82,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        Log::debug('earnedinperiod');
         $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $sum   = bcmul($this->sumInPeriod($accounts, $types, $start, $end), '-1');
 
@@ -438,7 +437,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        Log::debug('spentinperiod');
         $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $sum   = $this->sumInPeriod($accounts, $types, $start, $end);
 
@@ -757,7 +755,6 @@ class AccountRepository implements AccountRepositoryInterface
         $second = strval($query->sum('t.amount'));
         $sum    = bcadd($first, $second);
 
-        Log::debug('SumInPeriodData ', ['accounts' => $accountIds, 'first' => $first, 'second' => $second, 'sum' => $sum]);
 
         return $sum;
     }

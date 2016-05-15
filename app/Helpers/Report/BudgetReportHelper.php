@@ -54,7 +54,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 // spent for budget in time range:
                 $spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
 
-                // $spent = array_sum($totalSpent);
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
                     $budgetLine->setBudget($budget);

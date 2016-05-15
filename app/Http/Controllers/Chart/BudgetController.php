@@ -9,7 +9,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -110,7 +109,7 @@ class BudgetController extends Controller
         $cache->addProperty($repetition->id);
 
         if ($cache->has()) {
-             return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         $entries          = new Collection;
@@ -135,11 +134,9 @@ class BudgetController extends Controller
      *
      * @param BudgetRepositoryInterface $repository
      *
-     * @param ARI                       $accountRepository
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(BudgetRepositoryInterface $repository, ARI $accountRepository)
+    public function frontpage(BudgetRepositoryInterface $repository)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());

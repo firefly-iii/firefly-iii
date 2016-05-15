@@ -113,13 +113,11 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag                    $tag
-     *
-     * @param TagRepositoryInterface $repository
+     * @param Tag $tag
      *
      * @return \Illuminate\View\View
      */
-    public function edit(Tag $tag, TagRepositoryInterface $repository)
+    public function edit(Tag $tag)
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';

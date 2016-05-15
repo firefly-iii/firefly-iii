@@ -151,10 +151,6 @@ class HomeController extends Controller
     {
         // these routes are not relevant for the help pages:
         $ignore = [
-            //            'logout', 'register', 'bills.rescan', 'attachments.download', 'attachments.preview',
-            //            'budgets.income', 'csv.download-config', 'currency.default', 'export.status', 'export.download',
-            //            'json.', 'help.', 'piggy-banks.addMoney', 'piggy-banks.removeMoney', 'rules.rule.up', 'rules.rule.down',
-            //            'rules.rule-group.up', 'rules.rule-group.down', 'debugbar',
         ];
         $routes = Route::getRoutes();
         /** @var \Illuminate\Routing\Route $route */

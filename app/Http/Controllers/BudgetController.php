@@ -180,8 +180,8 @@ class BudgetController extends Controller
 
         /**
          * Do some cleanup:
+         * TODO reimplement the deletion of budget_limits and limit_repetitions with amount 0
          */
-        // $repository->cleanupBudgets();
 
         // loop the budgets:
         /** @var Budget $budget */

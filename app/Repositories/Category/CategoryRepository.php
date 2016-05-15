@@ -198,9 +198,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         );
         // create paginator
         $offset = ($page - 1) * $pageSize;
-        Log::debug('Page is ' . $page);
-        Log::debug('Offset is ' . $offset);
-        Log::debug('pagesize is ' . $pageSize);
         $subSet    = $complete->slice($offset, $pageSize)->all();
         $paginator = new LengthAwarePaginator($subSet, $complete->count(), $pageSize, $page);
 
@@ -343,7 +340,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         /** @var TransactionJournal $first */
         $lastJournalQuery = $category->transactionjournals()->orderBy('date', 'DESC');
-        Log::debug('lastUseDate ' . $category->name . ' (' . $category->id . ')');
 
         if ($accounts->count() > 0) {
             // filter journals:
@@ -356,7 +352,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         if ($lastJournal) {
             $last = $lastJournal->date;
-            Log::debug('last is now ' . $last);
         }
 
         // check transactions:
@@ -371,8 +366,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         $lastTransaction = $lastTransactionQuery->first(['transaction_journals.*']);
-        if (!is_null($lastTransaction)) {
-        }
         if (!is_null($lastTransaction) && ((!is_null($last) && $lastTransaction->date < $last) || is_null($last))) {
             $last = new Carbon($lastTransaction->date);
         }

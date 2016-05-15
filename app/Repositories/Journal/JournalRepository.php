@@ -122,11 +122,9 @@ class JournalRepository implements JournalRepositoryInterface
         $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         if (is_null($entry)) {
-            Log::debug('Could not find first transaction journal.');
 
             return new TransactionJournal;
         }
-        Log::debug('Found first journal: ', ['date' => $entry->date->format('Y-m-d')]);
 
         return $entry;
     }
@@ -145,8 +143,7 @@ class JournalRepository implements JournalRepositoryInterface
         if (count($types) > 0) {
             $query->transactionTypes($types);
         }
-        $count = $this->user->transactionJournals()->transactionTypes($types)->count();
-        Log::debug('getJournals() count: ' . $count);
+        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
         $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
@@ -205,7 +202,6 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return Collection
-     * @throws FireflyException
      */
     public function getTransactions(TransactionJournal $journal): Collection
     {
@@ -231,8 +227,8 @@ class JournalRepository implements JournalRepositoryInterface
 
                 /** @var Collection $transactions */
                 $transactions = $journal->transactions()
-                    ->groupBy('transactions.id')
-                    ->orderBy('transactions.id')->get(
+                                        ->groupBy('transactions.id')
+                                        ->orderBy('transactions.id')->get(
                         ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
                     );
                 break;
@@ -252,10 +248,6 @@ class JournalRepository implements JournalRepositoryInterface
                         ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
                     );
                 $transactions->push($final);
-                break;
-            default:
-
-                throw new FireflyException('Cannot handle ' . $journal->transactionType->type);
                 break;
         }
         // foreach do balance thing
@@ -469,27 +461,22 @@ class JournalRepository implements JournalRepositoryInterface
     {
         $sourceAccount      = null;
         $destinationAccount = null;
-        Log::debug('Now in storeAccounts()');
         switch ($type->type) {
             case TransactionType::WITHDRAWAL:
-                Log::debug('Now in storeAccounts()::withdrawal');
                 list($sourceAccount, $destinationAccount) = $this->storeWithdrawalAccounts($data);
                 break;
 
             case TransactionType::DEPOSIT:
-                Log::debug('Now in storeAccounts()::deposit');
                 list($sourceAccount, $destinationAccount) = $this->storeDepositAccounts($data);
 
                 break;
             case TransactionType::TRANSFER:
-                Log::debug('Now in storeAccounts()::transfer');
                 $sourceAccount      = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first();
                 $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first();
                 break;
             default:
                 throw new FireflyException('Did not recognise transaction type.');
         }
-        Log::debug('Now in storeAccounts(), continued.');
 
         if (is_null($destinationAccount)) {
             Log::error('"destination"-account is null, so we cannot continue!', ['data' => $data]);
@@ -540,10 +527,8 @@ class JournalRepository implements JournalRepositoryInterface
     private function storeWithdrawalAccounts(array $data): array
     {
         $sourceAccount = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first(['accounts.*']);
-        Log::debug('Now in storeWithdrawalAccounts() with ', ['name' => $data['destination_account_name'], 'len' => strlen($data['destination_account_name'])]);
 
         if (strlen($data['destination_account_name']) > 0) {
-            Log::debug('Now in storeWithdrawalAccounts()');
             $destinationType    = AccountType::where('type', 'Expense account')->first();
             $destinationAccount = Account::firstOrCreateEncrypted(
                 [
@@ -553,7 +538,6 @@ class JournalRepository implements JournalRepositoryInterface
                     'active'          => 1,
                 ]
             );
-            Log::debug('Errors: ', ['err' => $destinationAccount->getErrors()->toArray(), 'id' => $destinationAccount->id]);
 
             return [$sourceAccount, $destinationAccount];
         }
