@@ -4,7 +4,6 @@ php:
   - 7
 
 install:
-  - cp _development/phpunit.xml ./phpunit.xml
   - phpenv config-rm xdebug.ini
   - composer selfupdate
   - rm composer.lock
