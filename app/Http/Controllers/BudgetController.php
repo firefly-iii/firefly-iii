@@ -13,7 +13,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -193,7 +192,6 @@ class BudgetController extends Controller
             /** @var LimitRepetition $repetition */
             foreach ($allRepetitions as $repetition) {
                 if ($repetition->budget_id == $budget->id) {
-                    Log::debug('Repetition #' . $repetition->id . ' with budget #' . $repetition->budget_id . ' (current = ' . $budget->id . ')');
                     if ($repetition->budgetLimit->repeat_freq == $repeatFreq
                         && $repetition->startdate->format('Y-m-d') == $startAsString
                         && $repetition->enddate->format('Y-m-d') == $endAsString

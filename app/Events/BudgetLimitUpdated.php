@@ -14,7 +14,6 @@ namespace FireflyIII\Events;
 use Carbon\Carbon;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Queue\SerializesModels;
-use Log;
 
 /**
  * Class BudgetLimitUpdated
@@ -40,7 +39,6 @@ class BudgetLimitUpdated extends Event
      */
     public function __construct(BudgetLimit $budgetLimit, Carbon $end)
     {
-        Log::debug('Created new BudgetLimitUpdated.');
         //
         $this->budgetLimit = $budgetLimit;
         $this->end         = $end;

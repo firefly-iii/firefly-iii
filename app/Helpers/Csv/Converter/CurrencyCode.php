@@ -26,7 +26,7 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
 
             return $currency;
         }
-        
+
         $currency = $repository->findByCode($this->value);
 
 

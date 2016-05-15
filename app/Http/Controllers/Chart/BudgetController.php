@@ -12,7 +12,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -67,7 +66,6 @@ class BudgetController extends Controller
         $budgetCollection = new Collection([$budget]);
         $last             = Navigation::endOfX($last, $range, $final); // not to overshoot.
         $entries          = new Collection;
-        Log::debug('---- now at chart');
         while ($first < $last) {
 
             // periodspecific dates:
@@ -115,7 +113,6 @@ class BudgetController extends Controller
         $entries          = new Collection;
         $amount           = $repetition->amount;
         $budgetCollection = new Collection([$budget]);
-        Log::debug('amount starts ' . $amount);
         while ($start <= $end) {
             $spent  = $repository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount = bcadd($amount, $spent);

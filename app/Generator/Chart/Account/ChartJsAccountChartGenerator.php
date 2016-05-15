@@ -5,7 +5,6 @@ namespace FireflyIII\Generator\Chart\Account;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class ChartJsAccountChartGenerator
@@ -83,7 +82,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
      */
     public function single(Account $account, array $labels, array $dataSet): array
     {
-        $data     = [
+        $data = [
             'count'    => 1,
             'labels'   => $labels,
             'datasets' => [
@@ -93,6 +92,7 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
                 ],
             ],
         ];
+
         return $data;
     }
 

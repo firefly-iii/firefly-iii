@@ -19,7 +19,6 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class BudgetReportHelper
@@ -45,12 +44,10 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
-            Log::debug('Now at budget #' . $budget->id . ' (' . $budget->name . ')');
             $repetitions = $budget->limitrepetitions()->before($end)->after($start)->get();
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
-                Log::debug('Found zero repetitions.');
                 // spent for budget in time range:
                 $spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
 
@@ -63,7 +60,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 }
                 continue;
             }
-            Log::debug('Found ' . $repetitions->count() . ' repetitions.');
             // one or more repetitions for budget:
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
@@ -72,7 +68,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
                 $expenses = $repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
-                Log::debug('Spent in p. [' . $repetition->startdate->format('Y-m-d') . '] to [' . $repetition->enddate->format('Y-m-d') . '] is ' . $expenses);
 
                 $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
                 $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';

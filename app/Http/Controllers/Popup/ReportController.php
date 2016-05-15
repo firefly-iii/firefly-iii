@@ -226,7 +226,7 @@ class ReportController extends Controller
             }
         );
 
-        $view       = view('popup.report.income-entry', compact('journals', 'account'))->render();
+        $view = view('popup.report.income-entry', compact('journals', 'account'))->render();
 
         return $view;
     }

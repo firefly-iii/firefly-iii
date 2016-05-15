@@ -311,12 +311,10 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
 
-        Log::debug('Created importer');
         /** @var Importer $importer */
         $importer = app(Importer::class);
         $importer->setData($this->data);
         $importer->run();
-        Log::debug('Done importing!');
 
         $rows     = $importer->getRows();
         $errors   = $importer->getErrors();

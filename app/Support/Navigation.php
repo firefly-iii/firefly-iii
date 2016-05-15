@@ -5,7 +5,6 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use Log;
 
 /**
  * Class Navigation

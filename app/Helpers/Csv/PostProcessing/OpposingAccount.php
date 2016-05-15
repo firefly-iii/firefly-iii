@@ -5,7 +5,6 @@ namespace FireflyIII\Helpers\Csv\PostProcessing;
 use Auth;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Log;
 use Validator;
 
 /**
@@ -65,7 +64,6 @@ class OpposingAccount implements PostProcessorInterface
         $validator = Validator::make($check, $rules);
         if (is_string($iban) && strlen($iban) > 0 && !$validator->fails()) {
 
-            Log::debug('OpposingAccountPostProcession: opposing-account-iban is a string (******).');
             $this->data['opposing-account-object'] = $this->parseIbanString();
 
             return $this->data;
@@ -80,13 +78,11 @@ class OpposingAccount implements PostProcessorInterface
     protected function checkIdNameObject()
     {
         if ($this->data['opposing-account-id'] instanceof Account) { // first priority. try to find the account based on ID, if any
-            Log::debug('OpposingAccountPostProcession: opposing-account-id is an Account.');
             $this->data['opposing-account-object'] = $this->data['opposing-account-id'];
 
             return $this->data;
         }
         if ($this->data['opposing-account-iban'] instanceof Account) { // second: try to find the account based on IBAN, if any.
-            Log::debug('OpposingAccountPostProcession: opposing-account-iban is an Account.');
             $this->data['opposing-account-object'] = $this->data['opposing-account-iban'];
 
             return $this->data;
@@ -101,7 +97,6 @@ class OpposingAccount implements PostProcessorInterface
     protected function checkNameString()
     {
         if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
-            Log::debug('OpposingAccountPostProcession: opposing-account-name is an Account.');
             $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
 
             return $this->data;
@@ -135,7 +130,6 @@ class OpposingAccount implements PostProcessorInterface
                 'active'          => true,
             ]
         );
-        Log::debug('OpposingAccountPostProcession: created a new account.');
 
         return $account;
     }
@@ -169,7 +163,6 @@ class OpposingAccount implements PostProcessorInterface
         $accounts = Auth::user()->accounts()->get();
         foreach ($accounts as $entry) {
             if ($entry->iban == $this->data['opposing-account-iban']) {
-                Log::debug('OpposingAccountPostProcession: opposing-account-iban matches an Account.');
 
                 return $entry;
             }
@@ -189,7 +182,6 @@ class OpposingAccount implements PostProcessorInterface
         $accounts    = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
         foreach ($accounts as $entry) {
             if ($entry->name == $this->data['opposing-account-name']) {
-                Log::debug('Found an account with this name (#' . $entry->id . ': ******)');
 
                 return $entry;
             }

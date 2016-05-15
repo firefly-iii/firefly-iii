@@ -4,7 +4,6 @@ namespace FireflyIII\Helpers\Help;
 
 use Cache;
 use League\CommonMark\CommonMarkConverter;
-use Log;
 use Requests;
 use Route;
 
@@ -44,11 +43,9 @@ class Help implements HelpInterface
             'title' => $title,
         ];
 
-        Log::debug('Going to get from Github: ' . $uri);
 
         $result = Requests::get($uri);
 
-        Log::debug('Status code was ' . $result->status_code . '.');
 
         if ($result->status_code === 200) {
             $content['text'] = $result->body;
@@ -56,7 +53,6 @@ class Help implements HelpInterface
 
 
         if (strlen(trim($content['text'])) == 0) {
-            Log::debug('No actual help text for this route (even though a page was found).');
             $content['text'] = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
         }
         $converter       = new CommonMarkConverter();

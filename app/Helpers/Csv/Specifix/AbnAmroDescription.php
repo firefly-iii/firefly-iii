@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Specifix;
 
-use Log;
-
 /**
  * Parses the description from txt files for ABN AMRO bank accounts.
  *
@@ -71,7 +69,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted in ABN AMRO format
         if (preg_match('/ABN AMRO.{24} (.*)/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as costs from ABN AMRO itself.');
 
             $this->data['opposing-account-name'] = 'ABN AMRO';
             $this->data['description']           = $matches[1];
@@ -91,7 +88,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted in GEA/BEA format
         if (preg_match('/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as GEA or BEA format.');
 
             // description and opposing account will be the same.
             $this->data['opposing-account-name'] = $matches[4];
@@ -116,7 +112,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted as a SEPA plain description
         if (preg_match('/^SEPA(.{28})/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as SEPA plain description.');
 
             $type           = $matches[1];
             $reference      = '';
@@ -130,7 +125,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
                 foreach ($matches as $match) {
                     $key   = $match[1];
                     $value = trim($match[2]);
-                    Log::debug('SEPA: ' . $key . ' - ' . $value);
                     switch (strtoupper($key)) {
                         case 'OMSCHRIJVING':
                             $newDescription = $value;
@@ -173,7 +167,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted in TRTP format
         if (preg_match_all('!\/([A-Z]{3,4})\/([^/]*)!', $this->data['description'], $matches, PREG_SET_ORDER)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as TRTP format.');
 
             $type           = '';
             $name           = '';

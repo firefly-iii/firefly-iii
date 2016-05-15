@@ -10,7 +10,6 @@
 namespace FireflyIII\Crud\Split;
 
 
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 

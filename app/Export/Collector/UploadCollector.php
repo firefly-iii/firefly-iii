@@ -53,7 +53,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         // grab upload directory.
         $files = $this->uploadDisk->files();
-        Log::debug('Found ' . count($files) . ' files in the upload directory.');
 
         foreach ($files as $entry) {
             $this->processOldUpload($entry);
@@ -86,11 +85,9 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         $len = strlen($this->expected);
         if (substr($entry, 0, $len) === $this->expected) {
-            Log::debug($entry . ' is part of this users original uploads.');
 
             return true;
         }
-        Log::debug($entry . ' is not part of this users original uploads.');
 
         return false;
     }
@@ -113,7 +110,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
             // continue with file:
             $date = $this->getOriginalUploadDate($entry);
             $file = $this->job->key . '-Old CSV import dated ' . $date . '.csv';
-            Log::debug('Will put "' . $file . '" in the zip file.');
             $this->exportDisk->put($file, $content);
             $this->getFiles()->push($file);
         }

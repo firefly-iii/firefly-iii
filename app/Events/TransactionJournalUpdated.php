@@ -5,7 +5,6 @@ namespace FireflyIII\Events;
 
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
-use Log;
 
 /**
  * Class TransactionJournalUpdated
@@ -26,7 +25,6 @@ class TransactionJournalUpdated extends Event
      */
     public function __construct(TransactionJournal $journal)
     {
-        Log::debug('Created new TransactionJournalUpdated');
         //
         $this->journal = $journal;
     }

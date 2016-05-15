@@ -49,7 +49,6 @@ class HelpController extends Controller
             return Response::json($content);
         }
 
-        Log::debug('Will get help from Github for language "' . $language . '" and route "' . $route . '".');
         $content = $help->getFromGithub($language, $route);
 
         $help->putInCache($route, $language, $content);

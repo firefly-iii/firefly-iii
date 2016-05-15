@@ -19,7 +19,6 @@ use FireflyIII\Rules\Factory\ActionFactory;
 use FireflyIII\Rules\Factory\TriggerFactory;
 use FireflyIII\Rules\Triggers\AbstractTrigger;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class Processor
@@ -138,13 +137,11 @@ final class Processor
         $triggered = $this->triggered();
         if ($triggered) {
             if ($this->actions->count() > 0) {
-                Log::debug('Journal #' . $journal->id . ' triggered, actions executed.');
                 $this->actions();
             }
 
             return true;
         }
-        Log::debug('Journal #' . $journal->id . ' not triggered, did nothing.');
 
         return false;
 
@@ -195,7 +192,6 @@ final class Processor
             }
 
         }
-        Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
         return ($hitTriggers == $foundTriggers && $foundTriggers > 0);
 

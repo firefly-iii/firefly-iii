@@ -19,7 +19,6 @@ use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
-use Log;
 use Preferences;
 use Response;
 use Storage;
@@ -62,7 +61,6 @@ class ExportController extends Controller
 
 
         $job->change('export_downloaded');
-        Log::debug('Will send user file "' . $file . '".');
 
         return response($disk->get($file), 200)
             ->header('Content-Description', 'File Transfer')

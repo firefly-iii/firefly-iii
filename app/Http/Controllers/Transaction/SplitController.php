@@ -19,7 +19,6 @@ use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\Request;
-use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -198,7 +197,6 @@ class SplitController extends Controller
     private function arrayFromJournal(Request $request, TransactionJournal $journal): array
     {
         if (Session::has('_old_input')) {
-            Log::debug('Old input: ', session('_old_input'));
         }
         $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
         $destinationAccounts = TransactionJournal::destinationAccountList($journal);

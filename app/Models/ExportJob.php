@@ -12,7 +12,6 @@ namespace FireflyIII\Models;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -58,7 +57,6 @@ class ExportJob extends Model
      */
     public function change($status)
     {
-        Log::debug('Job ' . $this->key . ' to status "' . $status . '".');
         $this->status = $status;
         $this->save();
     }

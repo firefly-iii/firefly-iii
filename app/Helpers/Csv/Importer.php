@@ -108,7 +108,6 @@ class Importer
 
         foreach ($this->data->getReader() as $index => $row) {
             if ($this->parseRow($index)) {
-                Log::debug('--- Importing row ' . $index);
                 $this->rows++;
                 $result = $this->importRow($row);
                 if (!($result instanceof TransactionJournal)) {
@@ -119,7 +118,6 @@ class Importer
                     $this->journals->push($result);
                     event(new TransactionJournalStored($result, 0));
                 }
-                Log::debug('---');
             }
         }
     }
@@ -221,7 +219,6 @@ class Importer
             $class = config('csv.roles.' . $role . '.converter');
             $field = config('csv.roles.' . $role . '.field');
 
-            Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
 
             // here would be the place where preprocessors would fire.
 
@@ -275,7 +272,6 @@ class Importer
             if ($specifix->getProcessorType() == SpecifixInterface::POST_PROCESSOR) {
                 $specifix->setData($this->importData);
                 $specifix->setRow($this->importRow);
-                Log::debug('Now post-process specifix named ' . $className . ':');
                 $this->importData = $specifix->fix();
             }
         }
@@ -287,7 +283,6 @@ class Importer
             $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
             $array         = $this->importData ?? [];
             $postProcessor->setData($array);
-            Log::debug('Now post-process processor named ' . $className . ':');
             $this->importData = $postProcessor->process();
         }
 

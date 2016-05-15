@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Log;
 use Validator;
 
 /**
@@ -207,7 +206,6 @@ class AssetAccount implements PostProcessorInterface
         $accounts    = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
         foreach ($accounts as $entry) {
             if ($entry->name == $this->data['asset-account-name']) {
-                Log::debug('Found an asset account with this name (#' . $entry->id . ': ******)');
 
                 return $entry;
             }
@@ -239,7 +237,6 @@ class AssetAccount implements PostProcessorInterface
         foreach ($accounts as $entry) {
             $metaFieldValue = $entry->getMeta('accountNumber');
             if ($metaFieldValue === $accountNumber && $metaFieldValue !== '') {
-                Log::debug('Found an asset account with this account number (#' . $entry->id . ')');
 
                 return $entry;
             }

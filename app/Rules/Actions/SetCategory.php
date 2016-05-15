@@ -15,7 +15,6 @@ use Auth;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class SetCategory
@@ -47,7 +46,6 @@ class SetCategory implements ActionInterface
     {
         $name     = $this->action->action_value;
         $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => Auth::user()->id]);
-        Log::debug('Will set category "' . $name . '" (#' . $category->id . ') on journal #' . $journal->id . '.');
         $journal->categories()->sync([$category->id]);
 
         return true;

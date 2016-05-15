@@ -53,7 +53,7 @@ class AccountController extends Controller
         $cache->addProperty('expenseAccounts');
         $cache->addProperty('accounts');
         if ($cache->has()) {
-             return Response::json($cache->get());
+            return Response::json($cache->get());
         }
         $accounts = $repository->getAccountsByType(['Expense account', 'Beneficiary account']);
 
@@ -105,7 +105,7 @@ class AccountController extends Controller
         $cache->addProperty('frontpage');
         $cache->addProperty('accounts');
         if ($cache->has()) {
-             return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         $frontPage = Preferences::get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
@@ -151,7 +151,7 @@ class AccountController extends Controller
         $cache->addProperty('default');
         $cache->addProperty($accounts);
         if ($cache->has()) {
-             return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         foreach ($accounts as $account) {
@@ -196,7 +196,7 @@ class AccountController extends Controller
         $cache->addProperty('single');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-             return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         $format    = (string)trans('config.month_and_day');

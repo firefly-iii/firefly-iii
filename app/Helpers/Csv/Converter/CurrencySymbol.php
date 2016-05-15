@@ -26,7 +26,7 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
 
             return $currency;
         }
-        
+
         $currency = $repository->findBySymbol($this->value);
 
 

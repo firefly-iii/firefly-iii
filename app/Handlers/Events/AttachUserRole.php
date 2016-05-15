@@ -13,7 +13,6 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UserRegistration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Log;
 
 /**
  * Class AttachUserRole
@@ -38,13 +37,11 @@ class AttachUserRole
      */
     public function handle(UserRegistration $event)
     {
-        Log::debug('Trigger attachuserrole');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
 
         // first user ever?
         if ($repository->count() == 1) {
-            Log::debug('Will attach role.');
             $repository->attachRole($event->user, 'owner');
         }
     }

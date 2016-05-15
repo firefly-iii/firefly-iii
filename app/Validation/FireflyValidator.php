@@ -19,7 +19,6 @@ use FireflyIII\User;
 use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Log;
 use Session;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -135,7 +134,6 @@ class FireflyValidator extends Validator
             $value = $this->data['rule-action-value'][$index] ?? false;
             switch ($name) {
                 default:
-                    Log::debug(' (' . $attribute . ') (index:' . $index . ') Name is "' . $name . '" so no action is taken.');
 
                     return true;
                 case 'set_budget':

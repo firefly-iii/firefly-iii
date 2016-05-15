@@ -19,7 +19,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
-use Log;
 use Storage;
 use ZipArchive;
 
@@ -97,14 +96,6 @@ class Processor
         $repository     = app(JournalRepositoryInterface::class);
         $this->journals = $repository->getJournalsInRange($this->accounts, $this->settings['startDate'], $this->settings['endDate']);
 
-        Log::debug(
-            'Collected ' .
-            $this->journals->count() . ' journals (between ' .
-            $this->settings['startDate']->format('Y-m-d') . ' and ' .
-            $this->settings['endDate']->format('Y-m-d')
-            . ').'
-        );
-
         return true;
     }
 
@@ -133,7 +124,6 @@ class Processor
             $this->exportEntries->push(Entry::fromJournal($journal));
             $count++;
         }
-        Log::debug('Converted ' . $count . ' journals to "Entry" objects.');
 
         return true;
     }
@@ -158,7 +148,6 @@ class Processor
         $zip      = new ZipArchive;
         $file     = $this->job->key . '.zip';
         $fullPath = storage_path('export') . '/' . $file;
-        Log::debug('Will create zip file at ' . $fullPath);
 
         if ($zip->open($fullPath, ZipArchive::CREATE) !== true) {
             throw new FireflyException('Cannot store zip file.');
@@ -170,7 +159,6 @@ class Processor
             $zipFileName = str_replace($this->job->key . '-', '', $entry);
             $result      = $zip->addFromString($zipFileName, $disk->get($entry));
             if (!$result) {
-                Log::error('Could not add "' . $entry . '" into zip file as "' . $zipFileName . '".');
             }
         }
 
@@ -178,7 +166,6 @@ class Processor
 
         // delete the files:
         $this->deleteFiles($disk);
-        Log::debug('Done!');
 
         return true;
     }
@@ -190,11 +177,9 @@ class Processor
     {
         $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
         $exporter      = app($exporterClass, [$this->job]);
-        Log::debug('Going to export ' . $this->exportEntries->count() . ' export entries into ' . $this->exportFormat . ' format.');
         $exporter->setEntries($this->exportEntries);
         $exporter->run();
         $this->files->push($exporter->getFileName());
-        Log::debug('Added "' . $exporter->getFileName() . '" to the list of files to include in the zip.');
 
         return true;
     }
@@ -212,9 +197,7 @@ class Processor
      */
     private function deleteFiles(FilesystemAdapter $disk)
     {
-        Log::debug('Class of $disk: ' . get_class($disk));
         foreach ($this->getFiles() as $file) {
-            Log::debug('Will now delete file "' . $file . '".');
             $disk->delete($file);
         }
     }

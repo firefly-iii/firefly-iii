@@ -78,6 +78,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
                 $exportJob->key    = Str::random(12);
                 $exportJob->status = 'export_status_never_started';
                 $exportJob->save();
+
                 // breaks the loop:
 
                 return $exportJob;

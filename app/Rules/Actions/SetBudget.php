@@ -15,7 +15,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use Log;
 
 /**
  * Class SetBudget
@@ -55,12 +54,9 @@ class SetBudget implements ActionInterface
             }
         )->first();
         if (!is_null($budget)) {
-            Log::debug('Will set budget "' . $search . '" (#' . $budget->id . ') on journal #' . $journal->id . '.');
             $journal->budgets()->sync([$budget->id]);
-        } else {
-            Log::debug('Could not find budget "' . $search . '". Failed.');
         }
-
+        
         return true;
     }
 }

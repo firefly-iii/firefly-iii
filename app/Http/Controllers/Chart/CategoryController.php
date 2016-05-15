@@ -11,7 +11,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -69,10 +68,9 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            Log::debug('Searching for expenses from ' . $start . ' to ' . $currentEnd);
-            $spent  = $repository->spentInPeriod($categoryCollection, new Collection, $start, $currentEnd);
-            $earned = $repository->earnedInPeriod($categoryCollection, new Collection, $start, $currentEnd);
-            $date   = Navigation::periodShow($start, $range);
+            $spent      = $repository->spentInPeriod($categoryCollection, new Collection, $start, $currentEnd);
+            $earned     = $repository->earnedInPeriod($categoryCollection, new Collection, $start, $currentEnd);
+            $date       = Navigation::periodShow($start, $range);
             $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
         }
@@ -126,7 +124,6 @@ class CategoryController extends Controller
         /** @var Category $category */
         foreach ($categories as $category) {
             $spent = $repository->spentInPeriod(new Collection([$category]), new Collection, $start, $end);
-            Log::debug('Spent for ' . $category->name . ' is ' . $spent . ' (' . bccomp($spent, '0') . ')');
             if (bccomp($spent, '0') === -1) {
                 $category->spent = $spent;
                 $set->push($category);
@@ -255,17 +252,13 @@ class CategoryController extends Controller
         $cache->addProperty('specific-period');
 
         if ($cache->has()) {
-             return $cache->get();
+            return $cache->get();
         }
         $entries = new Collection;
-        Log::debug('Start is ' . $start . ' en end is ' . $end);
         while ($start <= $end) {
-            Log::debug('Now at ' . $start);
-            $spent = $repository->spentInPeriod($categoryCollection, new Collection, $start, $start);
-            Log::debug('spent: ' . $spent);
+            $spent  = $repository->spentInPeriod($categoryCollection, new Collection, $start, $start);
             $earned = $repository->earnedInPeriod($categoryCollection, new Collection, $start, $start);
-            Log::debug('earned: ' . $earned);
-            $date = Navigation::periodShow($start, '1D');
+            $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
         }

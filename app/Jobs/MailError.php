@@ -45,7 +45,6 @@ class MailError extends Job implements ShouldQueue
         $this->ipAddress   = $ipAddress;
         $this->exception   = $exceptionData;
 
-        Log::debug('In mail job constructor for error handler.');
         $debug = $exceptionData;
         unset($debug['stackTrace']);
         Log::error('Exception is: ' . json_encode($debug));
@@ -58,7 +57,6 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Start of handle()');
         if ($this->attempts() < 3) {
             // mail?
             try {
@@ -82,7 +80,6 @@ class MailError extends Job implements ShouldQueue
             } catch (ErrorException $e) {
                 Log::error('ErrorException ' . $e->getMessage());
             }
-            Log::debug('Successfully handled error.');
         }
     }
 }

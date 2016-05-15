@@ -10,19 +10,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Category
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property \Carbon\Carbon                                                     $deleted_at
- * @property string                                                             $name
- * @property integer                                                            $user_id
- * @property boolean                                                            $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                              $user
- * @property string                                                             $dateFormatted
- * @property string                                                              $spent
- * @property \Carbon\Carbon                                                     $lastActivity
- * @property string                                                             $type
+ * @property integer                                                                        $id
+ * @property \Carbon\Carbon                                                                 $created_at
+ * @property \Carbon\Carbon                                                                 $updated_at
+ * @property \Carbon\Carbon                                                                 $deleted_at
+ * @property string                                                                         $name
+ * @property integer                                                                        $user_id
+ * @property boolean                                                                        $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]             $transactionjournals
+ * @property-read \FireflyIII\User                                                          $user
+ * @property string                                                                         $dateFormatted
+ * @property string                                                                         $spent
+ * @property \Carbon\Carbon                                                                 $lastActivity
+ * @property string                                                                         $type
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
@@ -117,6 +117,7 @@ class Category extends Model
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
     }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

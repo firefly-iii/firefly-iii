@@ -12,7 +12,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -100,7 +99,6 @@ class ReportController extends Controller
 
         // lower threshold
         if ($start < session('first')) {
-            Log::debug('Start is ' . $start . ' but session first is ' . session('first'));
             $start = session('first');
         }
 
@@ -167,7 +165,7 @@ class ReportController extends Controller
              * Is there even activity on this account between the requested dates?
              */
             if ($start->between($first, $last) || $end->between($first, $last)) {
-                $exists = true;
+                $exists   = true;
                 $journals = $repos->journalsInPeriod($accounts, [], $start, $end);
 
             }

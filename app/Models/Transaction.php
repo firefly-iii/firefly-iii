@@ -122,7 +122,7 @@ class Transaction extends Model
     /**
      *
      * @param Builder $query
-     * @param Carbon          $date
+     * @param Carbon  $date
      *
      */
     public function scopeBefore(Builder $query, Carbon $date)

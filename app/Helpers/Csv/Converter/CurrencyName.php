@@ -27,7 +27,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
             return $currency;
         }
         $currency = $repository->findByName($this->value);
-        
+
 
         return $currency;
     }

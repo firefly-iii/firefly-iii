@@ -73,10 +73,8 @@ class UserConfirmation
      */
     private function doConfirm(User $user, string $ipAddress)
     {
-        Log::debug('Trigger UserConfirmation::doConfirm');
         $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
         if ($confirmAccount === false) {
-            Log::debug('Confirm account is false, so user will be auto-confirmed.');
             Preferences::setForUser($user, 'user_confirmed', true);
             Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
             Preferences::mark();
@@ -90,7 +88,6 @@ class UserConfirmation
         Preferences::setForUser($user, 'user_confirmed_last_mail', time());
         Preferences::setForUser($user, 'user_confirmed_code', $code);
         try {
-            Log::debug('Now in try block for user email message thing to ' . $email . '.');
             Mail::send(
                 ['emails.confirm-account-html', 'emails.confirm-account'], ['route' => $route, 'ip' => $ipAddress],
                 function (Message $message) use ($email) {
@@ -100,10 +97,8 @@ class UserConfirmation
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
         } catch (Exception $e) {
-            Log::debug('Caught general exception.');
             Log::error($e->getMessage());
         }
-        Log::debug('Finished mail handling for activation.');
 
         return;
     }

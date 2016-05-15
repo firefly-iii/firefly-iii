@@ -64,7 +64,7 @@ class AccountReportHelper implements AccountReportHelperInterface
                 return $account->id == $entry->id;
             }
         );
-        
+
         if (!is_null($currentEnd->first())) {
             $account->endBalance = $currentEnd->first()->balance;
         }
