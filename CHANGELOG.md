@@ -5,6 +5,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+[3.9.0]
+### Added
+- @zjean has added code that allows you to force "https://"-URL's.
+- @tonicospinelli has added Portuguese (Brazil) translations.
+- Firefly III supports the *splitting* of transactions:
+  - A withdrawal (expense) can be split into multiple sub-transactions (with multiple destinations)
+  - Likewise for deposits (incomes). You can set multiple sources.
+  - Likewise for transfers.
+
+### Changed
+- Update a lot of libraries.
+- Big improvement to test data generation.
+- Cleaned up many repositories.
+
+### Removed
+- Front page boxes will no longer respond to credit card bills.
+
+### Fixed
+- Many bugs
 
 ## [3.8.4] - 2016-04-24
 ### Added

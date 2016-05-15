@@ -308,7 +308,7 @@ class CategoryController extends Controller
         $cache->addProperty('specific-period');
 
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
         $entries = new Collection;
         Log::debug('Start is ' . $start . ' en end is ' . $end);

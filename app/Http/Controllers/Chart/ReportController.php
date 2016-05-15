@@ -100,7 +100,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            // return Response::json($cache->get());
+             return Response::json($cache->get());
         }
 
         // always per month.
