@@ -70,9 +70,6 @@
             {% if not hideCategory %}
                 <td class="hidden-xs">
                     {{ journalCategories(journal)|raw }}
-                    {% if journal.categories[0] %}
-                        <a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a>
-                    {% endif %}
                 </td>
             {% endif %}
         </tr>

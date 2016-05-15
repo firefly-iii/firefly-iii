@@ -11,7 +11,6 @@ use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class CategoryRepository
@@ -197,7 +196,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             }
         );
         // create paginator
-        $offset = ($page - 1) * $pageSize;
+        $offset    = ($page - 1) * $pageSize;
         $subSet    = $complete->slice($offset, $pageSize)->all();
         $paginator = new LengthAwarePaginator($subSet, $complete->count(), $pageSize, $page);
 
@@ -458,8 +457,13 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->distinct()
             ->transactionTypes($types)
             ->leftJoin(
-                'transactions as t', function (JoinClause $join) {
-                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            }
+            )
+            ->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
             }
             );
 
@@ -468,7 +472,9 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $query->whereIn('t.account_id', $accountIds);
+            $set        = join(', ', $accountIds);
+            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
+
         }
         if ($categories->count() > 0) {
             $categoryIds = $categories->pluck('id')->toArray();
@@ -477,7 +483,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         // that should do it:
-        $first = strval($query->sum('t.amount'));
+        $first = strval($query->sum('source.amount'));
 
         // then collection transactions (harder)
         $query = $this->user->transactions()
