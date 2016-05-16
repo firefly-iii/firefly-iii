@@ -74,7 +74,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         /** @var LimitRepetition $repetition */
         foreach ($limitRepetitions as $repetition) {
             $budget = $this->budgetRepository->find($repetition->budget_id);
-            $balance->addBalanceLine($this->createBalanceLine($budget, $repetition, $accounts));
+            $line   = $this->createBalanceLine($budget, $repetition, $accounts);
+            $balance->addBalanceLine($line);
         }
         $noBudgetLine       = $this->createNoBudgetLine($accounts, $start, $end);
         $coveredByTagLine   = $this->createTagsBalanceLine($accounts, $start, $end);

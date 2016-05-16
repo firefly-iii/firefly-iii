@@ -360,15 +360,22 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
+        $types = [TransactionType::WITHDRAWAL];
         $query = $this->user->transactionjournals()
                             ->distinct()
+                            ->transactionTypes($types)
                             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                             ->leftJoin(
-                                'transactions as t', function (JoinClause $join) {
-                                $join->on('t.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                                'transactions as source', function (JoinClause $join) {
+                                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
                             }
                             )
-                            ->leftJoin('budget_transaction', 't.id', '=', 'budget_transaction.transaction_id')
+                            ->leftJoin(
+                                'transactions as destination', function (JoinClause $join) {
+                                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+                            }
+                            )
+                            ->leftJoin('budget_transaction', 'source.id', '=', 'budget_transaction.transaction_id')
                             ->whereNull('budget_transaction_journal.id')
                             ->whereNull('budget_transaction.id')
                             ->before($end)
@@ -377,9 +384,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
 
-            $query->whereIn('t.account_id', $accountIds);
+            $set = join(', ', $accountIds);
+            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
         }
-        $sum = strval($query->sum('t.amount'));
+        $sum = strval($query->sum('source.amount'));
 
         return $sum;
     }
