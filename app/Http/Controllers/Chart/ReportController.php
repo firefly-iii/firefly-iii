@@ -270,8 +270,8 @@ class ReportController extends Controller
         while ($start < $end) {
             // total income and total expenses:
             $date       = $start->format('Y-m');
-            $incomeSum  = isset($earned[$date]) ? $earned[$date] * -1 : 0;
-            $expenseSum = isset($spent[$date]) ? $spent[$date] * -1 : 0;
+            $incomeSum  = isset($earned[$date]) ? $earned[$date] : 0;
+            $expenseSum = isset($spent[$date]) ? $spent[$date] : 0;
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addMonth();
@@ -297,8 +297,8 @@ class ReportController extends Controller
         $count   = 0;
         while ($start < $end) {
             $date           = $start->format('Y-m');
-            $currentIncome  = $earned[$date] ?? '0';
-            $currentExpense = $spent[$date] ??'0';
+            $currentIncome  = isset($earned[$date]) ? $earned[$date] : 0;
+            $currentExpense = isset($spent[$date]) ? $spent[$date] : 0;
             $income         = bcadd($income, $currentIncome);
             $expense        = bcadd($expense, $currentExpense);
 

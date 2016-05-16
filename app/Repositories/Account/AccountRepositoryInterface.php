@@ -108,8 +108,23 @@ interface AccountRepositoryInterface
     public function getSavingsAccounts(Carbon $start, Carbon $end): Collection;
 
     /**
+     * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
+     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
+     * than made by journalsInPeriod itself.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountRepositoryInterface::journalsInPeriod
+     *
+     * @return Collection
+     */
+    public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /**
      * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made to the given $accounts,
-     * as well as the transfers that move away to those $accounts. This is a slightly sharper selection
+     * as well as the transfers that move to to those $accounts. This is a slightly sharper selection
      * than made by journalsInPeriod itself.
      *
      * @param Collection $accounts
