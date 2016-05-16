@@ -168,7 +168,6 @@ class ReportController extends Controller
             $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
         }
 
-
         if ($start->diffInMonths($end) > 12) {
             // per year
             $data = $this->multiYearInOutSummarized($earnedArray, $spentArray, $start, $end);
@@ -195,7 +194,7 @@ class ReportController extends Controller
         while ($start < $end) {
 
             $incomeSum  = $this->pluckFromArray($start->year, $earned);
-            $expenseSum = $this->pluckFromArray($start->year, $spent) * -1;
+            $expenseSum = $this->pluckFromArray($start->year, $spent);
 
             $entries->push([clone $start, $incomeSum, $expenseSum]);
             $start->addYear();
@@ -222,7 +221,7 @@ class ReportController extends Controller
         while ($start < $end) {
 
             $currentIncome  = $this->pluckFromArray($start->year, $earned);
-            $currentExpense = bcmul($this->pluckFromArray($start->year, $spent), '-1');
+            $currentExpense = $this->pluckFromArray($start->year, $spent);
             $income         = bcadd($income, $currentIncome);
             $expense        = bcadd($expense, $currentExpense);
 
