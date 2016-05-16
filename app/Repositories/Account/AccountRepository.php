@@ -524,8 +524,7 @@ class AccountRepository implements AccountRepositoryInterface
         $sum     = '0';
         foreach ($incomes as $entry) {
             $amount = TransactionJournal::amountPositive($entry);
-            Log::debug('spentInPeriod amount: ' . $amount);
-            $sum = bcadd($sum, $amount);
+            $sum    = bcadd($sum, $amount);
         }
 
         return $sum;

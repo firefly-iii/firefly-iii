@@ -23,6 +23,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class ReportHelper
@@ -92,7 +93,7 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setHit(true);
             }
 
-            if ($billLine->isHitAndActive()) {
+            if ($billLine->isActive()) {
                 $collection->addBill($billLine);
             }
         }
