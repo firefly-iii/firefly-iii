@@ -57,10 +57,16 @@
 
             </td>
             <td>
-                {% if not accountPerspective %}
+                {% if not accountPerspective and not budgetPerspective %}
                     {{ journal|formatJournal }}
-                    {% else %}
+                {% endif %}
+
+                {% if accountPerspective %}
                     {{ formatPerspective(journal, accountPerspective)|raw }}
+                {% endif %}
+
+                {% if budgetPerspective %}
+                    {{ formatBudgetPerspective(journal, budgetPerspective)|raw }}
                 {% endif %}
             </td>
             <td class="hidden-sm hidden-xs">

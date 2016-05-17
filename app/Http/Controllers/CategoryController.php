@@ -163,6 +163,8 @@ class CategoryController extends Controller
         $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
         $count        = $set->count();
         $subSet       = $set->splice($offset, $pageSize);
+        $subTitle     = $category->name;
+        $subTitleIcon = 'fa-bar-chart';
         $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('categories/show/' . $category->id);
 
@@ -187,7 +189,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             $entries = $cache->get();
 
-            return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+            return view('categories.show', compact('category', 'journals', 'entries', 'subTitleIcon', 'hideCategory', 'subTitle'));
         }
 
 

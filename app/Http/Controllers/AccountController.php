@@ -41,8 +41,6 @@ class AccountController extends Controller
      */
     public function create(string $what = 'asset')
     {
-
-
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
         Session::flash('preFilled', []);
@@ -190,16 +188,18 @@ class AccountController extends Controller
     public function show(ARI $repository, Account $account)
     {
         // show journals from current period only:
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page     = intval(Input::get('page'));
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $offset   = ($page - 1) * $pageSize;
-        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
-        $count    = $set->count();
-        $subSet   = $set->splice($offset, $pageSize);
-        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $subTitle     = $account->name;
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page         = intval(Input::get('page'));
+        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
+        $offset       = ($page - 1) * $pageSize;
+        $set          = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count        = $set->count();
+        $subSet       = $set->splice($offset, $pageSize);
+        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('accounts/show/' . $account->id);
 
         // grouped other months thing:

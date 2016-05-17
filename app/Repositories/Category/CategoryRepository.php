@@ -241,10 +241,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         // that should do it:
         $first = $query->get(TransactionJournal::queryFields());
 
+        
         // then collection transactions (harder)
-        $query = $this->user->transactions()
-                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 23:59:59'));
+        $query  = $this->user->transactionjournals()->distinct()
+                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                             ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+
         if (count($types) > 0) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
             $query->whereIn('transaction_types.type', $types);
@@ -255,10 +257,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
         if ($categories->count() > 0) {
             $categoryIds = $categories->pluck('id')->toArray();
-            $query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
             $query->whereIn('category_transaction.category_id', $categoryIds);
         }
-        $second   = $query->get(['transaction_journals.*']);
+
+
+        $second = $query->get(['transaction_journals.*']);
+
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);
 

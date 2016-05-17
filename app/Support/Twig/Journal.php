@@ -6,6 +6,7 @@ namespace FireflyIII\Support\Twig;
 
 use Amount;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
@@ -24,14 +25,43 @@ class Journal extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
+    public function formatBudgetPerspective(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatBudgetPerspective', function (TransactionJournal $journal, Budget $budget) {
+            // get the account amount:
+            $transactions = $journal->transactions()->where('transactions.amount', '<', 0)->get(['transactions.*']);
+            $amount       = '0';
+            foreach ($transactions as $transaction) {
+                $currentBudget = $transaction->budgets->first();
+                if (!is_null($currentBudget) && $currentBudget->id === $budget->id) {
+                    $amount = bcadd($amount, strval($transaction->amount));
+                }
+            }
+
+            $formatted = Amount::format($amount, true);
+
+            return $formatted . ' (' . Amount::formatJournal($journal) . ')';
+        }
+        );
+    }
+
+
+    /**
+     * @return Twig_SimpleFunction
+     */
     public function formatPerspective(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'formatPerspective', function (TransactionJournal $journal, Account $account) {
 
             // get the account amount:
-            $transaction = $journal->transactions()->where('transactions.account_id', $account->id)->first();
-            $amount      = $transaction->amount;
+            $transactions = $journal->transactions()->where('transactions.account_id', $account->id)->get(['transactions.*']);
+            $amount       = '0';
+            foreach ($transactions as $transaction) {
+                $amount = bcadd($amount, strval($transaction->amount));
+            }
+
             if ($journal->isWithdrawal()) {
                 $amount = bcmul($amount, '-1');
             }
@@ -97,6 +127,7 @@ class Journal extends Twig_Extension
             $this->getSourceAccount(),
             $this->getDestinationAccount(),
             $this->formatPerspective(),
+            $this->formatBudgetPerspective(),
             $this->journalBudgets(),
             $this->journalCategories(),
             $this->transactionBudgets(),
