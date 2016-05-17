@@ -25,6 +25,56 @@ class Journal extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
+    public function formatAccountPerspective(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatAccountPerspective', function (TransactionJournal $journal, Account $account) {
+
+            $cache = new CacheProperties;
+            $cache->addProperty('formatAccountPerspective');
+            $cache->addProperty($journal->id);
+            $cache->addProperty($account->id);
+
+            if ($cache->has()) {
+                return $cache->get();
+            }
+
+            // get the account amount:
+            $transactions = $journal->transactions()->where('transactions.account_id', $account->id)->get(['transactions.*']);
+            $amount       = '0';
+            foreach ($transactions as $transaction) {
+                $amount = bcadd($amount, strval($transaction->amount));
+            }
+            if ($journal->isTransfer()) {
+                $amount = bcmul($amount, '-1');
+            }
+
+            // check if this sum is the same as the journal:
+            $journalSum = TransactionJournal::amount($journal);
+            $full       = Amount::formatJournal($journal);
+            if (bccomp($journalSum, $amount) === 0) {
+                $cache->store($full);
+
+                return $full;
+            }
+
+            $formatted = Amount::format($amount, true);
+
+            if ($journal->isTransfer()) {
+                $formatted = '<span class="text-info">' . Amount::format($amount) . '</span>';
+            }
+            $str = $formatted . ' (' . $full . ')';
+            $cache->store($str);
+
+            return $str;
+
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
     public function formatBudgetPerspective(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
@@ -37,33 +87,6 @@ class Journal extends Twig_Extension
                 if (!is_null($currentBudget) && $currentBudget->id === $budget->id) {
                     $amount = bcadd($amount, strval($transaction->amount));
                 }
-            }
-
-            $formatted = Amount::format($amount, true);
-
-            return $formatted . ' (' . Amount::formatJournal($journal) . ')';
-        }
-        );
-    }
-
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function formatPerspective(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatPerspective', function (TransactionJournal $journal, Account $account) {
-
-            // get the account amount:
-            $transactions = $journal->transactions()->where('transactions.account_id', $account->id)->get(['transactions.*']);
-            $amount       = '0';
-            foreach ($transactions as $transaction) {
-                $amount = bcadd($amount, strval($transaction->amount));
-            }
-
-            if ($journal->isWithdrawal()) {
-                $amount = bcmul($amount, '-1');
             }
 
             $formatted = Amount::format($amount, true);
@@ -126,7 +149,7 @@ class Journal extends Twig_Extension
         $functions = [
             $this->getSourceAccount(),
             $this->getDestinationAccount(),
-            $this->formatPerspective(),
+            $this->formatAccountPerspective(),
             $this->formatBudgetPerspective(),
             $this->journalBudgets(),
             $this->journalCategories(),

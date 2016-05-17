@@ -158,9 +158,12 @@ class HomeController extends Controller
 
             $name    = $route->getName();
             $methods = $route->getMethods();
+            $search  = ['{account}', '{what}', '{rule}', '{tj}'];
+            $replace = [1, 'asset', 1, 1];
+            $url     = str_replace($search, $replace, $route->getUri());
 
             if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo $name . '<br>';
+                echo '<a href="/' . $url . '" title="' . $name . '">' . $name . '</a><br>';
 
             }
         }
