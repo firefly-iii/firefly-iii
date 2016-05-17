@@ -22,12 +22,12 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
         $repository = app(CurrencyRepositoryInterface::class);
 
         if (isset($this->mapped[$this->index][$this->value])) {
-            $currency = $repository->find($this->mapped[$this->index][$this->value]);
+            $currency = $repository->find(intval($this->mapped[$this->index][$this->value]));
 
             return $currency;
         }
 
-        $currency = $repository->findByCode($this->value);
+        $currency = $repository->findByCode(intval($this->value));
 
 
         return $currency;
