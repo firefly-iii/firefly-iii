@@ -30,11 +30,15 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
+
             'FireflyIII\Events\BudgetLimitStored'         => [
                 'FireflyIII\Handlers\Events\BudgetLimitEventHandler@store',
             ],
             'FireflyIII\Events\BudgetLimitUpdated'        => [
                 'FireflyIII\Handlers\Events\BudgetLimitEventHandler@update',
+            ],
+            'FireflyIII\Events\TransactionStored'  => [
+                'FireflyIII\Handlers\Events\ConnectTransactionToPiggyBank',
             ],
             'FireflyIII\Events\TransactionJournalStored'  => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterStore',

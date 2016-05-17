@@ -11,6 +11,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
+use FireflyIII\Export\Entry\EntryAccount;
 use FireflyIII\Models\ExportJob;
 use League\Csv\Writer;
 use SplFileObject;
@@ -61,24 +62,126 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         // all rows:
         $rows = [];
 
+        /*
+         * Count the maximum number of sources and destinations
+         * each entry has. May need to expand the number of export fields:
+         */
+        $maxSourceAccounts      = 1;
+        $maxDestinationAccounts = 1;
+        /** @var Entry $entry */
+        foreach ($this->getEntries() as $entry) {
+            $sources                = $entry->sourceAccounts->count();
+            $destinations           = $entry->destinationAccounts->count();
+            $maxSourceAccounts      = max($maxSourceAccounts, $sources);
+            $maxDestinationAccounts = max($maxDestinationAccounts, $destinations);
+        }
+
         // add header:
-        $rows[] = array_keys(Entry::getFieldsAndTypes());
+        $rows[] = array_keys($this->getFieldsAndTypes($maxSourceAccounts, $maxDestinationAccounts));
 
         // then the rest:
         /** @var Entry $entry */
         foreach ($this->getEntries() as $entry) {
             // order is defined in Entry::getFieldsAndTypes.
-            $rows[] = [
-                $entry->description, $entry->amount, $entry->date, $entry->sourceAccount->accountId, $entry->sourceAccount->name, $entry->sourceAccount->iban,
-                $entry->sourceAccount->type, $entry->sourceAccount->number, $entry->destinationAccount->accountId, $entry->destinationAccount->name,
-                $entry->destinationAccount->iban, $entry->destinationAccount->type, $entry->destinationAccount->number, $entry->budget->budgetId,
-                $entry->budget->name, $entry->category->categoryId, $entry->category->name, $entry->bill->billId, $entry->bill->name,
-            ];
+            $current = [
+                $entry->description,
+                $entry->amount,
+                $entry->date];
+            for ($i = 0; $i < $maxSourceAccounts; $i++) {
+                /** @var EntryAccount $source */
+                $source        = $entry->sourceAccounts->get($i);
+                $currentId     = '';
+                $currentName   = '';
+                $currentIban   = '';
+                $currentType   = '';
+                $currentNumber = '';
+                if ($source) {
+                    $currentId     = $source->accountId;
+                    $currentName   = $source->name;
+                    $currentIban   = $source->iban;
+                    $currentType   = $source->type;
+                    $currentNumber = $source->number;
+                }
+                $current[] = $currentId;
+                $current[] = $currentName;
+                $current[] = $currentIban;
+                $current[] = $currentType;
+                $current[] = $currentNumber;
+            }
+            unset($source);
+            for ($i = 0; $i < $maxDestinationAccounts; $i++) {
+                /** @var EntryAccount $destination */
+                $destination   = $entry->destinationAccounts->get($i);
+                $currentId     = '';
+                $currentName   = '';
+                $currentIban   = '';
+                $currentType   = '';
+                $currentNumber = '';
+                if ($destination) {
+                    $currentId     = $destination->accountId;
+                    $currentName   = $destination->name;
+                    $currentIban   = $destination->iban;
+                    $currentType   = $destination->type;
+                    $currentNumber = $destination->number;
+                }
+                $current[] = $currentId;
+                $current[] = $currentName;
+                $current[] = $currentIban;
+                $current[] = $currentType;
+                $current[] = $currentNumber;
+            }
+            unset($destination);
+
+
+            $current[] = $entry->budget->budgetId;
+            $current[] = $entry->budget->name;
+            $current[] = $entry->category->categoryId;
+            $current[] = $entry->category->name;
+            $current[] = $entry->bill->billId;
+            $current[] = $entry->bill->name;
+            $rows[]    = $current;
 
         }
         $writer->insertAll($rows);
 
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFieldsAndTypes(int $sources, int $destinations): array
+    {
+        // key = field name (see top of class)
+        // value = field type (see csv.php under 'roles')
+        $array = [
+            'description' => 'description',
+            'amount'      => 'amount',
+            'date'        => 'date-transaction',
+        ];
+        for ($i = 0; $i < $sources; $i++) {
+            $array['source_account_' . $i . '_id']     = 'account-id';
+            $array['source_account_' . $i . '_name']   = 'account-name';
+            $array['source_account_' . $i . '_iban']   = 'account-iban';
+            $array['source_account_' . $i . '_type']   = '_ignore';
+            $array['source_account_' . $i . '_number'] = 'account-number';
+        }
+        for ($i = 0; $i < $destinations; $i++) {
+            $array['destination_account_' . $i . '_id']     = 'account-id';
+            $array['destination_account_' . $i . '_name']   = 'account-name';
+            $array['destination_account_' . $i . '_iban']   = 'account-iban';
+            $array['destination_account_' . $i . '_type']   = '_ignore';
+            $array['destination_account_' . $i . '_number'] = 'account-number';
+        }
+
+        $array['budget_id']     = 'budget-id';
+        $array['budget_name']   = 'budget-name';
+        $array['category_id']   = 'category-id';
+        $array['category_name'] = 'category-name';
+        $array['bill_id']       = 'bill-id';
+        $array['bill_name']     = 'bill-name';
+
+        return $array;
     }
 
     private function tempFile()

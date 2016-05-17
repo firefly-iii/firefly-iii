@@ -93,6 +93,9 @@
                                 <th>{{ trans('list.budget') }}</th>
                             {% endif %}
                             <th>{{ trans('list.category') }}</th>
+                            {% if preFilled.what == 'transfer' %}
+                                <th>{{ trans('list.piggy_bank') }}</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -139,6 +142,12 @@
                                 <td>
                                     <input type="text" name="category[]" value="{{ preFilled.category[index] }}" class="form-control"/>
                                 </td>
+                                {% if preFilled.what == 'transfer' %}
+                                    <td>
+                                        <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
+                                        {{ Form.select('piggy_bank_id[]',piggyBanks, preFilled.piggy_bank_id[index], {class: 'form-control'}) }}
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

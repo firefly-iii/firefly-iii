@@ -59,6 +59,9 @@ class SplitJournalFormRequest extends Request
                 'category'                 => $this->get('category')[$index] ?? '',
                 'source_account_id'        => intval($this->get('journal_source_account_id')),
                 'source_account_name'      => $this->get('journal_source_account_name'),
+                'piggy_bank_id'            => isset($this->get('piggy_bank_id')[$index])
+                    ? intval($this->get('piggy_bank_id')[$index])
+                    : 0,
                 'destination_account_id'   => isset($this->get('destination_account_id')[$index])
                     ? intval($this->get('destination_account_id')[$index])
                     : intval($this->get('journal_destination_account_id')),

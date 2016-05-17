@@ -18,6 +18,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -167,6 +168,18 @@ class JournalRepository implements JournalRepositoryInterface
 
         if ($accounts->count() > 0) {
             $ids = $accounts->pluck('id')->toArray();
+            // join source and destination:
+            $query->leftJoin(
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            }
+            );
+            $query->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            }
+            );
+
             $query->where(
                 function (Builder $q) use ($ids) {
                     $q->whereIn('destination.account_id', $ids);

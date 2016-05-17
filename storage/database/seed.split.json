@@ -1,0 +1,301 @@
+{
+  "users": [
+    {
+      "email": "thegrumpydictator@gmail.com",
+      "password": "james"
+    }
+  ],
+  "roles": [
+    {
+      "user_id": 1,
+      "role": 1
+    }
+  ],
+  "accounts": [
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Checking Account",
+      "iban": "NL11XOLA6707795988"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Alternate",
+      "iban": "NL40UKBK3619908726"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "SixtyFive"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "EightyFour"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Fiftyone"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Work SixtyFive"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Work EightyFour"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Work Fiftyone"
+    }
+  ],
+  "account-meta": [
+    {
+      "account_id": 1,
+      "name": "accountRole",
+      "data": "\"defaultAsset\""
+    },
+    {
+      "account_id": 2,
+      "name": "accountRole",
+      "data": "\"defaultAsset\""
+    }
+  ],
+  "bills": [],
+  "budgets": [
+    {
+      "name": "Groceries",
+      "user_id": 1
+    },
+    {
+      "name": "Bills",
+      "user_id": 1
+    },
+    {
+      "name": "Car",
+      "user_id": 1
+    }
+  ],
+  "budget-limits": [],
+  "monthly-limits": [
+    {
+      "budget_id": 1,
+      "amount_min": 200,
+      "amount_max": 200
+    },
+    {
+      "budget_id": 2,
+      "amount_min": 1000,
+      "amount_max": 1000
+    },
+    {
+      "budget_id": 3,
+      "amount_min": 200,
+      "amount_max": 200
+    }
+  ],
+  "categories": [
+    {
+      "name": "Daily groceries",
+      "user_id": 1
+    },
+    {
+      "name": "Car",
+      "user_id": 1
+    },
+    {
+      "name": "Reimbursements",
+      "user_id": 1
+    }
+  ],
+  "piggy-banks": [
+    {
+      "account_id": 2,
+      "name": "New camera",
+      "targetamount": 1000,
+      "startdate": "2015-04-01",
+      "reminder_skip": 0,
+      "remind_me": 0,
+      "order": 1,
+      "currentamount": 0
+    },
+    {
+      "account_id": 2,
+      "name": "New phone",
+      "targetamount": 600,
+      "startdate": "2015-04-01",
+      "reminder_skip": 0,
+      "remind_me": 0,
+      "order": 2,
+      "currentamount": 0
+    },
+    {
+      "account_id": 2,
+      "name": "New couch",
+      "targetamount": 500,
+      "startdate": "2015-04-01",
+      "reminder_skip": 0,
+      "remind_me": 0,
+      "order": 3,
+      "currentamount": 0
+    }
+  ],
+  "piggy-events": [],
+  "rule-groups": [],
+  "rules": [],
+  "rule-triggers": [],
+  "rule-actions": [],
+  "tags": [],
+  "monthly-deposits": [],
+  "monthly-transfers": [],
+  "monthly-withdrawals": [],
+  "attachments": [],
+  "multi-withdrawals": [
+    {
+      "user_id": 1,
+      "date": "2016-03-12",
+      "description": "Even multi-withdrawal (50, 50)",
+      "destination_ids": [
+        3,
+        4
+      ],
+      "source_id": 1,
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        1,
+        2,
+        3
+      ],
+      "budget_ids": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-12",
+      "description": "Uneven multi-withdrawal (15,34,51)",
+      "destination_ids": [
+        3,
+        4,
+        5
+      ],
+      "source_id": 1,
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        1,
+        2,
+        3
+      ],
+      "budget_ids": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "multi-deposits": [
+    {
+      "user_id": 1,
+      "date": "2016-03-02",
+      "description": "Even multi-deposit (50, 50)",
+      "source_ids": [
+        6,
+        7
+      ],
+      "destination_id": 1,
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-02",
+      "description": "Uneven multi-deposit (15,34,51)",
+      "source_ids": [
+        6,
+        7,
+        8
+      ],
+      "destination_id": 1,
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "multi-transfers": [
+    {
+      "user_id": 1,
+      "date": "2016-01-18",
+      "description": "Even multi-transfer (50, 50)",
+      "source_ids": [
+        1,
+        1
+      ],
+      "destination_ids": [
+        2,
+        2
+      ],
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        1,
+        2
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-03-28",
+      "description": "Uneven multi-transfer (15,34,51)",
+      "source_ids": [
+        1,
+        1,
+        1
+      ],
+      "destination_ids": [
+        2,
+        2,
+        2
+      ],
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

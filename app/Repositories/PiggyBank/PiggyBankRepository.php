@@ -58,6 +58,21 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param int $piggyBankid
+     *
+     * @return PiggyBank
+     */
+    public function find(int $piggyBankid): PiggyBank
+    {
+        $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankid)->first(['piggy_banks.*']);
+        if (!is_null($piggyBank)) {
+            return $piggyBank;
+        }
+
+        return new PiggyBank();
+    }
+
+    /**
      * @param PiggyBank $piggyBank
      *
      * @return Collection

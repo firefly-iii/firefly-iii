@@ -9,6 +9,7 @@
 
 namespace FireflyIII\Crud\Split;
 
+use FireflyIII\Events\TransactionStored;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -130,6 +131,13 @@ class Journal implements JournalInterface
             $budget = Budget::find($transaction['budget_id']);
             $one->budgets()->save($budget);
             $two->budgets()->save($budget);
+        }
+
+        if ($transaction['piggy_bank_id'] > 0) {
+            // add some extra meta information to the transaction data
+            $transaction['transaction_journal_id'] = $journal->id;
+            $transaction['date']                   = $journal->date->format('Y-m-d');
+            event(new TransactionStored($transaction));
         }
 
         return new Collection([$one, $two]);

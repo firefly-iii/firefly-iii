@@ -35,6 +35,13 @@ interface PiggyBankRepositoryInterface
     public function destroy(PiggyBank $piggyBank): bool;
 
     /**
+     * @param int $piggyBankid
+     *
+     * @return PiggyBank
+     */
+    public function find(int $piggyBankid): PiggyBank;
+
+    /**
      * Get all events.
      *
      * @param PiggyBank $piggyBank

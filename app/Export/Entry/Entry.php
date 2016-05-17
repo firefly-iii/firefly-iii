@@ -11,6 +11,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Entry;
 
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
 
 /**
  * To extend the exported object, in case of new features in Firefly III for example,
@@ -45,8 +46,21 @@ class Entry
     public $description;
     /** @var  EntryAccount */
     public $destinationAccount;
+    /** @var  Collection */
+    public $destinationAccounts;
     /** @var  EntryAccount */
     public $sourceAccount;
+    /** @var  Collection */
+    public $sourceAccounts;
+
+    /**
+     * Entry constructor.
+     */
+    private function __construct()
+    {
+        $this->sourceAccounts      = new Collection;
+        $this->destinationAccounts = new Collection;
+    }
 
     /**
      * @param TransactionJournal $journal
@@ -66,9 +80,17 @@ class Entry
         $entry->bill     = new EntryBill($journal->bill);
 
         $sources                   = TransactionJournal::sourceAccountList($journal);
-        $entry->sourceAccount      = new EntryAccount($sources->first());
         $destinations              = TransactionJournal::destinationAccountList($journal);
+        $entry->sourceAccount      = new EntryAccount($sources->first());
         $entry->destinationAccount = new EntryAccount($destinations->first());
+
+        foreach ($sources as $source) {
+            $entry->sourceAccounts->push(new EntryAccount($source));
+        }
+
+        foreach ($destinations as $destination) {
+            $entry->destinationAccounts->push(new EntryAccount($destination));
+        }
 
         return $entry;
 

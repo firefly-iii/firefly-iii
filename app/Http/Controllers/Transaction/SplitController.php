@@ -53,11 +53,13 @@ class SplitController extends Controller
         $accountRepository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
         $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $piggyRepository    = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $assetAccounts      = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
         $sessionData        = session('journal-data', []);
         $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
         $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks         = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanksWithAmount());
         $subTitle           = trans('form.add_new_' . $sessionData['what']);
         $subTitleIcon       = 'fa-plus';
         $preFilled          = [
@@ -74,7 +76,8 @@ class SplitController extends Controller
         ];
 
         return view(
-            'split.journals.create', compact('journal', 'subTitle', 'subTitleIcon', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize')
+            'split.journals.create',
+            compact('journal', 'piggyBanks', 'subTitle', 'subTitleIcon', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize')
         );
     }
 
@@ -125,7 +128,6 @@ class SplitController extends Controller
     public function store(JournalInterface $repository, SplitJournalFormRequest $request, TransactionJournal $journal)
     {
         $data = $request->getSplitData();
-
         foreach ($data['transactions'] as $transaction) {
             $repository->storeTransaction($journal, $transaction);
         }
@@ -245,7 +247,7 @@ class SplitController extends Controller
             $destinationName = $request->old('destination_account_name')[$index] ?? $transaction->account->name;
 
             // any transfer not from the source:
-            if (($journal->isWithdrawal() || $journal->isDeposit()) && $transaction->account_id !== $sourceAccounts->first()->id) {
+            if ($transaction->account_id !== $sourceAccounts->first()->id) {
                 $array['description'][]              = $description;
                 $array['destination_account_id'][]   = $transaction->account_id;
                 $array['destination_account_name'][] = $destinationName;
