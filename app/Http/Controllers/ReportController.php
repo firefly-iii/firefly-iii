@@ -177,11 +177,11 @@ class ReportController extends Controller
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
                 $journal->before   = $startBalance;
-                $transactionAmount = $journal->source_amount;
+                $transactionAmount = TransactionJournal::amount($journal);
 
                 // get currently relevant transaction:
                 if (intval($journal->destination_account_id) === $account->id) {
-                    $transactionAmount = $journal->destination_amount;
+                    $transactionAmount = TransactionJournal::amountPositive($journal);
                 }
                 $newBalance     = bcadd($startBalance, $transactionAmount);
                 $journal->after = $newBalance;

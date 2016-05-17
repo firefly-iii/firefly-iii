@@ -656,6 +656,7 @@ return [
     'report_audit'                              => 'Transaction history overview for :start until :end',
     'quick_link_reports'                        => 'Quick links',
     'quick_link_default_report'                 => 'Default financial report',
+    'quick_link_audit_report'                   => 'Transaction history overview',
     'report_this_month_quick'                   => 'Current month, all accounts',
     'report_this_year_quick'                    => 'Current year, all accounts',
     'report_this_fiscal_year_quick'             => 'Current fiscal year, all accounts',
