@@ -166,7 +166,7 @@ class ReportController extends Controller
              */
             if ($start->between($first, $last) || $end->between($first, $last)) {
                 $exists   = true;
-                $journals = $repos->journalsInPeriod($accounts, [], $start, $end);
+                $journals = $repos->journalsInPeriod(new Collection([$account]), [], $start, $end);
 
             }
             /*

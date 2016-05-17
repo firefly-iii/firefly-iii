@@ -82,12 +82,28 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $incomes = $this->incomesInPeriod($accounts, $start, $end);
-        $sum     = '0';
-        foreach ($incomes as $entry) {
-            $amount = TransactionJournal::amount($entry);
-            $sum    = bcadd($sum, $amount);
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+                            ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
         }
+
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            }
+            );
+            $query->whereIn('destination.account_id', $accountIds);
+
+        }
+        // remove group by
+        $query->getQuery()->getQuery()->groups = null;
+
+        // that should do it:
+        $sum = strval($query->sum('destination.amount'));
 
         return $sum;
 
@@ -522,12 +538,28 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $incomes = $this->expensesInPeriod($accounts, $start, $end);
-        $sum     = '0';
-        foreach ($incomes as $entry) {
-            $amount = TransactionJournal::amountPositive($entry);
-            $sum    = bcadd($sum, $amount);
+        /** @var HasMany $query */
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+                            ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
+        if ($end >= $start) {
+            $query->before($end)->after($start);
         }
+
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->leftJoin(
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            }
+            );
+            $query->whereIn('source.account_id', $accountIds);
+
+        }
+        // remove group by
+        $query->getQuery()->getQuery()->groups = null;
+
+        // that should do it:
+        $sum = strval($query->sum('source.amount'));
 
         return $sum;
     }
