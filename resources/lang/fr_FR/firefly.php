@@ -70,6 +70,8 @@ return [
     'registered'                                => 'You have registered successfully!',
     'search'                                    => 'Search',
     'no_budget_pointer'                         => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
+    'source_accounts'                           => 'Source account(s)',
+    'destination_accounts'                      => 'Destination account(s)',
 
     // repeat frequencies:
     'repeat_freq_monthly'                       => 'monthly',
@@ -654,6 +656,7 @@ return [
     'report_audit'                              => 'Transaction history overview for :start until :end',
     'quick_link_reports'                        => 'Quick links',
     'quick_link_default_report'                 => 'Default financial report',
+    'quick_link_audit_report'                   => 'Transaction history overview',
     'report_this_month_quick'                   => 'Current month, all accounts',
     'report_this_year_quick'                    => 'Current year, all accounts',
     'report_this_fiscal_year_quick'             => 'Current fiscal year, all accounts',
@@ -800,4 +803,36 @@ return [
     'user_administration'                       => 'User administration',
     'list_all_users'                            => 'All users',
     'all_users'                                 => 'All users',
+
+    // split a transaction:
+    'transaction_meta_data'                     => 'Transaction meta-data',
+    'transaction_dates'                         => 'Transaction dates',
+    'splits'                                    => 'Splits',
+    'split_title_withdrawal'                    => 'Split your new withdrawal',
+    'split_intro_one_withdrawal'                => 'Firefly supports the "splitting" of a withdrawal.',
+    'split_intro_two_withdrawal'                => 'It means that the amount of money you\'ve spent is divided between several destination expense accounts, budgets or categories.',
+    'split_intro_three_withdrawal'              => 'For example: you could split your :total groceries so you pay :split_one from your "daily groceries" budget and :split_two from your "cigarettes" budget.',
+    'split_table_intro_withdrawal'              => 'Split your withdrawal in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_withdrawal'                 => 'Store splitted withdrawal',
+    'update_splitted_withdrawal'                => 'Update splitted withdrawal',
+
+    'split_title_deposit'       => 'Split your new deposit',
+    'split_intro_one_deposit'   => 'Firefly supports the "splitting" of a deposit.',
+    'split_intro_two_deposit'   => 'It means that the amount of money you\'ve earned is divided between several source revenue accounts or categories.',
+    'split_intro_three_deposit' => 'For example: you could split your :total salary so you get :split_one as your base salary and :split_two as a reimbursment for expenses made.',
+    'split_table_intro_deposit' => 'Split your deposit in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_deposit'    => 'Store splitted deposit',
+
+    'split_title_transfer'       => 'Split your new transfer',
+    'split_intro_one_transfer'   => 'Firefly supports the "splitting" of a transfer.',
+    'split_intro_two_transfer'   => 'It means that the amount of money you\'re moving is divided between several categories or piggy banks.',
+    'split_intro_three_transfer' => 'For example: you could split your :total move so you get :split_one in one piggy bank and :split_two in another.',
+    'split_table_intro_transfer' => 'Split your transfer in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_transfer'    => 'Store splitted transfer',
+
+    'add_another_split'     => 'Add another split',
+    'split-transactions'    => 'Split transactions',
+    'split-new-transaction' => 'Split a new transaction',
+
+
 ];

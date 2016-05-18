@@ -70,6 +70,8 @@ return [
     'registered'                                => 'Você se registrou com sucesso!',
     'search'                                    => 'Pesquisa',
     'no_budget_pointer'                         => 'Parece que não há orçamentos ainda. Você deve criar alguns na página <a href="/budgets">orçamentos</a>. Orçamentos podem ajudá-lo a manter o controle de despesas.',
+    'source_accounts'                           => 'Source account(s)',
+    'destination_accounts'                      => 'Destination account(s)',
 
     // repeat frequencies:
     'repeat_freq_monthly'                       => 'mensal',
@@ -257,7 +259,7 @@ return [
     'pref_1M'                                   => 'Um mês',
     'pref_3M'                                   => 'Trimestral',
     'pref_6M'                                   => 'Semestral',
-    'pref_1Y'                                   => 'One year',
+    'pref_1Y'                                   => 'Um ano',
     'pref_languages'                            => 'Idiomas',
     'pref_languages_help'                       => 'Firefly III suporta muitos idiomas. Qual você prefere?',
     'pref_custom_fiscal_year'                   => 'Configurações de ano fiscal',
@@ -280,7 +282,7 @@ return [
     'transaction_page_size_help'                => 'Qualquer lista de transações mostra, no máximo, muitas transações',
     'transaction_page_size_label'               => 'Tamanho da página',
     'budget_maximum'                            => 'Máximo de orçamento',
-    'between_dates'                             => '(:start and :end)',
+    'between_dates'                             => '(:start e :end)',
 
     // profile:
     'change_your_password'                      => 'Alterar sua senha',
@@ -461,11 +463,11 @@ return [
     'store_new_budget'                          => 'Armazenar novo orçamento',
     'stored_new_budget'                         => 'Novo orçamento armazenado ":name"',
     'availableIn'                               => 'Disponível em :date',
-    'available_between'                         => 'Available between :start and :end',
+    'available_between'                         => 'Disponível entre :start e :end',
     'transactionsWithoutBudget'                 => 'Despesas sem orçamentos',
     'transactionsWithoutBudgetDate'             => 'Despesas sem orçamentos em :date',
-    'transactions_no_budget'                    => 'Expenses without budget between :start and :end',
-    'spent_between'                             => 'Spent between :start and :end',
+    'transactions_no_budget'                    => 'Despesas sem orçamento entre :start e :end',
+    'spent_between'                             => 'Gasto entre :start e :end',
     'createBudget'                              => 'Novo orçamento',
     'inactiveBudgets'                           => 'Orçamentos inativos',
     'without_budget_between'                    => 'Transações sem um orçamento entre :start e :end',
@@ -476,7 +478,7 @@ return [
     'updated_budget'                            => 'Orçamento atualizado ":name"',
     'update_amount'                             => 'Atualizar quantia',
     'update_budget'                             => 'Atualizar Orçamento',
-    'update_budget_amount_range'                => 'Update (expected) available amount between :start and :end',
+    'update_budget_amount_range'                => 'Atualizar quantia disponível (esperada) entre :start e :end',
 
     // bills:
     'matching_on'                               => 'Corresponde em',
@@ -654,6 +656,7 @@ return [
     'report_audit'                              => 'Visão geral do histórico de transação de :start até :end',
     'quick_link_reports'                        => 'Ligações rápidas',
     'quick_link_default_report'                 => 'Relatório financeiro padrão',
+    'quick_link_audit_report'                   => 'Transaction history overview',
     'report_this_month_quick'                   => 'Mês atual, todas as contas',
     'report_this_year_quick'                    => 'Ano atual, todas as contas',
     'report_this_fiscal_year_quick'             => 'Ano fiscal atual, todas as contas',
@@ -800,4 +803,36 @@ return [
     'user_administration'                       => 'Administração de usuários',
     'list_all_users'                            => 'Todos os usuários',
     'all_users'                                 => 'Todos os usuários',
+
+    // split a transaction:
+    'transaction_meta_data'                     => 'Transaction meta-data',
+    'transaction_dates'                         => 'Transaction dates',
+    'splits'                                    => 'Splits',
+    'split_title_withdrawal'                    => 'Split your new withdrawal',
+    'split_intro_one_withdrawal'                => 'Firefly supports the "splitting" of a withdrawal.',
+    'split_intro_two_withdrawal'                => 'It means that the amount of money you\'ve spent is divided between several destination expense accounts, budgets or categories.',
+    'split_intro_three_withdrawal'              => 'For example: you could split your :total groceries so you pay :split_one from your "daily groceries" budget and :split_two from your "cigarettes" budget.',
+    'split_table_intro_withdrawal'              => 'Split your withdrawal in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_withdrawal'                 => 'Store splitted withdrawal',
+    'update_splitted_withdrawal'                => 'Update splitted withdrawal',
+
+    'split_title_deposit'       => 'Split your new deposit',
+    'split_intro_one_deposit'   => 'Firefly supports the "splitting" of a deposit.',
+    'split_intro_two_deposit'   => 'It means that the amount of money you\'ve earned is divided between several source revenue accounts or categories.',
+    'split_intro_three_deposit' => 'For example: you could split your :total salary so you get :split_one as your base salary and :split_two as a reimbursment for expenses made.',
+    'split_table_intro_deposit' => 'Split your deposit in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_deposit'    => 'Store splitted deposit',
+
+    'split_title_transfer'       => 'Split your new transfer',
+    'split_intro_one_transfer'   => 'Firefly supports the "splitting" of a transfer.',
+    'split_intro_two_transfer'   => 'It means that the amount of money you\'re moving is divided between several categories or piggy banks.',
+    'split_intro_three_transfer' => 'For example: you could split your :total move so you get :split_one in one piggy bank and :split_two in another.',
+    'split_table_intro_transfer' => 'Split your transfer in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_transfer'    => 'Store splitted transfer',
+
+    'add_another_split'     => 'Add another split',
+    'split-transactions'    => 'Split transactions',
+    'split-new-transaction' => 'Split a new transaction',
+
+
 ];

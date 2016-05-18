@@ -70,6 +70,8 @@ return [
     'registered'                                => 'Je bent geregistreerd!',
     'search'                                    => 'Zoeken',
     'no_budget_pointer'                         => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href="/budgets">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
+    'source_accounts'                           => 'Bronrekening(en)',
+    'destination_accounts'                      => 'Doelrekening(en)',
 
     // repeat frequencies:
     'repeat_freq_monthly'                       => 'maandelijks',
@@ -654,6 +656,7 @@ return [
     'report_audit'                              => 'Transactiehistorie-overzicht van :start tot :end',
     'quick_link_reports'                        => 'Snelle links',
     'quick_link_default_report'                 => 'Standaard financieel rapport',
+    'quick_link_audit_report'                   => 'Transactiehistorie-overzicht',
     'report_this_month_quick'                   => 'Deze maand, alle rekeningen',
     'report_this_year_quick'                    => 'Dit jaar, alle rekeningen',
     'report_this_fiscal_year_quick'             => 'Huidig boekjaar, alle rekeningen',
@@ -800,4 +803,36 @@ return [
     'user_administration'                       => 'Gebruikersadministratie',
     'list_all_users'                            => 'Alle gebruikers',
     'all_users'                                 => 'Alle gebruikers',
+
+    // split a transaction:
+    'transaction_meta_data'                     => 'Transactie meta-data',
+    'transaction_dates'                         => 'Transactie data',
+    'splits'                                    => 'Splitten',
+    'split_title_withdrawal'                    => 'Splits je nieuwe uitgave',
+    'split_intro_one_withdrawal'                => 'Firefly kan een uitgave "splitsen".',
+    'split_intro_two_withdrawal'                => 'Dat betekent dat de uitgave die je maakt wordt verdeeld over verschillende doelrekeningen, budgetten of categorieën.',
+    'split_intro_three_withdrawal'              => 'Je kan bijvoorbeeld je boodschappen van :total verdelen zodat :split_one uit je boodschappenbudget komt, en :split_two uit je sigarettenbudget.',
+    'split_table_intro_withdrawal'              => 'Split je uitgave in zoveel stukken als je maar wilt. Standaard is je uitgave niet gesplitst; er is maar één "split". Voeg hieronder zoveel splits toe als je wilt. Denk er aan dat je niet afwijkt van het totaalbedrag. Als je dat wel doet zal Firefly je waarschuwen maar niet corrigeren.',
+    'store_splitted_withdrawal'                 => 'Sla gesplitste uitgave op',
+    'update_splitted_withdrawal'                => 'Gesplitste uitgave updaten',
+
+    'split_title_deposit'       => 'Splits je nieuwe inkomsten',
+    'split_intro_one_deposit'   => 'Firefly kan inkomsten "splitsen".',
+    'split_intro_two_deposit'   => 'Dat betekent dat de inkomsten die je krijgt wordt verdeeld over verschillende doelrekeningen of categorieën.',
+    'split_intro_three_deposit' => 'Je kan bijvoorbeeld je salaris van :total verdelen zodat :split_one wordt opgeslagen als je basissalaris, en :split_two als declaratieteruggave.',
+    'split_table_intro_deposit' => 'Split je inkomsten in zoveel stukken als je maar wilt. Standaard zijn je inkomsten niet gesplitst; er is maar één "split". Voeg hieronder zoveel splits toe als je wilt. Denk er aan dat je niet afwijkt van het totaalbedrag. Als je dat wel doet zal Firefly je waarschuwen maar niet corrigeren.',
+    'store_splitted_deposit'    => 'Sla gesplitse inkomsten op',
+
+    'split_title_transfer'       => 'Splits je nieuwe overschrijving',
+    'split_intro_one_transfer'   => 'Firefly kan overschrijvingen "splitsen".',
+    'split_intro_two_transfer'   => 'Dat betekent dat de uitgave die je maakt wordt verdeeld over verschillende categorieën of spaarpotjes.',
+    'split_intro_three_transfer' => 'Je kan bijvoorbeeld je overschrijving van :total verdelen zodat :split_one in het ene spaarpotje terecht komt, en :split_two in het andere spaarpotje.',
+    'split_table_intro_transfer' => 'Split je overschrijving in zoveel stukken als je maar wilt. Standaard is je overschrijving niet gesplitst; er is maar één "split". Voeg hieronder zoveel splits toe als je wilt. Denk er aan dat je niet afwijkt van het totaalbedrag. Als je dat wel doet zal Firefly je waarschuwen maar niet corrigeren.',
+    'store_splitted_transfer'    => 'Sla gesplitste overschrijving op',
+
+    'add_another_split'     => 'Voeg een split toe',
+    'split-transactions'    => 'Split transacties',
+    'split-new-transaction' => 'Split een nieuwe transactie',
+
+
 ];

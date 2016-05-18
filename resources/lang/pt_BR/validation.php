@@ -17,6 +17,7 @@ return [
     'file_attached'                  => 'Arquivo carregado com sucesso ":name".',
     'file_invalid_mime'              => 'Arquivo ":name" é do tipo ":mime" que não é aceito como um novo upload.',
     'file_too_large'                 => 'Arquivo ":name" é muito grande.',
+    'belongs_to_user'                => 'The value of :attribute is unknown',
     'accepted'                       => 'O campo :attribute deve ser aceito.',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
