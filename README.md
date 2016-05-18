@@ -2,14 +2,15 @@
 
 ## A personal finances manager
 
-Image here.
+[![Screenshot](https://i.nder.be/hhfv03hp/250)](https://i.nder.be/hhfv03hp) [![Screenshot](https://i.nder.be/hhmwmqw9/250)](https://i.nder.be/hhmwmqw9)
+
+[![Screenshot](https://i.nder.be/g63q05m0/250)](https://i.nder.be/g63q05m0) [![Screenshot](https://i.nder.be/c2g30ngg/250)](https://i.nder.be/c2g30ngg)
 
 "Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared  household accounts and savings accounts! It's pretty fancy. You should use it to save and organise money.
 
 ## Installation
 
 To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://jc5.github.io/firefly-iii/installation-guide/).
-
 
 ## More about Firefly III
 
