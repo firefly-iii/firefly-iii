@@ -28,13 +28,6 @@ interface JournalInterface
     public function markAsComplete(TransactionJournal $journal);
 
     /**
-     * @param array $data
-     *
-     * @return TransactionJournal
-     */
-    public function storeJournal(array $data) : TransactionJournal;
-
-    /**
      * @param TransactionJournal $journal
      * @param array              $transaction
      *

@@ -55,40 +55,6 @@ class Journal implements JournalInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return TransactionJournal
-     */
-    public function storeJournal(array $data) : TransactionJournal
-    {
-        // find transaction type.
-        $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
-        $journal         = new TransactionJournal(
-            [
-                'user_id'                 => $this->user->id,
-                'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['journal_currency_id'],
-                'description'             => $data['journal_description'],
-                'completed'               => 0,
-                'date'                    => $data['date'],
-                'interest_date'           => $data['interest_date'],
-                'book_date'               => $data['book_date'],
-                'process_date'            => $data['process_date'],
-            ]
-        );
-        $journal->save();
-
-        foreach ($data['transactions'] as $transaction) {
-            $this->storeTransaction($journal, $transaction);
-        }
-
-        $journal->completed = true;
-        $journal->save();
-
-        return $journal;
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param array              $transaction
      *
@@ -101,32 +67,20 @@ class Journal implements JournalInterface
 
         // store transaction one way:
         /** @var Transaction $one */
-        $one = Transaction::create( // first transaction.
-            [
-                'account_id'             => $sourceAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $transaction['amount'] * -1,
-                'description'            => $transaction['description'],
-            ]
+        $one = Transaction::create(
+            ['account_id'  => $sourceAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $transaction['amount'] * -1,
+             'description' => $transaction['description']]
+        );
+        $two = Transaction::create(
+            ['account_id'  => $destinationAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $transaction['amount'],
+             'description' => $transaction['description']]
         );
 
-        // store transaction the other way:
-        $two = Transaction::create( // first transaction.
-            [
-                'account_id'             => $destinationAccount->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $transaction['amount'],
-                'description'            => $transaction['description'],
-            ]
-        );
-
-        // store or get category and connect:
         if (strlen($transaction['category']) > 0) {
             $category = Category::firstOrCreateEncrypted(['name' => $transaction['category'], 'user_id' => $journal->user_id]);
             $one->categories()->save($category);
             $two->categories()->save($category);
         }
-        // store or get budget
         if (intval($transaction['budget_id']) > 0) {
             $budget = Budget::find($transaction['budget_id']);
             $one->budgets()->save($budget);
@@ -134,14 +88,11 @@ class Journal implements JournalInterface
         }
 
         if ($transaction['piggy_bank_id'] > 0) {
-            // add some extra meta information to the transaction data
-            $transaction['transaction_journal_id'] = $journal->id;
-            $transaction['date']                   = $journal->date->format('Y-m-d');
+            $transaction['date'] = $journal->date->format('Y-m-d');
             event(new TransactionStored($transaction));
         }
 
         return new Collection([$one, $two]);
-
     }
 
     /**
@@ -215,20 +166,20 @@ class Journal implements JournalInterface
         $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first(['accounts.*']);
 
         if (strlen($data['source_account_name']) > 0) {
-            $fromType    = AccountType::where('type', 'Revenue account')->first();
-            $fromAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $this->user->id, 'account_type_id' => $fromType->id, 'name' => $data['source_account_name'], 'active' => 1]
+            $sourceType    = AccountType::where('type', 'Revenue account')->first();
+            $sourceAccount = Account::firstOrCreateEncrypted(
+                ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
             );
 
-            return [$fromAccount, $destinationAccount];
-        } else {
-            $fromType    = AccountType::where('type', 'Cash account')->first();
-            $fromAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $this->user->id, 'account_type_id' => $fromType->id, 'name' => 'Cash account', 'active' => 1]
-            );
+            return [$sourceAccount, $destinationAccount];
         }
 
-        return [$fromAccount, $destinationAccount];
+        $sourceType    = AccountType::where('type', 'Cash account')->first();
+        $sourceAccount = Account::firstOrCreateEncrypted(
+            ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
+        );
+
+        return [$sourceAccount, $destinationAccount];
     }
 
     /**

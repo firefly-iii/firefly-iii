@@ -16,7 +16,6 @@ use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
@@ -27,6 +26,18 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportHelper implements BudgetReportHelperInterface
 {
+    /** @var BudgetRepositoryInterface */
+    private $repository;
+
+    /**
+     * BudgetReportHelper constructor.
+     *
+     * @param BudgetRepositoryInterface $repository
+     */
+    public function __construct(BudgetRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * @param Carbon     $start
@@ -38,9 +49,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection
     {
         $object = new BudgetCollection;
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $set        = $repository->getBudgets();
+        $set    = $this->repository->getBudgets();
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
@@ -49,7 +58,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
                 // spent for budget in time range:
-                $spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
+                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
 
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
@@ -63,24 +72,20 @@ class BudgetReportHelper implements BudgetReportHelperInterface
             // one or more repetitions for budget:
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
+                $data = $this->calculateExpenses($budget, $repetition, $accounts);
 
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses  = $repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
-                $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
-                $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
-                $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
-
-                $budgetLine->setLeft($left);
-                $budgetLine->setSpent($expenses);
-                $budgetLine->setOverspent($overspent);
+                $budgetLine->setLeft($data['left']);
+                $budgetLine->setSpent($data['expenses']);
+                $budgetLine->setOverspent($data['overspent']);
                 $budgetLine->setBudgeted($repetition->amount);
 
                 $object->addBudgeted($repetition->amount);
-                $object->addSpent($spent);
-                $object->addLeft($left);
-                $object->addOverspent($overspent);
+                $object->addSpent($data['spent']);
+                $object->addLeft($data['left']);
+                $object->addOverspent($data['overspent']);
                 $object->addBudgetLine($budgetLine);
 
             }
@@ -88,12 +93,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         // stuff outside of budgets:
-        $outsideBudget = $repository->journalsInPeriodWithoutBudget($accounts, $start, $end);
-        $noBudget      = '0';
-        /** @var TransactionJournal $journal */
-        foreach ($outsideBudget as $journal) {
-            $noBudget = bcadd($noBudget, TransactionJournal::amount($journal));
-        }
+
+        $noBudget = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end);
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
         $budgetLine->setSpent($noBudget);
@@ -158,5 +159,24 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     * @param Collection      $accounts
+     *
+     * @return array
+     */
+    private function calculateExpenses(Budget $budget, LimitRepetition $repetition, Collection $accounts): array
+    {
+        $array              = [];
+        $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
+        $array['left']      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
+        $array['spent']     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
+        $array['overspent'] = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
+
+        return $array;
+
     }
 }

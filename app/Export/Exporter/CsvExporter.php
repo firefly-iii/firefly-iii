@@ -13,6 +13,7 @@ namespace FireflyIII\Export\Exporter;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Export\Entry\EntryAccount;
 use FireflyIII\Models\ExportJob;
+use Illuminate\Support\Collection;
 use League\Csv\Writer;
 use SplFileObject;
 
@@ -55,92 +56,33 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
         // necessary for CSV writer:
         $fullPath = storage_path('export') . DIRECTORY_SEPARATOR . $this->fileName;
+        $writer   = Writer::createFromPath(new SplFileObject($fullPath, 'a+'), 'w');
+        $rows     = [];
 
-        // create CSV writer:
-        $writer = Writer::createFromPath(new SplFileObject($fullPath, 'a+'), 'w');
-
-        // all rows:
-        $rows = [];
-
-        /*
-         * Count the maximum number of sources and destinations
-         * each entry has. May need to expand the number of export fields:
-         */
-        $maxSourceAccounts      = 1;
-        $maxDestinationAccounts = 1;
+        // Count the maximum number of sources and destinations each entry has. May need to expand the number of export fields:
+        $maxSourceAccounts = 1;
+        $maxDestAccounts   = 1;
         /** @var Entry $entry */
         foreach ($this->getEntries() as $entry) {
-            $sources                = $entry->sourceAccounts->count();
-            $destinations           = $entry->destinationAccounts->count();
-            $maxSourceAccounts      = max($maxSourceAccounts, $sources);
-            $maxDestinationAccounts = max($maxDestinationAccounts, $destinations);
+            $sources           = $entry->sourceAccounts->count();
+            $destinations      = $entry->destinationAccounts->count();
+            $maxSourceAccounts = max($maxSourceAccounts, $sources);
+            $maxDestAccounts   = max($maxDestAccounts, $destinations);
         }
+        $rows[] = array_keys($this->getFieldsAndTypes($maxSourceAccounts, $maxDestAccounts));
 
-        // add header:
-        $rows[] = array_keys($this->getFieldsAndTypes($maxSourceAccounts, $maxDestinationAccounts));
-
-        // then the rest:
         /** @var Entry $entry */
         foreach ($this->getEntries() as $entry) {
             // order is defined in Entry::getFieldsAndTypes.
-            $current = [
-                $entry->description,
-                $entry->amount,
-                $entry->date];
-            for ($i = 0; $i < $maxSourceAccounts; $i++) {
-                /** @var EntryAccount $source */
-                $source        = $entry->sourceAccounts->get($i);
-                $currentId     = '';
-                $currentName   = '';
-                $currentIban   = '';
-                $currentType   = '';
-                $currentNumber = '';
-                if ($source) {
-                    $currentId     = $source->accountId;
-                    $currentName   = $source->name;
-                    $currentIban   = $source->iban;
-                    $currentType   = $source->type;
-                    $currentNumber = $source->number;
-                }
-                $current[] = $currentId;
-                $current[] = $currentName;
-                $current[] = $currentIban;
-                $current[] = $currentType;
-                $current[] = $currentNumber;
-            }
-            unset($source);
-            for ($i = 0; $i < $maxDestinationAccounts; $i++) {
-                /** @var EntryAccount $destination */
-                $destination   = $entry->destinationAccounts->get($i);
-                $currentId     = '';
-                $currentName   = '';
-                $currentIban   = '';
-                $currentType   = '';
-                $currentNumber = '';
-                if ($destination) {
-                    $currentId     = $destination->accountId;
-                    $currentName   = $destination->name;
-                    $currentIban   = $destination->iban;
-                    $currentType   = $destination->type;
-                    $currentNumber = $destination->number;
-                }
-                $current[] = $currentId;
-                $current[] = $currentName;
-                $current[] = $currentIban;
-                $current[] = $currentType;
-                $current[] = $currentNumber;
-            }
-            unset($destination);
-
-
-            $current[] = $entry->budget->budgetId;
-            $current[] = $entry->budget->name;
-            $current[] = $entry->category->categoryId;
-            $current[] = $entry->category->name;
-            $current[] = $entry->bill->billId;
-            $current[] = $entry->bill->name;
-            $rows[]    = $current;
-
+            $current    = [$entry->description, $entry->amount, $entry->date];
+            $sourceData = $this->getAccountData($maxSourceAccounts, $entry->sourceAccounts);
+            $current    = array_merge($current, $sourceData);
+            $destData   = $this->getAccountData($maxDestAccounts, $entry->destinationAccounts);
+            $current    = array_merge($current, $destData);
+            $rest       = [$entry->budget->budgetId, $entry->budget->name, $entry->category->categoryId, $entry->category->name, $entry->bill->billId,
+                           $entry->bill->name];
+            $current    = array_merge($current, $rest);
+            $rows[]     = $current;
         }
         $writer->insertAll($rows);
 
@@ -148,6 +90,44 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     }
 
     /**
+     * @param int        $max
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    private function getAccountData(int $max, Collection $accounts): array
+    {
+        $current = [];
+        for ($i = 0; $i < $max; $i++) {
+            /** @var EntryAccount $source */
+            $source        = $accounts->get($i);
+            $currentId     = '';
+            $currentName   = '';
+            $currentIban   = '';
+            $currentType   = '';
+            $currentNumber = '';
+            if ($source) {
+                $currentId     = $source->accountId;
+                $currentName   = $source->name;
+                $currentIban   = $source->iban;
+                $currentType   = $source->type;
+                $currentNumber = $source->number;
+            }
+            $current[] = $currentId;
+            $current[] = $currentName;
+            $current[] = $currentIban;
+            $current[] = $currentType;
+            $current[] = $currentNumber;
+        }
+        unset($source);
+
+        return $current;
+    }
+
+    /**
+     * @param int $sources
+     * @param int $destinations
+     *
      * @return array
      */
     private function getFieldsAndTypes(int $sources, int $destinations): array

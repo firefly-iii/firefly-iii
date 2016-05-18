@@ -18,12 +18,10 @@ use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
@@ -37,20 +35,16 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
     /** @var  BudgetRepositoryInterface */
     protected $budgetRepository;
-    /** @var  TagRepositoryInterface */
-    protected $tagRepository;
 
     /**
      * ReportHelper constructor.
      *
      *
      * @param BudgetRepositoryInterface $budgetRepository
-     * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
+    public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
         $this->budgetRepository = $budgetRepository;
-        $this->tagRepository    = $tagRepository;
     }
 
 
@@ -148,13 +142,11 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      *
      * @return BalanceLine
      */
-    private function createBalanceLine(BudgetModel $budget, LimitRepetition $repetition, Collection $accounts): BalanceLine
+    private function createBalanceLine(Budget $budget, LimitRepetition $repetition, Collection $accounts): BalanceLine
     {
         $line           = new BalanceLine;
         $budget->amount = $repetition->amount;
         $line->setBudget($budget);
-
-
         $line->setStartDate($repetition->startdate);
         $line->setEndDate($repetition->enddate);
 
@@ -185,7 +177,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $noBudgetEntries = $noBudgetLine->getBalanceEntries();
         $tagEntries      = $coveredByTagLine->getBalanceEntries();
 
-        /** @var BalanceEntry $entry */
         foreach ($noBudgetEntries as $entry) {
             $account  = $entry->getAccount();
             $tagEntry = $tagEntries->filter(
@@ -221,7 +212,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         foreach ($accounts as $account) {
             $spent = $this->budgetRepository->spentInPeriodWithoutBudget(new Collection([$account]), $start, $end);
-            //$spent ='0';
             // budget
             $budgetEntry = new BalanceEntry;
             $budgetEntry->setAccount($account);
@@ -278,11 +268,9 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     {
         $set    = $balance->getBalanceLines();
         $newSet = new Collection;
-        /** @var BalanceLine $entry */
         foreach ($set as $entry) {
             if (!is_null($entry->getBudget()->id)) {
                 $sum = '0';
-                /** @var BalanceEntry $balanceEntry */
                 foreach ($entry->getBalanceEntries() as $balanceEntry) {
                     $sum = bcadd($sum, $balanceEntry->getSpent());
                 }
