@@ -94,7 +94,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         // stuff outside of budgets:
 
-        $noBudget = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end);
+        $noBudget   = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end);
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
         $budgetLine->setSpent($noBudget);
@@ -175,6 +175,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $array['left']      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
         $array['spent']     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
         $array['overspent'] = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
+        $array['expenses']  = $expenses;
 
         return $array;
 
