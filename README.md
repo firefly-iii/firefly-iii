@@ -2,9 +2,9 @@
 
 ## A personal finances manager
 
-[![Screenshot](https://i.nder.be/hhfv03hp/450)](https://i.nder.be/hhfv03hp) [![Screenshot](https://i.nder.be/hhmwmqw9/450)](https://i.nder.be/hhmwmqw9)
+[![Screenshot](https://i.nder.be/hhfv03hp/400)](https://i.nder.be/hhfv03hp) [![Screenshot](https://i.nder.be/hhmwmqw9/400)](https://i.nder.be/hhmwmqw9)
 
-[![Screenshot](https://i.nder.be/g63q05m0/450)](https://i.nder.be/g63q05m0) [![Screenshot](https://i.nder.be/c2g30ngg/450)](https://i.nder.be/c2g30ngg)
+[![Screenshot](https://i.nder.be/g63q05m0/400)](https://i.nder.be/g63q05m0) [![Screenshot](https://i.nder.be/c2g30ngg/400)](https://i.nder.be/c2g30ngg)
 
 "Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared  household accounts and savings accounts! It's pretty fancy. You should use it to save and organise money.
 
