@@ -212,15 +212,18 @@ class ReportController extends Controller
     private function incomeEntry(array $attributes): string
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $account    = $repository->find(intval($attributes['accountId']));
-        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals   = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
-
+        $repository   = app(AccountRepositoryInterface::class);
+        $account      = $repository->find(intval($attributes['accountId']));
+        $types        = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $journals     = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
+        $destinations = $attributes['accounts']->pluck('id')->toArray();
         // filter for transfers and withdrawals FROM the given $account
         $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($account) {
-                if ($journal->source_account_id === $account->id) {
+            function (TransactionJournal $journal) use ($account, $destinations) {
+                if (
+                    $journal->source_account_id === $account->id &&
+                    in_array($journal->destination_account_id, $destinations)
+                ) {
                     return $journal;
                 }
             }
