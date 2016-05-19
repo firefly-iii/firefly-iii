@@ -140,8 +140,7 @@ class ReportHelper implements ReportHelperInterface
         $object = new Expense;
         /** @var AccountRepositoryInterface $repos */
         $repos    = app(AccountRepositoryInterface::class);
-        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals = $repos->journalsInPeriod($accounts, $types, $start, $end);
+        $journals = $repos->expensesInPeriod($accounts, $start, $end);
 
         /** @var TransactionJournal $entry */
         foreach ($journals as $entry) {
