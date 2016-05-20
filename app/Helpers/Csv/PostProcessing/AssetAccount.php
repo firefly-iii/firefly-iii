@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Csv\PostProcessing;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -230,6 +231,9 @@ class AssetAccount implements PostProcessorInterface
      */
     private function parseAccountNumberString()
     {
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class);
+
         $accountNumber = $this->data['asset-account-number'] ?? '';
         $accountType   = $this->getAccountType();
         $accounts      = Auth::user()->accounts()->with(['accountmeta'])->where('account_type_id', $accountType->id)->get();
@@ -258,7 +262,7 @@ class AssetAccount implements PostProcessorInterface
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => 1, // hard coded.
         ];
-        $account     = $repository->store($accountData);
+        $account     = $crud->store($accountData);
 
         return $account;
     }

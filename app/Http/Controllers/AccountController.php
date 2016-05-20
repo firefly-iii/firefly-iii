@@ -6,6 +6,7 @@ namespace FireflyIII\Http\Controllers;
 use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -83,19 +84,20 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
+     * @param ARI                  $repository
+     * @param AccountCrudInterface $crud
+     * @param Account              $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(ARI $repository, Account $account)
+    public function destroy(ARI $repository, AccountCrudInterface $crud, Account $account)
     {
         $type     = $account->accountType->type;
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
         $moveTo   = $repository->find(intval(Input::get('move_account_before_delete')));
 
-        $repository->destroy($account, $moveTo);
+        $crud->destroy($account, $moveTo);
 
         Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
@@ -273,12 +275,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param ARI                $repository
+     * @param AccountFormRequest   $request
+     * @param AccountCrudInterface $crud
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(AccountFormRequest $request, ARI $repository)
+    public function store(AccountFormRequest $request, AccountCrudInterface $crud)
     {
         $accountData = [
             'name'                   => $request->input('name'),
@@ -296,7 +298,7 @@ class AccountController extends Controller
 
         ];
 
-        $account = $repository->store($accountData);
+        $account = $crud->store($accountData);
 
         Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
@@ -320,13 +322,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param ARI                $repository
-     * @param Account            $account
+     * @param AccountFormRequest   $request
+     * @param AccountCrudInterface $crud
+     * @param Account              $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(AccountFormRequest $request, ARI $repository, Account $account)
+    public function update(AccountFormRequest $request, AccountCrudInterface $crud, Account $account)
     {
 
         $accountData = [
@@ -343,7 +345,7 @@ class AccountController extends Controller
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
-        $repository->update($account, $accountData);
+        $crud->update($account, $accountData);
 
         Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();

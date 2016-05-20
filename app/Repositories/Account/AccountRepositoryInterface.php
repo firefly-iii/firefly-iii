@@ -26,14 +26,6 @@ interface AccountRepositoryInterface
     public function countAccounts(array $types): int;
 
     /**
-     * @param Account $account
-     * @param Account $moveTo
-     *
-     * @return bool
-     */
-    public function destroy(Account $account, Account $moveTo): bool;
-
-    /**
      * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
      * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
      * how much money was earned by the given asset accounts. This method will tell you how much money
@@ -218,28 +210,5 @@ interface AccountRepositoryInterface
      * @return string
      */
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param array $data
-     *
-     * @return Account
-     */
-    public function store(array $data) : Account;
-
-    /**
-     * @param $account
-     * @param $name
-     * @param $value
-     *
-     * @return AccountMeta
-     */
-    public function storeMeta(Account $account, string $name, $value): AccountMeta;
-
-    /**
-     * @param Account $account
-     * @param array   $data
-     *
-     * @return Account
-     */
-    public function update(Account $account, array $data): Account;
+    
 }

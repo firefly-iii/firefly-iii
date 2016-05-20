@@ -13,6 +13,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
@@ -31,6 +32,9 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
+
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class);
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
@@ -68,7 +72,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
 
             ];
 
-            $account = $repository->store($accountData);
+            $account = $crud->store($accountData);
 
             return $account;
         }

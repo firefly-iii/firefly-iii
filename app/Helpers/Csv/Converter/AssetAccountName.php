@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
@@ -22,6 +23,10 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
+
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class);
+
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
 
@@ -50,7 +55,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             'openingBalanceCurrency' => 1, // hard coded.
         ];
 
-        $account = $repository->store($accountData);
+        $account = $crud->store($accountData);
 
         return $account;
     }

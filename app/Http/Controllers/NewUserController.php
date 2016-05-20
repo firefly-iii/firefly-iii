@@ -4,6 +4,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Preferences;
@@ -49,12 +50,12 @@ class NewUserController extends Controller
     }
 
     /**
-     * @param NewUserFormRequest $request
-     * @param ARI                $repository
+     * @param NewUserFormRequest   $request
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function submit(NewUserFormRequest $request, ARI $repository)
+    public function submit(NewUserFormRequest $request, AccountCrudInterface $crud)
     {
         $count = 1;
         // create normal asset account:
@@ -71,7 +72,7 @@ class NewUserController extends Controller
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_bank_balance')),
         ];
 
-        $repository->store($assetAccount);
+        $crud->store($assetAccount);
 
         // create savings account
         if (strlen($request->get('savings_balance') > 0)) {
@@ -87,7 +88,7 @@ class NewUserController extends Controller
                 'openingBalanceDate'     => new Carbon,
                 'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
             ];
-            $repository->store($savingsAccount);
+            $crud->store($savingsAccount);
             $count++;
         }
 
@@ -106,11 +107,11 @@ class NewUserController extends Controller
                 'openingBalanceDate'     => null,
                 'openingBalanceCurrency' => intval($request->input('amount_currency_id_credit_card_limit')),
             ];
-            $creditCard    = $repository->store($creditAccount);
+            $creditCard    = $crud->store($creditAccount);
 
             // store meta for CC:
-            $repository->storeMeta($creditCard, 'ccType', 'monthlyFull');
-            $repository->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
+            $crud->storeMeta($creditCard, 'ccType', 'monthlyFull');
+            $crud->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
             $count++;
         }
         $message = strval(trans('firefly.stored_new_accounts_new_user'));

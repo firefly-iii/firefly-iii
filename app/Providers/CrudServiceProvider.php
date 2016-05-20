@@ -53,5 +53,19 @@ class CrudServiceProvider extends ServiceProvider
                 return app('FireflyIII\Crud\Split\Journal', $arguments);
             }
         );
+
+        $this->app->bind(
+            'FireflyIII\Crud\Account\AccountCrudInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Crud\Account\AccountCrud', [$app->auth->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
+            }
+        );
     }
 }

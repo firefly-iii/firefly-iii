@@ -126,7 +126,7 @@ class HomeController extends Controller
         $piggyBankAccounts = $repository->getPiggyBankAccounts($start, $end);
 
 
-        $savingsTotal = 0;
+        $savingsTotal = '0';
         foreach ($savings as $savingAccount) {
             $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
         }
