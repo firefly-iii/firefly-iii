@@ -127,6 +127,8 @@ class AccountRepository implements AccountRepositoryInterface
                 $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
             }
             );
+
+            // should this not be a XOR query?
             $query->whereIn('destination.account_id', $accountIds);
 
         }
@@ -559,7 +561,13 @@ class AccountRepository implements AccountRepositoryInterface
                 $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
             }
             );
+            $query->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            }
+            );
             $query->whereIn('source.account_id', $accountIds);
+            $query->whereNotIn('destination.account_id', $accountIds);
 
         }
         // remove group by

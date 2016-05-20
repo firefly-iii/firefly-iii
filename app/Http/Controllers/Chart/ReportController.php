@@ -118,8 +118,8 @@ class ReportController extends Controller
         while ($currentStart <= $end) {
             $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
             $date               = $currentStart->format('Y-m');
-            $spent              = $repository->expensesInPeriod($accounts, $currentStart, $currentEnd);
-            $earned             = $repository->incomesInPeriod($accounts, $currentStart, $currentEnd);
+            $spent              = $repository->spentInPeriod($accounts, $currentStart, $currentEnd);
+            $earned             = $repository->earnedInPeriod($accounts, $currentStart, $currentEnd);
             $spentArray[$date]  = bcmul($spent, '-1');
             $earnedArray[$date] = $earned;
             $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
