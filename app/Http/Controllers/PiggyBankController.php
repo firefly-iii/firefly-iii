@@ -238,7 +238,7 @@ class PiggyBankController extends Controller
 
         if ($amount <= $maxAmount) {
             $repetition                = $piggyBank->currentRelevantRep();
-            $repetition->currentamount = bcadd($repetition->currentamount, $amount);
+            $repetition->currentamount = bcadd($repetition->currentamount, strval($amount));
             $repetition->save();
 
             // create event
