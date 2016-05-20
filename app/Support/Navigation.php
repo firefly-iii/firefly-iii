@@ -341,9 +341,10 @@ class Navigation
         if ($range == '6M') {
             if ($start->month >= 7) {
                 $end->endOfYear();
-            } else {
-                $end->startOfYear()->addMonths(6);
+
+                return $end;
             }
+            $end->startOfYear()->addMonths(6);
 
             return $end;
         }
