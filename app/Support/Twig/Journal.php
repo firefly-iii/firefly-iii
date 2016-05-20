@@ -15,6 +15,7 @@ namespace FireflyIII\Support\Twig;
 use Amount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget as ModelBudget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
@@ -283,26 +284,29 @@ class Journal extends Twig_Extension
             if ($cache->has()) {
                 return $cache->get();
             }
-
-
             $categories = [];
-            // get all budgets:
+            // get all categories for the journal itself (easy):
             foreach ($journal->categories as $category) {
                 $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name) . '</a>';
             }
-            // and more!
-            foreach ($journal->transactions as $transaction) {
-                foreach ($transaction->categories as $category) {
+            if (count($categories) === 0) {
+                $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
+                               ->leftJoin('transactions', 'category_transaction.transaction_id', '=', 'transactions.id')
+                               ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                               ->where('categories.user_ud', $journal->user_id)
+                               ->where('transaction_journals.id', $journal->id)
+                               ->get(['categories.*']);
+                /** @var Category $category */
+                foreach ($set as $category) {
                     $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name)
                                     . '</a>';
                 }
             }
+
             $string = join(', ', array_unique($categories));
             $cache->store($string);
 
             return $string;
-
-
         }
         );
     }
@@ -370,6 +374,8 @@ class Journal extends Twig_Extension
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
+     *
      * @return Twig_SimpleFilter
      */
     protected function typeIcon(): Twig_SimpleFilter
