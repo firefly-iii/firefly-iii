@@ -144,13 +144,18 @@ class Preferences
 
         if (!is_null($pref)) {
             $pref->data = $value;
-        } else {
-            $pref       = new Preference;
-            $pref->name = $name;
-            $pref->data = $value;
-            $pref->user()->associate($user);
+            $pref->save();
 
+            Cache::forever($fullName, $pref);
+
+            return $pref;
         }
+
+        $pref       = new Preference;
+        $pref->name = $name;
+        $pref->data = $value;
+        $pref->user()->associate($user);
+
         $pref->save();
 
         Cache::forever($fullName, $pref);

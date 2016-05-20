@@ -77,16 +77,13 @@ class Range
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepositoryInterface::class);
                 $journal    = $repository->first();
+                $first      = Carbon::now()->startOfYear();
+
                 if (!is_null($journal->id)) {
-                    Session::put('first', $journal->date);
-                } else {
-                    Session::put('first', Carbon::now()->startOfYear());
+                    $first = $journal->date;
                 }
+                Session::put('first', $first);
             }
-
-            // check "sum of everything".
-
-
             $current = Carbon::now()->formatLocalized('%B %Y');
             $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
             $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');

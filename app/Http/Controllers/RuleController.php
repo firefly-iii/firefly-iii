@@ -152,16 +152,16 @@ class RuleController extends Controller
      */
     public function edit(RuleRepositoryInterface $repository, Rule $rule)
     {
+        $oldTriggers  = $this->getCurrentTriggers($rule);
+        $triggerCount = count($oldTriggers);
+        $oldActions   = $this->getCurrentActions($rule);
+        $actionCount  = count($oldActions);
+
         // has old input?
         if (Input::old()) {
             $oldTriggers  = $this->getPreviousTriggers();
             $triggerCount = count($oldTriggers);
             $oldActions   = $this->getPreviousActions();
-            $actionCount  = count($oldActions);
-        } else {
-            $oldTriggers  = $this->getCurrentTriggers($rule);
-            $triggerCount = count($oldTriggers);
-            $oldActions   = $this->getCurrentActions($rule);
             $actionCount  = count($oldActions);
         }
 
@@ -306,10 +306,9 @@ class RuleController extends Controller
         $warning = '';
         if (count($matchingTransactions) == $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
-        } else {
-            if (count($matchingTransactions) == 0) {
-                $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
-            }
+        }
+        if (count($matchingTransactions) == 0) {
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
         }
 
         // Return json response

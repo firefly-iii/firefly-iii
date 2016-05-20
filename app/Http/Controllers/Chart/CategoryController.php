@@ -31,10 +31,6 @@ use stdClass;
  */
 class CategoryController extends Controller
 {
-    const MAKE_POSITIVE = -1;
-    const KEEP_POSITIVE = 1;
-
-
     /** @var  CategoryChartGeneratorInterface */
     protected $generator;
 
@@ -192,20 +188,20 @@ class CategoryController extends Controller
 
                 // get data:
                 if (is_null($category->id)) {
-                    $name   = trans('firefly.noCategory');
-                    $spent  = $repository->spentInPeriodWithoutCategory($accounts, $currentStart, $currentEnd);
-                    $earned = $repository->earnedInPeriodWithoutCategory($accounts, $currentStart, $currentEnd);
-                } else {
+                    $entry['name']          = trans('firefly.noCategory');
+                    $entry['spent'][$year]  = ($repository->spentInPeriodWithoutCategory($accounts, $currentStart, $currentEnd) * -1);
+                    $entry['earned'][$year] = $repository->earnedInPeriodWithoutCategory($accounts, $currentStart, $currentEnd);
 
-                    $name   = $category->name;
-                    $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd);
-                    $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd);
+                    // jump to next year.
+                    $currentStart = clone $currentEnd;
+                    $currentStart->addDay();
+                    continue;
+
                 }
-
-                // save to array:
-                $entry['name']          = $name;
-                $entry['spent'][$year]  = ($spent * -1);
-                $entry['earned'][$year] = $earned;
+                // alternative is a normal category:
+                $entry['name']          = $category->name;
+                $entry['spent'][$year]  = ($repository->spentInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd) * -1);
+                $entry['earned'][$year] = $repository->earnedInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd);
 
                 // jump to next year.
                 $currentStart = clone $currentEnd;
@@ -213,8 +209,8 @@ class CategoryController extends Controller
             }
             $entries->push($entry);
         }
-        // generate chart with data:
 
+        // generate chart with data:
         $data = $this->generator->multiYear($entries);
         $cache->store($data);
 

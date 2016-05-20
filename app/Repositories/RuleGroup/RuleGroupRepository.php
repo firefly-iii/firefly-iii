@@ -60,11 +60,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             if (is_null($moveTo)) {
 
                 $rule->delete();
-            } else {
-                // move
-                $rule->ruleGroup()->associate($moveTo);
-                $rule->save();
+                continue;
             }
+            // move
+            $rule->ruleGroup()->associate($moveTo);
+            $rule->save();
         }
 
         $ruleGroup->delete();

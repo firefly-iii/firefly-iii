@@ -531,12 +531,11 @@ class JournalRepository implements JournalRepositoryInterface
             );
 
             return [$fromAccount, $destinationAccount];
-        } else {
-            $fromType    = AccountType::where('type', 'Cash account')->first();
-            $fromAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => 'Cash account', 'active' => 1]
-            );
         }
+        $fromType    = AccountType::where('type', 'Cash account')->first();
+        $fromAccount = Account::firstOrCreateEncrypted(
+            ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => 'Cash account', 'active' => 1]
+        );
 
         return [$fromAccount, $destinationAccount];
     }

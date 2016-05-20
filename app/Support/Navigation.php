@@ -111,9 +111,14 @@ class Navigation
         $function = $functionMap[$repeatFreq];
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
-        } else {
-            $currentEnd->$function();
+
+            if (in_array($repeatFreq, $subDay)) {
+                $currentEnd->subDay();
+            }
+
+            return $currentEnd;
         }
+        $currentEnd->$function();
         if (in_array($repeatFreq, $subDay)) {
             $currentEnd->subDay();
         }
@@ -370,11 +375,14 @@ class Navigation
         if ($range == '6M') {
             if ($start->month >= 7) {
                 $start->startOfYear()->addMonths(6);
-            } else {
-                $start->startOfYear();
+
+                return $start;
             }
+            $start->startOfYear();
 
             return $start;
+
+
         }
         throw new FireflyException('updateStartDate cannot handle $range "' . $range . '"');
     }

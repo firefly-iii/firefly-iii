@@ -128,14 +128,17 @@ class ReportController extends Controller
         if ($start->diffInMonths($end) > 12) {
             // data = method X
             $data = $this->multiYearInOut($earnedArray, $spentArray, $start, $end);
-        } else {
-            // data = method Y
-            $data = $this->singleYearInOut($earnedArray, $spentArray, $start, $end);
+            $cache->store($data);
+
+            return Response::json($data);
         }
 
+        // data = method Y
+        $data = $this->singleYearInOut($earnedArray, $spentArray, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
+
 
     }
 
@@ -179,13 +182,16 @@ class ReportController extends Controller
         if ($start->diffInMonths($end) > 12) {
             // per year
             $data = $this->multiYearInOutSummarized($earnedArray, $spentArray, $start, $end);
-        } else {
-            // per month!
-            $data = $this->singleYearInOutSummarized($earnedArray, $spentArray, $start, $end);
+            $cache->store($data);
+
+            return Response::json($data);
         }
+        // per month!
+        $data = $this->singleYearInOutSummarized($earnedArray, $spentArray, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
+
     }
 
     /**

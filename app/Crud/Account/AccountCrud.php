@@ -140,6 +140,8 @@ class AccountCrud implements AccountCrudInterface
      * @param array $data
      *
      * @return Account
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function store(array $data): Account
     {
@@ -147,7 +149,6 @@ class AccountCrud implements AccountCrudInterface
         if (!is_null($newAccount)) {
             $this->storeMetadata($newAccount, $data);
         }
-
 
         // continue with the opposing account:
         if ($data['openingBalance'] != 0) {
@@ -202,26 +203,30 @@ class AccountCrud implements AccountCrudInterface
         if ($data['openingBalance'] != 0) {
             if (!is_null($openingBalance->id)) {
                 $this->updateInitialBalance($account, $openingBalance, $data);
-            } else {
-                $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
-                $opposingData = [
-                    'user'           => $data['user'],
-                    'accountType'    => $type,
-                    'name'           => $data['name'] . ' initial balance',
-                    'active'         => false,
-                    'iban'           => '',
-                    'virtualBalance' => 0,
-                ];
-                $opposing     = $this->storeAccount($opposingData);
-                if (!is_null($opposing)) {
-                    $this->storeInitialBalance($account, $opposing, $data);
-                }
+
+                return $account;
             }
 
-        } else {
-            if ($openingBalance) { // opening balance is zero, should we delete it?
-                $openingBalance->delete(); // delete existing opening balance.
+            $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
+            $opposingData = [
+                'user'           => $data['user'],
+                'accountType'    => $type,
+                'name'           => $data['name'] . ' initial balance',
+                'active'         => false,
+                'iban'           => '',
+                'virtualBalance' => 0,
+            ];
+            $opposing     = $this->storeAccount($opposingData);
+            if (!is_null($opposing)) {
+                $this->storeInitialBalance($account, $opposing, $data);
             }
+
+            return $account;
+
+        }
+
+        if ($openingBalance) { // opening balance is zero, should we delete it?
+            $openingBalance->delete(); // delete existing opening balance.
         }
 
         return $account;
@@ -292,16 +297,16 @@ class AccountCrud implements AccountCrudInterface
             ]
         );
 
+        $firstAccount  = $account;
+        $secondAccount = $opposing;
+        $firstAmount   = $data['openingBalance'];
+        $secondAmount  = $data['openingBalance'] * -1;
+
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
             $firstAmount   = $data['openingBalance'] * -1;
             $secondAmount  = $data['openingBalance'];
-        } else {
-            $firstAccount  = $account;
-            $secondAccount = $opposing;
-            $firstAmount   = $data['openingBalance'];
-            $secondAmount  = $data['openingBalance'] * -1;
         }
 
         $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
@@ -378,16 +383,17 @@ class AccountCrud implements AccountCrudInterface
                 if (!is_null($entry)) {
                     $entry->data = $data[$field];
                     $entry->save();
-                } else {
-                    $metaData = new AccountMeta(
-                        [
-                            'account_id' => $account->id,
-                            'name'       => $field,
-                            'data'       => $data[$field],
-                        ]
-                    );
-                    $metaData->save();
+
+                    continue;
                 }
+                $metaData = new AccountMeta(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field],
+                    ]
+                );
+                $metaData->save();
             }
         }
 

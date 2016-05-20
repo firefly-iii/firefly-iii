@@ -38,21 +38,20 @@ class IsConfirmed
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('login');
             }
-        } else {
-            // must the user be confirmed in the first place?
-            $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
-            // user must be logged in, then continue:
-            $isConfirmed = Preferences::get('user_confirmed', false)->data;
 
-            if ($isConfirmed === false && $confirmAccount === true) {
+            return redirect()->guest('login');
+        }
+        // must the user be confirmed in the first place?
+        $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
+        // user must be logged in, then continue:
+        $isConfirmed = Preferences::get('user_confirmed', false)->data;
 
-                // user account is not confirmed, redirect to
-                // confirmation page:
-                return redirect(route('confirmation_error'));
-            }
+        if ($isConfirmed === false && $confirmAccount === true) {
+
+            // user account is not confirmed, redirect to
+            // confirmation page:
+            return redirect(route('confirmation_error'));
         }
 
         return $next($request);
