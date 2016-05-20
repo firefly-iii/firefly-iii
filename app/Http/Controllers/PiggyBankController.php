@@ -131,9 +131,8 @@ class PiggyBankController extends Controller
         /*
          * Flash some data to fill the form.
          */
-        if (!is_null($piggyBank->targetdate) || !$piggyBank->targetdate == '') {
-            $targetDate = new Carbon($piggyBank->targetdate);
-            $targetDate = $targetDate->format('Y-m-d');
+        if (!is_null($piggyBank->targetdate)) {
+            $targetDate = $piggyBank->targetdate->format('Y-m-d');
         }
 
         $preFilled = ['name'         => $piggyBank->name,

@@ -176,12 +176,7 @@ class BudgetController extends Controller
         $accounts          = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
         $startAsString     = $start->format('Y-m-d');
         $endAsString       = $end->format('Y-m-d');
-
-        /**
-         * Do some cleanup:
-         * TODO reimplement the deletion of budget_limits and limit_repetitions with amount 0
-         */
-
+        
         // loop the budgets:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {

@@ -218,6 +218,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getTransactions(TransactionJournal $journal): Collection
     {
+        $transactions = new Collection;
         switch ($journal->transactionType->type) {
             case TransactionType::DEPOSIT:
                 /** @var Collection $transactions */

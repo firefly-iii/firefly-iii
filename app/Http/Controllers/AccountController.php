@@ -223,8 +223,9 @@ class AccountController extends Controller
 
 
         if ($cache->has()) {
-            //            $entries = $cache->get();
-            //            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+            $entries = $cache->get();
+
+            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
         }
 
         while ($end >= $start) {

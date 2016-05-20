@@ -6,7 +6,7 @@ namespace FireflyIII\Support\Twig;
 
 use Amount;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
+use FireflyIII\Models\Budget as ModelBudget;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
@@ -78,7 +78,7 @@ class Journal extends Twig_Extension
     public function formatBudgetPerspective(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatBudgetPerspective', function (TransactionJournal $journal, Budget $budget) {
+            'formatBudgetPerspective', function (TransactionJournal $journal, ModelBudget $budget) {
 
             $cache = new CacheProperties;
             $cache->addProperty('formatBudgetPerspective');

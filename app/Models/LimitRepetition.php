@@ -27,6 +27,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereEnddate($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereAmount($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition after($date)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition before($date)
  */
 class LimitRepetition extends Model
 {

@@ -78,6 +78,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal expanded()
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal sortCorrectly()
  */
 class TransactionJournal extends TransactionJournalSupport
 {

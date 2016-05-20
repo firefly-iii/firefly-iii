@@ -227,6 +227,7 @@ class ExpandedForm
      */
     public function makeSelectListWithEmpty(Collection $set): array
     {
+        $selectList    = [];
         $selectList[0] = '(none)';
         $fields        = ['title', 'name', 'description'];
         /** @var Eloquent $entry */

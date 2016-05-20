@@ -198,8 +198,6 @@ class SplitController extends Controller
      */
     private function arrayFromJournal(Request $request, TransactionJournal $journal): array
     {
-        if (Session::has('_old_input')) {
-        }
         $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
         $destinationAccounts = TransactionJournal::destinationAccountList($journal);
         $array               = [

@@ -30,7 +30,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Export\Entry
  */
-class Entry
+final class Entry
 {
     /** @var  string */
     public $amount;

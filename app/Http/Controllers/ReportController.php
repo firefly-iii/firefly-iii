@@ -194,9 +194,9 @@ class ReportController extends Controller
              */
             $auditData[$id]['journals']         = $journals->reverse();
             $auditData[$id]['exists']           = $exists;
-            $auditData[$id]['end']              = $end->formatLocalized(trans('config.month_and_day'));
+            $auditData[$id]['end']              = $end->formatLocalized(strval(trans('config.month_and_day')));
             $auditData[$id]['endBalance']       = Steam::balance($account, $end);
-            $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(trans('config.month_and_day'));
+            $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(strval(trans('config.month_and_day')));
             $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
         }
 

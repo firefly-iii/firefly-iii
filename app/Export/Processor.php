@@ -158,8 +158,6 @@ class Processor
             // is part of this job?
             $zipFileName = str_replace($this->job->key . '-', '', $entry);
             $result      = $zip->addFromString($zipFileName, $disk->get($entry));
-            if (!$result) {
-            }
         }
 
         $zip->close();
