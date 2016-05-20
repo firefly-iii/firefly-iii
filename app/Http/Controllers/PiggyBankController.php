@@ -232,7 +232,7 @@ class PiggyBankController extends Controller
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
-        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
+        $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
 
