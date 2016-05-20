@@ -1,7 +1,4 @@
 <?php
-declare(strict_types = 1);
-
-
 /**
  * JournalList.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -10,8 +7,9 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Support\Binder;
+declare(strict_types = 1);
 
+namespace FireflyIII\Support\Binder;
 
 use Auth;
 use FireflyIII\Models\TransactionJournal;
