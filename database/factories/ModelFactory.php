@@ -1,4 +1,7 @@
 <?php
+declare(strict_types = 1);
+
+
 
 $factory->define(
     FireflyIII\User::class, function (Faker\Generator $faker) {

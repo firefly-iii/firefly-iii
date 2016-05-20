@@ -1,4 +1,7 @@
 <?php
+declare(strict_types = 1);
+
+
 use Carbon\Carbon;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;

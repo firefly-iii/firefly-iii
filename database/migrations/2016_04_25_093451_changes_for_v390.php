@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Database\Migrations\Migration;

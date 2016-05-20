@@ -1,4 +1,7 @@
-<?php namespace FireflyIII\Models;
+<?php
+declare(strict_types = 1);
+
+namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;

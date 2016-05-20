@@ -1,4 +1,7 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+declare(strict_types = 1);
+
+namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use Carbon\Carbon;

@@ -157,7 +157,7 @@ class Processor
         foreach ($this->getFiles() as $entry) {
             // is part of this job?
             $zipFileName = str_replace($this->job->key . '-', '', $entry);
-            $result      = $zip->addFromString($zipFileName, $disk->get($entry));
+            $zip->addFromString($zipFileName, $disk->get($entry));
         }
 
         $zip->close();

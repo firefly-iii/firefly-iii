@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 /**
  * ConfigureLogging.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -24,20 +26,20 @@ class ConfigureLogging extends IlluminateConfigureLogging
      * @param Application $app
      * @param Writer      $log
      */
-    protected function configureSingleHandler(Application $app, Writer $log)
-    {
-        $log->useFiles($app->storagePath() . '/logs/firefly-iii.log');
-    }
-
-    /**
-     * @param Application $app
-     * @param Writer      $log
-     */
     protected function configureDailyHandler(Application $app, Writer $log)
     {
         $log->useDailyFiles(
             $app->storagePath() . '/logs/firefly-iii.log',
             $app->make('config')->get('app.log_max_files', 5)
         );
+    }
+
+    /**
+     * @param Application $app
+     * @param Writer      $log
+     */
+    protected function configureSingleHandler(Application $app, Writer $log)
+    {
+        $log->useFiles($app->storagePath() . '/logs/firefly-iii.log');
     }
 }
