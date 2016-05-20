@@ -47,15 +47,15 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
- * @property-read string                                                                               $transaction_type_type
+ * @property string                                                                                    $transaction_type_type
  * @property-read string                                                                               $transaction_currency_code
  * @property-read string                                                                               $destination_amount
- * @property-read string                                                                               $destination_account_id
- * @property-read string                                                                               $destination_account_name
+ * @property string                                                                                    $destination_account_id
+ * @property string                                                                                    $destination_account_name
  * @property-read string                                                                               $destination_account_type
  * @property-read string                                                                               $source_amount
- * @property-read string                                                                               $source_account_id
- * @property-read string                                                                               $source_account_name
+ * @property string                                                                                    $source_account_id
+ * @property string                                                                                    $source_account_name
  * @property-read string                                                                               $source_account_type
  * @property \Carbon\Carbon                                                                            $process_date
  * @property int                                                                                       $account_id
@@ -179,20 +179,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getDestinationAccountNameAttribute($value)
-    {
-        if (!is_null($value) && strlen(strval($value)) > 0) {
-            return Crypt::decrypt($value);
-        }
-
-        return null;
-    }
-
-    /**
      *
      * @param string $fieldName
      *
@@ -207,21 +193,6 @@ class TransactionJournal extends TransactionJournalSupport
         }
 
         return '';
-    }
-
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getSourceAccountNameAttribute($value)
-    {
-        if (!is_null($value) && strlen(strval($value)) > 0) {
-            return Crypt::decrypt($value);
-        }
-
-        return null;
-
     }
 
     /**
@@ -325,17 +296,6 @@ class TransactionJournal extends TransactionJournalSupport
     /**
      * @param EloquentBuilder $query
      */
-    public function scopeSortCorrectly(EloquentBuilder $query)
-    {
-        $query->orderBy('transaction_journals.date', 'DESC');
-        $query->orderBy('transaction_journals.order', 'ASC');
-        $query->orderBy('transaction_journals.id', 'DESC');
-
-    }
-
-    /**
-     * @param EloquentBuilder $query
-     */
     public function scopeExpanded(EloquentBuilder $query)
     {
         // left join transaction type:
@@ -349,6 +309,17 @@ class TransactionJournal extends TransactionJournalSupport
         // left join destination (for amount and account info).
         $query->groupBy('transaction_journals.id');
         $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     */
+    public function scopeSortCorrectly(EloquentBuilder $query)
+    {
+        $query->orderBy('transaction_journals.date', 'DESC');
+        $query->orderBy('transaction_journals.order', 'ASC');
+        $query->orderBy('transaction_journals.id', 'DESC');
+
     }
 
     /**

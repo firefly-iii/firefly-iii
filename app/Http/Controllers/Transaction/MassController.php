@@ -116,6 +116,24 @@ class MassController extends Controller
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'mass-edit');
 
+        // set some values to be used in the edit routine:
+        $journals->each(
+            function (TransactionJournal $journal) {
+                $journal->amount            = TransactionJournal::amountPositive($journal);
+                $sources                    = TransactionJournal::sourceAccountList($journal);
+                $destinations               = TransactionJournal::destinationAccountList($journal);
+                $journal->transaction_count = $journal->transactions()->count();
+                if (!is_null($sources->first())) {
+                    $journal->source_account_id   = $sources->first()->id;
+                    $journal->source_account_name = $sources->first()->name;
+                }
+                if (!is_null($destinations->first())) {
+                    $journal->destination_account_id   = $destinations->first()->id;
+                    $journal->destination_account_name = $destinations->first()->name;
+                }
+            }
+        );
+
         return view('transactions.mass-edit', compact('journals', 'subTitle', 'accountList'));
     }
 
