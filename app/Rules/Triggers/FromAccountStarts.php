@@ -10,6 +10,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules\Triggers;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -52,7 +53,13 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $name   = strtolower($journal->source_account_name ?? TransactionJournal::sourceAccount($journal)->name);
+        $name = '';
+
+        /** @var Account $account */
+        foreach (TransactionJournal::sourceAccountList($journal) as $account) {
+            $name .= strtolower($account->name);
+        }
+
         $search = strtolower($this->triggerValue);
 
         $part = substr($name, 0, strlen($search));

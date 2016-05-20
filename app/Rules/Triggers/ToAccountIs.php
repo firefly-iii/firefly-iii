@@ -10,6 +10,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules\Triggers;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -52,7 +53,13 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $toAccountName = strtolower($journal->destination_account_name ?? TransactionJournal::destinationAccount($journal)->name);
+        $toAccountName = '';
+
+        /** @var Account $account */
+        foreach (TransactionJournal::destinationAccountList($journal) as $account) {
+            $toAccountName .= strtolower($account->name);
+        }
+        
         $search        = strtolower($this->triggerValue);
 
         if ($toAccountName == $search) {

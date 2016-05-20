@@ -215,6 +215,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * The incoming journal ($journal)'s accounts (source accounts for a withdrawal, destination accounts for a deposit)
+     * must match the already existing transaction's accounts exactly.
+     *
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
@@ -223,16 +226,21 @@ class TagRepository implements TagRepositoryInterface
      */
     protected function matchAll(TransactionJournal $journal, Tag $tag): bool
     {
+        $checkSources      = join(',', TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray());
+        $checkDestinations = join(',', TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray());
+
         $match = true;
         /** @var TransactionJournal $check */
         foreach ($tag->transactionjournals as $check) {
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
+            $thisSources      = join(',', TransactionJournal::sourceAccountList($check)->pluck('id')->toArray());
+            $thisDestinations = join(',', TransactionJournal::destinationAccountList($check)->pluck('id')->toArray());
 
-            if ($check->isWithdrawal() && TransactionJournal::sourceAccount($check)->id != TransactionJournal::destinationAccount($journal)->id) {
+            if ($check->isWithdrawal() && $thisSources !== $checkSources) {
                 $match = false;
             }
-            if ($check->isDeposit() && TransactionJournal::destinationAccount($check)->id != TransactionJournal::destinationAccount($journal)->id) {
+            if ($check->isDeposit() && $thisDestinations !== $checkDestinations) {
                 $match = false;
             }
 
