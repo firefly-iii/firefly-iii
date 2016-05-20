@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 /**
  * MassController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,10 +9,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
-
 namespace FireflyIII\Http\Controllers\Transaction;
-
 
 use Auth;
 use Carbon\Carbon;

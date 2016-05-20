@@ -175,7 +175,7 @@ class PiggyBankController extends Controller
         foreach ($piggyBanks as $piggyBank) {
             $piggyBank->savedSoFar = round($piggyBank->currentRelevantRep()->currentamount, 2);
             $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
-            $piggyBank->leftToSave = bcsub($piggyBank->targetamount, $piggyBank->savedSoFar);
+            $piggyBank->leftToSave = bcsub($piggyBank->targetamount, strval($piggyBank->savedSoFar));
             $piggyBank->percentage = $piggyBank->percentage > 100 ? 100 : $piggyBank->percentage;
 
             /*
@@ -192,7 +192,7 @@ class PiggyBankController extends Controller
                     'leftToSave'        => $piggyBank->leftToSave,
                 ];
             } else {
-                $accounts[$account->id]['sumOfSaved']   = bcadd($accounts[$account->id]['sumOfSaved'], $piggyBank->savedSoFar);
+                $accounts[$account->id]['sumOfSaved']   = bcadd($accounts[$account->id]['sumOfSaved'], strval($piggyBank->savedSoFar));
                 $accounts[$account->id]['sumOfTargets'] = bcadd($accounts[$account->id]['sumOfTargets'], $piggyBank->targetamount);
                 $accounts[$account->id]['leftToSave']   = bcadd($accounts[$account->id]['leftToSave'], $piggyBank->leftToSave);
             }

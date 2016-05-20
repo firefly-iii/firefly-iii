@@ -40,19 +40,12 @@ class CrudServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(
-            'FireflyIII\Crud\Split\JournalInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Crud\Split\Journal', [$app->auth->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
-                }
+        $this->registerJournal();
+        $this->registerAccount();
+    }
 
-                return app('FireflyIII\Crud\Split\Journal', $arguments);
-            }
-        );
+    private function registerAccount()
+    {
 
         $this->app->bind(
             'FireflyIII\Crud\Account\AccountCrudInterface',
@@ -67,5 +60,23 @@ class CrudServiceProvider extends ServiceProvider
                 return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
             }
         );
+    }
+
+    private function registerJournal()
+    {
+        $this->app->bind(
+            'FireflyIII\Crud\Split\JournalInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Crud\Split\Journal', [$app->auth->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Crud\Split\Journal', $arguments);
+            }
+        );
+
     }
 }
