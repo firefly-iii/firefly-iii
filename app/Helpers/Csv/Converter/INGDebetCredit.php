@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * INGDebetCredit.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

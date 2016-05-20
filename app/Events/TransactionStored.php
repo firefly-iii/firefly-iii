@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 /**
  * TransactionStored.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -9,6 +7,7 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
 
 namespace FireflyIII\Events;
 
