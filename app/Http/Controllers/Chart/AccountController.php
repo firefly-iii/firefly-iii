@@ -12,13 +12,17 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Crud\Account\AccountCrudInterface;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
+use Navigation;
 use Preferences;
 use Response;
 use Steam;
@@ -202,6 +206,59 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('frontpage');
         $cache->addProperty('single');
+        $cache->addProperty($account->id);
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+
+        $format    = (string)trans('config.month_and_day');
+        $range     = Steam::balanceInRange($account, $start, $end);
+        $current   = clone $start;
+        $previous  = array_values($range)[0];
+        $labels    = [];
+        $chartData = [];
+
+        while ($end >= $current) {
+            $theDate = $current->format('Y-m-d');
+            $balance = $range[$theDate] ?? $previous;
+
+            $labels[]    = $current->formatLocalized($format);
+            $chartData[] = $balance;
+            $previous    = $balance;
+            $current->addDay();
+        }
+
+
+        $data = $this->generator->single($account, $labels, $chartData);
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+
+    /**
+     * @param Account $account
+     * @param string  $date
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws FireflyException
+     */
+    public function specificPeriod(Account $account, string $date)
+    {
+        try {
+            $start = new Carbon($date);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            throw new FireflyException('"' . e($date) . '" does not seem to be a valid date. Should be in the format YYYY-MM-DD');
+        }
+        $range = Preferences::get('viewRange', '1M')->data;
+        $end   = Navigation::endOfPeriod($start, $range);
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('frontpage');
+        $cache->addProperty('specificPeriod');
         $cache->addProperty($account->id);
         if ($cache->has()) {
             return Response::json($cache->get());

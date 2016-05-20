@@ -62,14 +62,23 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-
     $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-
-
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push(e($account->name), route('accounts.show', [$account->id]));
 }
 );
+
+Breadcrumbs::register(
+    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $date) {
+    $breadcrumbs->parent('accounts.show', $account);
+
+    $range = Preferences::get('viewRange', '1M')->data;
+    $title = $account->name . ' (' . Navigation::periodShow($date, $range) . ')';
+
+    $breadcrumbs->push($title, route('accounts.show.date', [$account->id, $date->format('Y-m-d')]));
+}
+);
+
 Breadcrumbs::register(
     'accounts.delete', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);

@@ -268,7 +268,7 @@ class AccountController extends Controller
         $range    = Preferences::get('viewRange', '1M')->data;
         $start    = Navigation::startOfPeriod($carbon, $range);
         $end      = Navigation::endOfPeriod($carbon, $range);
-        $subTitle = $account->name;
+        $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
         $page     = intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
@@ -276,9 +276,9 @@ class AccountController extends Controller
         $count    = $set->count();
         $subSet   = $set->splice($offset, $pageSize);
         $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
-        $journals->setPath('categories/show/' . $account->id . '/' . $date);
+        $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        return view('accounts.show_with_date', compact('category', 'journals', 'subTitle', 'carbon'));
+        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));
     }
 
     /**
