@@ -44,7 +44,8 @@ class ConnectJournalToPiggyBank
 
         $amount = TransactionJournal::amountPositive($journal);
         // if piggy account matches source account, the amount is positive
-        if ($piggyBank->account_id == TransactionJournal::sourceAccount($journal)->id) {
+        $sources = TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray();
+        if (in_array($piggyBank->account_id, $sources)) {
             $amount = bcmul($amount, '-1');
         }
 
