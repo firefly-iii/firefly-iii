@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
@@ -30,19 +31,19 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
             return $account;
         }
 
-        return $this->findAccount($repository);
+        return $this->findAccount($crud);
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param AccountCrudInterface $crud
      *
      * @return Account|string
      */
-    private function findAccount(AccountRepositoryInterface $repository)
+    private function findAccount(AccountCrudInterface $crud)
     {
         if (strlen($this->value) > 0) {
 
-            $set = $repository->getAccountsByType([]);
+            $set = $crud->getAccountsByType([]);
             /** @var Account $account */
             foreach ($set as $account) {
                 if ($account->iban == $this->value) {

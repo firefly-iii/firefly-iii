@@ -4,11 +4,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
 use FireflyIII\Helpers\Csv\Importer;
 use FireflyIII\Helpers\Csv\WizardInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Models\AccountType;
 use Illuminate\Http\Request;
 use Input;
 use Log;
@@ -158,11 +159,11 @@ class CsvController extends Controller
      *
      * STEP ONE
      *
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\View\View
      */
-    public function index(ARI $repository)
+    public function index(AccountCrudInterface $crud)
     {
         $subTitle = trans('firefly.csv_import');
 
@@ -190,7 +191,7 @@ class CsvController extends Controller
         ];
 
         // get a list of asset accounts:
-        $accounts = ExpandedForm::makeSelectList($repository->getAccountsByType(['Asset account', 'Default account']));
+        $accounts = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]));
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));

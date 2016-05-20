@@ -5,7 +5,6 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
@@ -78,20 +77,6 @@ interface AccountRepositoryInterface
      * @return \Illuminate\Support\Collection
      */
     public function get(array $ids): Collection;
-
-    /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
-    public function getAccountsById(array $accountIds): Collection;
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getAccountsByType(array $types): Collection;
 
     /**
      * @param TransactionJournal $journal
@@ -203,5 +188,5 @@ interface AccountRepositoryInterface
      * @return string
      */
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
-    
+
 }

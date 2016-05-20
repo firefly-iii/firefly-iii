@@ -13,6 +13,7 @@ namespace FireflyIII\Crud\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use Illuminate\Support\Collection;
 
 /**
  * Interface AccountCrudInterface
@@ -35,6 +36,20 @@ interface AccountCrudInterface
      * @return Account
      */
     public function find(int $accountId): Account;
+
+    /**
+     * @param array $accountIds
+     *
+     * @return Collection
+     */
+    public function getAccountsById(array $accountIds): Collection;
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types): Collection;
 
     /**
      * @param array $data

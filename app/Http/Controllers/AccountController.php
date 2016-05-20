@@ -63,16 +63,16 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
+     * @param AccountCrudInterface $crud
+     * @param Account              $account
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function delete(ARI $repository, Account $account)
+    public function delete(AccountCrudInterface $crud, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectListWithEmpty($repository->getAccountsByType([$account->accountType->type]));
+        $accountList = ExpandedForm::makeSelectListWithEmpty($crud->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -151,19 +151,19 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI                        $repository
-     * @param                            $what
+     * @param AccountCrudInterface $crud
+     * @param string               $what
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function index(ARI $repository, string $what)
+    public function index(AccountCrudInterface $crud, string $what)
     {
         $what = $what ?? 'asset';
 
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = $repository->getAccountsByType($types);
+        $accounts     = $crud->getAccountsByType($types);
         $start        = clone session('start', Carbon::now()->startOfMonth());
         $end          = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();

@@ -12,10 +12,12 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Processor;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ExportFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
@@ -86,13 +88,12 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ARI  $repository
-     *
-     * @param EJRI $jobs
+     * @param AccountCrudInterface $crud
+     * @param EJRI                 $jobs
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(ARI $repository, EJRI $jobs)
+    public function index(AccountCrudInterface $crud, EJRI $jobs)
     {
         // create new export job.
         $job = $jobs->create();
@@ -100,7 +101,7 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts      = $repository->getAccountsByType(['Default account', 'Asset account']);
+        $accounts      = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));

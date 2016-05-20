@@ -59,8 +59,8 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
         foreach (TransactionJournal::destinationAccountList($journal) as $account) {
             $toAccountName .= strtolower($account->name);
         }
-        
-        $search        = strtolower($this->triggerValue);
+
+        $search = strtolower($this->triggerValue);
 
         if ($toAccountName == $search) {
             return true;

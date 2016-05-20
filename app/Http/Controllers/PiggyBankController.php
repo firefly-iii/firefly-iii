@@ -5,7 +5,9 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -59,15 +61,15 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
-     * @return mixed
+     * @return View
      */
-    public function create(ARI $repository)
+    public function create(AccountCrudInterface $crud)
     {
 
         $periods      = config('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
+        $accounts     = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
@@ -117,16 +119,16 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param ARI       $repository
-     * @param PiggyBank $piggyBank
+     * @param AccountCrudInterface $crud
+     * @param PiggyBank            $piggyBank
      *
      * @return View
      */
-    public function edit(ARI $repository, PiggyBank $piggyBank)
+    public function edit(AccountCrudInterface $crud, PiggyBank $piggyBank)
     {
 
         $periods      = config('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
+        $accounts     = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;

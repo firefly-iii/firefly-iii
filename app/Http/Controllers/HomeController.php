@@ -4,6 +4,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Artisan;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
@@ -96,11 +97,12 @@ class HomeController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param ARI                  $repository
+     * @param AccountCrudInterface $crud
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function index(ARI $repository)
+    public function index(ARI $repository, AccountCrudInterface $crud)
     {
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
@@ -114,14 +116,14 @@ class HomeController extends Controller
         $mainTitleIcon = 'fa-fire';
         $transactions  = [];
         $frontPage     = Preferences::get(
-            'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+            'frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
-        $accounts          = $repository->getAccountsById($frontPage->data);
+        $accounts          = $crud->getAccountsById($frontPage->data);
         $savings           = $repository->getSavingsAccounts($start, $end);
         $piggyBankAccounts = $repository->getPiggyBankAccounts($start, $end);
 

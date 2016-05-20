@@ -59,7 +59,7 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
         foreach (TransactionJournal::sourceAccountList($journal) as $account) {
             $name .= strtolower($account->name);
         }
-        
+
         $search = strtolower($this->triggerValue);
 
         if ($name == $search) {

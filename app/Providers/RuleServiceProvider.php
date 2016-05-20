@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 
 
-
 namespace FireflyIII\Providers;
 
 use FireflyIII\Exceptions\FireflyException;

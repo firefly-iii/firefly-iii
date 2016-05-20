@@ -206,63 +206,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
-    public function getAccountsById(array $accountIds): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        );
-
-        if (count($accountIds) > 0) {
-            $query->whereIn('accounts.id', $accountIds);
-        }
-
-        $result = $query->get(['accounts.*']);
-
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getAccountsByType(array $types): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        );
-        if (count($types) > 0) {
-            $query->accountTypeIn($types);
-        }
-
-        $result = $query->get(['accounts.*']);
-
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param Account            $account
      *

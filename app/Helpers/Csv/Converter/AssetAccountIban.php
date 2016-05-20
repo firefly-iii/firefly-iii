@@ -6,7 +6,7 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountIban
@@ -21,9 +21,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
      */
     public function convert(): Account
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $crud = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
@@ -34,7 +32,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 
 
         if (strlen($this->value) > 0) {
-            $account = $this->searchOrCreate($repository, $crud);
+            $account = $this->searchOrCreate($crud);
 
             return $account;
         }
@@ -43,15 +41,14 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param AccountCrudInterface       $crud
+     * @param AccountCrudInterface $crud
      *
      * @return Account
      */
-    private function searchOrCreate(AccountRepositoryInterface $repository, AccountCrudInterface $crud)
+    private function searchOrCreate(AccountCrudInterface $crud)
     {
         // find or create new account:
-        $set = $repository->getAccountsByType(['Default account', 'Asset account']);
+        $set = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->iban == $this->value) {

@@ -241,11 +241,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         // that should do it:
         $first = $query->get(TransactionJournal::queryFields());
 
-        
+
         // then collection transactions (harder)
-        $query  = $this->user->transactionjournals()->distinct()
-                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                             ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+        $query = $this->user->transactionjournals()->distinct()
+                            ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
 
         if (count($types) > 0) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');

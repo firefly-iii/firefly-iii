@@ -4,7 +4,9 @@ namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
@@ -85,11 +87,12 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ARI $accountRepository
+     * @param ARI                  $accountRepository
+     * @param AccountCrudInterface $crud
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function boxIn(ARI $accountRepository)
+    public function boxIn(ARI $accountRepository, AccountCrudInterface $crud)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -102,7 +105,7 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
+        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $amount   = $accountRepository->earnedInPeriod($accounts, $start, $end);
         $data     = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -111,11 +114,12 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ARI $accountRepository
+     * @param ARI                  $accountRepository
+     * @param AccountCrudInterface $crud
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxOut(ARI $accountRepository)
+    public function boxOut(ARI $accountRepository, AccountCrudInterface $crud)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -129,7 +133,7 @@ class JsonController extends Controller
             return Response::json($cache->get());
         }
 
-        $accounts = $accountRepository->getAccountsByType(['Default account', 'Asset account', 'Cash account']);
+        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $amount   = $accountRepository->spentInPeriod($accounts, $start, $end);
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
@@ -169,13 +173,13 @@ class JsonController extends Controller
     /**
      * Returns a JSON list of all beneficiaries.
      *
-     * @param ARI $accountRepository
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAccounts(ARI $accountRepository)
+    public function expenseAccounts(AccountCrudInterface $crud)
     {
-        $list   = $accountRepository->getAccountsByType(['Expense account', 'Beneficiary account']);
+        $list   = $crud->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -186,13 +190,13 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ARI $accountRepository
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function revenueAccounts(ARI $accountRepository)
+    public function revenueAccounts(AccountCrudInterface $crud)
     {
-        $list   = $accountRepository->getAccountsByType(['Revenue account']);
+        $list   = $crud->getAccountsByType([AccountType::REVENUE]);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;

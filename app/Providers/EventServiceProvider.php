@@ -31,29 +31,29 @@ class EventServiceProvider extends ServiceProvider
 
             ],
 
-            'FireflyIII\Events\BudgetLimitStored'         => [
+            'FireflyIII\Events\BudgetLimitStored'        => [
                 'FireflyIII\Handlers\Events\BudgetLimitEventHandler@store',
             ],
-            'FireflyIII\Events\BudgetLimitUpdated'        => [
+            'FireflyIII\Events\BudgetLimitUpdated'       => [
                 'FireflyIII\Handlers\Events\BudgetLimitEventHandler@update',
             ],
-            'FireflyIII\Events\TransactionStored'  => [
+            'FireflyIII\Events\TransactionStored'        => [
                 'FireflyIII\Handlers\Events\ConnectTransactionToPiggyBank',
             ],
-            'FireflyIII\Events\TransactionJournalStored'  => [
+            'FireflyIII\Events\TransactionJournalStored' => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
                 'FireflyIII\Handlers\Events\FireRulesForStore',
             ],
-            'Illuminate\Auth\Events\Logout'               => [
+            'Illuminate\Auth\Events\Logout'              => [
                 'FireflyIII\Handlers\Events\UserEventListener@onUserLogout',
             ],
-            'FireflyIII\Events\UserRegistration'          => [
+            'FireflyIII\Events\UserRegistration'         => [
                 'FireflyIII\Handlers\Events\SendRegistrationMail',
                 'FireflyIII\Handlers\Events\AttachUserRole',
                 'FireflyIII\Handlers\Events\UserConfirmation@sendConfirmation',
             ],
-            'FireflyIII\Events\ResendConfirmation'        => [
+            'FireflyIII\Events\ResendConfirmation'       => [
                 'FireflyIII\Handlers\Events\UserConfirmation@resendConfirmation',
             ],
         ];

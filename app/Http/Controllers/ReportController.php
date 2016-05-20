@@ -4,12 +4,14 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\AccountReportHelperInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -58,12 +60,11 @@ class ReportController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
      * @return View
-     * @internal param ReportHelperInterface $helper
      */
-    public function index(ARI $repository)
+    public function index(AccountCrudInterface $crud)
     {
         /** @var Carbon $start */
         $start            = clone session('first');
@@ -71,7 +72,7 @@ class ReportController extends Controller
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
 
         // does the user have shared accounts?
-        $accounts = $repository->getAccountsByType(['Default account', 'Asset account']);
+        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         // get id's for quick links:
         $accountIds = [];
         /** @var Account $account */

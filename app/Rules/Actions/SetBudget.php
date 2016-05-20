@@ -56,7 +56,7 @@ class SetBudget implements ActionInterface
         if (!is_null($budget)) {
             $journal->budgets()->sync([$budget->id]);
         }
-        
+
         return true;
     }
 }

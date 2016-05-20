@@ -6,9 +6,11 @@ namespace FireflyIII\Http\Controllers;
 use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -168,17 +170,15 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * Shows a form for the user to select a range of transactions to execute this rulegroup for
-     *
-     * @param AccountRepositoryInterface $repository
-     * @param RuleGroup                  $ruleGroup
+     * @param AccountCrudInterface $crud
+     * @param RuleGroup            $ruleGroup
      *
      * @return View
      */
-    public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function selectTransactions(AccountCrudInterface $crud, RuleGroup $ruleGroup)
     {
         // does the user have shared accounts?
-        $accounts        = $repository->getAccountsByType(['Default account', 'Asset account']);
+        $accounts        = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList     = ExpandedForm::makeSelectList($accounts);
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');

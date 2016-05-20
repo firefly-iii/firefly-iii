@@ -12,7 +12,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionStored;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;

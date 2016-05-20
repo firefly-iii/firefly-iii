@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -39,11 +39,11 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's expense accounts.
      *
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAccounts(ARI $repository)
+    public function expenseAccounts(AccountCrudInterface $crud)
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -55,7 +55,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $accounts = $repository->getAccountsByType(['Expense account', 'Beneficiary account']);
+        $accounts = $crud->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
 
         $start->subDay();
         $ids           = $accounts->pluck('id')->toArray();
@@ -88,11 +88,11 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function frontpage(ARI $repository)
+    public function frontpage(AccountCrudInterface $crud)
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -108,8 +108,8 @@ class AccountController extends Controller
             return Response::json($cache->get());
         }
 
-        $frontPage = Preferences::get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
-        $accounts  = $repository->getAccountsById($frontPage->data);
+        $frontPage = Preferences::get('frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
+        $accounts  = $crud->getAccountsById($frontPage->data);
 
         foreach ($accounts as $account) {
             $balances = [];
