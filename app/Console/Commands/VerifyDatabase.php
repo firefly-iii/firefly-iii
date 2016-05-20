@@ -255,7 +255,7 @@ having transaction_count = 0
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            $sum = $user->transactions()->sum('amount');
+            $sum = strval($user->transactions()->sum('amount'));
             if (bccomp($sum, '0') !== 0) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
             }
