@@ -1,4 +1,4 @@
-    <?php
+<?php
 /**
  * FireflyValidator.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

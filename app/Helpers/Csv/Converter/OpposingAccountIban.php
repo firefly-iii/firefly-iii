@@ -12,7 +12,6 @@ namespace FireflyIII\Helpers\Csv\Converter;
 
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class OpposingAccountIban
@@ -29,9 +28,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
      */
     public function convert()
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $crud = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
         if (isset($this->mapped[$this->index][$this->value])) {
             $account = $crud->find($this->mapped[$this->index][$this->value]);
