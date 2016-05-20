@@ -74,6 +74,48 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
+     * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
+     * how much money was earned by the given asset accounts. This method will tell you how much money
+     * these given revenue accounts sent. Ie. how much money was made FROM these revenue accounts.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedFromInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+                            ->transactionTypes([TransactionType::DEPOSIT]);
+
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->leftJoin(
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            }
+            );
+            $query->whereIn('source.account_id', $accountIds);
+
+        }
+        // remove group by
+        $query->getQuery()->getQuery()->groups = null;
+
+        // that should do it:
+        $sum = strval($query->sum('source.amount'));
+        $sum = bcmul($sum, '-1');
+
+        return $sum;
+
+    }
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -527,6 +569,47 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * This method is almost the same as ::spentInPeriod, but only works for expense accounts
+     * instead of the implied asset accounts for ::spentInPeriod. ::spentInPeriod will tell you
+     * how much money was spent by the given asset accounts. This method will tell you how much money
+     * these given expense accounts received. Ie. how much money was spent AT these expense accounts.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var HasMany $query */
+        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+                            ->transactionTypes([TransactionType::WITHDRAWAL]);
+        if ($end >= $start) {
+            $query->before($end)->after($start);
+        }
+
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $query->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            }
+            );
+            $query->whereIn('destination.account_id', $accountIds);
+
+        }
+        // remove group by
+        $query->getQuery()->getQuery()->groups = null;
+
+        // that should do it:
+        $sum = strval($query->sum('destination.amount'));
+        $sum = bcmul($sum, '-1');
+
+        return $sum;
     }
 
     /**

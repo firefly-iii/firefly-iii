@@ -52,7 +52,7 @@ class Journal extends Twig_Extension
             // check if this sum is the same as the journal:
             $journalSum = TransactionJournal::amount($journal);
             $full       = Amount::formatJournal($journal);
-            if (bccomp($journalSum, $amount) === 0) {
+            if (bccomp($journalSum, $amount) === 0 || bccomp(bcmul($journalSum, '-1'), $amount) === 0) {
                 $cache->store($full);
 
                 return $full;
@@ -79,6 +79,16 @@ class Journal extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'formatBudgetPerspective', function (TransactionJournal $journal, Budget $budget) {
+
+            $cache = new CacheProperties;
+            $cache->addProperty('formatBudgetPerspective');
+            $cache->addProperty($journal->id);
+            $cache->addProperty($budget->id);
+
+            if ($cache->has()) {
+                return $cache->get();
+            }
+
             // get the account amount:
             $transactions = $journal->transactions()->where('transactions.amount', '<', 0)->get(['transactions.*']);
             $amount       = '0';
@@ -88,10 +98,17 @@ class Journal extends Twig_Extension
                     $amount = bcadd($amount, strval($transaction->amount));
                 }
             }
+            if ($amount === '0') {
+                $formatted = Amount::formatJournal($journal);
+                $cache->store($formatted);
 
-            $formatted = Amount::format($amount, true);
+                return $formatted;
+            }
 
-            return $formatted . ' (' . Amount::formatJournal($journal) . ')';
+            $formatted = Amount::format($amount, true) . ' (' . Amount::formatJournal($journal) . ')';
+            $cache->store($formatted);
+
+            return $formatted;
         }
         );
     }

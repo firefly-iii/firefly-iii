@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -222,25 +223,21 @@ class AccountController extends Controller
 
 
         if ($cache->has()) {
-            $entries = $cache->get();
-
-            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+            //            $entries = $cache->get();
+            //            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
         }
 
-
-        $accountCollection = new Collection([$account]);
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $repository->spentInPeriod($accountCollection, $end, $currentEnd);
-            $earned     = $repository->earnedInPeriod($accountCollection, $end, $currentEnd);
+            $spent      = $this->spentInPeriod($account, $end, $currentEnd);
+            $earned     = $this->earnedInPeriod($account, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
             $entries->push([$dateStr, $dateName, $spent, $earned]);
             $end = Navigation::subtractPeriod($end, $range, 1);
 
         }
-        $cache->store($entries);
 
         return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
     }
@@ -373,6 +370,70 @@ class AccountController extends Controller
         }
 
         return '';
+    }
+
+    /**
+     * Asset accounts actually earn money by being the destination of a deposit or the destination
+     * of a transfer. The money moves to them.
+     *
+     * A revenue account doesn't really earn money itself. Money is earned "from" the revenue account.
+     * So, the call to find out how many money has been earned by/from a revenue account is slightly different.
+     *
+     *
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return string
+     */
+    private function earnedInPeriod(Account $account, Carbon $start, Carbon $end)
+    {
+        /** @var ARI $repository */
+        $repository = app(ARI::class);
+        $collection = new Collection([$account]);
+        $type       = $account->accountType->type;
+        switch ($type) {
+            case AccountType::DEFAULT:
+            case AccountType::ASSET:
+                return $repository->earnedInPeriod($collection, $start, $end);
+            case AccountType::REVENUE:
+                return $repository->earnedFromInPeriod($collection, $start, $end);
+            default:
+                return '0';
+        }
+    }
+
+    /**
+     * Asset accounts actually spend money by being the source of a withdrawal or the source
+     * of a transfer. The money moves away from them.
+     *
+     * An expense account doesn't really spend money itself. Money is spent "at" the expense account.
+     * So, the call to find out how many money has been spent on/at an expense account is slightly different.
+     *
+     *
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return string
+     */
+    private function spentInPeriod(Account $account, Carbon $start, Carbon $end): string
+    {
+        /** @var ARI $repository */
+        $repository = app(ARI::class);
+        $collection = new Collection([$account]);
+        $type       = $account->accountType->type;
+        switch ($type) {
+            case AccountType::DEFAULT:
+            case AccountType::ASSET:
+                return $repository->spentInPeriod($collection, $start, $end);
+            case AccountType::EXPENSE:
+                return $repository->spentAtInPeriod($collection, $start, $end);
+            default:
+                return '0';
+        }
     }
 
 }

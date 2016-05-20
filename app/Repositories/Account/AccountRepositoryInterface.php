@@ -34,6 +34,20 @@ interface AccountRepositoryInterface
     public function destroy(Account $account, Account $moveTo): bool;
 
     /**
+     * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
+     * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
+     * how much money was earned by the given asset accounts. This method will tell you how much money
+     * these given revenue accounts sent. Ie. how much money was made FROM these revenue accounts.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedFromInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -41,6 +55,21 @@ interface AccountRepositoryInterface
      * @return string
      */
     public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /**
+     * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
+     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
+     * than made by journalsInPeriod itself.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountRepositoryInterface::journalsInPeriod
+     *
+     * @return Collection
+     */
+    public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
      * @param int $accountId
@@ -108,21 +137,6 @@ interface AccountRepositoryInterface
     public function getSavingsAccounts(Carbon $start, Carbon $end): Collection;
 
     /**
-     * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
-     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
-     * than made by journalsInPeriod itself.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountRepositoryInterface::journalsInPeriod
-     *
-     * @return Collection
-     */
-    public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
-
-    /**
      * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made to the given $accounts,
      * as well as the transfers that move to to those $accounts. This is a slightly sharper selection
      * than made by journalsInPeriod itself.
@@ -181,6 +195,20 @@ interface AccountRepositoryInterface
      * @return TransactionJournal
      */
     public function openingBalanceTransaction(Account $account) : TransactionJournal;
+
+    /**
+     * This method is almost the same as ::spentInPeriod, but only works for expense accounts
+     * instead of the implied asset accounts for ::spentInPeriod. ::spentInPeriod will tell you
+     * how much money was spent by the given asset accounts. This method will tell you how much money
+     * these given expense accounts received. Ie. how much money was spent AT these expense accounts.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param Collection $accounts
