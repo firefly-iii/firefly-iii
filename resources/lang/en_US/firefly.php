@@ -644,12 +644,9 @@ return [
     'saveOnAccount'                             => 'Save on account',
     'unknown'                                   => 'Unknown',
     'daily'                                     => 'Daily',
-    'weekly'                                    => 'Weekly',
     'monthly'                                   => 'Monthly',
-    'quarterly'                                 => 'Quarterly',
-    'half-year'                                 => 'Every six months',
-    'yearly'                                    => 'Yearly',
     'profile'                                   => 'Profile',
+    'errors'                                    => 'Errors',
 
     // reports:
     'report_default'                            => 'Default financial report for :start until :end',
@@ -833,6 +830,11 @@ return [
     'add_another_split'     => 'Add another split',
     'split-transactions'    => 'Split transactions',
     'split-new-transaction' => 'Split a new transaction',
+
+    'do_split'              => 'Do a split',
+    'split_this_withdrawal' => 'Split this withdrawal',
+    'split_this_deposit'    => 'Split this deposit',
+    'split_this_transfer'   => 'Split this transfer',
 
 
 ];
