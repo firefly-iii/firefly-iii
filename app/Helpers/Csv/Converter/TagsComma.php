@@ -41,8 +41,10 @@ class TagsComma extends BasicConverter implements ConverterInterface
                 'zoomLevel'   => null,
                 'tagMode'     => 'nothing',
             ];
-            $tag  = $repository->store($data); // should validate first?
-            $tags->push($tag);
+            if (strlen($string) > 0) {
+                $tag = $repository->store($data); // should validate first?
+                $tags->push($tag);
+            }
         }
         $tags = $tags->merge($this->data['tags']);
 
