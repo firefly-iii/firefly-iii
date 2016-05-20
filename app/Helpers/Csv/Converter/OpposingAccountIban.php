@@ -22,9 +22,10 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
+        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find($this->mapped[$this->index][$this->value]);
+            $account = $crud->find($this->mapped[$this->index][$this->value]);
 
             return $account;
         }

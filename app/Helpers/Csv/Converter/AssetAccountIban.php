@@ -23,17 +23,18 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
+        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
+            $account = $crud->find(intval($this->mapped[$this->index][$this->value]));
 
             return $account;
         }
 
 
         if (strlen($this->value) > 0) {
-            $account = $this->searchOrCreate($repository);
+            $account = $this->searchOrCreate($repository, $crud);
 
             return $account;
         }

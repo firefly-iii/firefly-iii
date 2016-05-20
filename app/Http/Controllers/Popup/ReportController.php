@@ -88,10 +88,8 @@ class ReportController extends Controller
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budget           = $budgetRepository->find(intval($attributes['budgetId']));
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $account           = $accountRepository->find(intval($attributes['accountId']));
+        $crud             = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $account          = $crud->find(intval($attributes['accountId']));
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
@@ -183,7 +181,8 @@ class ReportController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $account    = $repository->find(intval($attributes['accountId']));
+        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $account    = $crud->find(intval($attributes['accountId']));
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $journals   = $repository->journalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
 
@@ -213,7 +212,8 @@ class ReportController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
-        $account      = $repository->find(intval($attributes['accountId']));
+        $crud         = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $account      = $crud->find(intval($attributes['accountId']));
         $types        = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $journals     = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $destinations = $attributes['accounts']->pluck('id')->toArray();
@@ -221,8 +221,8 @@ class ReportController extends Controller
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($account, $destinations) {
                 if (
-                    $journal->source_account_id === $account->id &&
-                    in_array($journal->destination_account_id, $destinations)
+                    $journal->source_account_id === $account->id
+                    && in_array($journal->destination_account_id, $destinations)
                 ) {
                     return $journal;
                 }

@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Validator;
 
 /**
@@ -246,8 +245,6 @@ class AssetAccount implements PostProcessorInterface
             }
         }
         // create new if not exists and return that one:
-        /** @var AccountRepositoryInterface $repository */
-        $repository  = app(AccountRepositoryInterface::class);
         $accountData = [
             'name'                   => $accountNumber,
             'accountType'            => 'asset',

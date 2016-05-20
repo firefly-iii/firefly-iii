@@ -64,13 +64,6 @@ interface AccountRepositoryInterface
     public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param int $accountId
-     *
-     * @return Account
-     */
-    public function find(int $accountId): Account;
-
-    /**
      * @param Account $account
      *
      * @return Carbon

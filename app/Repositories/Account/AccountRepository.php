@@ -171,21 +171,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param $accountId
-     *
-     * @return Account
-     */
-    public function find(int $accountId): Account
-    {
-        $account = $this->user->accounts()->find($accountId);
-        if (is_null($account)) {
-            $account = new Account;
-        }
-
-        return $account;
-    }
-
-    /**
      * @param Account $account
      *
      * @return Carbon

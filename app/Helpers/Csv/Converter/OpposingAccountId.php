@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class OpposingAccountId
@@ -19,10 +18,9 @@ class OpposingAccountId extends BasicConverter implements ConverterInterface
      */
     public function convert(): Account
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
-        $account    = $repository->find($value);
+        $crud    = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $value   = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
+        $account = $crud->find($value);
 
         return $account;
     }

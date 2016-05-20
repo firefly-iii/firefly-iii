@@ -84,18 +84,17 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI                  $repository
      * @param AccountCrudInterface $crud
      * @param Account              $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(ARI $repository, AccountCrudInterface $crud, Account $account)
+    public function destroy(AccountCrudInterface $crud, Account $account)
     {
         $type     = $account->accountType->type;
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = $repository->find(intval(Input::get('move_account_before_delete')));
+        $moveTo   = $crud->find(intval(Input::get('move_account_before_delete')));
 
         $crud->destroy($account, $moveTo);
 

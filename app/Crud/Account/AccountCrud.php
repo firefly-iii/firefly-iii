@@ -64,23 +64,18 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
-     * @param Account $account
+     * @param $accountId
      *
-     * @return TransactionJournal|null
+     * @return Account
      */
-    public function openingBalanceTransaction(Account $account): TransactionJournal
+    public function find(int $accountId): Account
     {
-        $journal = TransactionJournal
-            ::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new TransactionJournal;
+        $account = $this->user->accounts()->find($accountId);
+        if (is_null($account)) {
+            $account = new Account;
         }
 
-        return $journal;
+        return $account;
     }
 
     /**
@@ -338,5 +333,25 @@ class AccountCrud implements AccountCrudInterface
             }
         }
 
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    private function openingBalanceTransaction(Account $account): TransactionJournal
+    {
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return new TransactionJournal;
+        }
+
+        return $journal;
     }
 }

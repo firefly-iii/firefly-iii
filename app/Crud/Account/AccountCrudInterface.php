@@ -13,7 +13,6 @@ namespace FireflyIII\Crud\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\TransactionJournal;
 
 /**
  * Interface AccountCrudInterface
@@ -31,12 +30,11 @@ interface AccountCrudInterface
     public function destroy(Account $account, Account $moveTo): bool;
 
     /**
+     * @param int $accountId
      *
-     * @param Account $account
-     *
-     * @return TransactionJournal
+     * @return Account
      */
-    public function openingBalanceTransaction(Account $account) : TransactionJournal;
+    public function find(int $accountId): Account;
 
     /**
      * @param array $data
