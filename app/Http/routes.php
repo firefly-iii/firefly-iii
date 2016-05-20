@@ -384,10 +384,10 @@ Route::group(
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
     // mass edit and mass delete.
-    Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'TransactionController@massEdit', 'as' => 'transactions.mass-edit']);
-    Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'TransactionController@massDelete', 'as' => 'transactions.mass-delete']);
-    Route::post('/transactions/mass-update', ['uses' => 'TransactionController@massUpdate', 'as' => 'transactions.mass-update']);
-    Route::post('/transactions/mass-destroy', ['uses' => 'TransactionController@massDestroy', 'as' => 'transactions.mass-destroy']);
+    Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'Transaction\MassController@massEdit', 'as' => 'transactions.mass-edit']);
+    Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'Transaction\MassController@massDelete', 'as' => 'transactions.mass-delete']);
+    Route::post('/transactions/mass-update', ['uses' => 'Transaction\MassController@massUpdate', 'as' => 'transactions.mass-update']);
+    Route::post('/transactions/mass-destroy', ['uses' => 'Transaction\MassController@massDestroy', 'as' => 'transactions.mass-destroy']);
 
     /**
      * POPUP Controllers
