@@ -52,11 +52,11 @@ class SplitController extends Controller
      */
     public function create(TransactionJournal $journal)
     {
-        $accountRepository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
         $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository    = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $assetAccounts      = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $crud               = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $assetAccounts      = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
         $sessionData        = session('journal-data', []);
         $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
@@ -92,11 +92,11 @@ class SplitController extends Controller
     public function edit(Request $request, TransactionJournal $journal)
     {
         $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
-        $accountRepository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $crud               = app('FireflyIII\Crud\Account\AccountCrudInterface');
         $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts      = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $assetAccounts      = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
         $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $preFilled          = $this->arrayFromJournal($request, $journal);
         $subTitle           = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);

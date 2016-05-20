@@ -136,10 +136,10 @@ class TransactionController extends Controller
         if ($count > 2) {
             return redirect(route('split.journal.edit', [$journal->id]));
         }
-        $accountRepository   = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $budgetRepository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository     = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $assetAccounts       = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $crud                = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $assetAccounts       = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
         $budgetList          = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $piggyBankList       = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
         $maxFileSize         = Steam::phpBytes(ini_get('upload_max_filesize'));
