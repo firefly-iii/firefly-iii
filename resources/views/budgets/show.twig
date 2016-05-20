@@ -67,7 +67,7 @@
                                 {% if overspent %}
                                     {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} <!-- must have -1 here -->
                                     <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
                                              aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
                                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
                                              aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
@@ -75,7 +75,7 @@
                                 {% else %}
                                     {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} <!-- must have -1 here -->
                                     <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
                                              aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
                                     </div>
                                 {% endif %}
