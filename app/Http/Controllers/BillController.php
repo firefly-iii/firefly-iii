@@ -44,7 +44,10 @@ class BillController extends Controller
      */
     public function create()
     {
-        $periods  = config('firefly.periods_to_text');
+        $periods = [];
+        foreach (config('firefly.bill_periods') as $current) {
+            $periods[$current] = trans('firefly.' . $current);
+        }
         $subTitle = trans('firefly.create_new_bill');
 
 
@@ -99,7 +102,10 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        $periods  = config('firefly.periods_to_text');
+        $periods = [];
+        foreach (config('firefly.bill_periods') as $current) {
+            $periods[$current] = trans('firefly.' . $current);
+        }
         $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").

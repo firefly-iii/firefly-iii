@@ -75,8 +75,6 @@ class PiggyBankController extends Controller
      */
     public function create(AccountCrudInterface $crud)
     {
-
-        $periods      = config('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
@@ -89,7 +87,7 @@ class PiggyBankController extends Controller
         Session::flash('gaEventCategory', 'piggy-banks');
         Session::flash('gaEventAction', 'create');
 
-        return view('piggy-banks.create', compact('accounts', 'periods', 'subTitle', 'subTitleIcon'));
+        return view('piggy-banks.create', compact('accounts', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -135,7 +133,6 @@ class PiggyBankController extends Controller
     public function edit(AccountCrudInterface $crud, PiggyBank $piggyBank)
     {
 
-        $periods      = config('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
@@ -162,7 +159,7 @@ class PiggyBankController extends Controller
         }
         Session::forget('piggy-banks.edit.fromUpdate');
 
-        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'periods', 'preFilled'));
+        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'preFilled'));
     }
 
     /**
