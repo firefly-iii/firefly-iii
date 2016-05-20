@@ -228,8 +228,7 @@ class PiggyBankController extends Controller
      */
     public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
     {
-        $amount = round(Input::get('amount'), 2);
-        /** @var Carbon $date */
+        $amount        = strval(round(Input::get('amount'), 2));
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
@@ -238,7 +237,7 @@ class PiggyBankController extends Controller
 
         if ($amount <= $maxAmount) {
             $repetition                = $piggyBank->currentRelevantRep();
-            $repetition->currentamount = bcadd($repetition->currentamount, strval($amount));
+            $repetition->currentamount = bcadd($repetition->currentamount, $amount);
             $repetition->save();
 
             // create event
