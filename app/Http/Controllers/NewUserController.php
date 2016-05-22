@@ -77,7 +77,7 @@ class NewUserController extends Controller
 
 
         // create credit card.
-        if (strlen($request->get('credit_card_limit') > 0)) {
+        if (strlen($request->get('credit_card_limit')) > 0) {
             $this->storeCreditCard($request, $crud);
             $count++;
         }
