@@ -83,7 +83,6 @@ class BudgetController extends Controller
             $currentEnd->subDay();
             $spent = $repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
             $entry = [$first, ($spent * -1)];
-
             $entries->push($entry);
             $first = Navigation::addPeriod($first, $range, 0);
         }
@@ -128,7 +127,7 @@ class BudgetController extends Controller
 
             $start->addDay();
         }
-        $data = $this->generator->budgetLimit($entries, 'monthAndDay');
+        $data = $this->generator->budgetLimit($entries, 'month_and_day');
         $cache->store($data);
 
         return Response::json($data);

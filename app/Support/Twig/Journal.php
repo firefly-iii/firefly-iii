@@ -293,7 +293,7 @@ class Journal extends Twig_Extension
                 $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
                                ->leftJoin('transactions', 'category_transaction.transaction_id', '=', 'transactions.id')
                                ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                               ->where('categories.user_ud', $journal->user_id)
+                               ->where('categories.user_id', $journal->user_id)
                                ->where('transaction_journals.id', $journal->id)
                                ->get(['categories.*']);
                 /** @var Category $category */

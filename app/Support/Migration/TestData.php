@@ -110,11 +110,11 @@ class TestData
                     'attachable_type' => $attachment['attachable_type'],
                     'user_id'         => $attachment['user_id'],
                     'md5'             => md5($attachment['content']),
-                    'filename'        => $attachment['filename'],
-                    'title'           => $attachment['title'],
-                    'description'     => $attachment['description'],
-                    'notes'           => $attachment['notes'],
-                    'mime'            => $attachment['mime'],
+                    'filename'        => Crypt::encrypt($attachment['filename']),
+                    'title'           => Crypt::encrypt($attachment['title']),
+                    'description'     => Crypt::encrypt($attachment['description']),
+                    'notes'           => Crypt::encrypt($attachment['notes']),
+                    'mime'            => Crypt::encrypt($attachment['mime']),
                     'size'            => strlen($attachment['content']),
                     'uploaded'        => 1,
                 ]
@@ -663,6 +663,18 @@ class TestData
                     ]
                 );
             }
+        }
+
+        foreach ($this->data['piggy-events'] as $event) {
+            DB::table('piggy_bank_events')->insert(
+                [
+                    'created_at'    => $this->time,
+                    'updated_at'    => $this->time,
+                    'piggy_bank_id' => $event['piggy_bank_id'],
+                    'date'          => $event['date'],
+                    'amount'        => $event['amount'],
+                ]
+            );
         }
     }
 

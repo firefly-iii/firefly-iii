@@ -548,12 +548,14 @@ class RuleController extends Controller
             'rule-trigger-values' => $request->get('rule-trigger-value'),
             'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
         ];
-        foreach ($data['rule-triggers'] as $index => $triggerType) {
-            $triggers[] = [
-                'type'           => $triggerType,
-                'value'          => $data['rule-trigger-values'][$index],
-                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
-            ];
+        if (is_array($data['rule-triggers'])) {
+            foreach ($data['rule-triggers'] as $index => $triggerType) {
+                $triggers[] = [
+                    'type'           => $triggerType,
+                    'value'          => $data['rule-trigger-values'][$index],
+                    'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+                ];
+            }
         }
 
         return $triggers;

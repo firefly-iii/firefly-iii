@@ -44,7 +44,7 @@ class ReportController extends Controller
      */
     public function info(Request $request)
     {
-        $attributes = $request->get('attributes');
+        $attributes = $request->get('attributes') ?? [];
         $attributes = $this->parseAttributes($attributes);
 
         View::share('start', $attributes['startDate']);

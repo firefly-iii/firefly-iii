@@ -35,7 +35,7 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
             return $currency;
         }
 
-        $currency = $repository->findByCode(intval($this->value));
+        $currency = $repository->findByCode($this->value);
 
 
         return $currency;

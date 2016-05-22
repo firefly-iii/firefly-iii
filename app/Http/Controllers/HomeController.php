@@ -170,12 +170,23 @@ class HomeController extends Controller
 
             $name    = $route->getName();
             $methods = $route->getMethods();
-            $search  = ['{account}', '{what}', '{rule}', '{tj}'];
-            $replace = [1, 'asset', 1, 1];
-            $url     = str_replace($search, $replace, $route->getUri());
+            $search  = [
+                '{account}', '{what}', '{rule}', '{tj}', '{category}', '{budget}', '{code}', '{date}', '{attachment}', '{bill}', '{limitrepetition}',
+                '{currency}', '{jobKey}', '{piggyBank}', '{ruleGroup}', '{rule}', '{route}', '{unfinishedJournal}',
+                '{reportType}', '{start_date}', '{end_date}', '{accountList}','{tag}','{journalList}'
+
+            ];
+            $replace = [1, 'asset', 1, 1, 1, 1, 'abc', '2016-01-01', 1, 1, 1, 1, 1, 1, 1, 1, 'index', 1,
+                        'default', '20160101', '20160131', '1,2',1,'1,2'
+            ];
+            if (count($search) != count($replace)) {
+                echo 'count';
+                exit;
+            }
+            $url = str_replace($search, $replace, $route->getUri());
 
             if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo '<a href="/' . $url . '" title="' . $name . '">' . $name . '</a><br>';
+                echo '<a href="/' . $url . '" title="' . $name . '">' . $name . '</a><br>' . "\n";
 
             }
         }
@@ -190,7 +201,10 @@ class HomeController extends Controller
      *
      * @return bool
      */
-    private function startsWithAny(array $array, string $needle): bool
+    private
+    function startsWithAny(
+        array $array, string $needle
+    ): bool
     {
         foreach ($array as $entry) {
             if ((substr($needle, 0, strlen($entry)) === $entry)) {

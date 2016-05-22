@@ -354,8 +354,8 @@ Route::group(
 
     Route::get('/transaction/create-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@create', 'as' => 'split.journal.create']);
     Route::post('/transaction/store-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@store', 'as' => 'split.journal.store']);
-    Route::get('/transaction/edit-split/{journal}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
-    Route::post('/transaction/edit-split/{journal}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
+    Route::get('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
+    Route::post('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
     /**
      * Tag Controller
      */

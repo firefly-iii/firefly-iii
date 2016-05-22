@@ -317,7 +317,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         // and left join transaction-category where null category
         $journalIds  = $set->pluck('id')->toArray();
         $secondQuery = $this->user->transactions()
-                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transaction.transaction_journal_id')
                                   ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id')
                                   ->whereNull('category_transaction.id')
                                   ->whereIn('transaction_journals.id', $journalIds);

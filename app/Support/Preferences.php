@@ -35,9 +35,7 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        /** @var Preference $preference */
-        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first();
-        $preference->delete();
+        Preference::where('user_id', Auth::user()->id)->where('name', $name)->delete();
 
         return true;
     }
