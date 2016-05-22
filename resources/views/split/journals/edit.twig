@@ -46,9 +46,13 @@
                         {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                     {% endif %}
 
+                    <!-- show destination account id, if deposit (is asset): -->
+                    {% if preFilled.what == 'deposit' %}
+                        {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
+                    {% endif %}
+
                     <!-- show static source if deposit: -->
                     {% if preFilled.what == 'deposit' %}
-                        {{ ExpandedForm.text('journal_source_account_name', preFilled.journal_source_account_name) }}
                     {% endif %}
 
                     <!-- show static destination if transfer -->
@@ -119,10 +123,10 @@
                                     </td>
                                 {% endif %}
 
-                                <!-- deposit has several destination id's -->
+                                <!-- deposit has several source names -->
                                 {% if preFilled.what == 'deposit' %}
                                     <td>
-                                        {{ Form.select('destination_account_id[]', assetAccounts, preFilled.destination_account_id[index], {class: 'form-control'}) }}
+                                        <input type="text" name="source_account_name[]" value="{{ preFilled.source_account_name[index] }}" class="form-control"/>
                                     </td>
                                 {% endif %}
 
