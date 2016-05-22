@@ -87,7 +87,8 @@ class General extends Twig_Extension
             'activeRoutePartial', function () : string {
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
-            if (!(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
+            $name  = Route::getCurrentRoute()->getName() ?? '';
+            if (!(strpos($name, $route) === false)) {
                 return 'active';
             }
 

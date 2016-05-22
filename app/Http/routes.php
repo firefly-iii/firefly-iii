@@ -220,6 +220,11 @@ Route::group(
     Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
     Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
 
+    /**
+     * IMPORT CONTROLLER
+     */
+    Route::get('/import', ['uses' => 'ImportController@index','as' => 'import.index']);
+    Route::post('/import/upload', ['uses' => 'ImportController@upload','as' => 'import.upload']);
 
     /**
      * Help Controller
