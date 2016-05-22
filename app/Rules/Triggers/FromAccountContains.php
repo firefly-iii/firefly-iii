@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * FromAccountContains.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,8 +7,11 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Rules\Triggers;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -52,9 +54,15 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $fromAccountName = strtolower($journal->source_account_name ?? TransactionJournal::sourceAccount($journal)->name);
-        $search          = strtolower($this->triggerValue);
-        $strpos          = strpos($fromAccountName, $search);
+        $fromAccountName = '';
+
+        /** @var Account $account */
+        foreach (TransactionJournal::sourceAccountList($journal) as $account) {
+            $fromAccountName .= strtolower($account->name);
+        }
+
+        $search = strtolower($this->triggerValue);
+        $strpos = strpos($fromAccountName, $search);
 
         if (!($strpos === false)) {
             return true;

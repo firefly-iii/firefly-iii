@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * AccountChartGeneratorInterface.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Generator\Chart\Account;
 
@@ -42,10 +43,10 @@ interface AccountChartGeneratorInterface
 
     /**
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param array   $labels
+     * @param array   $dataSet
      *
      * @return array
      */
-    public function single(Account $account, Carbon $start, Carbon $end): array;
+    public function single(Account $account, array $labels, array $dataSet): array;
 }

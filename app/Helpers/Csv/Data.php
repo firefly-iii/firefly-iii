@@ -1,4 +1,12 @@
 <?php
+/**
+ * Data.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
@@ -72,7 +80,8 @@ class Data
     }
 
     /**
-     * FIXME may return null
+     * FIXxME may return null
+     *
      * @return string
      */
     public function getCsvFileLocation(): string
@@ -91,7 +100,8 @@ class Data
     }
 
     /**
-     * FIXME may return null
+     * FIXxME may return null
+     *
      * @return string
      */
     public function getDateFormat(): string
@@ -110,7 +120,8 @@ class Data
     }
 
     /**
-     * FIXME may return null
+     * FIXxME may return null
+     *
      * @return string
      */
     public function getDelimiter(): string

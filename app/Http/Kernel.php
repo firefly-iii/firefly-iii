@@ -1,4 +1,12 @@
 <?php
+/**
+ * Kernel.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http;
@@ -36,15 +44,16 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $bootstrappers = [
-        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
-        'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-        'FireflyIII\Bootstrap\ConfigureLogging',
-        'Illuminate\Foundation\Bootstrap\HandleExceptions',
-        'Illuminate\Foundation\Bootstrap\RegisterFacades',
-        'Illuminate\Foundation\Bootstrap\RegisterProviders',
-        'Illuminate\Foundation\Bootstrap\BootProviders',
-    ];
+    protected $bootstrappers
+        = [
+            'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+            'Illuminate\Foundation\Bootstrap\LoadConfiguration',
+            'FireflyIII\Bootstrap\ConfigureLogging',
+            'Illuminate\Foundation\Bootstrap\HandleExceptions',
+            'Illuminate\Foundation\Bootstrap\RegisterFacades',
+            'Illuminate\Foundation\Bootstrap\RegisterProviders',
+            'Illuminate\Foundation\Bootstrap\BootProviders',
+        ];
 
     /**
      * The application's global HTTP middleware stack.
@@ -144,7 +153,7 @@ class Kernel extends HttpKernel
             // MUST be confirmed.
             // MUST have owner role
             // (this group includes the other Firefly middleware)
-            'admin'                   => [
+            'admin'                            => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

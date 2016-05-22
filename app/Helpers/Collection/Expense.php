@@ -1,8 +1,15 @@
 <?php
+/**
+ * Expense.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
-use Crypt;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use stdClass;
@@ -33,26 +40,32 @@ class Expense
      */
     public function addOrCreateExpense(TransactionJournal $entry)
     {
+        // add each account individually:
+        $destinations = TransactionJournal::destinationTransactionList($entry);
 
-        $accountId = $entry->account_id;
-        $amount    = strval(round($entry->journalAmount, 2));
-        if (bccomp('0', $amount) === -1) {
-            $amount = bcmul($amount, '-1');
+        foreach ($destinations as $transaction) {
+            $amount  = strval($transaction->amount);
+            $account = $transaction->account;
+            if (bccomp('0', $amount) === -1) {
+                $amount = bcmul($amount, '-1');
+            }
+
+            $object         = new stdClass;
+            $object->amount = $amount;
+            $object->name   = $account->name;
+            $object->count  = 1;
+            $object->id     = $account->id;
+
+            // overrule some properties:
+            if ($this->expenses->has($account->id)) {
+                $object         = $this->expenses->get($account->id);
+                $object->amount = bcadd($object->amount, $amount);
+                $object->count++;
+            }
+            $this->expenses->put($account->id, $object);
         }
 
-        if (!$this->expenses->has($accountId)) {
-            $newObject         = new stdClass;
-            $newObject->amount = $amount;
-            $newObject->name   = Crypt::decrypt($entry->account_name);
-            $newObject->count  = 1;
-            $newObject->id     = $accountId;
-            $this->expenses->put($accountId, $newObject);
-        } else {
-            $existing         = $this->expenses->get($accountId);
-            $existing->amount = bcadd($existing->amount, $amount);
-            $existing->count++;
-            $this->expenses->put($accountId, $existing);
-        }
+
     }
 
     /**
@@ -60,8 +73,6 @@ class Expense
      */
     public function addToTotal(string $add)
     {
-
-
         $add = strval(round($add, 2));
         if (bccomp('0', $add) === -1) {
             $add = bcmul($add, '-1');

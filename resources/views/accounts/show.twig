@@ -6,14 +6,13 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-12 col-md-10 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ account.name }}</h3>
 
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
@@ -32,15 +31,44 @@
 
 
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-10 col-md-10 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals' with {sorting:true} %}
+                    {% include 'list.journals' with {sorting:true, accountPerspective: account} %}
                 </div>
             </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            {% for entry in entries %}
+                {% if entry[2] != 0 or entry[3] != 0 %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a href="{{ route('accounts.show.date',[account.id,entry[0]]) }}">{{ entry[1] }}</a>
+                            </h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                {% if entry[2] != 0 %}
+                                    <tr>
+                                        <td colspan="33%">{{ 'spent'|_ }}</td>
+                                        <td colspan="67%">{{ entry[2]|formatAmount }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if entry[3] != 0 %}
+                                    <tr>
+                                        <td colspan="33%">{{ 'earned'|_ }}</td>
+                                        <td colspan="67%">{{ entry[3]|formatAmount }}</td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
         </div>
     </div>
 

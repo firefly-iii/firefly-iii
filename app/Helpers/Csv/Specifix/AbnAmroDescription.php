@@ -1,8 +1,14 @@
 <?php
+/**
+ * AbnAmroDescription.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Specifix;
-
-use Log;
 
 /**
  * Parses the description from txt files for ABN AMRO bank accounts.
@@ -71,7 +77,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted in ABN AMRO format
         if (preg_match('/ABN AMRO.{24} (.*)/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as costs from ABN AMRO itself.');
 
             $this->data['opposing-account-name'] = 'ABN AMRO';
             $this->data['description']           = $matches[1];
@@ -91,15 +96,13 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted in GEA/BEA format
         if (preg_match('/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as GEA or BEA format.');
 
             // description and opposing account will be the same.
             $this->data['opposing-account-name'] = $matches[4];
+            $this->data['description']           = $matches[4];
 
             if ($matches[1] == 'GEA') {
                 $this->data['description'] = 'GEA ' . $matches[4];
-            } else {
-                $this->data['description'] = $matches[4];
             }
 
             return true;
@@ -117,7 +120,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted as a SEPA plain description
         if (preg_match('/^SEPA(.{28})/', $this->data['description'], $matches)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as SEPA plain description.');
 
             $type           = $matches[1];
             $reference      = '';
@@ -131,13 +133,13 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
                 foreach ($matches as $match) {
                     $key   = $match[1];
                     $value = trim($match[2]);
-                    Log::debug('SEPA: ' . $key . ' - ' . $value);
                     switch (strtoupper($key)) {
                         case 'OMSCHRIJVING':
                             $newDescription = $value;
                             break;
                         case 'NAAM':
-                            $this->data['opposing-account-name'] = $name = $value;
+                            $this->data['opposing-account-name'] = $value;
+                            $name                                = $value;
                             break;
                         case 'KENMERK':
                             $reference = $value;
@@ -153,9 +155,8 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
 
             // Set a new description for the current transaction. If none was given
             // set the description to type, name and reference
-            if ($newDescription) {
-                $this->data['description'] = $newDescription;
-            } else {
+            $this->data['description'] = $newDescription;
+            if (strlen($newDescription) === 0) {
                 $this->data['description'] = sprintf('%s - %s (%s)', $type, $name, $reference);
             }
 
@@ -174,7 +175,6 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
     {
         // See if the current description is formatted in TRTP format
         if (preg_match_all('!\/([A-Z]{3,4})\/([^/]*)!', $this->data['description'], $matches, PREG_SET_ORDER)) {
-            Log::debug('AbnAmroSpecifix: Description is structured as TRTP format.');
 
             $type           = '';
             $name           = '';
@@ -211,9 +211,8 @@ class AbnAmroDescription extends Specifix implements SpecifixInterface
 
                 // Set a new description for the current transaction. If none was given
                 // set the description to type, name and reference
-                if ($newDescription) {
-                    $this->data['description'] = $newDescription;
-                } else {
+                $this->data['description'] = $newDescription;
+                if (strlen($newDescription) === 0) {
                     $this->data['description'] = sprintf('%s - %s (%s)', $type, $name, $reference);
                 }
             }

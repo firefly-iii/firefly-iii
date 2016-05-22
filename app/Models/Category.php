@@ -1,4 +1,15 @@
-<?php namespace FireflyIII\Models;
+<?php
+/**
+ * Category.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
+namespace FireflyIII\Models;
 
 use Auth;
 use Crypt;
@@ -10,19 +21,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Category
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property \Carbon\Carbon                                                     $deleted_at
- * @property string                                                             $name
- * @property integer                                                            $user_id
- * @property boolean                                                            $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                              $user
- * @property string                                                             $dateFormatted
- * @property float                                                              $spent
- * @property \Carbon\Carbon                                                     $lastActivity
- * @property string                                                             $type
+ * @property integer                                                                        $id
+ * @property \Carbon\Carbon                                                                 $created_at
+ * @property \Carbon\Carbon                                                                 $updated_at
+ * @property \Carbon\Carbon                                                                 $deleted_at
+ * @property string                                                                         $name
+ * @property integer                                                                        $user_id
+ * @property boolean                                                                        $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]             $transactionjournals
+ * @property-read \FireflyIII\User                                                          $user
+ * @property string                                                                         $dateFormatted
+ * @property string                                                                         $spent
+ * @property \Carbon\Carbon                                                                 $lastActivity
+ * @property string                                                                         $type
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
@@ -31,6 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereEncrypted($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  */
 class Category extends Model
 {
@@ -115,6 +127,14 @@ class Category extends Model
     public function transactionjournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactions()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Transaction', 'category_transaction', 'category_id');
     }
 
     /**

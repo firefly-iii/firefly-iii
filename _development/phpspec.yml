@@ -1,5 +1,0 @@
-suites:
-    main:
-        namespace: FireflyIII
-        psr4_prefix: FireflyIII
-        src_path: app

@@ -1,11 +1,19 @@
 <?php
+/**
+ * Tag.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
 use Auth;
 use Crypt;
-use Illuminate\Database\Eloquent\Model;
+use FireflyIII\Support\Models\TagSupport;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -40,7 +48,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereZoomLevel($value)
  * @mixin \Eloquent
  */
-class Tag extends Model
+class Tag extends TagSupport
 {
     protected $dates    = ['created_at', 'updated_at', 'date'];
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];

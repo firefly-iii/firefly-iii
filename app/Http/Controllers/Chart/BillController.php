@@ -1,9 +1,18 @@
 <?php
+/**
+ * BillController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
@@ -23,13 +32,13 @@ class BillController extends Controller
     protected $generator;
 
     /**
-     *
+     * checked
      */
     public function __construct()
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface');
+        $this->generator = app(BillChartGeneratorInterface::class);
     }
 
     /**
@@ -41,24 +50,11 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository)
     {
-        $start         = session('start', Carbon::now()->startOfMonth());
-        $end           = session('end', Carbon::now()->endOfMonth());
-        $paid          = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $unpaid        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $creditCardDue = $repository->getCreditCardBill($start, $end);
-
-        if ($creditCardDue < 0) {
-            // expenses are negative (bill not yet paid),
-            $creditCardDue = bcmul($creditCardDue, '-1');
-            $unpaid        = bcadd($unpaid, $creditCardDue);
-        } else {
-            // if more than zero, the bill has been paid: (transfer = positive).
-            // amount must be negative to be added to $paid:
-            $paid = bcadd($paid, $creditCardDue);
-        }
-
-        // build chart:
-        $data = $this->generator->frontpage($paid, $unpaid);
+        $start  = session('start', Carbon::now()->startOfMonth());
+        $end    = session('end', Carbon::now()->endOfMonth());
+        $paid   = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $unpaid = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $data   = $this->generator->frontpage($paid, $unpaid);
 
         return Response::json($data);
     }

@@ -1,15 +1,20 @@
 <?php
+/**
+ * AccountRepositoryInterface.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -28,19 +33,49 @@ interface AccountRepositoryInterface
     public function countAccounts(array $types): int;
 
     /**
-     * @param Account $account
-     * @param Account $moveTo
+     * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
+     * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
+     * how much money was earned by the given asset accounts. This method will tell you how much money
+     * these given revenue accounts sent. Ie. how much money was made FROM these revenue accounts.
      *
-     * @return bool
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
      */
-    public function destroy(Account $account, Account $moveTo): bool;
+    public function earnedFromInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
-     * @param int $accountId
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return Account
+     * @return string
      */
-    public function find(int $accountId): Account;
+    public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /**
+     * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
+     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
+     * than made by journalsInPeriod itself.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountRepositoryInterface::journalsInPeriod
+     *
+     * @return Collection
+     */
+    public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Account $account): Carbon;
 
     /**
      * Gets all the accounts by ID, for a given set.
@@ -52,39 +87,6 @@ interface AccountRepositoryInterface
     public function get(array $ids): Collection;
 
     /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getAccounts(array $types): Collection;
-
-    /**
-     * This method returns the users credit cards, along with some basic information about the
-     * balance they have on their CC. To be used in the JSON boxes on the front page that say
-     * how many bills there are still left to pay. The balance will be saved in field "balance".
-     *
-     * To get the balance, the field "date" is necessary.
-     *
-     * @param Carbon $date
-     *
-     * @return Collection
-     */
-    public function getCreditCards(Carbon $date): Collection;
-
-    /**
-     * Returns a list of transactions TO the given (expense) $account, all from the
-     * given list of accounts
-     *
-     * @param Account    $account
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getExpensesByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
-
-    /**
      * @param TransactionJournal $journal
      * @param Account            $account
      *
@@ -93,66 +95,52 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 
     /**
-     * @param Preference $preference
+     * Get the accounts of a user that have piggy banks connected to them.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
-    public function getFrontpageAccounts(Preference $preference): Collection;
+    public function getPiggyBankAccounts(Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * Get savings accounts.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
-    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end): Collection;
+    public function getSavingsAccounts(Carbon $start, Carbon $end): Collection;
 
     /**
-     * Returns a list of transactions TO the given (asset) $account, but none from the
-     * given list of accounts
+     * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made to the given $accounts,
+     * as well as the transfers that move to to those $accounts. This is a slightly sharper selection
+     * than made by journalsInPeriod itself.
      *
-     * @param Account    $account
      * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountRepositoryInterface::journalsInPeriod
+     *
+     * @return Collection
+     */
+    public function incomesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Collection $accounts
+     * @param array      $types
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return Collection
      */
-    public function getIncomeByDestination(Account $account, Collection $accounts, Carbon $start, Carbon $end): Collection;
+    public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param Account $account
-     * @param int     $page
-     * @param int $pageSize
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(Account $account, int $page, int $pageSize = 50): LengthAwarePaginator;
-
-    /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
      *
-     * @return Collection
-     */
-    public function getJournalsInRange(Account $account, Carbon $start, Carbon $end): Collection;
-
-    /**
-     * Get the accounts of a user that have piggy banks connected to them.
-     *
-     * @return Collection
-     */
-    public function getPiggyBankAccounts(): Collection;
-
-    /**
-     * Get savings accounts and the balance difference in the period.
-     *
-     * @return Collection
-     */
-    public function getSavingsAccounts() : Collection;
-
-    /**
      * @param Account $account
      * @param Carbon  $date
      *
@@ -179,6 +167,7 @@ interface AccountRepositoryInterface
     public function oldestJournalDate(Account $account): Carbon;
 
     /**
+     *
      * @param Account $account
      *
      * @return TransactionJournal
@@ -186,31 +175,26 @@ interface AccountRepositoryInterface
     public function openingBalanceTransaction(Account $account) : TransactionJournal;
 
     /**
-     * @param array $data
+     * This method is almost the same as ::spentInPeriod, but only works for expense accounts
+     * instead of the implied asset accounts for ::spentInPeriod. ::spentInPeriod will tell you
+     * how much money was spent by the given asset accounts. This method will tell you how much money
+     * these given expense accounts received. Ie. how much money was spent AT these expense accounts.
      *
-     * @return Account
-     */
-    public function store(array $data) : Account;
-
-    /**
-     * @param $account
-     * @param $name
-     * @param $value
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return AccountMeta
-     */
-    public function storeMeta(Account $account, string $name, $value): AccountMeta;
-
-    /**
      * @return string
      */
-    public function sumOfEverything() : string;
+    public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return Account
+     * @return string
      */
-    public function update(Account $account, array $data): Account;
+    public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
+
 }

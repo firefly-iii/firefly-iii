@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * ToAccountStarts.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,8 +7,11 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Rules\Triggers;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -52,10 +54,15 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $toAccountName = strtolower($journal->destination_account_name ?? TransactionJournal::destinationAccount($journal)->name);
-        $search        = strtolower($this->triggerValue);
+        $toAccountName = '';
 
-        $part = substr($toAccountName, 0, strlen($search));
+        /** @var Account $account */
+        foreach (TransactionJournal::destinationAccountList($journal) as $account) {
+            $toAccountName .= strtolower($account->name);
+        }
+
+        $search = strtolower($this->triggerValue);
+        $part   = substr($toAccountName, 0, strlen($search));
 
         if ($part == $search) {
             return true;

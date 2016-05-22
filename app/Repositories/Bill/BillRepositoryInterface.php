@@ -1,4 +1,12 @@
 <?php
+/**
+ * BillRepositoryInterface.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Bill;
@@ -83,17 +91,6 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
-
-    /**
-     * This method will tell you if you still have a CC bill to pay. Amount will be negative if the amount
-     * has been paid
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getCreditCardBill(Carbon $start, Carbon $end): string;
 
     /**
      * @param Bill $bill

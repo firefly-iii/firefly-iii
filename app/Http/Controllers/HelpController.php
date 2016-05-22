@@ -1,4 +1,15 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * HelpController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
+namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Helpers\Help\HelpInterface;
 use Log;
@@ -49,7 +60,6 @@ class HelpController extends Controller
             return Response::json($content);
         }
 
-        Log::debug('Will get help from Github for language "' . $language . '" and route "' . $route . '".');
         $content = $help->getFromGithub($language, $route);
 
         $help->putInCache($route, $language, $content);

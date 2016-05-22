@@ -1,4 +1,12 @@
 <?php
+/**
+ * PasswordController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -53,11 +61,14 @@ class PasswordController extends Controller
     {
         $this->validate($request, ['email' => 'required|email']);
 
-        $user = User::whereEmail($request->get('email'))->first();
+        $user     = User::whereEmail($request->get('email'))->first();
+        $response = 'passwords.blocked';
 
-        if (!is_null($user) && intval($user->blocked) === 1) {
-            $response = 'passwords.blocked';
-        } else {
+        if (is_null($user)) {
+            $response = Password::INVALID_USER;
+        }
+
+        if (!is_null($user) && intval($user->blocked) === 0) {
             $response = Password::sendResetLink(
                 $request->only('email'), function (Message $message) {
                 $message->subject($this->getEmailSubject());

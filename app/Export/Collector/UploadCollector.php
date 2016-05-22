@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * UploadCollector.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Export\Collector;
 
@@ -53,11 +54,11 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         // grab upload directory.
         $files = $this->uploadDisk->files();
-        Log::debug('Found ' . count($files) . ' files in the upload directory.');
 
         foreach ($files as $entry) {
             $this->processOldUpload($entry);
         }
+
         return true;
     }
 
@@ -85,11 +86,9 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         $len = strlen($this->expected);
         if (substr($entry, 0, $len) === $this->expected) {
-            Log::debug($entry . ' is part of this users original uploads.');
 
             return true;
         }
-        Log::debug($entry . ' is not part of this users original uploads.');
 
         return false;
     }
@@ -112,7 +111,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
             // continue with file:
             $date = $this->getOriginalUploadDate($entry);
             $file = $this->job->key . '-Old CSV import dated ' . $date . '.csv';
-            Log::debug('Will put "' . $file . '" in the zip file.');
             $this->exportDisk->put($file, $content);
             $this->getFiles()->push($file);
         }

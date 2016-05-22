@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * RuleController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,10 +7,11 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Config;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
@@ -152,16 +152,16 @@ class RuleController extends Controller
      */
     public function edit(RuleRepositoryInterface $repository, Rule $rule)
     {
+        $oldTriggers  = $this->getCurrentTriggers($rule);
+        $triggerCount = count($oldTriggers);
+        $oldActions   = $this->getCurrentActions($rule);
+        $actionCount  = count($oldActions);
+
         // has old input?
         if (Input::old()) {
             $oldTriggers  = $this->getPreviousTriggers();
             $triggerCount = count($oldTriggers);
             $oldActions   = $this->getPreviousActions();
-            $actionCount  = count($oldActions);
-        } else {
-            $oldTriggers  = $this->getCurrentTriggers($rule);
-            $triggerCount = count($oldTriggers);
-            $oldActions   = $this->getCurrentActions($rule);
             $actionCount  = count($oldActions);
         }
 
@@ -292,8 +292,8 @@ class RuleController extends Controller
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
-        $limit = Config::get('firefly.test-triggers.limit');
-        $range = Config::get('firefly.test-triggers.range');
+        $limit = config('firefly.test-triggers.limit');
+        $range = config('firefly.test-triggers.range');
 
         /** @var TransactionMatcher $matcher */
         $matcher = app('FireflyIII\Rules\TransactionMatcher');
@@ -306,10 +306,9 @@ class RuleController extends Controller
         $warning = '';
         if (count($matchingTransactions) == $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
-        } else {
-            if (count($matchingTransactions) == 0) {
-                $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
-            }
+        }
+        if (count($matchingTransactions) == 0) {
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
         }
 
         // Return json response
@@ -549,12 +548,14 @@ class RuleController extends Controller
             'rule-trigger-values' => $request->get('rule-trigger-value'),
             'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
         ];
-        foreach ($data['rule-triggers'] as $index => $triggerType) {
-            $triggers[] = [
-                'type'           => $triggerType,
-                'value'          => $data['rule-trigger-values'][$index],
-                'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
-            ];
+        if (is_array($data['rule-triggers'])) {
+            foreach ($data['rule-triggers'] as $index => $triggerType) {
+                $triggers[] = [
+                    'type'           => $triggerType,
+                    'value'          => $data['rule-trigger-values'][$index],
+                    'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+                ];
+            }
         }
 
         return $triggers;

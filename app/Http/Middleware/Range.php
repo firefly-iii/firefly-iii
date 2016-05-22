@@ -1,11 +1,19 @@
 <?php
-declare(strict_types = 1);
+/**
+ * Range.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,19 +74,16 @@ class Range
                 Session::put('end', $end);
             }
             if (!Session::has('first')) {
-                /** @var \FireflyIII\Repositories\Journal\JournalRepositoryInterface $repository */
-                $repository = app('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+                /** @var JournalRepositoryInterface $repository */
+                $repository = app(JournalRepositoryInterface::class);
                 $journal    = $repository->first();
+                $first      = Carbon::now()->startOfYear();
+
                 if (!is_null($journal->id)) {
-                    Session::put('first', $journal->date);
-                } else {
-                    Session::put('first', Carbon::now()->startOfYear());
+                    $first = $journal->date;
                 }
+                Session::put('first', $first);
             }
-
-            // check "sum of everything".
-
-
             $current = Carbon::now()->formatLocalized('%B %Y');
             $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
             $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');

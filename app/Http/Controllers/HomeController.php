@@ -1,13 +1,24 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * HomeController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
-use Amount;
+declare(strict_types = 1);
+namespace FireflyIII\Http\Controllers;
+
 use Artisan;
 use Carbon\Carbon;
-use Config;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Route;
@@ -33,8 +44,16 @@ class HomeController extends Controller
     public function dateRange()
     {
 
-        $start = new Carbon(Input::get('start'));
-        $end   = new Carbon(Input::get('end'));
+        $start         = new Carbon(Input::get('start'));
+        $end           = new Carbon(Input::get('end'));
+        $label         = Input::get('label');
+        $isCustomRange = false;
+
+        // check if the label is "everything" or "Custom range" which will betray
+        // a possible problem with the budgets.
+        if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
+            $isCustomRange = true;
+        }
 
         $diff = $start->diffInDays($end);
 
@@ -42,6 +61,7 @@ class HomeController extends Controller
             Session::flash('warning', strval(trans('firefly.warning_much_data', ['days' => $diff])));
         }
 
+        Session::put('is_custom_range', $isCustomRange);
         Session::put('start', $start);
         Session::put('end', $end);
     }
@@ -85,13 +105,14 @@ class HomeController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param ARI                  $repository
+     * @param AccountCrudInterface $crud
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function index(ARI $repository)
+    public function index(ARI $repository, AccountCrudInterface $crud)
     {
-        $types = Config::get('firefly.accountTypesByIdentifier.asset');
+        $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 
         if ($count == 0) {
@@ -102,30 +123,27 @@ class HomeController extends Controller
         $subTitle      = trans('firefly.welcomeBack');
         $mainTitleIcon = 'fa-fire';
         $transactions  = [];
-        $frontPage     = Preferences::get('frontPageAccounts', []);
+        $frontPage     = Preferences::get(
+            'frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+        );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
-        $accounts          = $repository->getFrontpageAccounts($frontPage);
-        $savings           = $repository->getSavingsAccounts();
-        $piggyBankAccounts = $repository->getPiggyBankAccounts();
+        $accounts          = $crud->getAccountsById($frontPage->data);
+        $savings           = $repository->getSavingsAccounts($start, $end);
+        $piggyBankAccounts = $repository->getPiggyBankAccounts($start, $end);
 
 
-        $savingsTotal = 0;
+        $savingsTotal = '0';
         foreach ($savings as $savingAccount) {
             $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
         }
 
-        $sum = $repository->sumOfEverything();
-
-        if (bccomp($sum, '0') !== 0) {
-            Session::flash('error', strval(trans('firefly.unbalanced_error', ['amount' => Amount::format($sum, false)])));
-        }
-
         foreach ($accounts as $account) {
-            $set = $repository->getFrontpageTransactions($account, $start, $end);
+            $set = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+            $set = $set->splice(0, 10);
 
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
@@ -145,10 +163,6 @@ class HomeController extends Controller
     {
         // these routes are not relevant for the help pages:
         $ignore = [
-            'logout', 'register', 'bills.rescan', 'attachments.download', 'attachments.preview',
-            'budgets.income', 'csv.download-config', 'currency.default', 'export.status', 'export.download',
-            'json.', 'help.', 'piggy-banks.addMoney', 'piggy-banks.removeMoney', 'rules.rule.up', 'rules.rule.down',
-            'rules.rule-group.up', 'rules.rule-group.down', 'debugbar',
         ];
         $routes = Route::getRoutes();
         /** @var \Illuminate\Routing\Route $route */
@@ -156,11 +170,23 @@ class HomeController extends Controller
 
             $name    = $route->getName();
             $methods = $route->getMethods();
+            $search  = [
+                '{account}', '{what}', '{rule}', '{tj}', '{category}', '{budget}', '{code}', '{date}', '{attachment}', '{bill}', '{limitrepetition}',
+                '{currency}', '{jobKey}', '{piggyBank}', '{ruleGroup}', '{rule}', '{route}', '{unfinishedJournal}',
+                '{reportType}', '{start_date}', '{end_date}', '{accountList}','{tag}','{journalList}'
+
+            ];
+            $replace = [1, 'asset', 1, 1, 1, 1, 'abc', '2016-01-01', 1, 1, 1, 1, 1, 1, 1, 1, 'index', 1,
+                        'default', '20160101', '20160131', '1,2',1,'1,2'
+            ];
+            if (count($search) != count($replace)) {
+                echo 'count';
+                exit;
+            }
+            $url = str_replace($search, $replace, $route->getUri());
 
             if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                foreach (array_keys(Config::get('firefly.languages')) as $lang) {
-                    echo 'touch ' . $lang . '/' . $name . '.md<br>';
-                }
+                echo '<a href="/' . $url . '" title="' . $name . '">' . $name . '</a><br>' . "\n";
 
             }
         }
@@ -175,7 +201,10 @@ class HomeController extends Controller
      *
      * @return bool
      */
-    private function startsWithAny(array $array, string $needle): bool
+    private
+    function startsWithAny(
+        array $array, string $needle
+    ): bool
     {
         foreach ($array as $entry) {
             if ((substr($needle, 0, strlen($entry)) === $entry)) {

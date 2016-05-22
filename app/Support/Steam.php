@@ -1,4 +1,12 @@
 <?php
+/**
+ * Steam.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Support;
@@ -16,16 +24,14 @@ use FireflyIII\Models\Transaction;
  */
 class Steam
 {
-
     /**
      *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
-     * @param bool                       $ignoreVirtualBalance
      *
      * @return string
      */
-    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false): string
+    public function balance(Account $account, Carbon $date): string
     {
 
         // abuse chart properties:
@@ -33,7 +39,36 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
-        $cache->addProperty($ignoreVirtualBalance);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $balance = strval(
+            $account->transactions()->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+        );
+        $balance = bcadd($balance, $account->virtual_balance);
+        $cache->store($balance);
+
+        return $balance;
+    }
+
+    /**
+     *
+     * @param \FireflyIII\Models\Account $account
+     * @param \Carbon\Carbon             $date
+     *
+     * @return string
+     */
+    public function balanceIgnoreVirtual(Account $account, Carbon $date): string
+    {
+
+        // abuse chart properties:
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance-no-virtual');
+        $cache->addProperty($date);
         if ($cache->has()) {
             return $cache->get();
         }
@@ -44,9 +79,6 @@ class Steam
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
 
-        if (!$ignoreVirtualBalance) {
-            $balance = bcadd($balance, $account->virtual_balance);
-        }
         $cache->store($balance);
 
         return $balance;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * TagsSpace.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
@@ -19,7 +27,7 @@ class TagsSpace extends BasicConverter implements ConverterInterface
     public function convert(): Collection
     {
         /** @var TagRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $repository = app(TagRepositoryInterface::class);
 
         $tags = new Collection;
 
@@ -34,8 +42,10 @@ class TagsSpace extends BasicConverter implements ConverterInterface
                 'zoomLevel'   => null,
                 'tagMode'     => 'nothing',
             ];
-            $tag  = $repository->store($data); // should validate first?
-            $tags->push($tag);
+            if (strlen($string) > 0) {
+                $tag = $repository->store($data); // should validate first?
+                $tags->push($tag);
+            }
         }
         $tags = $tags->merge($this->data['tags']);
 

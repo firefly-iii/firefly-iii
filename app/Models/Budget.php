@@ -1,4 +1,15 @@
-<?php namespace FireflyIII\Models;
+<?php
+/**
+ * Budget.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
+namespace FireflyIII\Models;
 
 use Auth;
 use Crypt;
@@ -10,21 +21,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Budget
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property \Carbon\Carbon                                                     $deleted_at
- * @property string                                                             $name
- * @property integer                                                            $user_id
- * @property boolean                                                            $active
- * @property boolean                                                            $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|BudgetLimit[]        $budgetlimits
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                              $user
- * @property string                                                             $dateFormatted
- * @property string                                                             $budgeted
- * @property float                                                              $amount
- * @property \Carbon\Carbon                                                     $date
+ * @property integer                                                                        $id
+ * @property \Carbon\Carbon                                                                 $created_at
+ * @property \Carbon\Carbon                                                                 $updated_at
+ * @property \Carbon\Carbon                                                                 $deleted_at
+ * @property string                                                                         $name
+ * @property integer                                                                        $user_id
+ * @property boolean                                                                        $active
+ * @property boolean                                                                        $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|BudgetLimit[]                    $budgetlimits
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]             $transactionjournals
+ * @property-read \FireflyIII\User                                                          $user
+ * @property string                                                                         $dateFormatted
+ * @property string                                                                         $budgeted
+ * @property float                                                                          $amount
+ * @property \Carbon\Carbon                                                                 $date
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereUpdatedAt($value)
@@ -34,6 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereActive($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereEncrypted($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  */
 class Budget extends Model
 {
@@ -134,6 +146,14 @@ class Budget extends Model
     public function transactionjournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'budget_transaction_journal', 'budget_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactions()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Transaction', 'budget_transaction', 'budget_id');
     }
 
     /**

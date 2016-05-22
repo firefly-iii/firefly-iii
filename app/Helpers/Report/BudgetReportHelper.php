@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * BudgetReportHelper.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,13 +7,17 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Helpers\Report;
 
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,6 +27,18 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportHelper implements BudgetReportHelperInterface
 {
+    /** @var BudgetRepositoryInterface */
+    private $repository;
+
+    /**
+     * BudgetReportHelper constructor.
+     *
+     * @param BudgetRepositoryInterface $repository
+     */
+    public function __construct(BudgetRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * @param Carbon     $start
@@ -35,25 +50,17 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection
     {
         $object = new BudgetCollection;
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository     = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $set            = $repository->getBudgets();
-        $allRepetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
-        $allTotalSpent  = $repository->spentAllPerDayForAccounts($accounts, $start, $end);
+        $set    = $this->repository->getBudgets();
 
+        /** @var Budget $budget */
         foreach ($set as $budget) {
-
-            $repetitions = $allRepetitions->filter(
-                function (LimitRepetition $rep) use ($budget) {
-                    return $rep->budget_id == $budget->id;
-                }
-            );
-            $totalSpent  = $allTotalSpent[$budget->id] ?? [];
+            $repetitions = $budget->limitrepetitions()->before($end)->after($start)->get();
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
+                // spent for budget in time range:
+                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
 
-                $spent = array_sum($totalSpent);
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
                     $budgetLine->setBudget($budget);
@@ -63,32 +70,23 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 }
                 continue;
             }
-
             // one or more repetitions for budget:
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
+                $data = $this->calculateExpenses($budget, $repetition, $accounts);
+
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses = $this->getSumOfRange($start, $end, $totalSpent);
-
-                // 200 en -100 is 100, vergeleken met 0 === 1
-                // 200 en -200 is 0, vergeleken met 0 === 0
-                // 200 en -300 is -100, vergeleken met 0 === -1
-
-                $left      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
-                $spent     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
-                $overspent = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
-
-                $budgetLine->setLeft($left);
-                $budgetLine->setSpent($expenses);
-                $budgetLine->setOverspent($overspent);
+                $budgetLine->setLeft($data['left']);
+                $budgetLine->setSpent($data['expenses']);
+                $budgetLine->setOverspent($data['overspent']);
                 $budgetLine->setBudgeted($repetition->amount);
 
                 $object->addBudgeted($repetition->amount);
-                $object->addSpent($spent);
-                $object->addLeft($left);
-                $object->addOverspent($overspent);
+                $object->addSpent($data['spent']);
+                $object->addLeft($data['left']);
+                $object->addOverspent($data['overspent']);
                 $object->addBudgetLine($budgetLine);
 
             }
@@ -96,7 +94,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         // stuff outside of budgets:
-        $noBudget   = $repository->getWithoutBudgetSum($accounts, $start, $end);
+
+        $noBudget   = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end);
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget);
         $budgetLine->setSpent($noBudget);
@@ -107,7 +106,37 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $budgets    = $repository->getActiveBudgets();
+
+        $set = new Collection;
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $total = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
+            if (bccomp($total, '0') === -1) {
+                $set->push($budget);
+            }
+        }
+        $set = $set->sortBy(
+            function (Budget $budget) {
+                return $budget->name;
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
      * and sum up everything in the array in the given range.
      *
      * @param Carbon $start
@@ -131,5 +160,25 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     * @param Collection      $accounts
+     *
+     * @return array
+     */
+    private function calculateExpenses(Budget $budget, LimitRepetition $repetition, Collection $accounts): array
+    {
+        $array              = [];
+        $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
+        $array['left']      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
+        $array['spent']     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
+        $array['overspent'] = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
+        $array['expenses']  = $expenses;
+
+        return $array;
+
     }
 }

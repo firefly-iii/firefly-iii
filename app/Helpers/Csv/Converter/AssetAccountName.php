@@ -1,11 +1,19 @@
 <?php
+/**
+ * AssetAccountName.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountName
@@ -20,27 +28,21 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
      */
     public function convert(): Account
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $crud = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
-        // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
+            $account = $crud->find(intval($this->mapped[$this->index][$this->value]));
 
             return $account;
         }
 
-
-        // find or create new account:
-        $set = $repository->getAccounts(['Default account', 'Asset account']);
+        $set = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $this->value) {
                 return $entry;
             }
         }
-
-        // create it if doesnt exist.
         $accountData = [
             'name'                   => $this->value,
             'accountType'            => 'asset',
@@ -54,10 +56,9 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             'openingBalance'         => 0,
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => 1, // hard coded.
-
         ];
 
-        $account = $repository->store($accountData);
+        $account = $crud->store($accountData);
 
         return $account;
     }

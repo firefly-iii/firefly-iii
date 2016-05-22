@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * ExportJob.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,11 +7,12 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Models;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -58,7 +58,6 @@ class ExportJob extends Model
      */
     public function change($status)
     {
-        Log::debug('Job ' . $this->key . ' to status "' . $status . '".');
         $this->status = $status;
         $this->save();
     }

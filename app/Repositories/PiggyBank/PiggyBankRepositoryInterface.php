@@ -1,4 +1,12 @@
 <?php
+/**
+ * PiggyBankRepositoryInterface.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\PiggyBank;
@@ -16,6 +24,8 @@ interface PiggyBankRepositoryInterface
 {
 
     /**
+     * Create a new event.
+     *
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
@@ -24,6 +34,8 @@ interface PiggyBankRepositoryInterface
     public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent;
 
     /**
+     * Destroy piggy bank.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return bool
@@ -31,13 +43,15 @@ interface PiggyBankRepositoryInterface
     public function destroy(PiggyBank $piggyBank): bool;
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param int $piggyBankid
      *
-     * @return Collection
+     * @return PiggyBank
      */
-    public function getEventSummarySet(PiggyBank $piggyBank) : Collection;
+    public function find(int $piggyBankid): PiggyBank;
 
     /**
+     * Get all events.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return Collection
@@ -45,14 +59,25 @@ interface PiggyBankRepositoryInterface
     public function getEvents(PiggyBank $piggyBank) : Collection;
 
     /**
+     * Highest order of all piggy banks.
+     *
      * @return int
      */
     public function getMaxOrder(): int;
 
     /**
+     * Return all piggy banks.
+     *
      * @return Collection
      */
     public function getPiggyBanks() : Collection;
+
+    /**
+     * Also add amount in name.
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksWithAmount() : Collection;
 
     /**
      * Set all piggy banks to order 0.
@@ -62,8 +87,7 @@ interface PiggyBankRepositoryInterface
     public function reset(): bool;
 
     /**
-     *
-     * set id of piggy bank.
+     * Set specific piggy bank to specific order.
      *
      * @param int $piggyBankId
      * @param int $order
@@ -74,6 +98,8 @@ interface PiggyBankRepositoryInterface
 
 
     /**
+     * Store new piggy bank.
+     *
      * @param array $data
      *
      * @return PiggyBank
@@ -81,6 +107,8 @@ interface PiggyBankRepositoryInterface
     public function store(array $data): PiggyBank;
 
     /**
+     * Update existing piggy bank.
+     *
      * @param PiggyBank $piggyBank
      * @param array     $data
      *

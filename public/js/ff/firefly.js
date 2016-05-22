@@ -96,19 +96,20 @@ function currencySelect(e) {
 
 
     return false;
-
-    //var code = target.data('code');
-    //var fieldType = target.data('field');
-    //var menu = $('.' + fieldType + 'CurrencyDropdown');
-    //
-    //var symbolHolder = $('#' + fieldType + 'CurrentSymbol');
-    //symbolHolder.text(symbol);
-    //$('input[name="' + fieldType + '_currency_id"]').val(id);
-    //
-    // close dropdown (hack hack)
-    //menu.click();
-
-
-    //return false;
 }
 
+// Settings object that controls default parameters for library methods:
+accounting.settings = {
+    currency: {
+        symbol: currencySymbol,   // default currency symbol is '$'
+        format: "%s %v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+        decimal: mon_decimal_point,  // decimal point separator
+        thousand: mon_thousands_sep,  // thousands separator
+        precision: frac_digits   // decimal places
+    },
+    number: {
+        precision: 0,  // default precision on numbers is 0
+        thousand: ",",
+        decimal: "."
+    }
+};

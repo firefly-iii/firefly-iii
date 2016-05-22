@@ -1,11 +1,18 @@
 <?php
+/**
+ * ChartJsBudgetChartGenerator.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Budget;
 
 
-use Config;
 use Illuminate\Support\Collection;
-use Preferences;
+use Navigation;
 
 /**
  * Class ChartJsBudgetChartGenerator
@@ -14,20 +21,17 @@ use Preferences;
  */
 class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 {
-
     /**
+     *
      * @param Collection $entries
      * @param string     $dateFormat
      *
      * @return array
      */
-    public function budget(Collection $entries, $dateFormat = 'month'): array
+    public function budgetLimit(Collection $entries, string $dateFormat = 'month_and_day'): array
     {
-        // language:
-        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $format   = Config::get('firefly.' . $dateFormat . '.' . $language);
-
-        $data = [
+        $format = strval(trans('config.' . $dateFormat));
+        $data   = [
             'labels'   => [],
             'datasets' => [
                 [
@@ -47,17 +51,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
         $data['count'] = count($data['datasets']);
 
         return $data;
-    }
-
-    /**
-     *
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function budgetLimit(Collection $entries): array
-    {
-        return $this->budget($entries, 'monthAndDay');
     }
 
     /**
@@ -134,6 +127,42 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
             $data['datasets'][] = ['label' => 'Budgeted for ' . $name, 'data' => array_values($budgeted)];
         }
         $data['count'] = count($data['datasets']);
+
+        return $data;
+
+    }
+
+    /**
+     * @param Collection $entries
+     * @param string     $viewRange
+     *
+     * @return array
+     */
+    public function period(Collection $entries, string $viewRange) : array
+    {
+        $data = [
+            'labels'   => [],
+            'datasets' => [
+                0 => [
+                    'label' => trans('firefly.budgeted'),
+                    'data'  => [],
+                ],
+                1 => [
+                    'label' => trans('firefly.spent'),
+                    'data'  => [],
+                ],
+            ],
+            'count'    => 2,
+        ];
+        foreach ($entries as $entry) {
+            $label            = Navigation::periodShow($entry['date'], $viewRange);
+            $data['labels'][] = $label;
+            // data set 0 is budgeted
+            // data set 1 is spent:
+            $data['datasets'][0]['data'][] = $entry['budgeted'];
+            $data['datasets'][1]['data'][] = round(($entry['spent'] * -1), 2);
+
+        }
 
         return $data;
 

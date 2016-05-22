@@ -1,9 +1,17 @@
 <?php
+/**
+ * MailError.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Jobs;
 
 use ErrorException;
-use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,27 +35,28 @@ class MailError extends Job implements ShouldQueue
     protected $exception;
     /** @var  string */
     protected $ipAddress;
-    /** @var  User */
-    protected $user;
+    /** @var  array */
+    protected $userData;
 
     /**
      * MailError constructor.
      *
-     * @param User   $user
+     * @param array  $userData
      * @param string $destination
      * @param string $ipAddress
      * @param array  $exceptionData
      *
      */
-    public function __construct(User $user, string $destination, string $ipAddress, array $exceptionData)
+    public function __construct(array $userData, string $destination, string $ipAddress, array $exceptionData)
     {
-        $this->user        = $user;
+        $this->userData    = $userData;
         $this->destination = $destination;
         $this->ipAddress   = $ipAddress;
         $this->exception   = $exceptionData;
 
-        Log::debug('In mail job constructor for error handler.');
-        Log::error('Exception is: ' . json_encode($exceptionData));
+        $debug = $exceptionData;
+        unset($debug['stackTrace']);
+        Log::error('Exception is: ' . json_encode($debug));
     }
 
     /**
@@ -57,14 +66,13 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Start of handle()');
         if ($this->attempts() < 3) {
             // mail?
             try {
                 $email            = env('SITE_OWNER');
                 $args             = $this->exception;
-                $args['loggedIn'] = !is_null($this->user->id);
-                $args['user']     = $this->user;
+                $args['loggedIn'] = $this->userData['id'] > 0;
+                $args['user']     = $this->userData;
                 $args['ip']       = $this->ipAddress;
 
                 Mail::send(
@@ -81,7 +89,6 @@ class MailError extends Job implements ShouldQueue
             } catch (ErrorException $e) {
                 Log::error('ErrorException ' . $e->getMessage());
             }
-            Log::debug('Successfully handled error.');
         }
     }
 }

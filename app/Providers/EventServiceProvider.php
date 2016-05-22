@@ -1,20 +1,22 @@
 <?php
+/**
+ * EventServiceProvider.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Log;
-use Navigation;
 
 /**
  * Class EventServiceProvider
@@ -36,20 +38,30 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\FireRulesForUpdate',
 
             ],
-            'FireflyIII\Events\TransactionJournalStored'  => [
+
+            'FireflyIII\Events\BudgetLimitStored'        => [
+                'FireflyIII\Handlers\Events\BudgetLimitEventHandler@store',
+            ],
+            'FireflyIII\Events\BudgetLimitUpdated'       => [
+                'FireflyIII\Handlers\Events\BudgetLimitEventHandler@update',
+            ],
+            'FireflyIII\Events\TransactionStored'        => [
+                'FireflyIII\Handlers\Events\ConnectTransactionToPiggyBank',
+            ],
+            'FireflyIII\Events\TransactionJournalStored' => [
                 'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
                 'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
                 'FireflyIII\Handlers\Events\FireRulesForStore',
             ],
-            'Illuminate\Auth\Events\Logout'               => [
+            'Illuminate\Auth\Events\Logout'              => [
                 'FireflyIII\Handlers\Events\UserEventListener@onUserLogout',
             ],
-            'FireflyIII\Events\UserRegistration'          => [
+            'FireflyIII\Events\UserRegistration'         => [
                 'FireflyIII\Handlers\Events\SendRegistrationMail',
                 'FireflyIII\Handlers\Events\AttachUserRole',
                 'FireflyIII\Handlers\Events\UserConfirmation@sendConfirmation',
             ],
-            'FireflyIII\Events\ResendConfirmation'        => [
+            'FireflyIII\Events\ResendConfirmation'       => [
                 'FireflyIII\Handlers\Events\UserConfirmation@resendConfirmation',
             ],
         ];
@@ -66,39 +78,6 @@ class EventServiceProvider extends ServiceProvider
         parent::boot($events);
         $this->registerDeleteEvents();
         $this->registerCreateEvents();
-        BudgetLimit::saved(
-            function (BudgetLimit $budgetLimit) {
-                $end = Navigation::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
-                $end->subDay();
-                $set = $budgetLimit->limitrepetitions()
-                                   ->where('startdate', $budgetLimit->startdate->format('Y-m-d 00:00:00'))
-                                   ->where('enddate', $end->format('Y-m-d 00:00:00'))
-                                   ->get();
-                if ($set->count() == 0) {
-                    $repetition            = new LimitRepetition;
-                    $repetition->startdate = $budgetLimit->startdate;
-                    $repetition->enddate   = $end;
-                    $repetition->amount    = $budgetLimit->amount;
-                    $repetition->budgetLimit()->associate($budgetLimit);
-
-                    try {
-                        $repetition->save();
-                    } catch (QueryException $e) {
-                        Log::error('Trying to save new LimitRepetition failed: ' . $e->getMessage());
-                    }
-                } else {
-                    if ($set->count() == 1) {
-                        $repetition         = $set->first();
-                        $repetition->amount = $budgetLimit->amount;
-                        $repetition->save();
-
-                    }
-                }
-            }
-        );
-
-
-        //
     }
 
     /**
@@ -126,16 +105,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected function registerDeleteEvents()
     {
-        TransactionJournal::deleted(
-            function (TransactionJournal $journal) {
-
-                /** @var Transaction $transaction */
-                foreach ($journal->transactions()->get() as $transaction) {
-                    $transaction->delete();
-                }
-            }
-        );
-
         Account::deleted(
             function (Account $account) {
 

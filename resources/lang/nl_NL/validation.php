@@ -17,6 +17,7 @@ return [
     'file_attached'                  => 'Bestand met naam ":name" is met succes geuploaded.',
     'file_invalid_mime'              => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',
     'file_too_large'                 => 'Bestand ":name" is te groot.',
+    'belongs_to_user'                => 'De waarde van :attribute is onbekend',
     'accepted'                       => ':attribute moet geaccepteerd zijn.',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',

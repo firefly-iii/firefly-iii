@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * TransactionMatcher.php
  * Copyright (C) 2016 Robert Horlings
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Rules;
 
@@ -72,8 +73,9 @@ class TransactionMatcher
         //   - the maximum number of transactions to search in have been searched 
         do {
             // Fetch a batch of transactions from the database
-            $offset = $page > 0 ? ($page - 1) * $pagesize : 0;
-            $set    = $this->repository->getCollectionOfTypes($this->transactionTypes, $offset, $pagesize);
+            $paginator = $this->repository->getJournals($this->transactionTypes, $page, $pagesize);
+            $set       = $paginator->getCollection();
+
 
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(

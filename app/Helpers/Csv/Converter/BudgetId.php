@@ -1,4 +1,12 @@
 <?php
+/**
+ * BudgetId.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
@@ -19,15 +27,9 @@ class BudgetId extends BasicConverter implements ConverterInterface
     public function convert(): Budget
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-
-
-        // is mapped? Then it's easy!
-        if (isset($this->mapped[$this->index][$this->value])) {
-            $budget = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $budget = $repository->find($this->value);
-        }
+        $repository = app(BudgetRepositoryInterface::class);
+        $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
+        $budget     = $repository->find($value);
 
         return $budget;
     }

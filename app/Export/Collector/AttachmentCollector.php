@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * AttachmentCollector.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Export\Collector;
 
@@ -44,7 +45,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     public function __construct(ExportJob $job)
     {
-        $this->repository = app('FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface');
+        /** @var AttachmentRepositoryInterface repository */
+        $this->repository = app(AttachmentRepositoryInterface::class);
         // make storage:
         $this->uploadDisk = Storage::disk('upload');
         $this->exportDisk = Storage::disk('export');
@@ -68,8 +70,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         // put the explanation string in a file and attach it as well.
         $file = $this->job->key . '-Source of all your attachments explained.txt';
         $this->exportDisk->put($file, $this->explanationString);
-        Log::debug('Also put explanation file "' . $file . '" in the zip.');
         $this->getFiles()->push($file);
+
         return true;
     }
 
@@ -102,14 +104,12 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     private function exportAttachment(Attachment $attachment): bool
     {
         $file = $attachment->fileName();
-        Log::debug('Original file is at "' . $file . '".');
         if ($this->uploadDisk->exists($file)) {
             try {
                 $decrypted  = Crypt::decrypt($this->uploadDisk->get($file));
                 $exportFile = $this->exportFileName($attachment);
                 $this->exportDisk->put($exportFile, $decrypted);
                 $this->getFiles()->push($exportFile);
-                Log::debug('Stored file content in new file "' . $exportFile . '", which will be in the final zip file.');
 
                 // explain:
                 $this->explain($attachment);
@@ -141,8 +141,6 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     private function getAttachments(): Collection
     {
         $attachments = $this->repository->get();
-
-        Log::debug('Found ' . $attachments->count() . ' attachments.');
 
         return $attachments;
     }

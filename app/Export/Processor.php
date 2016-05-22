@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * Processor.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,16 +7,19 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Export;
 
-use Auth;
-use Config;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Export\Collector\AttachmentCollector;
+use FireflyIII\Export\Collector\UploadCollector;
+use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalCollector;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
-use Log;
 use Storage;
 use ZipArchive;
 
@@ -78,9 +80,11 @@ class Processor
      */
     public function collectAttachments(): bool
     {
-        $attachmentCollector = app('FireflyIII\Export\Collector\AttachmentCollector', [$this->job]);
+        /** @var AttachmentCollector $attachmentCollector */
+        $attachmentCollector = app(AttachmentCollector::class, [$this->job]);
         $attachmentCollector->run();
         $this->files = $this->files->merge($attachmentCollector->getFiles());
+
         return true;
     }
 
@@ -89,17 +93,10 @@ class Processor
      */
     public function collectJournals(): bool
     {
-        $args             = [$this->accounts, Auth::user(), $this->settings['startDate'], $this->settings['endDate']];
-        /** @var JournalCollector $journalCollector */
-        $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
-        $this->journals   = $journalCollector->collect();
-        Log::debug(
-            'Collected ' .
-            $this->journals->count() . ' journals (between ' .
-            $this->settings['startDate']->format('Y-m-d') . ' and ' .
-            $this->settings['endDate']->format('Y-m-d')
-            . ').'
-        );
+        /** @var JournalRepositoryInterface $repository */
+        $repository     = app(JournalRepositoryInterface::class);
+        $this->journals = $repository->getJournalsInRange($this->accounts, $this->settings['startDate'], $this->settings['endDate']);
+
         return true;
     }
 
@@ -108,10 +105,12 @@ class Processor
      */
     public function collectOldUploads(): bool
     {
-        $uploadCollector = app('FireflyIII\Export\Collector\UploadCollector', [$this->job]);
+        /** @var UploadCollector $uploadCollector */
+        $uploadCollector = app(UploadCollector::class, [$this->job]);
         $uploadCollector->run();
 
         $this->files = $this->files->merge($uploadCollector->getFiles());
+
         return true;
     }
 
@@ -126,7 +125,7 @@ class Processor
             $this->exportEntries->push(Entry::fromJournal($journal));
             $count++;
         }
-        Log::debug('Converted ' . $count . ' journals to "Entry" objects.');
+
         return true;
     }
 
@@ -135,8 +134,9 @@ class Processor
      */
     public function createConfigFile(): bool
     {
-        $this->configurationMaker = app('FireflyIII\Export\ConfigurationFile', [$this->job]);
+        $this->configurationMaker = app(ConfigurationFile::class, [$this->job]);
         $this->files->push($this->configurationMaker->make());
+
         return true;
     }
 
@@ -149,7 +149,6 @@ class Processor
         $zip      = new ZipArchive;
         $file     = $this->job->key . '.zip';
         $fullPath = storage_path('export') . '/' . $file;
-        Log::debug('Will create zip file at ' . $fullPath);
 
         if ($zip->open($fullPath, ZipArchive::CREATE) !== true) {
             throw new FireflyException('Cannot store zip file.');
@@ -159,20 +158,14 @@ class Processor
         foreach ($this->getFiles() as $entry) {
             // is part of this job?
             $zipFileName = str_replace($this->job->key . '-', '', $entry);
-            $result      = $zip->addFromString($zipFileName, $disk->get($entry));
-            if (!$result) {
-                Log::error('Could not add "' . $entry . '" into zip file as "' . $zipFileName . '".');
-            }
+            $zip->addFromString($zipFileName, $disk->get($entry));
         }
 
         $zip->close();
 
         // delete the files:
-        foreach ($this->getFiles() as $file) {
-            Log::debug('Will now delete file "' . $file . '".');
-            $disk->delete($file);
-        }
-        Log::debug('Done!');
+        $this->deleteFiles($disk);
+
         return true;
     }
 
@@ -181,13 +174,12 @@ class Processor
      */
     public function exportJournals(): bool
     {
-        $exporterClass = Config::get('firefly.export_formats.' . $this->exportFormat);
+        $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
         $exporter      = app($exporterClass, [$this->job]);
-        Log::debug('Going to export ' . $this->exportEntries->count() . ' export entries into ' . $this->exportFormat . ' format.');
         $exporter->setEntries($this->exportEntries);
         $exporter->run();
         $this->files->push($exporter->getFileName());
-        Log::debug('Added "' . $exporter->getFileName() . '" to the list of files to include in the zip.');
+
         return true;
     }
 
@@ -197,5 +189,15 @@ class Processor
     public function getFiles(): Collection
     {
         return $this->files;
+    }
+
+    /**
+     * @param FilesystemAdapter $disk
+     */
+    private function deleteFiles(FilesystemAdapter $disk)
+    {
+        foreach ($this->getFiles() as $file) {
+            $disk->delete($file);
+        }
     }
 }

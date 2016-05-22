@@ -1,4 +1,15 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * CurrencyController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
+namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use Cache;
@@ -168,13 +179,15 @@ class CurrencyController extends Controller
      */
     public function store(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {
-        $data = $request->getCurrencyData();
-        if (Auth::user()->hasRole('owner')) {
-            $currency = $repository->store($data);
-            Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
-        } else {
+        if (!Auth::user()->hasRole('owner')) {
             Log::error('User ' . Auth::user()->id . ' is not admin, but tried to store a currency.');
+
+            return redirect(session('currency.create.url'));
         }
+
+        $data     = $request->getCurrencyData();
+        $currency = $repository->store($data);
+        Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('currency.create.fromStore', true);

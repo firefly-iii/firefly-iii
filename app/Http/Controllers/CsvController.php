@@ -1,15 +1,23 @@
 <?php
+/**
+ * CsvController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Config;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Data;
 use FireflyIII\Helpers\Csv\Importer;
 use FireflyIII\Helpers\Csv\WizardInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Models\AccountType;
 use Illuminate\Http\Request;
 use Input;
 use Log;
@@ -39,12 +47,12 @@ class CsvController extends Controller
         View::share('title', trans('firefly.csv'));
         View::share('mainTitleIcon', 'fa-file-text-o');
 
-        if (Config::get('firefly.csv_import_enabled') === false) {
+        if (config('firefly.csv_import_enabled') === false) {
             throw new FireflyException('CSV Import is not enabled.');
         }
 
-        $this->wizard = app('FireflyIII\Helpers\Csv\WizardInterface');
-        $this->data   = app('FireflyIII\Helpers\Csv\Data');
+        $this->wizard = app(WizardInterface::class);
+        $this->data   = app(Data::class);
 
     }
 
@@ -81,7 +89,7 @@ class CsvController extends Controller
         if ($this->data->hasHeaders()) {
             $headers = $firstRow;
         }
-        $keys = array_keys(Config::get('csv.roles'));
+        $keys = array_keys(config('csv.roles'));
         foreach ($keys as $name) {
             $availableRoles[$name] = trans('firefly.csv_column_' . $name);
         }
@@ -159,11 +167,11 @@ class CsvController extends Controller
      *
      * STEP ONE
      *
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\View\View
      */
-    public function index(ARI $repository)
+    public function index(AccountCrudInterface $crud)
     {
         $subTitle = trans('firefly.csv_import');
 
@@ -179,7 +187,7 @@ class CsvController extends Controller
 
         // get list of supported specifix
         $specifix = [];
-        foreach (Config::get('csv.specifix') as $entry) {
+        foreach (config('csv.specifix') as $entry) {
             $specifix[$entry] = trans('firefly.csv_specifix_' . $entry);
         }
 
@@ -191,7 +199,7 @@ class CsvController extends Controller
         ];
 
         // get a list of asset accounts:
-        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Asset account', 'Default account']));
+        $accounts = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]));
 
         // can actually upload?
         $uploadPossible = is_writable(storage_path('upload'));
@@ -312,12 +320,10 @@ class CsvController extends Controller
             return redirect(route('csv.index'));
         }
 
-        Log::debug('Created importer');
         /** @var Importer $importer */
-        $importer = app('FireflyIII\Helpers\Csv\Importer');
+        $importer = app(Importer::class);
         $importer->setData($this->data);
         $importer->run();
-        Log::debug('Done importing!');
 
         $rows     = $importer->getRows();
         $errors   = $importer->getErrors();
@@ -337,7 +343,6 @@ class CsvController extends Controller
      *
      * STEP SIX
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) it's 6, but it's allright.
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -382,9 +387,6 @@ class CsvController extends Controller
      * and sends you onwards.
      *
      * STEP TWO
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // need the length.
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly 5, its ok
      *
      * @param Request $request
      *

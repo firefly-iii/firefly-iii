@@ -12,6 +12,20 @@
         <input type="hidden" name="id" value="{{ journal.id }}"/>
         <input type="hidden" name="what" value="{{ what }}"/>
 
+        {% if errors.all|length > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="text-danger">{{ 'errors'|_ }}</h3>
+                <ul>
+                {% for err in errors.all %}
+                    <li class="text-danger">{{ err }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <div class="box box-primary">
@@ -22,25 +36,24 @@
                         <!-- ALWAYS AVAILABLE -->
                         {{ ExpandedForm.text('description',journal.description) }}
 
-                        <!-- SHOW ACCOUNT (FROM) ONLY FOR WITHDRAWALS AND DEPOSITS -->
-                        {% if what == 'deposit' or what == 'withdrawal' %}
-                            {{ ExpandedForm.select('account_id',accountList,data['account_id']) }}
+                        <!-- SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS -->
+                        {% if what == 'transfer' or what == 'withdrawal' %}
+                            {{ ExpandedForm.select('source_account_id',assetAccounts, data.source_account_id, {label: trans('form.asset_source_account')}) }}
                         {% endif %}
 
-                        <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
-                        {% if what == 'withdrawal' %}
-                            {{ ExpandedForm.text('expense_account',data['expense_account']) }}
-                        {% endif %}
-
-                        <!-- SHOW REVENUE ACCOUNT ONLY FOR DEPOSITS -->
+                        <!-- FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS -->
                         {% if what == 'deposit' %}
-                            {{ ExpandedForm.text('revenue_account',data['revenue_account']) }}
+                            {{ ExpandedForm.text('source_account_name',data.source_account_name, {label: trans('form.revenue_account')}) }}
                         {% endif %}
 
-                        <!-- ONLY SHOW FROM/TO ACCOUNT WHEN CREATING TRANSFER -->
-                        {% if what == 'transfer' %}
-                            {{ ExpandedForm.select('account_from_id',accountList,data['account_from_id']) }}
-                            {{ ExpandedForm.select('account_to_id',accountList,data['account_to_id']) }}
+                        <!-- FREE FORMAT DESTINATION ACCOUNT ONLY FOR EXPENSES -->
+                        {% if what == 'withdrawal' %}
+                            {{ ExpandedForm.text('destination_account_name',data.destination_account_name, {label: trans('form.expense_account')}) }}
+                        {% endif %}
+
+                        <!-- SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS -->
+                        {% if what == 'transfer' or what == 'deposit' %}
+                            {{ ExpandedForm.select('destination_account_id',assetAccounts, data.destination_account_id, {label: trans('form.asset_destination_account')} ) }}
                         {% endif %}
 
                         <!-- ALWAYS SHOW AMOUNT -->
@@ -98,6 +111,16 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.optionsList('update','transaction') }}
+
+                        <div class="form-group" id="do_split_holder">
+                            <label for="ffInput_do_split" class="col-sm-4 control-label">{{ 'do_split'|_ }}</label>
+
+                            <div class="col-sm-8">
+                                <p class="form-control-static">
+                                    <a href="{{ route('split.journal.edit', journal.id) }}">{{ ('split_this_'~what)|_ }}</a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="pull-right btn btn-success">{{ ('update_' ~ what)|_ }}</button>

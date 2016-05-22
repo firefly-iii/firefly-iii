@@ -1,6 +1,5 @@
 /vendor
 /node_modules
 .env
-
-storage/
+_development
 .env.local

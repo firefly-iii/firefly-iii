@@ -1,8 +1,15 @@
 <?php
+/**
+ * Income.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
-use Crypt;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use stdClass;
@@ -34,21 +41,29 @@ class Income
      */
     public function addOrCreateIncome(TransactionJournal $entry)
     {
+        // add each account individually:
+        $sources = TransactionJournal::sourceTransactionList($entry);
 
-        $accountId = $entry->account_id;
-        if (!$this->incomes->has($accountId)) {
-            $newObject         = new stdClass;
-            $newObject->amount = strval(round($entry->journalAmount, 2));
-            $newObject->name   = Crypt::decrypt($entry->account_name);
-            $newObject->count  = 1;
-            $newObject->id     = $accountId;
-            $this->incomes->put($accountId, $newObject);
-        } else {
-            $existing         = $this->incomes->get($accountId);
-            $existing->amount = bcadd($existing->amount, $entry->journalAmount);
-            $existing->count++;
-            $this->incomes->put($accountId, $existing);
+        foreach ($sources as $transaction) {
+            $amount  = strval($transaction->amount);
+            $account = $transaction->account;
+            $amount  = bcmul($amount, '-1');
+
+            $object         = new stdClass;
+            $object->amount = $amount;
+            $object->name   = $account->name;
+            $object->count  = 1;
+            $object->id     = $account->id;
+
+            // overrule some properties:
+            if ($this->incomes->has($account->id)) {
+                $object         = $this->incomes->get($account->id);
+                $object->amount = bcadd($object->amount, $amount);
+                $object->count++;
+            }
+            $this->incomes->put($account->id, $object);
         }
+
     }
 
     /**

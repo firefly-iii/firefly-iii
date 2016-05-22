@@ -1,11 +1,18 @@
 <?php
+/**
+ * OpposingAccount.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\PostProcessing;
 
 use Auth;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Log;
 use Validator;
 
 /**
@@ -55,18 +62,35 @@ class OpposingAccount implements PostProcessorInterface
     }
 
     /**
+     * @return array|null
+     */
+    protected function checkIbanString()
+    {
+        $rules     = ['iban' => 'iban'];
+        $iban      = $this->data['opposing-account-iban'];
+        $check     = ['iban' => $iban];
+        $validator = Validator::make($check, $rules);
+        if (is_string($iban) && strlen($iban) > 0 && !$validator->fails()) {
+
+            $this->data['opposing-account-object'] = $this->parseIbanString();
+
+            return $this->data;
+        }
+
+        return null;
+    }
+
+    /**
      * @return array
      */
     protected function checkIdNameObject()
     {
         if ($this->data['opposing-account-id'] instanceof Account) { // first priority. try to find the account based on ID, if any
-            Log::debug('OpposingAccountPostProcession: opposing-account-id is an Account.');
             $this->data['opposing-account-object'] = $this->data['opposing-account-id'];
 
             return $this->data;
         }
         if ($this->data['opposing-account-iban'] instanceof Account) { // second: try to find the account based on IBAN, if any.
-            Log::debug('OpposingAccountPostProcession: opposing-account-iban is an Account.');
             $this->data['opposing-account-object'] = $this->data['opposing-account-iban'];
 
             return $this->data;
@@ -78,41 +102,21 @@ class OpposingAccount implements PostProcessorInterface
     /**
      * @return array|null
      */
-    protected function checkIbanString()
+    protected function checkNameString()
     {
-        $rules     = ['iban' => 'iban'];
-        $iban      = $this->data['opposing-account-iban'];
-        $check     = ['iban' => $iban];
-        $validator = Validator::make($check, $rules);
-        if (is_string($iban) && strlen($iban) > 0 && !$validator->fails()) {
+        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
+            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
 
-            Log::debug('OpposingAccountPostProcession: opposing-account-iban is a string (******).');
-            $this->data['opposing-account-object'] = $this->parseIbanString();
+            return $this->data;
+        }
+        if (is_string($this->data['opposing-account-name'])) {
+
+            $this->data['opposing-account-object'] = $this->parseNameString();
 
             return $this->data;
         }
 
         return null;
-    }
-
-    /**
-     * @return Account|null
-     */
-    protected function parseIbanString()
-    {
-        // create by name and/or iban.
-        $accounts = Auth::user()->accounts()->get();
-        foreach ($accounts as $entry) {
-            if ($entry->iban == $this->data['opposing-account-iban']) {
-                Log::debug('OpposingAccountPostProcession: opposing-account-iban matches an Account.');
-
-                return $entry;
-            }
-        }
-        $account = $this->createAccount();
-
-
-        return $account;
     }
 
     /**
@@ -134,7 +138,6 @@ class OpposingAccount implements PostProcessorInterface
                 'active'          => true,
             ]
         );
-        Log::debug('OpposingAccountPostProcession: created a new account.');
 
         return $account;
     }
@@ -150,34 +153,32 @@ class OpposingAccount implements PostProcessorInterface
             // create expense account:
 
             return AccountType::where('type', 'Expense account')->first();
-        } else {
-            // create revenue account:
-
-            return AccountType::where('type', 'Revenue account')->first();
-
-
         }
+
+        // create revenue account:
+
+        return AccountType::where('type', 'Revenue account')->first();
+
+
     }
 
     /**
-     * @return array|null
+     * @return Account|null
      */
-    protected function checkNameString()
+    protected function parseIbanString()
     {
-        if ($this->data['opposing-account-name'] instanceof Account) { // third: try to find account based on name, if any.
-            Log::debug('OpposingAccountPostProcession: opposing-account-name is an Account.');
-            $this->data['opposing-account-object'] = $this->data['opposing-account-name'];
+        // create by name and/or iban.
+        $accounts = Auth::user()->accounts()->get();
+        foreach ($accounts as $entry) {
+            if ($entry->iban == $this->data['opposing-account-iban']) {
 
-            return $this->data;
+                return $entry;
+            }
         }
-        if (is_string($this->data['opposing-account-name'])) {
+        $account = $this->createAccount();
 
-            $this->data['opposing-account-object'] = $this->parseNameString();
 
-            return $this->data;
-        }
-
-        return null;
+        return $account;
     }
 
     /**
@@ -189,7 +190,6 @@ class OpposingAccount implements PostProcessorInterface
         $accounts    = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
         foreach ($accounts as $entry) {
             if ($entry->name == $this->data['opposing-account-name']) {
-                Log::debug('Found an account with this name (#' . $entry->id . ': ******)');
 
                 return $entry;
             }

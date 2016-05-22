@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * ExportController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,19 +7,23 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
+
+
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Config;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Processor;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ExportFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
-use Log;
 use Preferences;
 use Response;
 use Storage;
@@ -63,7 +66,6 @@ class ExportController extends Controller
 
 
         $job->change('export_downloaded');
-        Log::debug('Will send user file "' . $file . '".');
 
         return response($disk->get($file), 200)
             ->header('Content-Description', 'File Transfer')
@@ -89,13 +91,12 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ARI  $repository
-     *
-     * @param EJRI $jobs
+     * @param AccountCrudInterface $crud
+     * @param EJRI                 $jobs
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(ARI $repository, EJRI $jobs)
+    public function index(AccountCrudInterface $crud, EJRI $jobs)
     {
         // create new export job.
         $job = $jobs->create();
@@ -103,11 +104,11 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts      = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts      = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
-        $formats       = array_keys(Config::get('firefly.export_formats'));
-        $defaultFormat = Preferences::get('export_format', Config::get('firefly.default_export_format'))->data;
+        $formats       = array_keys(config('firefly.export_formats'));
+        $defaultFormat = Preferences::get('export_format', config('firefly.default_export_format'))->data;
         $first         = session('first')->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 

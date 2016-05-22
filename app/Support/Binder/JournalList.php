@@ -7,8 +7,9 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace FireflyIII\Support\Binder;
+declare(strict_types = 1);
 
+namespace FireflyIII\Support\Binder;
 
 use Auth;
 use FireflyIII\Models\TransactionJournal;
@@ -37,7 +38,7 @@ class JournalList implements BinderInterface
             $object = TransactionJournal::whereIn('transaction_journals.id', $ids)
                                         ->expanded()
                                         ->where('transaction_journals.user_id', Auth::user()->id)
-                                        ->get(TransactionJournal::QUERYFIELDS);
+                                        ->get(TransactionJournal::queryFields());
 
             if ($object->count() > 0) {
                 return $object;

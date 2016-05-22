@@ -1,17 +1,22 @@
 <?php
+/**
+ * BillRepository.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -251,55 +256,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * This method will tell you if you still have a CC bill to pay. Amount will be positive if the amount
-     * has been paid, otherwise it will be negative.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getCreditCardBill(Carbon $start, Carbon $end): string
-    {
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $amount            = '0';
-        $creditCards       = $accountRepository->getCreditCards($end); // Find credit card accounts and possibly unpaid credit card bills.
-        /** @var Account $creditCard */
-        foreach ($creditCards as $creditCard) {
-            if ($creditCard->balance == 0) {
-                // find a transfer TO the credit card which should account for anything paid. If not, the CC is not yet used.
-                $set       = TransactionJournal::whereIn(
-                    'transaction_journals.id', function (Builder $q) use ($creditCard, $start, $end) {
-                    $q->select('transaction_journals.id')
-                      ->from('transactions')
-                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                      ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                      ->where('transactions.account_id', $creditCard->id)
-                      ->where('transactions.amount', '>', 0)// this makes the filter unnecessary.
-                      ->where('transaction_journals.user_id', $this->user->id)
-                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                      ->where('transaction_types.type', TransactionType::TRANSFER);
-                }
-                )->leftJoin(
-                    'transactions', function (JoinClause $join) {
-                    $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-                }
-                )->first([DB::raw('SUM(`transactions`.`amount`) as `sum_amount`')]);
-                $sumAmount = $set->sum_amount ?? '0';
-                $amount    = bcadd($amount, $sumAmount);
-            } else {
-                $amount = bcadd($amount, $creditCard->balance);
-            }
-        }
-
-        return $amount;
-
-    }
-
-    /**
      * This method also returns the amount of the journal in "journalAmount"
      * for easy access.
      *
@@ -315,11 +271,9 @@ class BillRepository implements BillRepositoryInterface
         $offset    = ($page - 1) * $pageSize;
         $query     = $bill->transactionjournals()
                           ->expanded()
-                          ->orderBy('transaction_journals.date', 'DESC')
-                          ->orderBy('transaction_journals.order', 'ASC')
-                          ->orderBy('transaction_journals.id', 'DESC');
+                          ->sortCorrectly();
         $count     = $query->count();
-        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::QUERYFIELDS);
+        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
         $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
 
         return $paginator;
@@ -327,6 +281,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * Get all journals that were recorded on this bill between these dates.
+     *
      * @param Bill   $bill
      * @param Carbon $start
      * @param Carbon $end
@@ -481,12 +436,12 @@ class BillRepository implements BillRepositoryInterface
         if (false === $journal->isWithdrawal()) {
             return false;
         }
-
-        $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower(TransactionJournal::destinationAccount($journal)->name);
-
-        // new: add source to word match:
-        $description .= ' ' . strtolower(TransactionJournal::sourceAccount($journal)->name);
+        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
+        $matches             = explode(',', $bill->match);
+        $description         = strtolower($journal->description) . ' ';
+        $description .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
+        $description .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
 
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch(TransactionJournal::amountPositive($journal), $bill->amount_min, $bill->amount_max);

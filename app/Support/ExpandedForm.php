@@ -1,9 +1,18 @@
 <?php
+/**
+ * ExpandedForm.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
 use Amount as Amt;
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -27,31 +36,6 @@ class ExpandedForm
      *
      * @return string
      */
-    public function amountSmall(string $name, $value = null, array $options = []): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        $options['min']  = '0.01';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        $currencies      = Amt::getAllCurrencies();
-        unset($options['currency']);
-        unset($options['placeholder']);
-        $html = view('form.amount-small', compact('defaultCurrency', 'currencies', 'classes', 'name', 'value', 'options'))->render();
-
-        return $html;
-
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
     public function amount(string $name, $value = null, array $options = []): string
     {
         $label           = $this->label($name, $options);
@@ -65,6 +49,31 @@ class ExpandedForm
         unset($options['currency']);
         unset($options['placeholder']);
         $html = view('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function amountSmall(string $name, $value = null, array $options = []): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $options['min']  = '0.01';
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        $currencies      = Amt::getAllCurrencies();
+        unset($options['currency']);
+        unset($options['placeholder']);
+        $html = view('form.amount-small', compact('defaultCurrency', 'currencies', 'classes', 'name', 'value', 'options'))->render();
 
         return $html;
 
@@ -196,17 +205,39 @@ class ExpandedForm
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param \Illuminate\Support\Collection $set
-     * @param bool                           $addEmpty
      *
      * @return array
      */
-    public function makeSelectList(Collection $set, bool $addEmpty = false): array
+    public function makeSelectList(Collection $set): array
     {
         $selectList = [];
-        if ($addEmpty) {
-            $selectList[0] = '(none)';
+        $fields     = ['title', 'name', 'description'];
+        /** @var Eloquent $entry */
+        foreach ($set as $entry) {
+            $entryId = intval($entry->id);
+            $title   = null;
+
+            foreach ($fields as $field) {
+                if (isset($entry->$field) && is_null($title)) {
+                    $title = $entry->$field;
+                }
+            }
+            $selectList[$entryId] = $title;
         }
-        $fields = ['title', 'name', 'description'];
+
+        return $selectList;
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection $set
+     *
+     * @return array
+     */
+    public function makeSelectListWithEmpty(Collection $set): array
+    {
+        $selectList    = [];
+        $selectList[0] = '(none)';
+        $fields        = ['title', 'name', 'description'];
         /** @var Eloquent $entry */
         foreach ($set as $entry) {
             $entryId = intval($entry->id);
@@ -286,7 +317,7 @@ class ExpandedForm
 
         return $html;
     }
-    
+
 
     /**
      * @param       $name
@@ -321,7 +352,6 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
         $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
@@ -421,6 +451,9 @@ class ExpandedForm
             }
         } catch (RuntimeException $e) {
             // don't care about session errors.
+        }
+        if ($value instanceof Carbon) {
+            $value = $value->format('Y-m-d');
         }
 
 

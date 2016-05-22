@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * AssetAccountNumber.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -14,7 +13,7 @@ namespace FireflyIII\Helpers\Csv\Converter;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountNumber
@@ -29,12 +28,11 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
      */
     public function convert(): Account
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $crud = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
+            $account = $crud->find(intval($this->mapped[$this->index][$this->value]));
 
             return $account;
         }
@@ -42,7 +40,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         $value = $this->value ?? '';
         if (strlen($value) > 0) {
             // find or create new account:
-            $set = $repository->getAccounts(['Default account', 'Asset account']);
+            $set = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
             /** @var Account $entry */
             foreach ($set as $entry) {
                 $accountNumber = $entry->getMeta('accountNumber');
@@ -68,7 +66,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
 
             ];
 
-            $account = $repository->store($accountData);
+            $account = $crud->store($accountData);
 
             return $account;
         }

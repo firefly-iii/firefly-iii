@@ -1,4 +1,12 @@
 <?php
+/**
+ * TagController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
@@ -84,7 +92,7 @@ class TagController extends Controller
      */
     public function delete(Tag $tag)
     {
-        $subTitle = trans('firefly.delete_tag', ['name' => $tag->tag]);
+        $subTitle = trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]);
 
         // put previous url in session
         Session::put('tags.delete.url', URL::previous());
@@ -113,13 +121,11 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag                    $tag
-     *
-     * @param TagRepositoryInterface $repository
+     * @param Tag $tag
      *
      * @return \Illuminate\View\View
      */
-    public function edit(Tag $tag, TagRepositoryInterface $repository)
+    public function edit(Tag $tag)
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
@@ -132,8 +138,8 @@ class TagController extends Controller
         /*
          * Can this tag become another type?
          */
-        $allowAdvance        = $repository->tagAllowAdvance($tag);
-        $allowToBalancingAct = $repository->tagAllowBalancing($tag);
+        $allowAdvance        = Tag::tagAllowAdvance($tag);
+        $allowToBalancingAct = Tag::tagAllowBalancing($tag);
 
         // edit tag options:
         if ($allowAdvance === false) {
@@ -221,7 +227,7 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         /** @var Collection $journals */
-        $journals = $tag->transactionjournals()->expanded()->get(TransactionJournal::QUERYFIELDS);
+        $journals = $tag->transactionjournals()->sortCorrectly()->expanded()->get(TransactionJournal::queryFields());
 
         $sum = $journals->sum(
             function (TransactionJournal $journal) {

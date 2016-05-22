@@ -1,4 +1,12 @@
 <?php
+/**
+ * CurrencyId.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
@@ -19,13 +27,9 @@ class CurrencyId extends BasicConverter implements ConverterInterface
     public function convert(): TransactionCurrency
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
-
-        if (isset($this->mapped[$this->index][$this->value])) {
-            $currency = $repository->find($this->mapped[$this->index][$this->value]);
-        } else {
-            $currency = $repository->find($this->value);
-        }
+        $repository = app(CurrencyRepositoryInterface::class);
+        $value      = isset($this->mapped[$this->index][$this->value]) ? $this->mapped[$this->index][$this->value] : $this->value;
+        $currency   = $repository->find($value);
 
         return $currency;
     }

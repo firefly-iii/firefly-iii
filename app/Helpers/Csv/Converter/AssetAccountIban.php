@@ -1,12 +1,20 @@
 <?php
+/**
+ * AssetAccountIban.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\Converter;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Log;
+use FireflyIII\Models\AccountType;
 
 /**
  * Class AssetAccountIban
@@ -21,52 +29,61 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
      */
     public function convert(): Account
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $crud = app('FireflyIII\Crud\Account\AccountCrudInterface');
 
         // is mapped? Then it's easy!
         if (isset($this->mapped[$this->index][$this->value])) {
-            $account = $repository->find(intval($this->mapped[$this->index][$this->value]));
-            Log::debug('Found mapped account for value "' . $this->value . '". It is account #' . $account->id);
+            $account = $crud->find(intval($this->mapped[$this->index][$this->value]));
 
             return $account;
         }
 
+
         if (strlen($this->value) > 0) {
-            // find or create new account:
-            $set = $repository->getAccounts(['Default account', 'Asset account']);
-            /** @var Account $entry */
-            foreach ($set as $entry) {
-                if ($entry->iban == $this->value) {
-                    Log::debug('Found an account with the same IBAN ("' . $this->value . '"). It is account #' . $entry->id);
-
-                    return $entry;
-                }
-            }
-
-            Log::debug('Found no account with the same IBAN ("' . $this->value . '"), so will create a new one.');
-
-            // create it if doesn't exist.
-            $accountData = [
-                'name'                   => $this->value,
-                'accountType'            => 'asset',
-                'virtualBalance'         => 0,
-                'virtualBalanceCurrency' => 1, // hard coded.
-                'active'                 => true,
-                'user'                   => Auth::user()->id,
-                'iban'                   => $this->value,
-                'accountNumber'          => $this->value,
-                'accountRole'            => null,
-                'openingBalance'         => 0,
-                'openingBalanceDate'     => new Carbon,
-                'openingBalanceCurrency' => 1, // hard coded.
-            ];
-
-            $account = $repository->store($accountData);
+            $account = $this->searchOrCreate($crud);
 
             return $account;
         }
 
         return new Account;
+    }
+
+    /**
+     * @param AccountCrudInterface $crud
+     *
+     * @return Account
+     */
+    private function searchOrCreate(AccountCrudInterface $crud)
+    {
+        // find or create new account:
+        $set = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->iban == $this->value) {
+
+                return $entry;
+            }
+        }
+
+
+        // create it if doesn't exist.
+        $accountData = [
+            'name'                   => $this->value,
+            'accountType'            => 'asset',
+            'virtualBalance'         => 0,
+            'virtualBalanceCurrency' => 1, // hard coded.
+            'active'                 => true,
+            'user'                   => Auth::user()->id,
+            'iban'                   => $this->value,
+            'accountNumber'          => $this->value,
+            'accountRole'            => null,
+            'openingBalance'         => 0,
+            'openingBalanceDate'     => new Carbon,
+            'openingBalanceCurrency' => 1, // hard coded.
+        ];
+
+        $account = $crud->store($accountData);
+
+        return $account;
     }
 }

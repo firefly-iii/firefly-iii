@@ -1,8 +1,17 @@
 <?php
+/**
+ * AttachmentRepository.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -34,8 +43,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function destroy(Attachment $attachment): bool
     {
-        /** @var \FireflyIII\Helpers\Attachments\AttachmentHelperInterface $helper */
-        $helper = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
+        /** @var AttachmentHelperInterface $helper */
+        $helper = app(AttachmentHelperInterface::class);
 
         $file = $helper->getAttachmentLocation($attachment);
         unlink($file);

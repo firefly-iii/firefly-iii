@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * IsNotConfirmed.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -39,18 +38,17 @@ class IsNotConfirmed
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('login');
             }
-        } else {
-            // must the user be confirmed in the first place?
-            $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
-            // user must be logged in, then continue:
-            $isConfirmed = Preferences::get('user_confirmed', false)->data;
-            if ($isConfirmed || $confirmAccount === false) {
-                // user account is confirmed, simply send them home.
-                return redirect(route('home'));
-            }
+
+            return redirect()->guest('login');
+        }
+        // must the user be confirmed in the first place?
+        $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
+        // user must be logged in, then continue:
+        $isConfirmed = Preferences::get('user_confirmed', false)->data;
+        if ($isConfirmed || $confirmAccount === false) {
+            // user account is confirmed, simply send them home.
+            return redirect(route('home'));
         }
 
         return $next($request);

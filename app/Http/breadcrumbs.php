@@ -1,4 +1,12 @@
 <?php
+/**
+ * breadcrumbs.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbGenerator;
@@ -54,14 +62,23 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-
-    $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-
-
+    $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push(e($account->name), route('accounts.show', [$account->id]));
 }
 );
+
+Breadcrumbs::register(
+    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $date) {
+    $breadcrumbs->parent('accounts.show', $account);
+
+    $range = Preferences::get('viewRange', '1M')->data;
+    $title = $account->name . ' (' . Navigation::periodShow($date, $range) . ')';
+
+    $breadcrumbs->push($title, route('accounts.show.date', [$account->id, $date->format('Y-m-d')]));
+}
+);
+
 Breadcrumbs::register(
     'accounts.delete', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
@@ -73,7 +90,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.edit', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+    $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
     $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));
 }
@@ -502,6 +519,7 @@ Breadcrumbs::register(
 }
 );
 
+
 /**
  * TAGS
  */
@@ -577,5 +595,22 @@ Breadcrumbs::register(
     $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
 
+}
+);
+
+/**
+ * SPLIT
+ */
+Breadcrumbs::register(
+    'split.journal.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+    $breadcrumbs->parent('transactions.show', $journal);
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('split.journal.edit', [$journal->id]));
+}
+);
+
+Breadcrumbs::register(
+    'split.journal.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
+    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('split.journal.create', [$what]));
 }
 );

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Navigation.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Support;
@@ -56,18 +64,18 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $theCurrentEnd
+     * @param \Carbon\Carbon $end
      * @param                $repeatFreq
      *
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $theCurrentEnd, string $repeatFreq): Carbon
+    public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
-        $currentEnd = clone $theCurrentEnd;
+        $currentEnd = clone $end;
 
         $functionMap = [
-            '1D'   => 'addDay', 'daily' => 'addDay',
+            '1D'   => 'endOfDay', 'daily' => 'endOfDay',
             '1W'   => 'addWeek', 'week' => 'addWeek', 'weekly' => 'addWeek',
             '1M'   => 'addMonth', 'month' => 'addMonth', 'monthly' => 'addMonth',
             '3M'   => 'addMonths', 'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
@@ -103,9 +111,14 @@ class Navigation
         $function = $functionMap[$repeatFreq];
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
-        } else {
-            $currentEnd->$function();
+
+            if (in_array($repeatFreq, $subDay)) {
+                $currentEnd->subDay();
+            }
+
+            return $currentEnd;
         }
+        $currentEnd->$function();
         if (in_array($repeatFreq, $subDay)) {
             $currentEnd->subDay();
         }
@@ -328,9 +341,10 @@ class Navigation
         if ($range == '6M') {
             if ($start->month >= 7) {
                 $end->endOfYear();
-            } else {
-                $end->startOfYear()->addMonths(6);
+
+                return $end;
             }
+            $end->startOfYear()->addMonths(6);
 
             return $end;
         }
@@ -362,11 +376,14 @@ class Navigation
         if ($range == '6M') {
             if ($start->month >= 7) {
                 $start->startOfYear()->addMonths(6);
-            } else {
-                $start->startOfYear();
+
+                return $start;
             }
+            $start->startOfYear();
 
             return $start;
+
+
         }
         throw new FireflyException('updateStartDate cannot handle $range "' . $range . '"');
     }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * User.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII;
@@ -19,9 +27,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string                                                                                $password
  * @property string                                                                                $remember_token
  * @property string                                                                                $reset
- * @property bool $activated
- * @property bool $isAdmin
- * @property bool $has2FA
+ * @property bool                                                                                  $activated
+ * @property bool                                                                                  $isAdmin
+ * @property bool                                                                                  $has2FA
  * @property boolean                                                                               $blocked
  * @property string                                                                                $blocked_code
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[]            $accounts

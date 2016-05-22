@@ -1,4 +1,12 @@
 <?php
+/**
+ * ReportHelper.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Report;
@@ -11,9 +19,13 @@ use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
@@ -29,8 +41,6 @@ class ReportHelper implements ReportHelperInterface
 
     /** @var  BudgetRepositoryInterface */
     protected $budgetRepository;
-    /** @var ReportQueryInterface */
-    protected $query;
     /** @var  TagRepositoryInterface */
     protected $tagRepository;
 
@@ -38,13 +48,11 @@ class ReportHelper implements ReportHelperInterface
      * ReportHelper constructor.
      *
      *
-     * @param ReportQueryInterface      $query
      * @param BudgetRepositoryInterface $budgetRepository
      * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(ReportQueryInterface $query, BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
+    public function __construct(BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
     {
-        $this->query            = $query;
         $this->budgetRepository = $budgetRepository;
         $this->tagRepository    = $tagRepository;
     }
@@ -63,8 +71,8 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection
     {
-        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
         $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
         $collection = new BillCollection;
@@ -73,10 +81,10 @@ class ReportHelper implements ReportHelperInterface
         foreach ($bills as $bill) {
             $billLine = new BillLine;
             $billLine->setBill($bill);
-            $billLine->setActive(intval($bill->active) == 1);
+            $billLine->setActive(intval($bill->active) === 1);
             $billLine->setMin($bill->amount_min);
             $billLine->setMax($bill->amount_max);
-
+            $billLine->setHit(false);
             // is hit in period?
 
             $entry = $journals->filter(
@@ -89,13 +97,11 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setTransactionJournalId($first->id);
                 $billLine->setAmount($first->journalAmount);
                 $billLine->setHit(true);
-            } else {
-                $billLine->setHit(false);
-            }
-            if (!(!$billLine->isHit() && !$billLine->isActive())) {
-                $collection->addBill($billLine);
             }
 
+            if ($billLine->isActive()) {
+                $collection->addBill($billLine);
+            }
         }
 
         return $collection;
@@ -111,15 +117,15 @@ class ReportHelper implements ReportHelperInterface
     public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection
     {
         $object = new CategoryCollection;
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
 
-        /**
-         * GET CATEGORIES:
-         */
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-
-        $set = $repository->spentForAccountsPerMonth($accounts, $start, $end);
-        foreach ($set as $category) {
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
+            // CategoryCollection expects the amount in $spent:
+            $category->spent = $spent;
             $object->addCategory($category);
         }
 
@@ -138,10 +144,14 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense
     {
         $object = new Expense;
-        $set    = $this->query->expense($accounts, $start, $end);
+        /** @var AccountRepositoryInterface $repos */
+        $repos    = app(AccountRepositoryInterface::class);
+        $journals = $repos->expensesInPeriod($accounts, $start, $end);
 
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->journalAmount); // can be positive, if it's a transfer
+        /** @var TransactionJournal $entry */
+        foreach ($journals as $entry) {
+            $amount = TransactionJournal::amount($entry);
+            $object->addToTotal($amount);
             $object->addOrCreateExpense($entry);
         }
 
@@ -160,10 +170,13 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income
     {
         $object = new Income;
-        $set    = $this->query->income($accounts, $start, $end);
+        /** @var AccountRepositoryInterface $repos */
+        $repos    = app(AccountRepositoryInterface::class);
+        $journals = $repos->incomesInPeriod($accounts, $start, $end);
 
-        foreach ($set as $entry) {
-            $object->addToTotal($entry->journalAmount);
+        foreach ($journals as $entry) {
+            $amount = TransactionJournal::amount($entry);
+            $object->addToTotal($amount);
             $object->addOrCreateIncome($entry);
         }
 
@@ -178,7 +191,7 @@ class ReportHelper implements ReportHelperInterface
     public function listOfMonths(Carbon $date): array
     {
         /** @var FiscalHelperInterface $fiscalHelper */
-        $fiscalHelper = app('FireflyIII\Helpers\FiscalHelperInterface');
+        $fiscalHelper = app(FiscalHelperInterface::class);
         $start        = clone $date;
         $start->startOfMonth();
         $end = Carbon::now();
@@ -186,9 +199,7 @@ class ReportHelper implements ReportHelperInterface
         $months = [];
 
         while ($start <= $end) {
-            // current year:
-            $year = $fiscalHelper->endOfFiscalYear($start)->year;
-
+            $year = $fiscalHelper->endOfFiscalYear($start)->year; // current year
             if (!isset($months[$year])) {
                 $months[$year] = [
                     'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
@@ -201,7 +212,6 @@ class ReportHelper implements ReportHelperInterface
 
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
-
             $months[$year]['months'][] = [
                 'formatted' => $start->formatLocalized('%B %Y'),
                 'start'     => $start->format('Y-m-d'),
@@ -210,8 +220,7 @@ class ReportHelper implements ReportHelperInterface
                 'year'      => $year,
             ];
 
-            // to make the hop to the next month properly:
-            $start = clone $currentEnd;
+            $start = clone $currentEnd; // to make the hop to the next month properly
             $start->addDay();
         }
 
@@ -259,17 +268,14 @@ class ReportHelper implements ReportHelperInterface
         /** @var Tag $entry */
         foreach ($set as $entry) {
             // less than zero? multiply to be above zero.
-            $amount = $entry->amount;
-            $id     = intval($entry->id);
-            if (!isset($collection[$id])) {
-                $collection[$id] = [
-                    'id'     => $id,
-                    'tag'    => $entry->tag,
-                    'amount' => $amount,
-                ];
-            } else {
-                $collection[$id]['amount'] = bcadd($collection[$id]['amount'], $amount);
-            }
+            $amount          = $entry->amount;
+            $id              = intval($entry->id);
+            $previousAmount  = $collection[$id]['amount'] ?? '0';
+            $collection[$id] = [
+                'id'     => $id,
+                'tag'    => $entry->tag,
+                'amount' => bcadd($previousAmount, $amount),
+            ];
         }
 
         // cleanup collection (match "fonts")
@@ -286,7 +292,7 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
      * and sum up everything in the array in the given range.
      *
      * @param Carbon $start

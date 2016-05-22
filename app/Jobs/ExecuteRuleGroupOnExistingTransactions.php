@@ -1,9 +1,19 @@
 <?php
+/**
+ * ExecuteRuleGroupOnExistingTransactions.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -143,10 +153,10 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
      */
     protected function collectJournals()
     {
-        $args             = [$this->accounts, $this->user, $this->startDate, $this->endDate];
-        $journalCollector = app('FireflyIII\Repositories\Journal\JournalCollector', $args);
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
 
-        return $journalCollector->collect();
+        return $repository->getJournalsInRange($this->accounts, $this->startDate, $this->endDate);
     }
 
     /**

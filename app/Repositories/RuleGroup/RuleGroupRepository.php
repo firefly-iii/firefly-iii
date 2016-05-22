@@ -1,4 +1,12 @@
 <?php
+/**
+ * RuleGroupRepository.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\RuleGroup;
@@ -52,11 +60,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             if (is_null($moveTo)) {
 
                 $rule->delete();
-            } else {
-                // move
-                $rule->ruleGroup()->associate($moveTo);
-                $rule->save();
+                continue;
             }
+            // move
+            $rule->ruleGroup()->associate($moveTo);
+            $rule->save();
         }
 
         $ruleGroup->delete();
@@ -133,6 +141,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order + 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+
         return true;
     }
 
@@ -155,6 +164,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->order = ($ruleGroup->order - 1);
         $ruleGroup->save();
         $this->resetRuleGroupOrder();
+
         return true;
     }
 

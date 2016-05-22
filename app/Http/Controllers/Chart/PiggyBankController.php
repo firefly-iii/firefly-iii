@@ -1,10 +1,20 @@
 <?php
+/**
+ * PiggyBankController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -19,7 +29,7 @@ use Response;
 class PiggyBankController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface */
+    /** @var PiggyBankChartGeneratorInterface */
     protected $generator;
 
     /**
@@ -29,7 +39,7 @@ class PiggyBankController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGeneratorInterface');
+        $this->generator = app(PiggyBankChartGeneratorInterface::class);
     }
 
     /**
@@ -50,8 +60,20 @@ class PiggyBankController extends Controller
             return Response::json($cache->get());
         }
 
-        $set  = $repository->getEventSummarySet($piggyBank);
-        $data = $this->generator->history($set);
+        $set        = $repository->getEvents($piggyBank);
+        $set        = $set->reverse();
+        $collection = [];
+        /** @var PiggyBankEvent $entry */
+        foreach ($set as $entry) {
+            $date   = $entry->date->format('Y-m-d');
+            $amount = $entry->amount;
+            if (isset($collection[$date])) {
+                $amount = bcadd($amount, $collection[$date]);
+            }
+            $collection[$date] = $amount;
+        }
+
+        $data = $this->generator->history(new Collection($collection));
         $cache->store($data);
 
         return Response::json($data);

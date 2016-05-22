@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * RuleRepository.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Rule;
 
@@ -64,7 +65,7 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * FIXME can return null
+     * FIxXME can return null
      *
      * @return RuleGroup
      */
@@ -119,6 +120,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order + 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+
         return true;
     }
 
@@ -141,6 +143,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = ($rule->order - 1);
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
+
         return true;
     }
 
@@ -342,6 +345,7 @@ class RuleRepository implements RuleRepositoryInterface
 
             $this->storeAction($rule, $actionValues);
         }
+
         return true;
 
     }
@@ -349,6 +353,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule  $rule
      * @param array $data
+     *
      * @return bool
      */
     private function storeTriggers(Rule $rule, array $data): bool
@@ -378,6 +383,7 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeTrigger($rule, $triggerValues);
             $order++;
         }
+
         return true;
     }
 }

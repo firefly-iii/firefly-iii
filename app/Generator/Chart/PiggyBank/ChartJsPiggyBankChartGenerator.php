@@ -1,4 +1,12 @@
 <?php
+/**
+ * ChartJsPiggyBankChartGenerator.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\PiggyBank;
 
@@ -36,9 +44,9 @@ class ChartJsPiggyBankChartGenerator implements PiggyBankChartGeneratorInterface
             ],
         ];
         $sum  = '0';
-        foreach ($set as $entry) {
-            $date                          = new Carbon($entry->date);
-            $sum                           = bcadd($sum, $entry->sum);
+        foreach ($set as $key => $value) {
+            $date                          = new Carbon($key);
+            $sum                           = bcadd($sum, $value);
             $data['labels'][]              = $date->formatLocalized($format);
             $data['datasets'][0]['data'][] = round($sum, 2);
         }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Controller.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
@@ -73,7 +81,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Take the array as returned by SingleCategoryRepositoryInterface::spentPerDay and SingleCategoryRepositoryInterface::earnedByDay
+     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
      * and sum up everything in the array in the given range.
      *
      * @param Carbon $start

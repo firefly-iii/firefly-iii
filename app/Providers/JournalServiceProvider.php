@@ -1,8 +1,17 @@
 <?php
+/**
+ * JournalServiceProvider.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
 
 namespace FireflyIII\Providers;
 
-use Auth;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -34,12 +43,11 @@ class JournalServiceProvider extends ServiceProvider
         $this->app->bind(
             'FireflyIII\Repositories\Journal\JournalRepositoryInterface',
             function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && Auth::check()) {
-                    return app('FireflyIII\Repositories\Journal\JournalRepository', [Auth::user()]);
-                } else {
-                    if (!isset($arguments[0]) && !Auth::check()) {
-                        throw new FireflyException('There is no user present.');
-                    }
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\Journal\JournalRepository', [$app->auth->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
                 }
 
                 return app('FireflyIII\Repositories\Journal\JournalRepository', $arguments);

@@ -1,4 +1,12 @@
 <?php
+/**
+ * FiscalHelper.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Helpers;
@@ -24,11 +32,7 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function __construct()
     {
-        if (Preferences::get('customFiscalYear', 0)->data) {
-            $this->useCustomFiscalYear = true;
-        } else {
-            $this->useCustomFiscalYear = false;
-        }
+        $this->useCustomFiscalYear = Preferences::get('customFiscalYear', false)->data;
     }
 
     /**
@@ -44,9 +48,10 @@ class FiscalHelper implements FiscalHelperInterface
             // add 1 year and sub 1 day
             $endDate->addYear();
             $endDate->subDay();
-        } else {
-            $endDate->endOfYear();
+
+            return $endDate;
         }
+        $endDate->endOfYear();
 
 
         return $endDate;
@@ -70,9 +75,10 @@ class FiscalHelper implements FiscalHelperInterface
             if ($startDate > $date) {
                 $startDate->subYear();
             }
-        } else {
-            $startDate->startOfYear();
+
+            return $startDate;
         }
+        $startDate->startOfYear();
 
         return $startDate;
     }

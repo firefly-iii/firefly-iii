@@ -1,13 +1,29 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * AccountController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
+namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use Carbon\Carbon;
-use Config;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Support\CacheProperties;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Input;
+use Navigation;
 use Preferences;
 use Session;
 use Steam;
@@ -38,9 +54,7 @@ class AccountController extends Controller
      */
     public function create(string $what = 'asset')
     {
-
-
-        $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = trans('firefly.make_new_' . $what . '_account');
         Session::flash('preFilled', []);
 
@@ -57,16 +71,16 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
+     * @param AccountCrudInterface $crud
+     * @param Account              $account
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function delete(ARI $repository, Account $account)
+    public function delete(AccountCrudInterface $crud, Account $account)
     {
-        $typeName    = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectList($repository->getAccounts([$account->accountType->type]), true);
+        $accountList = ExpandedForm::makeSelectListWithEmpty($crud->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -78,19 +92,19 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
+     * @param AccountCrudInterface $crud
+     * @param Account              $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(ARI $repository, Account $account)
+    public function destroy(AccountCrudInterface $crud, Account $account)
     {
         $type     = $account->accountType->type;
-        $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
+        $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = $repository->find(intval(Input::get('move_account_before_delete')));
+        $moveTo   = $crud->find(intval(Input::get('move_account_before_delete')));
 
-        $repository->destroy($account, $moveTo);
+        $crud->destroy($account, $moveTo);
 
         Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
@@ -107,9 +121,9 @@ class AccountController extends Controller
     public function edit(ARI $repository, Account $account)
     {
 
-        $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
+        $what           = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle       = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $subTitleIcon   = config('firefly.subIconsByIdentifier.' . $what);
         $openingBalance = $repository->openingBalanceTransaction($account);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -145,23 +159,21 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI                        $repository
-     * @param                            $what
+     * @param AccountCrudInterface $crud
+     * @param string               $what
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function index(ARI $repository, string $what)
+    public function index(AccountCrudInterface $crud, string $what)
     {
         $what = $what ?? 'asset';
 
         $subTitle     = trans('firefly.' . $what . '_accounts');
-        $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
-        $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = $repository->getAccounts($types);
-        /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end = clone session('end', Carbon::now()->endOfMonth());
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
+        $types        = config('firefly.accountTypesByIdentifier.' . $what);
+        $accounts     = $crud->getAccountsByType($types);
+        $start        = clone session('start', Carbon::now()->startOfMonth());
+        $end          = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -188,25 +200,94 @@ class AccountController extends Controller
      */
     public function show(ARI $repository, Account $account)
     {
-        $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        // show journals from current period only:
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $subTitle     = $account->name;
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
-        $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $journals     = $repository->getJournals($account, $page, $pageSize);
-        $subTitle     = trans('firefly.details_for_' . $what, ['name' => $account->name]);
+        $offset       = ($page - 1) * $pageSize;
+        $set          = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count        = $set->count();
+        $subSet       = $set->splice($offset, $pageSize);
+        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('accounts/show/' . $account->id);
 
+        // grouped other months thing:
+        // oldest transaction in account:
+        $start = $repository->firstUseDate($account);
+        if ($start->year == 1900) {
+            $start = new Carbon;
+        }
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $start   = Navigation::startOfPeriod($start, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
 
-        return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('account-show');
+        $cache->addProperty($account->id);
+
+
+        if ($cache->has()) {
+            $entries = $cache->get();
+
+            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+        }
+
+        while ($end >= $start) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $spent      = $this->spentInPeriod($account, $end, $currentEnd);
+            $earned     = $this->earnedInPeriod($account, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+
+        }
+
+        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param ARI                $repository
+     * @param ARI     $repository
+     * @param Account $account
+     * @param string  $date
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return View
      */
-    public function store(AccountFormRequest $request, ARI $repository)
+    public function showWithDate(ARI $repository, Account $account, string $date)
+    {
+        $carbon   = new Carbon($date);
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = Navigation::startOfPeriod($carbon, $range);
+        $end      = Navigation::endOfPeriod($carbon, $range);
+        $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
+        $page     = intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $offset   = ($page - 1) * $pageSize;
+        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count    = $set->count();
+        $subSet   = $set->splice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $journals->setPath('accounts/show/' . $account->id . '/' . $date);
+
+        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));
+    }
+
+    /**
+     * @param AccountFormRequest   $request
+     * @param AccountCrudInterface $crud
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(AccountFormRequest $request, AccountCrudInterface $crud)
     {
         $accountData = [
             'name'                   => $request->input('name'),
@@ -224,7 +305,7 @@ class AccountController extends Controller
 
         ];
 
-        $account = $repository->store($accountData);
+        $account = $crud->store($accountData);
 
         Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
@@ -248,13 +329,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param ARI                $repository
-     * @param Account            $account
+     * @param AccountFormRequest   $request
+     * @param AccountCrudInterface $crud
+     * @param Account              $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(AccountFormRequest $request, ARI $repository, Account $account)
+    public function update(AccountFormRequest $request, AccountCrudInterface $crud, Account $account)
     {
 
         $accountData = [
@@ -271,7 +352,7 @@ class AccountController extends Controller
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
-        $repository->update($account, $accountData);
+        $crud->update($account, $accountData);
 
         Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
@@ -302,6 +383,70 @@ class AccountController extends Controller
         }
 
         return '';
+    }
+
+    /**
+     * Asset accounts actually earn money by being the destination of a deposit or the destination
+     * of a transfer. The money moves to them.
+     *
+     * A revenue account doesn't really earn money itself. Money is earned "from" the revenue account.
+     * So, the call to find out how many money has been earned by/from a revenue account is slightly different.
+     *
+     *
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return string
+     */
+    private function earnedInPeriod(Account $account, Carbon $start, Carbon $end)
+    {
+        /** @var ARI $repository */
+        $repository = app(ARI::class);
+        $collection = new Collection([$account]);
+        $type       = $account->accountType->type;
+        switch ($type) {
+            case AccountType::DEFAULT:
+            case AccountType::ASSET:
+                return $repository->earnedInPeriod($collection, $start, $end);
+            case AccountType::REVENUE:
+                return $repository->earnedFromInPeriod($collection, $start, $end);
+            default:
+                return '0';
+        }
+    }
+
+    /**
+     * Asset accounts actually spend money by being the source of a withdrawal or the source
+     * of a transfer. The money moves away from them.
+     *
+     * An expense account doesn't really spend money itself. Money is spent "at" the expense account.
+     * So, the call to find out how many money has been spent on/at an expense account is slightly different.
+     *
+     *
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return string
+     */
+    private function spentInPeriod(Account $account, Carbon $start, Carbon $end): string
+    {
+        /** @var ARI $repository */
+        $repository = app(ARI::class);
+        $collection = new Collection([$account]);
+        $type       = $account->accountType->type;
+        switch ($type) {
+            case AccountType::DEFAULT:
+            case AccountType::ASSET:
+                return $repository->spentInPeriod($collection, $start, $end);
+            case AccountType::EXPENSE:
+                return $repository->spentAtInPeriod($collection, $start, $end);
+            default:
+                return '0';
+        }
     }
 
 }

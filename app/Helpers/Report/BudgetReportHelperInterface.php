@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * BudgetReportHelperInterface.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Report;
 
@@ -30,4 +31,14 @@ interface BudgetReportHelperInterface
      * @return BudgetCollection
      */
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
+
 }

@@ -1,8 +1,18 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * NewUserController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use Carbon\Carbon;
-use Config;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Preferences;
@@ -36,7 +46,7 @@ class NewUserController extends Controller
         View::share('mainTitleIcon', 'fa-fire');
 
 
-        $types = Config::get('firefly.accountTypesByIdentifier.asset');
+        $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 
         if ($count > 0) {
@@ -48,15 +58,48 @@ class NewUserController extends Controller
     }
 
     /**
-     * @param NewUserFormRequest $request
-     * @param ARI                $repository
+     * @param NewUserFormRequest   $request
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function submit(NewUserFormRequest $request, ARI $repository)
+    public function submit(NewUserFormRequest $request, AccountCrudInterface $crud)
     {
         $count = 1;
         // create normal asset account:
+        $this->createAssetAccount($request, $crud);
+
+        // create savings account
+        if (strlen($request->get('savings_balance')) > 0) {
+            $this->createSavingsAccount($request, $crud);
+            $count++;
+        }
+
+
+        // create credit card.
+        if (strlen($request->get('credit_card_limit')) > 0) {
+            $this->storeCreditCard($request, $crud);
+            $count++;
+        }
+        $message = strval(trans('firefly.stored_new_accounts_new_user'));
+        if ($count == 1) {
+            $message = strval(trans('firefly.stored_new_account_new_user'));
+        }
+
+        Session::flash('success', $message);
+        Preferences::mark();
+
+        return redirect(route('index'));
+    }
+
+    /**
+     * @param NewUserFormRequest   $request
+     * @param AccountCrudInterface $crud
+     *
+     * @return bool
+     */
+    private function createAssetAccount(NewUserFormRequest $request, AccountCrudInterface $crud): bool
+    {
         $assetAccount = [
             'name'                   => $request->get('bank_name'),
             'iban'                   => null,
@@ -70,56 +113,62 @@ class NewUserController extends Controller
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_bank_balance')),
         ];
 
-        $repository->store($assetAccount);
+        $crud->store($assetAccount);
 
-        // create savings account
-        if (strlen($request->get('savings_balance') > 0)) {
-            $savingsAccount = [
-                'name'                   => $request->get('bank_name') . ' savings account',
-                'iban'                   => null,
-                'accountType'            => 'asset',
-                'virtualBalance'         => 0,
-                'active'                 => true,
-                'user'                   => Auth::user()->id,
-                'accountRole'            => 'savingAsset',
-                'openingBalance'         => round($request->input('savings_balance'), 2),
-                'openingBalanceDate'     => new Carbon,
-                'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
-            ];
-            $repository->store($savingsAccount);
-            $count++;
-        }
+        return true;
+    }
 
+    /**
+     * @param NewUserFormRequest   $request
+     * @param AccountCrudInterface $crud
+     *
+     * @return bool
+     */
+    private function createSavingsAccount(NewUserFormRequest $request, AccountCrudInterface $crud): bool
+    {
+        $savingsAccount = [
+            'name'                   => $request->get('bank_name') . ' savings account',
+            'iban'                   => null,
+            'accountType'            => 'asset',
+            'virtualBalance'         => 0,
+            'active'                 => true,
+            'user'                   => Auth::user()->id,
+            'accountRole'            => 'savingAsset',
+            'openingBalance'         => round($request->input('savings_balance'), 2),
+            'openingBalanceDate'     => new Carbon,
+            'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
+        ];
+        $crud->store($savingsAccount);
 
-        // create credit card.
-        if (strlen($request->get('credit_card_limit') > 0)) {
-            $creditAccount = [
-                'name'                   => 'Credit card',
-                'iban'                   => null,
-                'accountType'            => 'asset',
-                'virtualBalance'         => round($request->get('credit_card_limit'), 2),
-                'active'                 => true,
-                'user'                   => Auth::user()->id,
-                'accountRole'            => 'ccAsset',
-                'openingBalance'         => null,
-                'openingBalanceDate'     => null,
-                'openingBalanceCurrency' => intval($request->input('amount_currency_id_credit_card_limit')),
-            ];
-            $creditCard    = $repository->store($creditAccount);
+        return true;
+    }
 
-            // store meta for CC:
-            $repository->storeMeta($creditCard, 'ccType', 'monthlyFull');
-            $repository->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
-            $count++;
-        }
-        if ($count == 1) {
-            Session::flash('success', strval(trans('firefly.stored_new_account_new_user')));
-        } else {
-            Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
-        }
+    /**
+     * @param NewUserFormRequest   $request
+     * @param AccountCrudInterface $crud
+     *
+     * @return bool
+     */
+    private function storeCreditCard(NewUserFormRequest $request, AccountCrudInterface $crud): bool
+    {
+        $creditAccount = [
+            'name'                   => 'Credit card',
+            'iban'                   => null,
+            'accountType'            => 'asset',
+            'virtualBalance'         => round($request->get('credit_card_limit'), 2),
+            'active'                 => true,
+            'user'                   => Auth::user()->id,
+            'accountRole'            => 'ccAsset',
+            'openingBalance'         => null,
+            'openingBalanceDate'     => null,
+            'openingBalanceCurrency' => intval($request->input('amount_currency_id_credit_card_limit')),
+        ];
+        $creditCard    = $crud->store($creditAccount);
 
-        Preferences::mark();
+        // store meta for CC:
+        $crud->storeMeta($creditCard, 'ccType', 'monthlyFull');
+        $crud->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
 
-        return redirect(route('index'));
+        return true;
     }
 }

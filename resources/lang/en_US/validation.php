@@ -17,6 +17,7 @@ return [
     'file_attached'                  => 'Succesfully uploaded file ":name".',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
     'file_too_large'                 => 'File ":name" is too large.',
+    'belongs_to_user'                => 'The value of :attribute is unknown',
     'accepted'                       => 'The :attribute must be accepted.',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',

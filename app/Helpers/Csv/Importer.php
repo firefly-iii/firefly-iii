@@ -1,9 +1,16 @@
 <?php
+/**
+ * Importer.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Auth;
-use Config;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Converter\ConverterInterface;
@@ -109,7 +116,6 @@ class Importer
 
         foreach ($this->data->getReader() as $index => $row) {
             if ($this->parseRow($index)) {
-                Log::debug('--- Importing row ' . $index);
                 $this->rows++;
                 $result = $this->importRow($row);
                 if (!($result instanceof TransactionJournal)) {
@@ -120,7 +126,6 @@ class Importer
                     $this->journals->push($result);
                     event(new TransactionJournalStored($result, 0));
                 }
-                Log::debug('---');
             }
         }
     }
@@ -226,10 +231,9 @@ class Importer
         $data = $this->getFiller(); // These fields are necessary to create a new transaction journal. Some are optional
         foreach ($row as $index => $value) {
             $role  = $this->roles[$index] ?? '_ignore';
-            $class = Config::get('csv.roles.' . $role . '.converter');
-            $field = Config::get('csv.roles.' . $role . '.field');
+            $class = config('csv.roles.' . $role . '.converter');
+            $field = config('csv.roles.' . $role . '.field');
 
-            Log::debug('Column #' . $index . ' (role: ' . $role . ') : converter ' . $class . ' stores its data into field ' . $field . ':');
 
             // here would be the place where preprocessors would fire.
 
@@ -283,19 +287,17 @@ class Importer
             if ($specifix->getProcessorType() == SpecifixInterface::POST_PROCESSOR) {
                 $specifix->setData($this->importData);
                 $specifix->setRow($this->importRow);
-                Log::debug('Now post-process specifix named ' . $className . ':');
                 $this->importData = $specifix->fix();
             }
         }
 
 
-        $set = Config::get('csv.post_processors');
+        $set = config('csv.post_processors');
         foreach ($set as $className) {
             /** @var PostProcessorInterface $postProcessor */
             $postProcessor = app('FireflyIII\Helpers\Csv\PostProcessing\\' . $className);
             $array         = $this->importData ?? [];
             $postProcessor->setData($array);
-            Log::debug('Now post-process processor named ' . $className . ':');
             $this->importData = $postProcessor->process();
         }
 
@@ -363,7 +365,7 @@ class Importer
     private function getFiller()
     {
         $filler = [];
-        foreach (Config::get('csv.roles') as $role) {
+        foreach (config('csv.roles') as $role) {
             if (isset($role['field'])) {
                 $fieldName          = $role['field'];
                 $filler[$fieldName] = null;

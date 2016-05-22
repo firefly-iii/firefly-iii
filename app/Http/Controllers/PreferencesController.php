@@ -1,9 +1,19 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * PreferencesController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Config;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\TokenFormRequest;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Models\AccountType;
 use Input;
 use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
@@ -58,13 +68,13 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
-     * @return $this|\Illuminate\View\View
+     * @return View
      */
-    public function index(ARI $repository)
+    public function index(AccountCrudInterface $crud)
     {
-        $accounts            = $repository->getAccounts(['Default account', 'Asset account']);
+        $accounts            = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $viewRangePref       = Preferences::get('viewRange', '1M');
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
@@ -131,14 +141,14 @@ class PreferencesController extends Controller
         Preferences::set('budgetMaximum', $budgetMaximum);
 
         // custom fiscal year
-        $customFiscalYear = (int)Input::get('customFiscalYear');
+        $customFiscalYear = intval(Input::get('customFiscalYear')) === 1;
         $fiscalYearStart  = date('m-d', strtotime(Input::get('fiscalYearStart')));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
         // save page size:
         $transactionPageSize = intval(Input::get('transactionPageSize'));
-        if($transactionPageSize > 0 && $transactionPageSize < 1337) {
+        if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
             Preferences::set('transactionPageSize', $transactionPageSize);
         } else {
             Preferences::set('transactionPageSize', 50);
@@ -155,7 +165,7 @@ class PreferencesController extends Controller
 
         // language:
         $lang = Input::get('language');
-        if (in_array($lang, array_keys(Config::get('firefly.languages')))) {
+        if (in_array($lang, array_keys(config('firefly.languages')))) {
             Preferences::set('language', $lang);
         }
 

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * TransactionJournalSupport.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,16 +7,19 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Support\Models;
 
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Class TransactionJournalSupport
@@ -31,6 +33,7 @@ class TransactionJournalSupport extends Model
      * @param TransactionJournal $journal
      *
      * @return string
+     * @throws FireflyException
      */
     public static function amount(TransactionJournal $journal): string
     {
@@ -42,16 +45,16 @@ class TransactionJournalSupport extends Model
             return $cache->get();
         }
 
-        $transaction = $journal->transactions->sortByDesc('amount')->first();
-        $amount      = $transaction->amount;
+        // saves on queries:
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+
         if ($journal->isWithdrawal()) {
-            $amount = bcmul($amount, '-1');
+            $amount = $amount * -1;
         }
+        $amount = strval($amount);
         $cache->store($amount);
 
         return $amount;
-
-
     }
 
     /**
@@ -69,13 +72,10 @@ class TransactionJournalSupport extends Model
             return $cache->get();
         }
 
-        $amount = '0';
-        /** @var Transaction $t */
-        foreach ($journal->transactions as $t) {
-            if ($t->amount > 0) {
-                $amount = $t->amount;
-            }
-        }
+        // saves on queries:
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+
+        $amount = strval($amount);
         $cache->store($amount);
 
         return $amount;
@@ -134,48 +134,46 @@ class TransactionJournalSupport extends Model
     /**
      * @param TransactionJournal $journal
      *
-     * @return Account
+     * @return Collection
      */
-    public static function destinationAccount(TransactionJournal $journal): Account
+    public static function destinationAccountList(TransactionJournal $journal): Collection
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
         $cache->addProperty('transaction-journal');
-        $cache->addProperty('destination-account');
+        $cache->addProperty('destination-account-list');
         if ($cache->has()) {
             return $cache->get();
         }
-        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-        if (!is_null($transaction)) {
-            $account = $transaction->account;
-            $cache->store($account);
-        } else {
-            $account = new Account;
+        $transactions = $journal->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
         }
+        $cache->store($list);
 
-        return $account;
+        return $list;
     }
 
     /**
      * @param TransactionJournal $journal
      *
-     * @return string
+     * @return Collection
      */
-    public static function destinationAccountTypeStr(TransactionJournal $journal): string
+    public static function destinationTransactionList(TransactionJournal $journal): Collection
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
         $cache->addProperty('transaction-journal');
-        $cache->addProperty('destination-account-type-str');
+        $cache->addProperty('destination-transaction-list');
         if ($cache->has()) {
             return $cache->get();
         }
+        $list = $journal->transactions()->where('amount', '>', 0)->with('account')->get();
+        $cache->store($list);
 
-        $account = self::destinationAccount($journal);
-        $type    = $account->accountType ? $account->accountType->type : '(unknown)';
-        $cache->store($type);
-
-        return $type;
+        return $list;
     }
 
     /**
@@ -214,50 +212,60 @@ class TransactionJournalSupport extends Model
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Account
+     * @return array
      */
-    public static function sourceAccount(TransactionJournal $journal): Account
+    public static function queryFields(): array
     {
-        $cache = new CacheProperties;
-        $cache->addProperty($journal->id);
-        $cache->addProperty('transaction-journal');
-        $cache->addProperty('source-account');
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-        if (!is_null($transaction)) {
-            $account = $transaction->account;
-            $cache->store($account);
-        } else {
-            $account = new Account;
-        }
-
-        return $account;
+        return [
+            'transaction_journals.*',
+            'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
+            'transaction_currencies.code AS transaction_currency_code',
+        ];
     }
 
     /**
      * @param TransactionJournal $journal
      *
-     * @return string
+     * @return Collection
      */
-    public static function sourceAccountTypeStr(TransactionJournal $journal): string
+    public static function sourceAccountList(TransactionJournal $journal): Collection
     {
         $cache = new CacheProperties;
         $cache->addProperty($journal->id);
         $cache->addProperty('transaction-journal');
-        $cache->addProperty('source-account-type-str');
+        $cache->addProperty('source-account-list');
         if ($cache->has()) {
             return $cache->get();
         }
+        $transactions = $journal->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $cache->store($list);
 
-        $account = self::sourceAccount($journal);
-        $type    = $account->accountType ? $account->accountType->type : '(unknown)';
-        $cache->store($type);
+        return $list;
+    }
 
-        return $type;
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public static function sourceTransactionList(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('transaction-journal');
+        $cache->addProperty('source-transaction-list');
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $list = $journal->transactions()->where('amount', '<', 0)->with('account')->get();
+        $cache->store($list);
+
+        return $list;
     }
 
     /**

@@ -1,4 +1,12 @@
 <?php
+/**
+ * ConnectJournalToPiggyBank.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Handlers\Events;
@@ -44,7 +52,8 @@ class ConnectJournalToPiggyBank
 
         $amount = TransactionJournal::amountPositive($journal);
         // if piggy account matches source account, the amount is positive
-        if ($piggyBank->account_id == TransactionJournal::sourceAccount($journal)->id) {
+        $sources = TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray();
+        if (in_array($piggyBank->account_id, $sources)) {
             $amount = bcmul($amount, '-1');
         }
 

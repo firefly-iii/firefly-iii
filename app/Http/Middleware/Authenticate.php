@@ -1,4 +1,12 @@
 <?php
+/**
+ * Authenticate.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Middleware;
@@ -29,16 +37,15 @@ class Authenticate
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('login');
             }
-        } else {
-            if (intval(Auth::user()->blocked) === 1) {
-                Auth::guard($guard)->logout();
-                Session::flash('logoutMessage', trans('firefly.block_account_logout'));
 
-                return redirect()->guest('login');
-            }
+            return redirect()->guest('login');
+        }
+        if (intval(Auth::user()->blocked) === 1) {
+            Auth::guard($guard)->logout();
+            Session::flash('logoutMessage', trans('firefly.block_account_logout'));
+
+            return redirect()->guest('login');
         }
 
         return $next($request);

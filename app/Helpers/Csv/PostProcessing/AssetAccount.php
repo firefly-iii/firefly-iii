@@ -1,12 +1,20 @@
 <?php
+/**
+ * AssetAccount.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv\PostProcessing;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Log;
 use Validator;
 
 /**
@@ -206,7 +214,6 @@ class AssetAccount implements PostProcessorInterface
         $accounts    = Auth::user()->accounts()->where('account_type_id', $accountType->id)->get();
         foreach ($accounts as $entry) {
             if ($entry->name == $this->data['asset-account-name']) {
-                Log::debug('Found an asset account with this name (#' . $entry->id . ': ******)');
 
                 return $entry;
             }
@@ -231,6 +238,9 @@ class AssetAccount implements PostProcessorInterface
      */
     private function parseAccountNumberString()
     {
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class);
+
         $accountNumber = $this->data['asset-account-number'] ?? '';
         $accountType   = $this->getAccountType();
         $accounts      = Auth::user()->accounts()->with(['accountmeta'])->where('account_type_id', $accountType->id)->get();
@@ -238,14 +248,11 @@ class AssetAccount implements PostProcessorInterface
         foreach ($accounts as $entry) {
             $metaFieldValue = $entry->getMeta('accountNumber');
             if ($metaFieldValue === $accountNumber && $metaFieldValue !== '') {
-                Log::debug('Found an asset account with this account number (#' . $entry->id . ')');
 
                 return $entry;
             }
         }
         // create new if not exists and return that one:
-        /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
-        $repository  = app('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $accountData = [
             'name'                   => $accountNumber,
             'accountType'            => 'asset',
@@ -260,7 +267,7 @@ class AssetAccount implements PostProcessorInterface
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => 1, // hard coded.
         ];
-        $account     = $repository->store($accountData);
+        $account     = $crud->store($accountData);
 
         return $account;
     }

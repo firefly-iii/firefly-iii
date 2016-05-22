@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * AuthenticateTwoFactor.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -41,17 +40,16 @@ class AuthenticateTwoFactor
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('login');
             }
-        } else {
 
-            if (intval(Auth::user()->blocked) === 1) {
-                Auth::guard($guard)->logout();
-                Session::flash('logoutMessage', trans('firefly.block_account_logout'));
+            return redirect()->guest('login');
+        }
 
-                return redirect()->guest('login');
-            }
+        if (intval(Auth::user()->blocked) === 1) {
+            Auth::guard($guard)->logout();
+            Session::flash('logoutMessage', trans('firefly.block_account_logout'));
+
+            return redirect()->guest('login');
         }
         $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));

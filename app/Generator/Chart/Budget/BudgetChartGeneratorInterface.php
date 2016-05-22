@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * BudgetChartGeneratorInterface.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Generator\Chart\Budget;
 
@@ -19,19 +20,14 @@ use Illuminate\Support\Collection;
  */
 interface BudgetChartGeneratorInterface
 {
-    /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function budget(Collection $entries): array;
 
     /**
      * @param Collection $entries
+     * @param string     $dateFormat
      *
      * @return array
      */
-    public function budgetLimit(Collection $entries): array;
+    public function budgetLimit(Collection $entries, string $dateFormat): array;
 
     /**
      * @param Collection $entries
@@ -46,6 +42,14 @@ interface BudgetChartGeneratorInterface
      * @return array
      */
     public function multiYear(Collection $entries): array;
+
+    /**
+     * @param Collection $entries
+     * @param string     $viewRange
+     *
+     * @return array
+     */
+    public function period(Collection $entries, string $viewRange) : array;
 
     /**
      * @param Collection $budgets

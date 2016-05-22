@@ -1,4 +1,12 @@
 <?php
+/**
+ * ChartJsCategoryChartGenerator.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Category;
 
@@ -20,8 +28,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      */
     public function all(Collection $entries): array
     {
-
-
         $data = [
             'count'    => 2,
             'labels'   => [],
@@ -42,8 +48,8 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
             $spent            = $entry[2];
             $earned           = $entry[3];
 
-            $data['datasets'][0]['data'][] = bccomp($spent, '0') === 0 ? null : bcmul($spent, '-1');
-            $data['datasets'][1]['data'][] = bccomp($earned, '0') === 0 ? null : $earned;
+            $data['datasets'][0]['data'][] = bccomp($spent, '0') === 0 ? null : round(bcmul($spent, '-1'), 4);
+            $data['datasets'][1]['data'][] = bccomp($earned, '0') === 0 ? null : round($earned, 4);
         }
 
         return $data;
@@ -116,18 +122,9 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      */
     public function multiYear(Collection $entries): array
     {
-        // dataset:
-        $data = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
         // get labels from one of the categories (assuming there's at least one):
         $first = $entries->first();
-        $keys  = array_keys($first['spent']);
-        foreach ($keys as $year) {
-            $data['labels'][] = strval($year);
-        }
+        $data  = ['count' => 0, 'labels' => array_keys($first['spent']), 'datasets' => [],];
 
         // then, loop all entries and create datasets:
         foreach ($entries as $entry) {
@@ -144,7 +141,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
         $data['count'] = count($data['datasets']);
 
         return $data;
-
     }
 
     /**

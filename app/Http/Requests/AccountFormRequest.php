@@ -1,10 +1,17 @@
 <?php
+/**
+ * AccountFormRequest.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use Config;
 use FireflyIII\Models\Account;
 use Input;
 
@@ -30,9 +37,9 @@ class AccountFormRequest extends Request
      */
     public function rules()
     {
-        $accountRoles   = join(',', array_keys(Config::get('firefly.accountRoles')));
-        $types          = join(',', array_keys(Config::get('firefly.subTitlesByIdentifier')));
-        $ccPaymentTypes = join(',', array_keys(Config::get('firefly.ccTypes')));
+        $accountRoles   = join(',', array_keys(config('firefly.accountRoles')));
+        $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
+        $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
 
         $nameRule = 'required|min:1|uniqueAccountForUser';
         $idRule   = '';

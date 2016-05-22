@@ -1,4 +1,12 @@
 <?php
+/**
+ * FireflyValidator.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Validation;
@@ -19,7 +27,6 @@ use FireflyIII\User;
 use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Log;
 use Session;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -38,7 +45,6 @@ class FireflyValidator extends Validator
      * @param array               $messages
      * @param array               $customAttributes
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList) // inherited from Laravel.
      */
     public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -50,7 +56,6 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -62,7 +67,7 @@ class FireflyValidator extends Validator
 
         $secret = Session::get('two-factor-secret');
         /** @var Google2FA $google2fa */
-        $google2fa = app('PragmaRX\Google2FA\Google2FA');
+        $google2fa = app(Google2FA::class);
 
         return $google2fa->verifyKey($secret, $value);
     }
@@ -78,7 +83,9 @@ class FireflyValidator extends Validator
     {
         $field = $parameters[1] ?? 'id';
 
-
+        if (intval($value) === 0) {
+            return true;
+        }
         $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where($field, $value)->count();
         if ($count === 1) {
             return true;
@@ -92,7 +99,6 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -136,12 +142,11 @@ class FireflyValidator extends Validator
             $value = $this->data['rule-action-value'][$index] ?? false;
             switch ($name) {
                 default:
-                    Log::debug(' (' . $attribute . ') (index:' . $index . ') Name is "' . $name . '" so no action is taken.');
 
                     return true;
                 case 'set_budget':
                     /** @var BudgetRepositoryInterface $repository */
-                    $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+                    $repository = app(BudgetRepositoryInterface::class);
                     $budgets    = $repository->getBudgets();
                     // count budgets, should have at least one
                     $count = $budgets->filter(
@@ -214,7 +219,6 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -279,7 +283,6 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -310,7 +313,6 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -341,9 +343,6 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // cant remove it
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its as simple as I can get it.
      *
      * @return bool
      */

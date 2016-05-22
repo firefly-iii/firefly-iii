@@ -1,7 +1,16 @@
 <?php
+/**
+ * BalanceLine.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Budget as BudgetModel;
 use Illuminate\Support\Collection;
 
@@ -23,6 +32,11 @@ class BalanceLine
 
     /** @var BudgetModel */
     protected $budget;
+
+    /** @var  Carbon */
+    protected $startDate;
+    /** @var  Carbon */
+    protected $endDate;
 
     /** @var int */
     protected $role = self::ROLE_DEFAULTROLE;
@@ -112,6 +126,39 @@ class BalanceLine
 
         return '';
     }
+
+    /**
+     * @return Carbon
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param Carbon $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param Carbon $endDate
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
 
     /**
      * If a BalanceLine has a budget/repetition, each BalanceEntry in this BalanceLine

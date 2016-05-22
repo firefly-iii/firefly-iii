@@ -1,10 +1,18 @@
 <?php
+/**
+ * PiggyBankRepository.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
+use Amount;
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\User;
@@ -22,7 +30,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * PiggyBankRepository constructor.
      *
      * @param User $user
      */
@@ -48,6 +56,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
@@ -57,15 +66,18 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param int $piggyBankid
      *
-     * @return Collection
+     * @return PiggyBank
      */
-    public function getEventSummarySet(PiggyBank $piggyBank): Collection
+    public function find(int $piggyBankid): PiggyBank
     {
-        $var = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::raw('SUM(`amount`) AS `sum`')]);
+        $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankid)->first(['piggy_banks.*']);
+        if (!is_null($piggyBank)) {
+            return $piggyBank;
+        }
 
-        return new Collection($var);
+        return new PiggyBank();
     }
 
     /**
@@ -93,6 +105,21 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
+
+        return $set;
+    }
+
+    /**
+     * Also add amount in name.
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksWithAmount() : Collection
+    {
+        $set = $this->getPiggyBanks();
+        foreach ($set as $piggy) {
+            $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
+        }
 
         return $set;
     }

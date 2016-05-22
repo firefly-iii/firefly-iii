@@ -1,4 +1,12 @@
 <?php
+/**
+ * routes.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 
@@ -83,7 +91,9 @@ Route::group(
     Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])->where('what', 'revenue|asset|expense');
     Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
     Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
-    Route::get('/accounts/show/{account}/{view?}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+    Route::get('/accounts/show/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+    Route::get('/accounts/show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'accounts.show.date']);
+
 
     Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
     Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
@@ -124,7 +134,8 @@ Route::group(
     Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
     Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
     Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
-    Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+    Route::get('/budgets/show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+    Route::get('/budgets/show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showWithRepetition', 'as' => 'budgets.showWithRepetition']);
     Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'budgets.noBudget']);
     Route::post('/budgets/income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'budgets.postIncome']);
     Route::post('/budgets/store', ['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
@@ -188,8 +199,9 @@ Route::group(
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
     Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
-    Route::get('/chart/account/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
+    Route::get('/chart/account/report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
+    Route::get('/chart/account/{account}/{date}', ['uses' => 'Chart\AccountController@specificPeriod']);
 
 
     // bills:
@@ -200,9 +212,8 @@ Route::group(
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
 
     // this chart is used in reports:
-    Route::get('/chart/budget/year/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@year']);
-    Route::get('/chart/budget/multi-year/{reportType}/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
-
+    Route::get('/chart/budget/multi-year/default/{start_date}/{end_date}/{accountList}/{budgetList}', ['uses' => 'Chart\BudgetController@multiYear']);
+    Route::get('/chart/budget/period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@period']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
     Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
 
@@ -210,11 +221,7 @@ Route::group(
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
 
     // these three charts are for reports:
-    Route::get('/chart/category/earned-in-period/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@earnedInPeriod']);
-    Route::get('/chart/category/spent-in-period/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@spentInPeriod']);
-    Route::get(
-        '/chart/category/multi-year/{reportType}/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']
-    );
+    Route::get('/chart/category/multi-year/default/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'Chart\CategoryController@multiYear']);
 
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
     Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
@@ -342,6 +349,14 @@ Route::group(
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 
     /**
+     * Split controller
+     */
+
+    Route::get('/transaction/create-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@create', 'as' => 'split.journal.create']);
+    Route::post('/transaction/store-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@store', 'as' => 'split.journal.store']);
+    Route::get('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
+    Route::post('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
+    /**
      * Tag Controller
      */
     Route::get('/tags', ['uses' => 'TagController@index', 'as' => 'tags.index']);
@@ -378,10 +393,10 @@ Route::group(
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
     // mass edit and mass delete.
-    Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'TransactionController@massEdit', 'as' => 'transactions.mass-edit']);
-    Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'TransactionController@massDelete', 'as' => 'transactions.mass-delete']);
-    Route::post('/transactions/mass-update', ['uses' => 'TransactionController@massUpdate', 'as' => 'transactions.mass-update']);
-    Route::post('/transactions/mass-destroy', ['uses' => 'TransactionController@massDestroy', 'as' => 'transactions.mass-destroy']);
+    Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'Transaction\MassController@massEdit', 'as' => 'transactions.mass-edit']);
+    Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'Transaction\MassController@massDelete', 'as' => 'transactions.mass-delete']);
+    Route::post('/transactions/mass-update', ['uses' => 'Transaction\MassController@massUpdate', 'as' => 'transactions.mass-update']);
+    Route::post('/transactions/mass-destroy', ['uses' => 'Transaction\MassController@massDestroy', 'as' => 'transactions.mass-destroy']);
 
     /**
      * POPUP Controllers

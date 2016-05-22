@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * SetCategory.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,6 +7,8 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Rules\Actions;
 
 
@@ -15,7 +16,6 @@ use Auth;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use Log;
 
 /**
  * Class SetCategory
@@ -47,7 +47,6 @@ class SetCategory implements ActionInterface
     {
         $name     = $this->action->action_value;
         $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => Auth::user()->id]);
-        Log::debug('Will set category "' . $name . '" (#' . $category->id . ') on journal #' . $journal->id . '.');
         $journal->categories()->sync([$category->id]);
 
         return true;

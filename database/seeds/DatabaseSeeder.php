@@ -1,4 +1,7 @@
 <?php
+declare(strict_types = 1);
+
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
@@ -21,11 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
         $this->call('PermissionSeeder');
-
-        // set up basic test data (as little as possible):
-        if (App::environment() == 'testing' || App::environment() == 'local') {
-            $this->call('TestDataSeeder');
-        }
+        $this->call('TestDataSeeder');
     }
 
 }

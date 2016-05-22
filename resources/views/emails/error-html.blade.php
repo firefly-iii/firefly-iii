@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+</head>
+<body>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    Firefly III ran into an error: <span style="font-family: monospace;">{{ errorMessage }}</span>
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+The error was of type "{{ class }}".
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+The error occured on/at: {{ time }}.
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    This error occured in file <span style="font-family: monospace;">{{ file }}</span> on line {{ line }} with code {{ code }}.
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    {% if loggedIn %}
+        The error was encountered by user #{{ user.id }}, <a href="mailto:{{ user.email }}">{{ user.email }}</a>.
+    {% else %}
+        There was no user logged in for this error or no user was detected.
+    {% endif %}
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+	The IP address related to this error is: {{ ip }}
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    The full stacktrace is below. If you think this is a bug in Firefly III, you
+    can forward this message to
+    <a href="mailto:thegrumpydictator@gmail.com?subject=BUG!">thegrumpydictator@gmail.com</a>.
+    This can help fix the bug you just encountered.
+</p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    If you prefer, you can also open a new issue on <a href="https://github.com/JC5/firefly-iii/issues/new">Github</a>.
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    The full stacktrace is below:</p>
+<p style="font-family: monospace;font-size:11px;color:#aaa">
+    {{ stacktrace|nl2br }}
+</p>
+</body>
+</html>

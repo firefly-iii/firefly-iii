@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * ConfigurationFile.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,10 +7,12 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Export;
 
+use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
-use Log;
 use Storage;
 
 /**
@@ -42,8 +43,8 @@ class ConfigurationFile
      */
     public function make(): string
     {
-        $fields = array_keys(get_class_vars(Entry::class));
-        $types  = Entry::getTypes();
+        $fields = array_keys(Entry::getFieldsAndTypes());
+        $types  = Entry::getFieldsAndTypes();
 
         $configuration = [
             'date-format' => 'Y-m-d', // unfortunately, this is hard-coded.
@@ -57,8 +58,6 @@ class ConfigurationFile
             $configuration['roles'][] = $types[$field];
         }
         $file = $this->job->key . '-configuration.json';
-        Log::debug('Created JSON config file.');
-        Log::debug('Will put "' . $file . '" in the ZIP file.');
         $this->exportDisk->put($file, json_encode($configuration, JSON_PRETTY_PRINT));
 
         return $file;

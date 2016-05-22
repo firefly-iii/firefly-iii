@@ -1,10 +1,10 @@
 <?php
+declare(strict_types = 1);
+
 
 return [
     'chart'               => 'chartjs',
-    'version'             => '3.8.4',
-    'index_periods'       => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
-    'budget_periods'      => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'version'             => '3.9.0',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
@@ -16,20 +16,7 @@ return [
         // mt940 FireflyIII Export Exporter MtExporter
     ],
     'default_export_format' => 'csv',
-
-    'piggy_bank_periods' => [
-        'week'    => 'Week',
-        'month'   => 'Month',
-        'quarter' => 'Quarter',
-        'year'    => 'Year',
-    ],
-    'periods_to_text'    => [
-        'weekly'    => 'A week',
-        'monthly'   => 'A month',
-        'quarterly' => 'A quarter',
-        'half-year' => 'Six months',
-        'yearly'    => 'A year',
-    ],
+    'bill_periods'          => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
 
     'accountRoles' => [
         'defaultAsset' => 'Default asset account',
@@ -38,24 +25,8 @@ return [
         'ccAsset'      => 'Credit card',
     ],
 
-    'range_to_text'            => [
-        '1D'     => 'day',
-        '1W'     => 'week',
-        '1M'     => 'month',
-        '3M'     => 'three months',
-        '6M'     => 'half year',
-        'custom' => '(custom)',
-    ],
     'ccTypes'                  => [
         'monthlyFull' => 'Full payment every month',
-    ],
-    'range_to_name'            => [
-        '1D' => 'one day',
-        '1W' => 'one week',
-        '1M' => 'one month',
-        '3M' => 'three months',
-        '6M' => 'six months',
-        '1Y' => 'one year',
     ],
     'range_to_repeat_freq'     => [
         '1D'     => 'weekly',
@@ -63,7 +34,8 @@ return [
         '1M'     => 'monthly',
         '3M'     => 'quarterly',
         '6M'     => 'half-year',
-        'custom' => 'monthly',
+        '1Y'     => 'yearly',
+        'custom' => 'custom',
     ],
     'subTitlesByIdentifier'    =>
         [
@@ -110,20 +82,8 @@ return [
     'languages'                => [
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
-        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portugese (Brazil)', 'complete' => false],
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
-    ],
-    'lang'                     => [
-        'en_US' => 'English',
-        'nl_NL' => 'Nederlands',
-        'fr_FR' => 'Français',
-        'pt_BR' => 'Português do Brasil',
-    ],
-    'locales'                  => [
-        'en_US' => ['en', 'English', 'en_US', 'en_US.utf8'],
-        'nl_NL' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
-        'pt_BR' => ['pt_BR', 'pt_BR.utf8'],
-        'fr_FR' => ['fr_FR', 'fr_FR.utf8'],
     ],
     'transactionTypesByWhat'   => [
         'expenses'   => ['Withdrawal'],
@@ -143,42 +103,31 @@ return [
 
     ],
 
-    'month'       => [
-        'en_US' => '%B %Y',
-        'nl_NL' => '%B %Y',
-        'fr_FR' => '%B %Y',
-        'pt_BR' => '%B %Y',
-    ],
-    'monthAndDay' => [
-        'en_US' => '%B %e, %Y',
-        'nl_NL' => '%e %B %Y',
-        'fr_FR' => '%B %e, %Y',
-        'pt_BR' => '%B %e, %Y',
-    ],
     'bindables'   => [
         // models
-        'account'         => 'FireflyIII\Models\Account',
-        'attachment'      => 'FireflyIII\Models\Attachment',
-        'bill'            => 'FireflyIII\Models\Bill',
-        'budget'          => 'FireflyIII\Models\Budget',
-        'category'        => 'FireflyIII\Models\Category',
-        'currency'        => 'FireflyIII\Models\TransactionCurrency',
-        'limitrepetition' => 'FireflyIII\Models\LimitRepetition',
-        'piggyBank'       => 'FireflyIII\Models\PiggyBank',
-        'tj'              => 'FireflyIII\Models\TransactionJournal',
-        'tag'             => 'FireflyIII\Models\Tag',
-        'rule'            => 'FireflyIII\Models\Rule',
-        'ruleGroup'       => 'FireflyIII\Models\RuleGroup',
-        'jobKey'          => 'FireflyIII\Models\ExportJob',
+        'account'           => 'FireflyIII\Models\Account',
+        'attachment'        => 'FireflyIII\Models\Attachment',
+        'bill'              => 'FireflyIII\Models\Bill',
+        'budget'            => 'FireflyIII\Models\Budget',
+        'category'          => 'FireflyIII\Models\Category',
+        'currency'          => 'FireflyIII\Models\TransactionCurrency',
+        'limitrepetition'   => 'FireflyIII\Models\LimitRepetition',
+        'piggyBank'         => 'FireflyIII\Models\PiggyBank',
+        'tj'                => 'FireflyIII\Models\TransactionJournal',
+        'unfinishedJournal' => 'FireflyIII\Support\Binder\UnfinishedJournal',
+        'tag'               => 'FireflyIII\Models\Tag',
+        'rule'              => 'FireflyIII\Models\Rule',
+        'ruleGroup'         => 'FireflyIII\Models\RuleGroup',
+        'jobKey'            => 'FireflyIII\Models\ExportJob',
         // lists
-        'accountList'     => 'FireflyIII\Support\Binder\AccountList',
-        'budgetList'      => 'FireflyIII\Support\Binder\BudgetList',
-        'journalList'     => 'FireflyIII\Support\Binder\JournalList',
-        'categoryList'    => 'FireflyIII\Support\Binder\CategoryList',
+        'accountList'       => 'FireflyIII\Support\Binder\AccountList',
+        'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
+        'journalList'       => 'FireflyIII\Support\Binder\JournalList',
+        'categoryList'      => 'FireflyIII\Support\Binder\CategoryList',
 
         // others
-        'start_date'      => 'FireflyIII\Support\Binder\Date',
-        'end_date'        => 'FireflyIII\Support\Binder\Date',
+        'start_date'        => 'FireflyIII\Support\Binder\Date',
+        'end_date'          => 'FireflyIII\Support\Binder\Date',
     ],
 
     'rule-triggers'     => [

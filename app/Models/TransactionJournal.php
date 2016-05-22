@@ -1,4 +1,15 @@
-<?php namespace FireflyIII\Models;
+<?php
+/**
+ * TransactionJournal.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+
+namespace FireflyIII\Models;
 
 use Auth;
 use Carbon\Carbon;
@@ -7,7 +18,6 @@ use FireflyIII\Support\Models\TransactionJournalSupport;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
@@ -45,15 +55,15 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
- * @property-read string                                                                               $transaction_type_type
+ * @property string                                                                                    $transaction_type_type
  * @property-read string                                                                               $transaction_currency_code
  * @property-read string                                                                               $destination_amount
- * @property-read string                                                                               $destination_account_id
- * @property-read string                                                                               $destination_account_name
+ * @property string                                                                                    $destination_account_id
+ * @property string                                                                                    $destination_account_name
  * @property-read string                                                                               $destination_account_type
  * @property-read string                                                                               $source_amount
- * @property-read string                                                                               $source_account_id
- * @property-read string                                                                               $source_account_name
+ * @property string                                                                                    $source_account_id
+ * @property string                                                                                    $source_account_name
  * @property-read string                                                                               $source_account_type
  * @property \Carbon\Carbon                                                                            $process_date
  * @property int                                                                                       $account_id
@@ -79,32 +89,12 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal expanded()
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal sortCorrectly()
  */
 class TransactionJournal extends TransactionJournalSupport
 {
     use SoftDeletes, ValidatingTrait;
 
-    /**
-     * Fields which queries must load.
-     * ['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']
-     */
-    const QUERYFIELDS
-        = [
-            'transaction_journals.*',
-            'transaction_types.type AS transaction_type_type', // the other field is called "transaction_type_id" so this is pretty consistent.
-            'transaction_currencies.code AS transaction_currency_code',
-            // all for destination:
-            'destination.amount AS destination_amount', // is always positive
-            'destination_account.id AS destination_account_id',
-            'destination_account.name AS destination_account_name',
-            'destination_acct_type.type AS destination_account_type',
-            // all for source:
-            'source.amount AS source_amount', // is always negative
-            'source_account.id AS source_account_id',
-            'source_account.name AS source_account_name',
-            'source_acct_type.type AS source_account_type',
-
-        ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date', 'process_date'];
     /** @var array */
@@ -197,20 +187,6 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getDestinationAccountNameAttribute($value)
-    {
-        if (!is_null($value) && strlen(strval($value)) > 0) {
-            return Crypt::decrypt($value);
-        }
-
-        return null;
-    }
-
-    /**
      *
      * @param string $fieldName
      *
@@ -225,21 +201,6 @@ class TransactionJournal extends TransactionJournalSupport
         }
 
         return '';
-    }
-
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getSourceAccountNameAttribute($value)
-    {
-        if (!is_null($value) && strlen(strval($value)) > 0) {
-            return Crypt::decrypt($value);
-        }
-
-        return null;
-
     }
 
     /**
@@ -354,32 +315,18 @@ class TransactionJournal extends TransactionJournalSupport
         $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
 
         // left join destination (for amount and account info).
-        $query->leftJoin(
-            'transactions as destination', function (JoinClause $join) {
-            $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                 ->where('destination.amount', '>', 0);
-        }
-        );
-        // join destination account
-        $query->leftJoin('accounts as destination_account', 'destination_account.id', '=', 'destination.account_id');
-        // join destination account type
-        $query->leftJoin('account_types as destination_acct_type', 'destination_account.account_type_id', '=', 'destination_acct_type.id');
+        $query->groupBy('transaction_journals.id');
+        $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
+    }
 
-        // left join source (for amount and account info).
-        $query->leftJoin(
-            'transactions as source', function (JoinClause $join) {
-            $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                 ->where('source.amount', '<', 0);
-        }
-        );
-        // join destination account
-        $query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
-        // join destination account type
-        $query->leftJoin('account_types as source_acct_type', 'source_account.account_type_id', '=', 'source_acct_type.id')
-              ->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.order', 'ASC')->orderBy('transaction_journals.id', 'DESC');
-
-        $query->with(['categories', 'budgets', 'attachments', 'bill']);
-
+    /**
+     * @param EloquentBuilder $query
+     */
+    public function scopeSortCorrectly(EloquentBuilder $query)
+    {
+        $query->orderBy('transaction_journals.date', 'DESC');
+        $query->orderBy('transaction_journals.order', 'ASC');
+        $query->orderBy('transaction_journals.id', 'DESC');
 
     }
 

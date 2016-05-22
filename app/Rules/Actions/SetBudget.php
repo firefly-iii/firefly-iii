@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * SetBudget.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,6 +7,8 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Rules\Actions;
 
 
@@ -15,7 +16,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use Log;
 
 /**
  * Class SetBudget
@@ -46,7 +46,7 @@ class SetBudget implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository = app(BudgetRepositoryInterface::class);
         $search     = $this->action->action_value;
         $budgets    = $repository->getActiveBudgets();
         $budget     = $budgets->filter(
@@ -55,10 +55,7 @@ class SetBudget implements ActionInterface
             }
         )->first();
         if (!is_null($budget)) {
-            Log::debug('Will set budget "' . $search . '" (#' . $budget->id . ') on journal #' . $journal->id . '.');
             $journal->budgets()->sync([$budget->id]);
-        } else {
-            Log::debug('Could not find budget "' . $search . '". Failed.');
         }
 
         return true;

@@ -1,4 +1,7 @@
 <?php
+declare(strict_types = 1);
+
+
 
 return [
 
@@ -48,13 +51,17 @@ return [
             'root'   => storage_path('app'),
         ],
 
-        'upload' => [
+        'upload'   => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export' => [
+        'export'   => [
             'driver' => 'local',
             'root'   => storage_path('export'),
+        ],
+        'database' => [
+            'driver' => 'local',
+            'root'   => storage_path('database'),
         ],
 
         'ftp' => [

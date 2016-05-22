@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * Processor.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Rules;
 
@@ -19,7 +20,6 @@ use FireflyIII\Rules\Factory\ActionFactory;
 use FireflyIII\Rules\Factory\TriggerFactory;
 use FireflyIII\Rules\Triggers\AbstractTrigger;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class Processor
@@ -138,13 +138,11 @@ final class Processor
         $triggered = $this->triggered();
         if ($triggered) {
             if ($this->actions->count() > 0) {
-                Log::debug('Journal #' . $journal->id . ' triggered, actions executed.');
                 $this->actions();
             }
 
             return true;
         }
-        Log::debug('Journal #' . $journal->id . ' not triggered, did nothing.');
 
         return false;
 
@@ -195,7 +193,6 @@ final class Processor
             }
 
         }
-        Log::debug('Total: ' . $foundTriggers . ' found triggers. ' . $hitTriggers . ' triggers were hit.');
 
         return ($hitTriggers == $foundTriggers && $foundTriggers > 0);
 

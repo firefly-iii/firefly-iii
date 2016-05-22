@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * RuleFormRequest.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,10 +7,11 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use Config;
 use FireflyIII\Models\RuleGroup;
 use Input;
 
@@ -38,11 +38,11 @@ class RuleFormRequest extends Request
     public function rules()
     {
 
-        $validTriggers = array_keys(Config::get('firefly.rule-triggers'));
-        $validActions  = array_keys(Config::get('firefly.rule-actions'));
+        $validTriggers = array_keys(config('firefly.rule-triggers'));
+        $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some actions require text:
-        $contextActions = join(',', Config::get('firefly.rule-actions-text'));
+        $contextActions = join(',', config('firefly.rule-actions-text'));
 
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
         if (RuleGroup::find(Input::get('id'))) {

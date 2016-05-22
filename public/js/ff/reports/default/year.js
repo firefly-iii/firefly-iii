@@ -18,10 +18,15 @@ function drawChart() {
     lineChart('chart/report/net-worth/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'net-worth');
     columnChart('chart/report/in-out/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-chart');
     columnChart('chart/report/in-out-sum/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-sum-chart');
-    stackedColumnChart('chart/budget/year/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budgets');
-    stackedColumnChart('chart/category/spent-in-period/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-spent-in-period');
-    stackedColumnChart('chart/category/earned-in-period/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'categories-earned-in-period');
 
+    // in a loop
+    $.each($('.budget_year_chart'), function (i, v) {
+        var holder = $(v);
+        var id = holder.attr('id');
+        var budgetId = holder.data('budget');
+        columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, id);
+
+    });
 }
 
 

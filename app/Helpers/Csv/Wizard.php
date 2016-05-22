@@ -1,9 +1,16 @@
 <?php
+/**
+ * Wizard.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Csv;
 
 use Auth;
-use Config;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Csv\Mapper\MapperInterface;
@@ -61,18 +68,14 @@ class Wizard implements WizardInterface
      */
     public function processSelectedMapping(array $roles, array $map): array
     {
-        $configRoles = Config::get('csv.roles');
+        $configRoles = config('csv.roles');
         $maps        = [];
-
-
-        if (is_array($map)) {
-            $keys = array_keys($map);
-            foreach ($keys as $index) {
-                if (isset($roles[$index])) {
-                    $name = $roles[$index];
-                    if ($configRoles[$name]['mappable']) {
-                        $maps[$index] = $name;
-                    }
+        $keys        = array_keys($map);
+        foreach ($keys as $index) {
+            if (isset($roles[$index])) {
+                $name = $roles[$index];
+                if ($configRoles[$name]['mappable']) {
+                    $maps[$index] = $name;
                 }
             }
         }
@@ -134,7 +137,7 @@ class Wizard implements WizardInterface
         $options = [];
         foreach ($map as $index => $columnRole) {
 
-            $mapper = Config::get('csv.roles.' . $columnRole . '.mapper');
+            $mapper = config('csv.roles.' . $columnRole . '.mapper');
             if (is_null($mapper)) {
                 throw new FireflyException('Cannot map field of type "' . $columnRole . '".');
             }

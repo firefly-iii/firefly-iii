@@ -1,4 +1,7 @@
 <?php
+declare(strict_types = 1);
+
+
 
 use FireflyIII\Models\Role;
 use Illuminate\Database\Seeder;

@@ -1,6 +1,16 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * BillController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
-use Config;
+declare(strict_types = 1);
+
+namespace FireflyIII\Http\Controllers;
+
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
@@ -34,7 +44,10 @@ class BillController extends Controller
      */
     public function create()
     {
-        $periods  = Config::get('firefly.periods_to_text');
+        $periods = [];
+        foreach (config('firefly.bill_periods') as $current) {
+            $periods[$current] = trans('firefly.' . $current);
+        }
         $subTitle = trans('firefly.create_new_bill');
 
 
@@ -89,7 +102,10 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        $periods  = Config::get('firefly.periods_to_text');
+        $periods = [];
+        foreach (config('firefly.bill_periods') as $current) {
+            $periods[$current] = trans('firefly.' . $current);
+        }
         $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -174,9 +190,9 @@ class BillController extends Controller
      */
     public function show(BillRepositoryInterface $repository, Bill $bill)
     {
-        $page                    = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize                = Preferences::get('transactionPageSize', 50)->data;
-        $journals                = $repository->getJournals($bill, $page, $pageSize);
+        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $journals = $repository->getJournals($bill, $page, $pageSize);
         $journals->setPath('/bills/show/' . $bill->id);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;

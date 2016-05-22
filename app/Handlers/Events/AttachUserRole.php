@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * AttachUserRole.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,12 +7,13 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Handlers\Events;
 
 
 use FireflyIII\Events\UserRegistration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Log;
 
 /**
  * Class AttachUserRole
@@ -38,13 +38,11 @@ class AttachUserRole
      */
     public function handle(UserRegistration $event)
     {
-        Log::debug('Trigger attachuserrole');
         /** @var UserRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\User\UserRepositoryInterface');
+        $repository = app(UserRepositoryInterface::class);
 
         // first user ever?
         if ($repository->count() == 1) {
-            Log::debug('Will attach role.');
             $repository->attachRole($event->user, 'owner');
         }
     }

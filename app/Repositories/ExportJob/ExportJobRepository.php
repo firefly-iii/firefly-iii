@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * ExportJobRepository.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\ExportJob;
 
@@ -26,7 +27,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
+     * ExportJobRepository constructor.
      *
      * @param User $user
      */
@@ -68,29 +69,42 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function create(): ExportJob
     {
-        $exportJob = new ExportJob;
-        $exportJob->user()->associate($this->user);
-        /*
-         * In theory this random string could give db error.
-         */
-        $exportJob->key    = Str::random(12);
-        $exportJob->status = 'export_status_never_started';
-        $exportJob->save();
+        $count = 0;
+        while ($count < 30) {
+            $key      = Str::random(12);
+            $existing = $this->findByKey($key);
+            if (is_null($existing->id)) {
+                $exportJob = new ExportJob;
+                $exportJob->user()->associate($this->user);
+                $exportJob->key    = Str::random(12);
+                $exportJob->status = 'export_status_never_started';
+                $exportJob->save();
 
-        return $exportJob;
+                // breaks the loop:
+
+                return $exportJob;
+            }
+            $count++;
+
+        }
+
+        return new ExportJob;
+
     }
 
     /**
-     *
-     * FIXME this may return null
-     * 
      * @param string $key
      *
      * @return ExportJob|null
      */
     public function findByKey(string $key): ExportJob
     {
-        return $this->user->exportJobs()->where('key', $key)->first();
+        $result = $this->user->exportJobs()->where('key', $key)->first();
+        if (is_null($result)) {
+            return new ExportJob;
+        }
+
+        return $result;
     }
 
 }

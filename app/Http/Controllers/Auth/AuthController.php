@@ -1,4 +1,12 @@
 <?php
+/**
+ * AuthController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -15,7 +23,6 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Lang;
 use Log;
 use Mail;
-use Request as Rq;
 use Session;
 use Swift_TransportException;
 use Validator;
@@ -143,9 +150,9 @@ class AuthController extends Controller
      */
     public function showRegistrationForm()
     {
-        $host = Rq::getHttpHost();
+        $showDemoWarning = env('SHOW_DEMO_WARNING', false);
 
-        return view('auth.register', compact('host'));
+        return view('auth.register', compact('showDemoWarning'));
     }
 
     /**

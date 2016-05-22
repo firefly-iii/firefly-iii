@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 /**
  * Kernel.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -9,11 +7,12 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Console;
 
 use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
 use FireflyIII\Console\Commands\VerifyDatabase;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /**
@@ -53,17 +52,4 @@ class Kernel extends ConsoleKernel
             UpgradeFireflyInstructions::class,
             VerifyDatabase::class,
         ];
-
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameters)
-     */
-    protected function schedule(Schedule $schedule)
-    {
-    }
 }

@@ -1,9 +1,19 @@
 <?php
+/**
+ * CategoryRepositoryInterface.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Category;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -14,19 +24,48 @@ use Illuminate\Support\Collection;
 interface CategoryRepositoryInterface
 {
 
+    /**
+     * @param Category $category
+     *
+     * @return bool
+     */
+    public function destroy(Category $category): bool;
 
     /**
-     * Returns a collection of Categories appended with the amount of money that has been earned
-     * in these categories, based on the $accounts involved, in period X, grouped per month.
-     * The amount earned in category X in period X is saved in field "earned".
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @param $accounts
-     * @param $start
-     * @param $end
-     *
-     * @return Collection
+     * @return string
      */
-    public function earnedForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end): Collection;
+    public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) :string;
+
+    /**
+     * Find a category
+     *
+     * @param int $categoryId
+     *
+     * @return Category
+     */
+    public function find(int $categoryId) : Category;
+
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Category $category, Collection $accounts): Carbon;
 
     /**
      * Returns a list of all the categories belonging to a user.
@@ -36,67 +75,76 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
-     * This method returns a very special collection for each category:
+     * @param Category $category
+     * @param int      $page
+     * @param int      $pageSize
      *
-     * category, year, expense/earned, amount
+     * @return LengthAwarePaginator
+     */
+    public function getJournals(Category $category, int $page, int $pageSize): LengthAwarePaginator;
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * categories can be duplicated.
+     * @return Collection
+     */
+    public function journalsInPeriod(Collection $categories, Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
+     * @return string
+     */
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string;
+
+    /**
+     * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function journalsInPeriodWithoutCategory(Collection $accounts, array $types, Carbon $start, Carbon $end) : Collection;
+
+    /**
+     * Return most recent transaction(journal) date.
+     *
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @return Carbon
+     */
+    public function lastUseDate(Category $category, Collection $accounts): Carbon;
+
+    /**
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
-     */
-    public function listMultiYear(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
-
-    /**
-     * Returns a list of transaction journals in the range (all types, all accounts) that have no category
-     * associated to them.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function listNoCategory(Carbon $start, Carbon $end): Collection;
-
-    /**
-     * Returns a collection of Categories appended with the amount of money that has been spent
-     * in these categories, based on the $accounts involved, in period X, grouped per month.
-     * The amount earned in category X in period X is saved in field "spent".
-     *
-     * @param $accounts
-     * @param $start
-     * @param $end
-     *
-     * @return Collection
-     */
-    public function spentForAccountsPerMonth(Collection $accounts, Carbon $start, Carbon $end): Collection;
-
-    /**
-     * Returns the total amount of money related to transactions without any category connected to
-     * it. Returns either the earned amount.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
      */
-    public function sumEarnedNoCategory(Collection $accounts, Carbon $start, Carbon $end): string;
+    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
-     * Returns the total amount of money related to transactions without any category connected to
-     * it. Returns either the spent amount.
+     * @param array $data
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
+     * @return Category
      */
-    public function sumSpentNoCategory(Collection $accounts, Carbon $start, Carbon $end): string;
+    public function store(array $data): Category;
 
+    /**
+     * @param Category $category
+     * @param array    $data
+     *
+     * @return Category
+     */
+    public function update(Category $category, array $data): Category;
 }

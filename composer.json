@@ -45,7 +45,6 @@
     "symfony/dom-crawler": "2.8.*|3.0.*",
     "barryvdh/laravel-debugbar": "@stable",
     "barryvdh/laravel-ide-helper": "~2.0",
-    "johnkary/phpunit-speedtrap": "^1.0",
     "hamcrest/hamcrest-php": "^2.0@dev"
   },
   "autoload": {

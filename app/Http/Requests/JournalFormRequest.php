@@ -1,4 +1,12 @@
 <?php
+/**
+ * JournalFormRequest.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
@@ -37,11 +45,10 @@ class JournalFormRequest extends Request
         return [
             'what'                      => $this->get('what'),
             'description'               => $this->get('description'),
-            'account_id'                => intval($this->get('account_id')),
-            'account_from_id'           => intval($this->get('account_from_id')),
-            'account_to_id'             => intval($this->get('account_to_id')),
-            'expense_account'           => $this->get('expense_account') ?? '',
-            'revenue_account'           => $this->get('revenue_account') ?? '',
+            'source_account_id'         => intval($this->get('source_account_id')),
+            'source_account_name'       => $this->get('source_account_name') ?? '',
+            'destination_account_id'    => intval($this->get('destination_account_id')),
+            'destination_account_name'  => $this->get('destination_account_name') ?? '',
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => Auth::user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
@@ -52,6 +59,7 @@ class JournalFormRequest extends Request
             'budget_id'                 => intval($this->get('budget_id')),
             'category'                  => $this->get('category') ?? '',
             'tags'                      => explode(',', $tags),
+            'piggy_bank_id'             => $this->get('piggy_bank_id') ? intval($this->get('piggy_bank_id')) : 0,
         ];
     }
 
@@ -70,28 +78,27 @@ class JournalFormRequest extends Request
             'process_date'              => 'date',
             'book_date'                 => 'date',
             'interest_date'             => 'date',
+            'category'                  => 'between:1,255',
             'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
-
+            'piggy_bank_id'             => 'numeric',
         ];
 
         switch ($what) {
             case strtolower(TransactionType::WITHDRAWAL):
-                $rules['account_id']      = 'required|exists:accounts,id|belongsToUser:accounts';
-                $rules['expense_account'] = 'between:1,255';
-                $rules['category']        = 'between:1,255';
+                $rules['source_account_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
+                $rules['destination_account_name'] = 'between:1,255';
                 if (intval(Input::get('budget_id')) != 0) {
                     $rules['budget_id'] = 'exists:budgets,id|belongsToUser:budgets';
                 }
                 break;
             case strtolower(TransactionType::DEPOSIT):
-                $rules['category']        = 'between:1,255';
-                $rules['account_id']      = 'required|exists:accounts,id|belongsToUser:accounts';
-                $rules['revenue_account'] = 'between:1,255';
+                $rules['source_account_name']    = 'between:1,255';
+                $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
                 break;
             case strtolower(TransactionType::TRANSFER):
-                $rules['account_from_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:account_to_id';
-                $rules['account_to_id']   = 'required|exists:accounts,id|belongsToUser:accounts|different:account_from_id';
-                $rules['category']        = 'between:1,255';
+                $rules['source_account_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_account_id';
+                $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_account_id';
+
                 break;
             default:
                 throw new FireflyException('Cannot handle transaction type of type ' . e($what) . '.');

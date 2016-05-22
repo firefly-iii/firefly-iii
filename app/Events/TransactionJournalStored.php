@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * TransactionJournalStored.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,11 +7,12 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
+declare(strict_types = 1);
+
 namespace FireflyIII\Events;
 
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
-use Log;
 
 /**
  * Class TransactionJournalStored
@@ -35,7 +35,6 @@ class TransactionJournalStored extends Event
      */
     public function __construct(TransactionJournal $journal, int $piggyBankId)
     {
-        Log::debug('Created new TransactionJournalStored.');
         //
         $this->journal     = $journal;
         $this->piggyBankId = $piggyBankId;

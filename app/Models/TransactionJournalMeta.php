@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 /**
  * TransactionJournalMeta.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -7,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
@@ -31,14 +32,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereData($value)
  * @mixin \Eloquent
- * @property string $hash
+ * @property string                                     $hash
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereHash($value)
  */
 class TransactionJournalMeta extends Model
 {
 
     protected $dates    = ['created_at', 'updated_at'];
-    protected $fillable = ['transaction_journal_id', 'name', 'data','hash'];
+    protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
     protected $table    = 'journal_meta';
 
     /**

@@ -1,4 +1,13 @@
 <?php
+/**
+ * VerifyDatabase.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -10,7 +19,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
@@ -39,8 +47,6 @@ class VerifyDatabase extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -72,6 +78,9 @@ class VerifyDatabase extends Command
         $this->reportTransactions();
         // deleted accounts that still have not deleted transactions or journals attached to them.
         $this->reportDeletedAccounts();
+
+        // report on journals with no transactions at all.
+        $this->reportNoTransactions();
     }
 
     /**
@@ -123,7 +132,9 @@ class VerifyDatabase extends Command
             ::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
             ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
             ->distinct()
-            ->get(['budgets.id', 'budgets.name', 'budget_transaction_journal.budget_id', 'budgets.user_id', 'users.email']);
+            ->whereNull('budget_transaction_journal.budget_id')
+            ->whereNull('budgets.deleted_at')
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -142,7 +153,9 @@ class VerifyDatabase extends Command
             ::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
             ->leftJoin('users', 'categories.user_id', '=', 'users.id')
             ->distinct()
-            ->get(['categories.id', 'categories.name', 'category_transaction_journal.category_id', 'categories.user_id', 'users.email']);
+            ->whereNull('category_transaction_journal.category_id')
+            ->whereNull('categories.deleted_at')
+            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -210,19 +223,39 @@ class VerifyDatabase extends Command
         }
     }
 
+    private function reportNoTransactions()
+    {
+        /*
+         * select transaction_journals.id, count(transactions.id) as transaction_count from transaction_journals
+left join transactions ON transaction_journals.id = transactions.transaction_journal_id
+group by transaction_journals.id
+having transaction_count = 0
+         */
+        $set = TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->groupBy('transaction_journals.id')
+            ->having('transaction_count', '=', 0)
+            ->get(['transaction_journals.id', DB::raw('COUNT(`transactions`.`id`) as `transaction_count`')]);
+
+        foreach ($set as $entry) {
+            $this->error(
+                'Error: Journal #' . $entry->id . ' has zero transactions. Open table `transaction_journals` and delete the entry with id #' . $entry->id
+            );
+        }
+
+    }
+
     /**
      * Reports for each user when the sum of their transactions is not zero.
      */
     private function reportSum()
     {
         /** @var UserRepositoryInterface $userRepository */
-        $userRepository = app('FireflyIII\Repositories\User\UserRepositoryInterface');
+        $userRepository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            /** @var AccountRepositoryInterface $repository */
-            $repository = app('FireflyIII\Repositories\Account\AccountRepositoryInterface', [$user]);
-            $sum        = $repository->sumOfEverything();
+            $sum = strval($user->transactions()->sum('amount'));
             if (bccomp($sum, '0') !== 0) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
             }
@@ -238,7 +271,9 @@ class VerifyDatabase extends Command
             ::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
             ->leftJoin('users', 'tags.user_id', '=', 'users.id')
             ->distinct()
-            ->get(['tags.id', 'tags.tag', 'tag_transaction_journal.tag_id', 'tags.user_id', 'users.email']);
+            ->whereNull('tag_transaction_journal.tag_id')
+            ->whereNull('tags.deleted_at')
+            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {

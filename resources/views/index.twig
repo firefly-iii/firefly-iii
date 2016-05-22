@@ -16,10 +16,6 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'yourAccounts'|_ }}</h3>
-
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <canvas id="accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
@@ -30,10 +26,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgetsAndSpending'|_ }}</h3>
-
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <canvas id="budgets-chart" style="width:100%;" height="400"></canvas>
@@ -44,9 +36,6 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }}</h3>
 
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <canvas id="categories-chart" style="width:100%;" height="400"></canvas>
@@ -59,10 +48,7 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'bills'|_ }}</h3>
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
+
                 </div>
                 <div class="box-body">
                     <canvas id="bills-chart" style="width:100%;" height="250"></canvas>
@@ -77,7 +63,6 @@
 
                         <!-- ACTIONS MENU -->
                         <div class="box-tools pull-right">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <div class="btn-group">
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                                 <ul class="dropdown-menu" role="menu">
@@ -111,9 +96,6 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expense_accounts'|_ }}</h3>
 
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     <canvas id="expense-accounts-chart" style="width:100%;" height="400"></canvas>
@@ -128,9 +110,6 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'savings'|_ }}</h3>
 
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     {% if savings|length == 0 %}
@@ -195,9 +174,6 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3>
 
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
                 </div>
                 <div class="box-body">
                     {% if piggyBankAccounts|length  == 0 %}

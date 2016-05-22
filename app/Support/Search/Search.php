@@ -1,4 +1,12 @@
 <?php
+/**
+ * Search.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Support\Search;
@@ -109,10 +117,10 @@ class Search implements SearchInterface
                     $q->orWhere('transaction_journals.description', 'LIKE', '%' . e($word) . '%');
                 }
             }
-        )->get(TransactionJournal::QUERYFIELDS);
+        )->get(TransactionJournal::queryFields());
 
         // encrypted
-        $all      = Auth::user()->transactionjournals()->expanded()->where('transaction_journals.encrypted', 1)->get(TransactionJournal::QUERYFIELDS);
+        $all      = Auth::user()->transactionjournals()->expanded()->where('transaction_journals.encrypted', 1)->get(TransactionJournal::queryFields());
         $set      = $all->filter(
             function (TransactionJournal $journal) use ($words) {
                 foreach ($words as $word) {

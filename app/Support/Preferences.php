@@ -1,4 +1,12 @@
 <?php
+/**
+ * Preferences.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 declare(strict_types = 1);
 
 namespace FireflyIII\Support;
@@ -27,9 +35,7 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        /** @var Preference $preference */
-        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first();
-        $preference->delete();
+        Preference::where('user_id', Auth::user()->id)->where('name', $name)->delete();
 
         return true;
     }
@@ -111,9 +117,10 @@ class Preferences
         $user = Auth::user();
         if (is_null($user)) {
             // make new preference, return it:
-            $pref = new Preference;
+            $pref       = new Preference;
             $pref->name = $name;
             $pref->data = $value;
+
             return $pref;
         }
 
@@ -135,13 +142,18 @@ class Preferences
 
         if (!is_null($pref)) {
             $pref->data = $value;
-        } else {
-            $pref       = new Preference;
-            $pref->name = $name;
-            $pref->data = $value;
-            $pref->user()->associate($user);
+            $pref->save();
 
+            Cache::forever($fullName, $pref);
+
+            return $pref;
         }
+
+        $pref       = new Preference;
+        $pref->name = $name;
+        $pref->data = $value;
+        $pref->user()->associate($user);
+
         $pref->save();
 
         Cache::forever($fullName, $pref);

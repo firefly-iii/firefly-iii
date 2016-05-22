@@ -1,10 +1,20 @@
-<?php namespace FireflyIII\Http\Controllers;
+<?php
+/**
+ * JsonController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+declare(strict_types = 1);
+namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use Carbon\Carbon;
-use Config;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Report\ReportQueryInterface;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
@@ -36,7 +46,7 @@ class JsonController extends Controller
     public function action()
     {
         $count   = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
-        $keys    = array_keys(Config::get('firefly.rule-actions'));
+        $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
             $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
@@ -61,11 +71,7 @@ class JsonController extends Controller
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
-        $amount        = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $creditCardDue = $repository->getCreditCardBill($start, $end);
-        if ($creditCardDue >= 0) {
-            $amount = bcadd($amount, $creditCardDue);
-        }
+        $amount = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
         $amount = bcmul($amount, '-1');
 
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
@@ -80,30 +86,21 @@ class JsonController extends Controller
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
-        $start         = session('start', Carbon::now()->startOfMonth());
-        $end           = session('end', Carbon::now()->endOfMonth());
-        $amount        = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $creditCardDue = $repository->getCreditCardBill($start, $end);
-
-        if ($creditCardDue < 0) {
-            // expenses are negative (bill not yet paid),
-            $creditCardDue = bcmul($creditCardDue, '-1');
-            $amount        = bcadd($amount, $creditCardDue);
-        }
-
-        $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $start  = session('start', Carbon::now()->startOfMonth());
+        $end    = session('end', Carbon::now()->endOfMonth());
+        $amount = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $data   = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
 
         return Response::json($data);
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
-     *
      * @param ARI                  $accountRepository
+     * @param AccountCrudInterface $crud
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function boxIn(ReportQueryInterface $reportQuery, ARI $accountRepository)
+    public function boxIn(ARI $accountRepository, AccountCrudInterface $crud)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -116,28 +113,24 @@ class JsonController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
-        $amount   = $reportQuery->income($accounts, $start, $end)->sum('journalAmount');
-
-        $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $amount   = $accountRepository->earnedInPeriod($accounts, $start, $end);
+        $data     = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
 
         return Response::json($data);
     }
 
     /**
-     * @param ReportQueryInterface $reportQuery
-     *
      * @param ARI                  $accountRepository
+     * @param AccountCrudInterface $crud
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function boxOut(ReportQueryInterface $reportQuery, ARI $accountRepository)
+    public function boxOut(ARI $accountRepository, AccountCrudInterface $crud)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
-
-        $accounts = $accountRepository->getAccounts(['Default account', 'Asset account', 'Cash account']);
 
         // works for json too!
         $cache = new CacheProperties;
@@ -148,7 +141,8 @@ class JsonController extends Controller
             return Response::json($cache->get());
         }
 
-        $amount = $reportQuery->expense($accounts, $start, $end)->sum('journalAmount');
+        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $amount   = $accountRepository->spentInPeriod($accounts, $start, $end);
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
         $cache->store($data);
@@ -187,13 +181,13 @@ class JsonController extends Controller
     /**
      * Returns a JSON list of all beneficiaries.
      *
-     * @param ARI $accountRepository
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAccounts(ARI $accountRepository)
+    public function expenseAccounts(AccountCrudInterface $crud)
     {
-        $list   = $accountRepository->getAccounts(['Expense account', 'Beneficiary account']);
+        $list   = $crud->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -204,13 +198,13 @@ class JsonController extends Controller
     }
 
     /**
-     * @param ARI $accountRepository
+     * @param AccountCrudInterface $crud
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function revenueAccounts(ARI $accountRepository)
+    public function revenueAccounts(AccountCrudInterface $crud)
     {
-        $list   = $accountRepository->getAccounts(['Revenue account']);
+        $list   = $crud->getAccountsByType([AccountType::REVENUE]);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -276,9 +270,9 @@ class JsonController extends Controller
     public function transactionJournals(JournalRepositoryInterface $repository, $what)
     {
         $descriptions = [];
-        $dbType       = $repository->getTransactionType($what);
-
-        $journals = $repository->getJournalsOfType($dbType);
+        $type         = config('firefly.transactionTypesByWhat.' . $what);
+        $types        = [$type];
+        $journals     = $repository->getJournals($types, 1, 50);
         foreach ($journals as $j) {
             $descriptions[] = $j->description;
         }
@@ -297,7 +291,7 @@ class JsonController extends Controller
     public function trigger()
     {
         $count    = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
-        $keys     = array_keys(Config::get('firefly.rule-triggers'));
+        $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {
             if ($key != 'user_action') {
