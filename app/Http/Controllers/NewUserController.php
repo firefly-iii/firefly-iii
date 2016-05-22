@@ -70,7 +70,7 @@ class NewUserController extends Controller
         $this->createAssetAccount($request, $crud);
 
         // create savings account
-        if (strlen($request->get('savings_balance') > 0)) {
+        if (strlen($request->get('savings_balance')) > 0) {
             $this->createSavingsAccount($request, $crud);
             $count++;
         }
