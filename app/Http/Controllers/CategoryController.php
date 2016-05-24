@@ -13,7 +13,9 @@ namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
@@ -156,12 +158,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI      $repository
-     * @param Category $category
+     * @param CRI                  $repository
+     * @param AccountCrudInterface $crud
+     * @param Category             $category
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function show(CRI $repository, Category $category)
+    public function show(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
         /** @var Carbon $carbon */
         $range        = Preferences::get('viewRange', '1M')->data;
@@ -205,12 +208,12 @@ class CategoryController extends Controller
 
 
         $categoryCollection = new Collection([$category]);
-        $empty              = new Collection;
+        $accounts           = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $repository->spentInPeriod($categoryCollection, $empty, $end, $currentEnd);
-            $earned     = $repository->earnedInPeriod($categoryCollection, $empty, $end, $currentEnd);
+            $spent      = $repository->spentInPeriod($categoryCollection, $accounts, $end, $currentEnd);
+            $earned     = $repository->earnedInPeriod($categoryCollection, $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
             $entries->push([$dateStr, $dateName, $spent, $earned]);
