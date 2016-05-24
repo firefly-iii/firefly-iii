@@ -270,7 +270,7 @@ class PiggyBankController extends Controller
      */
     public function postRemove(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = round(Input::get('amount'), 2);
+        $amount = strval(round(Input::get('amount'), 2));
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
