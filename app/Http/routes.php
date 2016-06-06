@@ -158,6 +158,21 @@ Route::group(
     Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
     /**
+     * CSV controller
+     */
+    Route::get('/csv', ['uses' => 'CsvController@index', 'as' => 'csv.index']);
+    Route::post('/csv/upload', ['uses' => 'CsvController@upload', 'as' => 'csv.upload']);
+    Route::get('/csv/column_roles', ['uses' => 'CsvController@columnRoles', 'as' => 'csv.column-roles']);
+    Route::post('/csv/initial_parse', ['uses' => 'CsvController@initialParse', 'as' => 'csv.initial_parse']);
+    Route::get('/csv/map', ['uses' => 'CsvController@map', 'as' => 'csv.map']);
+    Route::get('/csv/download-config', ['uses' => 'CsvController@downloadConfig', 'as' => 'csv.download-config']);
+    Route::get('/csv/download', ['uses' => 'CsvController@downloadConfigPage', 'as' => 'csv.download-config-page']);
+    Route::post('/csv/save_mapping', ['uses' => 'CsvController@saveMapping', 'as' => 'csv.save_mapping']);
+    
+    Route::get('/csv/process', ['uses' => 'CsvController@process', 'as' => 'csv.process']);
+
+
+    /**
      * Currency Controller
      */
     Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
@@ -223,8 +238,8 @@ Route::group(
     /**
      * IMPORT CONTROLLER
      */
-    Route::get('/import', ['uses' => 'ImportController@index','as' => 'import.index']);
-    Route::post('/import/upload', ['uses' => 'ImportController@upload','as' => 'import.upload']);
+    Route::get('/import', ['uses' => 'ImportController@index', 'as' => 'import.index']);
+    Route::post('/import/upload', ['uses' => 'ImportController@upload', 'as' => 'import.upload']);
 
     /**
      * Help Controller
