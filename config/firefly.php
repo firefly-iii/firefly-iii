@@ -4,18 +4,25 @@ declare(strict_types = 1);
 
 return [
     'chart'               => 'chartjs',
-    'version'             => '3.9.0',
+    'version'             => '3.9.1',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
     'resend_confirmation' => 3600,
     'confirmation_age'    => 14400, // four hours
 
-    'export_formats'        => [
+    'export_formats' => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
         // mt940 FireflyIII Export Exporter MtExporter
     ],
+    'import_formats' => [
+        'csv' => 'FireflyIII\Import\Importer\CsvImporter',
+        // mt940 FireflyIII Import Importer MtImporter
+    ],
+
+
     'default_export_format' => 'csv',
+    'default_import_format' => 'csv',
     'bill_periods'          => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
 
     'accountRoles' => [
@@ -103,7 +110,7 @@ return [
 
     ],
 
-    'bindables'   => [
+    'bindables' => [
         // models
         'account'           => 'FireflyIII\Models\Account',
         'attachment'        => 'FireflyIII\Models\Attachment',

@@ -111,14 +111,11 @@
 
     <!-- import and export  -->
     <li class="{{ activeRoutePartial('export') }} {{ activeRoutePartial('csv') }} treeview">
+
         <a href="#">
             <i class="fa fa-arrows-alt fa-fw"></i>
             <span>
-                {% if Config.get('firefly.csv_import_enabled') %}
-                    {{ 'import_and_export'|_ }}
-                {% else %}
-                    {{ 'export_data'|_ }}
-                {% endif %}
+                {{ 'import_and_export'|_ }}
             </span>
             <i class="fa fa-angle-left pull-right"></i>
         </a>

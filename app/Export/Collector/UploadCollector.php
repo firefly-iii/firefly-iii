@@ -33,6 +33,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     private $uploadDisk;
 
     /**
+     *
      * AttachmentCollector constructor.
      *
      * @param ExportJob $job
@@ -44,6 +45,8 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         // make storage:
         $this->uploadDisk = Storage::disk('upload');
         $this->exportDisk = Storage::disk('export');
+
+        // todo needs work for new importer (potentially collect other types as well)
         $this->expected   = 'csv-upload-' . Auth::user()->id . '-';
     }
 

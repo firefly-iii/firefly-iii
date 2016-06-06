@@ -32,10 +32,11 @@ class ConnectTransactionToPiggyBank
      */
     public function handle(TransactionStored $event): bool
     {
-        echo '<pre>';
+
         /** @var PiggyBankRepositoryInterface $repository */
         $repository  = app(PiggyBankRepositoryInterface::class);
         $transaction = $event->transaction;
+
         $piggyBank   = $repository->find($transaction['piggy_bank_id']);
 
         // valid piggy:

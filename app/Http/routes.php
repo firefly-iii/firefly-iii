@@ -157,7 +157,6 @@ Route::group(
     Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
     Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
-
     /**
      * CSV controller
      */
@@ -169,8 +168,9 @@ Route::group(
     Route::get('/csv/download-config', ['uses' => 'CsvController@downloadConfig', 'as' => 'csv.download-config']);
     Route::get('/csv/download', ['uses' => 'CsvController@downloadConfigPage', 'as' => 'csv.download-config-page']);
     Route::post('/csv/save_mapping', ['uses' => 'CsvController@saveMapping', 'as' => 'csv.save_mapping']);
-
+    
     Route::get('/csv/process', ['uses' => 'CsvController@process', 'as' => 'csv.process']);
+
 
     /**
      * Currency Controller
@@ -235,6 +235,11 @@ Route::group(
     Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
     Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
 
+    /**
+     * IMPORT CONTROLLER
+     */
+    Route::get('/import', ['uses' => 'ImportController@index', 'as' => 'import.index']);
+    Route::post('/import/upload', ['uses' => 'ImportController@upload', 'as' => 'import.upload']);
 
     /**
      * Help Controller
