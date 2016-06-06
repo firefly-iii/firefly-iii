@@ -34,6 +34,10 @@ class UpdateJournalConnection
     {
         $journal = $event->journal;
 
+        if (!$journal->isTransfer()) {
+            return true;
+        }
+
         // get the event connected to this journal:
         /** @var PiggyBankEvent $event */
         $event = PiggyBankEvent::where('transaction_journal_id', $journal->id)->first();
