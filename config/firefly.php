@@ -5,6 +5,7 @@ declare(strict_types = 1);
 return [
     'chart'               => 'chartjs',
     'version'             => '3.9.0',
+    'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
     'resend_confirmation' => 3600,
