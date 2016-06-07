@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+[3.9.1]
+### Fixed
+- Fixed a bug where removing money from a piggy bank would not work. See issue #265 and #269
+
 [3.9.0]
 ### Added
 - @zjean has added code that allows you to force "https://"-URL's.
