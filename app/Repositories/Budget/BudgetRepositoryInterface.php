@@ -112,6 +112,11 @@ interface BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string;
 
     /**
+     * @return bool
+     */
+    public function cleanupBudgets(): bool;
+
+    /**
      * @param array $data
      *
      * @return Budget

@@ -157,6 +157,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @return bool
+     */
+    public function cleanupBudgets(): bool
+    {
+        // delete limits with amount 0:
+        BudgetLimit::where('amount', 0)->delete();
+
+        return true;
+
+    }
+
+    /**
      * @return Collection
      */
     public function getInactiveBudgets(): Collection
