@@ -223,8 +223,9 @@ Route::group(
     /**
      * IMPORT CONTROLLER
      */
-    Route::get('/import', ['uses' => 'ImportController@index', 'as' => 'import.index']);
-    Route::post('/import/upload', ['uses' => 'ImportController@upload', 'as' => 'import.upload']);
+    Route::get('/import', ['uses' => 'ImportController@index','as' => 'import.index']);
+    Route::post('/import/upload', ['uses' => 'ImportController@upload','as' => 'import.upload']);
+    Route::get('/import/configure/{importJob}', ['uses' => 'ImportController@configure','as' => 'import.configure']);
 
     /**
      * Help Controller
