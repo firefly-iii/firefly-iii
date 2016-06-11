@@ -6,14 +6,14 @@ $(function () {
     $('.currency-option').click(currencySelect);
 
     var ranges = {};
-    // range for the current month:
-    ranges[dateRangeConfig.currentMonth] = [moment().startOf('month'), moment().endOf('month')];
+    // range for the current period:
+    ranges[dateRangeConfig.currentPeriod] = [moment().startOf('month'), moment().endOf('month')];
 
-    // range for the previous month:
-    ranges[dateRangeConfig.previousMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+    // range for the previous period:
+    ranges[dateRangeConfig.previousPeriod] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
-    // range for the next month:
-    ranges[dateRangeConfig.nextMonth] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
+    // range for the next period:
+    ranges[dateRangeConfig.nextPeriod] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
 
     // range for everything:
     ranges[dateRangeConfig.everything] = [dateRangeConfig.firstDate, moment()];
@@ -48,10 +48,10 @@ $(function () {
                 label: label,
                 _token: token
             }).done(function () {
-                console.log('Succesfully sent new date range.');
+                console.log('Succesfully sent new date range [' + start.format('YYYY-MM-DD') + '-' + end.format('YYYY-MM-DD') + '].');
                 window.location.reload(true);
             }).fail(function () {
-                console.log('Could not send new date range.');
+                console.log('Could not send new date range [' + start.format('YYYY-MM-DD') + '-' + end.format('YYYY-MM-DD') + ']');
                 alert('Could not change date range');
 
             });
