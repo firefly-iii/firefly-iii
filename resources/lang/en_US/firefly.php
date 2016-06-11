@@ -327,11 +327,11 @@ return [
     'title_transfers'                           => 'Transfers',
 
     // import routine
-    'import_data' => 'Import data',
-    'import' => 'Import',
-    'import_intro_text' => 'Some intro here',
-    'import_file_help' => 'Select your file',
-    
+    'import_data'                               => 'Import data',
+    'import'                                    => 'Import',
+    'import_intro_text'                         => 'Some intro here',
+    'import_file_help'                          => 'Select your file',
+
 
     // create new stuff:
     'create_new_withdrawal'                     => 'Create new withdrawal',
@@ -727,29 +727,39 @@ return [
     'split_table_intro_withdrawal'              => 'Split your withdrawal in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
     'store_splitted_withdrawal'                 => 'Store splitted withdrawal',
     'update_splitted_withdrawal'                => 'Update splitted withdrawal',
+    'split_title_deposit'                       => 'Split your new deposit',
+    'split_intro_one_deposit'                   => 'Firefly supports the "splitting" of a deposit.',
+    'split_intro_two_deposit'                   => 'It means that the amount of money you\'ve earned is divided between several source revenue accounts or categories.',
+    'split_intro_three_deposit'                 => 'For example: you could split your :total salary so you get :split_one as your base salary and :split_two as a reimbursment for expenses made.',
+    'split_table_intro_deposit'                 => 'Split your deposit in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_deposit'                    => 'Store splitted deposit',
+    'split_title_transfer'                      => 'Split your new transfer',
+    'split_intro_one_transfer'                  => 'Firefly supports the "splitting" of a transfer.',
+    'split_intro_two_transfer'                  => 'It means that the amount of money you\'re moving is divided between several categories or piggy banks.',
+    'split_intro_three_transfer'                => 'For example: you could split your :total move so you get :split_one in one piggy bank and :split_two in another.',
+    'split_table_intro_transfer'                => 'Split your transfer in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
+    'store_splitted_transfer'                   => 'Store splitted transfer',
+    'add_another_split'                         => 'Add another split',
+    'split-transactions'                        => 'Split transactions',
+    'split-new-transaction'                     => 'Split a new transaction',
+    'do_split'                                  => 'Do a split',
+    'split_this_withdrawal'                     => 'Split this withdrawal',
+    'split_this_deposit'                        => 'Split this deposit',
+    'split_this_transfer'                       => 'Split this transfer',
 
-    'split_title_deposit'       => 'Split your new deposit',
-    'split_intro_one_deposit'   => 'Firefly supports the "splitting" of a deposit.',
-    'split_intro_two_deposit'   => 'It means that the amount of money you\'ve earned is divided between several source revenue accounts or categories.',
-    'split_intro_three_deposit' => 'For example: you could split your :total salary so you get :split_one as your base salary and :split_two as a reimbursment for expenses made.',
-    'split_table_intro_deposit' => 'Split your deposit in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
-    'store_splitted_deposit'    => 'Store splitted deposit',
-
-    'split_title_transfer'       => 'Split your new transfer',
-    'split_intro_one_transfer'   => 'Firefly supports the "splitting" of a transfer.',
-    'split_intro_two_transfer'   => 'It means that the amount of money you\'re moving is divided between several categories or piggy banks.',
-    'split_intro_three_transfer' => 'For example: you could split your :total move so you get :split_one in one piggy bank and :split_two in another.',
-    'split_table_intro_transfer' => 'Split your transfer in as many things as you want. By default the transaction will not split, there is just one entry. Add as many splits as you want to, below. Remember that you should not deviate from your total amount. If you do, Firefly will warn you but not correct you.',
-    'store_splitted_transfer'    => 'Store splitted transfer',
-
-    'add_another_split'     => 'Add another split',
-    'split-transactions'    => 'Split transactions',
-    'split-new-transaction' => 'Split a new transaction',
-
-    'do_split'              => 'Do a split',
-    'split_this_withdrawal' => 'Split this withdrawal',
-    'split_this_deposit'    => 'Split this deposit',
-    'split_this_transfer'   => 'Split this transfer',
+    // import
+    'import_file_type_csv'                      => 'CSV (comma separated values)',
+    'import_file_type_help'                     => 'Select the type of file you will upload',
+    'import_start'                              => 'Start the import',
+    'import_csv_configure_title'                => 'Configure your import',
+    'import_csv_configure_intro'                => 'There are some options for your CSV import.',
+    'import_csv_configure_form'                 => 'Form',
+    'csv_header_help'                           => 'Check this if the first row of your CSV file are the column titles',
+    'csv_date_help'                             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'csv_delimiter_help'                        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'csv_csv_config_file_help'                  => 'Select your CSV import configuration here. If you do not know what this is, ignore it. It will be explained later.',
+    'csv_import_account_help'                   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'csv_upload_not_writeable'                  => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
 
 
 ];

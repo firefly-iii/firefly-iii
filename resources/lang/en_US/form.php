@@ -130,4 +130,17 @@ return [
     'budget_keep_transactions'       => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',
     'category_keep_transactions'     => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
     'tag_keep_transactions'          => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
+
+    // import
+    'import_file'                    => 'Import file',
+    'import_file_type'               => 'Import file type',
+    'csv_comma'                      => 'A comma (,)',
+    'csv_semicolon'                  => 'A semicolon (;)',
+    'csv_tab'                        => 'A tab (invisible)',
+    'csv_delimiter'                  => 'CSV field delimiter',
+    'csv_import_account'             => 'Default import account',
+    'csv_config'                     => 'CSV import configuration',
+
+
+
 ];

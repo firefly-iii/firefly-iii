@@ -14,7 +14,7 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'import_csv_configure_intro' }}
+                        {{ 'import_csv_configure_intro'|_ }}
                     </p>
                 </div>
             </div>
@@ -45,14 +45,14 @@
 
 
 
-                        {% if not uploadPossible %}
+                        {% if not data.is_upload_possible %}
                             <div class="form-group" id="csv_holder">
                                 <div class="col-sm-4">
                                     &nbsp;
                                 </div>
 
                                 <div class="col-sm-8">
-                                    <pre>{{ path }}</pre>
+                                    <pre>{{ data.upload_path }}</pre>
                                     <p class="text-danger">
                                         {{ 'csv_upload_not_writeable'|_ }}
                                     </p>
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-
+        {% if data.is_upload_possible %}
         <div class="row">
             <div class="col-lg-12">
                 <div class="box">
@@ -76,6 +76,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </form>
 
 

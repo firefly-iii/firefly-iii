@@ -51,20 +51,14 @@ class CsvImporter implements ImporterInterface
         ];
 
         $data = [
-            'accounts'   => ExpandedForm::makeSelectList($accounts),
-            'specifix'   => [],
-            'delimiters' => $delimiters,
+            'accounts'           => ExpandedForm::makeSelectList($accounts),
+            'specifix'           => [],
+            'delimiters'         => $delimiters,
+            'upload_path'        => storage_path('upload'),
+            'is_upload_possible' => is_writable(storage_path('upload')),
         ];
 
         return $data;
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job)
-    {
-        $this->job = $job;
     }
 
     /**
@@ -77,5 +71,13 @@ class CsvImporter implements ImporterInterface
     {
         return 'do not work';
         exit;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
     }
 }
