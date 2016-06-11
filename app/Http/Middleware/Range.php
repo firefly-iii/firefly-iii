@@ -84,16 +84,22 @@ class Range
                 }
                 Session::put('first', $first);
             }
-            $current = Carbon::now()->formatLocalized('%B %Y');
-            $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
-            $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');
-            View::share('currentMonthName', $current);
-            View::share('previousMonthName', $prev);
-            View::share('nextMonthName', $next);
+
         }
+        $this->datePicker();
 
         return $theNext($request);
 
+    }
+
+    private function datePicker()
+    {
+        $current = Carbon::now()->formatLocalized('%B %Y');
+        $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
+        $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');
+        View::share('currentMonthName', $current);
+        View::share('previousMonthName', $prev);
+        View::share('nextMonthName', $next);
     }
 
 }
