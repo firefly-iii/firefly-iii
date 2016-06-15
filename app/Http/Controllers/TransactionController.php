@@ -223,7 +223,7 @@ class TransactionController extends Controller
         if (count($ids) > 0) {
             $order = 0;
             foreach ($ids as $id) {
-                $journal = $repository->find($id);
+                $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {
                     $journal->order = $order;
                     $order++;
