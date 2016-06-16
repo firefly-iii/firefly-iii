@@ -18,6 +18,7 @@ use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -38,6 +39,73 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function __construct(BudgetRepositoryInterface $repository)
     {
         $this->repository = $repository;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function budgetYearOverview(Carbon $start, Carbon $end, Collection $accounts): Collection
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget-year');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        
+        $headers = [];
+        $current = clone $start;
+        $return  = new Collection;
+        $set     = $this->repository->getBudgets();
+        $budgets = [];
+        $spent   = [];
+        while ($current < $end) {
+            $short           = $current->format('m-Y');
+            $headers[$short] = $current->formatLocalized((string)trans('config.month'));
+            $current->addMonth();
+        }
+
+
+        /** @var Budget $budget */
+        foreach ($set as $budget) {
+            $id           = $budget->id;
+            $budgets[$id] = $budget->name;
+            $spent[$id]   = [];
+            $current      = clone $start;
+            $sum          = '0';
+
+
+            while ($current < $end) {
+                $currentEnd = clone $current;
+                $currentEnd->endOfMonth();
+                $format              = $current->format('m-Y');
+                $budgetSpent         = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $current, $currentEnd);
+                $spent[$id][$format] = $budgetSpent;
+                $sum                 = bcadd($sum, $budgetSpent);
+                $current->addMonth();
+            }
+
+            if (bccomp('0', $sum) === 0) {
+                // not spent anything.
+                unset($spent[$id]);
+                unset($budgets[$id]);
+            }
+        }
+
+        $return->put('headers', $headers);
+        $return->put('budgets', $budgets);
+        $return->put('spent', $spent);
+
+        $cache->store($return);
+
+        return $return;
     }
 
     /**

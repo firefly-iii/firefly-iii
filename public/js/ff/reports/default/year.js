@@ -19,16 +19,19 @@ function drawChart() {
     columnChart('chart/report/in-out/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-chart');
     columnChart('chart/report/in-out-sum/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-sum-chart');
 
-    // in a loop
-    $.each($('.budget_year_chart'), function (i, v) {
-        var holder = $(v);
-        var id = holder.attr('id');
-        var budgetId = holder.data('budget');
-        columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, id);
-
-    });
+    $('.budget-chart-activate').on('click', clickBudgetChart);
 }
 
+function clickBudgetChart(e) {
+    "use strict";
+    var link = $(e.target);
+    var budgetId = link.data('budget');
+    console.log('Budget id is ' + budgetId);
+    $('#budget_chart').empty();
+    columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budget_chart');
+
+    return false;
+}
 
 function showIncomes() {
     "use strict";
