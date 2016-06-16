@@ -52,9 +52,9 @@ class AccountCrud implements AccountCrudInterface
      *
      * @return bool
      */
-    public function destroy(Account $account, Account $moveTo = null): bool
+    public function destroy(Account $account, Account $moveTo): bool
     {
-        if (!is_null($moveTo)) {
+        if (!is_null($moveTo->id)) {
             // update all transactions:
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
@@ -73,7 +73,7 @@ class AccountCrud implements AccountCrudInterface
     {
         $account = $this->user->accounts()->find($accountId);
         if (is_null($account)) {
-            $account = new Account;
+            return new Account;
         }
 
         return $account;
