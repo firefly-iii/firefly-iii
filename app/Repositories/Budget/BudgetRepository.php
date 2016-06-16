@@ -23,6 +23,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BudgetRepository
@@ -42,6 +43,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return bool
+     */
+    public function cleanupBudgets(): bool
+    {
+        // delete limits with amount 0:
+        BudgetLimit::where('amount', 0)->delete();
+
+        return true;
+
     }
 
     /**
@@ -154,18 +167,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         );
 
         return $set;
-    }
-
-    /**
-     * @return bool
-     */
-    public function cleanupBudgets(): bool
-    {
-        // delete limits with amount 0:
-        BudgetLimit::where('amount', 0)->delete();
-
-        return true;
-
     }
 
     /**

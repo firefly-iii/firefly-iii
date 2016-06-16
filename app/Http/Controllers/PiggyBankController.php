@@ -49,6 +49,26 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Add money to piggy bank (for mobile devices)
+     *
+     * @param ARI       $repository
+     * @param PiggyBank $piggyBank
+     *
+     * @return $this
+     */
+    public function addMobile(ARI $repository, PiggyBank $piggyBank)
+    {
+        /** @var Carbon $date */
+        $date          = session('end', Carbon::now()->endOfMonth());
+        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
+        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
+        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
+        $maxAmount     = min($leftOnAccount, $leftToSave);
+
+        return view('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount'));
+    }
+
+    /**
      * Add money to piggy bank
      *
      * @param ARI       $repository

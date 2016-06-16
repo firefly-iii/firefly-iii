@@ -251,6 +251,7 @@ class AccountController extends Controller
             $end = Navigation::subtractPeriod($end, $range, 1);
 
         }
+        $cache->store($entries);
 
         return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
     }

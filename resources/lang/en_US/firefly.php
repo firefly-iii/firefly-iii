@@ -739,6 +739,7 @@ return [
     'balanceFor'                                => 'Balance for :name',
 
     // piggy banks:
+    'add_money_to_piggy'                        => 'Add money to piggy bank ":name"',
     'piggy_bank'                                => 'Piggy bank',
     'new_piggy_bank'                            => 'Create new piggy bank',
     'store_piggy_bank'                          => 'Store new piggy bank',

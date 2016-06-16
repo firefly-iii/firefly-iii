@@ -2,6 +2,12 @@
     <tbody>
     {% for piggyBank in piggyBanks %}
         <tr data-id="{{ piggyBank.id }}">
+            <td class="visible-xs visible-sm hidden-md hidden-lg">
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('piggy-banks.remove-money-mobile', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-minus"></i></a>
+                    <a href="{{ route('piggy-banks.add-money-mobile', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
+                </div>
+            </td>
             <td style="width:60px;" class="hidden-sm hidden-xs">
                 <i class="fa fa-fw fa-bars handle"></i>
                 <i class="loadSpin"></i>
