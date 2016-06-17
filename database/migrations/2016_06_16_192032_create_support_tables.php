@@ -21,9 +21,9 @@ class CreateSupportTables extends Migration
         Schema::drop('transaction_types');
         Schema::drop('jobs');
         Schema::drop('password_resets');
+        Schema::drop('permission_role');
         Schema::drop('permissions');
         Schema::drop('roles');
-        Schema::drop('permission_role');
         Schema::drop('sessions');
 
     }
@@ -38,6 +38,54 @@ class CreateSupportTables extends Migration
         /*
          * account_types
          */
+        $this->createAccountTypeTable();
+        /*
+         * transaction_currencies
+         */
+        $this->createCurrencyTable();
+
+        /*
+         * transaction_types
+         */
+        $this->createTransactionTypeTable();
+
+        /*
+         * jobs
+         */
+        $this->createJobsTable();
+
+        /*
+         * password_resets
+         */
+        $this->createPasswordTable();
+
+        /*
+         * permissions
+         */
+        $this->createPermissionsTable();
+
+        /*
+         * roles
+         */
+        $this->createRolesTable();
+
+        /*
+         * permission_role
+         */
+        $this->createPermissionRoleTable();
+
+        /*
+         * sessions
+         */
+        $this->createSessionsTable();
+
+    }
+
+    /**
+     *
+     */
+    private function createAccountTypeTable()
+    {
         if (!Schema::hasTable('account_types')) {
             Schema::create(
                 'account_types', function (Blueprint $table) {
@@ -50,9 +98,13 @@ class CreateSupportTables extends Migration
             }
             );
         }
-        /*
-         * transaction_currencies
-         */
+    }
+
+    /**
+     *
+     */
+    private function createCurrencyTable()
+    {
         if (!Schema::hasTable('transaction_currencies')) {
             Schema::create(
                 'transaction_currencies', function (Blueprint $table) {
@@ -66,29 +118,16 @@ class CreateSupportTables extends Migration
                 // code must be unique.
                 $table->unique(['code']);
 
-            });
+            }
+            );
         }
+    }
 
-        /*
-         * transaction_types
-         */
-        if (!Schema::hasTable('transaction_types')) {
-            Schema::create(
-                'transaction_types', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->string('type', 50);
-
-                // type must be unique.
-                $table->unique(['type']);
-
-            });
-        }
-
-        /*
-         * jobs
-         */
+    /**
+     *
+     */
+    private function createJobsTable()
+    {
         if (!Schema::hasTable('jobs')) {
             Schema::create(
                 'jobs', function (Blueprint $table) {
@@ -104,12 +143,16 @@ class CreateSupportTables extends Migration
                 $table->unsignedInteger('created_at');
                 $table->index(['queue', 'reserved', 'reserved_at']);
 
-            });
+            }
+            );
         }
+    }
 
-        /*
-         * password_resets
-         */
+    /**
+     *
+     */
+    private function createPasswordTable()
+    {
         if (!Schema::hasTable('password_resets')) {
             Schema::create(
                 'password_resets', function (Blueprint $table) {
@@ -118,12 +161,36 @@ class CreateSupportTables extends Migration
                 $table->string('token')->index();
                 $table->timestamp('created_at');
 
-            });
+            }
+            );
         }
+    }
 
-        /*
-         * permissions
-         */
+    /**
+     *
+     */
+    private function createPermissionRoleTable()
+    {
+        if (!Schema::hasTable('permission_role')) {
+            Schema::create(
+                'permission_role', function (Blueprint $table) {
+                $table->integer('permission_id')->unsigned();
+                $table->integer('role_id')->unsigned();
+                
+                $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
+                $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+
+                $table->primary(['permission_id', 'role_id']);
+            }
+            );
+        }
+    }
+
+    /**
+     *
+     */
+    private function createPermissionsTable()
+    {
         if (!Schema::hasTable('permissions')) {
             Schema::create(
                 'permissions', function (Blueprint $table) {
@@ -132,12 +199,16 @@ class CreateSupportTables extends Migration
                 $table->string('name')->unique();
                 $table->string('display_name')->nullable();
                 $table->string('description')->nullable();
-            });
+            }
+            );
         }
+    }
 
-        /*
-         * roles
-         */
+    /**
+     *
+     */
+    private function createRolesTable()
+    {
         if (!Schema::hasTable('roles')) {
             Schema::create(
                 'roles', function (Blueprint $table) {
@@ -146,27 +217,17 @@ class CreateSupportTables extends Migration
                 $table->string('name')->unique();
                 $table->string('display_name')->nullable();
                 $table->string('description')->nullable();
-            });
+            }
+            );
         }
+    }
 
-        /*
-         * permission_role
-         */
-        if (!Schema::hasTable('permission_role')) {
-            Schema::create(
-                'permission_role', function (Blueprint $table) {
-                $table->integer('permission_id')->unsigned();
-                $table->integer('role_id')->unsigned();
-                $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
-                $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+    /**
+     *
+     */
+    private function createSessionsTable()
+    {
 
-                $table->primary(['permission_id', 'role_id']);
-            });
-        }
-
-        /*
-         * sessions
-         */
         if (!Schema::hasTable('sessions')) {
             Schema::create(
                 'sessions', function (Blueprint $table) {
@@ -176,8 +237,29 @@ class CreateSupportTables extends Migration
                 $table->text('user_agent')->nullable();
                 $table->text('payload');
                 $table->integer('last_activity');
-            });
+            }
+            );
         }
+    }
 
+    /**
+     *
+     */
+    private function createTransactionTypeTable()
+    {
+        if (!Schema::hasTable('transaction_types')) {
+            Schema::create(
+                'transaction_types', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->softDeletes();
+                $table->string('type', 50);
+
+                // type must be unique.
+                $table->unique(['type']);
+
+            }
+            );
+        }
     }
 }
