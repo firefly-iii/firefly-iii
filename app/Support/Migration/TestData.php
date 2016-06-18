@@ -646,8 +646,6 @@ class TestData
                     'name'          => Crypt::encrypt($piggyBank['name']),
                     'targetamount'  => $piggyBank['targetamount'],
                     'startdate'     => $piggyBank['startdate'],
-                    'reminder_skip' => 0,
-                    'remind_me'     => 0,
                     'order'         => $piggyBank['order'],
                     'encrypted'     => 1,
                 ]

@@ -355,8 +355,6 @@ class PiggyBankController extends Controller
             'startdate'     => new Carbon,
             'account_id'    => intval($request->get('account_id')),
             'targetamount'  => round($request->get('targetamount'), 2),
-            'remind_me'     => false,
-            'reminder_skip' => 0,
             'order'         => $repository->getMaxOrder() + 1,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
@@ -391,8 +389,6 @@ class PiggyBankController extends Controller
             'startdate'     => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
             'account_id'    => intval($request->get('account_id')),
             'targetamount'  => round($request->get('targetamount'), 2),
-            'remind_me'     => false,
-            'reminder_skip' => 0,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
