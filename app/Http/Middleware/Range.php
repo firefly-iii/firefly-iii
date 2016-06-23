@@ -98,9 +98,9 @@ class Range
         $start              = Session::get('start');
         $end                = Session::get('end');
         $prevStart          = Navigation::subtractPeriod($start, $viewRange);// subtract for previous period
-        $prevEnd            = Navigation::subtractPeriod($end, $viewRange);
-        $nextStart          = Navigation::addPeriod($start, $viewRange, 0);// add for previous period
-        $nextEnd            = Navigation::addPeriod($end, $viewRange, 0);
+        $prevEnd            = Navigation::endOfPeriod($prevStart, $viewRange);
+        $nextStart          = Navigation::addPeriod($start, $viewRange, 0); // add for previous period
+        $nextEnd            = Navigation::endOfPeriod($nextStart, $viewRange);
         $ranges             = [];
         $ranges['current']  = [$start->format('Y-m-d'), $end->format('Y-m-d')];
         $ranges['previous'] = [$prevStart->format('Y-m-d'), $prevEnd->format('Y-m-d')];
