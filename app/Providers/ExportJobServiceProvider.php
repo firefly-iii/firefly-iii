@@ -31,6 +31,27 @@ class ExportJobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->exportJob();
+        $this->importJob();
+
+    }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     *
+     */
+    private function exportJob()
+    {
+
         $this->app->bind(
             'FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface',
             function (Application $app, array $arguments) {
@@ -46,13 +67,20 @@ class ExportJobServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register()
+    private function importJob()
     {
-        //
+        $this->app->bind(
+            'FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\ImportJob\ImportJobRepository', [$app->auth->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Repositories\ImportJob\ImportJobRepository', $arguments);
+            }
+        );
     }
 }

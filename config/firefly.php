@@ -126,6 +126,7 @@ return [
         'rule'              => 'FireflyIII\Models\Rule',
         'ruleGroup'         => 'FireflyIII\Models\RuleGroup',
         'jobKey'            => 'FireflyIII\Models\ExportJob',
+        'importJob'         => 'FireflyIII\Models\ImportJob',
         // lists
         'accountList'       => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
