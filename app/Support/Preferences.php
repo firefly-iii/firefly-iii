@@ -69,7 +69,7 @@ class Preferences
             return Cache::get($fullName);
         }
 
-        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
+        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
 
         if ($preference) {
             Cache::forever($fullName, $preference);
@@ -138,7 +138,7 @@ class Preferences
     {
         $fullName = 'preference' . $user->id . $name;
         Cache::forget($fullName);
-        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
+        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
 
         if (!is_null($pref)) {
             $pref->data = $value;

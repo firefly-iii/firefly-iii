@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                $name
  * @property string                $name_encrypted
  * @property string                $data
- * @property string                $data_encrypted
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
@@ -41,7 +40,6 @@ class Preference extends Model
 
     protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['user_id', 'data', 'name'];
-    protected $hidden   = ['data_encrypted', 'name_encrypted'];
 
     /**
      * @param $value
@@ -50,10 +48,7 @@ class Preference extends Model
      */
     public function getDataAttribute($value)
     {
-        if (is_null($this->data_encrypted)) {
-            return json_decode($value);
-        }
-        $data = Crypt::decrypt($this->data_encrypted);
+        $data = Crypt::decrypt($value);
 
         return json_decode($data);
     }
@@ -63,8 +58,7 @@ class Preference extends Model
      */
     public function setDataAttribute($value)
     {
-        $this->attributes['data']           = '';
-        $this->attributes['data_encrypted'] = Crypt::encrypt(json_encode($value));
+        $this->attributes['data'] = Crypt::encrypt(json_encode($value));
     }
 
     /**
