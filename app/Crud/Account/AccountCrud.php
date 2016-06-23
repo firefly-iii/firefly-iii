@@ -58,8 +58,11 @@ class AccountCrud implements AccountCrudInterface
             // update all transactions:
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
+        if (!is_null($account)) {
+            Log::debug('Now trigger account delete #' . $account->id);
+            $account->delete();
+        }
 
-        $account->delete();
 
         return true;
     }

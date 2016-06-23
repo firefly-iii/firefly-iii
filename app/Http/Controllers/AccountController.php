@@ -103,7 +103,7 @@ class AccountController extends Controller
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
         $moveTo   = $crud->find(intval(Input::get('move_account_before_delete')));
-
+        
         $crud->destroy($account, $moveTo);
 
         Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));

@@ -440,11 +440,11 @@ class CreateMainTables extends Migration
 
                 $table->string('tag', 1024);
                 $table->string('tagMode', 1024);
-                $table->date('date');
-                $table->text('description');
-                $table->decimal('latitude', 18, 12);
-                $table->decimal('longitude', 18, 12);
-                $table->boolean('zoomLevel');
+                $table->date('date')->nullable();
+                $table->text('description')->nullable();
+                $table->decimal('latitude', 18, 12)->nullable();
+                $table->decimal('longitude', 18, 12)->nullable();
+                $table->boolean('zoomLevel')->nullable();
 
                 // link user id to users table
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

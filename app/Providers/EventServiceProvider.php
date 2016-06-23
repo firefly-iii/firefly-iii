@@ -15,8 +15,10 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Log;
 
 /**
  * Class EventServiceProvider
@@ -107,11 +109,27 @@ class EventServiceProvider extends ServiceProvider
     {
         Account::deleted(
             function (Account $account) {
-
+                Log::debug('Now trigger account delete response #' . $account->id);
                 /** @var Transaction $transaction */
                 foreach ($account->transactions()->get() as $transaction) {
+                    Log::debug('Now at transaction #' . $transaction->id);
                     $journal = $transaction->transactionJournal()->first();
-                    $journal->delete();
+                    if (!is_null($journal)) {
+                        Log::debug('Call for deletion of journal #' . $journal->id);
+                        $journal->delete();
+                    }
+                }
+            }
+        );
+
+        TransactionJournal::deleted(
+            function (TransactionJournal $journal) {
+                Log::debug('Now triggered journal delete response #' . $journal->id);
+
+                /** @var Transaction $transaction */
+                foreach ($journal->transactions()->get() as $transaction) {
+                    Log::debug('Will now delete transaction #' . $transaction->id);
+                    $transaction->delete();
                 }
             }
         );

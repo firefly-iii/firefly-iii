@@ -96,11 +96,6 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function delete(TransactionJournal $journal): bool
     {
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            $transaction->delete();
-        }
-
         $journal->delete();
 
         return true;
