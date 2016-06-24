@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <form class="form-horizontal" action="#" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal" action="{{ route('import.process_configuration', job.key) }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
         <div class="row">
@@ -41,9 +41,21 @@
 
                         {{ ExpandedForm.select('csv_import_account', data.accounts, 0, {helpText: 'csv_import_account_help'|_} ) }}
 
-                        {{ ExpandedForm.multiCheckbox('specifix', data.specifix) }}
+                        {% for type, specific in data.specifics %}
+                            <div class="form-group">
+                                <label for="{{ type }}_label" class="col-sm-4 control-label">
+                                    {{ specific.name }}
+                                </label>
 
-
+                                <div class="col-sm-8">
+                                    <div class="radio"><label>
+                                            {{ Form.checkbox('specifics['~type~']', '1', Input.old('specifics')[type] == '1', {'id': type ~ '_label'}) }}
+                                            {{ specific.description }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
 
                         {% if not data.is_upload_possible %}
                             <div class="form-group" id="csv_holder">
@@ -65,17 +77,17 @@
             </div>
         </div>
         {% if data.is_upload_possible %}
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="box">
-                    <div class="box-body">
-                        <button type="submit" class="pull-right btn btn-success">
-                            {{ 'csv_upload_button'|_ }}
-                        </button>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <button type="submit" class="pull-right btn btn-success">
+                                {{ 'csv_upload_button'|_ }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         {% endif %}
     </form>
 

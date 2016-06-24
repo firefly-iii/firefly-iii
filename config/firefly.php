@@ -11,11 +11,15 @@ return [
     'resend_confirmation' => 3600,
     'confirmation_age'    => 14400, // four hours
 
-    'export_formats' => [
+    'export_formats'       => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
         // mt940 FireflyIII Export Exporter MtExporter
     ],
-    'import_formats' => [
+    'csv_import_specifics' => [
+        'RabobankDescription' => 'FireflyIII\Import\Specifics\RabobankDescription',
+        'AbnAmroDescription'  => 'FireflyIII\Import\Specifics\AbnAmroDescription',
+    ],
+    'import_formats'       => [
         'csv' => 'FireflyIII\Import\Importer\CsvImporter',
         // mt940 FireflyIII Import Importer MtImporter
     ],

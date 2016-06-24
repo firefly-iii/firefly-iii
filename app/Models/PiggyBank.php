@@ -51,6 +51,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
  * @mixin \Eloquent
+ * @property boolean $active
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
  */
 class PiggyBank extends Model
 {

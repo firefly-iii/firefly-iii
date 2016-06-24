@@ -15,17 +15,18 @@ use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 /**
- * Class ImportJob
+ * FireflyIII\Models\ImportJob
  *
- * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $key
- * @property string $file_type
- * @property string $status
+ * @property integer               $id
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
+ * @property integer               $user_id
+ * @property string                $key
+ * @property string                $file_type
+ * @property string                $status
+ * @property string                $configuration
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
@@ -34,6 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereKey($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereFileType($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
  * @mixin \Eloquent
  */
 class ImportJob extends Model
@@ -71,5 +73,28 @@ class ImportJob extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
+    }
+
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function getConfigurationAttribute($value)
+    {
+        if (strlen($value) == 0) {
+            return [];
+        }
+        
+        return json_decode($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setConfigurationAttribute($value)
+    {
+        $this->attributes['configuration'] = json_encode($value);
     }
 }

@@ -37,6 +37,13 @@ interface ImporterInterface
     public function getConfigurationData(): array;
 
     /**
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function saveImportConfiguration(array $data): bool;
+
+    /**
      * Returns a Map thing used to allow the user to
      * define roles for each entry.
      *

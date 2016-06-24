@@ -13,13 +13,13 @@ class CreateMainTables extends Migration
      */
     public function down()
     {
-        //
         Schema::drop('account_meta');
         Schema::drop('piggy_bank_repetitions');
         Schema::drop('attachments');
         Schema::drop('limit_repetitions');
         Schema::drop('budget_limits');
         Schema::drop('export_jobs');
+        Schema::drop('import_jobs');
         Schema::drop('preferences');
         Schema::drop('role_user');
         Schema::drop('rule_actions');
@@ -109,6 +109,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createAttachmentsTable()
     {
 
@@ -139,6 +142,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createBillsTable()
     {
         if (!Schema::hasTable('bills')) {
@@ -167,6 +173,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createBudgetTables()
     {
 
@@ -224,6 +233,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createCategoriesTable()
     {
         if (!Schema::hasTable('categories')) {
@@ -244,6 +256,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createExportJobsTable()
     {
         if (!Schema::hasTable('export_jobs')) {
@@ -254,16 +269,31 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->string('key', 12);
                 $table->string('status', 255);
-
-                // link user id to users table
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
             );
         }
 
+        if (!Schema::hasTable('import_jobs')) {
+            Schema::create(
+                'import_jobs', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->integer('user_id')->unsigned();
+                $table->string('key', 12)->unique();
+                $table->string('file_type', 12);
+                $table->string('status', 45);
+                $table->text('configuration');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            }
+            );
+        }
 
     }
 
+    /**
+     *
+     */
     private function createPiggyBanksTable()
     {
         if (!Schema::hasTable('piggy_banks')) {
@@ -305,6 +335,9 @@ class CreateMainTables extends Migration
 
     }
 
+    /**
+     *
+     */
     private function createPreferencesTable()
     {
         if (!Schema::hasTable('preferences')) {
@@ -322,6 +355,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createRoleTable()
     {
 
@@ -342,6 +378,9 @@ class CreateMainTables extends Migration
 
     }
 
+    /**
+     *
+     */
     private function createRuleTables()
     {
         if (!Schema::hasTable('rule_groups')) {
@@ -454,6 +493,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     *
+     */
     private function createTransactionTables()
     {
 
@@ -607,6 +649,4 @@ class CreateMainTables extends Migration
             );
         }
     }
-
-
 }
