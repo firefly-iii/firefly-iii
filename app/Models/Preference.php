@@ -12,6 +12,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -48,7 +50,11 @@ class Preference extends Model
      */
     public function getDataAttribute($value)
     {
-        $data = Crypt::decrypt($value);
+        try {
+            $data = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            throw new FireflyException('Could not decrypt preference #' . $this->id . '.');
+        }
 
         return json_decode($data);
     }
