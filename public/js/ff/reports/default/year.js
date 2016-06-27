@@ -1,8 +1,10 @@
 /* globals google,  startDate ,reportURL, endDate , reportType ,accountIds , picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
 
-
+var chartDrawn;
+var budgetChart;
 $(function () {
     "use strict";
+    chartDrawn = false;
     drawChart();
 
     // click open the top X income list:
@@ -26,9 +28,68 @@ function clickBudgetChart(e) {
     "use strict";
     var link = $(e.target);
     var budgetId = link.data('budget');
-    console.log('Budget id is ' + budgetId);
-    $('#budget_chart').empty();
-    columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budget_chart');
+    var URL = 'chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds;
+    var container = 'budget_chart';
+    // if chart drawn is false, draw the first one, then
+    // set to true
+    if (chartDrawn == false) {
+        // do new chart:
+        
+
+        $.getJSON(URL).done(function (data) {
+            console.log('Will draw new columnChart(' + URL + ')');
+
+            var ctx = document.getElementById(container).getContext("2d");
+            var newData = {};
+            newData.datasets = [];
+
+            for (var i = 0; i < data.count; i++) {
+                newData.labels = data.labels;
+                var dataset = data.datasets[i];
+                dataset.backgroundColor = fillColors[i];
+                newData.datasets.push(dataset);
+            }
+            // completely new chart.
+            budgetChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: defaultColumnOptions
+            });
+
+        }).fail(function () {
+            $('#' + container).addClass('general-chart-error');
+        });
+        console.log('URL for column chart : ' + URL);
+        chartDrawn = true;
+    } else {
+        console.log('Will now handle remove data and add new!');
+        $.getJSON(URL).done(function (data) {
+            console.log('Will draw updated columnChart(' + URL + ')');
+            var newData = {};
+            newData.datasets = [];
+
+            for (var i = 0; i < data.count; i++) {
+                newData.labels = data.labels;
+                var dataset = data.datasets[i];
+                dataset.backgroundColor = fillColors[i];
+                newData.datasets.push(dataset);
+            }
+            // update the chart
+            console.log('Now update chart thing.');
+            budgetChart.data.datasets = newData.datasets;
+            budgetChart.update();
+
+        }).fail(function () {
+            $('#' + container).addClass('general-chart-error');
+        });
+
+
+    }
+
+    // if chart drawn is true, add new data to existing chart.
+    // console.log('Budget id is ' + budgetId);
+    // $('#budget_chart').empty();
+    // columnChart('chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'budget_chart');
 
     return false;
 }

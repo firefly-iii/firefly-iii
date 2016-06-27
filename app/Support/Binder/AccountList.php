@@ -42,7 +42,6 @@ class AccountList implements BinderInterface
 
             /** @var \Illuminate\Support\Collection $object */
             $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                             ->where('account_types.editable', 1)
                              ->whereIn('accounts.id', $ids)
                              ->where('user_id', Auth::user()->id)
                              ->get(['accounts.*']);
