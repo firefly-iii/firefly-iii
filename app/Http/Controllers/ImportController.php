@@ -85,7 +85,7 @@ class ImportController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws FireflyException
      */
-    public function process(Request $request, ImportJob $job)
+    public function postConfigure(Request $request, ImportJob $job)
     {
         if (!$this->jobInCorrectStep($job, 'process')) {
             return $this->redirectToCorrectStep($job);
@@ -94,7 +94,8 @@ class ImportController extends Controller
         // actual code
         $importer = $this->makeImporter($job);
         $data     = $request->all();
-        $importer->saveImportConfiguration($data);
+        $files    = $request->files;
+        $importer->saveImportConfiguration($data, $files);
 
         // update job:
         $job->status = 'import_configuration_saved';
@@ -121,11 +122,18 @@ class ImportController extends Controller
         }
         $importer = $this->makeImporter($job);
 
-        // now
+        // now show settings screen to user.
+        if ($importer->requireUserSettings()) {
+            $data = $importer->getDataForSettings();
+            $view = $importer->getViewForSettings();
+
+            return view($view, compact('data', 'job'));
+        }
+
+        // if no more settings, save job and continue to process thing.
         
 
-
-        echo 'now in settings';
+        echo 'now in settings (done)';
         exit;
 
         // actual code

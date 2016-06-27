@@ -13,6 +13,7 @@ namespace FireflyIII\Import\Importer;
 
 use FireflyIII\Import\Role\Map;
 use FireflyIII\Models\ImportJob;
+use Symfony\Component\HttpFoundation\FileBag;
 
 /**
  * Interface ImporterInterface
@@ -37,11 +38,19 @@ interface ImporterInterface
     public function getConfigurationData(): array;
 
     /**
-     * @param array $data
+     * This method returns the data required for the view that will let the user add settings to the import job.
      *
-     * @return bool
+     * @return array
      */
-    public function saveImportConfiguration(array $data): bool;
+    public function getDataForSettings(): array;
+
+    /**
+     * This method returns the name of the view that will be shown to the user to further configure
+     * the import job.
+     *
+     * @return string
+     */
+    public function getViewForSettings(): string;
 
     /**
      * Returns a Map thing used to allow the user to
@@ -50,6 +59,21 @@ interface ImporterInterface
      * @return Map
      */
     public function prepareRoles(): Map;
+
+    /**
+     * This method returns whether or not the user must configure this import
+     * job further.
+     *
+     * @return bool
+     */
+    public function requireUserSettings(): bool;
+
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function saveImportConfiguration(array $data, FileBag $files): bool;
 
     /**
      * @param ImportJob $job

@@ -11,20 +11,14 @@ return [
     'resend_confirmation' => 3600,
     'confirmation_age'    => 14400, // four hours
 
-    'export_formats'       => [
+    'export_formats'        => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
         // mt940 FireflyIII Export Exporter MtExporter
     ],
-    'csv_import_specifics' => [
-        'RabobankDescription' => 'FireflyIII\Import\Specifics\RabobankDescription',
-        'AbnAmroDescription'  => 'FireflyIII\Import\Specifics\AbnAmroDescription',
-    ],
-    'import_formats'       => [
+    'import_formats'        => [
         'csv' => 'FireflyIII\Import\Importer\CsvImporter',
         // mt940 FireflyIII Import Importer MtImporter
     ],
-
-
     'default_export_format' => 'csv',
     'default_import_format' => 'csv',
     'bill_periods'          => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
@@ -142,7 +136,7 @@ return [
         'end_date'          => 'FireflyIII\Support\Binder\Date',
     ],
 
-    'rule-triggers'     => [
+    'rule-triggers'        => [
         'user_action'           => 'FireflyIII\Rules\Triggers\UserAction',
         'from_account_starts'   => 'FireflyIII\Rules\Triggers\FromAccountStarts',
         'from_account_ends'     => 'FireflyIII\Rules\Triggers\FromAccountEnds',
@@ -161,7 +155,7 @@ return [
         'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
         'description_is'        => 'FireflyIII\Rules\Triggers\DescriptionIs',
     ],
-    'rule-actions'      => [
+    'rule-actions'         => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
         'clear_category'      => 'FireflyIII\Rules\Actions\ClearCategory',
         'set_budget'          => 'FireflyIII\Rules\Actions\SetBudget',
@@ -174,7 +168,7 @@ return [
         'prepend_description' => 'FireflyIII\Rules\Actions\PrependDescription',
     ],
     // all rule actions that require text input:
-    'rule-actions-text' => [
+    'rule-actions-text'    => [
         'set_category',
         'set_budget',
         'add_tag',
@@ -183,7 +177,7 @@ return [
         'append_description',
         'prepend_description',
     ],
-    'test-triggers'     => [
+    'test-triggers'        => [
         // The maximum number of transactions shown when testing a list of triggers
         'limit' => 10,
 

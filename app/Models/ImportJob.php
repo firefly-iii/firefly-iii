@@ -12,7 +12,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 use Auth;
+use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -68,15 +70,6 @@ class ImportJob extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('FireflyIII\User');
-    }
-
-
-    /**
      * @param $value
      *
      * @return mixed
@@ -86,8 +79,8 @@ class ImportJob extends Model
         if (strlen($value) == 0) {
             return [];
         }
-        
-        return json_decode($value);
+
+        return json_decode($value, true);
     }
 
     /**
@@ -96,5 +89,26 @@ class ImportJob extends Model
     public function setConfigurationAttribute($value)
     {
         $this->attributes['configuration'] = json_encode($value);
+    }
+
+    /**
+     * @return string
+     */
+    public function uploadFileContents(): string
+    {
+        $fileName         = $this->key . '.upload';
+        $disk             = Storage::disk('upload');
+        $encryptedContent = $disk->get($fileName);
+        $content          = Crypt::decrypt($encryptedContent);
+
+        return $content;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
     }
 }
