@@ -24,6 +24,44 @@
     </div>
     <form action="{{ route('import.postSettings', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="settings" value="map"/>
+
+        {% for field in data %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ field.name }}</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width:50%;">{{ trans('csv.field_value') }}</th>
+                                    <th>{{ trans('csv.field_mapped_to') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for option in field.values %}
+                                    <tr>
+                                        <td>
+                                            <code>{{ option }}</code>
+                                        </td>
+                                        <td>
+                                            {{ Form.select('mapping['~field.index~']['~option~']',
+                                            field.options,
+                                            job.configuration['column-mapping-config'][field.index][option], {class: 'form-control'}) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
 
         {#
 

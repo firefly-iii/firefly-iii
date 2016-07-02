@@ -54,10 +54,16 @@
                                         {% endif %}
 
                                     <td>
-                                        {{ Form.select(('role['~loop.index0~']'), data.available_roles,data.set_roles[index],{class: 'form-control'}) }}
+                                        {{ Form.select(('role['~loop.index0~']'),
+                                        data.available_roles,
+                                            job.configuration['column-roles'][loop.index0],
+                                        {class: 'form-control'}) }}
                                     </td>
                                     <td>
-                                        {{ Form.checkbox(('map['~loop.index0~']'),1,map[index]) }}
+                                        {{ Form.checkbox(('map['~loop.index0~']'),1,
+                                        job.configuration['column-do-mapping'][loop.index0]
+
+                                        ) }}
                                     </td>
 
                                 </tr>

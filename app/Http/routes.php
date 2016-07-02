@@ -229,6 +229,8 @@ Route::group(
     Route::post('/import/configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'import.process_configuration']);
     Route::get('/import/settings/{importJob}', ['uses' => 'ImportController@settings', 'as' => 'import.settings']);
     Route::post('/import/settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'import.postSettings']);
+    Route::get('/import/complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'import.complete']);
+    Route::get('/import/download/{importJob}', ['uses' => 'ImportController@download', 'as' => 'import.download']);
 
 
     /**

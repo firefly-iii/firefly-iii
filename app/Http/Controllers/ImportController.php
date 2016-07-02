@@ -34,6 +34,27 @@ class ImportController extends Controller
     }
 
     /**
+     * This is the last step before the import starts.
+     *
+     * @param ImportJob $job
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
+     */
+    public function complete(ImportJob $job)
+    {
+        Log::debug('Now in complete()', ['job' => $job->key]);
+        if (!$this->jobInCorrectStep($job, 'complete')) {
+            return $this->redirectToCorrectStep($job);
+        }
+        $importer     = $this->makeImporter($job);
+        $subTitle     = trans('firefy.import_complete');
+        $subTitleIcon = 'fa-star';
+
+        return view('import.complete', compact('job', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
      * This is step 3.
      * This is the first step in configuring the job. It can only be executed
      * when the job is set to "import_status_never_started".
@@ -45,7 +66,10 @@ class ImportController extends Controller
      */
     public function configure(ImportJob $job)
     {
+        Log::debug('Now at start of configure()');
         if (!$this->jobInCorrectStep($job, 'configure')) {
+            Log::debug('Job is not in correct state for configure()', ['status' => $job->status]);
+
             return $this->redirectToCorrectStep($job);
         }
 
@@ -62,12 +86,42 @@ class ImportController extends Controller
     }
 
     /**
+     * Generate a JSON file of the job's config and send it to the user.
+     *
+     * @param ImportJob $job
+     *
+     * @return mixed
+     */
+    public function download(ImportJob $job)
+    {
+        Log::debug('Now in download()', ['job' => $job->key]);
+        $config                            = $job->configuration;
+        $config['column-roles-complete']   = false;
+        $config['column-mapping-complete'] = false;
+        $result                            = json_encode($config, JSON_PRETTY_PRINT);
+        $name                              = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
+
+        return response($result, 200)
+            ->header('Content-disposition', 'attachment; filename=' . $name)
+            ->header('Content-Type', 'application/json')
+            ->header('Content-Description', 'File Transfer')
+            ->header('Connection', 'Keep-Alive')
+            ->header('Expires', '0')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'public')
+            ->header('Content-Length', strlen($result));
+
+
+    }
+
+    /**
      * This is step 1. Upload a file.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
+        Log::debug('Now at index');
         $subTitle          = trans('firefly.import_data_index');
         $subTitleIcon      = 'fa-home';
         $importFileTypes   = [];
@@ -91,9 +145,11 @@ class ImportController extends Controller
      */
     public function postConfigure(Request $request, ImportJob $job)
     {
+        Log::debug('Now in postConfigure()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'process')) {
             return $this->redirectToCorrectStep($job);
         }
+        Log::debug('Continue postConfigure()', ['job' => $job->key]);
 
         // actual code
         $importer = $this->makeImporter($job);
@@ -122,6 +178,7 @@ class ImportController extends Controller
      */
     public function postSettings(Request $request, ImportJob $job)
     {
+        Log::debug('Now in postSettings()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'store-settings')) {
             return $this->redirectToCorrectStep($job);
         }
@@ -143,29 +200,32 @@ class ImportController extends Controller
      */
     public function settings(ImportJob $job)
     {
+        Log::debug('Now in settings()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'settings')) {
+            Log::debug('Job should not be in settings()');
+
             return $this->redirectToCorrectStep($job);
         }
+        Log::debug('Continue in settings()');
         $importer     = $this->makeImporter($job);
         $subTitle     = trans('firefy.settings_for_import');
         $subTitleIcon = 'fa-wrench';
 
         // now show settings screen to user.
         if ($importer->requireUserSettings()) {
+            Log::debug('Job requires user config.');
             $data = $importer->getDataForSettings();
             $view = $importer->getViewForSettings();
 
             return view($view, compact('data', 'job', 'subTitle', 'subTitleIcon'));
         }
+        Log::debug('Job does NOT require user config.');
+
+        $job->status = 'settings_complete';
+        $job->save();
 
         // if no more settings, save job and continue to process thing.
-
-
-        echo 'now in settings (done)';
-        exit;
-
-        // actual code
-
+        return redirect(route('import.complete', [$job->key]));
 
         // ask the importer for the requested action.
         // for example pick columns or map data.
@@ -182,6 +242,7 @@ class ImportController extends Controller
      */
     public function upload(ImportUploadRequest $request, ImportJobRepositoryInterface $repository)
     {
+        Log::debug('Now in upload()');
         // create import job:
         $type = $request->get('import_file_type');
         $job  = $repository->create($type);
@@ -232,6 +293,7 @@ class ImportController extends Controller
      */
     private function jobInCorrectStep(ImportJob $job, string $method): bool
     {
+        Log::debug('Now in jobInCorrectStep()', ['job' => $job->key, 'method' => $method]);
         switch ($method) {
             case 'configure':
             case 'process':
@@ -240,6 +302,9 @@ class ImportController extends Controller
             case 'settings':
             case 'store-settings':
                 return $job->status === 'import_configuration_saved';
+                break;
+            case 'complete':
+                return $job->status === 'settings_complete';
                 break;
         }
 
@@ -272,12 +337,22 @@ class ImportController extends Controller
      */
     private function redirectToCorrectStep(ImportJob $job)
     {
+        Log::debug('Now in redirectToCorrectStep()', ['job' => $job->key]);
         switch ($job->status) {
             case 'import_status_never_started':
+                Log::debug('Will redirect to configure()');
+
                 return redirect(route('import.configure', [$job->key]));
                 break;
             case 'import_configuration_saved':
+                Log::debug('Will redirect to settings()');
+
                 return redirect(route('import.settings', [$job->key]));
+                break;
+            case 'settings_complete':
+                Log::debug('Will redirect to complete()');
+
+                return redirect(route('import.complete', [$job->key]));
                 break;
         }
 

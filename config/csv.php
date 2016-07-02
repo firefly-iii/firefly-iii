@@ -15,11 +15,12 @@ return [
     /*
      * Configuration for possible column roles.
      */
-    'import_roles' => [
+    'import_roles'     => [
         '_ignore'           => [
             'mappable'  => false,
-            'converter' => 'Ignore',
             'field'     => 'ignored',
+            'converter' => 'Ignore',
+
         ],
         'bill-id'           => [
             'mappable'  => false,
@@ -29,33 +30,33 @@ return [
         ],
         'bill-name'         => [
             'mappable'  => true,
-            'converter' => 'BillName',
             'field'     => 'bill',
+            'converter' => 'BillName',
             'mapper'    => 'Bills',
         ],
         'currency-id'       => [
             'mappable'  => true,
-            'converter' => 'CurrencyId',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrencies'
+            'converter' => 'CurrencyId',
+            'mapper'    => 'TransactionCurrencies',
         ],
         'currency-name'     => [
             'mappable'  => true,
             'converter' => 'CurrencyName',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrencies'
+            'mapper'    => 'TransactionCurrencies',
         ],
         'currency-code'     => [
             'mappable'  => true,
             'converter' => 'CurrencyCode',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrencies'
+            'mapper'    => 'TransactionCurrencies',
         ],
         'currency-symbol'   => [
             'mappable'  => true,
             'converter' => 'CurrencySymbol',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrencies'
+            'mapper'    => 'TransactionCurrencies',
         ],
         'description'       => [
             'mappable'  => false,
@@ -89,7 +90,7 @@ return [
             'converter' => 'RabobankDebetCredit',
             'field'     => 'amount-modifier',
         ],
-        'ing-debet-credit' => [
+        'ing-debet-credit'  => [
             'mappable'  => false,
             'converter' => 'INGDebetCredit',
             'field'     => 'amount-modifier',
@@ -120,27 +121,28 @@ return [
         ],
         'account-id'        => [
             'mappable'  => true,
-            'mapper'    => 'AssetAccountId',
             'field'     => 'asset-account-id',
-            'converter' => 'AssetAccounts'
+            'converter' => 'AssetAccountId',
+            'mapper'    => 'AssetAccounts',
         ],
         'account-name'      => [
             'mappable'  => true,
-            'mapper'    => 'AssetAccountName',
             'field'     => 'asset-account-name',
-            'converter' => 'AssetAccounts'
+            'converter' => 'AssetAccountName',
+            'mapper'    => 'AssetAccounts',
         ],
         'account-iban'      => [
             'mappable'  => true,
-            'converter' => 'AssetAccountIban',
             'field'     => 'asset-account-iban',
-            'mapper'    => 'AssetAccounts'
+            'converter' => 'AssetAccountIban',
+            'mapper'    => 'AssetAccounts',
+
         ],
-        'account-number'      => [
+        'account-number'    => [
             'mappable'  => true,
-            'converter' => 'AssetAccountNumber',
             'field'     => 'asset-account-number',
-            'mapper'    => 'AssetAccounts'
+            'converter' => 'AssetAccountNumber',
+            'mapper'    => 'AssetAccounts',
         ],
         'opposing-id'       => [
             'mappable'  => true,
@@ -160,7 +162,7 @@ return [
             'converter' => 'OpposingAccountIban',
             'mapper'    => 'OpposingAccounts',
         ],
-        'opposing-number'     => [
+        'opposing-number'   => [
             'mappable'  => true,
             'field'     => 'opposing-account-number',
             'converter' => 'OpposingAccountNumber',
@@ -171,11 +173,6 @@ return [
             'converter' => 'Amount',
             'field'     => 'amount',
         ],
-//        'amount-comma-separated' => [
-//            'mappable'  => false,
-//            'converter' => 'AmountComma',
-//            'field'     => 'amount',
-//        ],
         'sepa-ct-id'        => [
             'mappable'  => false,
             'converter' => 'Description',
@@ -192,12 +189,6 @@ return [
             'field'     => 'description',
         ],
     ],
-
-
-
-
-
-
 
 
     /*

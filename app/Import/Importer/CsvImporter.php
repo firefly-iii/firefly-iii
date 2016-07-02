@@ -158,13 +158,16 @@ class CsvImporter implements ImporterInterface
      */
     public function requireUserSettings(): bool
     {
-        // does the job have both a 'map' array and a 'columns' array.
-        $config = $this->job->configuration;
-        if (isset($config['map']) && isset($config['columns'])) {
-            return false;
-        }
+        Log::debug('doColumnMapping is ' . ($this->doColumnMapping() ? 'true' : 'false'));
+        Log::debug('doColumnRoles is ' . ($this->doColumnRoles() ? 'true' : 'false'));
+        if ($this->doColumnMapping() || $this->doColumnRoles()) {
+            Log::debug('Return true');
 
-        return true;
+            return true;
+        }
+        Log::debug('Return false');
+
+        return false;
     }
 
     /**
@@ -216,25 +219,52 @@ class CsvImporter implements ImporterInterface
      */
     public function storeSettings(Request $request)
     {
-        $config  = $this->job->configuration;
-        $count   = $config['column-count'];
-        $all     = $request->all();
-        $roleSet = 0;
-        for ($i = 0; $i < $count; $i++) {
-            $selectedRole = $all['role'][$i] ?? '_ignore';
-            $doMapping    = isset($all['map'][$i]) && $all['map'][$i] == '1' ? true : false;
-            if ($selectedRole == '_ignore' && $doMapping === true) {
-                $doMapping = false; // cannot map ignored columns.
+        $config = $this->job->configuration;
+        $all    = $request->all();
+        if ($request->get('settings') == 'roles') {
+            $count = $config['column-count'];
+
+            $roleSet = 0; // how many roles have been defined
+            $mapSet  = 0;  // how many columns must be mapped
+            for ($i = 0; $i < $count; $i++) {
+                $selectedRole = $all['role'][$i] ?? '_ignore';
+                $doMapping    = isset($all['map'][$i]) && $all['map'][$i] == '1' ? true : false;
+                if ($selectedRole == '_ignore' && $doMapping === true) {
+                    $doMapping = false; // cannot map ignored columns.
+                }
+                if ($selectedRole != '_ignore') {
+                    $roleSet++;
+                }
+                if ($doMapping === true) {
+                    $mapSet++;
+                }
+                $config['column-roles'][$i]      = $selectedRole;
+                $config['column-do-mapping'][$i] = $doMapping;
             }
-            if ($selectedRole != '_ignore') {
-                $roleSet++;
+            if ($roleSet > 0) {
+                $config['column-roles-complete'] = true;
+                $this->job->configuration        = $config;
+                $this->job->save();
             }
-            $config['column-roles'][$i]      = $selectedRole;
-            $config['column-do-mapping'][$i] = $doMapping;
+            if ($mapSet === 0) {
+                // skip setting of map:
+                $config['column-mapping-complete'] = true;
+            }
         }
-        if ($roleSet > 0) {
-            $config['column-roles-complete'] = true;
-            $this->job->configuration        = $config;
+        if ($request->get('settings') == 'map') {
+            foreach ($all['mapping'] as $index => $data) {
+                $config['column-mapping-config'][$index] = [];
+                foreach ($data as $value => $mapId) {
+                    $mapId = intval($mapId);
+                    if ($mapId !== 0) {
+                        $config['column-mapping-config'][$index][$value] = intval($mapId);
+                    }
+                }
+            }
+
+            // set thing to be completed.
+            $config['column-mapping-complete'] = true;
+            $this->job->configuration          = $config;
             $this->job->save();
         }
     }
@@ -260,8 +290,9 @@ class CsvImporter implements ImporterInterface
      */
     private function getDataForColumnMapping(): array
     {
-        $config = $this->job->configuration;
-        $data   = [];
+        $config  = $this->job->configuration;
+        $data    = [];
+        $indexes = [];
 
         foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
             if ($mustBeMapped) {
@@ -271,9 +302,11 @@ class CsvImporter implements ImporterInterface
                     $mapperName = '\FireflyIII\Import\Mapper\\' . config('csv.import_roles.' . $column . '.mapper');
                     /** @var MapperInterface $mapper */
                     $mapper       = new $mapperName;
+                    $indexes[]    = $index;
                     $data[$index] = [
                         'name'    => $column,
                         'mapper'  => $mapperName,
+                        'index'   => $index,
                         'options' => $mapper->getMap(),
                         'values'  => [],
                     ];
@@ -281,15 +314,25 @@ class CsvImporter implements ImporterInterface
             }
         }
 
+        // in order to actually map we also need all possible values from the CSV file.
+        $content = $this->job->uploadFileContents();
+        $reader  = Reader::createFromString($content);
+        $results = $reader->fetch();
 
-        echo '<pre>';
-        var_dump($data);
-        var_dump($config);
+        foreach ($results as $row) {
+            //do something here
+            foreach ($indexes as $index) {
+                $value = $row[$index];
+                if (strlen($value) > 0) {
+                    $data[$index]['values'][] = $row[$index];
+                }
+            }
+        }
+        foreach ($data as $index => $entry) {
+            $data[$index]['values'] = array_unique($data[$index]['values']);
+        }
 
-
-        exit;
-
-
+        return $data;
     }
 
     /**
