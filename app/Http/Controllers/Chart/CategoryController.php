@@ -13,8 +13,10 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
@@ -48,12 +50,13 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
-     * @param CRI      $repository
-     * @param Category $category
+     * @param CRI                  $repository
+     * @param AccountCrudInterface $crud
+     * @param Category             $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(CRI $repository, Category $category)
+    public function all(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
         $start              = $repository->firstUseDate($category, new Collection);
         $range              = Preferences::get('viewRange', '1M')->data;
@@ -62,6 +65,7 @@ class CategoryController extends Controller
         $end                = new Carbon;
         $entries            = new Collection;
         $cache              = new CacheProperties;
+        $accounts           = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('all');
@@ -72,8 +76,8 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriod($categoryCollection, new Collection, $start, $currentEnd);
-            $earned     = $repository->earnedInPeriod($categoryCollection, new Collection, $start, $currentEnd);
+            $spent      = $repository->spentInPeriod($categoryCollection, $accounts, $start, $currentEnd);
+            $earned     = $repository->earnedInPeriod($categoryCollection, $accounts, $start, $currentEnd);
             $date       = Navigation::periodShow($start, $range);
             $entries->push([clone $start, $date, $spent, $earned]);
             $start = Navigation::addPeriod($start, $range, 0);
