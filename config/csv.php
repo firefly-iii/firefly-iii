@@ -171,11 +171,11 @@ return [
             'converter' => 'Amount',
             'field'     => 'amount',
         ],
-        'amount-comma-separated' => [
-            'mappable'  => false,
-            'converter' => 'AmountComma',
-            'field'     => 'amount',
-        ],
+//        'amount-comma-separated' => [
+//            'mappable'  => false,
+//            'converter' => 'AmountComma',
+//            'field'     => 'amount',
+//        ],
         'sepa-ct-id'        => [
             'mappable'  => false,
             'converter' => 'Description',

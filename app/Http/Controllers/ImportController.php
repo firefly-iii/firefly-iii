@@ -10,8 +10,10 @@ use FireflyIII\Import\Importer\ImporterInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 use SplFileObject;
 use Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use View;
 
 /**
@@ -50,9 +52,11 @@ class ImportController extends Controller
         // actual code
         $importer = $this->makeImporter($job);
         $importer->configure();
-        $data = $importer->getConfigurationData();
+        $data         = $importer->getConfigurationData();
+        $subTitle     = trans('firefly.configure_import');
+        $subTitleIcon = 'fa-wrench';
 
-        return view('import.' . $job->file_type . '.configure', compact('data', 'job'));
+        return view('import.' . $job->file_type . '.configure', compact('data', 'job', 'subTitle', 'subTitleIcon'));
 
 
     }
@@ -107,6 +111,28 @@ class ImportController extends Controller
     }
 
     /**
+     * This step 6. Depending on the importer, this will process the
+     * settings given and store them.
+     *
+     * @param Request   $request
+     * @param ImportJob $job
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
+     */
+    public function postSettings(Request $request, ImportJob $job)
+    {
+        if (!$this->jobInCorrectStep($job, 'store-settings')) {
+            return $this->redirectToCorrectStep($job);
+        }
+        $importer = $this->makeImporter($job);
+        $importer->storeSettings($request);
+
+        // return redirect to settings (for more settings perhaps)
+        return redirect(route('import.settings', [$job->key]));
+    }
+
+    /**
      * Step 5. Depending on the importer, this will show the user settings to
      * fill in.
      *
@@ -120,18 +146,20 @@ class ImportController extends Controller
         if (!$this->jobInCorrectStep($job, 'settings')) {
             return $this->redirectToCorrectStep($job);
         }
-        $importer = $this->makeImporter($job);
+        $importer     = $this->makeImporter($job);
+        $subTitle     = trans('firefy.settings_for_import');
+        $subTitleIcon = 'fa-wrench';
 
         // now show settings screen to user.
         if ($importer->requireUserSettings()) {
             $data = $importer->getDataForSettings();
             $view = $importer->getViewForSettings();
 
-            return view($view, compact('data', 'job'));
+            return view($view, compact('data', 'job', 'subTitle', 'subTitleIcon'));
         }
 
         // if no more settings, save job and continue to process thing.
-        
+
 
         echo 'now in settings (done)';
         exit;
@@ -155,8 +183,11 @@ class ImportController extends Controller
     public function upload(ImportUploadRequest $request, ImportJobRepositoryInterface $repository)
     {
         // create import job:
-        $type             = $request->get('import_file_type');
-        $job              = $repository->create($type);
+        $type = $request->get('import_file_type');
+        $job  = $repository->create($type);
+        Log::debug('Created new job', ['key' => $job->key, 'id' => $job->id]);
+
+        /** @var UploadedFile $upload */
         $upload           = $request->files->get('import_file');
         $newName          = $job->key . '.upload';
         $uploaded         = new SplFileObject($upload->getRealPath());
@@ -164,6 +195,30 @@ class ImportController extends Controller
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
         $disk->put($newName, $contentEncrypted);
+
+        Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
+
+        // store configuration file's content into the job's configuration
+        // thing.
+        // otherwise, leave it empty.
+        if ($request->files->has('configuration_file')) {
+            /** @var UploadedFile $configFile */
+            $configFile = $request->files->get('configuration_file');
+            Log::debug(
+                'Uploaded configuration file',
+                ['name' => $configFile->getClientOriginalName(), 'size' => $configFile->getSize(), 'mime' => $configFile->getClientMimeType()]
+            );
+
+            $configFileObject = new SplFileObject($configFile->getRealPath());
+            $configRaw        = $configFileObject->fread($configFileObject->getSize());
+            $configuration    = json_decode($configRaw, true);
+
+            if (!is_null($configuration) && is_array($configuration)) {
+                Log::debug('Found configuration', $configuration);
+                $job->configuration = $configuration;
+                $job->save();
+            }
+        }
 
         return redirect(route('import.configure', [$job->key]));
 
@@ -183,6 +238,7 @@ class ImportController extends Controller
                 return $job->status === 'import_status_never_started';
                 break;
             case 'settings':
+            case 'store-settings':
                 return $job->status === 'import_configuration_saved';
                 break;
         }

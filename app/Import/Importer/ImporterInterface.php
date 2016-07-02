@@ -13,6 +13,7 @@ namespace FireflyIII\Import\Importer;
 
 use FireflyIII\Import\Role\Map;
 use FireflyIII\Models\ImportJob;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\FileBag;
 
 /**
@@ -45,20 +46,20 @@ interface ImporterInterface
     public function getDataForSettings(): array;
 
     /**
+     * Store the settings filled in by the user, if applicable.
+     * 
+     * @param Request $request
+     *
+     */
+    public function storeSettings(Request $request);
+
+    /**
      * This method returns the name of the view that will be shown to the user to further configure
      * the import job.
      *
      * @return string
      */
     public function getViewForSettings(): string;
-
-    /**
-     * Returns a Map thing used to allow the user to
-     * define roles for each entry.
-     *
-     * @return Map
-     */
-    public function prepareRoles(): Map;
 
     /**
      * This method returns whether or not the user must configure this import

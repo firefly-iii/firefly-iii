@@ -749,18 +749,12 @@ return [
     'split_this_transfer'                       => 'Split this transfer',
 
     // import
+    'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you.',
+    'import_data_index'                         => 'Index',
     'import_file_type_csv'                      => 'CSV (comma separated values)',
     'import_file_type_help'                     => 'Select the type of file you will upload',
     'import_start'                              => 'Start the import',
-    'import_csv_configure_title'                => 'Configure your import',
-    'import_csv_configure_intro'                => 'There are some options for your CSV import.',
-    'import_csv_configure_form'                 => 'Form',
-    'csv_header_help'                           => 'Check this if the first row of your CSV file are the column titles',
-    'csv_date_help'                             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'csv_delimiter_help'                        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'csv_csv_config_file_help'                  => 'Select your CSV import configuration here. If you do not know what this is, ignore it. It will be explained later.',
-    'csv_import_account_help'                   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'csv_upload_not_writeable'                  => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
-
-
+    'configure_import'                          => 'Further configure your import',
+    'import_finish_configuration'               => 'Finish configuration',
+    'settings_for_import'                       => 'Settings',
 ];
