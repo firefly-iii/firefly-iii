@@ -103,7 +103,7 @@ class AccountController extends Controller
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
         $moveTo   = $crud->find(intval(Input::get('move_account_before_delete')));
-        
+
         $crud->destroy($account, $moveTo);
 
         Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
@@ -271,6 +271,7 @@ class AccountController extends Controller
         $end      = Navigation::endOfPeriod($carbon, $range);
         $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
         $page     = intval(Input::get('page'));
+        $page     = $page === 0 ? 1 : $page;
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
         $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
