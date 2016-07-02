@@ -254,18 +254,24 @@ class CategoryController extends Controller
     {
         $categoryCollection = new Collection([$category]);
         $cache              = new CacheProperties;
+        /** @var AccountCrudInterface $crud */
+        $crud     = app(AccountCrudInterface::class);
+        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($accounts);
         $cache->addProperty($category->id);
         $cache->addProperty('specific-period');
+
 
         if ($cache->has()) {
             return $cache->get();
         }
         $entries = new Collection;
         while ($start <= $end) {
-            $spent  = $repository->spentInPeriod($categoryCollection, new Collection, $start, $start);
-            $earned = $repository->earnedInPeriod($categoryCollection, new Collection, $start, $start);
+            $spent  = $repository->spentInPeriod($categoryCollection, $accounts, $start, $start);
+            $earned = $repository->earnedInPeriod($categoryCollection, $accounts, $start, $start);
             $date   = Navigation::periodShow($start, '1D');
             $entries->push([clone $start, $date, $spent, $earned]);
             $start->addDay();
