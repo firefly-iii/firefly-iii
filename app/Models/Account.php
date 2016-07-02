@@ -13,6 +13,8 @@ namespace FireflyIII\Models;
 
 use Auth;
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -183,10 +185,14 @@ class Account extends Model
      */
     public function getIbanAttribute($value): string
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen(strval($value)) === 0) {
             return '';
         }
-        $result = Crypt::decrypt($value);
+        try {
+            $result = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            throw new FireflyException('Cannot decrypt value "' . $value . '" for account #' . $this->id);
+        }
         if (is_null($result)) {
             return '';
         }

@@ -25,37 +25,37 @@ return [
             'mappable'  => false,
             'field'     => 'bill',
             'converter' => 'BillId',
-            'mapper'    => 'Bill',
+            'mapper'    => 'Bills',
         ],
         'bill-name'         => [
             'mappable'  => true,
             'converter' => 'BillName',
             'field'     => 'bill',
-            'mapper'    => 'Bill',
+            'mapper'    => 'Bills',
         ],
         'currency-id'       => [
             'mappable'  => true,
             'converter' => 'CurrencyId',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrency'
+            'mapper'    => 'TransactionCurrencies'
         ],
         'currency-name'     => [
             'mappable'  => true,
             'converter' => 'CurrencyName',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrency'
+            'mapper'    => 'TransactionCurrencies'
         ],
         'currency-code'     => [
             'mappable'  => true,
             'converter' => 'CurrencyCode',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrency'
+            'mapper'    => 'TransactionCurrencies'
         ],
         'currency-symbol'   => [
             'mappable'  => true,
             'converter' => 'CurrencySymbol',
             'field'     => 'currency',
-            'mapper'    => 'TransactionCurrency'
+            'mapper'    => 'TransactionCurrencies'
         ],
         'description'       => [
             'mappable'  => false,
@@ -76,13 +76,13 @@ return [
             'mappable'  => true,
             'converter' => 'BudgetId',
             'field'     => 'budget',
-            'mapper'    => 'Budget',
+            'mapper'    => 'Budgets',
         ],
         'budget-name'       => [
             'mappable'  => true,
             'converter' => 'BudgetName',
             'field'     => 'budget',
-            'mapper'    => 'Budget',
+            'mapper'    => 'Budgets',
         ],
         'rabo-debet-credit' => [
             'mappable'  => false,
@@ -98,73 +98,73 @@ return [
             'mappable'  => true,
             'converter' => 'CategoryId',
             'field'     => 'category',
-            'mapper'    => 'Category',
+            'mapper'    => 'Categories',
         ],
         'category-name'     => [
             'mappable'  => true,
             'converter' => 'CategoryName',
             'field'     => 'category',
-            'mapper'    => 'Category',
+            'mapper'    => 'Categories',
         ],
         'tags-comma'        => [
             'mappable'  => true,
             'field'     => 'tags',
             'converter' => 'TagsComma',
-            'mapper'    => 'Tag',
+            'mapper'    => 'Tags',
         ],
         'tags-space'        => [
             'mappable'  => true,
             'field'     => 'tags',
             'converter' => 'TagsSpace',
-            'mapper'    => 'Tag',
+            'mapper'    => 'Tags',
         ],
         'account-id'        => [
             'mappable'  => true,
-            'mapper'    => 'AssetAccount',
+            'mapper'    => 'AssetAccountId',
             'field'     => 'asset-account-id',
-            'converter' => 'AccountId'
+            'converter' => 'AssetAccounts'
         ],
         'account-name'      => [
             'mappable'  => true,
-            'mapper'    => 'AssetAccount',
+            'mapper'    => 'AssetAccountName',
             'field'     => 'asset-account-name',
-            'converter' => 'AssetAccountName'
+            'converter' => 'AssetAccounts'
         ],
         'account-iban'      => [
             'mappable'  => true,
             'converter' => 'AssetAccountIban',
             'field'     => 'asset-account-iban',
-            'mapper'    => 'AssetAccount'
+            'mapper'    => 'AssetAccounts'
         ],
         'account-number'      => [
             'mappable'  => true,
             'converter' => 'AssetAccountNumber',
             'field'     => 'asset-account-number',
-            'mapper'    => 'AssetAccount'
+            'mapper'    => 'AssetAccounts'
         ],
         'opposing-id'       => [
             'mappable'  => true,
             'field'     => 'opposing-account-id',
             'converter' => 'OpposingAccountId',
-            'mapper'    => 'AnyAccount',
+            'mapper'    => 'OpposingAccounts',
         ],
         'opposing-name'     => [
             'mappable'  => true,
             'field'     => 'opposing-account-name',
             'converter' => 'OpposingAccountName',
-            'mapper'    => 'AnyAccount',
+            'mapper'    => 'OpposingAccounts',
         ],
         'opposing-iban'     => [
             'mappable'  => true,
             'field'     => 'opposing-account-iban',
             'converter' => 'OpposingAccountIban',
-            'mapper'    => 'AnyAccount',
+            'mapper'    => 'OpposingAccounts',
         ],
         'opposing-number'     => [
             'mappable'  => true,
             'field'     => 'opposing-account-number',
             'converter' => 'OpposingAccountNumber',
-            'mapper'    => 'AnyAccount',
+            'mapper'    => 'OpposingAccounts',
         ],
         'amount'            => [
             'mappable'  => false,

@@ -14,6 +14,7 @@ namespace FireflyIII\Import\Importer;
 
 use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrud;
+use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Http\Request;
@@ -111,54 +112,18 @@ class CsvImporter implements ImporterInterface
      */
     public function getDataForSettings(): array
     {
-        $config = $this->job->configuration;
-        $data   = [
-            'columns'     => [],
-            'columnCount' => 0,
-        ];
 
         if ($this->doColumnRoles()) {
-
-            // show user column role configuration.
-            $content = $this->job->uploadFileContents();
-
-            // create CSV reader.
-            $reader = Reader::createFromString($content);
-            $start  = $config['has-headers'] ? 1 : 0;
-            $end    = $start + self::EXAMPLE_ROWS; // first X rows
-
-            // collect example data in $data['columns']
-            while ($start < $end) {
-                $row = $reader->fetchOne($start);
-                foreach ($row as $index => $value) {
-                    $value = trim($value);
-                    if (strlen($value) > 0) {
-                        $data['columns'][$index][] = $value;
-                    }
-                }
-                $start++;
-                $data['columnCount'] = count($row);
-            }
-
-            // make unique example data
-            foreach ($data['columns'] as $index => $values) {
-                $data['columns'][$index] = array_unique($values);
-            }
-
-            $data['set_roles'] = [];
-            // collect possible column roles:
-            $data['available_roles'] = [];
-            foreach (array_keys(config('csv.import_roles')) as $role) {
-                $data['available_roles'][$role] = trans('csv.column_' . $role);
-            }
-
-            $config['column-count']   = $data['columnCount'];
-            $this->job->configuration = $config;
-            $this->job->save();
+            $data = $this->getDataForColumnRoles();
 
             return $data;
         }
-        
+
+        if ($this->doColumnMapping()) {
+            $data = $this->getDataForColumnMapping();
+
+            return $data;
+        }
 
         echo 'no settings to do.';
         exit;
@@ -176,6 +141,11 @@ class CsvImporter implements ImporterInterface
         if ($this->doColumnRoles()) {
             return 'import.csv.roles';
         }
+
+        if ($this->doColumnMapping()) {
+            return 'import.csv.map';
+        }
+
         echo 'no view for settings';
         exit;
     }
@@ -272,8 +242,106 @@ class CsvImporter implements ImporterInterface
     /**
      * @return bool
      */
+    private function doColumnMapping(): bool
+    {
+        return $this->job->configuration['column-mapping-complete'] === false;
+    }
+
+    /**
+     * @return bool
+     */
     private function doColumnRoles(): bool
     {
         return $this->job->configuration['column-roles-complete'] === false;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDataForColumnMapping(): array
+    {
+        $config = $this->job->configuration;
+        $data   = [];
+
+        foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
+            if ($mustBeMapped) {
+                $column      = $config['column-roles'][$index] ?? '_ignore';
+                $canBeMapped = config('csv.import_roles.' . $column . '.mappable');
+                if ($canBeMapped) {
+                    $mapperName = '\FireflyIII\Import\Mapper\\' . config('csv.import_roles.' . $column . '.mapper');
+                    /** @var MapperInterface $mapper */
+                    $mapper       = new $mapperName;
+                    $data[$index] = [
+                        'name'    => $column,
+                        'mapper'  => $mapperName,
+                        'options' => $mapper->getMap(),
+                        'values'  => [],
+                    ];
+                }
+            }
+        }
+
+
+        echo '<pre>';
+        var_dump($data);
+        var_dump($config);
+
+
+        exit;
+
+
+    }
+
+    /**
+     * @return array
+     */
+    private function getDataForColumnRoles():array
+    {
+        $config = $this->job->configuration;
+        $data   = [
+            'columns'     => [],
+            'columnCount' => 0,
+        ];
+
+        // show user column role configuration.
+        $content = $this->job->uploadFileContents();
+
+        // create CSV reader.
+        $reader = Reader::createFromString($content);
+        $start  = $config['has-headers'] ? 1 : 0;
+        $end    = $start + self::EXAMPLE_ROWS; // first X rows
+
+        // collect example data in $data['columns']
+        while ($start < $end) {
+            $row = $reader->fetchOne($start);
+            foreach ($row as $index => $value) {
+                $value = trim($value);
+                if (strlen($value) > 0) {
+                    $data['columns'][$index][] = $value;
+                }
+            }
+            $start++;
+            $data['columnCount'] = count($row);
+        }
+
+        // make unique example data
+        foreach ($data['columns'] as $index => $values) {
+            $data['columns'][$index] = array_unique($values);
+        }
+
+        $data['set_roles'] = [];
+        // collect possible column roles:
+        $data['available_roles'] = [];
+        foreach (array_keys(config('csv.import_roles')) as $role) {
+            $data['available_roles'][$role] = trans('csv.column_' . $role);
+        }
+
+        $config['column-count']   = $data['columnCount'];
+        $this->job->configuration = $config;
+        $this->job->save();
+
+        return $data;
+
+
     }
 }

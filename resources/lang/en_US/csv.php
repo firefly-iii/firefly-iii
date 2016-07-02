@@ -32,6 +32,7 @@ return [
     'column'                 => 'Column',
     'no_example_data'        => 'No example data available',
     'store_column_roles'     => 'Continue import',
+    'do_not_map'             => '(do not map)',
 
     'column__ignore'                => '(ignore this column)',
     'column_account-iban'           => 'Asset account (IBAN)',
