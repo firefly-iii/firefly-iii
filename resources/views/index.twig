@@ -59,7 +59,7 @@
             {% for data in transactions %}
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ data[1].name }}</h3>
+                        <h3 class="box-title"><a href="{{ route('accounts.show', data[1].id) }}">{{ data[1].name }}</a></h3>
 
                         <!-- ACTIONS MENU -->
                         <div class="box-tools pull-right">

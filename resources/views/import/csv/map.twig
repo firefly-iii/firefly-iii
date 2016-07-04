@@ -6,14 +6,17 @@
 
 {% block content %}
 
+
     <div class="row">
         <div class="col-lg-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'csv_column_roles_title'|_ }}</h3>
+                    <h3 class="box-title">{{ trans('csv.map_title') }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>{{ 'csv_column_roles_text'|_ }}</p>
+                    <p>
+                        {{ trans('csv.map_text') }}
+                    </p>
                 </div>
             </div>
 
@@ -21,67 +24,98 @@
     </div>
     <form action="{{ route('import.postSettings', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="settings" value="map"/>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'csv_column_roles_table'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th style="width:20%;">{{ 'csv_column_name'|_ }}</th>
-                                <th style="width:40%;">{{ 'csv_column_example'|_ }}</th>
-                                <th style="width:30%;">{{ 'csv_column_role'|_ }}</th>
-                                <th style="width:10%;">{{ 'csv_do_map_value'|_ }}</th>
-                            </tr>
-                            </thead>
-                            {% for i in 0..data.columnCount %}
+        {% for field in data %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ field.name }}</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                <thead>
                                 <tr>
-                                    <td>Column #{{ loop.index }}</td>
-                                    <td>
-                                        {% if data.columns[i]|length == 0 %}
-                                            <em>No example data available</em>
-                                        {% else %}
-                                            {% for example in data.columns[i] %}
-                                                <code>{{ example }}</code><br />
-                                            {% endfor %}
-                                        {% endif %}
-
-                                    <td>
-                                        {{ Form.select(('role['~index~']'), data.available_roles,data.set_roles[index],{class: 'form-control'}) }}
-                                    </td>
-                                    <td>
-                                        {# Form.checkbox(('map['~index~']'),1,map[index]) #}
-                                    </td>
-
+                                    <th style="width:50%;">{{ trans('csv.field_value') }}</th>
+                                    <th>{{ trans('csv.field_mapped_to') }}</th>
                                 </tr>
-                            {% endfor %}
-
-
-                        </table>
-
-
+                                </thead>
+                                <tbody>
+                                {% for option in field.values %}
+                                    <tr>
+                                        <td>
+                                            <code>{{ option }}</code>
+                                        </td>
+                                        <td>
+                                            {{ Form.select('mapping['~field.index~']['~option~']',
+                                            field.options,
+                                            job.configuration['column-mapping-config'][field.index][option], {class: 'form-control'}) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
+
+
+        {#
+
+        {% for index,columnName in map %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ Config.get('csv.roles.'~columnName~'.name') }}</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width:50%;">{{ 'csv_field_value'|_ }}</th>
+                                    <th>{{ 'csv_field_mapped_to'|_ }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for value in values[index] %}
+                                    <tr>
+                                        <td><code>{{ value }}</code></td>
+                                        <td>
+                                            {{ Form.select('mapping['~index~']['~value~']',options[index], mapped[index][value], {class: 'form-control'}) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        #}
+
 
         <div class="row">
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-body">
-                        <a href="{{ route('import.index') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> {{ 'csv_go_back'|_ }}</a>
                         <button type="submit" class="btn btn-success pull-right">
-                            {{ 'csv_continue'|_ }} <i class="fa fa-arrow-right"></i>
+                            {{ trans('csv.store_column_mapping') }} <i class="fa fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
     </form>
 
 
