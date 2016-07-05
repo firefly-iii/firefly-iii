@@ -557,4 +557,52 @@ class BillRepository implements BillRepositoryInterface
 
         return $wordMatch;
     }
+
+    /**
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return string
+     */
+    public function getYearAverage(Bill $bill, Carbon $date): string
+    {
+        $journals = $bill->transactionjournals()
+                         ->where('date', '>=', $date->year . '-01-01')
+                         ->where('date', '<=', $date->year . '-12-31')
+                         ->get();
+        $sum      = '0';
+        $count    = strval($journals->count());
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
+        }
+        $avg = '0';
+        if ($journals->count() > 0) {
+            $avg = bcdiv($sum, $count);
+        }
+
+        return $avg;
+    }
+
+    /**
+     * @param $bill
+     *
+     * @return string
+     */
+    public function getOverallAverage($bill): string
+    {
+        $journals = $bill->transactionjournals()->get();
+        $sum      = '0';
+        $count    = strval($journals->count());
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
+        }
+        $avg = '0';
+        if ($journals->count() > 0) {
+            $avg = bcdiv($sum, $count);
+        }
+
+        return $avg;
+    }
 }

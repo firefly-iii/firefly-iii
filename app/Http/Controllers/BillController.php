@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
@@ -190,15 +191,20 @@ class BillController extends Controller
      */
     public function show(BillRepositoryInterface $repository, Bill $bill)
     {
-        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $journals = $repository->getJournals($bill, $page, $pageSize);
+        /** @var Carbon $date */
+        $date           = session('start');
+        $year           = $date->year;
+        $page           = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize       = Preferences::get('transactionPageSize', 50)->data;
+        $journals       = $repository->getJournals($bill, $page, $pageSize);
+        $yearAverage    = $repository->getYearAverage($bill, $date);
+        $overallAverage = $repository->getOverallAverage($bill);
         $journals->setPath('/bills/show/' . $bill->id);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
         $subTitle                = e($bill->name);
 
-        return view('bills.show', compact('journals', 'hideBill', 'bill', 'subTitle'));
+        return view('bills.show', compact('journals', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
     }
 
     /**

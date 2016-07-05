@@ -33,6 +33,21 @@ interface BillRepositoryInterface
     public function destroy(Bill $bill): bool;
 
     /**
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return string
+     */
+    public function getYearAverage(Bill $bill, Carbon $date): string;
+
+    /**
+     * @param $bill
+     *
+     * @return string
+     */
+    public function getOverallAverage($bill): string;
+
+    /**
      * Find a bill by ID.
      *
      * @param int $billId

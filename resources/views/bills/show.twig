@@ -60,6 +60,14 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        <tr>
+                            <td>{{ trans('firefly.average_bill_amount_year', {year: year}) }}</td>
+                            <td>{{ '0'|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'average_bill_amount_overall'|_ }}</td>
+                            <td>{{ '0'|formatAmount }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>
