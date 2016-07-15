@@ -23,6 +23,14 @@ use Symfony\Component\HttpFoundation\FileBag;
  */
 interface ImporterInterface
 {
+
+    /**
+     * Run the actual import
+     *
+     * @return bool
+     */
+    public function start(): bool;
+
     /**
      * After uploading, and after setJob(), prepare anything that is
      * necessary for the configure() line.

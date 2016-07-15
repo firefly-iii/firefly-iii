@@ -33,6 +33,15 @@ return [
     'no_example_data'        => 'No example data available',
     'store_column_roles'     => 'Continue import',
     'do_not_map'             => '(do not map)',
+    'map_title'              => 'Connect data in your files',
+    'map_text'               => 'Connect data in your files',
+
+    'field_value'          => 'Field value',
+    'field_mapped_to'      => 'Mapped to',
+    'store_column_mapping' => 'Store mapping',
+
+    // map things.
+
 
     'column__ignore'                => '(ignore this column)',
     'column_account-iban'           => 'Asset account (IBAN)',

@@ -759,4 +759,8 @@ return [
     'configure_import'                          => 'Further configure your import',
     'import_finish_configuration'               => 'Finish configuration',
     'settings_for_import'                       => 'Settings',
+    'import_complete'                           => 'Import configuration complete!',
+    'import_complete_text'                      => 'Download the config file. You can also run it from the command line.',
+    'import_download_config'                    => 'Download configuration',
+    'import_start_import'                       => 'Start import',
 ];

@@ -14,12 +14,15 @@
                     <p>
                         {{ 'import_complete_text'|_ }}
                     </p>
+                    <p>
+                        <code>php artisan firefly:import {{ job.key }}</code>
+                    </p>
                     <div class="row">
-                        <div class="col-lg-2">
-                            <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i class="fa fa-fw fa-download"></i> {{ 'import_download_config' }}</a>
+                        <div class="col-lg-4">
+                            <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i class="fa fa-fw fa-download"></i> {{ 'import_download_config'|_ }}</a>
                         </div>
-                        <div class="col-lg-2">
-                            <a href="#" class="btn btn-default"><i class="fa fa-fw fa-gears"></i> {{ 'import_start_import' }}</a>
+                        <div class="col-lg-4">
+                            <a href="#" class="btn btn-default"><i class="fa fa-fw fa-gears"></i> {{ 'import_start_import'|_ }}</a>
                         </div>
                     </div>
                 </div>

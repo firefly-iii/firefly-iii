@@ -25,7 +25,7 @@ class UpgradeFireflyInstructions extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Instructions in case of upgrade trouble.';
     /**
      * The name and signature of the console command.
      *

@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Console;
 
+use FireflyIII\Console\Commands\Import;
 use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
 use FireflyIII\Console\Commands\VerifyDatabase;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -51,5 +52,6 @@ class Kernel extends ConsoleKernel
         = [
             UpgradeFireflyInstructions::class,
             VerifyDatabase::class,
+            Import::class,
         ];
 }

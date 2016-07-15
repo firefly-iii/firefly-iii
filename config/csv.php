@@ -135,7 +135,7 @@ return [
             'mappable'  => true,
             'field'     => 'asset-account-iban',
             'converter' => 'AssetAccountIban',
-            'mapper'    => 'AssetAccounts',
+            'mapper'    => 'AssetAccountIbans',
 
         ],
         'account-number'    => [
@@ -160,7 +160,7 @@ return [
             'mappable'  => true,
             'field'     => 'opposing-account-iban',
             'converter' => 'OpposingAccountIban',
-            'mapper'    => 'OpposingAccounts',
+            'mapper'    => 'OpposingAccountIbans',
         ],
         'opposing-number'   => [
             'mappable'  => true,
