@@ -83,6 +83,24 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
+     * @param string $iban
+     *
+     * @return Account
+     */
+    public function findByIban(string $iban): Account
+    {
+        $accounts = $this->user->accounts()->where('iban', '!=', "")->get();
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->iban === $iban) {
+                return $account;
+            }
+        }
+
+        return new Account;
+    }
+
+    /**
      * @param array $accountIds
      *
      * @return Collection

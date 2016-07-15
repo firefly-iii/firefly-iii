@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Crud\Account\AccountCrudInterface;
+use FireflyIII\Models\Account;
 use Log;
 
 /**
@@ -25,8 +26,9 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
     /**
      * @param $value
      *
+     * @return Account
      */
-    public function convert($value)
+    public function convert($value): Account
     {
         Log::debug('Going to convert value ' . $value);
 
@@ -35,14 +37,28 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 
 
         if (isset($this->mapping[$value])) {
-            Log::debug('Found account in mapping. Should exist.',['value' => $value]);
-            $account = $repository->find(intval($value));
-            Log::debug('Found account ', ['id' => $account->id]);
+            Log::debug('Found account in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);
+            $account = $repository->find(intval($this->mapping[$value]));
+            if (!is_null($account->id)) {
+                Log::debug('Found account by ID', ['id' => $account->id]);
 
+                return $account;
+            }
         }
 
-        Log::debug('Given map is ', $this->mapping);
+        // not mapped? Still try to find it first:
+        $account = $repository->findByIban($value);
+        if (!is_null($account->id)) {
+            Log::debug('Found account by IBAN', ['id' => $account->id]);
 
-        exit;
+            return $account;
+        }
+
+
+        $account = $repository->store(
+            ['name' => $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0, 'active' => true]
+        );
+
+        return $account;
     }
 }
