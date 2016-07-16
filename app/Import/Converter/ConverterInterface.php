@@ -10,6 +10,7 @@
 declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
+
 use FireflyIII\User;
 
 /**
@@ -24,6 +25,11 @@ interface ConverterInterface
      *
      */
     public function convert($value);
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config);
 
     /**
      * @param bool $doMap

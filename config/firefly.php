@@ -60,12 +60,15 @@ return [
             'Beneficiary account' => 'fa-shopping-cart',
             'revenue'             => 'fa-download',
             'Revenue account'     => 'fa-download',
+            'import'              => 'fa-download',
+            'Import account'      => 'fa-download',
         ],
     'accountTypesByIdentifier' =>
         [
             'asset'   => ['Default account', 'Asset account'],
             'expense' => ['Expense account', 'Beneficiary account'],
             'revenue' => ['Revenue account'],
+            'import'  => ['Import account'],
         ],
     'accountTypeByIdentifier'  =>
         [
@@ -74,11 +77,13 @@ return [
             'revenue' => 'Revenue account',
             'opening' => 'Initial balance account',
             'initial' => 'Initial balance account',
+            'import'  => 'Import account',
         ],
     'shortNamesByFullName'     =>
         [
             'Default account'     => 'asset',
             'Asset account'       => 'asset',
+            'Import account'      => 'import',
             'Expense account'     => 'expense',
             'Beneficiary account' => 'expense',
             'Revenue account'     => 'revenue',
@@ -136,7 +141,7 @@ return [
         'end_date'          => 'FireflyIII\Support\Binder\Date',
     ],
 
-    'rule-triggers'        => [
+    'rule-triggers'     => [
         'user_action'           => 'FireflyIII\Rules\Triggers\UserAction',
         'from_account_starts'   => 'FireflyIII\Rules\Triggers\FromAccountStarts',
         'from_account_ends'     => 'FireflyIII\Rules\Triggers\FromAccountEnds',
@@ -155,7 +160,7 @@ return [
         'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
         'description_is'        => 'FireflyIII\Rules\Triggers\DescriptionIs',
     ],
-    'rule-actions'         => [
+    'rule-actions'      => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
         'clear_category'      => 'FireflyIII\Rules\Actions\ClearCategory',
         'set_budget'          => 'FireflyIII\Rules\Actions\SetBudget',
@@ -168,7 +173,7 @@ return [
         'prepend_description' => 'FireflyIII\Rules\Actions\PrependDescription',
     ],
     // all rule actions that require text input:
-    'rule-actions-text'    => [
+    'rule-actions-text' => [
         'set_category',
         'set_budget',
         'add_tag',
@@ -177,7 +182,7 @@ return [
         'append_description',
         'prepend_description',
     ],
-    'test-triggers'        => [
+    'test-triggers'     => [
         // The maximum number of transactions shown when testing a list of triggers
         'limit' => 10,
 

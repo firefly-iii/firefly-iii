@@ -39,10 +39,19 @@ interface AccountCrudInterface
 
     /**
      * @param string $iban
+     * @param array  $types
      *
      * @return Account
      */
-    public function findByIban(string $iban): Account;
+    public function findByIban(string $iban, array $types): Account;
+
+    /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account;
 
     /**
      * @param array $accountIds

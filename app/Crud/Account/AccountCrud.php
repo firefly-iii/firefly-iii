@@ -84,15 +84,49 @@ class AccountCrud implements AccountCrudInterface
 
     /**
      * @param string $iban
+     * @param array  $types
      *
      * @return Account
      */
-    public function findByIban(string $iban): Account
+    public function findByIban(string $iban, array $types): Account
     {
-        $accounts = $this->user->accounts()->where('iban', '!=', "")->get();
+        $query = $this->user->accounts()->where('iban', '!=', "");
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get();
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->iban === $iban) {
+                return $account;
+            }
+        }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account
+    {
+        $query = $this->user->accounts()->where('iban', '!=', "");
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get();
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name) {
                 return $account;
             }
         }

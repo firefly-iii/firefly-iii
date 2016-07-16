@@ -1,6 +1,6 @@
 <?php
 /**
- * AssetAccountIban.php
+ * OpposingAccountName.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -13,15 +13,14 @@ namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use Log;
 
 /**
- * Class AssetAccountIban
+ * Class OpposingAccountName
  *
  * @package FireflyIII\Import\Converter
  */
-class AssetAccountIban extends BasicConverter implements ConverterInterface
+class OpposingAccountName extends BasicConverter implements ConverterInterface
 {
 
     /**
@@ -35,7 +34,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert ', ['value' => $value]);
 
         if (strlen($value) === 0) {
-            return new Account;
+            $value = '(empty account name)';
         }
 
         /** @var AccountCrudInterface $repository */
@@ -53,16 +52,21 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $repository->findByIban($value, [AccountType::ASSET]);
+        $account = $repository->findByName($value, []);
         if (!is_null($account->id)) {
-            Log::debug('Found account by IBAN', ['id' => $account->id]);
+            Log::debug('Found account by name', ['id' => $account->id]);
+            Log::warning(
+                'The match between name and account is uncertain because the type of transactions may not have been determined.',
+                ['id' => $account->id, 'name' => $value]
+            );
 
             return $account;
         }
 
-
         $account = $repository->store(
-            ['name' => $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0, 'active' => true]
+            ['name'           => $value, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'import', 'virtualBalance' => 0, 'active' => true,
+             'openingBalance' => 0,
+            ]
         );
 
         return $account;

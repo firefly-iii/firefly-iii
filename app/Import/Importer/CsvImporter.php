@@ -438,6 +438,7 @@ class CsvImporter implements ImporterInterface
             $converter->setMapping($mapping);
             $converter->setDoMap($doMap);
             $converter->setUser($this->job->user);
+            $converter->setConfig($config);
 
             // run the converter for this value:
             $convertedValue = $converter->convert($value);

@@ -21,14 +21,22 @@ use FireflyIII\User;
  */
 class BasicConverter
 {
+    /** @var  array */
+    public $config;
     /** @var  bool */
     public $doMap;
-
     /** @var  array */
     public $mapping = [];
-
     /** @var  User */
     public $user;
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * @param mixed $doMap
