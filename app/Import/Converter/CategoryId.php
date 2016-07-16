@@ -1,6 +1,6 @@
 <?php
 /**
- * AssetAccountName.php
+ * CategoryId.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -14,11 +14,11 @@ namespace FireflyIII\Import\Converter;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
- * Class AssetAccountName
+ * Class CategoryId
  *
  * @package FireflyIII\Import\Converter
  */
-class AssetAccountName extends BasicConverter implements ConverterInterface
+class CategoryId extends BasicConverter implements ConverterInterface
 {
 
     /**
@@ -28,7 +28,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
      */
     public function convert($value)
     {
-        throw new FireflyException('Importer with name AssetAccountName has not yet been configured.');
+        throw new FireflyException('Importer with name CategoryId has not yet been configured.');
 
     }
 }
