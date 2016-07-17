@@ -108,13 +108,13 @@ return [
             'mapper'    => 'Categories',
         ],
         'tags-comma'        => [
-            'mappable'  => true,
+            'mappable'  => false,
             'field'     => 'tags',
             'converter' => 'TagsComma',
             'mapper'    => 'Tags',
         ],
         'tags-space'        => [
-            'mappable'  => true,
+            'mappable'  => false,
             'field'     => 'tags',
             'converter' => 'TagsSpace',
             'mapper'    => 'Tags',
