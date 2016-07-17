@@ -110,13 +110,40 @@ class MassController extends Controller
         $crud        = app('FireflyIII\Crud\Account\AccountCrudInterface');
         $accountList = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
 
+        // skip transactions that have multiple destinations
+        // or multiple sources:
+        $filtered = new Collection;
+        $messages = [];
+        /**
+         * @var int                $index
+         * @var TransactionJournal $journal
+         */
+        foreach ($journals as $index => $journal) {
+            $sources      = TransactionJournal::sourceAccountList($journal);
+            $destinations = TransactionJournal::destinationAccountList($journal);
+            if ($sources->count() > 1) {
+                $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+
+            if ($destinations->count() > 1) {
+                $messages[] = trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+            $filtered->push($journal);
+        }
+
+        if (count($messages)) {
+            Session::flash('info', $messages);
+        }
+
         // put previous url in session
         Session::put('transactions.mass-edit.url', URL::previous());
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'mass-edit');
 
         // set some values to be used in the edit routine:
-        $journals->each(
+        $filtered->each(
             function (TransactionJournal $journal) {
                 $journal->amount            = TransactionJournal::amountPositive($journal);
                 $sources                    = TransactionJournal::sourceAccountList($journal);
@@ -132,6 +159,12 @@ class MassController extends Controller
                 }
             }
         );
+
+        if ($filtered->count() === 0) {
+            Session::flash('error', trans('firefly.no_edit_multiple_left'));
+        }
+
+        $journals = $filtered;
 
         return view('transactions.mass-edit', compact('journals', 'subTitle', 'accountList'));
     }
@@ -151,33 +184,26 @@ class MassController extends Controller
                 $journal = $repository->find(intval($journalId));
                 if ($journal) {
                     // get optional fields:
-                    $what            = strtolower(TransactionJournal::transactionTypeStr($journal));
-                    $sourceAccountId = $request->get('source_account_id')[$journal->id] ??  0;
-                    $destAccountId   = $request->get('destination_account_id')[$journal->id] ??  0;
-                    $expenseAccount  = $request->get('expense_account')[$journal->id] ?? '';
-                    $revenueAccount  = $request->get('revenue_account')[$journal->id] ?? '';
-                    $budgetId        = $journal->budgets->first() ? $journal->budgets->first()->id : 0;
-                    $category        = $journal->categories->first() ? $journal->categories->first()->name : '';
-                    $tags            = $journal->tags->pluck('tag')->toArray();
+                    $what = strtolower(TransactionJournal::transactionTypeStr($journal));
 
-                    // for a deposit, the 'account_id' is the account the money is deposited on.
-                    // needs a better way of handling.
-                    // more uniform source/destination field names
-                    $accountId = $sourceAccountId;
-                    if ($what == 'deposit') {
-                        $accountId = $destAccountId;
-                    }
+                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ??  0;
+                    $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
+                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;
+                    $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
+
+                    $budgetId = $journal->budgets->first() ? $journal->budgets->first()->id : 0;
+                    $category = $journal->categories->first() ? $journal->categories->first()->name : '';
+                    $tags     = $journal->tags->pluck('tag')->toArray();
 
                     // build data array
                     $data = [
                         'id'                        => $journal->id,
                         'what'                      => $what,
                         'description'               => $request->get('description')[$journal->id],
-                        'account_id'                => intval($accountId),
-                        'account_from_id'           => intval($sourceAccountId),
-                        'account_to_id'             => intval($destAccountId),
-                        'expense_account'           => $expenseAccount,
-                        'revenue_account'           => $revenueAccount,
+                        'source_account_id'         => intval($sourceAccountId),
+                        'source_account_name'       => intval($destAccountId),
+                        'destination_account_id'    => $sourceAccountName,
+                        'destination_account_name'  => $destAccountName,
                         'amount'                    => round($request->get('amount')[$journal->id], 4),
                         'user'                      => Auth::user()->id,
                         'amount_currency_id_amount' => intval($request->get('amount_currency_id_amount_' . $journal->id)),

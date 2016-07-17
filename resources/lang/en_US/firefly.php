@@ -749,6 +749,9 @@ return [
     'split_this_withdrawal'                     => 'Split this withdrawal',
     'split_this_deposit'                        => 'Split this deposit',
     'split_this_transfer'                       => 'Split this transfer',
+    'cannot_edit_multiple_source'               => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple source accounts.',
+    'cannot_edit_multiple_dest'                 => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
+    'no_edit_multiple_left'                     => 'You have selected no valid transactions to edit.',
 
     // import
     'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you.',
