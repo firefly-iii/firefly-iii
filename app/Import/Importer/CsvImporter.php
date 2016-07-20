@@ -280,12 +280,14 @@ class CsvImporter implements ImporterInterface
             }
         }
         if ($request->get('settings') == 'map') {
-            foreach ($all['mapping'] as $index => $data) {
-                $config['column-mapping-config'][$index] = [];
-                foreach ($data as $value => $mapId) {
-                    $mapId = intval($mapId);
-                    if ($mapId !== 0) {
-                        $config['column-mapping-config'][$index][$value] = intval($mapId);
+            if (isset($all['mapping'])) {
+                foreach ($all['mapping'] as $index => $data) {
+                    $config['column-mapping-config'][$index] = [];
+                    foreach ($data as $value => $mapId) {
+                        $mapId = intval($mapId);
+                        if ($mapId !== 0) {
+                            $config['column-mapping-config'][$index][$value] = intval($mapId);
+                        }
                     }
                 }
             }
@@ -302,7 +304,16 @@ class CsvImporter implements ImporterInterface
      */
     private function doColumnMapping(): bool
     {
-        return $this->job->configuration['column-mapping-complete'] === false;
+        $mapArray = $this->job->configuration['column-do-mapping'] ?? [];
+        $doMap    = false;
+        foreach ($mapArray as $value) {
+            if ($value === true) {
+                $doMap = true;
+                break;
+            }
+        }
+
+        return $this->job->configuration['column-mapping-complete'] === false && $doMap;
     }
 
     /**
