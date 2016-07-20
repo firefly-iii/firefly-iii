@@ -766,4 +766,5 @@ return [
     'import_complete_text'                      => 'Download the config file. You can also run it from the command line.',
     'import_download_config'                    => 'Download configuration',
     'import_start_import'                       => 'Start import',
+    'import_intro_beta'                         => 'The import function is currently being developed and will most probably not work.',
 ];

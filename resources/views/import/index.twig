@@ -14,8 +14,9 @@
                     <p>
                         {{ 'import_intro_text'|_ }}
                     </p>
-                    <p>
-                        &nbsp;
+
+                    <p class="text-danger">
+                        &nbsp;{{ 'import_intro_beta'|_ }}
                     </p>
                     <div class="row">
                         <form method="POST" action="{{ route('import.upload') }}" accept-charset="UTF-8" class="form-horizontal" id="update"
