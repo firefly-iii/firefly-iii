@@ -38,7 +38,7 @@
                                 {{ ExpandedForm.checkbox('has_headers',1,job.configuration['has-headers'],{helpText: trans('csv.header_help')}) }}
                                 {{ ExpandedForm.text('date_format',job.configuration['date-format'],{helpText: trans('csv.date_help', {dateExample: phpdate('Ymd')}) }) }}
                                 {{ ExpandedForm.select('csv_delimiter', data.delimiters, job.configuration['delimiter'], {helpText: trans('csv.delimiter_help') } ) }}
-                                {{ ExpandedForm.select('csv_import_account', data.accounts, 0, {helpText: trans('csv.import_account_help')} ) }}
+                                {{ ExpandedForm.select('csv_import_account', data.accounts, job.configuration['import-account'], {helpText: trans('csv.import_account_help')} ) }}
 
                                 {% for type, specific in data.specifics %}
                                     <div class="form-group">

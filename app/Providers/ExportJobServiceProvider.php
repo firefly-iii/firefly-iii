@@ -56,7 +56,7 @@ class ExportJobServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');
@@ -73,7 +73,7 @@ class ExportJobServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\ImportJob\ImportJobRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\ImportJob\ImportJobRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

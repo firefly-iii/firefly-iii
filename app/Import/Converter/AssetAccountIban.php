@@ -62,7 +62,8 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
 
 
         $account = $repository->store(
-            ['name' => $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0, 'active' => true]
+            ['name'   => 'Account with IBAN ' . $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0,
+             'active' => true]
         );
 
         return $account;

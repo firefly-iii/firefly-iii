@@ -117,7 +117,7 @@ class ImportController extends Controller
     /**
      * This is step 1. Upload a file.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
     public function index()
     {

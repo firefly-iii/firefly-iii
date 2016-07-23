@@ -54,6 +54,14 @@ interface AccountCrudInterface
     public function findByName(string $name, array $types): Account;
 
     /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByAccountNumber(string $number, array $types): Account;
+
+    /**
      * @param array $accountIds
      *
      * @return Collection

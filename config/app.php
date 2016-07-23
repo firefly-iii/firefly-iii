@@ -152,21 +152,6 @@ return [
         Collective\Html\HtmlServiceProvider::class,
 
 
-        /*
-         * More service providers.
-         */
-        FireflyIII\Providers\CrudServiceProvider::class,
-        FireflyIII\Providers\AccountServiceProvider::class,
-        FireflyIII\Providers\AttachmentServiceProvider::class,
-        FireflyIII\Providers\BillServiceProvider::class,
-        FireflyIII\Providers\BudgetServiceProvider::class,
-        FireflyIII\Providers\CategoryServiceProvider::class,
-        FireflyIII\Providers\ExportJobServiceProvider::class,
-        FireflyIII\Providers\JournalServiceProvider::class,
-        FireflyIII\Providers\PiggyBankServiceProvider::class,
-        FireflyIII\Providers\RuleServiceProvider::class,
-        FireflyIII\Providers\RuleGroupServiceProvider::class,
-        FireflyIII\Providers\TagServiceProvider::class,
 
 
         /*
@@ -185,6 +170,24 @@ return [
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'TwigBridge\ServiceProvider',
         'PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider',
+
+
+        /*
+ * More service providers.
+ */
+        FireflyIII\Providers\CrudServiceProvider::class,
+        FireflyIII\Providers\AccountServiceProvider::class,
+        FireflyIII\Providers\AttachmentServiceProvider::class,
+        FireflyIII\Providers\BillServiceProvider::class,
+        FireflyIII\Providers\BudgetServiceProvider::class,
+        FireflyIII\Providers\CategoryServiceProvider::class,
+        FireflyIII\Providers\ExportJobServiceProvider::class,
+        FireflyIII\Providers\JournalServiceProvider::class,
+        FireflyIII\Providers\PiggyBankServiceProvider::class,
+        FireflyIII\Providers\RuleServiceProvider::class,
+        FireflyIII\Providers\RuleGroupServiceProvider::class,
+        FireflyIII\Providers\TagServiceProvider::class,
+
 
     ],
 

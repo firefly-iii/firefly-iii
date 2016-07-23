@@ -33,21 +33,6 @@ interface BillRepositoryInterface
     public function destroy(Bill $bill): bool;
 
     /**
-     * @param Bill   $bill
-     * @param Carbon $date
-     *
-     * @return string
-     */
-    public function getYearAverage(Bill $bill, Carbon $date): string;
-
-    /**
-     * @param $bill
-     *
-     * @return string
-     */
-    public function getOverallAverage($bill): string;
-
-    /**
      * Find a bill by ID.
      *
      * @param int $billId
@@ -55,6 +40,15 @@ interface BillRepositoryInterface
      * @return Bill
      */
     public function find(int $billId) : Bill;
+
+    /**
+     * Find a bill by name.
+     *
+     * @param string $name
+     *
+     * @return Bill
+     */
+    public function findByName(string $name) : Bill;
 
     /**
      * @return Collection
@@ -129,6 +123,13 @@ interface BillRepositoryInterface
     public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
 
     /**
+     * @param $bill
+     *
+     * @return string
+     */
+    public function getOverallAverage($bill): string;
+
+    /**
      * @param Bill $bill
      *
      * @return Collection
@@ -147,6 +148,14 @@ interface BillRepositoryInterface
      * @return array
      */
     public function getRanges(Bill $bill, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return string
+     */
+    public function getYearAverage(Bill $bill, Carbon $date): string;
 
     /**
      * @param Bill $bill

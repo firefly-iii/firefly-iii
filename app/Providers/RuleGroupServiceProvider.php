@@ -45,7 +45,7 @@ class RuleGroupServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\RuleGroup\RuleGroupRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\RuleGroup\RuleGroupRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

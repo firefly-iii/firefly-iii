@@ -17,6 +17,7 @@ use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\ImportEntry;
 use FireflyIII\Import\Mapper\MapperInterface;
+use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Http\Request;
@@ -180,16 +181,23 @@ class CsvImporter implements ImporterInterface
     public function saveImportConfiguration(array $data, FileBag $files): bool
     {
         /** @var AccountCrud $repository */
-        $repository            = app(AccountCrud::class);
-        $account               = $repository->find(intval($data['csv_import_account']));
+        $repository = app(AccountCrud::class, [auth()->user()]);
+        $account    = $repository->find(intval($data['csv_import_account']));
+
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
         $config                = $this->job->configuration;
         $config['has-headers'] = $hasHeaders;
         $config['date-format'] = $data['date_format'];
         $config['delimiter']   = $data['csv_delimiter'];
 
+        Log::debug('Entered import account.', ['id' => $data['csv_import_account']]);
+
+
         if (!is_null($account->id)) {
+            Log::debug('Found account.', ['id' => $account->id, 'name' => $account->name]);
             $config['import-account'] = $account->id;
+        } else {
+            Log::error('Could not find anything for csv_import_account.', ['id' => $data['csv_import_account']]);
         }
         // loop specifics.
         if (isset($data['specifics']) && is_array($data['specifics'])) {
@@ -335,21 +343,28 @@ class CsvImporter implements ImporterInterface
 
         foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
             if ($mustBeMapped) {
-                $column      = $config['column-roles'][$index] ?? '_ignore';
-                $canBeMapped = config('csv.import_roles.' . $column . '.mappable');
+                $column        = $config['column-roles'][$index] ?? '_ignore';
+                $canBeMapped   = config('csv.import_roles.' . $column . '.mappable');
+                $preProcessMap = config('csv.import_roles.' . $column . '.pre-process-map');
                 if ($canBeMapped) {
                     $mapperName = '\FireflyIII\Import\Mapper\\' . config('csv.import_roles.' . $column . '.mapper');
                     /** @var MapperInterface $mapper */
                     $mapper       = new $mapperName;
                     $indexes[]    = $index;
                     $data[$index] = [
-                        'name'    => $column,
-                        'mapper'  => $mapperName,
-                        'index'   => $index,
-                        'options' => $mapper->getMap(),
-                        'values'  => [],
+                        'name'          => $column,
+                        'mapper'        => $mapperName,
+                        'index'         => $index,
+                        'options'       => $mapper->getMap(),
+                        'preProcessMap' => null,
+                        'values'        => [],
                     ];
+                    if ($preProcessMap) {
+                        $data[$index]['preProcessMap'] = '\FireflyIII\Import\MapperPreProcess\\' .
+                                                         config('csv.import_roles.' . $column . '.pre-process-mapper');
+                    }
                 }
+
             }
         }
 
@@ -358,12 +373,29 @@ class CsvImporter implements ImporterInterface
         $reader  = Reader::createFromString($content);
         $results = $reader->fetch();
 
-        foreach ($results as $row) {
+        foreach ($results as $rowIndex => $row) {
             //do something here
-            foreach ($indexes as $index) {
+            foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
                 $value = $row[$index];
                 if (strlen($value) > 0) {
-                    $data[$index]['values'][] = $row[$index];
+
+                    // we can do some preprocessing here,
+                    // which is exclusively to fix the tags:
+                    if (!is_null($data[$index]['preProcessMap'])) {
+                        /** @var PreProcessorInterface $preProcessor */
+                        $preProcessor           = app($data[$index]['preProcessMap']);
+                        $result                 = $preProcessor->run($value);
+                        $data[$index]['values'] = array_merge($data[$index]['values'], $result);
+
+                        Log::debug($rowIndex . ':' . $index . 'Value before preprocessor', ['value' => $value]);
+                        Log::debug($rowIndex . ':' . $index . 'Value after preprocessor', ['value-new' => $result]);
+                        Log::debug($rowIndex . ':' . $index . 'Value after joining', ['value-complete' => $data[$index]['values']]);
+
+
+                        continue;
+                    }
+
+                    $data[$index]['values'][] = $value;
                 }
             }
         }

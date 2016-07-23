@@ -74,12 +74,40 @@ class AccountCrud implements AccountCrudInterface
      */
     public function find(int $accountId): Account
     {
+        Log::debug('Searching for user ', ['user' => $this->user->id]);
         $account = $this->user->accounts()->find($accountId);
         if (is_null($account)) {
             return new Account;
         }
 
         return $account;
+    }
+
+    /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByAccountNumber(string $number, array $types): Account
+    {
+        $query = $this->user->accounts()
+                            ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                            ->where('account_meta.name', 'accountNumber')
+                            ->where('account_meta.data', json_encode($number));
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        /** @var Collection $accounts */
+        $accounts = $query->get();
+        if ($accounts->count() > 0) {
+            return $accounts->first();
+        }
+
+        return new Account;
     }
 
     /**
