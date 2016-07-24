@@ -15,6 +15,7 @@ use Auth;
 use Cache;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
+use Log;
 
 /**
  * Class FireflyConfig
@@ -48,8 +49,11 @@ class FireflyConfig
      */
     public function get($name, $default = null)
     {
+        Log::debug('Now in FFConfig::get()', ['name' => $name]);
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
+            Log::debug('Return cache.');
+
             return Cache::get($fullName);
         }
 
@@ -57,14 +61,19 @@ class FireflyConfig
 
         if ($config) {
             Cache::forever($fullName, $config);
+            Log::debug('Return found one.');
 
             return $config;
         }
         // no preference found and default is null:
         if (is_null($default)) {
             // return NULL
+            Log::debug('Return null.');
+
             return null;
         }
+
+        Log::debug('Return this->set().');
 
         return $this->set($name, $default);
 
@@ -78,7 +87,10 @@ class FireflyConfig
      */
     public function set($name, $value): Configuration
     {
-        $item       = $this->get($name, $value);
+        //
+
+        $item       = new Configuration;
+        $item->name = $name;
         $item->data = $value;
         $item->save();
 
