@@ -15,6 +15,7 @@ use Auth;
 use FireflyIII\Events\UserRegistration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -177,16 +178,7 @@ class AuthController extends Controller
      */
     protected function getBlockedDomains()
     {
-        $set     = explode(',', env('BLOCKED_DOMAINS', ''));
-        $domains = [];
-        foreach ($set as $entry) {
-            $domain = trim($entry);
-            if (strlen($domain) > 0) {
-                $domains[] = $domain;
-            }
-        }
-
-        return $domains;
+        return FireflyConfig::get('blocked-domains')->data;
     }
 
     /**
