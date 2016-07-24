@@ -13,6 +13,7 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
+use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
@@ -60,6 +61,12 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(
             'preferences', function () {
             return new Preferences;
+        }
+        );
+
+        $this->app->bind(
+            'fireflyconfig', function () {
+            return new FireflyConfig;
         }
         );
         $this->app->bind(

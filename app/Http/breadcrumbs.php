@@ -97,6 +97,23 @@ Breadcrumbs::register(
 );
 
 /**
+ * ADMIN
+ */
+Breadcrumbs::register(
+    'admin.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.administration'), route('admin.index'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.users', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.list_all_users'), route('admin.users'));
+}
+);
+
+/**
  * ATTACHMENTS
  */
 Breadcrumbs::register(

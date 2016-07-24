@@ -424,6 +424,10 @@ Route::group(
 
     // user manager
     Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
+    Route::get('/admin/users/domains', ['uses' => 'Admin\UserController@domains', 'as' => 'admin.users.domains']);
+    Route::get('/admin/users/domains/toggle/{domain}', ['uses' => 'Admin\UserController@toggleDomain', 'as' => 'admin.users.domains.block-toggle']);
+
+    Route::post('/admin/users/domains/manual', ['uses' => 'Admin\UserController@manual', 'as' => 'admin.users.domains.manual']);
 
 }
 );

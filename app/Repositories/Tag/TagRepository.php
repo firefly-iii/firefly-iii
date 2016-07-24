@@ -83,6 +83,39 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @param int $tagId
+     *
+     * @return Tag
+     */
+    public function find(int $tagId) : Tag
+    {
+        $tag = $this->user->tags()->find($tagId);
+        if (is_null($tag)) {
+            $tag = new Tag;
+        }
+
+        return $tag;
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return Tag
+     */
+    public function findByTag(string $tag) : Tag
+    {
+        $tags = $this->user->tags()->get();
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            if ($tag->tag === $tag) {
+                return $tag;
+            }
+        }
+
+        return new Tag;
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection

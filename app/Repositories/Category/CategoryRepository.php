@@ -102,6 +102,25 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * Find a category
+     *
+     * @param string $name
+     *
+     * @return Category
+     */
+    public function findByName(string $name) : Category
+    {
+        $categories = $this->user->categories()->get();
+        foreach ($categories as $category) {
+            if ($category->name === $name) {
+                return $category;
+            }
+        }
+
+        return new Category;
+    }
+
+    /**
      * @param Category   $category
      * @param Collection $accounts
      *
@@ -554,4 +573,5 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $sum;
 
     }
+
 }

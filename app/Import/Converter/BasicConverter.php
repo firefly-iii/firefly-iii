@@ -21,6 +21,8 @@ use FireflyIII\User;
  */
 class BasicConverter
 {
+    /** @var int */
+    public $certainty = 50;
     /** @var  array */
     public $config;
     /** @var  bool */
@@ -29,6 +31,14 @@ class BasicConverter
     public $mapping = [];
     /** @var  User */
     public $user;
+
+    /**
+     * @return int
+     */
+    public function getCertainty():int
+    {
+        return $this->certainty;
+    }
 
     /**
      * @param array $config

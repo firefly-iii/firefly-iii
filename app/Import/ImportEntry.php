@@ -12,7 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Import;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
+use Log;
 
 /**
  * Class ImportEntry
@@ -21,21 +21,39 @@ use FireflyIII\Models\Account;
  */
 class ImportEntry
 {
-    /** @var  Account */
-    public $assetAccount;
+    public $amount;
+
 
     /**
-     * @param $role
-     * @param $value
+     * @param string $role
+     * @param string $value
+     * @param int    $certainty
+     * @param        $convertedValue
      *
      * @throws FireflyException
      */
-    public function fromRawValue($role, $value)
+    public function importValue(string $role, string $value, int $certainty, $convertedValue)
     {
         switch ($role) {
             default:
-                throw new FireflyException('Cannot handle role of type "' . $role . '".');
+                Log::error('Import entry cannot handle object.', ['role' => $role]);
+                throw new FireflyException('Import entry cannot handle object of type "' . $role . '".');
+                break;
 
+            case 'amount':
+                $this->setAmount($convertedValue);
+                return;
+            case 'account-id':
+
+                break;
         }
+    }
+
+    /**
+     * @param float $amount
+     */
+    private function setAmount(float $amount)
+    {
+        $this->amount = $amount;
     }
 }

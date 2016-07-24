@@ -1,6 +1,6 @@
 <?php
 /**
- * AssetAccountId.php
+ * AccountId.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -16,11 +16,11 @@ use FireflyIII\Models\Account;
 use Log;
 
 /**
- * Class AssetAccountId
+ * Class AccountId
  *
  * @package FireflyIII\Import\Converter
  */
-class AssetAccountId extends BasicConverter implements ConverterInterface
+class AccountId extends BasicConverter implements ConverterInterface
 {
 
     /**

@@ -11,7 +11,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Log;
 
 /**
  * Class CurrencySymbol
@@ -24,11 +26,48 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
     /**
      * @param $value
      *
-     * @throws FireflyException
+     * @return TransactionCurrency
      */
     public function convert($value)
     {
-        throw new FireflyException('Importer with name CurrencySymbol has not yet been configured.');
+        $value = trim($value);
+        Log::debug('Going to convert using CurrencySymbol', ['value' => $value]);
+
+        if ($value === 0) {
+            return new TransactionCurrency;
+        }
+
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class, [$this->user]);
+
+        if (isset($this->mapping[$value])) {
+            Log::debug('Found currency in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);
+            $currency = $repository->find(intval($this->mapping[$value]));
+            if (!is_null($currency->id)) {
+                Log::debug('Found currency by ID', ['id' => $currency->id]);
+
+                return $currency;
+            }
+        }
+
+        // not mapped? Still try to find it first:
+        $currency = $repository->findBySymbol($value);
+        if (!is_null($currency->id)) {
+            Log::debug('Found currency by symbol ', ['id' => $currency->id]);
+
+            return $currency;
+        }
+
+        // create new currency
+        $currency = $repository->store(
+            [
+                'name'   => 'Currency ' . $value,
+                'code'   => $value,
+                'symbol' => $value,
+            ]
+        );
+
+        return $currency;
 
     }
 }

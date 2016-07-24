@@ -60,7 +60,7 @@ return [
 
         ],
         'bill-id'           => [
-            'mappable'        => false,
+            'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'bill',
             'converter'       => 'BillId',
@@ -179,7 +179,7 @@ return [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'asset-account-id',
-            'converter'       => 'AssetAccountId',
+            'converter'       => 'AccountId',
             'mapper'          => 'AssetAccounts',
         ],
         'account-name'      => [
@@ -208,7 +208,7 @@ return [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'opposing-account-id',
-            'converter'       => 'OpposingAccountId',
+            'converter'       => 'AccountId',
             'mapper'          => 'OpposingAccounts',
         ],
         'opposing-name'     => [

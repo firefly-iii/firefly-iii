@@ -47,6 +47,7 @@ class Preference extends Model
      * @param $value
      *
      * @return mixed
+     * @throws FireflyException
      */
     public function getDataAttribute($value)
     {

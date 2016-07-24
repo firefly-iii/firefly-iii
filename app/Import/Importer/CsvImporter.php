@@ -485,11 +485,13 @@ class CsvImporter implements ImporterInterface
 
             // run the converter for this value:
             $convertedValue = $converter->convert($value);
+            $certainty      = $converter->getCertainty();
 
             // log it.
             Log::debug('Value ', ['index' => $index, 'value' => $value, 'role' => $role]);
 
             // store in import entry:
+            $object->importValue($role, $value, $certainty, $convertedValue);
             // $object->fromRawValue($role, $value);
 
 

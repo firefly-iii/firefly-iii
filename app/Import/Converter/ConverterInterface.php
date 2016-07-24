@@ -32,6 +32,11 @@ interface ConverterInterface
     public function setConfig(array $config);
 
     /**
+     * @return int
+     */
+    public function getCertainty(): int;
+
+    /**
      * @param bool $doMap
      */
     public function setDoMap(bool $doMap);

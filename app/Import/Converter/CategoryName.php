@@ -12,6 +12,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use Log;
 
 /**
  * Class CategoryName
@@ -24,11 +27,47 @@ class CategoryName extends BasicConverter implements ConverterInterface
     /**
      * @param $value
      *
-     * @throws FireflyException
+     * @return Category
      */
     public function convert($value)
     {
-        throw new FireflyException('Importer with name CategoryName has not yet been configured.');
+        $value = trim($value);
+        Log::debug('Going to convert using CategoryName', ['value' => $value]);
+
+        if (strlen($value) === 0) {
+            return new Category;
+        }
+
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class, [$this->user]);
+
+        if (isset($this->mapping[$value])) {
+            Log::debug('Found category in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);
+            $category = $repository->find(intval($this->mapping[$value]));
+            if (!is_null($category->id)) {
+                Log::debug('Found category by ID', ['id' => $category->id]);
+
+                return $category;
+            }
+        }
+
+        // not mapped? Still try to find it first:
+        $category = $repository->findByName($value);
+        if (!is_null($category->id)) {
+            Log::debug('Found category by name ', ['id' => $category->id]);
+
+            return $category;
+        }
+
+        // create new category. Use a lot of made up values.
+        $category = $repository->store(
+            [
+                'name'    => $value,
+                'user_id' => $this->user->id,
+            ]
+        );
+
+        return $category;
 
     }
 }

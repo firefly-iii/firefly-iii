@@ -12,6 +12,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Log;
 
 /**
  * Class BudgetId
@@ -24,11 +27,40 @@ class BudgetId extends BasicConverter implements ConverterInterface
     /**
      * @param $value
      *
-     * @throws FireflyException
+     * @return Budget
      */
     public function convert($value)
     {
-        throw new FireflyException('Importer with name BudgetId has not yet been configured.');
+        $value = intval(trim($value));
+        Log::debug('Going to convert using BudgetId', ['value' => $value]);
+
+        if ($value === 0) {
+            return new Budget;
+        }
+
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class, [$this->user]);
+
+        if (isset($this->mapping[$value])) {
+            Log::debug('Found budget in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);
+            $budget = $repository->find(intval($this->mapping[$value]));
+            if (!is_null($budget->id)) {
+                Log::debug('Found budget by ID', ['id' => $budget->id]);
+
+                return $budget;
+            }
+        }
+
+        // not mapped? Still try to find it first:
+        $budget = $repository->find($value);
+        if (!is_null($budget->id)) {
+            Log::debug('Found budget by ID ', ['id' => $budget->id]);
+
+            return $budget;
+        }
+
+        // should not really happen. If the ID does not match FF, what is FF supposed to do?
+        return new Budget;
 
     }
 }

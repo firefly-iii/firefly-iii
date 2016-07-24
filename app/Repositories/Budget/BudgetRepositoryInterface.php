@@ -25,6 +25,11 @@ interface BudgetRepositoryInterface
 {
 
     /**
+     * @return bool
+     */
+    public function cleanupBudgets(): bool;
+
+    /**
      * @param Budget $budget
      *
      * @return bool
@@ -39,6 +44,15 @@ interface BudgetRepositoryInterface
      * @return Budget
      */
     public function find(int $budgetId): Budget;
+
+    /**
+     * Find a budget.
+     *
+     * @param string $name
+     *
+     * @return Budget
+     */
+    public function findByName(string $name): Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.
@@ -93,15 +107,6 @@ interface BudgetRepositoryInterface
     public function journalsInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
@@ -112,9 +117,13 @@ interface BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string;
 
     /**
-     * @return bool
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
      */
-    public function cleanupBudgets(): bool;
+    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param array $data

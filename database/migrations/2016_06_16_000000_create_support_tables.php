@@ -25,6 +25,7 @@ class CreateSupportTables extends Migration
         Schema::drop('permissions');
         Schema::drop('roles');
         Schema::drop('sessions');
+        Schema::drop('configuration');
 
     }
 
@@ -79,6 +80,8 @@ class CreateSupportTables extends Migration
          */
         $this->createSessionsTable();
 
+        $this->createConfigurationTable();
+
     }
 
     /**
@@ -118,6 +121,23 @@ class CreateSupportTables extends Migration
                 // code must be unique.
                 $table->unique(['code']);
 
+            }
+            );
+        }
+    }
+
+    private function createConfigurationTable()
+    {
+        if (!Schema::hasTable('configuration')) {
+            Schema::create(
+                'configuration', function (Blueprint $table) {
+
+                $table->increments('id');
+                $table->timestamps();
+                $table->softDeletes();
+                $table->string('name', 50);
+                $table->text('data');
+                $table->unique(['name']);
             }
             );
         }
@@ -176,7 +196,7 @@ class CreateSupportTables extends Migration
                 'permission_role', function (Blueprint $table) {
                 $table->integer('permission_id')->unsigned();
                 $table->integer('role_id')->unsigned();
-                
+
                 $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
                 $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
 

@@ -31,8 +31,12 @@ class RabobankDebetCredit extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert ', ['value' => $value]);
 
         if ($value === 'D') {
+            Log::debug('Return -1');
+
             return -1;
         }
+
+        Log::debug('Return 1');
 
         return 1;
     }

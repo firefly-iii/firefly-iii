@@ -23,7 +23,6 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class BudgetRepository
@@ -84,6 +83,26 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $budget;
+    }
+
+    /**
+     * Find a budget.
+     *
+     * @param string $name
+     *
+     * @return Budget
+     */
+    public function findByName(string $name): Budget
+    {
+        $budgets = $this->user->budgets()->get();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            if ($budget->name === $name) {
+                return $budget;
+            }
+        }
+
+        return new Budget;
     }
 
     /**
@@ -499,5 +518,4 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $limit;
     }
-
 }

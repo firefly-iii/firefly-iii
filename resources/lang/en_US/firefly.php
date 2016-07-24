@@ -718,6 +718,18 @@ return [
     'user_administration'                       => 'User administration',
     'list_all_users'                            => 'All users',
     'all_users'                                 => 'All users',
+    'all_blocked_domains'                       => 'All blocked domains',
+    'blocked_domains'                           => 'Blocked domains',
+    'no_domains_banned'                         => 'No domains blocked',
+    'all_user_domains'                          => 'All user email address domains',
+    'all_domains_is_filtered'                   => 'This list does not include already blocked domains.',
+    'domain_now_blocked'                        => 'Domain :domain is now blocked',
+    'domain_now_unblocked'                      => 'Domain :domain is now unblocked',
+    'manual_block_domain'                       => 'Block a domain by hand',
+    'block_domain'                              => 'Block domain',
+    'no_domain_filled_in'                       => 'No domain filled in',
+    'domain_already_blocked'                    => 'Domain :domain is already blocked',
+    'domain_is_now_blocked'                     => 'Domain :domain is now blocked',
 
     // split a transaction:
     'transaction_meta_data'                     => 'Transaction meta-data',

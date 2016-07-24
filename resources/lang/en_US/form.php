@@ -131,6 +131,9 @@ return [
     'category_keep_transactions'     => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
     'tag_keep_transactions'          => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
 
+    // admin
+    'domain'                         => 'Domain',
+
     // import
     'import_file'                    => 'Import file',
     'configuration_file'             => 'Configuration file',

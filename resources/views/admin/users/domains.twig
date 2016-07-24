@@ -1,0 +1,120 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'all_blocked_domains'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    {% if domains|length > 0 %}
+                        <table class="table table-condensed table-sortable">
+                            <thead>
+                            <tr>
+                                <th style="width:20%;">&nbsp;</th>
+                                <th>{{ trans('list.domain') }}</th>
+                                <th>{{ trans('list.is_blocked') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for domain in domains %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('admin.users.domains.block-toggle', [domain]) }}" class="btn btn-sm btn-success"><i
+                                                    class="fa fa-fw fa-times"></i> unblock</a>
+                                    </td>
+                                    <td>{{ domain }}</td>
+                                    <td>
+                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>
+                            <em>{{ 'no_domains_banned'|_ }}</em>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- domains found in users (not in top list) -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'all_user_domains'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    {% if knownDomains|length > 0 %}
+                        <p>
+                            {{ 'all_domains_is_filtered'|_ }}
+
+                        </p>
+                        <table class="table table-condensed table-sortable">
+                            <thead>
+                            <tr>
+                                <th style="width:20%;">&nbsp;</th>
+                                <th>{{ trans('list.domain') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for domain in knownDomains %}
+                                <tr>
+                                    <td><a href="{{ route('admin.users.domains.block-toggle', [domain]) }}" class="btn btn-sm btn-danger"><i
+                                                    class="fa fa-fw fa-check"></i> block</a></td>
+                                    <td>{{ domain }}</td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p class="well">
+                            <em>{{ 'no_domains_banned'|_ }}</em>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- block domain by hand -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'manual_block_domain'|_ }}</h3>
+                </div>
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+
+                            <form action="{{ route('admin.users.domains.manual') }}" method="post" id="store" class="form-horizontal">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                                <input type="hidden" name="what" value="{{ what }}"/>
+
+                                {{ ExpandedForm.text('domain') }}
+
+                                <input type="submit" name="submit" class="btn btn-success" value="{{ ('block_domain')|_ }}"/>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

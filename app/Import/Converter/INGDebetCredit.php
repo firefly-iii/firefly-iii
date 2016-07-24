@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Exceptions\FireflyException;
+use Log;
 
 /**
  * Class INGDebetCredit
@@ -24,11 +25,19 @@ class INGDebetCredit extends BasicConverter implements ConverterInterface
     /**
      * @param $value
      *
-     * @throws FireflyException
+     * @return int
      */
     public function convert($value)
     {
-        throw new FireflyException('Importer with name INGDebetCredit has not yet been configured.');
+        Log::debug('Going to convert ', ['value' => $value]);
+
+        if ($value === 'Af') {
+            Log::debug('Return -1');
+            return -1;
+        }
+
+        Log::debug('Return 1');
+        return 1;
 
     }
 }
