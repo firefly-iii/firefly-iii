@@ -8,9 +8,28 @@
 
 /* globals globalSum */
 
+var destAccounts = {};
+var srcAccounts = {};
+var categories = {};
 $(function () {
     "use strict";
     $('.btn-do-split').click(cloneRow);
+
+    $.getJSON('json/expense-accounts').done(function (data) {
+        destAccounts = data;
+        console.log('destAccounts length is now ' + destAccounts.length);
+    });
+
+    $.getJSON('json/revenue-accounts').done(function (data) {
+        srcAccounts = data;
+        console.log('srcAccounts length is now ' + srcAccounts.length);
+    });
+
+    $.getJSON('json/categories').done(function (data) {
+        categories = data;
+        console.log('categories length is now ' + categories.length);
+    });
+
     $('input[name="amount[]"]').on('input', calculateSum)
 });
 
@@ -21,6 +40,19 @@ function cloneRow() {
     source.removeClass('initial-row');
     source.find('.count').text('#' + count);
     source.find('input[name="amount[]"]').val("").on('input', calculateSum);
+    if (destAccounts.length > 0) {
+        console.log('Will be able to extend dest-accounts.');
+        source.find('input[name="destination_account_name[]"]').typeahead({source: destAccounts});
+    }
+
+    if (destAccounts.length > 0) {
+        console.log('Will be able to extend src-accounts.');
+        source.find('input[name="source_account_name[]"]').typeahead({source: srcAccounts});
+    }
+    if(categories.length > 0) {
+        console.log('Will be able to extend categories.');
+        source.find('input[name="category[]"]').typeahead({source: categories});
+    }
 
     $('.split-table tbody').append(source);
 
