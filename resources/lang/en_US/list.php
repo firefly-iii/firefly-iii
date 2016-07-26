@@ -29,6 +29,7 @@ return [
     'lastMatch'             => 'Last match',
     'split_number'          => 'Split #',
     'destination'           => 'Destination',
+    'source'                => 'Source',
     'expectedMatch'         => 'Expected match',
     'automatch'             => 'Auto match?',
     'repeat_freq'           => 'Repeats',

@@ -59,14 +59,10 @@ class SplitJournalFormRequest extends Request
                 'amount'                   => round($this->get('amount')[$index], 2),
                 'budget_id'                => $this->get('budget_id')[$index] ? intval($this->get('budget_id')[$index]) : 0,
                 'category'                 => $this->get('category')[$index] ?? '',
-                'source_account_id'        => intval($this->get('journal_source_account_id')),
-                'source_account_name'      => $this->get('journal_source_account_name'),
-                'piggy_bank_id'            => isset($this->get('piggy_bank_id')[$index])
-                    ? intval($this->get('piggy_bank_id')[$index])
-                    : 0,
-                'destination_account_id'   => isset($this->get('destination_account_id')[$index])
-                    ? intval($this->get('destination_account_id')[$index])
-                    : intval($this->get('journal_destination_account_id')),
+                'source_account_id'        => isset($this->get('source_account_id')[$index]) ? intval($this->get('source_account_id')[$index]) : intval($this->get('journal_source_account_id')),
+                'source_account_name'      => $this->get('source_account_name')[$index] ?? '',
+                'piggy_bank_id'            => isset($this->get('piggy_bank_id')[$index]) ? intval($this->get('piggy_bank_id')[$index]) : 0,
+                'destination_account_id'   => isset($this->get('destination_account_id')[$index]) ? intval($this->get('destination_account_id')[$index]) : intval($this->get('journal_destination_account_id')),
                 'destination_account_name' => $this->get('destination_account_name')[$index] ?? '',
             ];
             $data['transactions'][] = $transaction;
