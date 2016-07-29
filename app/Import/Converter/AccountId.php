@@ -34,6 +34,8 @@ class AccountId extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using AssetAccountId', ['value' => $value]);
 
         if ($value === 0) {
+            $this->setCertainty(0);
+
             return new Account;
         }
 
@@ -47,6 +49,8 @@ class AccountId extends BasicConverter implements ConverterInterface
             if (!is_null($account->id)) {
                 Log::debug('Found account by ID', ['id' => $account->id]);
 
+                $this->setCertainty(100);
+
                 return $account;
             }
         }
@@ -54,10 +58,14 @@ class AccountId extends BasicConverter implements ConverterInterface
         // not mapped? Still try to find it first:
         $account = $repository->find($value);
         if (!is_null($account->id)) {
+            $this->setCertainty(90);
+
             Log::debug('Found account by ID ', ['id' => $account->id]);
 
             return $account;
         }
+
+        $this->setCertainty(0);
 
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
         return new Account;

@@ -41,6 +41,14 @@ class BasicConverter
     }
 
     /**
+     * @param int $certainty
+     */
+    protected function setCertainty(int $certainty)
+    {
+        $this->certainty = $certainty;
+    }
+
+    /**
      * @param array $config
      */
     public function setConfig(array $config)
