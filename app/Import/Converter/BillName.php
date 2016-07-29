@@ -35,6 +35,7 @@ class BillName extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using BillName', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
             return new Bill;
         }
 
@@ -46,7 +47,7 @@ class BillName extends BasicConverter implements ConverterInterface
             $bill = $repository->find(intval($this->mapping[$value]));
             if (!is_null($bill->id)) {
                 Log::debug('Found bill by ID', ['id' => $bill->id]);
-
+                $this->setCertainty(100);
                 return $bill;
             }
         }
@@ -55,7 +56,7 @@ class BillName extends BasicConverter implements ConverterInterface
         $bill = $repository->findByName($value);
         if (!is_null($bill->id)) {
             Log::debug('Found bill by name ', ['id' => $bill->id]);
-
+            $this->setCertainty(100);
             return $bill;
         }
 
@@ -75,6 +76,7 @@ class BillName extends BasicConverter implements ConverterInterface
 
             ]
         );
+        $this->setCertainty(100);
 
         return $bill;
 

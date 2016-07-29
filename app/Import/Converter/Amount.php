@@ -56,6 +56,8 @@ class Amount extends BasicConverter implements ConverterInterface
             $value  = str_replace($search, '', $value);
         }
 
+        $this->setCertainty(90);
+
 
         return round(floatval($value), 4);
 

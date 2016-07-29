@@ -34,6 +34,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert ', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
             return new Account;
         }
 
@@ -46,7 +47,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
             $account = $repository->find(intval($this->mapping[$value]));
             if (!is_null($account->id)) {
                 Log::debug('Found account by ID', ['id' => $account->id]);
-
+                $this->setCertainty(100);
                 return $account;
             }
         }
@@ -59,6 +60,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
                 'The match between IBAN and account is uncertain because the type of transactions may not have been determined.',
                 ['id' => $account->id, 'iban' => $value]
             );
+            $this->setCertainty(50);
 
             return $account;
         }
@@ -67,6 +69,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
             ['name'           => $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'import', 'virtualBalance' => 0, 'active' => true,
              'openingBalance' => 0]
         );
+        $this->setCertainty(100);
 
         return $account;
     }

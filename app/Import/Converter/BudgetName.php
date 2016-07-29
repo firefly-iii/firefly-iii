@@ -35,6 +35,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using BudgetName', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
             return new Budget;
         }
 
@@ -46,7 +47,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
             $budget = $repository->find(intval($this->mapping[$value]));
             if (!is_null($budget->id)) {
                 Log::debug('Found budget by ID', ['id' => $budget->id]);
-
+                $this->setCertainty(100);
                 return $budget;
             }
         }
@@ -55,7 +56,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
         $budget = $repository->findByName($value);
         if (!is_null($budget->id)) {
             Log::debug('Found budget by name ', ['id' => $budget->id]);
-
+            $this->setCertainty(100);
             return $budget;
         }
 
@@ -66,6 +67,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
                 'user_id'     => $this->user->id,
             ]
         );
+        $this->setCertainty(100);
 
         return $budget;
 

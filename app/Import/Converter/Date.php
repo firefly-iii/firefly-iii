@@ -42,7 +42,7 @@ class Date extends BasicConverter implements ConverterInterface
             throw new FireflyException(sprintf('Cannot convert "%s" to a valid date using format "%s".', $value, $this->config['date-format']));
         }
         Log::debug('Converted date', ['converted' => $date->toAtomString()]);
-
+        $this->setCertainty(100);
         return $date;
     }
 }

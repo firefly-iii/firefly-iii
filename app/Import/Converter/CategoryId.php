@@ -35,6 +35,7 @@ class CategoryId extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using CategoryId', ['value' => $value]);
 
         if ($value === 0) {
+            $this->setCertainty(0);
             return new Category;
         }
 
@@ -46,7 +47,7 @@ class CategoryId extends BasicConverter implements ConverterInterface
             $category = $repository->find(intval($this->mapping[$value]));
             if (!is_null($category->id)) {
                 Log::debug('Found category by ID', ['id' => $category->id]);
-
+                $this->setCertainty(100);
                 return $category;
             }
         }
@@ -55,11 +56,12 @@ class CategoryId extends BasicConverter implements ConverterInterface
         $category = $repository->find($value);
         if (!is_null($category->id)) {
             Log::debug('Found category by ID ', ['id' => $category->id]);
-
+            $this->setCertainty(100);
             return $category;
         }
 
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
+        $this->setCertainty(0);
         return new Category;
 
     }

@@ -35,6 +35,8 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert ', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
+
             return new Account;
         }
 
@@ -46,6 +48,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             Log::debug('Found account in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);
             $account = $repository->find(intval($this->mapping[$value]));
             if (!is_null($account->id)) {
+                $this->setCertainty(100);
                 Log::debug('Found account by ID', ['id' => $account->id]);
 
                 return $account;
@@ -56,6 +59,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         $account = $repository->findByIban($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by IBAN', ['id' => $account->id]);
+            $this->setCertainty(50);
 
             return $account;
         }
@@ -65,6 +69,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             ['name'   => 'Account with IBAN ' . $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0,
              'active' => true]
         );
+        $this->setCertainty(100);
 
         return $account;
     }

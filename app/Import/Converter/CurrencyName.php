@@ -34,6 +34,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using CurrencyName', ['value' => $value]);
 
         if ($value === 0) {
+            $this->setCertainty(0);
             return new TransactionCurrency;
         }
 
@@ -45,7 +46,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
             $currency = $repository->find(intval($this->mapping[$value]));
             if (!is_null($currency->id)) {
                 Log::debug('Found currency by ID', ['id' => $currency->id]);
-
+                $this->setCertainty(100);
                 return $currency;
             }
         }
@@ -54,7 +55,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
         $currency = $repository->findByName($value);
         if (!is_null($currency->id)) {
             Log::debug('Found currency by name ', ['id' => $currency->id]);
-
+            $this->setCertainty(100);
             return $currency;
         }
 
@@ -66,6 +67,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
                 'symbol' => strtoupper(substr($value, 0, 1)),
             ]
         );
+        $this->setCertainty(100);
 
         return $currency;
 

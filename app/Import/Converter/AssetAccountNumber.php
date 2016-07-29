@@ -57,7 +57,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         $account = $repository->findByAccountNumber($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
-
+            $this->setCertainty(50);
             return $account;
         }
 
@@ -66,6 +66,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
             ['name'           => 'Account with number ' . $value, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'asset',
              'virtualBalance' => 0, 'active' => true]
         );
+        $this->setCertainty(100);
 
         return $account;
 

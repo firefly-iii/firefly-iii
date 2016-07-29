@@ -35,6 +35,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using OpposingAccountNumber', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
             return new Account;
         }
 
@@ -47,7 +48,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
             $account = $repository->find(intval($this->mapping[$value]));
             if (!is_null($account->id)) {
                 Log::debug('Found account by ID', ['id' => $account->id]);
-
+                $this->setCertainty(100);
                 return $account;
             }
         }
@@ -55,8 +56,8 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         // not mapped? Still try to find it first:
         $account = $repository->findByAccountNumber($value, []);
         if (!is_null($account->id)) {
-            Log::debug('Found account by name', ['id' => $account->id]);
-
+            Log::debug('Found account by number', ['id' => $account->id]);
+            $this->setCertainty(50);
             return $account;
         }
 
@@ -65,6 +66,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
             ['name'           => 'Account with number ' . $value, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'asset',
              'virtualBalance' => 0, 'active' => true]
         );
+        $this->setCertainty(100);
 
         return $account;
 

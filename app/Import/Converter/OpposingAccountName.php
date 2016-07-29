@@ -46,7 +46,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
             $account = $repository->find(intval($this->mapping[$value]));
             if (!is_null($account->id)) {
                 Log::debug('Found account by ID', ['id' => $account->id]);
-
+                $this->setCertainty(100);
                 return $account;
             }
         }
@@ -59,7 +59,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
                 'The match between name and account is uncertain because the type of transactions may not have been determined.',
                 ['id' => $account->id, 'name' => $value]
             );
-
+            $this->setCertainty(50);
             return $account;
         }
 
@@ -68,6 +68,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
              'openingBalance' => 0,
             ]
         );
+        $this->setCertainty(100);
 
         return $account;
     }

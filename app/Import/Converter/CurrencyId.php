@@ -35,6 +35,7 @@ class CurrencyId extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using CurrencyId', ['value' => $value]);
 
         if ($value === 0) {
+            $this->setCertainty(0);
             return new TransactionCurrency;
         }
 
@@ -46,7 +47,7 @@ class CurrencyId extends BasicConverter implements ConverterInterface
             $currency = $repository->find(intval($this->mapping[$value]));
             if (!is_null($currency->id)) {
                 Log::debug('Found currency by ID', ['id' => $currency->id]);
-
+                $this->setCertainty(100);
                 return $currency;
             }
         }
@@ -55,10 +56,10 @@ class CurrencyId extends BasicConverter implements ConverterInterface
         $currency = $repository->find($value);
         if (!is_null($currency->id)) {
             Log::debug('Found currency by ID ', ['id' => $currency->id]);
-
+            $this->setCertainty(100);
             return $currency;
         }
-
+        $this->setCertainty(0);
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
         return new TransactionCurrency;
 

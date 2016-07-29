@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Log;
@@ -35,6 +34,8 @@ class BillId extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using BillId', ['value' => $value]);
 
         if ($value === 0) {
+            $this->setCertainty(0);
+
             return new Bill;
         }
 
@@ -46,6 +47,7 @@ class BillId extends BasicConverter implements ConverterInterface
             $bill = $repository->find(intval($this->mapping[$value]));
             if (!is_null($bill->id)) {
                 Log::debug('Found bill by ID', ['id' => $bill->id]);
+                $this->setCertainty(100);
 
                 return $bill;
             }
@@ -55,11 +57,15 @@ class BillId extends BasicConverter implements ConverterInterface
         $bill = $repository->find($value);
         if (!is_null($bill->id)) {
             Log::debug('Found bill by ID ', ['id' => $bill->id]);
+            $this->setCertainty(100);
 
             return $bill;
         }
 
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
+
+        $this->setCertainty(0);
+
         return new Bill;
 
     }

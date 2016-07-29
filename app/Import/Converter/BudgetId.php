@@ -35,6 +35,7 @@ class BudgetId extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using BudgetId', ['value' => $value]);
 
         if ($value === 0) {
+            $this->setCertainty(0);
             return new Budget;
         }
 
@@ -46,6 +47,7 @@ class BudgetId extends BasicConverter implements ConverterInterface
             $budget = $repository->find(intval($this->mapping[$value]));
             if (!is_null($budget->id)) {
                 Log::debug('Found budget by ID', ['id' => $budget->id]);
+                $this->setCertainty(100);
 
                 return $budget;
             }
@@ -55,11 +57,12 @@ class BudgetId extends BasicConverter implements ConverterInterface
         $budget = $repository->find($value);
         if (!is_null($budget->id)) {
             Log::debug('Found budget by ID ', ['id' => $budget->id]);
-
+            $this->setCertainty(100);
             return $budget;
         }
 
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
+        $this->setCertainty(0);
         return new Budget;
 
     }

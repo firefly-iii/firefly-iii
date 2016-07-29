@@ -33,9 +33,11 @@ class INGDebetCredit extends BasicConverter implements ConverterInterface
 
         if ($value === 'Af') {
             Log::debug('Return -1');
+            $this->setCertainty(100);
             return -1;
         }
 
+        $this->setCertainty(100);
         Log::debug('Return 1');
         return 1;
 

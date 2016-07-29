@@ -32,11 +32,13 @@ class RabobankDebetCredit extends BasicConverter implements ConverterInterface
 
         if ($value === 'D') {
             Log::debug('Return -1');
+            $this->setCertainty(100);
 
             return -1;
         }
 
         Log::debug('Return 1');
+        $this->setCertainty(100);
 
         return 1;
     }

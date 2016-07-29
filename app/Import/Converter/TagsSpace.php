@@ -34,6 +34,7 @@ class TagsSpace extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using TagsSpace', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
             return new Collection;
         }
         $parts = array_unique(explode(' ', $value));
@@ -79,6 +80,7 @@ class TagsSpace extends BasicConverter implements ConverterInterface
             Log::debug('Created new tag', ['name' => $part, 'id' => $tag->id]);
             $set->push($tag);
         }
+        $this->setCertainty(100);
 
         return $set;
 

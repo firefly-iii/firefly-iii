@@ -35,6 +35,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
         Log::debug('Going to convert using CategoryName', ['value' => $value]);
 
         if (strlen($value) === 0) {
+            $this->setCertainty(0);
             return new Category;
         }
 
@@ -46,7 +47,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
             $category = $repository->find(intval($this->mapping[$value]));
             if (!is_null($category->id)) {
                 Log::debug('Found category by ID', ['id' => $category->id]);
-
+                $this->setCertainty(100);
                 return $category;
             }
         }
@@ -55,7 +56,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
         $category = $repository->findByName($value);
         if (!is_null($category->id)) {
             Log::debug('Found category by name ', ['id' => $category->id]);
-
+            $this->setCertainty(100);
             return $category;
         }
 
@@ -66,6 +67,7 @@ class CategoryName extends BasicConverter implements ConverterInterface
                 'user_id' => $this->user->id,
             ]
         );
+        $this->setCertainty(100);
 
         return $category;
 
