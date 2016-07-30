@@ -135,6 +135,8 @@ class AccountRepository implements AccountRepositoryInterface
 
             $query->whereIn('destination.account_id', $accountIds);
             $query->whereNotIn('source.account_id', $accountIds);
+            $query->whereNull('destination.deleted_at');
+            $query->whereNull('source.deleted_at');
 
         }
         // remove group by
