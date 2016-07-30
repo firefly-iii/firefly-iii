@@ -3,3 +3,4 @@
 .env
 _development
 .env.local
+result.html
