@@ -33,7 +33,7 @@ class CurrencySymbol extends BasicConverter implements ConverterInterface
         $value = trim($value);
         Log::debug('Going to convert using CurrencySymbol', ['value' => $value]);
 
-        if ($value === 0) {
+        if (strlen($value) === 0) {
             $this->setCertainty(0);
             return new TransactionCurrency;
         }

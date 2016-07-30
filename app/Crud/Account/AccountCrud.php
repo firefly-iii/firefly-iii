@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Crud\Account;
 
+use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -233,21 +234,8 @@ class AccountCrud implements AccountCrudInterface
             $this->storeMetadata($newAccount, $data);
         }
 
-        // continue with the opposing account:
         if ($data['openingBalance'] != 0) {
-            $opposingData = [
-                'user'           => $data['user'],
-                'accountType'    => 'initial',
-                'virtualBalance' => 0,
-                'name'           => $data['name'] . ' initial balance',
-                'active'         => false,
-                'iban'           => '',
-            ];
-            $opposing     = $this->storeAccount($opposingData);
-            if (!is_null($opposing) && !is_null($newAccount)) {
-                $this->storeInitialBalance($newAccount, $opposing, $data);
-            }
-
+            $this->storeInitialBalance($newAccount, $data);
         }
 
         return $newAccount;
@@ -282,35 +270,7 @@ class AccountCrud implements AccountCrudInterface
         $account->save();
 
         $this->updateMetadata($account, $data);
-        $openingBalance = $this->openingBalanceTransaction($account);
-        if ($data['openingBalance'] != 0) {
-            if (!is_null($openingBalance->id)) {
-                $this->updateInitialBalance($account, $openingBalance, $data);
-
-                return $account;
-            }
-
-            $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
-            $opposingData = [
-                'user'           => $data['user'],
-                'accountType'    => $type,
-                'name'           => $data['name'] . ' initial balance',
-                'active'         => false,
-                'iban'           => '',
-                'virtualBalance' => 0,
-            ];
-            $opposing     = $this->storeAccount($opposingData);
-            if (!is_null($opposing)) {
-                $this->storeInitialBalance($account, $opposing, $data);
-            }
-
-            return $account;
-
-        }
-
-        if ($openingBalance) { // opening balance is zero, should we delete it?
-            $openingBalance->delete(); // delete existing opening balance.
-        }
+        $this->updateInitialBalance($account, $data);
 
         return $account;
     }
@@ -359,19 +319,21 @@ class AccountCrud implements AccountCrudInterface
 
     /**
      * @param Account $account
-     * @param Account $opposing
      * @param array   $data
      *
      * @return TransactionJournal
      */
-    protected function storeInitialBalance(Account $account, Account $opposing, array $data): TransactionJournal
+    protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
+        $amount          = $data['openingBalance'];
+        $user            = $data['user'];
+        $name            = $data['name'];
+        $opposing        = $this->storeOpposingAccount($amount, $user, $name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $transactionType->id,
-                'bill_id'                 => null,
                 'transaction_currency_id' => $data['openingBalanceCurrency'],
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
@@ -382,24 +344,22 @@ class AccountCrud implements AccountCrudInterface
 
         $firstAccount  = $account;
         $secondAccount = $opposing;
-        $firstAmount   = $data['openingBalance'];
-        $secondAmount  = $data['openingBalance'] * -1;
+        $firstAmount   = $amount;
+        $secondAmount  = $amount * -1;
 
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
-            $firstAmount   = $data['openingBalance'] * -1;
-            $secondAmount  = $data['openingBalance'];
+            $firstAmount   = $amount * -1;
+            $secondAmount  = $amount;
         }
 
         $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
         $one->save();// first transaction: from
-
         $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
         $two->save(); // second transaction: to
 
         return $journal;
-
     }
 
     /**
@@ -425,30 +385,32 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
-     * @param Account            $account
-     * @param TransactionJournal $journal
-     * @param array              $data
+     * @param Account $account
+     * @param array   $data
      *
-     * @return TransactionJournal
+     * @return bool
      */
-    protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data): TransactionJournal
+    protected function updateInitialBalance(Account $account, array $data): bool
     {
-        $journal->date = $data['openingBalanceDate'];
-        $journal->save();
+        $openingBalance = $this->openingBalanceTransaction($account);
+        if ($data['openingBalance'] != 0) {
+            if (!is_null($openingBalance->id)) {
+                $date   = $data['openingBalanceDate'];
+                $amount = $data['openingBalance'];
 
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id == $transaction->account_id) {
-                $transaction->amount = $data['openingBalance'];
-                $transaction->save();
+                return $this->updateJournal($account, $openingBalance, $date, $amount);
             }
-            if ($account->id != $transaction->account_id) {
-                $transaction->amount = $data['openingBalance'] * -1;
-                $transaction->save();
-            }
+
+            $this->storeInitialBalance($account, $data);
+
+            return true;
+        }
+        // else, delete it:
+        if ($openingBalance) { // opening balance is zero, should we delete it?
+            $openingBalance->delete(); // delete existing opening balance.
         }
 
-        return $journal;
+        return true;
     }
 
     /**
@@ -500,5 +462,57 @@ class AccountCrud implements AccountCrudInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * @param float  $amount
+     * @param int    $user
+     * @param string $name
+     *
+     * @return Account
+     */
+    private function storeOpposingAccount(float $amount, int $user, string $name):Account
+    {
+        $type         = $amount < 0 ? 'expense' : 'revenue';
+        $opposingData = [
+            'user'           => $user,
+            'accountType'    => $type,
+            'name'           => $name . ' initial balance',
+            'active'         => false,
+            'iban'           => '',
+            'virtualBalance' => 0,
+        ];
+
+        return $this->storeAccount($opposingData);
+    }
+
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $journal
+     * @param Carbon             $date
+     * @param float              $amount
+     *
+     * @return bool
+     */
+    private function updateJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    {
+        // update date:
+        $journal->date = $date;
+        $journal->save();
+        // update transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($account->id == $transaction->account_id) {
+                $transaction->amount = $amount;
+                $transaction->save();
+            }
+            if ($account->id != $transaction->account_id) {
+                $transaction->amount = $amount * -1;
+                $transaction->save();
+            }
+        }
+
+        return true;
+
     }
 }

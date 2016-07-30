@@ -24,6 +24,8 @@ class ImportEntry
     public $amount;
 
 
+
+
     /**
      * @param string $role
      * @param string $value
@@ -34,6 +36,8 @@ class ImportEntry
      */
     public function importValue(string $role, string $value, int $certainty, $convertedValue)
     {
+        Log::debug('Going to import', ['role' => $role, 'value' => $value, 'certainty' => $certainty]);
+
         switch ($role) {
             default:
                 Log::error('Import entry cannot handle object.', ['role' => $role]);
@@ -41,11 +45,12 @@ class ImportEntry
                 break;
 
             case 'amount':
+                /*
+                 * Easy enough.
+                 */
                 $this->setAmount($convertedValue);
-                return;
-            case 'account-id':
 
-                break;
+                return;
         }
     }
 
