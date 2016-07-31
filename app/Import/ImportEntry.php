@@ -11,11 +11,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use Log;
 
 /**
@@ -25,31 +22,33 @@ use Log;
  */
 class ImportEntry
 {
-    /** @var  float */
-    public $amount;
+    /** @var array */
+    public $certain = [];
+    /** @var  array */
+    public $fields = [];
 
-    /** @var  Account */
-    public $assetAccount;
+    /** @var array */
+    private $validFields
+        = ['amount',
+           'date-transaction',
+           'date-interest',
+           'date-book',
+           'description',
+           'date-process',
+           'currency', 'asset-account', 'opposing-account', 'bill', 'budget', 'category'];
 
-    /** @var int */
-    public $assetAccountCertainty = 0;
-    /** @var  Bill */
-    public $bill;
-    /** @var  int */
-    public $billCertainty;
-    /** @var  Budget */
-    public $budget;
-    /** @var  int */
-    public $budgetCertainty;
-    /** @var  Account */
-    public $opposingAccount;
-    /** @var int */
-    public $opposingAccountCertainty = 0;
+    /**
+     * ImportEntry constructor.
+     */
+    public function __construct()
+    {
 
-    /** @var  Category */
-    public $category;
-    /** @var  int */
-    public $categoryCertainty;
+        /** @var string $value */
+        foreach ($this->validFields as $value) {
+            $this->fields[$value]  = null;
+            $this->certain[$value] = 0;
+        }
+    }
 
     /**
      * @param string $role
@@ -73,126 +72,144 @@ class ImportEntry
                 /*
                  * Easy enough.
                  */
-                $this->setAmount($convertedValue);
+                $this->setFloat('amount', $convertedValue, $certainty);
 
                 return;
             case 'account-id':
             case 'account-iban':
             case 'account-name':
-                $this->setAssetAccount($convertedValue, $certainty);
+                $this->setObject('asset-account', $convertedValue, $certainty);
                 break;
             case 'opposing-number':
-                $this->setOpposingAccount($convertedValue, $certainty);
+                case 'opposing-iban':
+                    case 'opposing-id':
+                        case 'opposing-number':
+                            case 'opposing-name':
+                $this->setObject('opposing-account', $convertedValue, $certainty);
                 break;
             case 'bill-id':
             case 'bill-name':
-                $this->setBill($convertedValue, $certainty);
+                $this->setObject('bill', $convertedValue, $certainty);
                 break;
             case 'budget-id':
             case 'budget-name':
-                $this->setObject('budget', 'budgetCertainty', $convertedValue, $certainty);
-                //$this->setBudget($convertedValue, $certainty);
+                $this->setObject('budget', $convertedValue, $certainty);
                 break;
             case 'category-id':
             case 'category-name':
-                $this->setObject('category', 'categoryCertainty', $convertedValue, $certainty);
+                $this->setObject('category', $convertedValue, $certainty);
+                break;
+            case 'currency-code':
+            case 'currency-id':
+            case 'currency-name':
+            case 'currency-symbol':
+                $this->setObject('currency', $convertedValue, $certainty);
+                break;
+            case 'date-transaction':
+                $this->setDate('date-transaction', $convertedValue, $certainty);
                 break;
 
+            case 'date-interest':
+                $this->setDate('date-interest', $convertedValue, $certainty);
+                break;
+            case 'date-book':
+                $this->setDate('date-book', $convertedValue, $certainty);
+                break;
+            case 'date-process':
+                $this->setDate('date-process', $convertedValue, $certainty);
+                break;
+            case'description':
+                $this->setAppendableString('description', $convertedValue);
+                break;
+            case '_ignore':
+                break;
+            case 'ing-debet-credit':
+                case 'rabo-debet-credit':
+                $this->manipulateFloat('amount', 'multiply', $convertedValue);
+                break;
         }
-    }
-
-    /**
-     * @param float $amount
-     */
-    private function setAmount(float $amount)
-    {
-        $this->amount = $amount;
-    }
-
-    /**
-     * @param Account $account
-     * @param int     $certainty
-     */
-    private function setAssetAccount(Account $account, int $certainty)
-    {
-        if ($certainty > $this->assetAccountCertainty && !is_null($account->id)) {
-            Log::debug(sprintf('ImportEntry: Asset Account ID is now %d with certainty %d', $account->id, $certainty));
-            $this->assetAccount          = $account;
-            $this->assetAccountCertainty = $certainty;
-
-            return;
-        }
-        Log::error(sprintf('Will not set asset account based on certainty %d (current certainty is %d) or NULL id.', $certainty, $this->assetAccountCertainty));
-    }
-
-    /**
-     * @param Bill $bill
-     * @param int  $certainty
-     */
-    private function setBill(Bill $bill, int $certainty)
-    {
-        if ($certainty > $this->billCertainty && !is_null($bill->id)) {
-            Log::debug(sprintf('ImportEntry: Bill-ID is now %d with certainty %d', $bill->id, $certainty));
-            $this->bill          = $bill;
-            $this->billCertainty = $certainty;
-
-            return;
-        }
-        Log::error(sprintf('Will not set bill based on certainty %d (current certainty is %d) or NULL id.', $certainty, $this->billCertainty));
-    }
-
-    /**
-     * @param Budget $budget
-     * @param int    $certainty
-     */
-    private function setBudget(Budget $budget, int $certainty)
-    {
-        if ($certainty > $this->budgetCertainty && !is_null($budget->id)) {
-            Log::debug(sprintf('ImportEntry: Budget-ID is now %d with certainty %d', $budget->id, $certainty));
-            $this->budget          = $budget;
-            $this->budgetCertainty = $certainty;
-
-            return;
-        }
-        Log::error(sprintf('Will not set budget based on certainty %d (current certainty is %d) or NULL id.', $certainty, $this->budgetCertainty));
     }
 
     /**
      * @param string $field
-     * @param string $cert
-     * @param        $object
-     * @param int    $certainty
+     * @param string $action
+     * @param        $convertedValue
+     *
+     * @throws FireflyException
      */
-    private function setObject(string $field, string $cert, $object, int $certainty)
+    private function manipulateFloat(string $field, string $action, $convertedValue)
     {
-        if ($certainty > $this->$cert && !is_null($object->id)) {
-            Log::debug(sprintf('ImportEntry: %s ID is now %d with certainty %d', $field, $object->id, $certainty));
-            $this->$field = $object;
-            $this->$cert  = $certainty;
+        switch ($action) {
+            default:
+                Log::error('Cannot handle manipulateFloat', ['field' => $field, 'action' => $action]);
+                throw new FireflyException('Cannot manipulateFloat with action ' . $action);
+            case'multiply':
+                $this->fields[$field] = $this->fields[$field] * $convertedValue;
+                break;
+        }
+    }
+
+    /**
+     * @param string $field
+     * @param string $value
+     */
+    private function setAppendableString(string $field, string $value)
+    {
+        $value = trim($value);
+        $this->fields[$field] .= ' ' . $value;
+    }
+
+    /**
+     * @param string  $field
+     * @param  Carbon $date
+     * @param int     $certainty
+     */
+    private function setDate(string $field, Carbon $date, int $certainty)
+    {
+        if ($certainty > $this->certain[$field] && !is_null($date)) {
+            Log::debug(sprintf('ImportEntry: %s is now %s with certainty %d', $field, $date->format('Y-m-d'), $certainty));
+            $this->fields[$field]  = $date;
+            $this->certain[$field] = $certainty;
 
             return;
         }
-        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->$cert));
+        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
 
     }
 
     /**
-     * @param Account $account
-     * @param int     $certainty
+     * @param string $field
+     * @param float  $value
+     * @param int    $certainty
      */
-    private function setOpposingAccount(Account $account, int $certainty)
+    private function setFloat(string $field, float $value, int $certainty)
     {
-        if ($certainty > $this->opposingAccountCertainty && !is_null($account->id)) {
-            Log::debug(sprintf('ImportEntry: Opposing Account ID is now %d with certainty %d', $account->id, $certainty));
-            $this->assetAccount          = $account;
-            $this->assetAccountCertainty = $certainty;
+        if ($certainty > $this->certain[$field]) {
+            Log::debug(sprintf('ImportEntry: %s is now %f with certainty %d', $field, $value, $certainty));
+            $this->fields[$field]  = $value;
+            $this->certain[$field] = $certainty;
 
             return;
         }
-        Log::error(
-            sprintf('Will not set opposing account based on certainty %d (current certainty is %d) or NULL id.', $certainty, $this->assetAccountCertainty)
-        );
+        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d).', $field, $certainty, $this->certain[$field]));
     }
 
+    /**
+     * @param string $field
+     * @param        $object
+     * @param int    $certainty
+     */
+    private function setObject(string $field, $object, int $certainty)
+    {
+        if ($certainty > $this->certain[$field] && !is_null($object->id)) {
+            Log::debug(sprintf('ImportEntry: %s ID is now %d with certainty %d', $field, $object->id, $certainty));
+            $this->fields[$field]  = $object;
+            $this->certain[$field] = $certainty;
+
+            return;
+        }
+        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
+
+    }
 
 }

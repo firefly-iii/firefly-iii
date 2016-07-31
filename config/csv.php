@@ -113,11 +113,23 @@ return [
             'converter'       => 'Date',
             'field'           => 'date',
         ],
-        'date-rent'         => [
+        'date-interest'         => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Date',
-            'field'           => 'date-rent',
+            'field'           => 'date-interest',
+        ],
+        'date-book'         => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Date',
+            'field'           => 'date-book',
+        ],
+        'date-process'         => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Date',
+            'field'           => 'date-process',
         ],
         'budget-id'         => [
             'mappable'        => true,
