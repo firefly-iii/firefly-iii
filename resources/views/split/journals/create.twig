@@ -11,6 +11,17 @@
         <input type="hidden" name="id" value="{{ journal.id }}"/>
         <input type="hidden" name="what" value="{{ preFilled.what }}"/>
 
+        <!--
+        A splitted withdrawal has a single source with multiple destinations.
+        Amount X is withdrawn from one account and submitted to multiple accounts.
+        Groceries can be split in several categories this way.
+
+        A splitted deposit has a singe destination and multiple sources.
+        Amount X is deposited from multiple sources.
+        Salary can be split in several types this way (base salary, reimbursements, bonus)
+
+        -->
+
         {% if errors.all()|length > 0 %}
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -40,14 +51,17 @@
                         {{ ExpandedForm.select('journal_currency_id', currencies, journal.transaction_currency_id) }}
                         {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
                         <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+
                         <!-- show  source if withdrawal or transfer -->
                         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
                             {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                         {% endif %}
-                        <!-- show static source if deposit: -->
+
+                        <!-- show destination account id, if deposit (is asset): -->
                         {% if preFilled.what == 'deposit' %}
-                            {{ ExpandedForm.text('journal_source_account_name', preFilled.journal_source_account_name) }}
+                            {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
                         {% endif %}
+
                         <!-- show static destination if transfer -->
                         {% if preFilled.what == 'transfer' %}
                             {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
@@ -85,17 +99,26 @@
                             <tr>
                                 <th>{{ trans('list.split_number') }}</th>
                                 <th>{{ trans('list.description') }}</th>
+
+
+                                <!-- withdrawal and deposit have a destination. -->
                                 {% if preFilled.what == 'withdrawal' %}
                                     <th>{{ trans('list.destination') }}</th>
                                 {% endif %}
+
                                 {% if preFilled.what == 'deposit' %}
                                     <th>{{ trans('list.source') }}</th>
                                 {% endif %}
+
+
                                 <th>{{ trans('list.amount') }}</th>
+
+                                <!-- only withdrawal has budget -->
                                 {% if preFilled.what == 'withdrawal' %}
                                     <th>{{ trans('list.budget') }}</th>
                                 {% endif %}
                                 <th>{{ trans('list.category') }}</th>
+
                                 {% if preFilled.what == 'transfer' %}
                                     <th>{{ trans('list.piggy_bank') }}</th>
                                 {% endif %}
@@ -117,10 +140,10 @@
                                         </td>
                                     {% endif %}
 
-                                    <!-- deposit has several destination id's -->
+                                    <!-- deposit has several source names -->
                                     {% if preFilled.what == 'deposit' %}
                                         <td>
-                                            {{ Form.select('destination_account_id[]', assetAccounts, preFilled.destination_account_id[index], {class: 'form-control'}) }}
+                                            <input type="text" name="source_account_name[]" value="{{ preFilled.source_account_name[index] }}" class="form-control"/>
                                         </td>
                                     {% endif %}
 
