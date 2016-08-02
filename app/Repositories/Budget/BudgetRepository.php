@@ -354,6 +354,9 @@ class BudgetRepository implements BudgetRepositoryInterface
                 $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
             }
             );
+        $query->whereNull('source.deleted_at');
+        $query->whereNull('destination.deleted_at');
+        $query->where('transaction_journals.completed', 1);
 
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -362,16 +365,27 @@ class BudgetRepository implements BudgetRepositoryInterface
             $accountIds = $accounts->pluck('id')->toArray();
             $set        = join(', ', $accountIds);
             $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
+
         }
         if ($budgets->count() > 0) {
             $budgetIds = $budgets->pluck('id')->toArray();
             $query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $query->whereIn('budget_transaction_journal.budget_id', $budgetIds);
+
         }
 
         // that should do it:
-        $first = strval($query->sum('source.amount'));
-
+        $ids   = $query->distinct()->get(['transaction_journals.id'])->pluck('id')->toArray();
+        $first = '0';
+        if (count($ids) > 0) {
+            $first = strval(
+                $this->user->transactions()
+                           ->whereIn('transaction_journal_id', $ids)
+                           ->where('amount', '<', '0')
+                           ->whereNull('transactions.deleted_at')
+                           ->sum('amount')
+            );
+        }
         // then collection transactions (harder)
         $query = $this->user->transactions()
                             ->where('transactions.amount', '<', 0)
@@ -419,7 +433,10 @@ class BudgetRepository implements BudgetRepositoryInterface
                             ->whereNull('budget_transaction_journal.id')
                             ->whereNull('budget_transaction.id')
                             ->before($end)
-                            ->after($start);
+                            ->after($start)
+                            ->whereNull('source.deleted_at')
+                            ->whereNull('destination.deleted_at')
+                            ->where('transaction_journals.completed', 1);
 
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
@@ -427,7 +444,17 @@ class BudgetRepository implements BudgetRepositoryInterface
             $set = join(', ', $accountIds);
             $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
         }
-        $sum = strval($query->sum('source.amount'));
+        $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
+        $sum = '0';
+        if (count($ids) > 0) {
+            $sum = strval(
+                $this->user->transactions()
+                           ->whereIn('transaction_journal_id', $ids)
+                           ->where('amount', '<', '0')
+                           ->whereNull('transactions.deleted_at')
+                           ->sum('amount')
+            );
+        }
 
         return $sum;
     }
