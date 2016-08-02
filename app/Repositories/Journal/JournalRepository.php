@@ -144,6 +144,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         $offset = ($page - 1) * $pageSize;
         $query  = $this->user->transactionJournals()->expanded()->sortCorrectly();
+        $query->where('transaction_journals.completed', 1);
         if (count($types) > 0) {
             $query->transactionTypes($types);
         }
@@ -166,6 +167,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
+        $query->where('transaction_journals.completed', 1);
         $query->before($end);
         $query->after($start);
 
