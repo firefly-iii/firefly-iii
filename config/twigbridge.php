@@ -142,6 +142,7 @@ return [
             'Route',
             'Auth',
             'Lang',
+            'Preferences',
             'URL',
             'Config',
             'ExpandedForm' => [

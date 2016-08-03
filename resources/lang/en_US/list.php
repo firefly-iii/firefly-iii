@@ -58,6 +58,8 @@ return [
     'is_blocked'            => 'Is blocked',
     'is_admin'              => 'Is admin',
     'has_two_factor'        => 'Has 2FA',
+    'confirmed_from'        => 'Confirmed from',
+    'registered_from'       => 'Registered from',
     'blocked_code'          => 'Block code',
     'domain'                => 'Domain',
     'registration_attempts' => 'Registration attempts',

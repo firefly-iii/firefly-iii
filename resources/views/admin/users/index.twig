@@ -17,6 +17,8 @@
                             <th colspan="2">&nbsp;</th>
                             <th>{{ trans('list.email') }}</th>
                             <th>{{ trans('list.registered_at') }}</th>
+                            <th>{{ trans('list.registered_from') }}</th>
+                            <th>{{ trans('list.confirmed_from') }}</th>
                             <th>{{ trans('list.is_admin') }}</th>
                             <th>{{ trans('list.has_two_factor') }}</th>
                             <th>{{ trans('list.is_activated') }}</th>
@@ -33,6 +35,12 @@
                                 <td>
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
+                                </td>
+                                <td>
+                                    {{ Preferences.getForUser(user,"registration_ip_address").data }}
+                                </td>
+                                <td>
+                                    {{ Preferences.getForUser(user,"confirmation_ip_address").data }}
                                 </td>
                                 <td>
                                     {% if user.isAdmin %}

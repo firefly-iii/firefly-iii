@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
 use FireflyIII\Events\ResendConfirmation;
+use FireflyIII\Events\UserIsConfirmed;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -36,12 +37,13 @@ class ConfirmationController extends Controller
     }
 
     /**
-     * @param string $code
+     * @param Request $request
+     * @param string  $code
      *
      * @return mixed
      * @throws FireflyException
      */
-    public function doConfirmation(string $code)
+    public function doConfirmation(Request $request, string $code)
     {
         // check user_confirmed_last_mail
 
@@ -51,6 +53,10 @@ class ConfirmationController extends Controller
         $maxDiff  = config('firefly.confirmation_age');
 
         if ($database === $code && ($now - $time <= $maxDiff)) {
+
+            // trigger user registration event:
+            event(new UserIsConfirmed(Auth::user(), $request->ip()));
+
             Preferences::setForUser(Auth::user(), 'user_confirmed', true);
             Preferences::setForUser(Auth::user(), 'user_confirmed_confirmed', time());
             Session::flash('success', strval(trans('firefly.account_is_confirmed')));

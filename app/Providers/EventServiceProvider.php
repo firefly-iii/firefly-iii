@@ -62,6 +62,10 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\SendRegistrationMail',
                 'FireflyIII\Handlers\Events\AttachUserRole',
                 'FireflyIII\Handlers\Events\UserConfirmation@sendConfirmation',
+                'FireflyIII\Handlers\Events\UserSaveIpAddress@saveFromRegistration',
+            ],
+            'FireflyIII\Events\UserIsConfirmed'          => [
+                'FireflyIII\Handlers\Events\UserSaveIpAddress@saveFromConfirmation',
             ],
             'FireflyIII\Events\ResendConfirmation'       => [
                 'FireflyIII\Handlers\Events\UserConfirmation@resendConfirmation',
