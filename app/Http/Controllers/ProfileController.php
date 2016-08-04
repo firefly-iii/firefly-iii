@@ -17,6 +17,7 @@ use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\User;
 use Hash;
+use Preferences;
 use Session;
 
 /**
@@ -111,7 +112,8 @@ class ProfileController extends Controller
         event(new UserIsDeleted(Auth::user(), $request->ip()));
 
         // store some stuff for the future:
-
+        $registration = Preferences::get('registration_ip_address')->data;
+        $confirmation = Preferences::get('confirmation_ip_address')->data;
 
         // DELETE!
         $email = Auth::user()->email;
@@ -121,7 +123,7 @@ class ProfileController extends Controller
         Session::flash('gaEventAction', 'delete-account');
 
         // create a new user with the same email address so re-registration is blocked.
-        User::create(
+        $newUser = User::create(
             [
                 'email'        => $email,
                 'password'     => 'deleted',
@@ -129,6 +131,13 @@ class ProfileController extends Controller
                 'blocked_code' => 'deleted',
             ]
         );
+        if (strlen($registration) > 0) {
+            Preferences::setForUser($newUser, 'registration_ip_address', $registration);
+
+        }
+        if (strlen($confirmation) > 0) {
+            Preferences::setForUser($newUser, 'confirmation_ip_address', $confirmation);
+        }
 
         return redirect(route('index'));
     }

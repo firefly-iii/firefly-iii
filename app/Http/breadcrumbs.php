@@ -113,6 +113,13 @@ Breadcrumbs::register(
 }
 );
 
+Breadcrumbs::register(
+    'admin.users.domains', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.blocked_domains'), route('admin.users.domains'));
+}
+);
+
 /**
  * ATTACHMENTS
  */
