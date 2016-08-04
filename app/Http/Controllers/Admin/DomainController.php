@@ -41,7 +41,7 @@ class DomainController extends Controller
         // known domains
         $knownDomains = $this->getKnownDomains();
 
-        return view('admin.users.domains', compact('title', 'mainTitleIcon', 'knownDomains', 'subTitle', 'subTitleIcon', 'domains'));
+        return view('admin.domains.index', compact('title', 'mainTitleIcon', 'knownDomains', 'subTitle', 'subTitleIcon', 'domains'));
     }
 
 

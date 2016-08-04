@@ -110,6 +110,8 @@ class ProfileController extends Controller
         // respond to deletion:
         event(new UserIsDeleted(Auth::user(), $request->ip()));
 
+        // store some stuff for the future:
+
 
         // DELETE!
         $email = Auth::user()->email;
