@@ -29,7 +29,11 @@
                         <tbody>
                         {% for user in users %}
                             <tr>
-                                <td>~</td>
+                                <td>
+                                    <div class="btn-group btn-group-xs">
+                                        <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                </td>
                                 <td>#{{ user.id }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>
