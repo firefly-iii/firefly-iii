@@ -15,7 +15,7 @@ use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
-
+use Log;
 /**
  * FireflyIII\Models\Preference
  *
@@ -54,6 +54,7 @@ class Preference extends Model
         try {
             $data = Crypt::decrypt($value);
         } catch (DecryptException $e) {
+            Log::error('Could not decrypt preference.', ['id' => $this->id,'name' => $this->name,'data' => $this->data]);
             throw new FireflyException('Could not decrypt preference #' . $this->id . '.');
         }
 
