@@ -178,7 +178,7 @@ class AuthController extends Controller
      */
     protected function getBlockedDomains()
     {
-        return FireflyConfig::get('blocked-domains')->data;
+        return FireflyConfig::get('blocked-domains', [])->data;
     }
 
     /**
