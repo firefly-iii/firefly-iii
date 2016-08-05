@@ -220,6 +220,13 @@ class Steam
             return intval($bytes);
         }
 
+        if (!(stripos($string, 'g') === false)) {
+            // has a G in it, remove the G and multiply by (1024)^3.
+            $bytes = bcmul(rtrim($string, 'gG'), '1073741824');
+
+            return intval($bytes);
+        }
+
         return intval($string);
 
 
