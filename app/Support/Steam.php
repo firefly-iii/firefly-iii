@@ -220,7 +220,7 @@ class Steam
             return intval($bytes);
         }
 
-        return $string;
+        return intval($string);
 
 
     }
