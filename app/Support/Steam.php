@@ -206,16 +206,16 @@ class Steam
     {
         $string = strtolower($string);
 
-        if (!(strpos($string, 'k') === false)) {
+        if (!(stripos($string, 'k') === false)) {
             // has a K in it, remove the K and multiply by 1024.
-            $bytes = bcmul(rtrim($string, 'k'), '1024');
+            $bytes = bcmul(rtrim($string, 'kK'), '1024');
 
             return intval($bytes);
         }
 
-        if (!(strpos($string, 'm') === false)) {
+        if (!(stripos($string, 'm') === false)) {
             // has a M in it, remove the M and multiply by 1048576.
-            $bytes = bcmul(rtrim($string, 'm'), '1048576');
+            $bytes = bcmul(rtrim($string, 'mM'), '1048576');
 
             return intval($bytes);
         }
