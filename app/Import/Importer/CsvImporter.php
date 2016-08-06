@@ -56,7 +56,6 @@ class CsvImporter implements ImporterInterface
             $this->defaultImportAccount = $repository->find($config['import-account']);
         }
 
-
         // create CSV reader.
         $reader  = Reader::createFromString($content);
         $start   = $config['has-headers'] ? 1 : 0;
@@ -64,7 +63,7 @@ class CsvImporter implements ImporterInterface
         foreach ($results as $index => $row) {
             if ($index >= $start) {
                 Log::debug(sprintf('Now going to import row %d.', $index));
-                $this->importSingleRow($row);
+                $this->importSingleRow($index, $row);
             }
         }
 
@@ -75,16 +74,19 @@ class CsvImporter implements ImporterInterface
 
 
     /**
+     * @param int   $index
      * @param array $row
      *
      * @return ImportResult
      */
-    private function importSingleRow(array $row): ImportResult
+    private function importSingleRow(int $index, array $row): ImportResult
     {
+        // create import object:
         $object = new ImportEntry;
+
+        // set some vars:
         $object->setUser($this->job->user);
         $config = $this->job->configuration;
-        $result = new ImportResult;
 
         foreach ($row as $index => $value) {
             // find the role for this column:
@@ -104,18 +106,16 @@ class CsvImporter implements ImporterInterface
             $convertedValue = $converter->convert($value);
             $certainty      = $converter->getCertainty();
 
-
             // log it.
             Log::debug('Value ', ['index' => $index, 'value' => $value, 'role' => $role]);
 
             // store in import entry:
             $object->importValue($role, $value, $certainty, $convertedValue);
-            // $object->fromRawValue($role, $value);
         }
 
         $result = $object->import();
         if ($result->failed()) {
-            Log::error('Import of row has failed.', $result->errors->toArray());
+            Log::error(sprintf('Import of row %d has failed.', $index), $result->errors->toArray());
         }
 
         exit;

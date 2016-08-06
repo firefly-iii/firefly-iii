@@ -34,9 +34,6 @@ class ImportEntry
     /** @var  array */
     public $fields = [];
 
-    /** @var  Account */
-    public $defaultImportAccount;
-
     /** @var  User */
     public $user;
 
@@ -181,72 +178,6 @@ class ImportEntry
         $this->fields[$field] = $this->fields[$field]->merge($convertedValue);
     }
 
-
-    /**
-     * @return ImportResult
-     */
-    private function doImport(): ImportResult
-    {
-        $result = new ImportResult;
-
-        // here we go!
-        $journal = new TransactionJournal;
-        $journal->user()->associate($this->user);
-        $journal->transactionType()->associate($this->getTransactionType());
-        $journal->transactionCurrency()->associate($this->getTransactionCurrency());
-        $journal->description   = $this->fields['description'] ?? '(empty transaction description)';
-        $journal->date          = $this->fields['date-transaction'] ?? new Carbon;
-        $journal->interest_date = $this->fields['date-interest'];
-        $journal->process_date  = $this->fields['date-process'];
-        $journal->book_date     = $this->fields['date-book'];
-        $journal->completed     = 0;
-
-
-
-
-    }
-
-    /**
-     * @return TransactionCurrency
-     */
-    private function getTransactionCurrency(): TransactionCurrency
-    {
-        if (!is_null($this->fields['currency'])) {
-            return $this->fields['currency'];
-        }
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-
-        return $repository->findByCode(env('DEFAULT_CURRENCY', 'EUR'));
-    }
-
-    /**
-     * @return TransactionType
-     */
-    private function getTransactionType(): TransactionType
-    {
-
-
-        /*
-         * source: import/asset/expense/revenue/null
-         * destination: import/asset/expense/revenue/null
-         *
-         * */
-
-        // source and opposing are asset = transfer
-        // source = asset and dest = import and amount = neg  = withdrawal
-        // source = asset and dest = expense and amount = neg  = withdrawal
-        // source = asset and dest = revenue and amount = pos  = deposit
-        // source = asset and dest = import and amount = pos  = deposit
-
-        // source = import
-
-        // source = expense
-        //
-
-        // source  = revenue
-    }
-
     /**
      * @param string $field
      * @param string $action
@@ -328,35 +259,4 @@ class ImportEntry
         Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
 
     }
-
-    /**
-     * Validate the content of the import entry so far. We only need a few things.
-     *
-     * @return ImportResult
-     */
-    private function validate(): ImportResult
-    {
-        $result = new ImportResult;
-        $result->validated();
-        if ($this->fields['amount'] == 0) {
-            // false, amount must be above or below zero.
-            $result->failed();
-            $result->appendError('No valid amount found.');
-        }
-        if (is_null($this->fields['date-transaction'])) {
-            $result->appendWarning('No valid date found.');
-        }
-        if (is_null($this->fields['description']) || (!is_null($this->fields['description']) && strlen($this->fields['description']) == 0)) {
-            $result->appendWarning('No valid description found.');
-        }
-        if (is_null($this->fields['asset-account'])) {
-            $result->appendWarning('No valid asset account found. Will use default account.');
-        }
-        if (is_null($this->fields['opposing-account'])) {
-            $result->appendWarning('No valid asset opposing found. Will use default.');
-        }
-
-        return $result;
-    }
-
 }
