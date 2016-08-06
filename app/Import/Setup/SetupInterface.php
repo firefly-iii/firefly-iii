@@ -1,6 +1,6 @@
 <?php
 /**
- * ImporterInterface.php
+ * SetupInterface.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -9,7 +9,7 @@
 
 declare(strict_types = 1);
 
-namespace FireflyIII\Import\Importer;
+namespace FireflyIII\Import\Setup;
 
 use FireflyIII\Import\Role\Map;
 use FireflyIII\Models\ImportJob;
@@ -17,11 +17,11 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\FileBag;
 
 /**
- * Interface ImporterInterface
+ * Interface SetupInterface
  *
- * @package FireflyIII\Import\Importer
+ * @package FireflyIII\Import\Setup
  */
-interface ImporterInterface
+interface SetupInterface
 {
 
     /**

@@ -50,7 +50,7 @@ return [
      *
      */
     'import_roles'     => [
-        '_ignore'           => [
+        '_ignore'       => [
             'mappable'        => false,
             'pre-process-map' => false,
             'field'           => 'ignored',
@@ -59,41 +59,48 @@ return [
 
 
         ],
-        'bill-id'           => [
+        'bill-id'       => [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'bill',
             'converter'       => 'BillId',
             'mapper'          => 'Bills',
         ],
-        'bill-name'         => [
+        'bill-name'     => [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'bill',
             'converter'       => 'BillName',
             'mapper'          => 'Bills',
         ],
-        'currency-id'       => [
+        'currency-id'   => [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'currency',
             'converter'       => 'CurrencyId',
             'mapper'          => 'TransactionCurrencies',
         ],
-        'currency-name'     => [
+        'currency-name' => [
             'mappable'        => true,
             'pre-process-map' => false,
             'converter'       => 'CurrencyName',
             'field'           => 'currency',
             'mapper'          => 'TransactionCurrencies',
         ],
-        'currency-code'     => [
+        'currency-code' => [
             'mappable'        => true,
             'pre-process-map' => false,
             'converter'       => 'CurrencyCode',
             'field'           => 'currency',
             'mapper'          => 'TransactionCurrencies',
         ],
+        'external-id'   => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'ExternalId',
+            'field'           => 'external-id',
+        ],
+
         'currency-symbol'   => [
             'mappable'        => true,
             'pre-process-map' => false,
@@ -113,7 +120,7 @@ return [
             'converter'       => 'Date',
             'field'           => 'date',
         ],
-        'date-interest'         => [
+        'date-interest'     => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Date',
@@ -125,7 +132,7 @@ return [
             'converter'       => 'Date',
             'field'           => 'date-book',
         ],
-        'date-process'         => [
+        'date-process'      => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Date',

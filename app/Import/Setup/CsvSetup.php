@@ -1,6 +1,6 @@
 <?php
 /**
- * CsvImporter.php
+ * CsvSetup.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms
@@ -9,7 +9,7 @@
 
 declare(strict_types = 1);
 
-namespace FireflyIII\Import\Importer;
+namespace FireflyIII\Import\Setup;
 
 
 use ExpandedForm;
@@ -28,11 +28,11 @@ use Log;
 use Symfony\Component\HttpFoundation\FileBag;
 
 /**
- * Class CsvImporter
+ * Class CsvSetup
  *
  * @package FireflyIII\Import\Importer
  */
-class CsvImporter implements ImporterInterface
+class CsvSetup implements SetupInterface
 {
     const EXAMPLE_ROWS = 5;
     /** @var  Account */

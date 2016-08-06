@@ -141,11 +141,18 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
+        $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
+
+
 
         // that should do it:
-        $sum = strval($query->sum('destination.amount'));
+        $sum = $this->user->transactions()
+                          ->whereIn('transaction_journal_id', $ids)
+                          ->where('amount', '>', '0')
+                          ->whereNull('transactions.deleted_at')
+                          ->sum('amount');
 
-        return $sum;
+        return strval($sum);
 
     }
 
