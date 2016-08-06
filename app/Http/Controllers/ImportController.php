@@ -1,4 +1,11 @@
 <?php
+/**
+ * ImportController.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
 
 namespace FireflyIII\Http\Controllers;
 
@@ -6,7 +13,7 @@ use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ImportUploadRequest;
-use FireflyIII\Import\Importer\ImporterInterface;
+use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Request;
@@ -315,14 +322,14 @@ class ImportController extends Controller
     /**
      * @param ImportJob $job
      *
-     * @return ImporterInterface
+     * @return SetupInterface
      */
-    private function makeImporter(ImportJob $job): ImporterInterface
+    private function makeImporter(ImportJob $job): SetupInterface
     {
         // create proper importer (depends on job)
         $type = $job->file_type;
-        /** @var ImporterInterface $importer */
-        $importer = app('FireflyIII\Import\Importer\\' . ucfirst($type) . 'Importer');
+        /** @var SetupInterface $importer */
+        $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
         $importer->setJob($job);
 
         return $importer;

@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Import\Importer\ImporterInterface;
+use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
@@ -70,6 +71,7 @@ class Import extends Command
 
         $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
         $class = config('firefly.import_formats.' . $job->file_type);
+
         /** @var ImporterInterface $importer */
         $importer = app($class);
         $importer->setJob($job);
@@ -78,7 +80,6 @@ class Import extends Command
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
         $importer->start();
-
 
         $this->line('Something something import: ' . $jobKey);
     }

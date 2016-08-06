@@ -13,6 +13,13 @@ namespace FireflyIII\Import;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -27,6 +34,12 @@ class ImportEntry
     /** @var  array */
     public $fields = [];
 
+    /** @var  Account */
+    public $defaultImportAccount;
+
+    /** @var  User */
+    public $user;
+
     /** @var array */
     private $validFields
         = ['amount',
@@ -35,19 +48,34 @@ class ImportEntry
            'date-book',
            'description',
            'date-process',
-           'currency', 'asset-account', 'opposing-account', 'bill', 'budget', 'category'];
+           'currency', 'asset-account', 'opposing-account', 'bill', 'budget', 'category', 'tags'];
 
     /**
      * ImportEntry constructor.
      */
     public function __construct()
     {
-
+        $this->defaultImportAccount = new Account;
         /** @var string $value */
         foreach ($this->validFields as $value) {
             $this->fields[$value]  = null;
             $this->certain[$value] = 0;
         }
+    }
+
+    /**
+     * @return ImportResult
+     */
+    public function import(): ImportResult
+    {
+
+        $validation = $this->validate();
+
+        if ($validation->valid()) {
+            return $this->doImport();
+        }
+
+        return $validation;
     }
 
     /**
@@ -81,10 +109,9 @@ class ImportEntry
                 $this->setObject('asset-account', $convertedValue, $certainty);
                 break;
             case 'opposing-number':
-                case 'opposing-iban':
-                    case 'opposing-id':
-                        case 'opposing-number':
-                            case 'opposing-name':
+            case 'opposing-iban':
+            case 'opposing-id':
+            case 'opposing-name':
                 $this->setObject('opposing-account', $convertedValue, $certainty);
                 break;
             case 'bill-id':
@@ -124,10 +151,100 @@ class ImportEntry
             case '_ignore':
                 break;
             case 'ing-debet-credit':
-                case 'rabo-debet-credit':
+            case 'rabo-debet-credit':
                 $this->manipulateFloat('amount', 'multiply', $convertedValue);
                 break;
+            case 'tags-comma':
+            case 'tags-space':
+                $this->appendCollection('tags', $convertedValue);
+
         }
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param string     $field
+     * @param Collection $convertedValue
+     */
+    private function appendCollection(string $field, Collection $convertedValue)
+    {
+        if (is_null($this->fields[$field])) {
+            $this->fields[$field] = new Collection;
+        }
+        $this->fields[$field] = $this->fields[$field]->merge($convertedValue);
+    }
+
+
+    /**
+     * @return ImportResult
+     */
+    private function doImport(): ImportResult
+    {
+        $result = new ImportResult;
+
+        // here we go!
+        $journal = new TransactionJournal;
+        $journal->user()->associate($this->user);
+        $journal->transactionType()->associate($this->getTransactionType());
+        $journal->transactionCurrency()->associate($this->getTransactionCurrency());
+        $journal->description   = $this->fields['description'] ?? '(empty transaction description)';
+        $journal->date          = $this->fields['date-transaction'] ?? new Carbon;
+        $journal->interest_date = $this->fields['date-interest'];
+        $journal->process_date  = $this->fields['date-process'];
+        $journal->book_date     = $this->fields['date-book'];
+        $journal->completed     = 0;
+
+
+
+
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    private function getTransactionCurrency(): TransactionCurrency
+    {
+        if (!is_null($this->fields['currency'])) {
+            return $this->fields['currency'];
+        }
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+
+        return $repository->findByCode(env('DEFAULT_CURRENCY', 'EUR'));
+    }
+
+    /**
+     * @return TransactionType
+     */
+    private function getTransactionType(): TransactionType
+    {
+
+
+        /*
+         * source: import/asset/expense/revenue/null
+         * destination: import/asset/expense/revenue/null
+         *
+         * */
+
+        // source and opposing are asset = transfer
+        // source = asset and dest = import and amount = neg  = withdrawal
+        // source = asset and dest = expense and amount = neg  = withdrawal
+        // source = asset and dest = revenue and amount = pos  = deposit
+        // source = asset and dest = import and amount = pos  = deposit
+
+        // source = import
+
+        // source = expense
+        //
+
+        // source  = revenue
     }
 
     /**
@@ -210,6 +327,36 @@ class ImportEntry
         }
         Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
 
+    }
+
+    /**
+     * Validate the content of the import entry so far. We only need a few things.
+     *
+     * @return ImportResult
+     */
+    private function validate(): ImportResult
+    {
+        $result = new ImportResult;
+        $result->validated();
+        if ($this->fields['amount'] == 0) {
+            // false, amount must be above or below zero.
+            $result->failed();
+            $result->appendError('No valid amount found.');
+        }
+        if (is_null($this->fields['date-transaction'])) {
+            $result->appendWarning('No valid date found.');
+        }
+        if (is_null($this->fields['description']) || (!is_null($this->fields['description']) && strlen($this->fields['description']) == 0)) {
+            $result->appendWarning('No valid description found.');
+        }
+        if (is_null($this->fields['asset-account'])) {
+            $result->appendWarning('No valid asset account found. Will use default account.');
+        }
+        if (is_null($this->fields['opposing-account'])) {
+            $result->appendWarning('No valid asset opposing found. Will use default.');
+        }
+
+        return $result;
     }
 
 }
