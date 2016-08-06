@@ -14,9 +14,6 @@ namespace FireflyIII\Import\Setup;
 
 use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrud;
-use FireflyIII\Import\Converter\ConverterInterface;
-use FireflyIII\Import\ImportEntry;
-use FireflyIII\Import\ImportResult;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Models\Account;
@@ -234,38 +231,6 @@ class CsvSetup implements SetupInterface
     }
 
     /**
-     * Run the actual import
-     *
-     * @return bool
-     */
-    public function start(): bool
-    {
-        $config  = $this->job->configuration;
-        $content = $this->job->uploadFileContents();
-
-        if ($config['import-account'] != 0) {
-            $repository                 = app(AccountCrud::class, [auth()->user()]);
-            $this->defaultImportAccount = $repository->find($config['csv_import_account']);
-        }
-
-
-        // create CSV reader.
-        $reader  = Reader::createFromString($content);
-        $start   = $config['has-headers'] ? 1 : 0;
-        $results = $reader->fetch();
-        foreach ($results as $index => $row) {
-            if ($index >= $start) {
-                Log::debug(sprintf('Now going to import row %d.', $index));
-                $this->importSingleRow($row);
-            }
-        }
-
-        Log::debug('This call should be intercepted somehow.');
-
-        return true;
-    }
-
-    /**
      * Store the settings filled in by the user, if applicable.
      *
      * @param Request $request
@@ -475,54 +440,5 @@ class CsvSetup implements SetupInterface
         return $data;
 
 
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return ImportResult
-     */
-    private function importSingleRow(array $row): ImportResult
-    {
-        $object = new ImportEntry;
-        $object->setUser($this->job->user);
-        $config = $this->job->configuration;
-        $result = new ImportResult;
-
-        foreach ($row as $index => $value) {
-            // find the role for this column:
-            $role           = $config['column-roles'][$index] ?? '_ignore';
-            $doMap          = $config['column-do-mapping'][$index] ?? false;
-            $converterClass = config('csv.import_roles.' . $role . '.converter');
-            $mapping        = $config['column-mapping-config'][$index] ?? [];
-            /** @var ConverterInterface $converter */
-            $converter = app('FireflyIII\\Import\\Converter\\' . $converterClass);
-            // set some useful values for the converter:
-            $converter->setMapping($mapping);
-            $converter->setDoMap($doMap);
-            $converter->setUser($this->job->user);
-            $converter->setConfig($config);
-
-            // run the converter for this value:
-            $convertedValue = $converter->convert($value);
-            $certainty      = $converter->getCertainty();
-
-
-            // log it.
-            Log::debug('Value ', ['index' => $index, 'value' => $value, 'role' => $role]);
-
-            // store in import entry:
-            $object->importValue($role, $value, $certainty, $convertedValue);
-            // $object->fromRawValue($role, $value);
-        }
-
-        $result = $object->import();
-        if ($result->failed()) {
-            Log::error('Import of row has failed.', $result->errors->toArray());
-        }
-
-        exit;
-
-        return true;
     }
 }
