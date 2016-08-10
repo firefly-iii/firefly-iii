@@ -66,6 +66,7 @@ return [
     'column_description'            => 'Description',
     'column_opposing-iban'          => 'Opposing account (IBAN)',
     'column_opposing-id'            => 'Opposing account ID (matching Firefly)',
+    'column_external-id'            => 'External ID',
     'column_opposing-name'          => 'Opposing account (name)',
     'column_rabo-debet-credit'      => 'Rabobank specific debet/credit indicator',
     'column_ing-debet-credit'       => 'ING specific debet/credit indicator',

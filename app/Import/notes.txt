@@ -36,11 +36,12 @@ In any case, this newly minted set of ImportEntries (it cannot be saved or store
 this has to be done in one go) is then fed to the ImportValidator which will reject entries
 (almost never) and corrects fields if necessary.
 
-- Adds a default description if there isn't one present.
+
 - Adds the date (today) if no date is present.
 - Determins the type of transaction (withdrawal, deposit, transfer).
 - Determins the types of accounts involved (asset, expense, revenue).
 - Determins the currency of the transaction.
+- Adds a default description if there isn't one present.
 
 This set of corrected ImportEntries is then fed to the ImportStorage class which will generate
 TransactionJournals, Transactions and other related objects.

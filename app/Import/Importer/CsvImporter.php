@@ -14,9 +14,9 @@ namespace FireflyIII\Import\Importer;
 use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\ImportEntry;
-use FireflyIII\Import\ImportResult;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\ImportJob;
+use Illuminate\Support\Collection;
 use League\Csv\Reader;
 use Log;
 
@@ -30,8 +30,33 @@ class CsvImporter implements ImporterInterface
     /** @var  ImportJob */
     public $job;
 
-    /** @var  Account */
-    public $defaultImportAccount;
+    /**
+     * Run the actual import
+     *
+     * @return Collection
+     */
+    public function createImportEntries(): Collection
+    {
+        $config  = $this->job->configuration;
+        $content = $this->job->uploadFileContents();
+
+        // create CSV reader.
+        $reader     = Reader::createFromString($content);
+        $start      = $config['has-headers'] ? 1 : 0;
+        $results    = $reader->fetch();
+        $collection = new Collection;
+        foreach ($results as $index => $row) {
+            if ($index >= $start) {
+                Log::debug(sprintf('Now going to import row %d.', $index));
+                $importEntry = $this->importSingleRow($index, $row);
+                $collection->push($importEntry);
+            }
+        }
+        Log::debug(sprintf('Collection contains %d entries', $collection->count()));
+        Log::debug('This call should be intercepted somehow.');
+
+        return $collection;
+    }
 
     /**
      * @param ImportJob $job
@@ -42,44 +67,12 @@ class CsvImporter implements ImporterInterface
     }
 
     /**
-     * Run the actual import
-     *
-     * @return bool
-     */
-    public function start(): bool
-    {
-        $config  = $this->job->configuration;
-        $content = $this->job->uploadFileContents();
-
-        if ($config['import-account'] != 0) {
-            $repository                 = app(AccountCrud::class, [$this->job->user]);
-            $this->defaultImportAccount = $repository->find($config['import-account']);
-        }
-
-        // create CSV reader.
-        $reader  = Reader::createFromString($content);
-        $start   = $config['has-headers'] ? 1 : 0;
-        $results = $reader->fetch();
-        foreach ($results as $index => $row) {
-            if ($index >= $start) {
-                Log::debug(sprintf('Now going to import row %d.', $index));
-                $this->importSingleRow($index, $row);
-            }
-        }
-
-        Log::debug('This call should be intercepted somehow.');
-
-        return true;
-    }
-
-
-    /**
      * @param int   $index
      * @param array $row
      *
-     * @return ImportResult
+     * @return ImportEntry
      */
-    private function importSingleRow(int $index, array $row): ImportResult
+    private function importSingleRow(int $index, array $row): ImportEntry
     {
         // create import object:
         $object = new ImportEntry;
@@ -113,13 +106,15 @@ class CsvImporter implements ImporterInterface
             $object->importValue($role, $value, $certainty, $convertedValue);
         }
 
-        $result = $object->import();
-        if ($result->failed()) {
-            Log::error(sprintf('Import of row %d has failed.', $index), $result->errors->toArray());
-        }
+        return $object;
 
-        exit;
-
-        return true;
+        //        $result = $object->import();
+        //        if ($result->failed()) {
+        //            Log::error(sprintf('Import of row %d has failed.', $index), $result->errors->toArray());
+        //        }
+        //
+        //        exit;
+        //
+        //        return true;
     }
 }

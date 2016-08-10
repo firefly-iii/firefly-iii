@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Crud\Account\AccountCrudInterface;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Log;
@@ -58,13 +57,25 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
             $this->setCertainty(50);
+
+            return $account;
+        }
+
+        // try to find by the name we would give it:
+        $accountName = 'Asset account with number ' . e($value);
+        $account     = $repository->findByName($accountName, [AccountType::ASSET]);
+        if (!is_null($account->id)) {
+            Log::debug('Found account by name', ['id' => $account->id]);
+            $this->setCertainty(50);
+
             return $account;
         }
 
 
         $account = $repository->store(
-            ['name'           => 'Account with number ' . $value, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'asset',
-             'virtualBalance' => 0, 'active' => true]
+            ['name'           => $accountName, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id,
+             'accountType'    => 'asset',
+             'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]
         );
         $this->setCertainty(100);
 

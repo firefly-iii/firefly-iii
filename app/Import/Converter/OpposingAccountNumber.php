@@ -14,6 +14,7 @@ namespace FireflyIII\Import\Converter;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use Log;
 
 /**
@@ -61,13 +62,23 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
             return $account;
         }
 
+        // try to find by the name we would give it:
+        $accountName = 'Import account with number ' . e($value);
+        $account     = $repository->findByName($accountName, [AccountType::IMPORT]);
+        if (!is_null($account->id)) {
+            Log::debug('Found account by name', ['id' => $account->id]);
+            $this->setCertainty(50);
+
+            return $account;
+        }
+
 
         $account = $repository->store(
-            ['name'           => 'Account with number ' . $value, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'asset',
-             'virtualBalance' => 0, 'active' => true]
+            ['name'           => $accountName, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id,
+             'accountType'    => 'import',
+             'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]
         );
         $this->setCertainty(100);
-
         return $account;
 
     }

@@ -14,10 +14,6 @@ namespace FireflyIII\Import;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -33,10 +29,10 @@ class ImportEntry
     public $certain = [];
     /** @var  array */
     public $fields = [];
-
     /** @var  User */
     public $user;
-
+    /** @var bool */
+    public $valid = true;
     /** @var array */
     private $validFields
         = ['amount',
@@ -45,6 +41,7 @@ class ImportEntry
            'date-book',
            'description',
            'date-process',
+           'transaction-type',
            'currency', 'asset-account', 'opposing-account', 'bill', 'budget', 'category', 'tags'];
 
     /**
@@ -154,6 +151,9 @@ class ImportEntry
             case 'tags-comma':
             case 'tags-space':
                 $this->appendCollection('tags', $convertedValue);
+            case 'external-id':
+                // ignore for now.
+                break;
 
         }
     }

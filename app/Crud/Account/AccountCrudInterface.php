@@ -38,6 +38,14 @@ interface AccountCrudInterface
     public function find(int $accountId): Account;
 
     /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByAccountNumber(string $number, array $types): Account;
+
+    /**
      * @param string $iban
      * @param array  $types
      *
@@ -52,14 +60,6 @@ interface AccountCrudInterface
      * @return Account
      */
     public function findByName(string $name, array $types): Account;
-
-    /**
-     * @param string $number
-     * @param array  $types
-     *
-     * @return Account
-     */
-    public function findByAccountNumber(string $number, array $types): Account;
 
     /**
      * @param array $accountIds
@@ -91,7 +91,6 @@ interface AccountCrudInterface
      */
     public function storeMeta(Account $account, string $name, $value): AccountMeta;
 
-
     /**
      * @param Account $account
      * @param array   $data
@@ -99,4 +98,12 @@ interface AccountCrudInterface
      * @return Account
      */
     public function update(Account $account, array $data): Account;
+
+    /**
+     * @param Account $account
+     * @param string  $type
+     *
+     * @return Account
+     */
+    public function updateAccountType(Account $account, string $type): Account;
 }

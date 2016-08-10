@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Importer;
 use FireflyIII\Models\ImportJob;
+use Illuminate\Support\Collection;
 
 /**
  * Interface ImporterInterface
@@ -22,9 +23,9 @@ interface ImporterInterface
     /**
      * Run the actual import
      *
-     * @return bool
+     * @return Collection
      */
-    public function start(): bool;
+    public function createImportEntries(): Collection;
 
     /**
      * @param ImportJob $job

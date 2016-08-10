@@ -11,8 +11,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Console\Commands;
 
+use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Importer\ImporterInterface;
-use FireflyIII\Import\Setup\SetupInterface;
+use FireflyIII\Import\ImportValidator;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
@@ -79,7 +80,20 @@ class Import extends Command
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
-        $importer->start();
+
+        // create import entries
+        $collection = $importer->createImportEntries();
+
+        // validate / clean collection:
+        $validator = new ImportValidator($collection);
+        $validator->setUser($job->user);
+        if ($job->configuration['import-account'] != 0) {
+            $repository = app(AccountCrud::class, [$job->user]);
+            $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
+        }
+
+        $validator->clean();
+
 
         $this->line('Something something import: ' . $jobKey);
     }

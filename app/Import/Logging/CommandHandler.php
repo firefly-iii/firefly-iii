@@ -44,6 +44,6 @@ class CommandHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->command->line((string) $record['formatted']);
+        $this->command->line((string) trim($record['formatted']));
     }
 }

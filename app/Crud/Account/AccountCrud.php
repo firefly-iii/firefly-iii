@@ -276,6 +276,24 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
+     * @param Account $account
+     * @param string  $type
+     *
+     * @return Account
+     */
+    public function updateAccountType(Account $account, string $type): Account
+    {
+        $type = AccountType::whereType($type)->first();
+        if (!is_null($type)) {
+            $account->account_type_id = $type->id;
+            $account->save();
+        }
+
+        return $account;
+
+    }
+
+    /**
      * @param array $data
      *
      * @return Account
