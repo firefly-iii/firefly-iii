@@ -13,6 +13,7 @@ namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Importer\ImporterInterface;
+use FireflyIII\Import\ImportStorage;
 use FireflyIII\Import\ImportValidator;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
@@ -92,7 +93,14 @@ class Import extends Command
             $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
         }
 
-        $validator->clean();
+        $cleaned = $validator->clean();
+
+        // then import collection:
+        $storage = new ImportStorage($collection);
+        $storage->setUser($job->user);
+
+        // and run store routine:
+        $storage->store();
 
 
         $this->line('Something something import: ' . $jobKey);

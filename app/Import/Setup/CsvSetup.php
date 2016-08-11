@@ -191,7 +191,8 @@ class CsvSetup implements SetupInterface
     {
         /** @var AccountCrud $repository */
         $repository = app(AccountCrud::class, [auth()->user()]);
-        $account    = $repository->find(intval($data['csv_import_account']));
+        $importId = $data['csv_import_account'] ?? 0;
+        $account    = $repository->find(intval($importId));
 
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
         $config                = $this->job->configuration;
@@ -199,14 +200,14 @@ class CsvSetup implements SetupInterface
         $config['date-format'] = $data['date_format'];
         $config['delimiter']   = $data['csv_delimiter'];
 
-        Log::debug('Entered import account.', ['id' => $data['csv_import_account']]);
+        Log::debug('Entered import account.', ['id' => $importId]);
 
 
         if (!is_null($account->id)) {
             Log::debug('Found account.', ['id' => $account->id, 'name' => $account->name]);
             $config['import-account'] = $account->id;
         } else {
-            Log::error('Could not find anything for csv_import_account.', ['id' => $data['csv_import_account']]);
+            Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
         }
         // loop specifics.
         if (isset($data['specifics']) && is_array($data['specifics'])) {
@@ -353,7 +354,9 @@ class CsvSetup implements SetupInterface
 
         // in order to actually map we also need all possible values from the CSV file.
         $content = $this->job->uploadFileContents();
+        /** @var Reader $reader */
         $reader  = Reader::createFromString($content);
+        $reader->setDelimiter($config['delimiter']);
         $results = $reader->fetch();
 
         foreach ($results as $rowIndex => $row) {
@@ -405,6 +408,7 @@ class CsvSetup implements SetupInterface
 
         // create CSV reader.
         $reader = Reader::createFromString($content);
+        $reader->setDelimiter($config['delimiter']);
         $start  = $config['has-headers'] ? 1 : 0;
         $end    = $start + self::EXAMPLE_ROWS; // first X rows
 

@@ -42,6 +42,7 @@ class CsvImporter implements ImporterInterface
 
         // create CSV reader.
         $reader     = Reader::createFromString($content);
+        $reader->setDelimiter($config['delimiter']);
         $start      = $config['has-headers'] ? 1 : 0;
         $results    = $reader->fetch();
         $collection = new Collection;

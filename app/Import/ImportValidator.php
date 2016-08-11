@@ -48,7 +48,7 @@ class ImportValidator
     /**
      * Clean collection by filling in all the blanks.
      */
-    public function clean()
+    public function clean(): Collection
     {
         /** @var ImportEntry $entry */
         foreach ($this->entries as $entry) {
@@ -67,13 +67,7 @@ class ImportValidator
             $this->setTransactionType($entry);
             $this->setTransactionCurrency($entry);
         }
-
-
-        /** @var ImportEntry $entry */
-        foreach ($this->entries as $entry) {
-            Log::debug('Description: ' . $entry->fields['description']);
-        }
-
+        return $this->entries;
     }
 
     /**
@@ -328,13 +322,13 @@ class ImportValidator
         $type = $entry->fields['opposing-account']->accountType->type;
         switch ($type) {
             case AccountType::EXPENSE:
-                $entry->fields['transaction-type'] = TransactionType::WITHDRAWAL;
+                $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
                 break;
             case AccountType::REVENUE:
-                $entry->fields['transaction-type'] = TransactionType::DEPOSIT;
+                $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::DEPOSIT)->first();
                 break;
             case AccountType::ASSET:
-                $entry->fields['transaction-type'] = TransactionType::TRANSFER;
+                $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::TRANSFER)->first();
                 break;
         }
     }
