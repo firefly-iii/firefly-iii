@@ -106,9 +106,9 @@ class TagRepository implements TagRepositoryInterface
     {
         $tags = $this->user->tags()->get();
         /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            if ($tag->tag === $tag) {
-                return $tag;
+        foreach ($tags as $databaseTag) {
+            if ($databaseTag->tag === $tag) {
+                return $databaseTag;
             }
         }
 

@@ -35,6 +35,7 @@ class TagsSpace extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new Collection;
         }
         $parts = array_unique(explode(' ', $value));
@@ -63,22 +64,23 @@ class TagsSpace extends BasicConverter implements ConverterInterface
                 Log::debug('Found tag by name ', ['id' => $tag->id]);
 
                 $set->push($tag);
-                continue;
             }
-            // create new tag
-            $tag = $repository->store(
-                [
-                    'tag'         => $part,
-                    'date'        => null,
-                    'description' => $part,
-                    'latitude'    => null,
-                    'longitude'   => null,
-                    'zoomLevel'   => null,
-                    'tagMode'     => 'nothing',
-                ]
-            );
-            Log::debug('Created new tag', ['name' => $part, 'id' => $tag->id]);
-            $set->push($tag);
+            if (is_null($tag->id)) {
+                // create new tag
+                $tag = $repository->store(
+                    [
+                        'tag'         => $part,
+                        'date'        => null,
+                        'description' => $part,
+                        'latitude'    => null,
+                        'longitude'   => null,
+                        'zoomLevel'   => null,
+                        'tagMode'     => 'nothing',
+                    ]
+                );
+                Log::debug('Created new tag', ['name' => $part, 'id' => $tag->id]);
+                $set->push($tag);
+            }
         }
         $this->setCertainty(100);
 
