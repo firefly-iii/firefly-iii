@@ -62,6 +62,9 @@ class CategoryId extends BasicConverter implements ConverterInterface
 
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
         $this->setCertainty(0);
+
+        Log::info(sprintf('Could not find category with ID %d. Will return NULL', $value));
+
         return new Category;
 
     }

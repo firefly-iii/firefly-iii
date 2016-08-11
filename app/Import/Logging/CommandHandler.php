@@ -13,6 +13,7 @@ namespace FireflyIII\Import\Logging;
 
 use Illuminate\Console\Command;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
 
 /**
  * Class CommandHandler
@@ -32,7 +33,9 @@ class CommandHandler extends AbstractProcessingHandler
      */
     public function __construct(Command $command)
     {
+        parent::__construct();
         $this->command = $command;
+        $this->changeLevel(env('LOG_LEVEL', 'debug'));
     }
 
     /**
@@ -44,6 +47,39 @@ class CommandHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->command->line((string) trim($record['formatted']));
+        $this->command->line((string)trim($record['formatted']));
+    }
+
+    /**
+     * @param string $level
+     */
+    private function changeLevel(string $level)
+    {
+        switch ($level) {
+            case 'debug':
+                $this->setLevel(Logger::DEBUG);
+                break;
+            case 'info':
+                $this->setLevel(Logger::INFO);
+                break;
+            case 'notice':
+                $this->setLevel(Logger::NOTICE);
+                break;
+            case 'warning':
+                $this->setLevel(Logger::WARNING);
+                break;
+            case 'error':
+                $this->setLevel(Logger::ERROR);
+                break;
+            case 'critical':
+                $this->setLevel(Logger::CRITICAL);
+                break;
+            case 'alert':
+                $this->setLevel(Logger::ALERT);
+                break;
+            case 'emergency':
+                $this->setLevel(Logger::EMERGENCY);
+                break;
+        }
     }
 }

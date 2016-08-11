@@ -11,20 +11,78 @@
       "role": 1
     }
   ],
-  "accounts": [],
-  "account-meta": [],
-  "bills": [],
-  "budgets": [],
+  "accounts": [
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "ExistingAssetAccount",
+      "iban": "NL62EXFK3945306779"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "ExistingOpposingAccount",
+      "iban": "NL79BGWN6303364632"
+    }
+  ],
+  "account-meta": [
+    {
+      "account_id": 1,
+      "name": "accountNumber",
+      "data": "\"3945306779\""
+    },
+    {
+      "account_id": 2,
+      "name": "accountNumber",
+      "data": "\"6303364632\""
+    }
+  ],
+  "bills": [
+    {
+      "name": "ExistingBill",
+      "match": "ExistingBill",
+      "amount_min": 100,
+      "amount_max": 200,
+      "user_id": 1,
+      "date": "2015-01-01",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "monthly",
+      "skip": 0
+    }
+  ],
+  "budgets": [
+    {
+      "name": "ExistingBudget",
+      "user_id": 1
+    }
+  ],
   "budget-limits": [],
   "monthly-limits": [],
-  "categories": [],
+  "categories": [
+    {
+      "name": "ExistingCategory",
+      "user_id": 1
+    }
+  ],
   "piggy-banks": [],
   "piggy-events": [],
   "rule-groups": [],
   "rules": [],
   "rule-triggers": [],
   "rule-actions": [],
-  "tags": [],
+  "tags": [
+    {
+      "user_id": 1,
+      "tag": "ExistingTag",
+      "tagMode": "nothing"
+    },
+    {
+      "user_id": 1,
+      "tag": "AnotherExistingTag",
+      "tagMode": "nothing"
+    }
+  ],
   "monthly-deposits": [],
   "monthly-transfers": [],
   "monthly-withdrawals": [],
@@ -43,18 +101,67 @@
         "date-format": "Ymd",
         "delimiter": ",",
         "import-account": 0,
-        "specifics": [],
-        "column-count": 7,
+        "specifics": {
+          "RabobankDescription": 1,
+          "AbnAmroDescription": 1
+        },
+        "column-count": 30,
         "column-roles": [
-          "account-name",
-          "opposing-name",
           "amount",
-          "date-transaction",
-          "category-name",
+          "account-id",
+          "account-iban",
+          "account-name",
+          "opposing-number",
+          "bill-id",
+          "bill-name",
+          "budget-id",
           "budget-name",
-          "description"
+          "category-id",
+          "category-name",
+          "currency-code",
+          "currency-id",
+          "currency-symbol",
+          "currency-name",
+          "date-transaction",
+          "description",
+          "_ignore",
+          "ing-debet-credit",
+          "opposing-iban",
+          "opposing-id",
+          "opposing-name",
+          "opposing-number",
+          "rabo-debet-credit",
+          "tags-comma",
+          "tags-space",
+          "date-interest",
+          "date-book",
+          "date-process",
+          "external-id"
         ],
         "column-do-mapping": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
           false,
           false,
           false,
@@ -64,9 +171,16 @@
           false
         ],
         "column-roles-complete": false,
-        "column-mapping-config": [],
+        "column-mapping-config": {},
         "column-mapping-complete": false
       }
+    }
+  ],
+  "currencies": [
+    {
+      "name": "ExistingCurrency",
+      "symbol": "#",
+      "code": "EXI"
     }
   ]
 }

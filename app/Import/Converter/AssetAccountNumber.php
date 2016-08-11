@@ -32,7 +32,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
     public function convert($value)
     {
         $value = trim($value);
-        Log::debug('Going to convert using AssetAccountName', ['value' => $value]);
+        Log::debug('Going to convert using AssetAccountNumber', ['value' => $value]);
 
         if (strlen($value) === 0) {
             return new Account;
@@ -77,6 +77,14 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
              'accountType'    => 'asset',
              'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]
         );
+
+        if (is_null($account->id)) {
+            $this->setCertainty(0);
+            Log::notice('Could not store new asset account by account number', $account->getErrors()->toArray());
+
+            return new Account;
+        }
+
         $this->setCertainty(100);
 
         return $account;

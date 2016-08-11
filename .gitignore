@@ -5,3 +5,4 @@ _development
 .env.local
 result.html
 test-import.sh
+test-import-report.txt

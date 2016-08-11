@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Category
@@ -46,11 +47,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Category extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, ValidatingTrait;
 
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'name'];
     protected $hidden   = ['encrypted'];
+    protected $rules    = ['name' => 'required|between:1,200',];
 
     /**
      * @param array $fields

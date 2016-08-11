@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Bill
@@ -58,17 +59,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
  * @mixin \Eloquent
- * @property string $deleted_at
+ * @property string                                                             $deleted_at
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereDeletedAt($value)
  */
 class Bill extends Model
 {
+
+    use ValidatingTrait;
 
     protected $dates  = ['created_at', 'updated_at', 'date'];
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
+    protected $rules  = ['name' => 'required|between:1,200',];
 
     /**
      * @param Bill $value

@@ -38,10 +38,15 @@ class TestDataSeeder extends Seeder
         if ($disk->exists($fileName)) {
             Log::debug('Now seeding ' . $fileName);
             $file = json_decode($disk->get($fileName), true);
-            // run the file:
-            TestData::run($file);
 
+            if (is_array($file)) {
+                // run the file:
+                TestData::run($file);
+                return;
+            }
+            Log::error('No valid data found (' . $fileName . ') for environment ' . $env);
             return;
+
         }
         Log::info('No seed file (' . $fileName . ') for environment ' . $env);
     }

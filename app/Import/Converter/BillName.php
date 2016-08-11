@@ -76,6 +76,13 @@ class BillName extends BasicConverter implements ConverterInterface
 
             ]
         );
+        if (is_null($bill->id)) {
+            $this->setCertainty(0);
+            Log::info('Could not store new bill by name', $bill->getErrors()->toArray());
+
+            return new Bill;
+        }
+
         $this->setCertainty(100);
 
         return $bill;

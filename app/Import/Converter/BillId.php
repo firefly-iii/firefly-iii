@@ -63,6 +63,7 @@ class BillId extends BasicConverter implements ConverterInterface
         }
 
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
+        Log::info(sprintf('Could not find bill with ID %d. Will return NULL', $value));
 
         $this->setCertainty(0);
 

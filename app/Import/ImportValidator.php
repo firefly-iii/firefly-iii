@@ -52,8 +52,8 @@ class ImportValidator
     {
         $newCollection = new Collection;
         /** @var ImportEntry $entry */
-        foreach ($this->entries as $entry) {
-            Log::debug('--- import validator start ---');
+        foreach ($this->entries as $index => $entry) {
+            Log::debug(sprintf('--- import validator start for row %d ---', $index));
             /*
              * X Adds the date (today) if no date is present.
              * X Determins the types of accounts involved (asset, expense, revenue).
@@ -64,14 +64,12 @@ class ImportValidator
             $entry = $this->checkAmount($entry);
             $entry = $this->setDate($entry);
             $entry = $this->setAssetAccount($entry);
-            Log::debug(sprintf('Opposing account is of type %s', $entry->fields['opposing-account']->accountType->type));
             $entry = $this->setOpposingAccount($entry);
-            Log::debug(sprintf('Opposing account is of type %s', $entry->fields['opposing-account']->accountType->type));
             $entry = $this->cleanDescription($entry);
             $entry = $this->setTransactionType($entry);
             $entry = $this->setTransactionCurrency($entry);
 
-            $newCollection->push($entry);
+            $newCollection->put($index, $entry);
         }
 
         return $newCollection;
@@ -118,6 +116,7 @@ class ImportValidator
      */
     private function cleanDescription(ImportEntry $entry): ImportEntry
     {
+
         if (!isset($entry->fields['description'])) {
             Log::debug('Set empty transaction description because field was not set.');
             $entry->fields['description'] = '(empty transaction description)';
@@ -130,6 +129,7 @@ class ImportValidator
 
             return $entry;
         }
+        $entry->fields['description'] = trim($entry->fields['description']);
 
         if (strlen($entry->fields['description']) == 0) {
             Log::debug('Set empty transaction description because field was empty.');
@@ -137,8 +137,7 @@ class ImportValidator
 
             return $entry;
         }
-        Log::debug('Transaction description is OK.');
-        $entry->fields['description'] = trim($entry->fields['description']);
+        Log::debug('Transaction description is OK.', ['description' => $entry->fields['description']]);
 
         return $entry;
     }
@@ -246,7 +245,7 @@ class ImportValidator
      */
     private function setDate(ImportEntry $entry): ImportEntry
     {
-        if (is_null($entry->fields['date-transaction'])) {
+        if (is_null($entry->fields['date-transaction']) || $entry->certain['date-transaction'] == 0) {
             // empty date field? find alternative.
             $alternatives = ['date-book', 'date-interest', 'date-process'];
             foreach ($alternatives as $alternative) {
@@ -263,6 +262,9 @@ class ImportValidator
 
             return $entry;
         }
+
+        // confidence is zero?
+
         Log::debug('Date-transaction is OK');
 
         return $entry;

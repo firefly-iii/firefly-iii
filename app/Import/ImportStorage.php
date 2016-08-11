@@ -57,9 +57,9 @@ class ImportStorage
      */
     public function store()
     {
-        foreach ($this->entries as $entry) {
-            Log::debug('--- import store start ---');
-            $this->storeSingle($entry);
+        foreach ($this->entries as $index => $entry) {
+            Log::debug(sprintf('--- import store start for row %d ---', $index));
+            $this->storeSingle($index, $entry);
         }
 
     }
@@ -80,19 +80,20 @@ class ImportStorage
     }
 
     /**
+     * @param int         $index
      * @param ImportEntry $entry
      *
      * @throws FireflyException
      */
-    private function storeSingle(ImportEntry $entry)
+    private function storeSingle(int $index, ImportEntry $entry)
     {
         if ($entry->valid === false) {
-            Log::error('Cannot import entry, because valid=false');
+            Log::error(sprintf('Cannot import row %d, because valid=false', $index));
 
             return;
         }
 
-        Log::debug('Going to store entry!');
+        Log::debug(sprintf('Going to store row %d', $index));
         $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
         $journalData = [
             'user_id'                 => $entry->user->id,
@@ -108,7 +109,12 @@ class ImportStorage
         ];
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create($journalData);
-        $amount  = $this->makePositive($entry->fields['amount']);
+
+        foreach ($journal->getErrors()->all() as $err) {
+            Log::error($err);
+        }
+
+        $amount = $this->makePositive($entry->fields['amount']);
 
         Log::debug('Created journal', ['id' => $journal->id]);
 
@@ -154,13 +160,30 @@ class ImportStorage
 
         $one = Transaction::create($sourceData);
         $two = Transaction::create($destinationData);
-        Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id,'account_name' => $source->name]);
-        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id,'account_name' => $destination->name]);
+        Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id, 'account_name' => $source->name]);
+        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id, 'account_name' => $destination->name]);
 
         $journal->completed = 1;
         $journal->save();
 
         // now attach budget and so on.
+        if (!is_null($entry->fields['budget']) && !is_null($entry->fields['budget']->id)) {
+            $journal->budgets()->save($entry->fields['budget']);
+            Log::debug('Attached budget', ['id' => $entry->fields['budget']->id, 'name' => $entry->fields['budget']->name]);
+            $journal->save();
+        }
+
+        if (!is_null($entry->fields['category']) && !is_null($entry->fields['category']->id)) {
+            $journal->categories()->save($entry->fields['category']);
+            Log::debug('Attached category', ['id' => $entry->fields['category']->id, 'name' => $entry->fields['category']->name]);
+            $journal->save();
+        }
+
+        if (!is_null($entry->fields['bill']) && !is_null($entry->fields['bill']->id)) {
+            $journal->bill()->associate($entry->fields['bill']);
+            Log::debug('Attached bill', ['id' => $entry->fields['bill']->id, 'name' => $entry->fields['bill']->name]);
+            $journal->save();
+        }
 
 
     }

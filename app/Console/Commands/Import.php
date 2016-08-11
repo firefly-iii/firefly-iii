@@ -19,6 +19,7 @@ use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
 use Log;
+use Monolog\Handler\StreamHandler;
 
 /**
  * Class Import
@@ -80,6 +81,7 @@ class Import extends Command
         // intercept logging by importer.
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
+
         $monolog->pushHandler($handler);
 
         // create import entries

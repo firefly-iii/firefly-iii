@@ -158,10 +158,12 @@ class AccountCrud implements AccountCrudInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->name === $name) {
-                Log::debug('Account name is an exact match. ', ['db' => $account->name, 'source' => $name,'id' => $account->id]);
+                Log::debug('Account name is an exact match. ', ['db' => $account->name, 'source' => $name, 'id' => $account->id]);
+
+                return $account;
             }
         }
-        Log::warning('Found nothing in findByName()', ['name' => $name, 'types' => $types]);
+        Log::debug('Found nothing in findByName()', ['name' => $name, 'types' => $types]);
 
         return new Account;
     }
@@ -233,7 +235,7 @@ class AccountCrud implements AccountCrudInterface
     public function store(array $data): Account
     {
         $newAccount = $this->storeAccount($data);
-        if (!is_null($newAccount)) {
+        if (!is_null($newAccount->id)) {
             $this->storeMetadata($newAccount, $data);
         }
 
@@ -327,8 +329,8 @@ class AccountCrud implements AccountCrudInterface
             ];
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
-                Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                abort(500);
+                Log::error('Account create error', $newAccount->getErrors()->toArray());
+                return new Account;
             }
             $newAccount = $existingAccount;
 

@@ -15,6 +15,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\TransactionCurrency
@@ -38,19 +39,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionCurrency extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, ValidatingTrait;
 
 
-    protected $fillable = ['name', 'code', 'symbol'];
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactionJournals()
-    {
-        return $this->hasMany('FireflyIII\Models\TransactionJournal');
-    }
+    protected $fillable = ['name', 'code', 'symbol'];
+    protected $rules    = ['name' => 'required|between:1,200', 'code' => 'required|between:3,3', 'symbol' => 'required|between:1,12'];
 
     /**
      * @param TransactionCurrency $currency
@@ -63,5 +57,13 @@ class TransactionCurrency extends Model
             return $currency;
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactionJournals()
+    {
+        return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 }

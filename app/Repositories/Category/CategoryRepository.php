@@ -444,6 +444,12 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function store(array $data): Category
     {
+        // TODO use validation, not this.
+        if (strlen($data['name']) > 200 || strlen($data['name']) === 0) {
+
+        }
+
+
         $newCategory = Category::firstOrCreateEncrypted(
             [
                 'user_id' => $data['user'],

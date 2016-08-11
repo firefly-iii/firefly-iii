@@ -72,9 +72,9 @@ class TestData
                 'updated_at'      => $this->time,
                 'user_id'         => $account['user_id'],
                 'account_type_id' => $account['account_type_id'],
-                'name'            => Crypt::encrypt($account['name']),
+                'name'            => $account['name'],
                 'active'          => 1,
-                'encrypted'       => 1,
+                'encrypted'       => 0,
                 'virtual_balance' => 0,
                 'iban'            => isset($account['iban']) ? Crypt::encrypt($account['iban']) : null,
             ];
@@ -242,6 +242,25 @@ class TestData
             ];
         }
         DB::table('categories')->insert($insert);
+    }
+
+    /**
+     *
+     */
+    private function createCurrencies()
+    {
+        $insert = [];
+        foreach ($this->data['currencies'] as $job) {
+            $insert[] = [
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
+                'deleted_at' => null,
+                'code'       => $job['code'],
+                'name'       => $job['name'],
+                'symbol'     => $job['symbol'],
+            ];
+        }
+        DB::table('transaction_currencies')->insert($insert);
     }
 
     /**
@@ -829,6 +848,7 @@ class TestData
         $this->createMultiDeposits();
         $this->createMultiTransfers();
         $this->createImportJobs();
+        $this->createCurrencies();
     }
 
 }

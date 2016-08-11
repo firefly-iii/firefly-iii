@@ -61,6 +61,9 @@ class CurrencyId extends BasicConverter implements ConverterInterface
         }
         $this->setCertainty(0);
         // should not really happen. If the ID does not match FF, what is FF supposed to do?
+
+        Log::info(sprintf('Could not find category with ID %d. Will return NULL', $value));
+
         return new TransactionCurrency;
 
     }

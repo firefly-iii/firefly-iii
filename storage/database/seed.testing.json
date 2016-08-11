@@ -1007,5 +1007,6 @@
       ]
     }
   ],
-  "import-jobs": []
+  "import-jobs": [],
+  "currencies": []
 }

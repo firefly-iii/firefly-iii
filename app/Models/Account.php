@@ -79,8 +79,9 @@ class Account extends Model
                       = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required',
+            'name'            => 'required|between:1,200',
             'active'          => 'required|boolean',
+            'iban'            => 'between:1,50|iban',
         ];
     /** @var  bool */
     private $joinedAccountTypes;

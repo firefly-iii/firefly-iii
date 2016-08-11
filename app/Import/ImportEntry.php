@@ -221,7 +221,7 @@ class ImportEntry
 
             return;
         }
-        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
+        Log::info(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
 
     }
 
@@ -239,7 +239,7 @@ class ImportEntry
 
             return;
         }
-        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d).', $field, $certainty, $this->certain[$field]));
+        Log::info(sprintf('Will not set %s based on certainty %d (current certainty is %d).', $field, $certainty, $this->certain[$field]));
     }
 
     /**
@@ -256,7 +256,7 @@ class ImportEntry
 
             return;
         }
-        Log::error(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
+        Log::info(sprintf('Will not set %s based on certainty %d (current certainty is %d) or NULL id.', $field, $certainty, $this->certain[$field]));
 
     }
 }

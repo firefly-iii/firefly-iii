@@ -68,6 +68,14 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             ['name'   => $value, 'iban' => null, 'openingBalance' => 0, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0,
              'active' => true]
         );
+
+        if (is_null($account->id)) {
+            $this->setCertainty(0);
+            Log::info('Could not store new asset account by name', $account->getErrors()->toArray());
+
+            return new Account;
+        }
+
         $this->setCertainty(100);
 
         Log::debug('Created new asset account ', ['name' => $account->name, 'id' => $account->id]);
