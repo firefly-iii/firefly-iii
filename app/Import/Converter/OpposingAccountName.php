@@ -54,7 +54,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
         // not mapped? Still try to find it first:
         $account = $repository->findByName($value, []);
         if (!is_null($account->id)) {
-            Log::debug('Found account by name', ['id' => $account->id]);
+            Log::debug('Found opposing account by name', ['id' => $account->id]);
             Log::warning(
                 'The match between name and account is uncertain because the type of transactions may not have been determined.',
                 ['id' => $account->id, 'name' => $value]
@@ -69,6 +69,8 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
             ]
         );
         $this->setCertainty(100);
+
+        Log::debug('Created new opposing account ', ['name' => $account->name, 'id' => $account->id]);
 
         return $account;
     }

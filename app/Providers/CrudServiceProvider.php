@@ -58,7 +58,7 @@ class CrudServiceProvider extends ServiceProvider
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');
                 }
-                Log::debug('AccountCrud constructor, run with default arguments.', $arguments);
+                // Log::debug('AccountCrud constructor, run with default arguments.', $arguments);
 
                 return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
             }

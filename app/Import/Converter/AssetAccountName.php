@@ -36,6 +36,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new Account;
         }
 
@@ -49,6 +50,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
             if (!is_null($account->id)) {
                 Log::debug('Found account by ID', ['id' => $account->id]);
                 $this->setCertainty(100);
+
                 return $account;
             }
         }
@@ -56,7 +58,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
         // not mapped? Still try to find it first:
         $account = $repository->findByName($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
-            Log::debug('Found account by name', ['id' => $account->id]);
+            Log::debug('Found asset account by name', ['value' => $value, 'id' => $account->id]);
 
             return $account;
         }
@@ -67,6 +69,8 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
              'active' => true]
         );
         $this->setCertainty(100);
+
+        Log::debug('Created new asset account ', ['name' => $account->name, 'id' => $account->id]);
 
         return $account;
 

@@ -58,6 +58,7 @@ class ImportStorage
     public function store()
     {
         foreach ($this->entries as $entry) {
+            Log::debug('--- import store start ---');
             $this->storeSingle($entry);
         }
 
@@ -80,9 +81,17 @@ class ImportStorage
 
     /**
      * @param ImportEntry $entry
+     *
+     * @throws FireflyException
      */
     private function storeSingle(ImportEntry $entry)
     {
+        if ($entry->valid === false) {
+            Log::error('Cannot import entry, because valid=false');
+
+            return;
+        }
+
         Log::debug('Going to store entry!');
         $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
         $journalData = [
@@ -145,13 +154,13 @@ class ImportStorage
 
         $one = Transaction::create($sourceData);
         $two = Transaction::create($destinationData);
-        Log::debug('Created transactions', ['source' => $one->id,'destination' => $two->id]);
+        Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id,'account_name' => $source->name]);
+        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id,'account_name' => $destination->name]);
 
         $journal->completed = 1;
         $journal->save();
 
         // now attach budget and so on.
-
 
 
     }

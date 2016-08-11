@@ -64,7 +64,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
         $budget = $repository->store(
             [
                 'name'        => $value,
-                'user_id'     => $this->user->id,
+                'user'     => $this->user->id,
             ]
         );
         $this->setCertainty(100);

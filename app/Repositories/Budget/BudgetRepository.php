@@ -94,7 +94,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function findByName(string $name): Budget
     {
-        $budgets = $this->user->budgets()->get();
+        $budgets = $this->user->budgets()->get(['budgets.*']);
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             if ($budget->name === $name) {

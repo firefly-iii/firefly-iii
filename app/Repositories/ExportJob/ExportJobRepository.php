@@ -99,7 +99,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function findByKey(string $key): ExportJob
     {
-        $result = $this->user->exportJobs()->where('key', $key)->first();
+        $result = $this->user->exportJobs()->where('key', $key)->first(['export_jobs.*']);
         if (is_null($result)) {
             return new ExportJob;
         }

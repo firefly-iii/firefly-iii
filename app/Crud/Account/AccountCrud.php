@@ -103,7 +103,7 @@ class AccountCrud implements AccountCrudInterface
         }
 
         /** @var Collection $accounts */
-        $accounts = $query->get();
+        $accounts = $query->get(['accounts.*']);
         if ($accounts->count() > 0) {
             return $accounts->first();
         }
@@ -126,7 +126,7 @@ class AccountCrud implements AccountCrudInterface
             $query->whereIn('account_types.type', $types);
         }
 
-        $accounts = $query->get();
+        $accounts = $query->get(['accounts.*']);
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->iban === $iban) {
@@ -145,20 +145,23 @@ class AccountCrud implements AccountCrudInterface
      */
     public function findByName(string $name, array $types): Account
     {
-        $query = $this->user->accounts()->where('iban', '!=', "");
+        $query = $this->user->accounts();
+        Log::debug('Now in findByName()', ['name' => $name, 'types' => $types]);
 
         if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
 
-        $accounts = $query->get();
+        $accounts = $query->get(['accounts.*']);
+        Log::debug(sprintf('Total set count is %d ', $accounts->count()));
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->name === $name) {
-                return $account;
+                Log::debug('Account name is an exact match. ', ['db' => $account->name, 'source' => $name,'id' => $account->id]);
             }
         }
+        Log::warning('Found nothing in findByName()', ['name' => $name, 'types' => $types]);
 
         return new Account;
     }
@@ -285,11 +288,11 @@ class AccountCrud implements AccountCrudInterface
     {
         $type = AccountType::whereType($type)->first();
         if (!is_null($type)) {
-            $account->account_type_id = $type->id;
+            $account->accountType()->associate($type);
             $account->save();
         }
 
-        return $account;
+        return $this->find($account->id);
 
     }
 

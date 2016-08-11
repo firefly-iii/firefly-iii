@@ -1,0 +1,72 @@
+{
+  "users": [
+    {
+      "email": "thegrumpydictator@gmail.com",
+      "password": "james"
+    }
+  ],
+  "roles": [
+    {
+      "user_id": 1,
+      "role": 1
+    }
+  ],
+  "accounts": [],
+  "account-meta": [],
+  "bills": [],
+  "budgets": [],
+  "budget-limits": [],
+  "monthly-limits": [],
+  "categories": [],
+  "piggy-banks": [],
+  "piggy-events": [],
+  "rule-groups": [],
+  "rules": [],
+  "rule-triggers": [],
+  "rule-actions": [],
+  "tags": [],
+  "monthly-deposits": [],
+  "monthly-transfers": [],
+  "monthly-withdrawals": [],
+  "attachments": [],
+  "multi-withdrawals": [],
+  "multi-deposits": [],
+  "multi-transfers": [],
+  "import-jobs": [
+    {
+      "user_id": 1,
+      "key": "testImport",
+      "file_type": "csv",
+      "status": "settings_complete",
+      "configuration": {
+        "has-headers": false,
+        "date-format": "Ymd",
+        "delimiter": ",",
+        "import-account": 0,
+        "specifics": [],
+        "column-count": 7,
+        "column-roles": [
+          "account-name",
+          "opposing-name",
+          "amount",
+          "date-transaction",
+          "category-name",
+          "budget-name",
+          "description"
+        ],
+        "column-do-mapping": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "column-roles-complete": false,
+        "column-mapping-config": [],
+        "column-mapping-complete": false
+      }
+    }
+  ]
+}

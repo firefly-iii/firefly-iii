@@ -119,6 +119,7 @@ class HomeController extends Controller
      */
     public function index(ARI $repository, AccountCrudInterface $crud)
     {
+
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 

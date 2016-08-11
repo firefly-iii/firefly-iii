@@ -50,8 +50,10 @@ class ImportValidator
      */
     public function clean(): Collection
     {
+        $newCollection = new Collection;
         /** @var ImportEntry $entry */
         foreach ($this->entries as $entry) {
+            Log::debug('--- import validator start ---');
             /*
              * X Adds the date (today) if no date is present.
              * X Determins the types of accounts involved (asset, expense, revenue).
@@ -59,15 +61,20 @@ class ImportValidator
              * - Determins the currency of the transaction.
              * X Adds a default description if there isn't one present.
              */
-            $this->checkAmount($entry);
-            $this->setDate($entry);
-            $this->setAssetAccount($entry);
-            $this->setOpposingAccount($entry);
-            $this->cleanDescription($entry);
-            $this->setTransactionType($entry);
-            $this->setTransactionCurrency($entry);
+            $entry = $this->checkAmount($entry);
+            $entry = $this->setDate($entry);
+            $entry = $this->setAssetAccount($entry);
+            Log::debug(sprintf('Opposing account is of type %s', $entry->fields['opposing-account']->accountType->type));
+            $entry = $this->setOpposingAccount($entry);
+            Log::debug(sprintf('Opposing account is of type %s', $entry->fields['opposing-account']->accountType->type));
+            $entry = $this->cleanDescription($entry);
+            $entry = $this->setTransactionType($entry);
+            $entry = $this->setTransactionCurrency($entry);
+
+            $newCollection->push($entry);
         }
-        return $this->entries;
+
+        return $newCollection;
     }
 
     /**
@@ -88,42 +95,52 @@ class ImportValidator
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function checkAmount(ImportEntry $entry)
+    private function checkAmount(ImportEntry $entry): ImportEntry
     {
         if ($entry->fields['amount'] == 0) {
             $entry->valid = false;
             Log::error('Amount of transaction is zero, cannot handle.');
+
+            return $entry;
         }
         Log::debug('Amount is OK.');
+
+        return $entry;
     }
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function cleanDescription(ImportEntry $entry)
+    private function cleanDescription(ImportEntry $entry): ImportEntry
     {
         if (!isset($entry->fields['description'])) {
             Log::debug('Set empty transaction description because field was not set.');
             $entry->fields['description'] = '(empty transaction description)';
 
-            return;
+            return $entry;
         }
         if (is_null($entry->fields['description'])) {
             Log::debug('Set empty transaction description because field was null.');
             $entry->fields['description'] = '(empty transaction description)';
 
-            return;
+            return $entry;
         }
 
         if (strlen($entry->fields['description']) == 0) {
             Log::debug('Set empty transaction description because field was empty.');
             $entry->fields['description'] = '(empty transaction description)';
 
-            return;
+            return $entry;
         }
         Log::debug('Transaction description is OK.');
         $entry->fields['description'] = trim($entry->fields['description']);
+
+        return $entry;
     }
 
     /**
@@ -136,6 +153,8 @@ class ImportValidator
     {
         $accountType = $account->accountType->type;
         if ($accountType === $type) {
+            Log::debug(sprintf('Account %s already of type %s', $account->name, $type));
+
             return $account;
         }
         // find it first by new type:
@@ -144,7 +163,9 @@ class ImportValidator
         $result     = $repository->findByName($account->name, [$type]);
         if (is_null($result->id)) {
             // can convert account:
+            Log::debug(sprintf('No account named %s of type %s, will convert.', $account->name, $type));
             $result = $repository->updateAccountType($account, $type);
+
         }
 
         return $result;
@@ -194,29 +215,36 @@ class ImportValidator
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function setAssetAccount(ImportEntry $entry)
+    private function setAssetAccount(ImportEntry $entry): ImportEntry
     {
         if (is_null($entry->fields['asset-account'])) {
             if (!is_null($this->defaultImportAccount)) {
                 Log::debug('Set asset account from default asset account');
                 $entry->fields['asset-account'] = $this->defaultImportAccount;
 
-                return;
+                return $entry;
             }
             // default import is null? should not happen. Entry cannot be imported.
             // set error message and block.
             $entry->valid = false;
             Log::error('Cannot import entry. Asset account is NULL and import account is also NULL.');
+
         }
-        Log::debug('Asset account is OK.');
+        Log::debug('Asset account is OK.', ['id' => $entry->fields['asset-account']->id, 'name' => $entry->fields['asset-account']->name]);
+
+        return $entry;
     }
 
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function setDate(ImportEntry $entry)
+    private function setDate(ImportEntry $entry): ImportEntry
     {
         if (is_null($entry->fields['date-transaction'])) {
             // empty date field? find alternative.
@@ -226,24 +254,26 @@ class ImportValidator
                     Log::debug(sprintf('Copied date-transaction from %s.', $alternative));
                     $entry->fields['date-transaction'] = clone $entry->fields[$alternative];
 
-                    return;
+                    return $entry;
                 }
             }
             // date is still null at this point
             Log::debug('Set date-transaction to today.');
             $entry->fields['date-transaction'] = new Carbon;
 
-            return;
+            return $entry;
         }
         Log::debug('Date-transaction is OK');
 
-
+        return $entry;
     }
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function setOpposingAccount(ImportEntry $entry)
+    private function setOpposingAccount(ImportEntry $entry): ImportEntry
     {
         // empty opposing account. Create one based on amount.
         if (is_null($entry->fields['opposing-account'])) {
@@ -253,12 +283,12 @@ class ImportValidator
                 Log::debug('Created fallback expense account');
                 $entry->fields['opposing-account'] = $this->fallbackExpenseAccount();
 
-                return;
+                return $entry;
             }
             Log::debug('Created fallback revenue account');
             $entry->fields['opposing-account'] = $this->fallbackRevenueAccount();
 
-            return;
+            return $entry;
         }
 
         // opposing is of type "import". Convert to correct type (by amount):
@@ -268,14 +298,14 @@ class ImportValidator
             $entry->fields['opposing-account'] = $account;
             Log::debug('Converted import account to expense account');
 
-            return;
+            return $entry;
         }
         if ($type == AccountType::IMPORT && $entry->fields['amount'] > 0) {
             $account                           = $this->convertAccount($entry->fields['opposing-account'], AccountType::REVENUE);
             $entry->fields['opposing-account'] = $account;
             Log::debug('Converted import account to revenue account');
 
-            return;
+            return $entry;
         }
         // amount < 0, but opposing is revenue
         if ($type == AccountType::REVENUE && $entry->fields['amount'] < 0) {
@@ -283,7 +313,7 @@ class ImportValidator
             $entry->fields['opposing-account'] = $account;
             Log::debug('Converted revenue account to expense account');
 
-            return;
+            return $entry;
         }
 
         // amount > 0, but opposing is expense
@@ -292,45 +322,65 @@ class ImportValidator
             $entry->fields['opposing-account'] = $account;
             Log::debug('Converted expense account to revenue account');
 
-            return;
+            return $entry;
         }
         // account type is OK
         Log::debug('Opposing account is OK.');
+
+        return $entry;
 
     }
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function setTransactionCurrency(ImportEntry $entry)
+    private function setTransactionCurrency(ImportEntry $entry): ImportEntry
     {
         if (is_null($entry->fields['currency'])) {
             /** @var CurrencyRepositoryInterface $repository */
             $repository                = app(CurrencyRepositoryInterface::class);
             $entry->fields['currency'] = $repository->findByCode(env('DEFAULT_CURRENCY', 'EUR'));
             Log::debug('Set currency to EUR');
-            return;
+
+            return $entry;
         }
         Log::debug('Currency is OK');
+
+        return $entry;
     }
 
     /**
      * @param ImportEntry $entry
+     *
+     * @return ImportEntry
      */
-    private function setTransactionType(ImportEntry $entry)
+    private function setTransactionType(ImportEntry $entry): ImportEntry
     {
+        Log::debug(sprintf('Opposing account is of type %s', $entry->fields['opposing-account']->accountType->type));
         $type = $entry->fields['opposing-account']->accountType->type;
         switch ($type) {
             case AccountType::EXPENSE:
                 $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-                break;
+                Log::debug('Transaction type is now withdrawal.');
+
+                return $entry;
             case AccountType::REVENUE:
                 $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-                break;
+                Log::debug('Transaction type is now deposit.');
+
+                return $entry;
             case AccountType::ASSET:
                 $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::TRANSFER)->first();
-                break;
+                Log::debug('Transaction type is now transfer.');
+
+                return $entry;
         }
+        Log::error(sprintf('Opposing account is of type %s, cannot handle this.', $type));
+        $entry->valid = false;
+
+        return $entry;
     }
 
 

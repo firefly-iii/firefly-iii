@@ -66,7 +66,7 @@ class BillName extends BasicConverter implements ConverterInterface
                 'name'        => $value,
                 'match'       => $value,
                 'amount_min'  => 1,
-                'user_id'     => $this->user->id,
+                'user'     => $this->user->id,
                 'amount_max'  => 10,
                 'date'        => date('Ymd'),
                 'repeat_freq' => 'monthly',

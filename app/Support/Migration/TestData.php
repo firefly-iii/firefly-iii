@@ -247,6 +247,26 @@ class TestData
     /**
      *
      */
+    private function createImportJobs()
+    {
+        $insert = [];
+        foreach ($this->data['import-jobs'] as $job) {
+            $insert[] = [
+                'created_at'    => $this->time,
+                'updated_at'    => $this->time,
+                'user_id'       => $job['user_id'],
+                'file_type'     => $job['file_type'],
+                'key'           => $job['key'],
+                'status'        => $job['status'],
+                'configuration' => json_encode($job['configuration']),
+            ];
+        }
+        DB::table('import_jobs')->insert($insert);
+    }
+
+    /**
+     *
+     */
     private function createJournals()
     {
         $current      = clone $this->start;
@@ -640,14 +660,14 @@ class TestData
         foreach ($this->data['piggy-banks'] as $piggyBank) {
             $piggyId = DB::table('piggy_banks')->insertGetId(
                 [
-                    'created_at'    => $this->time,
-                    'updated_at'    => $this->time,
-                    'account_id'    => $piggyBank['account_id'],
-                    'name'          => Crypt::encrypt($piggyBank['name']),
-                    'targetamount'  => $piggyBank['targetamount'],
-                    'startdate'     => $piggyBank['startdate'],
-                    'order'         => $piggyBank['order'],
-                    'encrypted'     => 1,
+                    'created_at'   => $this->time,
+                    'updated_at'   => $this->time,
+                    'account_id'   => $piggyBank['account_id'],
+                    'name'         => Crypt::encrypt($piggyBank['name']),
+                    'targetamount' => $piggyBank['targetamount'],
+                    'startdate'    => $piggyBank['startdate'],
+                    'order'        => $piggyBank['order'],
+                    'encrypted'    => 1,
                 ]
             );
             if (isset($piggyBank['currentamount'])) {
@@ -808,6 +828,7 @@ class TestData
         $this->createMultiWithdrawals();
         $this->createMultiDeposits();
         $this->createMultiTransfers();
+        $this->createImportJobs();
     }
 
 }

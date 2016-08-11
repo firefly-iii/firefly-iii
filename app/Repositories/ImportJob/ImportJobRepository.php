@@ -71,7 +71,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function findByKey(string $key): ImportJob
     {
-        $result = $this->user->importJobs()->where('key', $key)->first();
+        $result = $this->user->importJobs()->where('key', $key)->first(['import_jobs.*']);
         if (is_null($result)) {
             return new ImportJob;
         }

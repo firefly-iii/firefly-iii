@@ -48,6 +48,7 @@ class CsvImporter implements ImporterInterface
         $collection = new Collection;
         foreach ($results as $index => $row) {
             if ($index >= $start) {
+                Log::debug('----- import entry build start --');
                 Log::debug(sprintf('Now going to import row %d.', $index));
                 $importEntry = $this->importSingleRow($index, $row);
                 $collection->push($importEntry);

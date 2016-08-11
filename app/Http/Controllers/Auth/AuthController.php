@@ -64,6 +64,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+
         $this->validate($request, [$this->loginUsername() => 'required', 'password' => 'required',]);
         $throttles = $this->isUsingThrottlesLoginsTrait();
 

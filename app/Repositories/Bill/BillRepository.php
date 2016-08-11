@@ -81,7 +81,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function findByName(string $name) : Bill
     {
-        $bills = $this->user->bills()->get();
+        $bills = $this->user->bills()->get(['bills.*']);
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
