@@ -80,44 +80,13 @@ class ImportStorage
     }
 
     /**
-     * @param int         $index
-     * @param ImportEntry $entry
+     * @param $entry
      *
+     * @return array
      * @throws FireflyException
      */
-    private function storeSingle(int $index, ImportEntry $entry)
+    private function storeAccounts($entry): array
     {
-        if ($entry->valid === false) {
-            Log::error(sprintf('Cannot import row %d, because valid=false', $index));
-
-            return;
-        }
-
-        Log::debug(sprintf('Going to store row %d', $index));
-        $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
-        $journalData = [
-            'user_id'                 => $entry->user->id,
-            'transaction_type_id'     => $entry->fields['transaction-type']->id,
-            'bill_id'                 => $billId,
-            'transaction_currency_id' => $entry->fields['currency']->id,
-            'description'             => $entry->fields['description'],
-            'date'                    => $entry->fields['date-transaction'],
-            'interest_date'           => $entry->fields['date-interest'],
-            'book_date'               => $entry->fields['date-book'],
-            'process_date'            => $entry->fields['date-process'],
-            'completed'               => 0,
-        ];
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::create($journalData);
-
-        foreach ($journal->getErrors()->all() as $err) {
-            Log::error($err);
-        }
-
-        $amount = $this->makePositive($entry->fields['amount']);
-
-        Log::debug('Created journal', ['id' => $journal->id]);
-
         // then create transactions. Single ones, unfortunately.
         switch ($entry->fields['transaction-type']->type) {
             default:
@@ -143,47 +112,135 @@ class ImportStorage
                 break;
         }
 
-        // create new transactions. This is something that needs a rewrite for multiple/split transactions.
-        $sourceData = [
-            'account_id'             => $source->id,
-            'transaction_journal_id' => $journal->id,
-            'description'            => $journalData['description'],
-            'amount'                 => bcmul($amount, '-1'),
+        return [
+            'source'      => $source,
+            'destination' => $destination,
         ];
+    }
 
-        $destinationData = [
-            'account_id'             => $destination->id,
-            'transaction_journal_id' => $journal->id,
-            'description'            => $journalData['description'],
-            'amount'                 => $amount,
-        ];
-
-        $one = Transaction::create($sourceData);
-        $two = Transaction::create($destinationData);
-        Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id, 'account_name' => $source->name]);
-        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id, 'account_name' => $destination->name]);
-
-        $journal->completed = 1;
-        $journal->save();
-
-        // now attach budget and so on.
-        if (!is_null($entry->fields['budget']) && !is_null($entry->fields['budget']->id)) {
-            $journal->budgets()->save($entry->fields['budget']);
-            Log::debug('Attached budget', ['id' => $entry->fields['budget']->id, 'name' => $entry->fields['budget']->name]);
-            $journal->save();
-        }
-
-        if (!is_null($entry->fields['category']) && !is_null($entry->fields['category']->id)) {
-            $journal->categories()->save($entry->fields['category']);
-            Log::debug('Attached category', ['id' => $entry->fields['category']->id, 'name' => $entry->fields['category']->name]);
-            $journal->save();
-        }
+    /**
+     * @param TransactionJournal $journal
+     * @param ImportEntry        $entry
+     */
+    private function storeBill(TransactionJournal $journal, ImportEntry $entry)
+    {
 
         if (!is_null($entry->fields['bill']) && !is_null($entry->fields['bill']->id)) {
             $journal->bill()->associate($entry->fields['bill']);
             Log::debug('Attached bill', ['id' => $entry->fields['bill']->id, 'name' => $entry->fields['bill']->name]);
             $journal->save();
         }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param ImportEntry        $entry
+     */
+    private function storeBudget(TransactionJournal $journal, ImportEntry $entry)
+    {
+        if (!is_null($entry->fields['budget']) && !is_null($entry->fields['budget']->id)) {
+            $journal->budgets()->save($entry->fields['budget']);
+            Log::debug('Attached budget', ['id' => $entry->fields['budget']->id, 'name' => $entry->fields['budget']->name]);
+            $journal->save();
+        }
+
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param ImportEntry        $entry
+     */
+    private function storeCategory(TransactionJournal $journal, ImportEntry $entry)
+    {
+        if (!is_null($entry->fields['category']) && !is_null($entry->fields['category']->id)) {
+            $journal->categories()->save($entry->fields['category']);
+            Log::debug('Attached category', ['id' => $entry->fields['category']->id, 'name' => $entry->fields['category']->name]);
+            $journal->save();
+        }
+    }
+
+    /**
+     * @param $entry
+     *
+     * @return TransactionJournal
+     */
+    private function storeJournal($entry): TransactionJournal
+    {
+        $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
+        $journalData = [
+            'user_id'                 => $entry->user->id,
+            'transaction_type_id'     => $entry->fields['transaction-type']->id,
+            'bill_id'                 => $billId,
+            'transaction_currency_id' => $entry->fields['currency']->id,
+            'description'             => $entry->fields['description'],
+            'date'                    => $entry->fields['date-transaction'],
+            'interest_date'           => $entry->fields['date-interest'],
+            'book_date'               => $entry->fields['date-book'],
+            'process_date'            => $entry->fields['date-process'],
+            'completed'               => 0,
+        ];
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::create($journalData);
+
+        foreach ($journal->getErrors()->all() as $err) {
+            Log::error($err);
+        }
+        Log::debug('Created journal', ['id' => $journal->id]);
+
+        return $journal;
+    }
+
+    /**
+     * @param int         $index
+     * @param ImportEntry $entry
+     *
+     * @return ImportResult
+     * @throws FireflyException
+     */
+    private function storeSingle(int $index, ImportEntry $entry): ImportResult
+    {
+        if ($entry->valid === false) {
+            Log::error(sprintf('Cannot import row %d, because valid=false', $index));
+            $result = new ImportResult();
+            $result->failed();
+            $result->appendError(sprintf('Cannot import row %d, because valid=false', $index));
+
+            return $result;
+        }
+        Log::debug(sprintf('Going to store row %d', $index));
+
+
+        $journal  = $this->storeJournal($entry);
+        $amount   = $this->makePositive($entry->fields['amount']);
+        $accounts = $this->storeAccounts($entry);
+
+        // create new transactions. This is something that needs a rewrite for multiple/split transactions.
+        $sourceData = [
+            'account_id'             => $accounts['source']->id,
+            'transaction_journal_id' => $journal->id,
+            'description'            => $journal->description,
+            'amount'                 => bcmul($amount, '-1'),
+        ];
+
+        $destinationData = [
+            'account_id'             => $accounts['destination']->id,
+            'transaction_journal_id' => $journal->id,
+            'description'            => $journal->description,
+            'amount'                 => $amount,
+        ];
+
+        $one = Transaction::create($sourceData);
+        $two = Transaction::create($destinationData);
+        Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id, 'account_name' => $accounts['source']->name]);
+        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id, 'account_name' => $destination->name]);
+
+        $journal->completed = 1;
+        $journal->save();
+
+        // now attach budget and so on.
+        $this->storeBudget($journal, $entry);
+        $this->storeCategory($journal, $entry);
+        $this->storeBill($journal, $entry);
 
 
     }
