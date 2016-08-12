@@ -34,4 +34,14 @@ class AbnAmroDescription implements SpecificInterface
     {
         return 'Fixes possible problems with ABN Amro descriptions.';
     }
+
+    /**
+     * @param array $row
+     *
+     * @return array
+     */
+    public function run(array $row): array
+    {
+        return $row;
+    }
 }

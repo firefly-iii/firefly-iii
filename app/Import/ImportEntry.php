@@ -27,12 +27,18 @@ class ImportEntry
 {
     /** @var array */
     public $certain = [];
+    /** @var  string */
+    public $externalID;
     /** @var  array */
     public $fields = [];
     /** @var  User */
     public $user;
     /** @var bool */
     public $valid = true;
+
+    /** @var  int */
+    private $amountMultiplier = 0;
+
     /** @var array */
     private $validFields
         = ['amount',
@@ -74,16 +80,13 @@ class ImportEntry
 
     /**
      * @param string $role
-     * @param string $value
      * @param int    $certainty
      * @param        $convertedValue
      *
      * @throws FireflyException
      */
-    public function importValue(string $role, string $value, int $certainty, $convertedValue)
+    public function importValue(string $role, int $certainty, $convertedValue)
     {
-        Log::debug('Going to import', ['role' => $role, 'value' => $value, 'certainty' => $certainty]);
-
         switch ($role) {
             default:
                 Log::error('Import entry cannot handle object.', ['role' => $role]);
@@ -95,6 +98,8 @@ class ImportEntry
                  * Easy enough.
                  */
                 $this->setFloat('amount', $convertedValue, $certainty);
+
+                $this->applyMultiplier('amount'); // if present.
 
                 return;
             case 'account-id':
@@ -139,6 +144,9 @@ class ImportEntry
             case 'date-process':
                 $this->setDate('date-process', $convertedValue, $certainty);
                 break;
+            case 'sepa-ct-id':
+            case 'sepa-db':
+            case 'sepa-ct-op':
             case'description':
                 $this->setAppendableString('description', $convertedValue);
                 break;
@@ -147,12 +155,13 @@ class ImportEntry
             case 'ing-debet-credit':
             case 'rabo-debet-credit':
                 $this->manipulateFloat('amount', 'multiply', $convertedValue);
+            $this->applyMultiplier('amount'); // if present.
                 break;
             case 'tags-comma':
             case 'tags-space':
                 $this->appendCollection('tags', $convertedValue);
             case 'external-id':
-                // ignore for now.
+                $this->externalID = $convertedValue;
                 break;
 
         }
@@ -180,6 +189,16 @@ class ImportEntry
 
     /**
      * @param string $field
+     */
+    private function applyMultiplier(string $field)
+    {
+        if ($this->fields[$field] != 0 && $this->amountMultiplier != 0) {
+            $this->fields[$field] = $this->fields[$field] * $this->amountMultiplier;
+        }
+    }
+
+    /**
+     * @param string $field
      * @param string $action
      * @param        $convertedValue
      *
@@ -191,8 +210,8 @@ class ImportEntry
             default:
                 Log::error('Cannot handle manipulateFloat', ['field' => $field, 'action' => $action]);
                 throw new FireflyException('Cannot manipulateFloat with action ' . $action);
-            case'multiply':
-                $this->fields[$field] = $this->fields[$field] * $convertedValue;
+            case 'multiply':
+                $this->amountMultiplier = $convertedValue;
                 break;
         }
     }

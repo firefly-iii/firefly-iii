@@ -31,7 +31,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
     public function convert($value): Account
     {
         $value = trim($value);
-        Log::debug('Going to convert ', ['value' => $value]);
+        Log::debug('Going to convert opposing IBAN', ['value' => $value]);
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);

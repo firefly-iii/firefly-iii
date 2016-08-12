@@ -30,7 +30,7 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
      */
     public function convert($value): TransactionCurrency
     {
-        Log::debug('Going to convert ', ['value' => $value]);
+        Log::debug('Going to convert currency code', ['value' => $value]);
 
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);

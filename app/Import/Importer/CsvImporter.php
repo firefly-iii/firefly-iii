@@ -11,10 +11,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Importer;
 
-use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\ImportEntry;
-use FireflyIII\Models\Account;
+use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\Collection;
 use League\Csv\Reader;
@@ -27,8 +26,18 @@ use Log;
  */
 class CsvImporter implements ImporterInterface
 {
+    /** @var  Collection */
+    public $collection;
     /** @var  ImportJob */
     public $job;
+
+    /**
+     * CsvImporter constructor.
+     */
+    public function __construct()
+    {
+        $this->collection = new Collection;
+    }
 
     /**
      * Run the actual import
@@ -41,22 +50,21 @@ class CsvImporter implements ImporterInterface
         $content = $this->job->uploadFileContents();
 
         // create CSV reader.
-        $reader     = Reader::createFromString($content);
+        $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $start      = $config['has-headers'] ? 1 : 0;
-        $results    = $reader->fetch();
-        $collection = new Collection;
+        $start   = $config['has-headers'] ? 1 : 0;
+        $results = $reader->fetch();
         foreach ($results as $index => $row) {
             if ($index >= $start) {
                 Log::debug('----- import entry build start --');
                 Log::debug(sprintf('Now going to import row %d.', $index));
                 $importEntry = $this->importSingleRow($index, $row);
-                $collection->put($index, $importEntry);
+                $this->collection->put($index, $importEntry);
             }
         }
-        Log::debug(sprintf('Import collection contains %d entries', $collection->count()));
+        Log::debug(sprintf('Import collection contains %d entries', $this->collection->count()));
 
-        return $collection;
+        return $this->collection;
     }
 
     /**
@@ -75,19 +83,28 @@ class CsvImporter implements ImporterInterface
      */
     private function importSingleRow(int $index, array $row): ImportEntry
     {
-        // create import object:
+        // create import object. This is where each entry ends up.
         $object = new ImportEntry;
 
         // set some vars:
         $object->setUser($this->job->user);
         $config = $this->job->configuration;
 
-        foreach ($row as $index => $value) {
+        // and this is the point where the specifix go to work.
+        foreach ($config['specifics'] as $name => $enabled) {
+            /** @var SpecificInterface $specific */
+            $specific = app('FireflyIII\Import\Specifics\\' . $name);
+
+            // it returns the row, possibly modified:
+            $row = $specific->run($row);
+        }
+
+        foreach ($row as $rowIndex => $value) {
             // find the role for this column:
-            $role           = $config['column-roles'][$index] ?? '_ignore';
-            $doMap          = $config['column-do-mapping'][$index] ?? false;
+            $role           = $config['column-roles'][$rowIndex] ?? '_ignore';
+            $doMap          = $config['column-do-mapping'][$rowIndex] ?? false;
             $converterClass = config('csv.import_roles.' . $role . '.converter');
-            $mapping        = $config['column-mapping-config'][$index] ?? [];
+            $mapping        = $config['column-mapping-config'][$rowIndex] ?? [];
             /** @var ConverterInterface $converter */
             $converter = app('FireflyIII\\Import\\Converter\\' . $converterClass);
             // set some useful values for the converter:
@@ -101,21 +118,15 @@ class CsvImporter implements ImporterInterface
             $certainty      = $converter->getCertainty();
 
             // log it.
-            Log::debug('Value ', ['index' => $index, 'value' => $value, 'role' => $role]);
+            Log::debug('Value ', ['index' => $rowIndex, 'value' => $value, 'role' => $role]);
 
             // store in import entry:
-            $object->importValue($role, $value, $certainty, $convertedValue);
+            Log::debug('Going to import', ['role' => $role, 'value' => $value, 'certainty' => $certainty]);
+            $object->importValue($role, $certainty, $convertedValue);
         }
+
 
         return $object;
 
-        //        $result = $object->import();
-        //        if ($result->failed()) {
-        //            Log::error(sprintf('Import of row %d has failed.', $index), $result->errors->toArray());
-        //        }
-        //
-        //        exit;
-        //
-        //        return true;
     }
 }

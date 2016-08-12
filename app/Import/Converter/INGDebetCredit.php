@@ -29,7 +29,7 @@ class INGDebetCredit extends BasicConverter implements ConverterInterface
      */
     public function convert($value)
     {
-        Log::debug('Going to convert ', ['value' => $value]);
+        Log::debug('Going to convert ing debet credit', ['value' => $value]);
 
         if ($value === 'Af') {
             Log::debug('Return -1');

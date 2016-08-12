@@ -31,10 +31,11 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
     public function convert($value): Account
     {
         $value = trim($value);
-        Log::debug('Going to convert ', ['value' => $value]);
+        Log::debug('Going to convert opposing account name', ['value' => $value]);
 
         if (strlen($value) === 0) {
-            $value = '(empty account name)';
+            $this->setCertainty(0);
+            return new Account;
         }
 
         /** @var AccountCrudInterface $repository */

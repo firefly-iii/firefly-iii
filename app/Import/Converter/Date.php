@@ -32,7 +32,7 @@ class Date extends BasicConverter implements ConverterInterface
      */
     public function convert($value): Carbon
     {
-        Log::debug('Going to convert ', ['value' => $value]);
+        Log::debug('Going to convert date', ['value' => $value]);
         Log::debug('Format: ', ['format' => $this->config['date-format']]);
         try {
             $date = Carbon::createFromFormat($this->config['date-format'], $value);

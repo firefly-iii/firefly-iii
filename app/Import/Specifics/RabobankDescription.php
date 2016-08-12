@@ -11,6 +11,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Specifics;
 
+use Log;
+
 /**
  * Class RabobankDescription
  *
@@ -21,16 +23,42 @@ class RabobankDescription implements SpecificInterface
     /**
      * @return string
      */
+    static public function getDescription(): string
+    {
+        return 'Fixes possible problems with Rabobank descriptions.';
+    }
+
+    /**
+     * @return string
+     */
     static public function getName(): string
     {
         return 'Rabobank description';
     }
 
     /**
-     * @return string
+     * @param array $row
+     *
+     * @return array
      */
-    static public function getDescription(): string
+    public function run(array $row): array
     {
-        return 'Fixes possible problems with Rabobank descriptions.';
+        $oppositeAccount = trim($row[5]);
+        $oppositeName    = trim($row[6]);
+        $alternateName   = trim($row[10]);
+        if (strlen($oppositeAccount) < 1 && strlen($oppositeName) < 1) {
+            Log::debug(
+                sprintf(
+                    'Rabobank specific: Opposite account and opposite name are' .
+                    ' both empty. Will use "%s" (from description) instead', $alternateName
+                )
+            );
+            $row[6]  = $alternateName;
+            $row[10] = '';
+        } else {
+            Log::debug('Rabobank specific: either opposite account or name are filled.');
+        }
+
+        return $row;
     }
 }

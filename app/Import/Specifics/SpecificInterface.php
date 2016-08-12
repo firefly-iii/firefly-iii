@@ -28,4 +28,11 @@ interface SpecificInterface
      */
     static public function getDescription(): string;
 
+    /**
+     * @param array $row
+     *
+     * @return array
+     */
+    public function run(array $row): array;
+
 }
