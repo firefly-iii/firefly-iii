@@ -51,7 +51,7 @@ class EncryptFile extends Command
      */
     public function handle()
     {
-        $file = e($this->argument('file'));
+        $file = e(strval($this->argument('file')));
         if (!file_exists($file)) {
             $this->error(sprintf('File "%s" does not seem to exist.', $file));
 
@@ -59,7 +59,7 @@ class EncryptFile extends Command
         }
         $content = file_get_contents($file);
         $content = Crypt::encrypt($content);
-        $newName = $this->argument('key') . '.upload';
+        $newName = e($this->argument('key')) . '.upload';
 
         $path = storage_path('upload') . '/' . $newName;
         file_put_contents($path, $content);

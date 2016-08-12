@@ -168,7 +168,7 @@ class ImportController extends Controller
 
         // return redirect to settings.
         // this could loop until the user is done.
-        return redirect(route('import.settings', $job->key));
+        return redirect(route('import.settings', [$job->key]));
     }
 
     /**
@@ -345,17 +345,14 @@ class ImportController extends Controller
                 Log::debug('Will redirect to configure()');
 
                 return redirect(route('import.configure', [$job->key]));
-                break;
             case 'import_configuration_saved':
                 Log::debug('Will redirect to settings()');
 
                 return redirect(route('import.settings', [$job->key]));
-                break;
             case 'settings_complete':
                 Log::debug('Will redirect to complete()');
 
                 return redirect(route('import.complete', [$job->key]));
-                break;
         }
 
         throw new FireflyException('Cannot redirect for job state ' . $job->status);
