@@ -16,6 +16,7 @@ use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
+use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
@@ -191,7 +192,7 @@ class CsvSetup implements SetupInterface
     {
         /** @var AccountCrud $repository */
         $repository = app(AccountCrud::class, [auth()->user()]);
-        $importId = $data['csv_import_account'] ?? 0;
+        $importId   = $data['csv_import_account'] ?? 0;
         $account    = $repository->find(intval($importId));
 
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
@@ -199,6 +200,7 @@ class CsvSetup implements SetupInterface
         $config['has-headers'] = $hasHeaders;
         $config['date-format'] = $data['date_format'];
         $config['delimiter']   = $data['csv_delimiter'];
+        $config['delimiter']   = $config['delimiter'] === 'tab' ? "\t" : $config['delimiter'];
 
         Log::debug('Entered import account.', ['id' => $importId]);
 
@@ -355,11 +357,22 @@ class CsvSetup implements SetupInterface
         // in order to actually map we also need all possible values from the CSV file.
         $content = $this->job->uploadFileContents();
         /** @var Reader $reader */
-        $reader  = Reader::createFromString($content);
+        $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
         $results = $reader->fetch();
 
         foreach ($results as $rowIndex => $row) {
+
+            // run specifics here:
+            // and this is the point where the specifix go to work.
+            foreach ($config['specifics'] as $name => $enabled) {
+                /** @var SpecificInterface $specific */
+                $specific = app('FireflyIII\Import\Specifics\\' . $name);
+
+                // it returns the row, possibly modified:
+                $row = $specific->run($row);
+            }
+
             //do something here
             foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
                 $value = $row[$index];
@@ -409,12 +422,23 @@ class CsvSetup implements SetupInterface
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $start  = $config['has-headers'] ? 1 : 0;
-        $end    = $start + self::EXAMPLE_ROWS; // first X rows
+        $start = $config['has-headers'] ? 1 : 0;
+        $end   = $start + self::EXAMPLE_ROWS; // first X rows
 
         // collect example data in $data['columns']
         while ($start < $end) {
             $row = $reader->fetchOne($start);
+
+            // run specifics here:
+            // and this is the point where the specifix go to work.
+            foreach ($config['specifics'] as $name => $enabled) {
+                /** @var SpecificInterface $specific */
+                $specific = app('FireflyIII\Import\Specifics\\' . $name);
+
+                // it returns the row, possibly modified:
+                $row = $specific->run($row);
+            }
+
             foreach ($row as $index => $value) {
                 $value = trim($value);
                 if (strlen($value) > 0) {
@@ -422,7 +446,7 @@ class CsvSetup implements SetupInterface
                 }
             }
             $start++;
-            $data['columnCount'] = count($row);
+            $data['columnCount'] = count($row) > $data['columnCount'] ? count($row) : $data['columnCount'];
         }
 
         // make unique example data
