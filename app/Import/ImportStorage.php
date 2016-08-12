@@ -232,7 +232,7 @@ class ImportStorage
         $one = Transaction::create($sourceData);
         $two = Transaction::create($destinationData);
         Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id, 'account_name' => $accounts['source']->name]);
-        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id, 'account_name' => $destination->name]);
+        Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id, 'account_name' => $accounts['destination']->name]);
 
         $journal->completed = 1;
         $journal->save();

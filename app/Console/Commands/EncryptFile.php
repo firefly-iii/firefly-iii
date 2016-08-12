@@ -59,7 +59,7 @@ class EncryptFile extends Command
         }
         $content = file_get_contents($file);
         $content = Crypt::encrypt($content);
-        $newName = e($this->argument('key')) . '.upload';
+        $newName = e(strval($this->argument('key'))) . '.upload';
 
         $path = storage_path('upload') . '/' . $newName;
         file_put_contents($path, $content);
