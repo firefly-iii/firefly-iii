@@ -132,12 +132,12 @@ return [
     'tag_keep_transactions'          => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
 
     // admin
-    'domain'                         => 'Domain',
+    'domain'                         => 'Domein',
 
     // import
-    'import_file'                    => 'Import file',
-    'configuration_file'             => 'Configuration file',
-    'import_file_type'               => 'Import file type',
+    'import_file'                    => 'Importbestand',
+    'configuration_file'             => 'Configuratiebestand',
+    'import_file_type'               => 'Importbestandstype',
     'csv_comma'                      => 'Een komma (,)',
     'csv_semicolon'                  => 'Een puntkomma (;)',
     'csv_tab'                        => 'Een tab (onzichtbaar)',
