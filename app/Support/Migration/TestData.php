@@ -810,10 +810,11 @@ class TestData
         foreach ($this->data['users'] as $user) {
             $insert[]
                 = [
-                'created_at' => $this->time,
-                'updated_at' => $this->time,
-                'email'      => $user['email'],
-                'password'   => bcrypt($user['password']),
+                'created_at'     => $this->time,
+                'updated_at'     => $this->time,
+                'email'          => $user['email'],
+                'remember_token' => '',
+                'password'       => bcrypt($user['password']),
             ];
 
         }
