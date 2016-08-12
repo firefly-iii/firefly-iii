@@ -5,6 +5,44 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.10] - 2015-05-25
+### Added
+- New charts in year report
+- Can add / remove money from piggy bank on mobile device.
+- Bill overview shows some useful things.
+- Firefly will track registration / activation IP addresses.
+
+
+### Changed
+- Rewrote the import routine.
+- The date picker now supports more ranges and periods.
+- Rewrote all migrations. #272
+
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Issue #264
+- Issue #265
+- Fixed amount calculation problems, #266, thanks @xzaz
+- Issue #271
+- Issue #278, #273, thanks @StevenReitsma and @rubella
+- Bug in attachment download routine would report the wrong size to the user's browser.
+- Various NULL errors fixed.
+- Various strict typing errors fixed.
+- Fixed pagination problems, #276, thanks @xzaz
+- Fixed a bug where an expense would be assigned to a piggy bank if you created a transfer first.
+- Bulk update problems, #280, thanks @stickgrinder
+- Fixed various problems with amount reporting of split transactions.
+
+### Security
+- Initial release.
+
+
 [3.9.1]
 ### Fixed
 - Fixed a bug where removing money from a piggy bank would not work. See issue #265 and #269
