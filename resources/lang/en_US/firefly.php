@@ -326,13 +326,6 @@ return [
     'title_transfer'                            => 'Transfers',
     'title_transfers'                           => 'Transfers',
 
-    // import routine
-    'import_data'                               => 'Import data',
-    'import'                                    => 'Import',
-    'import_intro_text'                         => 'Some intro here',
-    'import_file_help'                          => 'Select your file',
-
-
     // create new stuff:
     'create_new_withdrawal'                     => 'Create new withdrawal',
     'create_new_deposit'                        => 'Create new deposit',
@@ -775,8 +768,13 @@ return [
     'import_finish_configuration'               => 'Finish configuration',
     'settings_for_import'                       => 'Settings',
     'import_complete'                           => 'Import configuration complete!',
-    'import_complete_text'                      => 'Download the config file. You can also run it from the command line.',
+    'import_complete_text'                      => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you need to execute the following command in your console. Unfortunately, a web-based import is not yet possible.',
     'import_download_config'                    => 'Download configuration',
     'import_start_import'                       => 'Start import',
-    'import_intro_beta'                         => 'The import function is currently being developed and will most probably not work.',
+    'import_intro_beta'                         => 'The import function of Firefly III is in beta. Many users of Firefly III have tried many different files. Although each individual compontent of this import routine works (really), the combination might break. If your file cannot be imported by Firefly, please read <a href="https://github.com/JC5/firefly-iii/wiki/Submit-issues-with-sensitive-data-in-them">this wiki page</a> so I can fix the problem you have run into.',
+    'import_data'                               => 'Import data',
+    'import_data_full'                          => 'Import data into Firefly III',
+    'import'                                    => 'Import',
+    'import_intro_text'                         => 'Welcome to the Firefly III data import routine. At the moment, this routine can help you import files into Firefly. To do so, you must download or export transactions from other systems or software, and upload them here. The next steps will let you help Firefly III determin what the content is of your file, and how to handle it. Please select a file, and read all instructions carefully.',
+    'import_file_help'                          => 'Select your file',
 ];

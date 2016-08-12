@@ -37,7 +37,7 @@ class ImportController extends Controller
     {
         parent::__construct();
         View::share('mainTitleIcon', 'fa-archive');
-        View::share('title', trans('firefly.import_data'));
+        View::share('title', trans('firefly.import_data_full'));
     }
 
     /**
@@ -215,7 +215,7 @@ class ImportController extends Controller
         }
         Log::debug('Continue in settings()');
         $importer     = $this->makeImporter($job);
-        $subTitle     = trans('firefy.settings_for_import');
+        $subTitle     = trans('firefly.settings_for_import');
         $subTitleIcon = 'fa-wrench';
 
         // now show settings screen to user.
