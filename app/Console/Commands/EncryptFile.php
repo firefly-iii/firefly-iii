@@ -51,7 +51,7 @@ class EncryptFile extends Command
      */
     public function handle()
     {
-        $file = $this->argument('file');
+        $file = e($this->argument('file'));
         if (!file_exists($file)) {
             $this->error(sprintf('File "%s" does not seem to exist.', $file));
 

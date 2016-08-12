@@ -45,8 +45,7 @@ class ImportController extends Controller
      *
      * @param ImportJob $job
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws FireflyException
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function complete(ImportJob $job)
     {
@@ -54,7 +53,6 @@ class ImportController extends Controller
         if (!$this->jobInCorrectStep($job, 'complete')) {
             return $this->redirectToCorrectStep($job);
         }
-        $importer     = $this->makeImporter($job);
         $subTitle     = trans('firefy.import_complete');
         $subTitleIcon = 'fa-star';
 
@@ -305,14 +303,11 @@ class ImportController extends Controller
             case 'configure':
             case 'process':
                 return $job->status === 'import_status_never_started';
-                break;
             case 'settings':
             case 'store-settings':
                 return $job->status === 'import_configuration_saved';
-                break;
             case 'complete':
                 return $job->status === 'settings_complete';
-                break;
         }
 
         return false;

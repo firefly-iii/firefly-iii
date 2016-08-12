@@ -19,7 +19,6 @@ use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
 use Log;
-use Monolog\Handler\StreamHandler;
 
 /**
  * Class Import
@@ -73,7 +72,11 @@ class Import extends Command
         }
 
         $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
-        $class = config('firefly.import_formats.' . $job->file_type);
+        $valid = array_keys(config('firefly.import_formats'));
+        $class = 'INVALID';
+        if (in_array($job->file_type, $valid)) {
+            $class = config('firefly.import_formats.' . $job->file_type);
+        }
 
         /** @var ImporterInterface $importer */
         $importer = app($class);
@@ -98,7 +101,7 @@ class Import extends Command
         $cleaned = $validator->clean();
 
         // then import collection:
-        $storage = new ImportStorage($collection);
+        $storage = new ImportStorage($cleaned);
         $storage->setUser($job->user);
 
         // and run store routine:

@@ -29,7 +29,7 @@ class AbnAmroDescription implements SpecificInterface
     /**
      * @return string
      */
-    static public function getDescription(): string
+    public static function getDescription(): string
     {
         return 'Fixes possible problems with ABN Amro descriptions.';
     }
@@ -37,7 +37,7 @@ class AbnAmroDescription implements SpecificInterface
     /**
      * @return string
      */
-    static public function getName(): string
+    public static function getName(): string
     {
         return 'ABN Amro description';
     }

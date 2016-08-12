@@ -56,7 +56,6 @@ class CreateMainTables extends Migration
         $this->createBudgetTables();
         $this->createCategoriesTable();
         $this->createExportJobsTable();
-        // $this->createImportJobsTable();
         $this->createPreferencesTable();
         $this->createRoleTable();
         $this->createRuleTables();

@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                $key
  * @property string                $file_type
  * @property string                $status
- * @property string                $configuration
+ * @property array                $configuration
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)

@@ -107,6 +107,8 @@ class Range
         $ranges['next']     = [$nextStart->format('Y-m-d'), $nextEnd->format('Y-m-d')];
 
         switch ($viewRange) {
+            default:
+                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
             case '1D':
                 $format = (string)trans('config.month_and_day');
                 break;
@@ -122,8 +124,6 @@ class Range
             case '1M':
                 $format = (string)trans('config.month');
                 break;
-            default:
-                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
             case '1W':
                 $format = (string)trans('config.week_in_year');
                 break;

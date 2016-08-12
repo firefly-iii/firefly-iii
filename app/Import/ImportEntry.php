@@ -55,27 +55,11 @@ class ImportEntry
      */
     public function __construct()
     {
-        $this->defaultImportAccount = new Account;
         /** @var string $value */
         foreach ($this->validFields as $value) {
             $this->fields[$value]  = null;
             $this->certain[$value] = 0;
         }
-    }
-
-    /**
-     * @return ImportResult
-     */
-    public function import(): ImportResult
-    {
-
-        $validation = $this->validate();
-
-        if ($validation->valid()) {
-            return $this->doImport();
-        }
-
-        return $validation;
     }
 
     /**
@@ -91,14 +75,11 @@ class ImportEntry
             default:
                 Log::error('Import entry cannot handle object.', ['role' => $role]);
                 throw new FireflyException('Import entry cannot handle object of type "' . $role . '".');
-                break;
-
             case 'amount':
                 /*
                  * Easy enough.
                  */
                 $this->setFloat('amount', $convertedValue, $certainty);
-
                 $this->applyMultiplier('amount'); // if present.
 
                 return;
@@ -147,7 +128,7 @@ class ImportEntry
             case 'sepa-ct-id':
             case 'sepa-db':
             case 'sepa-ct-op':
-            case'description':
+            case 'description':
                 $this->setAppendableString('description', $convertedValue);
                 break;
             case '_ignore':
@@ -160,6 +141,7 @@ class ImportEntry
             case 'tags-comma':
             case 'tags-space':
                 $this->appendCollection('tags', $convertedValue);
+            break;
             case 'external-id':
                 $this->externalID = $convertedValue;
                 break;

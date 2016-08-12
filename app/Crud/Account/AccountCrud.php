@@ -119,7 +119,7 @@ class AccountCrud implements AccountCrudInterface
      */
     public function findByIban(string $iban, array $types): Account
     {
-        $query = $this->user->accounts()->where('iban', '!=', "");
+        $query = $this->user->accounts()->where('iban', '!=', '');
 
         if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');

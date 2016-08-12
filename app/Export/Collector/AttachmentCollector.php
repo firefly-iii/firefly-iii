@@ -83,10 +83,10 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         /** @var TransactionJournal $journal */
         $journal = $attachment->attachable;
         $args    = [
-            'attachment_name' => $attachment->filename,
+            'attachment_name' => e($attachment->filename),
             'attachment_id'   => $attachment->id,
             'type'            => strtolower($journal->transactionType->type),
-            'description'     => $journal->description,
+            'description'     => e($journal->description),
             'journal_id'      => $journal->id,
             'date'            => $journal->date->formatLocalized(strval(trans('config.month_and_day'))),
             'amount'          => Amount::formatJournal($journal, false),

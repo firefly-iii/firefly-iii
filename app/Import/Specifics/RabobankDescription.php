@@ -23,7 +23,7 @@ class RabobankDescription implements SpecificInterface
     /**
      * @return string
      */
-    static public function getDescription(): string
+    public static function getDescription(): string
     {
         return 'Fixes possible problems with Rabobank descriptions.';
     }
@@ -31,7 +31,7 @@ class RabobankDescription implements SpecificInterface
     /**
      * @return string
      */
-    static public function getName(): string
+    public static function getName(): string
     {
         return 'Rabobank description';
     }

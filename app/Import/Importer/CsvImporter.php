@@ -86,6 +86,8 @@ class CsvImporter implements ImporterInterface
         // create import object. This is where each entry ends up.
         $object = new ImportEntry;
 
+        Log::debug(sprintf('Now at row %d', $index));
+
         // set some vars:
         $object->setUser($this->job->user);
         $config = $this->job->configuration;

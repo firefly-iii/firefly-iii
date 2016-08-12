@@ -28,10 +28,12 @@ class UserController extends Controller
 
     /**
      * @param User $user
+     *
+     * @return int
      */
     public function edit(User $user)
     {
-
+        return $user->id;
 
     }
 
