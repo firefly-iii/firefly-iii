@@ -44,7 +44,7 @@ class AttachmentServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Attachment\AttachmentRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Attachment\AttachmentRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

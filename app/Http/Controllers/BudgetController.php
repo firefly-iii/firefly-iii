@@ -164,6 +164,8 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository, AccountCrudInterface $crud)
     {
+        $repository->cleanupBudgets();
+
         $budgets    = $repository->getActiveBudgets();
         $inactive   = $repository->getInactiveBudgets();
         $spent      = '0';

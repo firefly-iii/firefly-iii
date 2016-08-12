@@ -14,6 +14,10 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover sortable">
                         <tr>
+                            <td>{{ trans('list.amount') }}</td>
+                            <td>{{ journal|formatJournal }}</td>
+                        </tr>
+                        <tr>
                             <td>{{ trans('list.date') }}</td>
                             <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
                         </tr>

@@ -15,6 +15,7 @@ use Auth;
 use Crypt;
 use FireflyIII\Support\Models\TagSupport;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Tag
@@ -52,6 +53,9 @@ class Tag extends TagSupport
 {
     protected $dates    = ['created_at', 'updated_at', 'date'];
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
+    protected $rules    = ['tag' => 'required|between:1,200',];
+
+    use ValidatingTrait;
 
     /**
      * @param array $fields

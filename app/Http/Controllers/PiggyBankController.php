@@ -49,6 +49,26 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Add money to piggy bank (for mobile devices)
+     *
+     * @param ARI       $repository
+     * @param PiggyBank $piggyBank
+     *
+     * @return $this
+     */
+    public function addMobile(ARI $repository, PiggyBank $piggyBank)
+    {
+        /** @var Carbon $date */
+        $date          = session('end', Carbon::now()->endOfMonth());
+        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
+        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
+        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
+        $maxAmount     = min($leftOnAccount, $leftToSave);
+
+        return view('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount'));
+    }
+
+    /**
      * Add money to piggy bank
      *
      * @param ARI       $repository
@@ -335,8 +355,6 @@ class PiggyBankController extends Controller
             'startdate'     => new Carbon,
             'account_id'    => intval($request->get('account_id')),
             'targetamount'  => round($request->get('targetamount'), 2),
-            'remind_me'     => false,
-            'reminder_skip' => 0,
             'order'         => $repository->getMaxOrder() + 1,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
@@ -371,8 +389,6 @@ class PiggyBankController extends Controller
             'startdate'     => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
             'account_id'    => intval($request->get('account_id')),
             'targetamount'  => round($request->get('targetamount'), 2),
-            'remind_me'     => false,
-            'reminder_skip' => 0,
             'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 

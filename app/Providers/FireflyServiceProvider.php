@@ -13,6 +13,7 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
+use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
@@ -62,6 +63,12 @@ class FireflyServiceProvider extends ServiceProvider
             return new Preferences;
         }
         );
+
+        $this->app->bind(
+            'fireflyconfig', function () {
+            return new FireflyConfig;
+        }
+        );
         $this->app->bind(
             'navigation', function () {
             return new Navigation;
@@ -87,7 +94,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface', 'FireflyIII\Repositories\Currency\CurrencyRepository');
         $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
         $this->app->bind('FireflyIII\Repositories\User\UserRepositoryInterface', 'FireflyIII\Repositories\User\UserRepository');
-        $this->app->bind('FireflyIII\Helpers\Csv\WizardInterface', 'FireflyIII\Helpers\Csv\Wizard');
         $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
         $this->app->bind(
             'FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator'

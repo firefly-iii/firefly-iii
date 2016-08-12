@@ -1,0 +1,47 @@
+The import routine is as follows:
+
+1. Upload and setup:
+
+User uploads a file with entries. The Setup/SetupInterface gives the user
+the opportunity (in any number of steps) to do the necessary configuration.
+This could also be skipped of course. An ImportJob object is created with a
+basic and empty configuration.
+
+Helper classes are as follows, greatly modelled to the CSV importer:
+
+- The Mapper classes give back lists of Firefly objects. You can show them to the
+user in order to help you convert text values to their Firefly counterparts.
+For example, the user maps "Gcrsr" to category Groceries.
+- The Converter classes exist to help convert text values to their Firely counterparts.
+Feed "AB12ABCD897829" to the AssetAccountIban Converter and you should end up with a new
+or found asset account. The previously built mapping is used to narrow it down. Submit an empty
+mapping if this one is not relevant.
+
+The mapping and possibly other configuration options are stored in a newly created
+ImportJob object, stored in the database. This import job holds a reference to the uploaded file
+(placed encrypted in /storage/uploads) and the status of the import.
+
+2. Actual import
+
+Using either the command line or the web interface the user can tell Firefly to start the import.
+
+The ImporterInterface runs and creates an ImportEntry for each line, blob or whatever distinction it
+wants.
+
+For each line, the ImporterInterface should run each field through the selected Converter in order
+to convert the text values to their Firefly counterparts. Again, this is modelled to the CSV importer
+and may need an update for MT940.
+
+In any case, this newly minted set of ImportEntries (it cannot be saved or stored atm,
+this has to be done in one go) is then fed to the ImportValidator which will reject entries
+(almost never) and corrects fields if necessary.
+
+
+- Adds the date (today) if no date is present.
+- Determins the type of transaction (withdrawal, deposit, transfer).
+- Determins the types of accounts involved (asset, expense, revenue).
+- Determins the currency of the transaction.
+- Adds a default description if there isn't one present.
+
+This set of corrected ImportEntries is then fed to the ImportStorage class which will generate
+TransactionJournals, Transactions and other related objects.

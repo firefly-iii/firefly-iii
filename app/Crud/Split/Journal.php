@@ -105,9 +105,6 @@ class Journal implements JournalInterface
      */
     public function updateJournal(TransactionJournal $journal, array $data): TransactionJournal
     {
-        echo '<pre>';
-        print_r($data);
-
         $journal->description             = $data['journal_description'];
         $journal->transaction_currency_id = $data['journal_currency_id'];
         $journal->date                    = $data['date'];
@@ -167,7 +164,8 @@ class Journal implements JournalInterface
     {
         $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first(['accounts.*']);
 
-        if (strlen($data['source_account_name']) > 0) {
+
+        if (isset($data['source_account_name']) && strlen($data['source_account_name']) > 0) {
             $sourceType    = AccountType::where('type', 'Revenue account')->first();
             $sourceAccount = Account::firstOrCreateEncrypted(
                 ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]

@@ -31,19 +31,9 @@ class ExportJobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(
-            'FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', [$app->auth->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
-                }
+        $this->exportJob();
+        $this->importJob();
 
-                return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', $arguments);
-            }
-        );
     }
 
     /**
@@ -54,5 +44,43 @@ class ExportJobServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     *
+     */
+    private function exportJob()
+    {
+
+        $this->app->bind(
+            'FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', [auth()->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', $arguments);
+            }
+        );
+    }
+
+    private function importJob()
+    {
+        $this->app->bind(
+            'FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\ImportJob\ImportJobRepository', [auth()->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Repositories\ImportJob\ImportJobRepository', $arguments);
+            }
+        );
     }
 }

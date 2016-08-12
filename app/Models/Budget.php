@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * FireflyIII\Models\Budget
@@ -46,15 +47,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereEncrypted($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\LimitRepetition[] $limitrepetitions
  */
 class Budget extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, ValidatingTrait;
 
     protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
+    protected $rules    = ['name' => 'required|between:1,200',];
 
     /**
      * @param array $fields

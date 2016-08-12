@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -64,7 +65,6 @@ class Range
             // ignore preference. set the range to be the current month:
             if (!Session::has('start') && !Session::has('end')) {
 
-                /** @var \FireflyIII\Models\Preference $viewRange */
                 $viewRange = Preferences::get('viewRange', '1M')->data;
                 $start     = new Carbon;
                 $start     = Navigation::updateStartDate($viewRange, $start);
@@ -84,16 +84,61 @@ class Range
                 }
                 Session::put('first', $first);
             }
-            $current = Carbon::now()->formatLocalized('%B %Y');
-            $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
-            $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');
-            View::share('currentMonthName', $current);
-            View::share('previousMonthName', $prev);
-            View::share('nextMonthName', $next);
+
         }
+        $this->datePicker();
 
         return $theNext($request);
 
+    }
+
+    private function datePicker()
+    {
+        $viewRange          = Preferences::get('viewRange', '1M')->data;
+        $start              = Session::get('start');
+        $end                = Session::get('end');
+        $prevStart          = Navigation::subtractPeriod($start, $viewRange);// subtract for previous period
+        $prevEnd            = Navigation::endOfPeriod($prevStart, $viewRange);
+        $nextStart          = Navigation::addPeriod($start, $viewRange, 0); // add for previous period
+        $nextEnd            = Navigation::endOfPeriod($nextStart, $viewRange);
+        $ranges             = [];
+        $ranges['current']  = [$start->format('Y-m-d'), $end->format('Y-m-d')];
+        $ranges['previous'] = [$prevStart->format('Y-m-d'), $prevEnd->format('Y-m-d')];
+        $ranges['next']     = [$nextStart->format('Y-m-d'), $nextEnd->format('Y-m-d')];
+
+        switch ($viewRange) {
+            default:
+                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
+            case '1D':
+                $format = (string)trans('config.month_and_day');
+                break;
+            case '3M':
+                $format = (string)trans('config.quarter_in_year');
+                break;
+            case '6M':
+                $format = (string)trans('config.half_year');
+                break;
+            case '1Y':
+                $format = (string)trans('config.year');
+                break;
+            case '1M':
+                $format = (string)trans('config.month');
+                break;
+            case '1W':
+                $format = (string)trans('config.week_in_year');
+                break;
+        }
+
+
+        $current = $start->formatLocalized($format);
+        $next    = $nextStart->formatLocalized($format);
+        $prev    = $prevStart->formatLocalized($format);
+        View::share('dpStart', $start->format('Y-m-d'));
+        View::share('dpEnd', $end->format('Y-m-d'));
+        View::share('dpCurrent', $current);
+        View::share('dpPrevious', $prev);
+        View::share('dpNext', $next);
+        View::share('dpRanges', $ranges);
     }
 
 }

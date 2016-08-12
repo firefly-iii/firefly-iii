@@ -49,28 +49,8 @@ class SplitJournalFormRequest extends Request
             'interest_date'                    => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
             'book_date'                        => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
             'process_date'                     => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
-            'transactions'                     => [],
+            'transactions'                     => $this->getTransactionData(),
         ];
-
-        // description is leading because it is one of the mandatory fields.
-        foreach ($this->get('description') as $index => $description) {
-            $transaction            = [
-                'description'              => $description,
-                'amount'                   => round($this->get('amount')[$index], 2),
-                'budget_id'                => $this->get('budget_id')[$index] ? intval($this->get('budget_id')[$index]) : 0,
-                'category'                 => $this->get('category')[$index] ?? '',
-                'source_account_id'        => intval($this->get('journal_source_account_id')),
-                'source_account_name'      => $this->get('journal_source_account_name'),
-                'piggy_bank_id'            => isset($this->get('piggy_bank_id')[$index])
-                    ? intval($this->get('piggy_bank_id')[$index])
-                    : 0,
-                'destination_account_id'   => isset($this->get('destination_account_id')[$index])
-                    ? intval($this->get('destination_account_id')[$index])
-                    : intval($this->get('journal_destination_account_id')),
-                'destination_account_name' => $this->get('destination_account_name')[$index] ?? '',
-            ];
-            $data['transactions'][] = $transaction;
-        }
 
         return $data;
     }
@@ -91,14 +71,46 @@ class SplitJournalFormRequest extends Request
             'interest_date'                 => 'date',
             'book_date'                     => 'date',
             'process_date'                  => 'date',
-
-            'description.*'              => 'required|between:1,255',
-            'destination_account_id.*'   => 'numeric|belongsToUser:accounts,id',
-            'destination_account_name.*' => 'between:1,255',
-            'amount.*'                   => 'required|numeric',
-            'budget_id.*'                => 'belongsToUser:budgets,id',
-            'category.*'                 => 'between:1,255',
-            'piggy_bank_id.*'            => 'between:1,255',
+            'description.*'                 => 'required|between:1,255',
+            'destination_account_id.*'      => 'numeric|belongsToUser:accounts,id',
+            'destination_account_name.*'    => 'between:1,255',
+            'amount.*'                      => 'required|numeric',
+            'budget_id.*'                   => 'belongsToUser:budgets,id',
+            'category.*'                    => 'between:1,255',
+            'piggy_bank_id.*'               => 'between:1,255',
         ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getTransactionData(): array
+    {
+        $return = [];
+        // description is leading because it is one of the mandatory fields.
+        foreach ($this->get('description') as $index => $description) {
+            $transaction = [
+                'description'              => $description,
+                'amount'                   => round($this->get('amount')[$index], 2),
+                'budget_id'                => $this->get('budget_id')[$index] ? intval($this->get('budget_id')[$index]) : 0,
+                'category'                 => $this->get('category')[$index] ?? '',
+                'source_account_id'        => isset($this->get('source_account_id')[$index])
+                    ? intval($this->get('source_account_id')[$index])
+                    : intval(
+                        $this->get('journal_source_account_id')
+                    ),
+                'source_account_name'      => $this->get('source_account_name')[$index] ?? '',
+                'piggy_bank_id'            => isset($this->get('piggy_bank_id')[$index]) ? intval($this->get('piggy_bank_id')[$index]) : 0,
+                'destination_account_id'   => isset($this->get('destination_account_id')[$index])
+                    ? intval($this->get('destination_account_id')[$index])
+                    : intval(
+                        $this->get('journal_destination_account_id')
+                    ),
+                'destination_account_name' => $this->get('destination_account_name')[$index] ?? '',
+            ];
+            $return[]    = $transaction;
+        }
+
+        return $return;
     }
 }

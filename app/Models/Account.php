@@ -13,6 +13,8 @@ namespace FireflyIII\Models;
 
 use Auth;
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -77,8 +79,9 @@ class Account extends Model
                       = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required',
+            'name'            => 'required|between:1,200',
             'active'          => 'required|boolean',
+            'iban'            => 'between:1,50|iban',
         ];
     /** @var  bool */
     private $joinedAccountTypes;
@@ -183,10 +186,14 @@ class Account extends Model
      */
     public function getIbanAttribute($value): string
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen(strval($value)) === 0) {
             return '';
         }
-        $result = Crypt::decrypt($value);
+        try {
+            $result = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            throw new FireflyException('Cannot decrypt value "' . $value . '" for account #' . $this->id);
+        }
         if (is_null($result)) {
             return '';
         }
@@ -295,8 +302,8 @@ class Account extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $this->attributes['name']      = $value;
+        $this->attributes['encrypted'] = false;
     }
 
     /**

@@ -4,23 +4,21 @@ declare(strict_types = 1);
 
 return [
     'chart'               => 'chartjs',
-    'version'             => '3.9.1',
+    'version'             => '3.10',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
     'resend_confirmation' => 3600,
     'confirmation_age'    => 14400, // four hours
 
-    'export_formats' => [
+    'export_formats'        => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
         // mt940 FireflyIII Export Exporter MtExporter
     ],
-    'import_formats' => [
+    'import_formats'        => [
         'csv' => 'FireflyIII\Import\Importer\CsvImporter',
         // mt940 FireflyIII Import Importer MtImporter
     ],
-
-
     'default_export_format' => 'csv',
     'default_import_format' => 'csv',
     'bill_periods'          => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
@@ -62,12 +60,15 @@ return [
             'Beneficiary account' => 'fa-shopping-cart',
             'revenue'             => 'fa-download',
             'Revenue account'     => 'fa-download',
+            'import'              => 'fa-download',
+            'Import account'      => 'fa-download',
         ],
     'accountTypesByIdentifier' =>
         [
             'asset'   => ['Default account', 'Asset account'],
             'expense' => ['Expense account', 'Beneficiary account'],
             'revenue' => ['Revenue account'],
+            'import'  => ['Import account'],
         ],
     'accountTypeByIdentifier'  =>
         [
@@ -76,11 +77,13 @@ return [
             'revenue' => 'Revenue account',
             'opening' => 'Initial balance account',
             'initial' => 'Initial balance account',
+            'import'  => 'Import account',
         ],
     'shortNamesByFullName'     =>
         [
             'Default account'     => 'asset',
             'Asset account'       => 'asset',
+            'Import account'      => 'import',
             'Expense account'     => 'expense',
             'Beneficiary account' => 'expense',
             'Revenue account'     => 'revenue',
@@ -91,6 +94,8 @@ return [
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
+        'zh-HK' => ['name_locale' => 'Chinese Traditional, Hong Kong', 'name_english' => 'Chinese Traditional, Hong Kong', 'complete' => false],
+        'zh-TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional', 'complete' => false],
     ],
     'transactionTypesByWhat'   => [
         'expenses'   => ['Withdrawal'],
@@ -126,6 +131,7 @@ return [
         'rule'              => 'FireflyIII\Models\Rule',
         'ruleGroup'         => 'FireflyIII\Models\RuleGroup',
         'jobKey'            => 'FireflyIII\Models\ExportJob',
+        'importJob'         => 'FireflyIII\Models\ImportJob',
         // lists
         'accountList'       => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',

@@ -197,7 +197,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request, JournalRepositoryInterface $repository, string $what)
     {
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $subTitle     = trans('firefly.title_' . $what);
@@ -223,7 +223,7 @@ class TransactionController extends Controller
         if (count($ids) > 0) {
             $order = 0;
             foreach ($ids as $id) {
-                $journal = $repository->find($id);
+                $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {
                     $journal->order = $order;
                     $order++;
@@ -274,6 +274,8 @@ class TransactionController extends Controller
         // store the journal only, flash the rest.
         if ($doSplit) {
             $journal = $repository->storeJournal($journalData);
+            $journal->completed = false;
+            $journal->save();
 
             // store attachments:
             $att->saveAttachmentsForModel($journal);

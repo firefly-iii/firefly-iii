@@ -24,8 +24,23 @@ use Preferences;
  */
 class UserController extends Controller
 {
+
+
+    /**
+     * @param User $user
+     *
+     * @return int
+     */
+    public function edit(User $user)
+    {
+        return $user->id;
+
+    }
+
     /**
      * @param UserRepositoryInterface $repository
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(UserRepositoryInterface $repository)
     {
@@ -60,5 +75,6 @@ class UserController extends Controller
         return view('admin.users.index', compact('title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'users'));
 
     }
+
 
 }

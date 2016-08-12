@@ -251,6 +251,7 @@ class AccountController extends Controller
             $end = Navigation::subtractPeriod($end, $range, 1);
 
         }
+        $cache->store($entries);
 
         return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
     }
@@ -270,6 +271,7 @@ class AccountController extends Controller
         $end      = Navigation::endOfPeriod($carbon, $range);
         $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
         $page     = intval(Input::get('page'));
+        $page     = $page === 0 ? 1 : $page;
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
         $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);

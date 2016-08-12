@@ -18,6 +18,7 @@ use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Input;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -93,9 +94,11 @@ class AttachmentController extends Controller
         if ($disk->exists($file)) {
 
             $quoted = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+            $content = Crypt::decrypt($disk->get($file));
 
+            Log::debug('Send file to user', ['file' =>  $quoted, 'size' => strlen($content)]);
 
-            return response(Crypt::decrypt($disk->get($file)), 200)
+            return response($content, 200)
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
                 ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -104,7 +107,7 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', $disk->size($file));
+                ->header('Content-Length', strlen($content));
 
         }
         throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');

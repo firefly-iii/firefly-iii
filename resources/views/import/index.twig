@@ -6,7 +6,6 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <!-- ACCOUNTS -->
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'import'|_ }}</h3>
@@ -15,8 +14,9 @@
                     <p>
                         {{ 'import_intro_text'|_ }}
                     </p>
-                    <p>
-                        &nbsp;
+
+                    <p class="text-danger">
+                        &nbsp;{{ 'import_intro_beta'|_ }}
                     </p>
                     <div class="row">
                         <form method="POST" action="{{ route('import.upload') }}" accept-charset="UTF-8" class="form-horizontal" id="update"
@@ -25,7 +25,8 @@
                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
                             <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
-                                {{ ExpandedForm.file('import_file',{helpText: 'import_file_help'|_}) }}
+                                {{ ExpandedForm.file('import_file', {helpText: 'import_file_help'|_}) }}
+                                {{ ExpandedForm.file('configuration_file', {helpText: 'configuration_file_help'|_}) }}
 
                                 {{ ExpandedForm.select('import_file_type', importFileTypes, defaultImportType, {'helpText' : 'import_file_type_help'|_}) }}
 

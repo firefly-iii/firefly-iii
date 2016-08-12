@@ -60,6 +60,15 @@ interface CategoryRepositoryInterface
     public function find(int $categoryId) : Category;
 
     /**
+     * Find a category
+     *
+     * @param string $name
+     *
+     * @return Category
+     */
+    public function findByName(string $name) : Category;
+
+    /**
      * @param Category   $category
      * @param Collection $accounts
      *
@@ -96,15 +105,6 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string;
-
-    /**
-     * @param Collection $accounts
      * @param array      $types
      * @param Carbon     $start
      * @param Carbon     $end
@@ -132,6 +132,15 @@ interface CategoryRepositoryInterface
      * @return string
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string;
 
     /**
      * @param array $data

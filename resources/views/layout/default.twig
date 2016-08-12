@@ -167,20 +167,21 @@
 
     // date range picker configuration:
     var dateRangeConfig = {
-        startDate: moment("{{ Session.get('start').format('Y-m-d') }}"),
-        endDate: moment("{{ Session.get('end').format('Y-m-d') }}"),
+        startDate: moment("{{ dpStart }}"),
+        endDate: moment("{{ dpEnd }}"),
         linkTitle: "{{ Session.get('start').formatLocalized(monthAndDayFormat) }} - {{ Session.get('end').formatLocalized(monthAndDayFormat) }}",
         URL: "{{ route('daterange') }}",
         firstDate: moment("{{ Session.get('first').format('Y-m-d') }}"),
-        currentMonth: "{{ currentMonthName }}",
-        previousMonth: "{{ previousMonthName }}",
-        nextMonth: "{{ nextMonthName }}",
+        currentPeriod: "{{ dpCurrent }}",
+        previousPeriod: "{{ dpPrevious }}",
+        nextPeriod: "{{ dpNext }}",
         everything: '{{ 'everything'|_ }}',
         customRangeLabel: '{{ 'customRange'|_ }}',
         applyLabel: '{{ 'apply'|_ }}',
         cancelLabel: '{{ 'cancel'|_ }}',
         fromLabel: '{{ 'from'|_ }}',
-        toLabel: '{{ 'to'|_ }}'
+        toLabel: '{{ 'to'|_ }}',
+        ranges: {{ dpRanges|json_encode|raw }}
     };
 
     var token = "{{ csrf_token() }}";

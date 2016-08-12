@@ -1,0 +1,1012 @@
+{
+  "users": [
+    {
+      "email": "thegrumpydictator@gmail.com",
+      "password": "james"
+    },
+    {
+      "email": "thegrumpydictator+empty@gmail.com",
+      "password": "james"
+    },
+    {
+      "email": "thegrumpydictator+deleteme@gmail.com",
+      "password": "james"
+    }
+  ],
+  "roles": [
+    {
+      "user_id": 1,
+      "role": 1
+    }
+  ],
+  "accounts": [
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Checking Account",
+      "iban": "NL11XOLA6707795988"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Alternate Checking Account",
+      "iban": "NL40UKBK3619908726"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Savings Account",
+      "iban": "NL96DZCO4665940223"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Shared Checking Account",
+      "iban": "NL81RCQZ7160379858"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Emergency Savings Account",
+      "iban": "NL38SRMN4325934708"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Adobe"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Google"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Vitens"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Albert Heijn"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "PLUS"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Bakker"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Belastingdienst"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "bol.com"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Cafe Central"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "conrad.nl"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Coolblue"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Shell"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "SixtyFive"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "EightyFour"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Fiftyone"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "DUO"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Etos"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "FEBO"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Greenchoice"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Halfords"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "XS4All"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "iCentre"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Jumper"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "Land lord"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Job"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Belastingdienst"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Bank"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "KPN"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Google"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Work SixtyFive"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Work EightyFour"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 5,
+      "name": "Work Fiftyone"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 6,
+      "name": "Opposing for Savings Account"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 6,
+      "name": "Opposing for Emergency Savings Account"
+    }
+  ],
+  "account-meta": [
+    {
+      "account_id": 1,
+      "name": "accountRole",
+      "data": "\"defaultAsset\""
+    },
+    {
+      "account_id": 2,
+      "name": "accountRole",
+      "data": "\"defaultAsset\""
+    },
+    {
+      "account_id": 3,
+      "name": "accountRole",
+      "data": "\"savingAsset\""
+    },
+    {
+      "account_id": 4,
+      "name": "accountRole",
+      "data": "\"sharedAsset\""
+    }
+  ],
+  "bills": [
+    {
+      "name": "Rent",
+      "match": "rent,land,lord",
+      "amount_min": 795,
+      "amount_max": 805,
+      "user_id": 1,
+      "date": "2015-01-01",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "monthly",
+      "skip": 0
+    },
+    {
+      "name": "Health insurance",
+      "match": "insurer,insurance,health",
+      "amount_min": 120,
+      "amount_max": 140,
+      "user_id": 1,
+      "date": "2015-01-01",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "monthly",
+      "skip": 0
+    }
+  ],
+  "budgets": [
+    {
+      "name": "Groceries",
+      "user_id": 1
+    },
+    {
+      "name": "Bills",
+      "user_id": 1
+    },
+    {
+      "name": "Car",
+      "user_id": 1
+    },
+    {
+      "name": "One Empty Budget",
+      "user_id": 1
+    },
+    {
+      "name": "Another Empty Budget",
+      "user_id": 1
+    },
+    {
+      "name": "Going out",
+      "user_id": 1
+    },
+    {
+      "name": "Multi budget A",
+      "user_id": 1
+    },
+    {
+      "name": "Multi budget B",
+      "user_id": 1
+    },
+    {
+      "name": "Multi budget C",
+      "user_id": 1
+    }
+  ],
+  "budget-limits": [
+    {
+      "budget_id": 1,
+      "startdate": "2016-04-01",
+      "amount_min": 100,
+      "amount_max": 200,
+      "repeat_freq": "daily"
+    },
+    {
+      "budget_id": 1,
+      "startdate": "2016-05-01",
+      "amount_min": 100,
+      "amount_max": 200,
+      "repeat_freq": "weekly"
+    },
+    {
+      "budget_id": 1,
+      "startdate": "2016-06-01",
+      "amount_min": 100,
+      "amount_max": 200,
+      "repeat_freq": "monthly"
+    },
+    {
+      "budget_id": 1,
+      "startdate": "2016-07-01",
+      "amount_min": 100,
+      "amount_max": 200,
+      "repeat_freq": "quarterly"
+    },
+    {
+      "budget_id": 1,
+      "startdate": "2016-08-01",
+      "amount_min": 100,
+      "amount_max": 200,
+      "repeat_freq": "half-year"
+    },
+    {
+      "budget_id": 1,
+      "startdate": "2016-09-01",
+      "amount_min": 100,
+      "amount_max": 200,
+      "repeat_freq": "yearly"
+    }
+  ],
+  "monthly-limits": [
+    {
+      "budget_id": 1,
+      "amount_min": 200,
+      "amount_max": 200
+    },
+    {
+      "budget_id": 2,
+      "amount_min": 1000,
+      "amount_max": 1000
+    },
+    {
+      "budget_id": 3,
+      "amount_min": 200,
+      "amount_max": 200
+    },
+    {
+      "budget_id": 6,
+      "amount_min": 100,
+      "amount_max": 100
+    }
+  ],
+  "categories": [
+    {
+      "name": "Daily groceries",
+      "user_id": 1
+    },
+    {
+      "name": "Car",
+      "user_id": 1
+    },
+    {
+      "name": "Reimbursements",
+      "user_id": 1
+    },
+    {
+      "name": "Salary",
+      "user_id": 1
+    },
+    {
+      "name": "Bills",
+      "user_id": 1
+    },
+    {
+      "name": "Going out",
+      "user_id": 1
+    },
+    {
+      "name": "Multi category A",
+      "user_id": 1
+    },
+    {
+      "name": "Multi category B",
+      "user_id": 1
+    },
+    {
+      "name": "Multi category C",
+      "user_id": 1
+    }
+  ],
+  "piggy-banks": [
+    {
+      "account_id": 3,
+      "name": "New camera",
+      "targetamount": 1000,
+      "startdate": "2015-04-01",
+      "reminder_skip": 0,
+      "remind_me": 0,
+      "order": 1,
+      "currentamount": 735
+    },
+    {
+      "account_id": 3,
+      "name": "New phone",
+      "targetamount": 600,
+      "startdate": "2015-04-01",
+      "reminder_skip": 0,
+      "remind_me": 0,
+      "order": 2,
+      "currentamount": 333
+    },
+    {
+      "account_id": 3,
+      "name": "New couch",
+      "targetamount": 500,
+      "startdate": "2015-04-01",
+      "reminder_skip": 0,
+      "remind_me": 0,
+      "order": 3,
+      "currentamount": 120
+    }
+  ],
+  "piggy-events": [
+    {
+      "piggy_bank_id": 1,
+      "date": "2015-05-01",
+      "amount": 245
+    },
+    {
+      "piggy_bank_id": 1,
+      "date": "2015-06-02",
+      "amount": 245
+    },
+    {
+      "piggy_bank_id": 1,
+      "date": "2015-07-03",
+      "amount": 245
+    },
+    {
+      "piggy_bank_id": 2,
+      "date": "2015-08-04",
+      "amount": 111
+    },
+    {
+      "piggy_bank_id": 2,
+      "date": "2015-09-05",
+      "amount": 111
+    },
+    {
+      "piggy_bank_id": 2,
+      "date": "2015-10-06",
+      "amount": 111
+    },
+    {
+      "piggy_bank_id": 3,
+      "date": "2015-11-07",
+      "amount": 40
+    },
+    {
+      "piggy_bank_id": 3,
+      "date": "2015-12-08",
+      "amount": 40
+    },
+    {
+      "piggy_bank_id": 3,
+      "date": "2016-01-09",
+      "amount": 40
+    }
+  ],
+  "rule-groups": [
+    {
+      "user_id": 1,
+      "order": 1,
+      "title": "Default rules",
+      "description": "All your rules not in a particular group."
+    }
+  ],
+  "rules": [
+    {
+      "user_id": 1,
+      "rule_group_id": 1,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "title": "Your first default rule",
+      "description": "This rule is an example. You can safely delete it."
+    }
+  ],
+  "rule-triggers": [
+    {
+      "rule_id": 1,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "user_action",
+      "trigger_value": "store-journal"
+    },
+    {
+      "rule_id": 1,
+      "order": 2,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "description_is",
+      "trigger_value": "The Man Who Sold the World"
+    },
+    {
+      "rule_id": 1,
+      "order": 3,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "from_account_is",
+      "trigger_value": "David Bowie"
+    }
+  ],
+  "rule-actions": [
+    {
+      "rule_id": 1,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "action_type": "prepend_description",
+      "action_value": "Bought the world from "
+    },
+    {
+      "rule_id": 1,
+      "order": 2,
+      "active": 1,
+      "stop_processing": 0,
+      "action_type": "set_category",
+      "action_value": "Large expenses"
+    }
+  ],
+  "tags": [
+    {
+      "user_id": 1,
+      "tag": "TagJanuary",
+      "tagMode": "nothing",
+      "date": "2015-01-01"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagFebruary",
+      "tagMode": "nothing",
+      "date": "2015-02-02"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagMarch",
+      "tagMode": "nothing",
+      "date": "2015-03-03"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagApril",
+      "tagMode": "nothing",
+      "date": "2015-04-04"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagMay",
+      "tagMode": "nothing",
+      "date": "2015-05-05"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagJune",
+      "tagMode": "nothing",
+      "date": "2015-06-06"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagJuly",
+      "tagMode": "nothing",
+      "date": "2015-07-07"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagAugust",
+      "tagMode": "nothing",
+      "date": "2015-08-08"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagSeptember",
+      "tagMode": "nothing",
+      "date": "2015-09-09"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagOctober",
+      "tagMode": "nothing",
+      "date": "2015-10-10"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagNovember",
+      "tagMode": "nothing",
+      "date": "2015-11-11"
+    },
+    {
+      "user_id": 1,
+      "tag": "TagDecember",
+      "tagMode": "nothing",
+      "date": "2015-12-12"
+    }
+  ],
+  "monthly-deposits": [
+    {
+      "user_id": 1,
+      "day-of-month": 24,
+      "description": "Salary in :month",
+      "source_id": 30,
+      "destination_id": 1,
+      "min_amount": 1500,
+      "max_amount": 1700,
+      "category_id": 4
+    }
+  ],
+  "monthly-transfers": [
+    {
+      "user_id": 1,
+      "day-of-month": 28,
+      "description": "Saving money for :month",
+      "source_id": 1,
+      "destination_id": 3,
+      "min_amount": 150,
+      "max_amount": 150
+    }
+  ],
+  "monthly-withdrawals": [
+    {
+      "user_id": 1,
+      "day-of-month": "02",
+      "description": "Rent for :month",
+      "source_id": 1,
+      "destination_id": 29,
+      "min_amount": 800,
+      "max_amount": 800,
+      "category_id": 5,
+      "budget_id": 2
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "04",
+      "description": "Water bill :month",
+      "source_id": 1,
+      "destination_id": 8,
+      "min_amount": 8,
+      "max_amount": 12,
+      "category_id": 5,
+      "budget_id": 2
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "06",
+      "description": "TV bill :month",
+      "source_id": 1,
+      "destination_id": 26,
+      "min_amount": 50,
+      "max_amount": 60,
+      "category_id": 5,
+      "budget_id": 2
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "08",
+      "description": "Power bill :month",
+      "source_id": 1,
+      "destination_id": 24,
+      "min_amount": 75,
+      "max_amount": 90,
+      "category_id": 5,
+      "budget_id": 2
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "07",
+      "description": "Bought gas",
+      "source_id": 1,
+      "destination_id": 17,
+      "min_amount": 40,
+      "max_amount": 50,
+      "category_id": 2,
+      "budget_id": 3
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 17,
+      "description": "Filled the car up again",
+      "source_id": 1,
+      "destination_id": 17,
+      "min_amount": 40,
+      "max_amount": 50,
+      "category_id": 2,
+      "budget_id": 3
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 27,
+      "description": "Needed gas again",
+      "source_id": 1,
+      "destination_id": 17,
+      "min_amount": 45,
+      "max_amount": 55,
+      "category_id": 2,
+      "budget_id": 3
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "02",
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 9,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "06",
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 10,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "08",
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 11,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 11,
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 9,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 15,
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 10,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 19,
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 11,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 23,
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 9,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 26,
+      "description": "Groceries",
+      "source_id": 1,
+      "destination_id": 10,
+      "min_amount": 15,
+      "max_amount": 25,
+      "category_id": 1,
+      "budget_id": 1
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 13,
+      "description": "Going out for drinks",
+      "source_id": 1,
+      "destination_id": 14,
+      "min_amount": 15,
+      "max_amount": 36,
+      "category_id": 6,
+      "budget_id": 6
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 26,
+      "description": "Going out for drinks again",
+      "source_id": 1,
+      "destination_id": 14,
+      "min_amount": 15,
+      "max_amount": 36,
+      "category_id": 6,
+      "budget_id": 6
+    }
+  ],
+  "attachments": [
+    {
+      "attachable_id": 1,
+      "attachable_type": "FireflyIII\\Models\\TransactionJournal",
+      "user_id": 1,
+      "content": "This is attachment number one.",
+      "filename": "empty-file.txt",
+      "title": "Empty file",
+      "description": "This file is empty",
+      "notes": "Some notes",
+      "mime": "text\/plain",
+      "uploaded": 1
+    },
+    {
+      "attachable_id": 2,
+      "attachable_type": "FireflyIII\\Models\\TransactionJournal",
+      "user_id": 1,
+      "content": "This is attachment number two.",
+      "filename": "empty-file2.txt",
+      "title": "Empty file",
+      "description": "This file is empty",
+      "notes": "Some notes",
+      "mime": "text\/plain",
+      "uploaded": 1
+    }
+  ],
+  "multi-withdrawals": [
+    {
+      "user_id": 1,
+      "date": "2016-03-12",
+      "description": "Even multi-withdrawal (50, 50)",
+      "destination_ids": [
+        18,
+        19
+      ],
+      "source_id": 1,
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ],
+      "budget_ids": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-12",
+      "description": "Uneven multi-withdrawal (15,34,51)",
+      "destination_ids": [
+        18,
+        19,
+        20
+      ],
+      "source_id": 1,
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ],
+      "budget_ids": [
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "multi-deposits": [
+    {
+      "user_id": 1,
+      "date": "2016-03-02",
+      "description": "Even multi-deposit (50, 50)",
+      "source_ids": [
+        35,
+        36
+      ],
+      "destination_id": 1,
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-02",
+      "description": "Uneven multi-deposit (15,34,51)",
+      "source_ids": [
+        35,
+        36,
+        37
+      ],
+      "destination_id": 1,
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "multi-transfers": [
+    {
+      "user_id": 1,
+      "date": "2016-03-02",
+      "description": "Even multi-transfer (50, 50)",
+      "source_ids": [
+        4,
+        4
+      ],
+      "destination_ids": [
+        5,
+        5
+      ],
+      "amounts": [
+        50,
+        50
+      ],
+      "category_ids": [
+        7,
+        8
+      ]
+    },
+    {
+      "user_id": 1,
+      "date": "2016-05-02",
+      "description": "Uneven multi-transfer (15,34,51)",
+      "source_ids": [
+        4,
+        4,
+        4
+      ],
+      "destination_ids": [
+        5,
+        5,
+        5
+      ],
+      "amounts": [
+        14,
+        35,
+        51
+      ],
+      "category_ids": [
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "import-jobs": [],
+  "currencies": []
+}

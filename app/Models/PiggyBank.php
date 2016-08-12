@@ -31,8 +31,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property \Carbon\Carbon                                                      $targetdate
  * @property integer                                                             $order
  * @property boolean                                                             $encrypted
- * @property boolean                                                             $remind_me
- * @property integer                                                             $reminder_skip
  * @property-read Account                                                        $account
  * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankRepetition[] $piggyBankRepetitions
  * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]      $piggyBankEvents
@@ -53,13 +51,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
  * @mixin \Eloquent
+ * @property boolean $active
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
  */
 class PiggyBank extends Model
 {
     use SoftDeletes;
 
     protected $fillable
-                      = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'remind_me', 'reminder_skip'];
+                      = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
     protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
 

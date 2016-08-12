@@ -1,0 +1,39 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('piggy-banks.post-add-mobile', piggyBank.id)}) }}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('firefly.add_money_to_piggy', {name: piggyBank.name}) }}</h3>
+                </div>
+                <div class="box-body">
+
+                    <p>
+                        {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
+                    </p>
+
+                    <div class="input-group">
+                        <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                        <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}" type="number"/>
+                    </div>
+                    <p>
+                        &nbsp;
+                    </p>
+                    <button type="submit" class="btn btn-success pull-right">
+                        {{ 'add'|_ }}
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{ Form.close|raw }}
+{% endblock %}

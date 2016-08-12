@@ -44,7 +44,7 @@ class AccountServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Account\AccountRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Account\AccountRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Account\AccountRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

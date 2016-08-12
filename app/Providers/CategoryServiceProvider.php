@@ -44,7 +44,7 @@ class CategoryServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Category\CategoryRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Category\CategoryRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Category\CategoryRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

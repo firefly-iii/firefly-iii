@@ -51,10 +51,6 @@
                         {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
                     {% endif %}
 
-                    <!-- show static source if deposit: -->
-                    {% if preFilled.what == 'deposit' %}
-                    {% endif %}
-
                     <!-- show static destination if transfer -->
                     {% if preFilled.what == 'transfer' %}
                         {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
@@ -94,8 +90,12 @@
                             <th>{{ trans('list.description') }}</th>
 
                             <!-- withdrawal and deposit have a destination. -->
-                            {% if preFilled.what == 'withdrawal' or preFilled.what == 'deposit' %}
+                            {% if preFilled.what == 'withdrawal' %}
                                 <th>{{ trans('list.destination') }}</th>
+                            {% endif %}
+
+                            {% if preFilled.what == 'deposit' %}
+                                <th>{{ trans('list.source') }}</th>
                             {% endif %}
 
                             <th>{{ trans('list.amount') }}</th>

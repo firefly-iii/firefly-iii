@@ -45,7 +45,7 @@ class PiggyBankServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\PiggyBank\PiggyBankRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\PiggyBank\PiggyBankRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

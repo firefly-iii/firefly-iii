@@ -66,10 +66,8 @@ class FireflyValidator extends Validator
         }
 
         $secret = Session::get('two-factor-secret');
-        /** @var Google2FA $google2fa */
-        $google2fa = app(Google2FA::class);
 
-        return $google2fa->verifyKey($secret, $value);
+        return Google2FA::verifyKey($secret, $value);
     }
 
     /**

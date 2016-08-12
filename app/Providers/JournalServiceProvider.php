@@ -44,7 +44,7 @@ class JournalServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Journal\JournalRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Journal\JournalRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Journal\JournalRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

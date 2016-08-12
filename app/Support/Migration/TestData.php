@@ -72,9 +72,9 @@ class TestData
                 'updated_at'      => $this->time,
                 'user_id'         => $account['user_id'],
                 'account_type_id' => $account['account_type_id'],
-                'name'            => Crypt::encrypt($account['name']),
+                'name'            => $account['name'],
                 'active'          => 1,
-                'encrypted'       => 1,
+                'encrypted'       => 0,
                 'virtual_balance' => 0,
                 'iban'            => isset($account['iban']) ? Crypt::encrypt($account['iban']) : null,
             ];
@@ -242,6 +242,45 @@ class TestData
             ];
         }
         DB::table('categories')->insert($insert);
+    }
+
+    /**
+     *
+     */
+    private function createCurrencies()
+    {
+        $insert = [];
+        foreach ($this->data['currencies'] as $job) {
+            $insert[] = [
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
+                'deleted_at' => null,
+                'code'       => $job['code'],
+                'name'       => $job['name'],
+                'symbol'     => $job['symbol'],
+            ];
+        }
+        DB::table('transaction_currencies')->insert($insert);
+    }
+
+    /**
+     *
+     */
+    private function createImportJobs()
+    {
+        $insert = [];
+        foreach ($this->data['import-jobs'] as $job) {
+            $insert[] = [
+                'created_at'    => $this->time,
+                'updated_at'    => $this->time,
+                'user_id'       => $job['user_id'],
+                'file_type'     => $job['file_type'],
+                'key'           => $job['key'],
+                'status'        => $job['status'],
+                'configuration' => json_encode($job['configuration']),
+            ];
+        }
+        DB::table('import_jobs')->insert($insert);
     }
 
     /**
@@ -640,16 +679,14 @@ class TestData
         foreach ($this->data['piggy-banks'] as $piggyBank) {
             $piggyId = DB::table('piggy_banks')->insertGetId(
                 [
-                    'created_at'    => $this->time,
-                    'updated_at'    => $this->time,
-                    'account_id'    => $piggyBank['account_id'],
-                    'name'          => Crypt::encrypt($piggyBank['name']),
-                    'targetamount'  => $piggyBank['targetamount'],
-                    'startdate'     => $piggyBank['startdate'],
-                    'reminder_skip' => 0,
-                    'remind_me'     => 0,
-                    'order'         => $piggyBank['order'],
-                    'encrypted'     => 1,
+                    'created_at'   => $this->time,
+                    'updated_at'   => $this->time,
+                    'account_id'   => $piggyBank['account_id'],
+                    'name'         => Crypt::encrypt($piggyBank['name']),
+                    'targetamount' => $piggyBank['targetamount'],
+                    'startdate'    => $piggyBank['startdate'],
+                    'order'        => $piggyBank['order'],
+                    'encrypted'    => 1,
                 ]
             );
             if (isset($piggyBank['currentamount'])) {
@@ -773,10 +810,11 @@ class TestData
         foreach ($this->data['users'] as $user) {
             $insert[]
                 = [
-                'created_at' => $this->time,
-                'updated_at' => $this->time,
-                'email'      => $user['email'],
-                'password'   => bcrypt($user['password']),
+                'created_at'     => $this->time,
+                'updated_at'     => $this->time,
+                'email'          => $user['email'],
+                'remember_token' => '',
+                'password'       => bcrypt($user['password']),
             ];
 
         }
@@ -810,6 +848,8 @@ class TestData
         $this->createMultiWithdrawals();
         $this->createMultiDeposits();
         $this->createMultiTransfers();
+        $this->createImportJobs();
+        $this->createCurrencies();
     }
 
 }

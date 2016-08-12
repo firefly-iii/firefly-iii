@@ -44,7 +44,7 @@ class TagServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Tag\TagRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Tag\TagRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Tag\TagRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

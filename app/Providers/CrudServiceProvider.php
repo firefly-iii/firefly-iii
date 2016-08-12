@@ -12,8 +12,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Log;
 
 /**
  * Class CrudServiceProvider
@@ -49,13 +51,13 @@ class CrudServiceProvider extends ServiceProvider
         $this->app->bind(
             'FireflyIII\Crud\Account\AccountCrudInterface',
             function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Crud\Account\AccountCrud', [$app->auth->user()]);
+
+                if (!isset($arguments[0]) && auth()->check()) {
+                    return app('FireflyIII\Crud\Account\AccountCrud', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');
                 }
-
                 return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
             }
         );
@@ -67,7 +69,7 @@ class CrudServiceProvider extends ServiceProvider
             'FireflyIII\Crud\Split\JournalInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Crud\Split\Journal', [$app->auth->user()]);
+                    return app('FireflyIII\Crud\Split\Journal', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

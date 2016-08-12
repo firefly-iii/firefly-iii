@@ -44,7 +44,7 @@ class BillServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Bill\BillRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Bill\BillRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Bill\BillRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

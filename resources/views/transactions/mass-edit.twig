@@ -56,24 +56,24 @@
                                     </td>
                                     <td>
 
-                                        <!-- SOURCE ACCOUNT FOR TRANSFER OR WITHDRAWAL -->
+                                        <!-- SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL -->
                                         {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Withdrawal' %}
                                             {{ Form.select('source_account_id['~journal.id~']', accountList, journal.source_account_id, {'class': 'form-control'}) }}
                                         {% else %}
-                                            <!-- if is income -->
-                                            {{ Form.input('text', 'revenue_account['~journal.id~']', journal.source_account_name, {'class': 'form-control', 'placeholder': trans('form.revenue_account')}) }}
+                                            <!-- SOURCE ACCOUNT NAME FOR DEPOSIT -->
+                                            {{ Form.input('text', 'source_account_name['~journal.id~']', journal.source_account_name, {'class': 'form-control', 'placeholder': trans('form.revenue_account')}) }}
                                         {% endif %}
 
                                     </td>
                                     <td>
 
                                         {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Deposit' %}
-                                            <!-- is is transfer or income -->
+                                            <!-- DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT -->
                                             {{ Form.select('destination_account_id['~journal.id~']', accountList, journal.destination_account_id, {'class': 'form-control'}) }}
                                         {% else %}
-                                            <!-- if is expense -->
+                                            <!-- DESTINATION ACCOUNT NAME FOR EXPENSE-->
 
-                                            {{ Form.input('text', 'expense_account['~journal.id~']', journal.destination_account_name, {'class': 'form-control', 'placeholder': trans('form.expense_account')}) }}
+                                            {{ Form.input('text', 'destination_account_name['~journal.id~']', journal.destination_account_name, {'class': 'form-control', 'placeholder': trans('form.expense_account')}) }}
                                         {% endif %}
 
                                     </td>
@@ -83,8 +83,11 @@
                     </table>
                 </div>
                 <div class="box-footer">
-                    <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-danger pull-right"/>
+                    {% if journals.count > 0 %}
+                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-danger pull-right"/>
+                    {% endif %}
                     <a href="{{ route('index') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+
                 </div>
             </div>
         </div>

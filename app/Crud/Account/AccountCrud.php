@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Crud\Account;
 
+use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -52,14 +53,17 @@ class AccountCrud implements AccountCrudInterface
      *
      * @return bool
      */
-    public function destroy(Account $account, Account $moveTo = null): bool
+    public function destroy(Account $account, Account $moveTo): bool
     {
-        if (!is_null($moveTo)) {
+        if (!is_null($moveTo->id)) {
             // update all transactions:
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
+        if (!is_null($account)) {
+            Log::debug('Now trigger account delete #' . $account->id);
+            $account->delete();
+        }
 
-        $account->delete();
 
         return true;
     }
@@ -71,12 +75,97 @@ class AccountCrud implements AccountCrudInterface
      */
     public function find(int $accountId): Account
     {
+        Log::debug('Searching for user ', ['user' => $this->user->id]);
         $account = $this->user->accounts()->find($accountId);
         if (is_null($account)) {
-            $account = new Account;
+            return new Account;
         }
 
         return $account;
+    }
+
+    /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByAccountNumber(string $number, array $types): Account
+    {
+        $query = $this->user->accounts()
+                            ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                            ->where('account_meta.name', 'accountNumber')
+                            ->where('account_meta.data', json_encode($number));
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        /** @var Collection $accounts */
+        $accounts = $query->get(['accounts.*']);
+        if ($accounts->count() > 0) {
+            return $accounts->first();
+        }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByIban(string $iban, array $types): Account
+    {
+        $query = $this->user->accounts()->where('iban', '!=', '');
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->iban === $iban) {
+                return $account;
+            }
+        }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account
+    {
+        $query = $this->user->accounts();
+        Log::debug('Now in findByName()', ['name' => $name, 'types' => $types]);
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get(['accounts.*']);
+        Log::debug(sprintf('Total set count is %d ', $accounts->count()));
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name) {
+                Log::debug('Account name is an exact match. ', ['db' => $account->name, 'source' => $name, 'id' => $account->id]);
+
+                return $account;
+            }
+        }
+        Log::debug('Found nothing in findByName()', ['name' => $name, 'types' => $types]);
+
+        return new Account;
     }
 
     /**
@@ -146,25 +235,12 @@ class AccountCrud implements AccountCrudInterface
     public function store(array $data): Account
     {
         $newAccount = $this->storeAccount($data);
-        if (!is_null($newAccount)) {
+        if (!is_null($newAccount->id)) {
             $this->storeMetadata($newAccount, $data);
         }
 
-        // continue with the opposing account:
         if ($data['openingBalance'] != 0) {
-            $opposingData = [
-                'user'           => $data['user'],
-                'accountType'    => 'initial',
-                'virtualBalance' => 0,
-                'name'           => $data['name'] . ' initial balance',
-                'active'         => false,
-                'iban'           => '',
-            ];
-            $opposing     = $this->storeAccount($opposingData);
-            if (!is_null($opposing) && !is_null($newAccount)) {
-                $this->storeInitialBalance($newAccount, $opposing, $data);
-            }
-
+            $this->storeInitialBalance($newAccount, $data);
         }
 
         return $newAccount;
@@ -199,37 +275,27 @@ class AccountCrud implements AccountCrudInterface
         $account->save();
 
         $this->updateMetadata($account, $data);
-        $openingBalance = $this->openingBalanceTransaction($account);
-        if ($data['openingBalance'] != 0) {
-            if (!is_null($openingBalance->id)) {
-                $this->updateInitialBalance($account, $openingBalance, $data);
-
-                return $account;
-            }
-
-            $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
-            $opposingData = [
-                'user'           => $data['user'],
-                'accountType'    => $type,
-                'name'           => $data['name'] . ' initial balance',
-                'active'         => false,
-                'iban'           => '',
-                'virtualBalance' => 0,
-            ];
-            $opposing     = $this->storeAccount($opposingData);
-            if (!is_null($opposing)) {
-                $this->storeInitialBalance($account, $opposing, $data);
-            }
-
-            return $account;
-
-        }
-
-        if ($openingBalance) { // opening balance is zero, should we delete it?
-            $openingBalance->delete(); // delete existing opening balance.
-        }
+        $this->updateInitialBalance($account, $data);
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $type
+     *
+     * @return Account
+     */
+    public function updateAccountType(Account $account, string $type): Account
+    {
+        $type = AccountType::whereType($type)->first();
+        if (!is_null($type)) {
+            $account->accountType()->associate($type);
+            $account->save();
+        }
+
+        return $this->find($account->id);
+
     }
 
     /**
@@ -263,8 +329,8 @@ class AccountCrud implements AccountCrudInterface
             ];
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
-                Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                abort(500);
+                Log::error('Account create error', $newAccount->getErrors()->toArray());
+                return new Account;
             }
             $newAccount = $existingAccount;
 
@@ -276,19 +342,21 @@ class AccountCrud implements AccountCrudInterface
 
     /**
      * @param Account $account
-     * @param Account $opposing
      * @param array   $data
      *
      * @return TransactionJournal
      */
-    protected function storeInitialBalance(Account $account, Account $opposing, array $data): TransactionJournal
+    protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
+        $amount          = $data['openingBalance'];
+        $user            = $data['user'];
+        $name            = $data['name'];
+        $opposing        = $this->storeOpposingAccount($amount, $user, $name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $transactionType->id,
-                'bill_id'                 => null,
                 'transaction_currency_id' => $data['openingBalanceCurrency'],
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
@@ -299,24 +367,22 @@ class AccountCrud implements AccountCrudInterface
 
         $firstAccount  = $account;
         $secondAccount = $opposing;
-        $firstAmount   = $data['openingBalance'];
-        $secondAmount  = $data['openingBalance'] * -1;
+        $firstAmount   = $amount;
+        $secondAmount  = $amount * -1;
 
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
-            $firstAmount   = $data['openingBalance'] * -1;
-            $secondAmount  = $data['openingBalance'];
+            $firstAmount   = $amount * -1;
+            $secondAmount  = $amount;
         }
 
         $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
         $one->save();// first transaction: from
-
         $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
         $two->save(); // second transaction: to
 
         return $journal;
-
     }
 
     /**
@@ -342,30 +408,32 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
-     * @param Account            $account
-     * @param TransactionJournal $journal
-     * @param array              $data
+     * @param Account $account
+     * @param array   $data
      *
-     * @return TransactionJournal
+     * @return bool
      */
-    protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data): TransactionJournal
+    protected function updateInitialBalance(Account $account, array $data): bool
     {
-        $journal->date = $data['openingBalanceDate'];
-        $journal->save();
+        $openingBalance = $this->openingBalanceTransaction($account);
+        if ($data['openingBalance'] != 0) {
+            if (!is_null($openingBalance->id)) {
+                $date   = $data['openingBalanceDate'];
+                $amount = $data['openingBalance'];
 
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id == $transaction->account_id) {
-                $transaction->amount = $data['openingBalance'];
-                $transaction->save();
+                return $this->updateJournal($account, $openingBalance, $date, $amount);
             }
-            if ($account->id != $transaction->account_id) {
-                $transaction->amount = $data['openingBalance'] * -1;
-                $transaction->save();
-            }
+
+            $this->storeInitialBalance($account, $data);
+
+            return true;
+        }
+        // else, delete it:
+        if ($openingBalance) { // opening balance is zero, should we delete it?
+            $openingBalance->delete(); // delete existing opening balance.
         }
 
-        return $journal;
+        return true;
     }
 
     /**
@@ -417,5 +485,57 @@ class AccountCrud implements AccountCrudInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * @param float  $amount
+     * @param int    $user
+     * @param string $name
+     *
+     * @return Account
+     */
+    private function storeOpposingAccount(float $amount, int $user, string $name):Account
+    {
+        $type         = $amount < 0 ? 'expense' : 'revenue';
+        $opposingData = [
+            'user'           => $user,
+            'accountType'    => $type,
+            'name'           => $name . ' initial balance',
+            'active'         => false,
+            'iban'           => '',
+            'virtualBalance' => 0,
+        ];
+
+        return $this->storeAccount($opposingData);
+    }
+
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $journal
+     * @param Carbon             $date
+     * @param float              $amount
+     *
+     * @return bool
+     */
+    private function updateJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    {
+        // update date:
+        $journal->date = $date;
+        $journal->save();
+        // update transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($account->id == $transaction->account_id) {
+                $transaction->amount = $amount;
+                $transaction->save();
+            }
+            if ($account->id != $transaction->account_id) {
+                $transaction->amount = $amount * -1;
+                $transaction->save();
+            }
+        }
+
+        return true;
+
     }
 }

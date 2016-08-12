@@ -97,6 +97,30 @@ Breadcrumbs::register(
 );
 
 /**
+ * ADMIN
+ */
+Breadcrumbs::register(
+    'admin.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.administration'), route('admin.index'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.users', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.list_all_users'), route('admin.users'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.users.domains', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.blocked_domains'), route('admin.users.domains'));
+}
+);
+
+/**
  * ATTACHMENTS
  */
 Breadcrumbs::register(
@@ -266,44 +290,6 @@ Breadcrumbs::register(
     'categories.noCategory', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
     $breadcrumbs->parent('categories.index');
     $breadcrumbs->push($subTitle, route('categories.noCategory'));
-}
-);
-
-/**
- * CSV CONTROLLER
- */
-Breadcrumbs::register(
-    'csv.index', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('firefly.csv_index_title'), route('csv.index'));
-}
-);
-
-Breadcrumbs::register(
-    'csv.column-roles', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('csv.index');
-    $breadcrumbs->push(trans('firefly.csv_define_column_roles'), route('csv.column-roles'));
-}
-);
-
-Breadcrumbs::register(
-    'csv.map', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('csv.index');
-    $breadcrumbs->push(trans('firefly.csv_map_values'), route('csv.map'));
-}
-);
-
-Breadcrumbs::register(
-    'csv.download-config-page', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('csv.index');
-    $breadcrumbs->push(trans('firefly.csv_download_config'), route('csv.download-config-page'));
-}
-);
-
-Breadcrumbs::register(
-    'csv.process', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('csv.index');
-    $breadcrumbs->push(trans('firefly.csv_process_title'), route('csv.process'));
 }
 );
 

@@ -71,13 +71,9 @@ return [
     'code'                           => 'Code',
     'iban'                           => 'IBAN',
     'accountNumber'                  => 'Rekeningnummer',
-    'csv'                            => 'CSV-bestand',
     'has_headers'                    => 'Kolomnamen op de eerste rij?',
     'date_format'                    => 'Datumformaat',
-    'csv_config'                     => 'Configuratiebestand',
     'specifix'                       => 'Bank- or of bestandsspecifieke opties',
-    'csv_import_account'             => 'Standaard rekening voor importeren',
-    'csv_delimiter'                  => 'CSV scheidingsteken',
     'attachments[]'                  => 'Bijlagen',
     'store_new_withdrawal'           => 'Nieuwe uitgave opslaan',
     'store_new_deposit'              => 'Nieuwe inkomsten opslaan',
@@ -102,9 +98,6 @@ return [
     'include_config'                 => 'Sla ook een configuratiebestand ook',
     'include_old_uploads'            => 'Sla ook geïmporteerde bestanden op',
     'accounts'                       => 'Exporteer boekingen van deze rekeningen',
-    'csv_comma'                      => 'Een komma (,)',
-    'csv_semicolon'                  => 'Een puntkomma (;)',
-    'csv_tab'                        => 'Een tab (onzichtbaar)',
     'delete_account'                 => 'Verwijder rekening ":name"',
     'delete_bill'                    => 'Verwijder contract ":name"',
     'delete_budget'                  => 'Verwijder budget ":name"',
@@ -137,4 +130,20 @@ return [
     'budget_keep_transactions'       => 'De transactie verbonden aan dit budget blijft bewaard.|De :count transacties verbonden aan dit budget blijven bewaard.',
     'category_keep_transactions'     => 'De transactie verbonden aan deze categorie blijft bewaard.|De :count transacties verbonden aan deze categorie blijven bewaard.',
     'tag_keep_transactions'          => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
+
+    // admin
+    'domain'                         => 'Domein',
+
+    // import
+    'import_file'                    => 'Importbestand',
+    'configuration_file'             => 'Configuratiebestand',
+    'import_file_type'               => 'Importbestandstype',
+    'csv_comma'                      => 'Een komma (,)',
+    'csv_semicolon'                  => 'Een puntkomma (;)',
+    'csv_tab'                        => 'Een tab (onzichtbaar)',
+    'csv_delimiter'                  => 'CSV scheidingsteken',
+    'csv_import_account'             => 'Standaard rekening voor importeren',
+    'csv_config'                     => 'Configuratiebestand',
+
+
 ];

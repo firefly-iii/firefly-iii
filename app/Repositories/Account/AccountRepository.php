@@ -135,15 +135,24 @@ class AccountRepository implements AccountRepositoryInterface
 
             $query->whereIn('destination.account_id', $accountIds);
             $query->whereNotIn('source.account_id', $accountIds);
+            $query->whereNull('destination.deleted_at');
+            $query->whereNull('source.deleted_at');
 
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
+        $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
+
+
 
         // that should do it:
-        $sum = strval($query->sum('destination.amount'));
+        $sum = $this->user->transactions()
+                          ->whereIn('transaction_journal_id', $ids)
+                          ->where('amount', '>', '0')
+                          ->whereNull('transactions.deleted_at')
+                          ->sum('amount');
 
-        return $sum;
+        return strval($sum);
 
     }
 
@@ -566,6 +575,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
             }
             );
+
             $query->leftJoin(
                 'transactions as destination', function (JoinClause $join) {
                 $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
@@ -573,15 +583,22 @@ class AccountRepository implements AccountRepositoryInterface
             );
             $query->whereIn('source.account_id', $accountIds);
             $query->whereNotIn('destination.account_id', $accountIds);
+            $query->whereNull('source.deleted_at');
+            $query->whereNull('destination.deleted_at');
+            $query->distinct();
 
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
+        $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
 
-        // that should do it:
-        $sum = strval($query->sum('source.amount'));
+        $sum = $this->user->transactions()
+                          ->whereIn('transaction_journal_id', $ids)
+                          ->where('amount', '<', '0')
+                          ->whereNull('transactions.deleted_at')
+                          ->sum('amount');
 
-        return $sum;
+        return strval($sum);
     }
 
 }

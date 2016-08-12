@@ -158,21 +158,6 @@ Route::group(
     Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
     /**
-     * CSV controller
-     */
-    Route::get('/csv', ['uses' => 'CsvController@index', 'as' => 'csv.index']);
-    Route::post('/csv/upload', ['uses' => 'CsvController@upload', 'as' => 'csv.upload']);
-    Route::get('/csv/column_roles', ['uses' => 'CsvController@columnRoles', 'as' => 'csv.column-roles']);
-    Route::post('/csv/initial_parse', ['uses' => 'CsvController@initialParse', 'as' => 'csv.initial_parse']);
-    Route::get('/csv/map', ['uses' => 'CsvController@map', 'as' => 'csv.map']);
-    Route::get('/csv/download-config', ['uses' => 'CsvController@downloadConfig', 'as' => 'csv.download-config']);
-    Route::get('/csv/download', ['uses' => 'CsvController@downloadConfigPage', 'as' => 'csv.download-config-page']);
-    Route::post('/csv/save_mapping', ['uses' => 'CsvController@saveMapping', 'as' => 'csv.save_mapping']);
-    
-    Route::get('/csv/process', ['uses' => 'CsvController@process', 'as' => 'csv.process']);
-
-
-    /**
      * Currency Controller
      */
     Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
@@ -240,6 +225,13 @@ Route::group(
      */
     Route::get('/import', ['uses' => 'ImportController@index', 'as' => 'import.index']);
     Route::post('/import/upload', ['uses' => 'ImportController@upload', 'as' => 'import.upload']);
+    Route::get('/import/configure/{importJob}', ['uses' => 'ImportController@configure', 'as' => 'import.configure']);
+    Route::post('/import/configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'import.process_configuration']);
+    Route::get('/import/settings/{importJob}', ['uses' => 'ImportController@settings', 'as' => 'import.settings']);
+    Route::post('/import/settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'import.postSettings']);
+    Route::get('/import/complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'import.complete']);
+    Route::get('/import/download/{importJob}', ['uses' => 'ImportController@download', 'as' => 'import.download']);
+
 
     /**
      * Help Controller
@@ -277,6 +269,13 @@ Route::group(
     Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
     Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']);
     Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']);
+
+    Route::get('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'piggy-banks.add-money-mobile']);
+    Route::get('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'piggy-banks.remove-money-mobile']);
+
+    Route::post('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@postAddMobile', 'as' => 'piggy-banks.post-add-mobile']);
+    Route::post('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@postRemoveMobile', 'as' => 'piggy-banks.post-remove-mobile']);
+
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
@@ -425,6 +424,12 @@ Route::group(
 
     // user manager
     Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
+    Route::get('/admin/users/edit/{user}', ['uses' => 'Admin\UserController@edit', 'as' => 'admin.users.edit']);
+
+    // user domains:
+    Route::get('/admin/domains', ['uses' => 'Admin\DomainController@domains', 'as' => 'admin.users.domains']);
+    Route::get('/admin/domains/toggle/{domain}', ['uses' => 'Admin\DomainController@toggleDomain', 'as' => 'admin.users.domains.block-toggle']);
+    Route::post('/admin/domains/manual', ['uses' => 'Admin\DomainController@manual', 'as' => 'admin.users.domains.manual']);
 
 }
 );

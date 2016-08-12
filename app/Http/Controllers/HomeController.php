@@ -18,8 +18,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
+use Log;
 use Preferences;
 use Route;
 use Session;
@@ -41,18 +42,24 @@ class HomeController extends Controller
         parent::__construct();
     }
 
-    public function dateRange()
+    /**
+     * @param Request $request
+     */
+    public function dateRange(Request $request)
     {
 
-        $start         = new Carbon(Input::get('start'));
-        $end           = new Carbon(Input::get('end'));
-        $label         = Input::get('label');
+        $start         = new Carbon($request->get('start'));
+        $end           = new Carbon($request->get('end'));
+        $label         = $request->get('label');
         $isCustomRange = false;
+
+        Log::debug('Received dateRange', ['start' => $request->get('start'), 'end' => $request->get('end'), 'label' => $request->get('label')]);
 
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
             $isCustomRange = true;
+            Log::debug('Range is now marked as "custom".');
         }
 
         $diff = $start->diffInDays($end);
@@ -112,6 +119,7 @@ class HomeController extends Controller
      */
     public function index(ARI $repository, AccountCrudInterface $crud)
     {
+
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 
@@ -173,11 +181,11 @@ class HomeController extends Controller
             $search  = [
                 '{account}', '{what}', '{rule}', '{tj}', '{category}', '{budget}', '{code}', '{date}', '{attachment}', '{bill}', '{limitrepetition}',
                 '{currency}', '{jobKey}', '{piggyBank}', '{ruleGroup}', '{rule}', '{route}', '{unfinishedJournal}',
-                '{reportType}', '{start_date}', '{end_date}', '{accountList}','{tag}','{journalList}'
+                '{reportType}', '{start_date}', '{end_date}', '{accountList}', '{tag}', '{journalList}',
 
             ];
             $replace = [1, 'asset', 1, 1, 1, 1, 'abc', '2016-01-01', 1, 1, 1, 1, 1, 1, 1, 1, 'index', 1,
-                        'default', '20160101', '20160131', '1,2',1,'1,2'
+                        'default', '20160101', '20160131', '1,2', 1, '1,2',
             ];
             if (count($search) != count($replace)) {
                 echo 'count';

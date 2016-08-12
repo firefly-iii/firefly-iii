@@ -1,0 +1,170 @@
+{
+  "users": [
+    {
+      "email": "thegrumpydictator@gmail.com",
+      "password": "james"
+    }
+  ],
+  "roles": [
+    {
+      "user_id": 1,
+      "role": 1
+    }
+  ],
+  "accounts": [
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "ExistingAssetAccount",
+      "iban": "NL62EXFK3945306779"
+    },
+    {
+      "user_id": 1,
+      "account_type_id": 4,
+      "name": "ExistingOpposingAccount",
+      "iban": "NL79BGWN6303364632"
+    }
+  ],
+  "account-meta": [
+    {
+      "account_id": 1,
+      "name": "accountNumber",
+      "data": "\"3945306779\""
+    },
+    {
+      "account_id": 2,
+      "name": "accountNumber",
+      "data": "\"6303364632\""
+    }
+  ],
+  "bills": [
+    {
+      "name": "ExistingBill",
+      "match": "ExistingBill",
+      "amount_min": 100,
+      "amount_max": 200,
+      "user_id": 1,
+      "date": "2015-01-01",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "monthly",
+      "skip": 0
+    }
+  ],
+  "budgets": [
+    {
+      "name": "ExistingBudget",
+      "user_id": 1
+    }
+  ],
+  "budget-limits": [],
+  "monthly-limits": [],
+  "categories": [
+    {
+      "name": "ExistingCategory",
+      "user_id": 1
+    }
+  ],
+  "piggy-banks": [],
+  "piggy-events": [],
+  "rule-groups": [],
+  "rules": [],
+  "rule-triggers": [],
+  "rule-actions": [],
+  "tags": [
+    {
+      "user_id": 1,
+      "tag": "ExistingTag",
+      "tagMode": "nothing"
+    },
+    {
+      "user_id": 1,
+      "tag": "AnotherExistingTag",
+      "tagMode": "nothing"
+    }
+  ],
+  "monthly-deposits": [],
+  "monthly-transfers": [],
+  "monthly-withdrawals": [],
+  "attachments": [],
+  "multi-withdrawals": [],
+  "multi-deposits": [],
+  "multi-transfers": [],
+  "import-jobs": [
+    {
+      "user_id": 1,
+      "key": "testImport",
+      "file_type": "csv",
+      "status": "settings_complete",
+      "configuration": {
+        "has-headers": false,
+        "date-format": "Ymd",
+        "delimiter": ",",
+        "import-account": 1,
+        "specifics": {
+          "RabobankDescription": 1
+        },
+        "column-count": 19,
+        "column-roles": [
+          "account-iban",
+          "currency-code",
+          "date-interest",
+          "rabo-debet-credit",
+          "amount",
+          "opposing-iban",
+          "opposing-name",
+          "date-book",
+          "description",
+          "_ignore",
+          "description",
+          "description",
+          "description",
+          "description",
+          "description",
+          "description",
+          "sepa-ct-id",
+          "sepa-ct-op",
+          "sepa-db"
+        ],
+        "column-do-mapping": [
+          true,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "column-roles-complete": false,
+        "column-mapping-config": {
+          "0": [],
+          "1": {
+            "EUR": 1
+          },
+          "5": [],
+          "6": []
+        },
+        "column-mapping-complete": false
+      }
+    }
+  ],
+  "currencies": [
+    {
+      "name": "ExistingCurrency",
+      "symbol": "#",
+      "code": "EXI"
+    }
+  ]
+}

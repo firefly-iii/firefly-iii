@@ -12,8 +12,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
-
+use Log;
 /**
  * FireflyIII\Models\Preference
  *
@@ -24,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                $name
  * @property string                $name_encrypted
  * @property string                $data
- * @property string                $data_encrypted
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
@@ -41,19 +42,21 @@ class Preference extends Model
 
     protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['user_id', 'data', 'name'];
-    protected $hidden   = ['data_encrypted', 'name_encrypted'];
 
     /**
      * @param $value
      *
      * @return mixed
+     * @throws FireflyException
      */
     public function getDataAttribute($value)
     {
-        if (is_null($this->data_encrypted)) {
-            return json_decode($value);
+        try {
+            $data = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            Log::error('Could not decrypt preference.', ['id' => $this->id,'name' => $this->name,'data' => $this->data]);
+            throw new FireflyException('Could not decrypt preference #' . $this->id . '.');
         }
-        $data = Crypt::decrypt($this->data_encrypted);
 
         return json_decode($data);
     }
@@ -63,8 +66,7 @@ class Preference extends Model
      */
     public function setDataAttribute($value)
     {
-        $this->attributes['data']           = '';
-        $this->attributes['data_encrypted'] = Crypt::encrypt(json_encode($value));
+        $this->attributes['data'] = Crypt::encrypt(json_encode($value));
     }
 
     /**

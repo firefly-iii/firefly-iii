@@ -58,8 +58,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      */
     public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts): Balance
     {
-        $balance = new Balance;
-        // build a balance header:
+        $balance          = new Balance;
         $header           = new BalanceHeader;
         $limitRepetitions = $this->budgetRepository->getAllBudgetLimitRepetitions($start, $end);
         foreach ($accounts as $account) {

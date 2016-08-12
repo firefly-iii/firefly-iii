@@ -44,7 +44,7 @@ class BudgetServiceProvider extends ServiceProvider
             'FireflyIII\Repositories\Budget\BudgetRepositoryInterface',
             function (Application $app, array $arguments) {
                 if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Budget\BudgetRepository', [$app->auth->user()]);
+                    return app('FireflyIII\Repositories\Budget\BudgetRepository', [auth()->user()]);
                 }
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');

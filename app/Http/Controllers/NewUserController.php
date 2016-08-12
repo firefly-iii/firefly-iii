@@ -42,6 +42,7 @@ class NewUserController extends Controller
      */
     public function index(ARI $repository)
     {
+
         View::share('title', 'Welcome to Firefly!');
         View::share('mainTitleIcon', 'fa-fire');
 
