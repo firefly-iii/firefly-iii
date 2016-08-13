@@ -52,7 +52,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob->file_type       = $fileType;
                 $importJob->key             = Str::random(12);
                 $importJob->status          = 'import_status_never_started';
-                $importJob->extended_status = ['total_steps' => 0, 'steps_done' => 0,];
+                $importJob->extended_status = ['total_steps' => 0, 'steps_done' => 0, 'errors' => [], 'import_count' => 0];
                 $importJob->save();
 
                 // breaks the loop:

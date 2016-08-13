@@ -781,5 +781,5 @@ return [
     'import_file_help'                          => 'Select your file',
     'import_status_settings_complete'           => 'The import is ready to start.',
     'import_status_import_complete'             => 'The import has completed.',
-    'import_status_import_running'              => 'The import is currently running. Please be patient. An apparent lack of progress may be a trick of the light.',
+    'import_status_import_running'              => 'The import is currently running. Please be patient.',
 ];

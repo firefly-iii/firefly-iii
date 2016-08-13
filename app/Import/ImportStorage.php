@@ -220,8 +220,13 @@ class ImportStorage
             Log::warning(sprintf('Cannot import row %d, because the entry is not valid.', $index));
             $result = new ImportResult();
             $result->failed();
-            $errors = join(', ', $entry->errors->all());
-            $result->appendError(sprintf('Row #%d: ' . $errors, $index));
+            $errors    = join(', ', $entry->errors->all());
+            $errorText = sprintf('Row #%d: ' . $errors, $index);
+            $result->appendError($errorText);
+            $extendedStatus             = $this->job->extended_status;
+            $extendedStatus['errors'][] = $errorText;
+            $this->job->extended_status = $extendedStatus;
+            $this->job->save();
 
             return $result;
         }

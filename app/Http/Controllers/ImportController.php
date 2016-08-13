@@ -54,7 +54,7 @@ class ImportController extends Controller
         if (!$this->jobInCorrectStep($job, 'complete')) {
             return $this->redirectToCorrectStep($job);
         }
-        $subTitle     = trans('firefy.import_complete');
+        $subTitle     = trans('firefly.import_complete');
         $subTitleIcon = 'fa-star';
 
         return view('import.complete', compact('job', 'subTitle', 'subTitleIcon'));
@@ -121,6 +121,19 @@ class ImportController extends Controller
     }
 
     /**
+     * @param ImportJob $job
+     *
+     * @return View
+     */
+    public function finished(ImportJob $job)
+    {
+        $subTitle     = trans('firefly.import_finished');
+        $subTitleIcon = 'fa-star';
+
+        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
      * This is step 1. Upload a file.
      *
      * @return View
@@ -154,6 +167,7 @@ class ImportController extends Controller
             'started'        => false,
             'completed'      => false,
             'running'        => false,
+            'errors'         => $job->extended_status['errors'],
             'percentage'     => 0,
             'steps'          => $job->extended_status['total_steps'],
             'stepsDone'      => $job->extended_status['steps_done'],
@@ -290,7 +304,7 @@ class ImportController extends Controller
         if (!$this->jobInCorrectStep($job, 'status')) {
             return $this->redirectToCorrectStep($job);
         }
-        $subTitle     = trans('firefy.import_status');
+        $subTitle     = trans('firefly.import_status');
         $subTitleIcon = 'fa-star';
 
         return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
@@ -414,6 +428,8 @@ class ImportController extends Controller
                 Log::debug('Will redirect to complete()');
 
                 return redirect(route('import.complete', [$job->key]));
+            case 'import_complete':
+                return redirect(route('import.finished', [$job->key]));
         }
 
         throw new FireflyException('Cannot redirect for job state ' . $job->status);

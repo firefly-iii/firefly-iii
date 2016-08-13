@@ -98,7 +98,9 @@
       "status": "settings_complete",
       "extended_status": {
         "steps_done": 0,
-        "total_steps": 0
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0
       },
       "configuration": {
         "has-headers": false,

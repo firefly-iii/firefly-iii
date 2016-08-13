@@ -11,9 +11,6 @@
                     <h3 class="box-title">{{ 'import_status'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>
-                        {{ 'import_status_text'|_ }}
-                    </p>
                     <div class="row">
 
                         <div class="col-lg-6 col-lg-offset-3">
@@ -23,8 +20,10 @@
                                      aria-valuemax="100" style="width: 100%">
                                 </div>
                             </div>
-                            <p id="import-status-txt"></p>
+                            <p id="import-status-txt">{{ 'import_status_settings_complete'|_ }}</p>
                             <p id="import-status-more-info"></p>
+                            <p id="import-status-error-intro"></p>
+                            <ul id="import-status-error-list"></ul>
                         </div>
                     </div>
 

@@ -9,12 +9,13 @@
 
 
 var startedImport = false;
+var startInterval = 2000;
 var interval = 500;
 $(function () {
     "use strict";
 
     // check status, every 500 ms.
-    setTimeout(checkImportStatus, 500);
+    setTimeout(checkImportStatus, startInterval);
 
 });
 
@@ -24,54 +25,85 @@ function checkImportStatus() {
     $.getJSON(jobImportUrl).success(reportOnJobImport).fail(failedJobImport);
 }
 
-function reportOnJobImport(data) {
+function importComplete(data) {
     "use strict";
-    console.log('Now in reportOnJobImport');
+    var bar = $('#import-status-bar');
+    bar.removeClass('active');
+    // TODO show more completion info.
+}
 
-    // update bar if it's a percentage or not:
-
+function updateBar(data) {
+    "use strict";
     var bar = $('#import-status-bar');
     if (data.showPercentage) {
-        console.log('Has percentage.');
         bar.addClass('progress-bar-success').removeClass('progress-bar-info');
         bar.attr('aria-valuenow', data.percentage);
         bar.css('width', data.percentage + '%');
         $('#import-status-bar').text(data.stepsDone + '/' + data.steps);
 
-
         if (data.percentage >= 100) {
-            console.log('Now import complete!');
-            bar.removeClass('active');
+            importComplete(data);
             return;
         }
+        return;
+    }
+    // dont show percentage:
+    $('#import-status-more-info').text('');
+    bar.removeClass('progress-bar-success').addClass('progress-bar-info');
+    bar.attr('aria-valuenow', 100);
+    bar.css('width', '100%');
+}
 
-    } else {
-        $('#import-status-more-info').text('');
-        console.log('Has no percentage.');
-        bar.removeClass('progress-bar-success').addClass('progress-bar-info');
-        bar.attr('aria-valuenow', 100);
-        bar.css('width', '100%');
+function reportErrors(data) {
+    "use strict";
+    if (data.errors.length == 1) {
+        $('#import-status-error-intro').text('An error has occured during the import. The import can continue, however.');
+    }
+    if (data.errors.length > 1) {
+        $('#import-status-error-intro').text('Errors have occured during the import. The import can continue, however.');
     }
 
-    // update the message:
+    // fill the list:
+    $('#import-status-error-list').empty();
+    for (var i = 0; i < data.errors.length; i++) {
+        var item = $('<li>').text(data.errors[i]);
+        $('#import-status-error-list').append(item);
+    }
+}
+
+function reportStatus(data) {
+    "use strict";
     $('#import-status-txt').removeClass('text-danger').text(data.statusText);
+}
+
+function kickStartJob() {
+    "use strict";
+    $.post(jobStartUrl, {_token: token});
+    startedTheImport();
+    startedImport = true;
+}
+
+function reportOnJobImport(data) {
+    "use strict";
+
+    updateBar(data);
+    reportErrors(data);
+    reportStatus(data);
 
     // if the job has not actually started, do so now:
     if (!data.started && !startedImport) {
-        console.log('Will now start job.');
-        $.post(jobStartUrl, {_token: token});
-        startedTheImport();
-        startedImport = true;
-    } else {
-        // trigger another check.
-        setTimeout(checkImportStatus, 500);
+        kickStartJob();
+        return;
     }
+
+    // trigger another check.
+    setTimeout(checkImportStatus, interval);
+
 }
 
 function startedTheImport() {
     "use strict";
-    console.log('Started the import. Now starting over again.');
-    setTimeout(checkImportStatus, 500);
+    setTimeout(checkImportStatus, interval);
 }
 
 function failedJobImport(jqxhr, textStatus, error) {
