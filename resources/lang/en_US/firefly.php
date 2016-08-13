@@ -768,7 +768,7 @@ return [
     'import_finish_configuration'               => 'Finish configuration',
     'settings_for_import'                       => 'Settings',
     'import_complete'                           => 'Import configuration complete!',
-    'import_complete_text'                      => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you need to execute the following command in your console. Unfortunately, a web-based import is not yet possible.',
+    'import_complete_text'                      => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
     'import_download_config'                    => 'Download configuration',
     'import_start_import'                       => 'Start import',
     'import_intro_beta'                         => 'The import function of Firefly III is in beta. Many users of Firefly III have tried many different files. Although each individual compontent of this import routine works (really), the combination might break. If your file cannot be imported by Firefly, please read <a href="https://github.com/JC5/firefly-iii/wiki/Submit-issues-with-sensitive-data-in-them">this wiki page</a> so I can fix the problem you have run into.',
