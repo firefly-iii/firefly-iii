@@ -205,10 +205,11 @@ class ImportStorage
     private function storeSingle(int $index, ImportEntry $entry): ImportResult
     {
         if ($entry->valid === false) {
-            Log::warning(sprintf('Cannot import row %d, because valid=false', $index));
+            Log::warning(sprintf('Cannot import row %d, because the entry is not valid.', $index));
             $result = new ImportResult();
             $result->failed();
-            $result->appendError(sprintf('Cannot import row %d, because the current line is not valid.', $index));
+            $errors = join(', ', $entry->errors->all());
+            $result->appendError(sprintf('Row #%d: ' . $errors, $index));
 
             return $result;
         }

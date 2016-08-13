@@ -102,6 +102,7 @@ class ImportValidator
     {
         if ($entry->fields['amount'] == 0) {
             $entry->valid = false;
+            $entry->errors->push('Amount of transaction is zero, cannot handle.');
             Log::warning('Amount of transaction is zero, cannot handle.');
 
             return $entry;
@@ -383,6 +384,7 @@ class ImportValidator
         }
         Log::warning(sprintf('Opposing account is of type %s, cannot handle this.', $type));
         $entry->valid = false;
+        $entry->errors->push(sprintf('Opposing account is of type %s, cannot handle this.', $type));
 
         return $entry;
     }
