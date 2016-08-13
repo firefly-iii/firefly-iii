@@ -13,6 +13,7 @@ namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Importer\ImporterInterface;
+use FireflyIII\Import\ImportResult;
 use FireflyIII\Import\ImportStorage;
 use FireflyIII\Import\ImportValidator;
 use FireflyIII\Import\Logging\CommandHandler;
@@ -70,6 +71,8 @@ class Import extends Command
 
             return;
         }
+        $job->status = 'import_running';
+        $job->save();
 
         $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
         $valid = array_keys(config('firefly.import_formats'));
@@ -105,9 +108,25 @@ class Import extends Command
         $storage->setUser($job->user);
 
         // and run store routine:
-        $storage->store();
+        $result = $storage->store();
+
+        $job->status = 'import_complete';
+        $job->save();
+
+        /**
+         * @var int          $index
+         * @var ImportResult $entry
+         */
+        foreach ($result as $index => $entry) {
+            if ($entry->isSuccess()) {
+                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $entry->journal->id));
+                continue;
+            }
+            $errors = join(', ', $entry->errors->all());
+            $this->error(sprintf('Could not store line #%d, because: %s', $index, $errors));
+        }
 
 
-        $this->line('Something something import: ' . $jobKey);
+        $this->line('The import has completed.');
     }
 }

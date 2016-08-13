@@ -53,15 +53,20 @@ class ImportStorage
     }
 
     /**
-     *
+     * @return Collection
      */
-    public function store()
+    public function store(): Collection
     {
+        $collection = new Collection;
+        Log::notice(sprintf('Started storing %d entry(ies).', $this->entries->count()));
         foreach ($this->entries as $index => $entry) {
             Log::debug(sprintf('--- import store start for row %d ---', $index));
-            $this->storeSingle($index, $entry);
+            $result = $this->storeSingle($index, $entry);
+            $collection->put($index, $result);
         }
+        Log::notice(sprintf('Finished storing %d entry(ies).', $collection->count()));
 
+        return $collection;
     }
 
     /**
@@ -200,10 +205,10 @@ class ImportStorage
     private function storeSingle(int $index, ImportEntry $entry): ImportResult
     {
         if ($entry->valid === false) {
-            Log::error(sprintf('Cannot import row %d, because valid=false', $index));
+            Log::warning(sprintf('Cannot import row %d, because valid=false', $index));
             $result = new ImportResult();
             $result->failed();
-            $result->appendError(sprintf('Cannot import row %d, because valid=false', $index));
+            $result->appendError(sprintf('Cannot import row %d, because the current line is not valid.', $index));
 
             return $result;
         }
@@ -241,6 +246,13 @@ class ImportStorage
         $this->storeBudget($journal, $entry);
         $this->storeCategory($journal, $entry);
         $this->storeBill($journal, $entry);
+
+        $result = new ImportResult();
+        $result->success();
+        $result->appendMessage(sprintf('Journal titled "%s" imported.', $journal->description));
+        $result->setJournal($journal);
+
+        return $result;
 
 
     }

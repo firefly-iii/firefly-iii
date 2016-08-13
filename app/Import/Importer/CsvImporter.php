@@ -54,15 +54,20 @@ class CsvImporter implements ImporterInterface
         $reader->setDelimiter($config['delimiter']);
         $start   = $config['has-headers'] ? 1 : 0;
         $results = $reader->fetch();
+
+        Log::notice('Building importable objects from CSV file.');
+
         foreach ($results as $index => $row) {
             if ($index >= $start) {
+                $line = $index + 1;
                 Log::debug('----- import entry build start --');
                 Log::debug(sprintf('Now going to import row %d.', $index));
                 $importEntry = $this->importSingleRow($index, $row);
-                $this->collection->put($index, $importEntry);
+                $this->collection->put($line, $importEntry);
             }
         }
         Log::debug(sprintf('Import collection contains %d entries', $this->collection->count()));
+        Log::notice(sprintf('Built %d importable object(s) from your CSV file.', $this->collection->count()));
 
         return $this->collection;
     }

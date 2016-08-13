@@ -80,7 +80,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
 
         if (is_null($account->id)) {
             $this->setCertainty(0);
-            Log::notice('Could not store new asset account by account number', $account->getErrors()->toArray());
+            Log::info('Could not store new asset account by account number', $account->getErrors()->toArray());
 
             return new Account;
         }
