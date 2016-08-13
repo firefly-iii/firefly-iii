@@ -39,6 +39,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
  * @mixin \Eloquent
+ * @property string $extended_status
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
  */
 class ImportJob extends Model
 {
