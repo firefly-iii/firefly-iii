@@ -234,7 +234,7 @@ Route::group(
 
     Route::get('/import/status/{importJob}', ['uses' => 'ImportController@status', 'as' => 'import.status']);
     Route::get('/import/json/{importJob}', ['uses' => 'ImportController@json', 'as' => 'import.json']);
-    Route::get('/import/start/{importJob}', ['uses' => 'ImportController@run', 'as' => 'import.start']);
+    Route::post('/import/start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'import.start']);
 
 
     /**

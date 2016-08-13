@@ -49,9 +49,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             if (is_null($existing->id)) {
                 $importJob = new ImportJob;
                 $importJob->user()->associate($this->user);
-                $importJob->file_type = $fileType;
-                $importJob->key    = Str::random(12);
-                $importJob->status = 'import_status_never_started';
+                $importJob->file_type       = $fileType;
+                $importJob->key             = Str::random(12);
+                $importJob->status          = 'import_status_never_started';
+                $importJob->extended_status = ['total_steps' => 0, 'steps_done' => 0,];
                 $importJob->save();
 
                 // breaks the loop:

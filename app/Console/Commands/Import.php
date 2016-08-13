@@ -13,6 +13,7 @@ namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Importer\ImporterInterface;
+use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\ImportResult;
 use FireflyIII\Import\ImportStorage;
 use FireflyIII\Import\ImportValidator;
@@ -71,47 +72,15 @@ class Import extends Command
 
             return;
         }
-        $job->status = 'import_running';
-        $job->save();
 
         $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
-        $valid = array_keys(config('firefly.import_formats'));
-        $class = 'INVALID';
-        if (in_array($job->file_type, $valid)) {
-            $class = config('firefly.import_formats.' . $job->file_type);
-        }
 
-        /** @var ImporterInterface $importer */
-        $importer = app($class);
-        $importer->setJob($job);
-        // intercept logging by importer.
+        // intercept log entries and print them on the command line
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
-
         $monolog->pushHandler($handler);
 
-        // create import entries
-        $collection = $importer->createImportEntries();
-
-        // validate / clean collection:
-        $validator = new ImportValidator($collection);
-        $validator->setUser($job->user);
-        if ($job->configuration['import-account'] != 0) {
-            $repository = app(AccountCrud::class, [$job->user]);
-            $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
-        }
-
-        $cleaned = $validator->clean();
-
-        // then import collection:
-        $storage = new ImportStorage($cleaned);
-        $storage->setUser($job->user);
-
-        // and run store routine:
-        $result = $storage->store();
-
-        $job->status = 'import_complete';
-        $job->save();
+        $result = ImportProcedure::run($job);
 
         /**
          * @var int          $index
@@ -128,5 +97,6 @@ class Import extends Command
 
 
         $this->line('The import has completed.');
+
     }
 }

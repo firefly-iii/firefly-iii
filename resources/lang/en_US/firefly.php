@@ -767,6 +767,8 @@ return [
     'configure_import'                          => 'Further configure your import',
     'import_finish_configuration'               => 'Finish configuration',
     'settings_for_import'                       => 'Settings',
+    'import_status'                             => 'Import status',
+    'import_status_text'                        => 'The import is currently running, or will start momentarily.',
     'import_complete'                           => 'Import configuration complete!',
     'import_complete_text'                      => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
     'import_download_config'                    => 'Download configuration',
@@ -777,4 +779,7 @@ return [
     'import'                                    => 'Import',
     'import_intro_text'                         => 'Welcome to the Firefly III data import routine. At the moment, this routine can help you import files into Firefly. To do so, you must download or export transactions from other systems or software, and upload them here. The next steps will let you help Firefly III determin what the content is of your file, and how to handle it. Please select a file, and read all instructions carefully.',
     'import_file_help'                          => 'Select your file',
+    'import_status_settings_complete'           => 'The import is ready to start.',
+    'import_status_import_complete'             => 'The import has completed.',
+    'import_status_import_running'              => 'The import is currently running. Please be patient. An apparent lack of progress may be a trick of the light.',
 ];

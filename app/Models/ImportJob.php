@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                $key
  * @property string                $file_type
  * @property string                $status
- * @property array                $configuration
+ * @property array                 $configuration
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
  * @mixin \Eloquent
- * @property string $extended_status
+ * @property string                $extended_status
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
  */
 class ImportJob extends Model
@@ -60,6 +60,30 @@ class ImportJob extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function addStepsDone(int $count)
+    {
+        $status = $this->extended_status;
+        $status['steps_done'] += $count;
+        $this->extended_status = $status;
+        $this->save();
+
+    }
+
+    /**
+     * @param int $count
+     */
+    public function addTotalSteps(int $count)
+    {
+        $status = $this->extended_status;
+        $status['total_steps'] += $count;
+        $this->extended_status = $status;
+        $this->save();
+
     }
 
     /**
@@ -87,10 +111,32 @@ class ImportJob extends Model
 
     /**
      * @param $value
+     *
+     * @return mixed
+     */
+    public function getExtendedStatusAttribute($value)
+    {
+        if (strlen($value) == 0) {
+            return [];
+        }
+
+        return json_decode($value, true);
+    }
+
+    /**
+     * @param $value
      */
     public function setConfigurationAttribute($value)
     {
         $this->attributes['configuration'] = json_encode($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setExtendedStatusAttribute($value)
+    {
+        $this->attributes['extended_status'] = json_encode($value);
     }
 
     /**

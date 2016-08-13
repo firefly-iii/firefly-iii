@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
@@ -34,6 +35,19 @@ class ImportValidator
     protected $entries;
     /** @var  User */
     protected $user;
+
+    /** @var  ImportJob */
+    public $job;
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
+    }
+
+
 
     /**
      * ImportValidator constructor.
@@ -71,6 +85,8 @@ class ImportValidator
             $entry = $this->setTransactionCurrency($entry);
 
             $newCollection->put($index, $entry);
+            $this->job->addStepsDone(1);
+            sleep(1);
         }
         Log::notice(sprintf('Finished validating %d entry(ies).', $newCollection->count()));
 

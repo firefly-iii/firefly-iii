@@ -11,13 +11,14 @@ namespace FireflyIII\Http\Controllers;
 
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ImportUploadRequest;
+use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
+use Response;
 use SplFileObject;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -140,6 +141,35 @@ class ImportController extends Controller
     }
 
     /**
+     * @param ImportJob $job
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function json(ImportJob $job)
+    {
+        $result = [
+            'showPercentage' => false,
+            'status'         => $job->status,
+            'key'            => $job->key,
+            'started'        => false,
+            'completed'      => false,
+            'running'        => false,
+            'percentage'     => 0,
+            'steps'          => $job->extended_status['total_steps'],
+            'stepsDone'      => $job->extended_status['steps_done'],
+            'statusText'     => trans('firefly.import_status_' . $job->status),
+        ];
+        if ($job->status === 'import_running') {
+            $result['started']        = true;
+            $result['running']        = true;
+            $result['showPercentage'] = true;
+            $result['percentage']     = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
+        }
+
+        return Response::json($result);
+    }
+
+    /**
      * Step 4. Save the configuration.
      *
      * @param Request   $request
@@ -238,6 +268,35 @@ class ImportController extends Controller
     }
 
     /**
+     * @param ImportJob $job
+     */
+    public function start(ImportJob $job)
+    {
+        if ($job->status == "settings_complete") {
+            ImportProcedure::run($job);
+        }
+    }
+
+    /**
+     * This is the last step before the import starts.
+     *
+     * @param ImportJob $job
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     */
+    public function status(ImportJob $job)
+    {
+        Log::debug('Now in status()', ['job' => $job->key]);
+        if (!$this->jobInCorrectStep($job, 'status')) {
+            return $this->redirectToCorrectStep($job);
+        }
+        $subTitle     = trans('firefy.import_status');
+        $subTitleIcon = 'fa-star';
+
+        return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
      * This is step 2. It creates an Import Job. Stores the import.
      *
      * @param ImportUploadRequest          $request
@@ -308,6 +367,8 @@ class ImportController extends Controller
                 return $job->status === 'import_configuration_saved';
             case 'complete':
                 return $job->status === 'settings_complete';
+            case 'status':
+                return ($job->status === 'settings_complete') || ($job->status === 'import_running');
         }
 
         return false;

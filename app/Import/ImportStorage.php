@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Import;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -29,7 +30,8 @@ class ImportStorage
 
     /** @var  Collection */
     public $entries;
-
+    /** @var  ImportJob */
+    public $job;
     /** @var  User */
     public $user;
 
@@ -42,6 +44,14 @@ class ImportStorage
     {
         $this->entries = $entries;
 
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
     }
 
     /**
@@ -62,6 +72,8 @@ class ImportStorage
         foreach ($this->entries as $index => $entry) {
             Log::debug(sprintf('--- import store start for row %d ---', $index));
             $result = $this->storeSingle($index, $entry);
+            $this->job->addStepsDone(1);
+            sleep(1);
             $collection->put($index, $result);
         }
         Log::notice(sprintf('Finished storing %d entry(ies).', $collection->count()));

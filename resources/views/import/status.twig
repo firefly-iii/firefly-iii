@@ -1,0 +1,47 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'import_status_text'|_ }}
+                    </p>
+                    <div class="row">
+
+                        <div class="col-lg-6 col-lg-offset-3">
+                            <div class="progress" id="import-status-holder">
+                                <div id="import-status-bar" class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar"
+                                     aria-valuenow="100" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 100%">
+                                </div>
+                            </div>
+                            <p id="import-status-txt"></p>
+                            <p id="import-status-more-info"></p>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var jobKey = '{{ job.key }}';
+        var jobImportUrl = '{{ route('import.json', [job.key]) }}';
+        var jobStartUrl = '{{ route('import.start', [job.key]) }}';
+        var token = '{{ csrf_token() }}';
+    </script>
+    <script type="text/javascript" src="js/ff/import/status.js"></script>
+{% endblock %}
+{% block styles %}
+{% endblock %}
