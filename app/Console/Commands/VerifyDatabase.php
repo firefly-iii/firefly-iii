@@ -93,12 +93,21 @@ class VerifyDatabase extends Command
             ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
             ->groupBy('accounts.id')
             ->having('transaction_count', '=', 0)
-            ->get(['accounts.id', 'accounts.name', 'accounts.user_id', 'users.email', DB::raw('COUNT(`transactions`.`id`) AS `transaction_count`')]);
+            ->get(
+                ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email',
+                 DB::raw('COUNT(`transactions`.`id`) AS `transaction_count`')]
+            );
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = 'User #' . $entry->user_id . ' (' . $entry->email . ') has account #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
-                    . '") which has no transactions.';
+
+            $isEncrypted = intval($entry->encrypted) === 1;
+            $name        = $entry->name;
+            if ($isEncrypted) {
+                $name = Crypt::decrypt($entry->name);
+            }
+            $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
+            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $name);
             $this->line($line);
         }
     }
