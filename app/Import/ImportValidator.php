@@ -86,7 +86,6 @@ class ImportValidator
 
             $newCollection->put($index, $entry);
             $this->job->addStepsDone(1);
-            sleep(1);
         }
         Log::notice(sprintf('Finished validating %d entry(ies).', $newCollection->count()));
 

@@ -66,7 +66,6 @@ class CsvImporter implements ImporterInterface
                 $this->collection->put($line, $importEntry);
                 $this->job->addTotalSteps(3);
                 $this->job->addStepsDone(1);
-                sleep(1);
             }
         }
         Log::debug(sprintf('Import collection contains %d entries', $this->collection->count()));

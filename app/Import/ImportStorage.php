@@ -15,6 +15,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -79,6 +80,19 @@ class ImportStorage
         Log::notice(sprintf('Finished storing %d entry(ies).', $collection->count()));
 
         return $collection;
+    }
+
+    /**
+     * @param string $hash
+     *
+     * @return bool
+     */
+    private function alreadyImported(string $hash): bool
+    {
+
+        $count = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->count();
+
+        return $count > 0;
     }
 
     /**
@@ -183,6 +197,7 @@ class ImportStorage
      */
     private function storeJournal($entry): TransactionJournal
     {
+
         $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
         $journalData = [
             'user_id'                 => $entry->user->id,
@@ -203,6 +218,13 @@ class ImportStorage
             Log::error($err);
         }
         Log::debug('Created journal', ['id' => $journal->id]);
+
+        // save hash as meta value:
+        $meta       = new TransactionJournalMeta;
+        $meta->name = 'originalImportHash';
+        $meta->data = $entry->hash;
+        $meta->transactionjournal()->associate($journal);
+        $meta->save();
 
         return $journal;
     }
@@ -230,6 +252,21 @@ class ImportStorage
 
             return $result;
         }
+
+        if ($this->alreadyImported($entry->hash)) {
+            Log::warning(sprintf('Cannot import row %d, because it has already been imported.', $index));
+            $result = new ImportResult();
+            $result->failed();
+            $errorText = sprintf('Row #%d: This row has been imported before.', $index);
+            $result->appendError($errorText);
+            $extendedStatus             = $this->job->extended_status;
+            $extendedStatus['errors'][] = $errorText;
+            $this->job->extended_status = $extendedStatus;
+            $this->job->save();
+
+            return $result;
+        }
+
         Log::debug(sprintf('Going to store row %d', $index));
 
 

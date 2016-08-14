@@ -786,4 +786,8 @@ return [
     'import_status_errors'                      => 'Import errors',
     'import_status_report'                      => 'Import report',
     'import_finished'                           => 'Import has finished',
+    'import_error_single'                       => 'An error has occured during the import.',
+    'import_error_multi'                        => 'Some errors occured during the import.',
+    'import_error_fatal'                        => 'There was an error during the import routine. Please check the log files. The error seems to be:',
+    'import_error_timeout'                      => 'The import seems to have timed out. If this error persists, please import your data using the console command.',
 ];

@@ -5,12 +5,15 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-/* globals $, jobImportUrl, jobStartUrl, token, langImportMultiError, langImportSingleError  */
+/* globals $, jobImportUrl, jobStartUrl, token, langImportMultiError, langImportSingleError, langImportFatalError, langImportTimeOutError  */
 
 
 var startedImport = false;
 var startInterval = 2000;
 var interval = 500;
+var timeoutLimit = 5000;
+var currentLimit = 0;
+var stepCount = 0;
 $(function () {
     "use strict";
 
@@ -85,12 +88,42 @@ function kickStartJob() {
     startedImport = true;
 }
 
+function updateTimeout(data) {
+    "use strict";
+    if (data.stepsDone != stepCount) {
+        stepCount = data.stepsDone;
+        currentLimit = 0;
+        return;
+    }
+
+    currentLimit = currentLimit + interval;
+    console.log("stepCount: " + stepCount + ", stepsDone: " + data.stepsDone + ", currentLimit: " + currentLimit);
+}
+
+function timeoutError() {
+    "use strict";
+
+    // set status
+    $('#import-status-txt').addClass('text-danger').text(langImportTimeOutError);
+
+    // remove progress bar.
+    $('#import-status-holder').hide();
+
+}
+
 function reportOnJobImport(data) {
     "use strict";
 
     updateBar(data);
     reportErrors(data);
     reportStatus(data);
+    updateTimeout(data);
+
+    // same number of steps as last time?
+    if (currentLimit > timeoutLimit) {
+        timeoutError();
+        return;
+    }
 
     // if the job has not actually started, do so now:
     if (!data.started && !startedImport) {
@@ -113,9 +146,7 @@ function failedJobImport(jqxhr, textStatus, error) {
 
     // set status
     // "There was an error during the import routine. Please check the log files. The error seems to be: '"
-    $('#import-status-txt').addClass('text-danger').text(
-        langImportFatalError + textStatus + ' ' + error
-    );
+    $('#import-status-txt').addClass('text-danger').text(langImportFatalError + ' ' + textStatus + ' ' + error);
 
     // remove progress bar.
     $('#import-status-holder').hide();

@@ -66,7 +66,7 @@ class TransactionJournalMeta extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transactionjournal(): BelongsTo
+    public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\Models\TransactionJournal');
     }
