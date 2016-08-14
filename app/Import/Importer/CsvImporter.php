@@ -100,6 +100,10 @@ class CsvImporter implements ImporterInterface
         $object->setUser($this->job->user);
         $config = $this->job->configuration;
 
+        // hash the row:
+        $hash = hash('sha256', json_encode($row));
+        $object->importValue('hash', 100, $hash);
+
         // and this is the point where the specifix go to work.
         foreach ($config['specifics'] as $name => $enabled) {
             /** @var SpecificInterface $specific */

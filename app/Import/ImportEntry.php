@@ -32,6 +32,8 @@ class ImportEntry
     public $externalID;
     /** @var  array */
     public $fields = [];
+    /** @var  string */
+    public $hash;
     /** @var  User */
     public $user;
     /** @var bool */
@@ -77,6 +79,10 @@ class ImportEntry
             default:
                 Log::error('Import entry cannot handle object.', ['role' => $role]);
                 throw new FireflyException('Import entry cannot handle object of type "' . $role . '".');
+            case 'hash':
+                $this->hash = $convertedValue;
+
+                return;
             case 'amount':
                 /*
                  * Easy enough.
