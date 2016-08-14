@@ -782,4 +782,8 @@ return [
     'import_status_settings_complete'           => 'The import is ready to start.',
     'import_status_import_complete'             => 'The import has completed.',
     'import_status_import_running'              => 'The import is currently running. Please be patient.',
+    'import_status_header'                      => 'Import status and progress',
+    'import_status_errors'                      => 'Import errors',
+    'import_status_report'                      => 'Import report',
+    'import_finished'                           => 'Import has finished',
 ];

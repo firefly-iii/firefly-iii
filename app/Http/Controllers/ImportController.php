@@ -127,6 +127,12 @@ class ImportController extends Controller
      */
     public function finished(ImportJob $job)
     {
+        if (!$this->jobInCorrectStep($job, 'finished')) {
+            Log::debug('Job is not in correct state for finished()', ['status' => $job->status]);
+
+            return $this->redirectToCorrectStep($job);
+        }
+
         $subTitle     = trans('firefly.import_finished');
         $subTitleIcon = 'fa-star';
 
@@ -379,6 +385,8 @@ class ImportController extends Controller
             case 'settings':
             case 'store-settings':
                 return $job->status === 'import_configuration_saved';
+            case 'finished':
+                return $job->status === 'import_finished';
             case 'complete':
                 return $job->status === 'settings_complete';
             case 'status':
