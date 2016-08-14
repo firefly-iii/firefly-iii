@@ -168,10 +168,8 @@ class ImportController extends Controller
     {
         $result     = [
             'showPercentage' => false,
-            'status'         => $job->status,
-            'key'            => $job->key,
             'started'        => false,
-            'completed'      => false,
+            'finished'       => false,
             'running'        => false,
             'errors'         => $job->extended_status['errors'],
             'percentage'     => 0,
@@ -182,6 +180,9 @@ class ImportController extends Controller
         $percentage = 0;
         if ($job->extended_status['total_steps'] !== 0) {
             $percentage = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
+        }
+        if ($job->status === 'import_complete') {
+            $result['finished'] = true;
         }
 
         if ($job->status === 'import_running') {

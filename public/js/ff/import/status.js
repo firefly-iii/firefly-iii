@@ -25,18 +25,20 @@ $(function () {
 
 function checkImportStatus() {
     "use strict";
+    console.log('checkImportStatus()');
     $.getJSON(jobImportUrl).success(reportOnJobImport).fail(failedJobImport);
 }
 
 function importComplete(data) {
     "use strict";
+    console.log('importComplete()');
     var bar = $('#import-status-bar');
     bar.removeClass('active');
-    // TODO show more completion info.
 }
 
 function updateBar(data) {
     "use strict";
+    console.log('updateBar()');
     var bar = $('#import-status-bar');
     if (data.showPercentage) {
         bar.addClass('progress-bar-success').removeClass('progress-bar-info');
@@ -59,6 +61,7 @@ function updateBar(data) {
 
 function reportErrors(data) {
     "use strict";
+    console.log('reportErrors()');
     if (data.errors.length == 1) {
         $('#import-status-error-intro').text(langImportSingleError);
         //'An error has occured during the import. The import can continue, however.'
@@ -78,11 +81,13 @@ function reportErrors(data) {
 
 function reportStatus(data) {
     "use strict";
+    console.log('reportStatus()');
     $('#import-status-txt').removeClass('text-danger').text(data.statusText);
 }
 
 function kickStartJob() {
     "use strict";
+    console.log('kickStartJob()');
     $.post(jobStartUrl, {_token: token});
     startedTheImport();
     startedImport = true;
@@ -90,6 +95,7 @@ function kickStartJob() {
 
 function updateTimeout(data) {
     "use strict";
+    console.log('updateTimeout()');
     if (data.stepsDone != stepCount) {
         stepCount = data.stepsDone;
         currentLimit = 0;
@@ -97,12 +103,12 @@ function updateTimeout(data) {
     }
 
     currentLimit = currentLimit + interval;
-    console.log("stepCount: " + stepCount + ", stepsDone: " + data.stepsDone + ", currentLimit: " + currentLimit);
+    // console.log("stepCount: " + stepCount + ", stepsDone: " + data.stepsDone + ", currentLimit: " + currentLimit);
 }
 
 function timeoutError() {
     "use strict";
-
+    console.log('timeoutError()');
     // set status
     $('#import-status-txt').addClass('text-danger').text(langImportTimeOutError);
 
@@ -111,13 +117,35 @@ function timeoutError() {
 
 }
 
+function importJobFinished(data) {
+    "use strict";
+    console.log('importJobFinished() = ' + data.finished);
+    return data.finished;
+}
+
+function finishedJob() {
+    "use strict";
+    console.log('finishedJob()');
+    // "There was an error during the import routine. Please check the log files. The error seems to be: '"
+    $('#import-status-txt').removeClass('text-danger').addClass('text-success').text(langImportFinished);
+
+    // remove progress bar.
+    $('#import-status-holder').hide();
+}
+
 function reportOnJobImport(data) {
     "use strict";
-
+    console.log('reportOnJobImport()');
     updateBar(data);
     reportErrors(data);
     reportStatus(data);
     updateTimeout(data);
+
+    if (importJobFinished(data)) {
+        finishedJob();
+        return;
+    }
+
 
     // same number of steps as last time?
     if (currentLimit > timeoutLimit) {
@@ -138,12 +166,13 @@ function reportOnJobImport(data) {
 
 function startedTheImport() {
     "use strict";
+    console.log('startedTheImport()');
     setTimeout(checkImportStatus, interval);
 }
 
 function failedJobImport(jqxhr, textStatus, error) {
     "use strict";
-
+    console.log('failedJobImport()');
     // set status
     // "There was an error during the import routine. Please check the log files. The error seems to be: '"
     $('#import-status-txt').addClass('text-danger').text(langImportFatalError + ' ' + textStatus + ' ' + error);
