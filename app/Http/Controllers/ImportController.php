@@ -166,7 +166,7 @@ class ImportController extends Controller
      */
     public function json(ImportJob $job)
     {
-        $result = [
+        $result     = [
             'showPercentage' => false,
             'status'         => $job->status,
             'key'            => $job->key,
@@ -179,11 +179,16 @@ class ImportController extends Controller
             'stepsDone'      => $job->extended_status['steps_done'],
             'statusText'     => trans('firefly.import_status_' . $job->status),
         ];
+        $percentage = 0;
+        if ($job->extended_status['total_steps'] !== 0) {
+            $percentage = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
+        }
+
         if ($job->status === 'import_running') {
             $result['started']        = true;
             $result['running']        = true;
             $result['showPercentage'] = true;
-            $result['percentage']     = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
+            $result['percentage']     = $percentage;
         }
 
         return Response::json($result);
