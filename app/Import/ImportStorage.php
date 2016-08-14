@@ -13,10 +13,12 @@ namespace FireflyIII\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -31,6 +33,8 @@ class ImportStorage
 
     /** @var  Collection */
     public $entries;
+    /** @var  Tag */
+    public $importTag;
     /** @var  ImportJob */
     public $job;
     /** @var  User */
@@ -68,13 +72,14 @@ class ImportStorage
      */
     public function store(): Collection
     {
-        $collection = new Collection;
+        // create a tag to join the transactions.
+        $this->importTag = $this->createImportTag();
+        $collection      = new Collection;
         Log::notice(sprintf('Started storing %d entry(ies).', $this->entries->count()));
         foreach ($this->entries as $index => $entry) {
             Log::debug(sprintf('--- import store start for row %d ---', $index));
             $result = $this->storeSingle($index, $entry);
             $this->job->addStepsDone(1);
-            sleep(1);
             $collection->put($index, $result);
         }
         Log::notice(sprintf('Finished storing %d entry(ies).', $collection->count()));
@@ -96,6 +101,27 @@ class ImportStorage
         }
 
         return new TransactionJournal;
+    }
+
+    /**
+     * @return Tag
+     */
+    private function createImportTag(): Tag
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $data       = [
+            'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
+            'date'        => null,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+            'tagMode'     => 'nothing',
+        ];
+        $tag        = $repository->store($data);
+
+        return $tag;
     }
 
     /**
@@ -302,6 +328,9 @@ class ImportStorage
 
         $journal->completed = 1;
         $journal->save();
+
+        // attach import tag.
+        $journal->tags()->save($this->importTag);
 
         // now attach budget and so on.
         $this->storeBudget($journal, $entry);

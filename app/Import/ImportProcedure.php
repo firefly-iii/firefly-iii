@@ -68,7 +68,11 @@ class ImportProcedure
         // and run store routine:
         $result = $storage->store();
 
-        $job->status = 'import_complete';
+        // grab import tag:
+        $status               = $job->extended_status;
+        $status['importTag']  = $storage->importTag->id;
+        $job->extended_status = $status;
+        $job->status          = 'import_complete';
         $job->save();
 
         return $result;

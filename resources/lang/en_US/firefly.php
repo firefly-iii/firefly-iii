@@ -791,5 +791,8 @@ return [
     'import_error_fatal'                        => 'There was an error during the import routine. Please check the log files. The error seems to be:',
     'import_error_timeout'                      => 'The import seems to have timed out. If this error persists, please import your data using the console command.',
     'import_double'                             => 'Row #:row: This row has been imported before, and is stored in <a href=":link">:description</a>.',
-    'import_finished_all'                       => 'The import has finished. Please check out the result below.',
+    'import_finished_all'                       => 'The import has finished. Please check out the results below.',
+    'import_with_key'                           => 'Import with key \':key\'',
+    'import_finished_report'                    => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
+    'import_finished_link'                      => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
 ];

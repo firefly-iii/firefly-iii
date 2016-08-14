@@ -17,6 +17,9 @@ var stepCount = 0;
 $(function () {
     "use strict";
 
+    $('#import-status-intro').hide();
+    $('#import-status-more-info').hide();
+
     // check status, every 500 ms.
     setTimeout(checkImportStatus, startInterval);
 
@@ -53,7 +56,6 @@ function updateBar(data) {
         return;
     }
     // dont show percentage:
-    $('#import-status-more-info').text('');
     bar.removeClass('progress-bar-success').addClass('progress-bar-info');
     bar.attr('aria-valuenow', 100);
     bar.css('width', '100%');
@@ -123,7 +125,7 @@ function importJobFinished(data) {
     return data.finished;
 }
 
-function finishedJob() {
+function finishedJob(data) {
     "use strict";
     console.log('finishedJob()');
     // "There was an error during the import routine. Please check the log files. The error seems to be: '"
@@ -131,6 +133,11 @@ function finishedJob() {
 
     // remove progress bar.
     $('#import-status-holder').hide();
+
+    // show info:
+    $('#import-status-intro').show();
+    $('#import-status-more-info').html(data.finishedText).show();
+
 }
 
 function reportOnJobImport(data) {
@@ -142,7 +149,7 @@ function reportOnJobImport(data) {
     updateTimeout(data);
 
     if (importJobFinished(data)) {
-        finishedJob();
+        finishedJob(data);
         return;
     }
 

@@ -16,6 +16,7 @@ use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
 use Response;
@@ -176,13 +177,19 @@ class ImportController extends Controller
             'steps'          => $job->extended_status['total_steps'],
             'stepsDone'      => $job->extended_status['steps_done'],
             'statusText'     => trans('firefly.import_status_' . $job->status),
+            'finishedText'   => '',
         ];
         $percentage = 0;
         if ($job->extended_status['total_steps'] !== 0) {
             $percentage = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
         }
         if ($job->status === 'import_complete') {
-            $result['finished'] = true;
+            $tagId = $job->extended_status['importTag'];
+            /** @var TagRepositoryInterface $repository */
+            $repository             = app(TagRepositoryInterface::class);
+            $tag                    = $repository->find($tagId);
+            $result['finished']     = true;
+            $result['finishedText'] = trans('firefly.import_finished_link', ['link' => route('tags.show', [$tag->id]), 'tag' => $tag->tag]);
         }
 
         if ($job->status === 'import_running') {
@@ -392,7 +399,7 @@ class ImportController extends Controller
             case 'store-settings':
                 return $job->status === 'import_configuration_saved';
             case 'finished':
-                return $job->status === 'import_finished';
+                return $job->status === 'import_complete';
             case 'complete':
                 return $job->status === 'settings_complete';
             case 'status':
@@ -442,7 +449,10 @@ class ImportController extends Controller
                 Log::debug('Will redirect to complete()');
 
                 return redirect(route('import.complete', [$job->key]));
-            case 'import_complete':
+            case
+            'import_complete':
+                Log::debug('Will redirect to finished()');
+
                 return redirect(route('import.finished', [$job->key]));
         }
 
