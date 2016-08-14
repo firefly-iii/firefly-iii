@@ -85,14 +85,17 @@ class ImportStorage
     /**
      * @param string $hash
      *
-     * @return bool
+     * @return TransactionJournal
      */
-    private function alreadyImported(string $hash): bool
+    private function alreadyImported(string $hash): TransactionJournal
     {
 
-        $count = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->count();
+        $meta = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->first(['journal_meta.*']);
+        if (!is_null($meta)) {
+            return $meta->transactionjournal;
+        }
 
-        return $count > 0;
+        return new TransactionJournal;
     }
 
     /**
@@ -252,12 +255,15 @@ class ImportStorage
 
             return $result;
         }
-
-        if ($this->alreadyImported($entry->hash)) {
-            Log::warning(sprintf('Cannot import row %d, because it has already been imported.', $index));
+        $alreadyImported = $this->alreadyImported($entry->hash);
+        if (!is_null($alreadyImported->id)) {
+            Log::warning(sprintf('Cannot import row %d, because it has already been imported (journal #%d).', $index, $alreadyImported->id));
             $result = new ImportResult();
             $result->failed();
-            $errorText = sprintf('Row #%d: This row has been imported before.', $index);
+            $errorText = trans(
+                'firefly.import_double',
+                ['row' => $index, 'link' => route('transactions.show', [$alreadyImported->id]), 'description' => $alreadyImported->description]
+            );
             $result->appendError($errorText);
             $extendedStatus             = $this->job->extended_status;
             $extendedStatus['errors'][] = $errorText;

@@ -71,7 +71,7 @@ function reportErrors(data) {
     // fill the list with error texts
     $('#import-status-error-list').empty();
     for (var i = 0; i < data.errors.length; i++) {
-        var item = $('<li>').text(data.errors[i]);
+        var item = $('<li>').html(data.errors[i]);
         $('#import-status-error-list').append(item);
     }
 }

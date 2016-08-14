@@ -790,4 +790,5 @@ return [
     'import_error_multi'                        => 'Some errors occured during the import.',
     'import_error_fatal'                        => 'There was an error during the import routine. Please check the log files. The error seems to be:',
     'import_error_timeout'                      => 'The import seems to have timed out. If this error persists, please import your data using the console command.',
+    'import_double'                             => 'Row #:row: This row has been imported before, and is stored in <a href=":link">:description</a>.',
 ];
