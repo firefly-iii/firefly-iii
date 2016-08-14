@@ -5,7 +5,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-/* globals $, jobImportUrl, jobStartUrl, token  */
+/* globals $, jobImportUrl, jobStartUrl, token, langImportMultiError, langImportSingleError  */
 
 
 var startedImport = false;
@@ -57,13 +57,15 @@ function updateBar(data) {
 function reportErrors(data) {
     "use strict";
     if (data.errors.length == 1) {
-        $('#import-status-error-intro').text('An error has occured during the import. The import can continue, however.');
+        $('#import-status-error-intro').text(langImportSingleError);
+        //'An error has occured during the import. The import can continue, however.'
     }
     if (data.errors.length > 1) {
-        $('#import-status-error-intro').text('Errors have occured during the import. The import can continue, however.');
+        // 'Errors have occured during the import. The import can continue, however.'
+        $('#import-status-error-intro').text(langImportMultiError);
     }
 
-    // fill the list:
+    // fill the list with error texts
     $('#import-status-error-list').empty();
     for (var i = 0; i < data.errors.length; i++) {
         var item = $('<li>').text(data.errors[i]);
@@ -110,14 +112,11 @@ function failedJobImport(jqxhr, textStatus, error) {
     "use strict";
 
     // set status
+    // "There was an error during the import routine. Please check the log files. The error seems to be: '"
     $('#import-status-txt').addClass('text-danger').text(
-        "There was an error during the import routine. Please check the log files. The error seems to be: '" + textStatus + ' ' + error + "'."
+        langImportFatalError + textStatus + ' ' + error
     );
 
     // remove progress bar.
     $('#import-status-holder').hide();
-    console.log('failedJobImport');
-    console.log(textStatus);
-    console.log(error);
-
 }

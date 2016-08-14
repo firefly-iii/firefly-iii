@@ -57,6 +57,12 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
+
+        // some useful translations.
+        var langImportSingleError = '{{ 'import_error_single'|_ }}';
+        var langImportMultiError = '{{ 'import_error_multi'|_ }}';
+        var langImportFatalError = '{{ 'import_error_fatal'|_ }}';
+
         var jobKey = '{{ job.key }}';
         var jobImportUrl = '{{ route('import.json', [job.key]) }}';
         var jobStartUrl = '{{ route('import.start', [job.key]) }}';
