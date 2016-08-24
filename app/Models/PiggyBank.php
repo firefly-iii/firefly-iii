@@ -51,17 +51,32 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
  * @mixin \Eloquent
- * @property boolean $active
+ * @property boolean                                                             $active
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
  */
 class PiggyBank extends Model
 {
     use SoftDeletes;
 
+    protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
     protected $fillable
                       = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
-    protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+
+    /**
+     * @param PiggyBank $value
+     *
+     * @return PiggyBank
+     */
+    public static function routeBinder(PiggyBank $value)
+    {
+        if (Auth::check()) {
+            if ($value->account->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -76,26 +91,21 @@ class PiggyBank extends Model
      *
      * @returns PiggyBankRepetition
      */
-    public function currentRelevantRep()
+    public function currentRelevantRep(): PiggyBankRepetition
     {
         if (!is_null($this->currentRep)) {
             return $this->currentRep;
         }
         // repeating piggy banks are no longer supported.
-        $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
+        $rep = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
+        if (is_null($rep)) {
+            return new PiggyBankRepetition();
+        }
         $this->currentRep = $rep;
 
         return $rep;
 
 
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function piggyBankRepetitions()
-    {
-        return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
     }
 
     /**
@@ -123,6 +133,14 @@ class PiggyBank extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggyBankRepetitions()
+    {
+        return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
+    }
+
+    /**
      *
      * @param $value
      */
@@ -138,20 +156,5 @@ class PiggyBank extends Model
     public function setTargetamountAttribute($value)
     {
         $this->attributes['targetamount'] = strval(round($value, 2));
-    }
-
-    /**
-     * @param PiggyBank $value
-     *
-     * @return PiggyBank
-     */
-    public static function routeBinder(PiggyBank $value)
-    {
-        if (Auth::check()) {
-            if ($value->account->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
     }
 }

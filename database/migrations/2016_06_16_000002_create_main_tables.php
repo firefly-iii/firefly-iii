@@ -304,8 +304,8 @@ class CreateMainTables extends Migration
                 $table->integer('account_id', false, true);
                 $table->string('name', 1024);
                 $table->decimal('targetamount', 10, 4);
-                $table->date('startdate');
-                $table->date('targetdate');
+                $table->date('startdate')->nullable();
+                $table->date('targetdate')->nullable();
                 $table->integer('order', false, true);
                 $table->boolean('active')->default(0);
                 $table->boolean('encrypted')->default(1);
@@ -322,8 +322,8 @@ class CreateMainTables extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('piggy_bank_id', false, true);
-                $table->date('startdate');
-                $table->date('targetdate');
+                $table->date('startdate')->nullable();
+                $table->date('targetdate')->nullable();
                 $table->decimal('currentamount', 10, 4);
 
                 $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
