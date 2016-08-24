@@ -100,12 +100,7 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-
-            $isEncrypted = intval($entry->encrypted) === 1;
-            $name        = $entry->name;
-            if ($isEncrypted) {
-                $name = Crypt::decrypt($entry->name);
-            }
+            $name = $entry->name;
             $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
             $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $name);
             $this->line($line);
