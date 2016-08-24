@@ -45,6 +45,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ImportJob extends Model
 {
 
+    protected $validStatus
+        = [
+            'import_status_never_started', // initial state
+            'import_configuration_saved', // import configuration saved. This step is going to be obsolete.
+            'settings_complete', // aka: ready for import.
+            'import_running', // import currently underway
+            'import_complete', // done with everything
+        ];
+
     /**
      * @param $value
      *
@@ -137,6 +146,16 @@ class ImportJob extends Model
     public function setExtendedStatusAttribute($value)
     {
         $this->attributes['extended_status'] = json_encode($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setStatusAttribute(string $value)
+    {
+        if (in_array($value, $this->validStatus)) {
+            $this->attributes['status'] = $value;
+        }
     }
 
     /**

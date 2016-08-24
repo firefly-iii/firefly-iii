@@ -11,12 +11,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Console\Commands;
 
-use FireflyIII\Crud\Account\AccountCrud;
-use FireflyIII\Import\Importer\ImporterInterface;
 use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\ImportResult;
-use FireflyIII\Import\ImportStorage;
-use FireflyIII\Import\ImportValidator;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
@@ -61,21 +57,12 @@ class Import extends Command
     {
         $jobKey = $this->argument('key');
         $job    = ImportJob::whereKey($jobKey)->first();
-        if (is_null($job)) {
-            $this->error('This job does not seem to exist.');
-
-            return;
-        }
-
-        if ($job->status != 'settings_complete') {
-            $this->error('This job is not ready to be imported.');
-
+        if (!$this->isValid($job)) {
             return;
         }
 
         $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
 
-        // intercept log entries and print them on the command line
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
@@ -98,5 +85,27 @@ class Import extends Command
 
         $this->line('The import has completed.');
 
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return bool
+     */
+    private function isValid(ImportJob $job): bool
+    {
+        if (is_null($job)) {
+            $this->error('This job does not seem to exist.');
+
+            return false;
+        }
+
+        if ($job->status != 'settings_complete') {
+            $this->error('This job is not ready to be imported.');
+
+            return false;
+        }
+
+        return true;
     }
 }
