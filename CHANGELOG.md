@@ -5,6 +5,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.10.1] - 2016-08-25
+### Added
+- More feedback in the import procedure.
+- Extended model for import job.
+- Web bases import procedure.
+
+
+### Changed
+- Scrutinizer configuration
+- Various code clean up.
+
+### Removed
+- Code climate YAML file.
+
+### Fixed
+- Fixed a bug where a migration would check an empty table name.
+- Fixed various bugs in the import routine.
+- Fixed various bugs in the piggy banks pages.
+- Fixed a bug in the ``firefly:verify`` routine
+
 ## [3.10] - 2015-05-25
 ### Added
 - New charts in year report
