@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('piggy-banks.post-add-mobile', piggyBank.id)}) }}
+    {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('piggy-banks.add', piggyBank.id)}) }}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box box-primary">

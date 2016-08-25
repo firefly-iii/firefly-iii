@@ -290,103 +290,6 @@ class CreateMainTables extends Migration
 
     }
 
-    private function createJournalTables()
-    {
-        if (!Schema::hasTable('transaction_journals')) {
-            Schema::create(
-                'transaction_journals', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-
-                $table->integer('user_id', false, true);
-                $table->integer('transaction_type_id', false, true);
-                $table->integer('bill_id', false, true)->nullable();
-                $table->integer('transaction_currency_id', false, true);
-
-                $table->string('description', 1024);
-
-                $table->date('date');
-                $table->date('interest_date')->nullable();
-                $table->date('book_date')->nullable();
-                $table->date('process_date')->nullable();
-
-                $table->integer('order', false, true);
-                $table->integer('tag_count', false, true);
-
-                $table->boolean('encrypted')->default(1);
-                $table->boolean('completed')->default(1);
-
-                // links to other tables:
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
-                $table->foreign('bill_id')->references('id')->on('bills')->onDelete('set null');
-                $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-            }
-            );
-        }
-
-        if (!Schema::hasTable('journal_meta')) {
-            Schema::create(
-                'journal_meta', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('transaction_journal_id', false, true);
-                $table->string('name', 255);
-                $table->text('data');
-                $table->string('hash', 64);
-
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            }
-            );
-        }
-    }
-
-    private function createMoreJournalTables()
-    {
-        if (!Schema::hasTable('tag_transaction_journal')) {
-            Schema::create(
-                'tag_transaction_journal', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('tag_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-
-                $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-
-
-            }
-            );
-        }
-
-        if (!Schema::hasTable('budget_transaction_journal')) {
-            Schema::create(
-                'budget_transaction_journal', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('budget_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-
-                $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            }
-            );
-        }
-
-        if (!Schema::hasTable('category_transaction_journal')) {
-            Schema::create(
-                'category_transaction_journal', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('category_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-
-                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            }
-            );
-        }
-
-    }
-
     /**
      *
      */
@@ -401,8 +304,8 @@ class CreateMainTables extends Migration
                 $table->integer('account_id', false, true);
                 $table->string('name', 1024);
                 $table->decimal('targetamount', 10, 4);
-                $table->date('startdate');
-                $table->date('targetdate');
+                $table->date('startdate')->nullable();
+                $table->date('targetdate')->nullable();
                 $table->integer('order', false, true);
                 $table->boolean('active')->default(0);
                 $table->boolean('encrypted')->default(1);
@@ -419,8 +322,8 @@ class CreateMainTables extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('piggy_bank_id', false, true);
-                $table->date('startdate');
-                $table->date('targetdate');
+                $table->date('startdate')->nullable();
+                $table->date('targetdate')->nullable();
                 $table->decimal('currentamount', 10, 4);
 
                 $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
@@ -594,8 +497,95 @@ class CreateMainTables extends Migration
      */
     private function createTransactionTables()
     {
-        $this->createJournalTables();
-        $this->createMoreJournalTables();
+        if (!Schema::hasTable('transaction_journals')) {
+            Schema::create(
+                'transaction_journals', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->softDeletes();
+
+                $table->integer('user_id', false, true);
+                $table->integer('transaction_type_id', false, true);
+                $table->integer('bill_id', false, true)->nullable();
+                $table->integer('transaction_currency_id', false, true);
+
+                $table->string('description', 1024);
+
+                $table->date('date');
+                $table->date('interest_date')->nullable();
+                $table->date('book_date')->nullable();
+                $table->date('process_date')->nullable();
+
+                $table->integer('order', false, true);
+                $table->integer('tag_count', false, true);
+
+                $table->boolean('encrypted')->default(1);
+                $table->boolean('completed')->default(1);
+
+                // links to other tables:
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
+                $table->foreign('bill_id')->references('id')->on('bills')->onDelete('set null');
+                $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+            }
+            );
+        }
+
+        if (!Schema::hasTable('journal_meta')) {
+            Schema::create(
+                'journal_meta', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->integer('transaction_journal_id', false, true);
+                $table->string('name', 255);
+                $table->text('data');
+                $table->string('hash', 64);
+
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+            }
+            );
+        }
+
+        if (!Schema::hasTable('tag_transaction_journal')) {
+            Schema::create(
+                'tag_transaction_journal', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('tag_id', false, true);
+                $table->integer('transaction_journal_id', false, true);
+
+                $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+
+
+            }
+            );
+        }
+
+        if (!Schema::hasTable('budget_transaction_journal')) {
+            Schema::create(
+                'budget_transaction_journal', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('budget_id', false, true);
+                $table->integer('transaction_journal_id', false, true);
+
+                $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+            }
+            );
+        }
+
+        if (!Schema::hasTable('category_transaction_journal')) {
+            Schema::create(
+                'category_transaction_journal', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('category_id', false, true);
+                $table->integer('transaction_journal_id', false, true);
+
+                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+            }
+            );
+        }
 
 
         if (!Schema::hasTable('piggy_bank_events')) {
@@ -645,7 +635,7 @@ class CreateMainTables extends Migration
             );
         }
 
-        if (!Schema::hasTable('')) {
+        if (!Schema::hasTable('category_transaction')) {
             Schema::create(
                 'category_transaction', function (Blueprint $table) {
                 $table->increments('id');

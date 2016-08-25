@@ -45,10 +45,13 @@ class BudgetLine
 
     /**
      * @param BudgetModel $budget
+     *
+     * @return BudgetLine
      */
-    public function setBudget(BudgetModel $budget)
+    public function setBudget(BudgetModel $budget): BudgetLine
     {
         $this->budget = $budget;
+        return $this;
     }
 
     /**
@@ -61,10 +64,13 @@ class BudgetLine
 
     /**
      * @param string $budgeted
+     *
+     * @return BudgetLine
      */
-    public function setBudgeted(string $budgeted)
+    public function setBudgeted(string $budgeted): BudgetLine
     {
         $this->budgeted = $budgeted;
+        return $this;
     }
 
     /**
@@ -77,10 +83,13 @@ class BudgetLine
 
     /**
      * @param string $left
+     *
+     * @return BudgetLine
      */
-    public function setLeft(string $left)
+    public function setLeft(string $left): BudgetLine
     {
         $this->left = $left;
+        return $this;
     }
 
     /**
@@ -93,10 +102,13 @@ class BudgetLine
 
     /**
      * @param string $overspent
+     *
+     * @return BudgetLine
      */
-    public function setOverspent(string $overspent)
+    public function setOverspent(string $overspent): BudgetLine
     {
         $this->overspent = $overspent;
+        return $this;
     }
 
     /**
@@ -109,10 +121,13 @@ class BudgetLine
 
     /**
      * @param LimitRepetition $repetition
+     *
+     * @return BudgetLine
      */
-    public function setRepetition(LimitRepetition $repetition)
+    public function setRepetition(LimitRepetition $repetition): BudgetLine
     {
         $this->repetition = $repetition;
+        return $this;
     }
 
     /**
@@ -125,10 +140,13 @@ class BudgetLine
 
     /**
      * @param string $spent
+     *
+     * @return BudgetLine
      */
-    public function setSpent(string $spent)
+    public function setSpent(string $spent): BudgetLine
     {
         $this->spent = $spent;
+        return $this;
     }
 
 

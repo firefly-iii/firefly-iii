@@ -49,26 +49,6 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * Add money to piggy bank (for mobile devices)
-     *
-     * @param ARI       $repository
-     * @param PiggyBank $piggyBank
-     *
-     * @return $this
-     */
-    public function addMobile(ARI $repository, PiggyBank $piggyBank)
-    {
-        /** @var Carbon $date */
-        $date          = session('end', Carbon::now()->endOfMonth());
-        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
-        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
-        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = min($leftOnAccount, $leftToSave);
-
-        return view('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount'));
-    }
-
-    /**
      * Add money to piggy bank
      *
      * @param ARI       $repository
@@ -81,11 +61,31 @@ class PiggyBankController extends Controller
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
-        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
+        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount ?? '0';
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
 
         return view('piggy-banks.add', compact('piggyBank', 'maxAmount'));
+    }
+
+    /**
+     * Add money to piggy bank (for mobile devices)
+     *
+     * @param ARI       $repository
+     * @param PiggyBank $piggyBank
+     *
+     * @return $this
+     */
+    public function addMobile(ARI $repository, PiggyBank $piggyBank)
+    {
+        /** @var Carbon $date */
+        $date          = session('end', Carbon::now()->endOfMonth());
+        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
+        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount?? '0';
+        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
+        $maxAmount     = min($leftOnAccount, $leftToSave);
+
+        return view('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount'));
     }
 
     /**
@@ -262,7 +262,8 @@ class PiggyBankController extends Controller
 
         if ($amount <= $maxAmount) {
             $repetition                = $piggyBank->currentRelevantRep();
-            $repetition->currentamount = bcadd($repetition->currentamount, $amount);
+            $currentAmount             = $repetition->currentamount ?? '0';
+            $repetition->currentamount = bcadd($currentAmount, $amount);
             $repetition->save();
 
             // create event
@@ -327,6 +328,18 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Remove money from piggy bank (for mobile devices)
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return $this
+     */
+    public function removeMobile(PiggyBank $piggyBank)
+    {
+        return view('piggy-banks.remove-mobile', compact('piggyBank'));
+    }
+
+    /**
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
@@ -351,12 +364,12 @@ class PiggyBankController extends Controller
     {
 
         $piggyBankData = [
-            'name'          => $request->get('name'),
-            'startdate'     => new Carbon,
-            'account_id'    => intval($request->get('account_id')),
-            'targetamount'  => round($request->get('targetamount'), 2),
-            'order'         => $repository->getMaxOrder() + 1,
-            'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
+            'name'         => $request->get('name'),
+            'startdate'    => new Carbon,
+            'account_id'   => intval($request->get('account_id')),
+            'targetamount' => round($request->get('targetamount'), 2),
+            'order'        => $repository->getMaxOrder() + 1,
+            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
         $piggyBank = $repository->store($piggyBankData);
@@ -385,11 +398,11 @@ class PiggyBankController extends Controller
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {
         $piggyBankData = [
-            'name'          => $request->get('name'),
-            'startdate'     => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
-            'account_id'    => intval($request->get('account_id')),
-            'targetamount'  => round($request->get('targetamount'), 2),
-            'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
+            'name'         => $request->get('name'),
+            'startdate'    => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
+            'account_id'   => intval($request->get('account_id')),
+            'targetamount' => round($request->get('targetamount'), 2),
+            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);

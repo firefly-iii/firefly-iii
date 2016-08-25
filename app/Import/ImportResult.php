@@ -10,6 +10,8 @@
 declare(strict_types = 1);
 
 namespace FireflyIII\Import;
+
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 
 /**
@@ -25,6 +27,8 @@ class ImportResult
 
     /** @var Collection */
     public $errors;
+    /** @var  TransactionJournal */
+    public $journal;
     /** @var  Collection */
     public $messages;
     /** @var int */
@@ -103,11 +107,27 @@ class ImportResult
     }
 
     /**
+     * @return bool
+     */
+    public function isSuccess(): bool
+    {
+        return $this->status === self::IMPORT_SUCCESS;
+    }
+
+    /**
      * @param Collection $errors
      */
     public function setErrors(Collection $errors)
     {
         $this->errors = $errors;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     */
+    public function setJournal(TransactionJournal $journal)
+    {
+        $this->journal = $journal;
     }
 
     /**

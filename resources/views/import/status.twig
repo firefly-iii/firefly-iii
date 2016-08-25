@@ -1,0 +1,77 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status_header'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                            <div class="progress" id="import-status-holder">
+                                <div id="import-status-bar" class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar"
+                                     aria-valuenow="100" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 100%">
+                                </div>
+                            </div>
+                            <p id="import-status-txt">{{ 'import_status_settings_complete'|_ }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status_errors'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p id="import-status-error-intro">
+                        No errors detected.
+                    </p>
+                    <ul id="import-status-error-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status_report'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p id="import-status-intro">
+                        {{ 'import_finished_report'|_ }}
+                    </p>
+                    <p id="import-status-more-info"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+
+        // some useful translations.
+        var langImportSingleError = '{{ 'import_error_single'|_ }}';
+        var langImportMultiError = '{{ 'import_error_multi'|_ }}';
+        var langImportFatalError = '{{ 'import_error_fatal'|_ }}';
+        var langImportTimeOutError = '{{ 'import_error_timeout'|_ }}';
+        var langImportFinished = '{{ 'import_finished_all'|_ }}';
+
+        var jobKey = '{{ job.key }}';
+        var jobImportUrl = '{{ route('import.json', [job.key]) }}';
+        var jobStartUrl = '{{ route('import.start', [job.key]) }}';
+        var token = '{{ csrf_token() }}';
+    </script>
+    <script type="text/javascript" src="js/ff/import/status.js"></script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

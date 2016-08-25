@@ -27,6 +27,7 @@ class UpdateJournalConnection
      * Handle the event.
      *
      * @param  TransactionJournalUpdated $event
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      *
      * @return bool
      */
@@ -46,7 +47,7 @@ class UpdateJournalConnection
         }
         $piggyBank  = $event->piggyBank()->first();
         $repetition = null;
-        if ($piggyBank) {
+        if (!is_null($piggyBank)) {
             /** @var PiggyBankRepetition $repetition */
             $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
         }

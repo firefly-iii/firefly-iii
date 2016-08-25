@@ -13,7 +13,6 @@ namespace FireflyIII\Import;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -27,15 +26,18 @@ class ImportEntry
 {
     /** @var array */
     public $certain = [];
+    /** @var  Collection */
+    public $errors;
     /** @var  string */
     public $externalID;
     /** @var  array */
     public $fields = [];
+    /** @var  string */
+    public $hash;
     /** @var  User */
     public $user;
     /** @var bool */
     public $valid = true;
-
     /** @var  int */
     private $amountMultiplier = 0;
 
@@ -60,6 +62,8 @@ class ImportEntry
             $this->fields[$value]  = null;
             $this->certain[$value] = 0;
         }
+        $this->errors = new Collection;
+
     }
 
     /**
@@ -75,6 +79,10 @@ class ImportEntry
             default:
                 Log::error('Import entry cannot handle object.', ['role' => $role]);
                 throw new FireflyException('Import entry cannot handle object of type "' . $role . '".');
+            case 'hash':
+                $this->hash = $convertedValue;
+
+                return;
             case 'amount':
                 /*
                  * Easy enough.
@@ -136,12 +144,12 @@ class ImportEntry
             case 'ing-debet-credit':
             case 'rabo-debet-credit':
                 $this->manipulateFloat('amount', 'multiply', $convertedValue);
-            $this->applyMultiplier('amount'); // if present.
+                $this->applyMultiplier('amount'); // if present.
                 break;
             case 'tags-comma':
             case 'tags-space':
                 $this->appendCollection('tags', $convertedValue);
-            break;
+                break;
             case 'external-id':
                 $this->externalID = $convertedValue;
                 break;

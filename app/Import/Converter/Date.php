@@ -37,8 +37,8 @@ class Date extends BasicConverter implements ConverterInterface
         try {
             $date = Carbon::createFromFormat($this->config['date-format'], $value);
         } catch (InvalidArgumentException $e) {
-            Log::notice($e->getMessage());
-            Log::notice('Cannot convert this string using the given format.', ['value' => $value, 'format' => $this->config['date-format']]);
+            Log::info($e->getMessage());
+            Log::info('Cannot convert this string using the given format.', ['value' => $value, 'format' => $this->config['date-format']]);
             $this->setCertainty(0);
             return new Carbon;
         }

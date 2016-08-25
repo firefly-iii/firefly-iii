@@ -11,10 +11,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Console\Commands;
 
-use FireflyIII\Crud\Account\AccountCrud;
-use FireflyIII\Import\Importer\ImporterInterface;
-use FireflyIII\Import\ImportStorage;
-use FireflyIII\Import\ImportValidator;
+use FireflyIII\Import\ImportProcedure;
+use FireflyIII\Import\ImportResult;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
@@ -59,55 +57,55 @@ class Import extends Command
     {
         $jobKey = $this->argument('key');
         $job    = ImportJob::whereKey($jobKey)->first();
+        if (!$this->isValid($job)) {
+            return;
+        }
+
+        $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
+
+        $monolog = Log::getMonolog();
+        $handler = new CommandHandler($this);
+        $monolog->pushHandler($handler);
+
+        $result = ImportProcedure::run($job);
+
+        /**
+         * @var int          $index
+         * @var ImportResult $entry
+         */
+        foreach ($result as $index => $entry) {
+            if ($entry->isSuccess()) {
+                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $entry->journal->id));
+                continue;
+            }
+            $errors = join(', ', $entry->errors->all());
+            $this->error(sprintf('Could not store line #%d, because: %s', $index, $errors));
+        }
+
+
+        $this->line('The import has completed.');
+
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return bool
+     */
+    private function isValid(ImportJob $job): bool
+    {
         if (is_null($job)) {
             $this->error('This job does not seem to exist.');
 
-            return;
+            return false;
         }
 
         if ($job->status != 'settings_complete') {
             $this->error('This job is not ready to be imported.');
 
-            return;
+            return false;
         }
 
-        $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
-        $valid = array_keys(config('firefly.import_formats'));
-        $class = 'INVALID';
-        if (in_array($job->file_type, $valid)) {
-            $class = config('firefly.import_formats.' . $job->file_type);
-        }
-
-        /** @var ImporterInterface $importer */
-        $importer = app($class);
-        $importer->setJob($job);
-        // intercept logging by importer.
-        $monolog = Log::getMonolog();
-        $handler = new CommandHandler($this);
-
-        $monolog->pushHandler($handler);
-
-        // create import entries
-        $collection = $importer->createImportEntries();
-
-        // validate / clean collection:
-        $validator = new ImportValidator($collection);
-        $validator->setUser($job->user);
-        if ($job->configuration['import-account'] != 0) {
-            $repository = app(AccountCrud::class, [$job->user]);
-            $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
-        }
-
-        $cleaned = $validator->clean();
-
-        // then import collection:
-        $storage = new ImportStorage($cleaned);
-        $storage->setUser($job->user);
-
-        // and run store routine:
-        $storage->store();
-
-
-        $this->line('Something something import: ' . $jobKey);
+        return true;
     }
 }

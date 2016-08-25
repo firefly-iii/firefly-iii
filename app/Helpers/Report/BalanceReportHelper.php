@@ -261,7 +261,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
     /**
      * @param Balance $balance
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      * @return Balance
      */
     private function removeUnusedBudgets(Balance $balance): Balance

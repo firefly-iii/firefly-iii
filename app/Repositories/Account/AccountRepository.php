@@ -438,7 +438,9 @@ class AccountRepository implements AccountRepositoryInterface
         $balance = Steam::balanceIgnoreVirtual($account, $date);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
-            $balance = bcsub($balance, $p->currentRelevantRep()->currentamount);
+            $currentAmount = $p->currentRelevantRep()->currentamount ?? '0';
+
+            $balance = bcsub($balance, $currentAmount);
         }
 
         return $balance;

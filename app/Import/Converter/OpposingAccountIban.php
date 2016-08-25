@@ -56,7 +56,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
         $account = $repository->findByIban($value, []);
         if (!is_null($account->id)) {
             Log::debug('Found account by IBAN', ['id' => $account->id]);
-            Log::notice(
+            Log::info(
                 'The match between IBAN and account is uncertain because the type of transactions may not have been determined.',
                 ['id' => $account->id, 'iban' => $value]
             );

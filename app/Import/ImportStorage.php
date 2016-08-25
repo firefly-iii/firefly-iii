@@ -12,9 +12,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Import;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -29,7 +33,10 @@ class ImportStorage
 
     /** @var  Collection */
     public $entries;
-
+    /** @var  Tag */
+    public $importTag;
+    /** @var  ImportJob */
+    public $job;
     /** @var  User */
     public $user;
 
@@ -45,6 +52,14 @@ class ImportStorage
     }
 
     /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -53,15 +68,60 @@ class ImportStorage
     }
 
     /**
-     *
+     * @return Collection
      */
-    public function store()
+    public function store(): Collection
     {
+        // create a tag to join the transactions.
+        $this->importTag = $this->createImportTag();
+        $collection      = new Collection;
+        Log::notice(sprintf('Started storing %d entry(ies).', $this->entries->count()));
         foreach ($this->entries as $index => $entry) {
             Log::debug(sprintf('--- import store start for row %d ---', $index));
-            $this->storeSingle($index, $entry);
+            $result = $this->storeSingle($index, $entry);
+            $this->job->addStepsDone(1);
+            $collection->put($index, $result);
+        }
+        Log::notice(sprintf('Finished storing %d entry(ies).', $collection->count()));
+
+        return $collection;
+    }
+
+    /**
+     * @param string $hash
+     *
+     * @return TransactionJournal
+     */
+    private function alreadyImported(string $hash): TransactionJournal
+    {
+
+        $meta = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->first(['journal_meta.*']);
+        if (!is_null($meta)) {
+            return $meta->transactionjournal;
         }
 
+        return new TransactionJournal;
+    }
+
+    /**
+     * @return Tag
+     */
+    private function createImportTag(): Tag
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $data       = [
+            'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
+            'date'        => null,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+            'tagMode'     => 'nothing',
+        ];
+        $tag        = $repository->store($data);
+
+        return $tag;
     }
 
     /**
@@ -166,6 +226,7 @@ class ImportStorage
      */
     private function storeJournal($entry): TransactionJournal
     {
+
         $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
         $journalData = [
             'user_id'                 => $entry->user->id,
@@ -187,6 +248,13 @@ class ImportStorage
         }
         Log::debug('Created journal', ['id' => $journal->id]);
 
+        // save hash as meta value:
+        $meta       = new TransactionJournalMeta;
+        $meta->name = 'originalImportHash';
+        $meta->data = $entry->hash;
+        $meta->transactionjournal()->associate($journal);
+        $meta->save();
+
         return $journal;
     }
 
@@ -200,13 +268,37 @@ class ImportStorage
     private function storeSingle(int $index, ImportEntry $entry): ImportResult
     {
         if ($entry->valid === false) {
-            Log::error(sprintf('Cannot import row %d, because valid=false', $index));
+            Log::warning(sprintf('Cannot import row %d, because the entry is not valid.', $index));
             $result = new ImportResult();
             $result->failed();
-            $result->appendError(sprintf('Cannot import row %d, because valid=false', $index));
+            $errors    = join(', ', $entry->errors->all());
+            $errorText = sprintf('Row #%d: ' . $errors, $index);
+            $result->appendError($errorText);
+            $extendedStatus             = $this->job->extended_status;
+            $extendedStatus['errors'][] = $errorText;
+            $this->job->extended_status = $extendedStatus;
+            $this->job->save();
 
             return $result;
         }
+        $alreadyImported = $this->alreadyImported($entry->hash);
+        if (!is_null($alreadyImported->id)) {
+            Log::warning(sprintf('Cannot import row %d, because it has already been imported (journal #%d).', $index, $alreadyImported->id));
+            $result = new ImportResult();
+            $result->failed();
+            $errorText = trans(
+                'firefly.import_double',
+                ['row' => $index, 'link' => route('transactions.show', [$alreadyImported->id]), 'description' => $alreadyImported->description]
+            );
+            $result->appendError($errorText);
+            $extendedStatus             = $this->job->extended_status;
+            $extendedStatus['errors'][] = $errorText;
+            $this->job->extended_status = $extendedStatus;
+            $this->job->save();
+
+            return $result;
+        }
+
         Log::debug(sprintf('Going to store row %d', $index));
 
 
@@ -237,10 +329,20 @@ class ImportStorage
         $journal->completed = 1;
         $journal->save();
 
+        // attach import tag.
+        $journal->tags()->save($this->importTag);
+
         // now attach budget and so on.
         $this->storeBudget($journal, $entry);
         $this->storeCategory($journal, $entry);
         $this->storeBill($journal, $entry);
+
+        $result = new ImportResult();
+        $result->success();
+        $result->appendMessage(sprintf('Journal titled "%s" imported.', $journal->description));
+        $result->setJournal($journal);
+
+        return $result;
 
 
     }

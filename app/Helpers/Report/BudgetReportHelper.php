@@ -42,6 +42,9 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // at 43, its ok.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -59,38 +62,22 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         if ($cache->has()) {
             return $cache->get();
         }
-        
-        $headers = [];
+
         $current = clone $start;
         $return  = new Collection;
         $set     = $this->repository->getBudgets();
         $budgets = [];
         $spent   = [];
-        while ($current < $end) {
-            $short           = $current->format('m-Y');
-            $headers[$short] = $current->formatLocalized((string)trans('config.month'));
-            $current->addMonth();
-        }
-
+        $headers = $this->createYearHeaders($current, $end);
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
             $id           = $budget->id;
             $budgets[$id] = $budget->name;
-            $spent[$id]   = [];
             $current      = clone $start;
-            $sum          = '0';
-
-
-            while ($current < $end) {
-                $currentEnd = clone $current;
-                $currentEnd->endOfMonth();
-                $format              = $current->format('m-Y');
-                $budgetSpent         = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $current, $currentEnd);
-                $spent[$id][$format] = $budgetSpent;
-                $sum                 = bcadd($sum, $budgetSpent);
-                $current->addMonth();
-            }
+            $budgetData   = $this->getBudgetSpentData($current, $end, $budget, $accounts);
+            $sum          = $budgetData['sum'];
+            $spent[$id]   = $budgetData['spent'];
 
             if (bccomp('0', $sum) === 0) {
                 // not spent anything.
@@ -131,10 +118,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
-                    $budgetLine->setBudget($budget);
-                    $budgetLine->setOverspent($spent);
-                    $object->addOverspent($spent);
-                    $object->addBudgetLine($budgetLine);
+                    $budgetLine->setBudget($budget)->setOverspent($spent);
+                    $object->addOverspent($spent)->addBudgetLine($budgetLine);
                 }
                 continue;
             }
@@ -144,18 +129,12 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $data = $this->calculateExpenses($budget, $repetition, $accounts);
 
                 $budgetLine = new BudgetLine;
-                $budgetLine->setBudget($budget);
-                $budgetLine->setRepetition($repetition);
-                $budgetLine->setLeft($data['left']);
-                $budgetLine->setSpent($data['expenses']);
-                $budgetLine->setOverspent($data['overspent']);
-                $budgetLine->setBudgeted($repetition->amount);
+                $budgetLine->setBudget($budget)->setRepetition($repetition)
+                           ->setLeft($data['left'])->setSpent($data['expenses'])->setOverspent($data['overspent'])
+                           ->setBudgeted(strval($repetition->amount));
 
-                $object->addBudgeted($repetition->amount);
-                $object->addSpent($data['spent']);
-                $object->addLeft($data['left']);
-                $object->addOverspent($data['overspent']);
-                $object->addBudgetLine($budgetLine);
+                $object->addBudgeted(strval($repetition->amount))->addSpent($data['spent'])
+                       ->addLeft($data['left'])->addOverspent($data['overspent'])->addBudgetLine($budgetLine);
 
             }
 
@@ -165,10 +144,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         $noBudget   = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end);
         $budgetLine = new BudgetLine;
-        $budgetLine->setOverspent($noBudget);
-        $budgetLine->setSpent($noBudget);
-        $object->addOverspent($noBudget);
-        $object->addBudgetLine($budgetLine);
+        $budgetLine->setOverspent($noBudget)->setSpent($noBudget);
+        $object->addOverspent($noBudget)->addBudgetLine($budgetLine);
 
         return $object;
     }
@@ -248,5 +225,51 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         return $array;
 
+    }
+
+    /**
+     * @param Carbon $current
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function createYearHeaders(Carbon $current, Carbon $end): array
+    {
+        $headers = [];
+        while ($current < $end) {
+            $short           = $current->format('m-Y');
+            $headers[$short] = $current->formatLocalized((string)trans('config.month'));
+            $current->addMonth();
+        }
+
+        return $headers;
+    }
+
+    /**
+     * @param Carbon     $current
+     * @param Carbon     $end
+     * @param Budget     $budget
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    private function getBudgetSpentData(Carbon $current, Carbon $end, Budget $budget, Collection $accounts): array
+    {
+        $sum   = '0';
+        $spent = [];
+        while ($current < $end) {
+            $currentEnd = clone $current;
+            $currentEnd->endOfMonth();
+            $format         = $current->format('m-Y');
+            $budgetSpent    = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $current, $currentEnd);
+            $spent[$format] = $budgetSpent;
+            $sum            = bcadd($sum, $budgetSpent);
+            $current->addMonth();
+        }
+
+        return [
+            'spent' => $spent,
+            'sum'   => $sum,
+        ];
     }
 }

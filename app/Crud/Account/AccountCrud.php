@@ -27,6 +27,8 @@ use Log;
 /**
  * Class AccountCrud
  *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
  * @package FireflyIII\Crud\Account
  */
 class AccountCrud implements AccountCrudInterface
@@ -56,14 +58,11 @@ class AccountCrud implements AccountCrudInterface
     public function destroy(Account $account, Account $moveTo): bool
     {
         if (!is_null($moveTo->id)) {
-            // update all transactions:
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
         if (!is_null($account)) {
-            Log::debug('Now trigger account delete #' . $account->id);
             $account->delete();
         }
-
 
         return true;
     }
@@ -75,7 +74,6 @@ class AccountCrud implements AccountCrudInterface
      */
     public function find(int $accountId): Account
     {
-        Log::debug('Searching for user ', ['user' => $this->user->id]);
         $account = $this->user->accounts()->find($accountId);
         if (is_null($account)) {
             return new Account;
@@ -146,7 +144,6 @@ class AccountCrud implements AccountCrudInterface
     public function findByName(string $name, array $types): Account
     {
         $query = $this->user->accounts();
-        Log::debug('Now in findByName()', ['name' => $name, 'types' => $types]);
 
         if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -154,16 +151,13 @@ class AccountCrud implements AccountCrudInterface
         }
 
         $accounts = $query->get(['accounts.*']);
-        Log::debug(sprintf('Total set count is %d ', $accounts->count()));
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->name === $name) {
-                Log::debug('Account name is an exact match. ', ['db' => $account->name, 'source' => $name, 'id' => $account->id]);
 
                 return $account;
             }
         }
-        Log::debug('Found nothing in findByName()', ['name' => $name, 'types' => $types]);
 
         return new Account;
     }
@@ -187,7 +181,6 @@ class AccountCrud implements AccountCrudInterface
         }
 
         $result = $query->get(['accounts.*']);
-
         $result = $result->sortBy(
             function (Account $account) {
                 return strtolower($account->name);
@@ -215,7 +208,6 @@ class AccountCrud implements AccountCrudInterface
         }
 
         $result = $query->get(['accounts.*']);
-
         $result = $result->sortBy(
             function (Account $account) {
                 return strtolower($account->name);
@@ -229,8 +221,6 @@ class AccountCrud implements AccountCrudInterface
      * @param array $data
      *
      * @return Account
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function store(array $data): Account
     {
@@ -330,6 +320,7 @@ class AccountCrud implements AccountCrudInterface
             $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
                 Log::error('Account create error', $newAccount->getErrors()->toArray());
+
                 return new Account;
             }
             $newAccount = $existingAccount;
@@ -402,8 +393,6 @@ class AccountCrud implements AccountCrudInterface
                 );
                 $metaData->save();
             }
-
-
         }
     }
 

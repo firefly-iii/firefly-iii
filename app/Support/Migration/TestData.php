@@ -271,13 +271,14 @@ class TestData
         $insert = [];
         foreach ($this->data['import-jobs'] as $job) {
             $insert[] = [
-                'created_at'    => $this->time,
-                'updated_at'    => $this->time,
-                'user_id'       => $job['user_id'],
-                'file_type'     => $job['file_type'],
-                'key'           => $job['key'],
-                'status'        => $job['status'],
-                'configuration' => json_encode($job['configuration']),
+                'created_at'      => $this->time,
+                'updated_at'      => $this->time,
+                'user_id'         => $job['user_id'],
+                'file_type'       => $job['file_type'],
+                'key'             => $job['key'],
+                'status'          => $job['status'],
+                'extended_status' => json_encode($job['extended_status']),
+                'configuration'   => json_encode($job['configuration']),
             ];
         }
         DB::table('import_jobs')->insert($insert);

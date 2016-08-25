@@ -11,13 +11,15 @@ namespace FireflyIII\Http\Controllers;
 
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\ImportUploadRequest;
+use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
+use Response;
 use SplFileObject;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -53,7 +55,7 @@ class ImportController extends Controller
         if (!$this->jobInCorrectStep($job, 'complete')) {
             return $this->redirectToCorrectStep($job);
         }
-        $subTitle     = trans('firefy.import_complete');
+        $subTitle     = trans('firefly.import_complete');
         $subTitleIcon = 'fa-star';
 
         return view('import.complete', compact('job', 'subTitle', 'subTitleIcon'));
@@ -120,6 +122,25 @@ class ImportController extends Controller
     }
 
     /**
+     * @param ImportJob $job
+     *
+     * @return View
+     */
+    public function finished(ImportJob $job)
+    {
+        if (!$this->jobInCorrectStep($job, 'finished')) {
+            Log::debug('Job is not in correct state for finished()', ['status' => $job->status]);
+
+            return $this->redirectToCorrectStep($job);
+        }
+
+        $subTitle     = trans('firefly.import_finished');
+        $subTitleIcon = 'fa-star';
+
+        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
      * This is step 1. Upload a file.
      *
      * @return View
@@ -137,6 +158,48 @@ class ImportController extends Controller
         }
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'importFileTypes', 'defaultImportType'));
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function json(ImportJob $job)
+    {
+        $result     = [
+            'showPercentage' => false,
+            'started'        => false,
+            'finished'       => false,
+            'running'        => false,
+            'errors'         => $job->extended_status['errors'],
+            'percentage'     => 0,
+            'steps'          => $job->extended_status['total_steps'],
+            'stepsDone'      => $job->extended_status['steps_done'],
+            'statusText'     => trans('firefly.import_status_' . $job->status),
+            'finishedText'   => '',
+        ];
+        $percentage = 0;
+        if ($job->extended_status['total_steps'] !== 0) {
+            $percentage = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
+        }
+        if ($job->status === 'import_complete') {
+            $tagId = $job->extended_status['importTag'];
+            /** @var TagRepositoryInterface $repository */
+            $repository             = app(TagRepositoryInterface::class);
+            $tag                    = $repository->find($tagId);
+            $result['finished']     = true;
+            $result['finishedText'] = trans('firefly.import_finished_link', ['link' => route('tags.show', [$tag->id]), 'tag' => $tag->tag]);
+        }
+
+        if ($job->status === 'import_running') {
+            $result['started']        = true;
+            $result['running']        = true;
+            $result['showPercentage'] = true;
+            $result['percentage']     = $percentage;
+        }
+
+        return Response::json($result);
     }
 
     /**
@@ -238,6 +301,35 @@ class ImportController extends Controller
     }
 
     /**
+     * @param ImportJob $job
+     */
+    public function start(ImportJob $job)
+    {
+        if ($job->status == "settings_complete") {
+            ImportProcedure::run($job);
+        }
+    }
+
+    /**
+     * This is the last step before the import starts.
+     *
+     * @param ImportJob $job
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     */
+    public function status(ImportJob $job)
+    {
+        Log::debug('Now in status()', ['job' => $job->key]);
+        if (!$this->jobInCorrectStep($job, 'status')) {
+            return $this->redirectToCorrectStep($job);
+        }
+        $subTitle     = trans('firefly.import_status');
+        $subTitleIcon = 'fa-star';
+
+        return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
      * This is step 2. It creates an Import Job. Stores the import.
      *
      * @param ImportUploadRequest          $request
@@ -306,8 +398,12 @@ class ImportController extends Controller
             case 'settings':
             case 'store-settings':
                 return $job->status === 'import_configuration_saved';
+            case 'finished':
+                return $job->status === 'import_complete';
             case 'complete':
                 return $job->status === 'settings_complete';
+            case 'status':
+                return ($job->status === 'settings_complete') || ($job->status === 'import_running');
         }
 
         return false;
@@ -353,6 +449,11 @@ class ImportController extends Controller
                 Log::debug('Will redirect to complete()');
 
                 return redirect(route('import.complete', [$job->key]));
+            case
+            'import_complete':
+                Log::debug('Will redirect to finished()');
+
+                return redirect(route('import.finished', [$job->key]));
         }
 
         throw new FireflyException('Cannot redirect for job state ' . $job->status);

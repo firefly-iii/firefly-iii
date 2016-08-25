@@ -118,7 +118,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $set = $this->getPiggyBanks();
         foreach ($set as $piggy) {
-            $piggy->name = $piggy->name . ' (' . Amount::format($piggy->currentRelevantRep()->currentamount, false) . ')';
+            $currentAmount = $piggy->currentRelevantRep()->currentamount ?? '0';
+            $piggy->name   = $piggy->name . ' (' . Amount::format($currentAmount, false) . ')';
         }
 
         return $set;

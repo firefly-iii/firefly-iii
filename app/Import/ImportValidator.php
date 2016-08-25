@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
@@ -35,6 +36,19 @@ class ImportValidator
     /** @var  User */
     protected $user;
 
+    /** @var  ImportJob */
+    public $job;
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
+    }
+
+
+
     /**
      * ImportValidator constructor.
      *
@@ -50,6 +64,7 @@ class ImportValidator
      */
     public function clean(): Collection
     {
+        Log::notice(sprintf('Started validating %d entry(ies).', $this->entries->count()));
         $newCollection = new Collection;
         /** @var ImportEntry $entry */
         foreach ($this->entries as $index => $entry) {
@@ -70,7 +85,9 @@ class ImportValidator
             $entry = $this->setTransactionCurrency($entry);
 
             $newCollection->put($index, $entry);
+            $this->job->addStepsDone(1);
         }
+        Log::notice(sprintf('Finished validating %d entry(ies).', $newCollection->count()));
 
         return $newCollection;
     }
@@ -100,7 +117,8 @@ class ImportValidator
     {
         if ($entry->fields['amount'] == 0) {
             $entry->valid = false;
-            Log::error('Amount of transaction is zero, cannot handle.');
+            $entry->errors->push('Amount of transaction is zero, cannot handle.');
+            Log::warning('Amount of transaction is zero, cannot handle.');
 
             return $entry;
         }
@@ -229,7 +247,7 @@ class ImportValidator
             // default import is null? should not happen. Entry cannot be imported.
             // set error message and block.
             $entry->valid = false;
-            Log::error('Cannot import entry. Asset account is NULL and import account is also NULL.');
+            Log::warning('Cannot import entry. Asset account is NULL and import account is also NULL.');
 
         }
         Log::debug('Asset account is OK.', ['id' => $entry->fields['asset-account']->id, 'name' => $entry->fields['asset-account']->name]);
@@ -379,8 +397,9 @@ class ImportValidator
 
                 return $entry;
         }
-        Log::error(sprintf('Opposing account is of type %s, cannot handle this.', $type));
+        Log::warning(sprintf('Opposing account is of type %s, cannot handle this.', $type));
         $entry->valid = false;
+        $entry->errors->push(sprintf('Opposing account is of type %s, cannot handle this.', $type));
 
         return $entry;
     }

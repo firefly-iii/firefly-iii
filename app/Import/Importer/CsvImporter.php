@@ -54,15 +54,22 @@ class CsvImporter implements ImporterInterface
         $reader->setDelimiter($config['delimiter']);
         $start   = $config['has-headers'] ? 1 : 0;
         $results = $reader->fetch();
+
+        Log::notice('Building importable objects from CSV file.');
+
         foreach ($results as $index => $row) {
             if ($index >= $start) {
+                $line = $index + 1;
                 Log::debug('----- import entry build start --');
                 Log::debug(sprintf('Now going to import row %d.', $index));
                 $importEntry = $this->importSingleRow($index, $row);
-                $this->collection->put($index, $importEntry);
+                $this->collection->put($line, $importEntry);
+                $this->job->addTotalSteps(3);
+                $this->job->addStepsDone(1);
             }
         }
         Log::debug(sprintf('Import collection contains %d entries', $this->collection->count()));
+        Log::notice(sprintf('Built %d importable object(s) from your CSV file.', $this->collection->count()));
 
         return $this->collection;
     }
@@ -91,6 +98,10 @@ class CsvImporter implements ImporterInterface
         // set some vars:
         $object->setUser($this->job->user);
         $config = $this->job->configuration;
+
+        // hash the row:
+        $hash = hash('sha256', json_encode($row));
+        $object->importValue('hash', 100, $hash);
 
         // and this is the point where the specifix go to work.
         foreach ($config['specifics'] as $name => $enabled) {

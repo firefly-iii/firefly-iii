@@ -232,6 +232,11 @@ Route::group(
     Route::get('/import/complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'import.complete']);
     Route::get('/import/download/{importJob}', ['uses' => 'ImportController@download', 'as' => 'import.download']);
 
+    Route::get('/import/status/{importJob}', ['uses' => 'ImportController@status', 'as' => 'import.status']);
+    Route::get('/import/json/{importJob}', ['uses' => 'ImportController@json', 'as' => 'import.json']);
+
+    Route::post('/import/start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'import.start']);
+    Route::get('/import/finished/{importJob}', ['uses' => 'ImportController@finished', 'as' => 'import.finished']);
 
     /**
      * Help Controller
@@ -269,13 +274,10 @@ Route::group(
     Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
     Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']);
     Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']);
-
     Route::get('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'piggy-banks.add-money-mobile']);
     Route::get('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'piggy-banks.remove-money-mobile']);
-
-    Route::post('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@postAddMobile', 'as' => 'piggy-banks.post-add-mobile']);
-    Route::post('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@postRemoveMobile', 'as' => 'piggy-banks.post-remove-mobile']);
-
+    // Route::post('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@postAddMobile', 'as' => 'piggy-banks.post-add-mobile']);
+    // Route::post('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@postRemoveMobile', 'as' => 'piggy-banks.post-remove-mobile']);
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
@@ -283,8 +285,10 @@ Route::group(
     Route::post('/piggy-banks/store', ['uses' => 'PiggyBankController@store', 'as' => 'piggy-banks.store']);
     Route::post('/piggy-banks/update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'piggy-banks.update']);
     Route::post('/piggy-banks/destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'piggy-banks.destroy']);
+
     Route::post('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy-banks.add']);
     Route::post('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy-banks.remove']);
+
     Route::post('/piggy-banks/sort', ['uses' => 'PiggyBankController@order', 'as' => 'piggy-banks.order']);
 
     /**

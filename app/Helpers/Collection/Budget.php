@@ -41,46 +41,61 @@ class Budget
 
     /**
      * @param BudgetLine $budgetLine
+     *
+     * @return Budget
      */
-    public function addBudgetLine(BudgetLine $budgetLine)
+    public function addBudgetLine(BudgetLine $budgetLine): Budget
     {
         $this->budgetLines->push($budgetLine);
+        return $this;
     }
 
     /**
      * @param string $add
+     *
+     * @return Budget
      */
-    public function addBudgeted(string $add)
+    public function addBudgeted(string $add): Budget
     {
         $add            = strval(round($add, 2));
         $this->budgeted = bcadd($this->budgeted, $add);
+        return $this;
     }
 
     /**
      * @param string $add
+     *
+     * @return Budget
      */
-    public function addLeft(string $add)
+    public function addLeft(string $add): Budget
     {
         $add        = strval(round($add, 2));
         $this->left = bcadd($this->left, $add);
+        return $this;
     }
 
     /**
      * @param string $add
+     *
+     * @return Budget
      */
-    public function addOverspent(string $add)
+    public function addOverspent(string $add): Budget
     {
         $add             = strval(round($add, 2));
         $this->overspent = bcadd($this->overspent, $add);
+        return $this;
     }
 
     /**
      * @param string $add
+     *
+     * @return Budget
      */
-    public function addSpent(string $add)
+    public function addSpent(string $add): Budget
     {
         $add         = strval(round($add, 2));
         $this->spent = bcadd($this->spent, $add);
+        return $this;
     }
 
     /**
@@ -101,10 +116,14 @@ class Budget
 
     /**
      * @param string $budgeted
+     *
+     * @return Budget
      */
-    public function setBudgeted(string $budgeted)
+    public function setBudgeted(string $budgeted): Budget
     {
         $this->budgeted = $budgeted;
+
+        return $this;
     }
 
     /**
@@ -117,10 +136,14 @@ class Budget
 
     /**
      * @param string $left
+     *
+     * @return Budget
      */
-    public function setLeft(string $left)
+    public function setLeft(string $left): Budget
     {
         $this->left = $left;
+
+        return $this;
     }
 
     /**
@@ -133,10 +156,14 @@ class Budget
 
     /**
      * @param string $overspent
+     *
+     * @return Budget
      */
-    public function setOverspent(string $overspent)
+    public function setOverspent(string $overspent): Budget
     {
         $this->overspent = strval(round($overspent, 2));
+
+        return $this;
     }
 
     /**
@@ -149,10 +176,14 @@ class Budget
 
     /**
      * @param string $spent
+     *
+     * @return Budget
      */
-    public function setSpent(string $spent)
+    public function setSpent(string $spent): Budget
     {
         $this->spent = strval(round($spent, 2));
+
+        return $this;
     }
 
 
