@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ExtendImportTable
+ * Class ChangesFor3101
  */
-class ExtendImportTable extends Migration
+class ChangesFor3101 extends Migration
 {
     /**
      * Reverse the migrations.
