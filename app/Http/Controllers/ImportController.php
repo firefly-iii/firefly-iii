@@ -306,7 +306,7 @@ class ImportController extends Controller
     public function start(ImportJob $job)
     {
         if ($job->status == "settings_complete") {
-            ImportProcedure::run($job);
+            $journals = ImportProcedure::runImport($job);
         }
     }
 

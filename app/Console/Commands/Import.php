@@ -67,7 +67,9 @@ class Import extends Command
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
 
-        $result = ImportProcedure::run($job);
+        $result = ImportProcedure::runImport($job);
+
+
 
         /**
          * @var int          $index
