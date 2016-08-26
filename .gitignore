@@ -6,3 +6,4 @@ _development
 result.html
 test-import.sh
 test-import-report.txt
+public/google*.html
