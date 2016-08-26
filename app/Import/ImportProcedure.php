@@ -88,9 +88,8 @@ class ImportProcedure
         $cleaned = $validator->clean();
 
         // then import collection:
-        $storage = new ImportStorage($cleaned);
+        $storage = new ImportStorage($job->user, $cleaned);
         $storage->setJob($job);
-        $storage->setUser($job->user);
 
         // and run store routine:
         $result = $storage->store();

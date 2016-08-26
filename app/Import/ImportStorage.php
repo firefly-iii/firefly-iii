@@ -40,14 +40,20 @@ class ImportStorage
     /** @var  User */
     public $user;
 
+    /** @var  Collection */
+    private $rules;
+
     /**
      * ImportStorage constructor.
      *
+     * @param User       $user
      * @param Collection $entries
      */
-    public function __construct(Collection $entries)
+    public function __construct(User $user, Collection $entries)
     {
         $this->entries = $entries;
+        $this->user    = $user;
+        $this->rules   = $this->getUserRules();
 
     }
 
@@ -122,6 +128,13 @@ class ImportStorage
         $tag        = $repository->store($data);
 
         return $tag;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getUserRules(): Collection
+    {
     }
 
     /**
