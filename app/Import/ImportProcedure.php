@@ -23,33 +23,6 @@ use Illuminate\Support\Collection;
  */
 class ImportProcedure
 {
-    //
-    //    /**
-    //     * @param ImportJob  $job
-    //     * @param Collection $journals
-    //     */
-    //    public static function runRules(ImportJob $job, Collection $journals)
-    //    {
-    //        // get all rules for user.
-    //        $rules
-    //            = Rule::distinct()
-    //                  ->where('user_id', $job->user->id)
-    //                  ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-    //                  ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-    //                  ->where('rule_groups.active', 1)
-    //                  ->where('rule_triggers.trigger_type', 'user_action')
-    //                  ->where('rule_triggers.trigger_value', 'store-journal')
-    //                  ->where('rules.active', 1)
-    //                  ->orderBy('rule_groups.order', 'ASC')
-    //                  ->orderBy('rules.order', 'ASC')
-    //                  ->get(['rules.*']);
-    //
-    //        // execute rules on each transaction.
-    //        /** @var TransactionJournal $journal */
-    //        foreach($journals as $journal) {
-    //            self::applyRules($rules, $journal);
-    //        }
-    //    }
 
     /**
      * @param ImportJob $job
