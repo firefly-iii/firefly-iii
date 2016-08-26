@@ -62,7 +62,9 @@ interface SetupInterface
     public function requireUserSettings(): bool;
 
     /**
-     * @param array $data
+     * @param array   $data
+     *
+     * @param FileBag $files
      *
      * @return bool
      */

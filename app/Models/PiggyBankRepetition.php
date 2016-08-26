@@ -57,7 +57,7 @@ class PiggyBankRepetition extends Model
      * @param Carbon          $start
      * @param Carbon          $target
      *
-     * @return $this
+     * @return EloquentBuilder
      */
     public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target)
     {

@@ -42,7 +42,7 @@ class TransactionGroup extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionjournals()
+    public function transactionJournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
     }

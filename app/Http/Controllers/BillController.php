@@ -41,7 +41,7 @@ class BillController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -66,7 +66,7 @@ class BillController extends Controller
     /**
      * @param Bill $bill
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function delete(Bill $bill)
     {
@@ -99,7 +99,7 @@ class BillController extends Controller
     /**
      * @param Bill $bill
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(Bill $bill)
     {
@@ -123,11 +123,13 @@ class BillController extends Controller
     /**
      * @param BillRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index(BillRepositoryInterface $repository)
     {
+        /** @var Carbon $start */
         $start = session('start');
+        /** @var Carbon $end */
         $end   = session('end');
 
         $bills = $repository->getBills();
@@ -187,7 +189,7 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      * @param Bill                    $bill
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function show(BillRepositoryInterface $repository, Bill $bill)
     {
@@ -195,7 +197,7 @@ class BillController extends Controller
         $date           = session('start');
         $year           = $date->year;
         $page           = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize       = Preferences::get('transactionPageSize', 50)->data;
+        $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
         $journals       = $repository->getJournals($bill, $page, $pageSize);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);

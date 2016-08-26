@@ -61,7 +61,7 @@ class TagController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -88,7 +88,7 @@ class TagController extends Controller
     /**
      * @param Tag $tag
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function delete(Tag $tag)
     {
@@ -123,7 +123,7 @@ class TagController extends Controller
     /**
      * @param Tag $tag
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(Tag $tag)
     {
@@ -220,14 +220,14 @@ class TagController extends Controller
     /**
      * @param Tag $tag
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function show(Tag $tag)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         /** @var Collection $journals */
-        $journals = $tag->transactionjournals()->sortCorrectly()->expanded()->get(TransactionJournal::queryFields());
+        $journals = $tag->transactionJournals()->sortCorrectly()->expanded()->get(TransactionJournal::queryFields());
 
         $sum = $journals->sum(
             function (TransactionJournal $journal) {

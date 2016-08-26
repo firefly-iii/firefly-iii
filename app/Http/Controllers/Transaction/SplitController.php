@@ -160,7 +160,7 @@ class SplitController extends Controller
      * @param JournalInterface          $repository
      * @param AttachmentHelperInterface $att
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(TransactionJournal $journal, SplitJournalFormRequest $request, JournalInterface $repository, AttachmentHelperInterface $att)
     {

@@ -47,7 +47,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -66,7 +66,7 @@ class CategoryController extends Controller
     /**
      * @param Category $category
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function delete(Category $category)
     {
@@ -101,7 +101,7 @@ class CategoryController extends Controller
     /**
      * @param Category $category
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(Category $category)
     {
@@ -122,7 +122,7 @@ class CategoryController extends Controller
     /**
      * @param CRI $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index(CRI $repository)
     {
@@ -140,7 +140,7 @@ class CategoryController extends Controller
     /**
      * @param CRI $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function noCategory(CRI $repository)
     {
@@ -166,9 +166,10 @@ class CategoryController extends Controller
      */
     public function show(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
-        /** @var Carbon $carbon */
         $range        = Preferences::get('viewRange', '1M')->data;
+        /** @var Carbon $start */
         $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        /** @var Carbon $end */
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
@@ -232,7 +233,7 @@ class CategoryController extends Controller
      *
      * @param                                   $date
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function showWithDate(CRI $repository, Category $category, string $date)
     {

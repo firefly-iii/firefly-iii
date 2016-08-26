@@ -223,7 +223,7 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param string                   $message
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     protected function sendFailedLoginResponse(Request $request, string $message)
     {

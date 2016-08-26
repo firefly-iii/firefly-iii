@@ -156,7 +156,7 @@ class Bill extends Model
     /**
      * @return HasMany
      */
-    public function transactionjournals(): HasMany
+    public function transactionJournals(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }

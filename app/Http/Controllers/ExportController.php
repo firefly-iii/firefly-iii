@@ -92,7 +92,7 @@ class ExportController extends Controller
      * @param AccountCrudInterface $crud
      * @param EJRI                 $jobs
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
     public function index(AccountCrudInterface $crud, EJRI $jobs)
     {

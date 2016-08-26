@@ -57,10 +57,11 @@ class Preferences
     }
 
     /**
+     * @param User        $user
      * @param      string $name
      * @param string      $default
      *
-     * @return null|\FireflyIII\Models\Preference
+     * @return Preference|null
      */
     public function getForUser(User $user, $name, $default = null)
     {

@@ -146,7 +146,7 @@ class Budget extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionjournals()
+    public function transactionJournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'budget_transaction_journal', 'budget_id');
     }

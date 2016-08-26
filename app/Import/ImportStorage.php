@@ -313,7 +313,7 @@ class ImportStorage
         $meta       = new TransactionJournalMeta;
         $meta->name = 'originalImportHash';
         $meta->data = $entry->hash;
-        $meta->transactionjournal()->associate($journal);
+        $meta->transactionJournal()->associate($journal);
         $meta->save();
 
         return $journal;

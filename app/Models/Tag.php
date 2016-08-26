@@ -155,7 +155,7 @@ class Tag extends TagSupport
      */
     public function save(array $options = [])
     {
-        foreach ($this->transactionjournals()->get() as $journal) {
+        foreach ($this->transactionJournals()->get() as $journal) {
             $count              = $journal->tags()->count();
             $journal->tag_count = $count;
             $journal->save();
@@ -185,7 +185,7 @@ class Tag extends TagSupport
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionjournals()
+    public function transactionJournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
     }

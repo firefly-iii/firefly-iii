@@ -27,6 +27,7 @@ class BillName extends BasicConverter implements ConverterInterface
     /**
      * @param $value
      *
+     * @return Bill
      * @throws FireflyException
      */
     public function convert($value)

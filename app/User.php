@@ -143,7 +143,7 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function exportjobs(): HasMany
+    public function exportJobs(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\ExportJob');
     }
@@ -172,7 +172,7 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function importjobs(): HasMany
+    public function importJobs(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\ImportJob');
     }
@@ -228,7 +228,7 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function transactionjournals(): HasMany
+    public function transactionJournals(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }

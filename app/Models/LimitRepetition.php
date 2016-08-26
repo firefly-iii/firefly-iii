@@ -56,7 +56,7 @@ class LimitRepetition extends Model
     {
         if (Auth::check()) {
             $object = LimitRepetition::where('limit_repetitions.id', $value)
-                                     ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                                     ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
                                      ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                                      ->where('budgets.user_id', Auth::user()->id)
                                      ->first(['limit_repetitions.*']);

@@ -263,7 +263,7 @@ class ImportController extends Controller
      *
      * @param ImportJob $job
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return View
      * @throws FireflyException
      */
     public function settings(ImportJob $job)

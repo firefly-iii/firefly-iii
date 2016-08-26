@@ -108,7 +108,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function find(int $journalId) : TransactionJournal
     {
-        $journal = $this->user->transactionjournals()->where('id', $journalId)->first();
+        $journal = $this->user->transactionJournals()->where('id', $journalId)->first();
         if (is_null($journal)) {
             return new TransactionJournal;
         }
@@ -123,7 +123,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function first(): TransactionJournal
     {
-        $entry = $this->user->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         if (is_null($entry)) {
 

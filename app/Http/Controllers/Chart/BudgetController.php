@@ -214,8 +214,9 @@ class BudgetController extends Controller
         $repetitions = $repetitions->filter(
             function (LimitRepetition $repetition) use ($budgetIds) {
                 if (in_array(strval($repetition->budget_id), $budgetIds)) {
-                    return $repetition;
+                    return true;
                 }
+                return false;
             }
         );
         /** @var LimitRepetition $repetition */
@@ -289,8 +290,9 @@ class BudgetController extends Controller
             $reps         = $repetitions->filter(
                 function (LimitRepetition $repetition) use ($budget, $currentStart) {
                     if ($repetition->budget_id === $budget->id && $repetition->startdate == $currentStart) {
-                        return $repetition;
+                        return true;
                     }
+                    return false;
                 }
             );
             $budgeted     = $reps->sum('amount');
@@ -325,8 +327,9 @@ class BudgetController extends Controller
         return $repetitions->filter(
             function (LimitRepetition $repetition) use ($budget, $start, $end) {
                 if ($repetition->startdate < $end && $repetition->enddate > $start && $repetition->budget_id === $budget->id) {
-                    return $repetition;
+                    return true;
                 }
+                return false;
             }
         );
     }

@@ -38,7 +38,7 @@ class NewUserController extends Controller
     /**
      * @param ARI $repository
      *
-     * @@return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @@return View
      */
     public function index(ARI $repository)
     {

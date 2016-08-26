@@ -47,7 +47,7 @@ class AttachmentController extends Controller
     /**
      * @param Attachment $attachment
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function delete(Attachment $attachment)
     {
@@ -116,7 +116,7 @@ class AttachmentController extends Controller
     /**
      * @param Attachment $attachment
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(Attachment $attachment)
     {

@@ -39,7 +39,7 @@ class Budget extends Twig_Extension
                 return $cache->get();
             }
             $sum
-                = Auth::user()->transactionjournals()
+                = Auth::user()->transactionJournals()
                       ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                       ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budget_transaction_journal.budget_id')
                       ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')

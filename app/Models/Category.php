@@ -126,7 +126,7 @@ class Category extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionjournals()
+    public function transactionJournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
     }

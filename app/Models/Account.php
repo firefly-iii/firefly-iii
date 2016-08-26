@@ -183,6 +183,7 @@ class Account extends Model
      * @param $value
      *
      * @return string
+     * @throws FireflyException
      */
     public function getIbanAttribute($value): string
     {

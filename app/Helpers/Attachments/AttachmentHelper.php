@@ -250,6 +250,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * @param array $files
      *
+     * @param Model $model
+     *
      * @return bool
      */
     private function processFiles(array $files, Model $model): bool

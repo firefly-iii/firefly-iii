@@ -51,7 +51,7 @@ class RuleGroup extends Model
     /**
      * @param RuleGroup $value
      *
-     * @return Rule
+     * @return RuleGroup
      */
     public static function routeBinder(RuleGroup $value)
     {

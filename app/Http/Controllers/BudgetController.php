@@ -82,7 +82,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -101,7 +101,7 @@ class BudgetController extends Controller
     /**
      * @param Budget $budget
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function delete(Budget $budget)
     {
@@ -138,7 +138,7 @@ class BudgetController extends Controller
     /**
      * @param Budget $budget
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(Budget $budget)
     {
@@ -237,7 +237,7 @@ class BudgetController extends Controller
     /**
      * @param BudgetRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function noBudget(BudgetRepositoryInterface $repository)
     {
@@ -411,7 +411,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function updateIncome()
     {
