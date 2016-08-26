@@ -151,8 +151,8 @@ class Importer
 
         $transactionType = $this->getTransactionType(); // defaults to deposit
         $errors          = new MessageBag;
-        
-        $journal         = TransactionJournal::create(
+
+        $journal = TransactionJournal::create(
             [
                 'user_id'                 => Auth::user()->id,
                 'transaction_type_id'     => $transactionType->id,

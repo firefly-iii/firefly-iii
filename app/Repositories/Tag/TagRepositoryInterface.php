@@ -43,18 +43,18 @@ interface TagRepositoryInterface
     public function destroy(Tag $tag): bool;
 
     /**
-     * @param string $tag
-     *
-     * @return Tag
-     */
-    public function findByTag(string $tag) : Tag;
-
-    /**
      * @param int $tagId
      *
      * @return Tag
      */
     public function find(int $tagId) : Tag;
+
+    /**
+     * @param string $tag
+     *
+     * @return Tag
+     */
+    public function findByTag(string $tag) : Tag;
 
     /**
      * This method returns all the user's tags.

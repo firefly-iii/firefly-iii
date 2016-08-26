@@ -92,6 +92,7 @@ class Import extends Command
                 $this->error($error);
             }
         }
+
         return;
     }
 

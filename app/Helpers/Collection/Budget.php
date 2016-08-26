@@ -47,6 +47,7 @@ class Budget
     public function addBudgetLine(BudgetLine $budgetLine): Budget
     {
         $this->budgetLines->push($budgetLine);
+
         return $this;
     }
 
@@ -59,6 +60,7 @@ class Budget
     {
         $add            = strval(round($add, 2));
         $this->budgeted = bcadd($this->budgeted, $add);
+
         return $this;
     }
 
@@ -71,6 +73,7 @@ class Budget
     {
         $add        = strval(round($add, 2));
         $this->left = bcadd($this->left, $add);
+
         return $this;
     }
 
@@ -83,6 +86,7 @@ class Budget
     {
         $add             = strval(round($add, 2));
         $this->overspent = bcadd($this->overspent, $add);
+
         return $this;
     }
 
@@ -95,6 +99,7 @@ class Budget
     {
         $add         = strval(round($add, 2));
         $this->spent = bcadd($this->spent, $add);
+
         return $this;
     }
 

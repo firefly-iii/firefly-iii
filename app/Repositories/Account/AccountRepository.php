@@ -144,7 +144,6 @@ class AccountRepository implements AccountRepositoryInterface
         $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
 
 
-
         // that should do it:
         $sum = $this->user->transactions()
                           ->whereIn('transaction_journal_id', $ids)

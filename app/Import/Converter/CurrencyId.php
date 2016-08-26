@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Log;
@@ -36,6 +35,7 @@ class CurrencyId extends BasicConverter implements ConverterInterface
 
         if ($value === 0) {
             $this->setCertainty(0);
+
             return new TransactionCurrency;
         }
 
@@ -48,6 +48,7 @@ class CurrencyId extends BasicConverter implements ConverterInterface
             if (!is_null($currency->id)) {
                 Log::debug('Found currency by ID', ['id' => $currency->id]);
                 $this->setCertainty(100);
+
                 return $currency;
             }
         }
@@ -57,6 +58,7 @@ class CurrencyId extends BasicConverter implements ConverterInterface
         if (!is_null($currency->id)) {
             Log::debug('Found currency by ID ', ['id' => $currency->id]);
             $this->setCertainty(100);
+
             return $currency;
         }
         $this->setCertainty(0);

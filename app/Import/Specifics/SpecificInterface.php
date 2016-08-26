@@ -21,12 +21,12 @@ interface SpecificInterface
     /**
      * @return string
      */
-    public static function getName(): string;
+    public static function getDescription(): string;
 
     /**
      * @return string
      */
-    public static function getDescription(): string;
+    public static function getName(): string;
 
     /**
      * @param array $row

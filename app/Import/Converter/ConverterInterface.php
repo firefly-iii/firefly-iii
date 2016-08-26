@@ -27,14 +27,14 @@ interface ConverterInterface
     public function convert($value);
 
     /**
-     * @param array $config
-     */
-    public function setConfig(array $config);
-
-    /**
      * @return int
      */
     public function getCertainty(): int;
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config);
 
     /**
      * @param bool $doMap

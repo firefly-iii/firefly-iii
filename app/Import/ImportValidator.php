@@ -29,25 +29,14 @@ use Log;
  */
 class ImportValidator
 {
+    /** @var  ImportJob */
+    public $job;
     /** @var  Account */
     protected $defaultImportAccount;
     /** @var Collection */
     protected $entries;
     /** @var  User */
     protected $user;
-
-    /** @var  ImportJob */
-    public $job;
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job)
-    {
-        $this->job = $job;
-    }
-
-
 
     /**
      * ImportValidator constructor.
@@ -98,6 +87,14 @@ class ImportValidator
     public function setDefaultImportAccount(Account $defaultImportAccount)
     {
         $this->defaultImportAccount = $defaultImportAccount;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
     }
 
     /**

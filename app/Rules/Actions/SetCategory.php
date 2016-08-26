@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Actions;
 
 
-use Auth;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;

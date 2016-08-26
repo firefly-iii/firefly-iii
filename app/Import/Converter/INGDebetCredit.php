@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Exceptions\FireflyException;
 use Log;
 
 /**
@@ -34,11 +33,13 @@ class INGDebetCredit extends BasicConverter implements ConverterInterface
         if ($value === 'Af') {
             Log::debug('Return -1');
             $this->setCertainty(100);
+
             return -1;
         }
 
         $this->setCertainty(100);
         Log::debug('Return 1');
+
         return 1;
 
     }

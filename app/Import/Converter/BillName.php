@@ -36,6 +36,7 @@ class BillName extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new Bill;
         }
 
@@ -48,6 +49,7 @@ class BillName extends BasicConverter implements ConverterInterface
             if (!is_null($bill->id)) {
                 Log::debug('Found bill by ID', ['id' => $bill->id]);
                 $this->setCertainty(100);
+
                 return $bill;
             }
         }
@@ -57,6 +59,7 @@ class BillName extends BasicConverter implements ConverterInterface
         if (!is_null($bill->id)) {
             Log::debug('Found bill by name ', ['id' => $bill->id]);
             $this->setCertainty(100);
+
             return $bill;
         }
 
@@ -66,7 +69,7 @@ class BillName extends BasicConverter implements ConverterInterface
                 'name'        => $value,
                 'match'       => $value,
                 'amount_min'  => 1,
-                'user'     => $this->user->id,
+                'user'        => $this->user->id,
                 'amount_max'  => 10,
                 'date'        => date('Ymd'),
                 'repeat_freq' => 'monthly',

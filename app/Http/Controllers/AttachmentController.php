@@ -93,10 +93,10 @@ class AttachmentController extends Controller
 
         if ($disk->exists($file)) {
 
-            $quoted = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+            $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
             $content = Crypt::decrypt($disk->get($file));
 
-            Log::debug('Send file to user', ['file' =>  $quoted, 'size' => strlen($content)]);
+            Log::debug('Send file to user', ['file' => $quoted, 'size' => strlen($content)]);
 
             return response($content, 200)
                 ->header('Content-Description', 'File Transfer')

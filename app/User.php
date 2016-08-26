@@ -54,9 +54,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlockedCode($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[] $importjobs
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[]          $importjobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]          $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]        $transactions
  */
 class User extends Authenticatable
 {
@@ -149,14 +149,6 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany
-     */
-    public function importjobs(): HasMany
-    {
-        return $this->hasMany('FireflyIII\Models\ImportJob');
-    }
-
-    /**
      * Checks if the user has a role by its name.
      *
      * Full credit goes to: https://github.com/Zizaco/entrust
@@ -175,6 +167,14 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function importjobs(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\ImportJob');
     }
 
     /**

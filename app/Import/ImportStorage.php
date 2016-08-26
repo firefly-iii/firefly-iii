@@ -330,8 +330,8 @@ class ImportStorage
     {
         if ($entry->valid === false) {
             Log::warning(sprintf('Cannot import row %d, because the entry is not valid.', $index));
-            $errors    = join(', ', $entry->errors->all());
-            $errorText = sprintf('Row #%d: ' . $errors, $index);
+            $errors                     = join(', ', $entry->errors->all());
+            $errorText                  = sprintf('Row #%d: ' . $errors, $index);
             $extendedStatus             = $this->job->extended_status;
             $extendedStatus['errors'][] = $errorText;
             $this->job->extended_status = $extendedStatus;
@@ -342,7 +342,7 @@ class ImportStorage
         $alreadyImported = $this->alreadyImported($entry->hash);
         if (!is_null($alreadyImported->id)) {
             Log::warning(sprintf('Cannot import row %d, because it has already been imported (journal #%d).', $index, $alreadyImported->id));
-            $errorText = trans(
+            $errorText                  = trans(
                 'firefly.import_double',
                 ['row' => $index, 'link' => route('transactions.show', [$alreadyImported->id]), 'description' => $alreadyImported->description]
             );

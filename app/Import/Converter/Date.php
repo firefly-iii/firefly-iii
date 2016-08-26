@@ -40,10 +40,12 @@ class Date extends BasicConverter implements ConverterInterface
             Log::info($e->getMessage());
             Log::info('Cannot convert this string using the given format.', ['value' => $value, 'format' => $this->config['date-format']]);
             $this->setCertainty(0);
+
             return new Carbon;
         }
         Log::debug('Converted date', ['converted' => $date->toAtomString()]);
         $this->setCertainty(100);
+
         return $date;
     }
 }

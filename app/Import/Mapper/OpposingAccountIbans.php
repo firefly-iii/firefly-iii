@@ -29,13 +29,14 @@ class OpposingAccountIbans implements MapperInterface
     public function getMap(): array
     {
         /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class);
-        $set  = $crud->getAccountsByType(
+        $crud    = app(AccountCrudInterface::class);
+        $set     = $crud->getAccountsByType(
             [
                 AccountType::DEFAULT, AccountType::ASSET,
                 AccountType::EXPENSE, AccountType::BENEFICIARY,
-                AccountType::REVENUE
-            ]);
+                AccountType::REVENUE,
+            ]
+        );
         $topList = [];
         $list    = [];
 

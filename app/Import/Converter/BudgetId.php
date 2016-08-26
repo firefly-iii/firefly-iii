@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Log;
@@ -36,6 +35,7 @@ class BudgetId extends BasicConverter implements ConverterInterface
 
         if ($value === 0) {
             $this->setCertainty(0);
+
             return new Budget;
         }
 
@@ -58,6 +58,7 @@ class BudgetId extends BasicConverter implements ConverterInterface
         if (!is_null($budget->id)) {
             Log::debug('Found budget by ID ', ['id' => $budget->id]);
             $this->setCertainty(100);
+
             return $budget;
         }
 

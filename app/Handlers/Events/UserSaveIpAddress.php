@@ -13,7 +13,6 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UserIsConfirmed;
 use FireflyIII\Events\UserRegistration;
-use FireflyIII\User;
 use Preferences;
 
 /**
@@ -35,20 +34,6 @@ class UserSaveIpAddress
     /**
      * Handle the event.
      *
-     * @param  UserRegistration $event
-     *
-     * @return bool
-     */
-    public function saveFromRegistration(UserRegistration $event): bool
-    {
-        Preferences::setForUser($event->user, 'registration_ip_address', $event->ipAddress);
-
-        return true;
-    }
-
-    /**
-     * Handle the event.
-     *
      * @param  UserIsConfirmed $event
      *
      * @return bool
@@ -56,6 +41,20 @@ class UserSaveIpAddress
     public function saveFromConfirmation(UserIsConfirmed $event): bool
     {
         Preferences::setForUser($event->user, 'confirmation_ip_address', $event->ipAddress);
+
+        return true;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  UserRegistration $event
+     *
+     * @return bool
+     */
+    public function saveFromRegistration(UserRegistration $event): bool
+    {
+        Preferences::setForUser($event->user, 'registration_ip_address', $event->ipAddress);
 
         return true;
     }

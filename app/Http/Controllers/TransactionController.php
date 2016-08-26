@@ -273,7 +273,7 @@ class TransactionController extends Controller
 
         // store the journal only, flash the rest.
         if ($doSplit) {
-            $journal = $repository->storeJournal($journalData);
+            $journal            = $repository->storeJournal($journalData);
             $journal->completed = false;
             $journal->save();
 
