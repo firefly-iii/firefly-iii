@@ -40,9 +40,9 @@ use Illuminate\Database\Eloquent\Model;
 class PiggyBankRepetition extends Model
 {
 
+    protected $dates    = ['created_at', 'updated_at', 'startdate', 'targetdate'];
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
     protected $hidden   = ['currentamount_encrypted'];
-    protected $dates    = ['created_at', 'updated_at', 'startdate', 'targetdate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

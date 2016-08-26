@@ -22,21 +22,21 @@ use Watson\Validating\ValidatingTrait;
 /**
  * FireflyIII\Models\Budget
  *
- * @property integer                                                                        $id
- * @property \Carbon\Carbon                                                                 $created_at
- * @property \Carbon\Carbon                                                                 $updated_at
- * @property \Carbon\Carbon                                                                 $deleted_at
- * @property string                                                                         $name
- * @property integer                                                                        $user_id
- * @property boolean                                                                        $active
- * @property boolean                                                                        $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|BudgetLimit[]                    $budgetlimits
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]             $transactionjournals
- * @property-read \FireflyIII\User                                                          $user
- * @property string                                                                         $dateFormatted
- * @property string                                                                         $budgeted
- * @property float                                                                          $amount
- * @property \Carbon\Carbon                                                                 $date
+ * @property integer                                                                            $id
+ * @property \Carbon\Carbon                                                                     $created_at
+ * @property \Carbon\Carbon                                                                     $updated_at
+ * @property \Carbon\Carbon                                                                     $deleted_at
+ * @property string                                                                             $name
+ * @property integer                                                                            $user_id
+ * @property boolean                                                                            $active
+ * @property boolean                                                                            $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|BudgetLimit[]                        $budgetlimits
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]                 $transactionjournals
+ * @property-read \FireflyIII\User                                                              $user
+ * @property string                                                                             $dateFormatted
+ * @property string                                                                             $budgeted
+ * @property float                                                                              $amount
+ * @property \Carbon\Carbon                                                                     $date
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereUpdatedAt($value)
@@ -46,7 +46,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereActive($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereEncrypted($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]     $transactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\LimitRepetition[] $limitrepetitions
  */
 class Budget extends Model

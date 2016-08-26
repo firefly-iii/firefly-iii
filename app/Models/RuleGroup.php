@@ -49,23 +49,6 @@ class RuleGroup extends Model
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('FireflyIII\User');
-    }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function rules()
-    {
-        return $this->hasMany('FireflyIII\Models\Rule');
-    }
-
-    /**
      * @param RuleGroup $value
      *
      * @return Rule
@@ -78,5 +61,21 @@ class RuleGroup extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function rules()
+    {
+        return $this->hasMany('FireflyIII\Models\Rule');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
     }
 }

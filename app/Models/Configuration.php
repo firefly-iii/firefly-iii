@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * FireflyIII\Models\Configuration
  *
  * @mixin \Eloquent
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
- * @property string $name
- * @property string $data
+ * @property string         $name
+ * @property string         $data
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereUpdatedAt($value)
@@ -35,9 +35,8 @@ class Configuration extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'configuration';
-
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $table = 'configuration';
 
     /**
      * @param $value
@@ -56,7 +55,6 @@ class Configuration extends Model
     {
         $this->attributes['data'] = json_encode($value);
     }
-
 
 
 }

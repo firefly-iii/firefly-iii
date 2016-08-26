@@ -53,11 +53,26 @@ class Rule extends Model
     use SoftDeletes;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param Rule $value
+     *
+     * @return Rule
      */
-    public function user()
+    public static function routeBinder(Rule $value)
     {
-        return $this->belongsTo('FireflyIII\User');
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ruleActions()
+    {
+        return $this->hasMany('FireflyIII\Models\RuleAction');
     }
 
     /**
@@ -71,32 +86,17 @@ class Rule extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ruleActions()
-    {
-        return $this->hasMany('FireflyIII\Models\RuleAction');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function ruleTriggers()
     {
         return $this->hasMany('FireflyIII\Models\RuleTrigger');
     }
 
     /**
-     * @param Rule $value
-     *
-     * @return Rule
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public static function routeBinder(Rule $value)
+    public function user()
     {
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
+        return $this->belongsTo('FireflyIII\User');
     }
 
 }
