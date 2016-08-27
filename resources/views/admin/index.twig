@@ -6,7 +6,22 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <div class="box box-primary">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'instance_configuration'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <ul>
+                        <li><a href="{{ route('admin.configuration.index') }}">{{ 'firefly_instance_configuration'|_ }}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'user_administration'|_ }}</h3>
                 </div>

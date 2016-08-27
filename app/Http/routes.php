@@ -435,5 +435,8 @@ Route::group(
     Route::get('/admin/domains/toggle/{domain}', ['uses' => 'Admin\DomainController@toggleDomain', 'as' => 'admin.users.domains.block-toggle']);
     Route::post('/admin/domains/manual', ['uses' => 'Admin\DomainController@manual', 'as' => 'admin.users.domains.manual']);
 
+    // FF configuration:
+    Route::get('/admin/configuration', ['uses' => 'Admin\ConfigurationController@index', 'as' => 'admin.configuration.index']);
+
 }
 );

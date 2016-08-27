@@ -120,6 +120,14 @@ Breadcrumbs::register(
 }
 );
 
+Breadcrumbs::register(
+    'admin.configuration.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.instance_configuration'), route('admin.configuration.index'));
+}
+);
+
+
 /**
  * ATTACHMENTS
  */
