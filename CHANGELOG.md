@@ -3,7 +3,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-- No unreleased changes yet.
+### Added
+- New Chinese translations. Set Firefly III to show incomplete translations to follow the progress. Want to translate Firefly III in Chinese, or in any other language? Then check out [the Crowdin project](https://crowdin.com/project/firefly-iii).
+- Added more admin pages. They do nothing yet.
+
+### Changed
+- Import routine will now also apply user rules.
+
+### Fixed
+- Bug in the mass edit routines.
 
 ## [3.10.1] - 2016-08-25
 ### Added
