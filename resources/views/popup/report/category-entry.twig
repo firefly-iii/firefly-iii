@@ -3,7 +3,8 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'close'|_ }}"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="expenseEntryTitle">{{ trans('firefly.category_entry', {name: category.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}</h4>
+            <h4 class="modal-title"
+                id="expenseEntryTitle">{{ trans('firefly.category_entry', {name: category.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}</h4>
         </div>
         <div class="modal-body">
             {% set hideCategory = true %}

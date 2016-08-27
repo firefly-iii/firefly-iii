@@ -4,7 +4,7 @@
     <div class="col-sm-8">
         {% for value,description in list %}
             {% set options = options|merge({'id': 'ffInput_'~name~'_'~value}) %}
-        <div class="checkbox">
+            <div class="checkbox">
                 <label>
                     {% if value in selected %}
                         {{ Form.checkbox(name~'[]', value, true, options) }}

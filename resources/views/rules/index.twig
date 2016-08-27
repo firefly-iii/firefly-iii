@@ -44,15 +44,15 @@
                                                     class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
                                     <li><a href="{{ route('rules.rule-group.select_transactions',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-anchor"></i> {{ 'execute_on_existing_transactions_short'|_ }}</a></li>
-                                        {% if ruleGroup.order > 1 %}
-                                    <li><a href="{{ route('rules.rule-group.up',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a></li>
-                                        {% endif %}
-                                        {% if ruleGroup.order < ruleGroups|length %}
-                                    <li><a href="{{ route('rules.rule-group.down',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}
-                                        </a></li>
-                                        {% endif %}
+                                    {% if ruleGroup.order > 1 %}
+                                        <li><a href="{{ route('rules.rule-group.up',ruleGroup.id) }}"><i
+                                                        class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a></li>
+                                    {% endif %}
+                                    {% if ruleGroup.order < ruleGroups|length %}
+                                        <li><a href="{{ route('rules.rule-group.down',ruleGroup.id) }}"><i
+                                                        class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}
+                                            </a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>

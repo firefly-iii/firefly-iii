@@ -130,7 +130,7 @@
     </li>
 
     <!-- options and preferences -->
-    <li id="option-menu" class="{{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
+    <li id="option-menu" class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
         <a href="#">
             <i class="fa fa-gears fa-fw"></i>
             <span>{{ 'options'|_ }}</span>
@@ -147,6 +147,12 @@
             <li class="{{ activeRoutePartial('currency') }}">
                 <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
             </li>
+            <!-- admin (if user admin) -->
+            {% if Auth.user.hasRole('owner') %}
+            <li class="{{ activeRoutePartial('admin') }}">
+                <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}"><i class="fa fa-hand-spock-o fa-fw"></i> {{ 'administration'|_ }}</a>
+            </li>
+            {% endif %}
         </ul>
 
 

@@ -7,7 +7,7 @@
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'preferences.code'}) }}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6">            
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'pref_two_factor_auth_code'|_ }}</h3>
@@ -18,15 +18,15 @@
                     </p>
                     <div class="form group">
                         <div class="col-sm-8 col-md-offset-4">
-                            <img src="{{ image }}" alt="" title="" />
-                            <br /><br />
+                            <img src="{{ image }}" alt="" title=""/>
+                            <br/><br/>
                         </div>
-                        
+
                     </div>
 
                     {{ ExpandedForm.text('code', code) }}
                 </div>
-            </div>            
+            </div>
         </div>
 
     </div>

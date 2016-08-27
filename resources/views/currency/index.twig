@@ -37,7 +37,8 @@
                                         {% if currency.id == defaultCurrency.id %}
                                             <span class="label label-success">{{ 'default_currency'|_ }}</span>
                                         {% else %}
-                                            <a class="btn btn-info btn-xs" href="{{ route('currency.default',currency.id) }}">{{ 'make_default_currency'|_ }}</a>
+                                            <a class="btn btn-info btn-xs"
+                                               href="{{ route('currency.default',currency.id) }}">{{ 'make_default_currency'|_ }}</a>
                                         {% endif %}
                                     </td>
                                 </tr>

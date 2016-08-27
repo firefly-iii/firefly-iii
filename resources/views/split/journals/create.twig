@@ -143,7 +143,8 @@
                                     <!-- deposit has several source names -->
                                     {% if preFilled.what == 'deposit' %}
                                         <td>
-                                            <input type="text" name="source_account_name[]" value="{{ preFilled.source_account_name[index] }}" class="form-control"/>
+                                            <input type="text" name="source_account_name[]" value="{{ preFilled.source_account_name[index] }}"
+                                                   class="form-control"/>
                                         </td>
                                     {% endif %}
 

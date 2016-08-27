@@ -36,7 +36,7 @@
                         {% for journal in journals %}
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="confirm_mass_delete[]" value="{{ journal.id }}" checked />
+                                    <input type="checkbox" name="confirm_mass_delete[]" value="{{ journal.id }}" checked/>
                                 </td>
                                 <td>
                                     <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
