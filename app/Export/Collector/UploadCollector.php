@@ -29,6 +29,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     private $expected;
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     private $exportDisk;
+    private $importKeys = [];
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     private $uploadDisk;
 
@@ -42,10 +43,17 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         parent::__construct($job);
 
+        Log::debug('Going to collect attachments', ['key' => $job->key]);
+
         // make storage:
         $this->uploadDisk = Storage::disk('upload');
         $this->exportDisk = Storage::disk('export');
-        $this->expected   = 'csv-upload-' . Auth::user()->id . '-';
+
+        // file names associated with the old import routine.
+        $this->expected = 'csv-upload-' . Auth::user()->id . '-';
+
+        // for the new import routine:
+        $this->getImportKeys();
     }
 
     /**
@@ -57,10 +65,24 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         $files = $this->uploadDisk->files();
 
         foreach ($files as $entry) {
-            $this->processOldUpload($entry);
+            $this->processUpload($entry);
         }
 
         return true;
+    }
+
+    /**
+     *
+     */
+    private function getImportKeys()
+    {
+        $set = Auth::user()->importJobs()->where('status', 'import_complete')->get(['import_jobs.*']);
+        if ($set->count() > 0) {
+            $keys             = $set->pluck('key')->toArray();
+            $this->importKeys = $keys;
+
+        }
+        Log::debug('Valid import keys are ', $this->importKeys);
     }
 
     /**
@@ -83,9 +105,28 @@ class UploadCollector extends BasicCollector implements CollectorInterface
      *
      * @return bool
      */
-    private function isValidFile(string $entry): bool
+    private function isImportFile(string $entry): bool
+    {
+        $name = str_replace('.upload', '', $entry);
+        if (in_array($name, $this->importKeys)) {
+            Log::debug(sprintf('Import file "%s" is in array', $name), $this->importKeys);
+
+            return true;
+        }
+        Log::debug(sprintf('Import file "%s" is NOT in array', $name), $this->importKeys);
+
+        return false;
+    }
+
+    /**
+     * @param string $entry
+     *
+     * @return bool
+     */
+    private function isOldImport(string $entry): bool
     {
         $len = strlen($this->expected);
+        // file is part of the old import routine:
         if (substr($entry, 0, $len) === $this->expected) {
 
             return true;
@@ -97,23 +138,63 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     /**
      * @param $entry
      */
-    private function processOldUpload(string $entry)
+    private function processUpload(string $entry)
     {
-        $content = '';
-
-        if ($this->isValidFile($entry)) {
-            try {
-                $content = Crypt::decrypt($this->uploadDisk->get($entry));
-            } catch (DecryptException $e) {
-                Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped because ' . $e->getMessage());
-            }
+        // file is old import:
+        if ($this->isOldImport($entry)) {
+            $this->saveOldImportFile($entry);
         }
-        if (strlen($content) > 0) {
-            // continue with file:
-            $date = $this->getOriginalUploadDate($entry);
-            $file = $this->job->key . '-Old CSV import dated ' . $date . '.csv';
+
+        // file is current import.
+        if ($this->isImportFile($entry)) {
+            $this->saveImportFile($entry);
+        }
+    }
+
+    /**
+     * @param string $entry
+     */
+    private function saveImportFile(string $entry)
+    {
+        // find job associated with import file:
+        $name    = str_replace('.upload', '', $entry);
+        $job     = Auth::user()->importJobs()->where('key', $name)->first();
+        $content = '';
+        try {
+            $content = Crypt::decrypt($this->uploadDisk->get($entry));
+        } catch (DecryptException $e) {
+            Log::error('Could not decrypt old import file ' . $entry . '. Skipped because ' . $e->getMessage());
+        }
+
+        if (!is_null($job) && strlen($content) > 0) {
+            // add to export disk.
+            $date = $job->created_at->format('Y-m-d');
+            $file = sprintf('%s-Old %s import dated %s.%s', $this->job->key, strtoupper($job->file_type), $date, $job->file_type);
             $this->exportDisk->put($file, $content);
             $this->getFiles()->push($file);
         }
     }
+
+    /**
+     * @param string $entry
+     */
+    private function saveOldImportFile(string $entry)
+    {
+        $content = '';
+        try {
+            $content = Crypt::decrypt($this->uploadDisk->get($entry));
+        } catch (DecryptException $e) {
+            Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped because ' . $e->getMessage());
+        }
+
+        if (strlen($content) > 0) {
+            // add to export disk.
+            $date = $this->getOriginalUploadDate($entry);
+            $file = $this->job->key . '-Old import dated ' . $date . '.csv';
+            $this->exportDisk->put($file, $content);
+            $this->getFiles()->push($file);
+        }
+    }
+
+
 }

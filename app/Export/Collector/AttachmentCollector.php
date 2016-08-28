@@ -92,6 +92,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
             'amount'          => Amount::formatJournal($journal, false),
         ];
         $string  = trans('firefly.attachment_explanation', $args) . "\n";
+        Log::debug('Appended explanation string', ['string' => $string]);
         $this->explanationString .= $string;
 
     }
