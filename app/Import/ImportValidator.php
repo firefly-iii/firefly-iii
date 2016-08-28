@@ -334,7 +334,7 @@ class ImportValidator
         }
 
         // amount > 0, but opposing is expense
-        if ($type == AccountType::EXPENSE && $entry->fields['amount'] < 0) {
+        if ($type == AccountType::EXPENSE && $entry->fields['amount'] > 0) {
             $account                           = $this->convertAccount($entry->fields['opposing-account'], AccountType::REVENUE);
             $entry->fields['opposing-account'] = $account;
             Log::debug('Converted expense account to revenue account');
