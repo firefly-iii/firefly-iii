@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Import routine will now also apply user rules.
+- Various code cleanup.
+- Some small HTML changes.
 
 ### Fixed
 - Bug in the mass edit routines.
