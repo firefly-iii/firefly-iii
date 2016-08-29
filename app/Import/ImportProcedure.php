@@ -29,7 +29,7 @@ class ImportProcedure
      *
      * @return Collection
      */
-    public static function run(ImportJob $job): Collection
+    public static function runImport(ImportJob $job): Collection
     {
         // update job to say we started.
         $job->status = 'import_running';
@@ -61,9 +61,8 @@ class ImportProcedure
         $cleaned = $validator->clean();
 
         // then import collection:
-        $storage = new ImportStorage($cleaned);
+        $storage = new ImportStorage($job->user, $cleaned);
         $storage->setJob($job);
-        $storage->setUser($job->user);
 
         // and run store routine:
         $result = $storage->store();

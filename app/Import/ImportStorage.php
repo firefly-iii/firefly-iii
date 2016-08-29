@@ -13,12 +13,14 @@ namespace FireflyIII\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -40,14 +42,20 @@ class ImportStorage
     /** @var  User */
     public $user;
 
+    /** @var  Collection */
+    private $rules;
+
     /**
      * ImportStorage constructor.
      *
+     * @param User       $user
      * @param Collection $entries
      */
-    public function __construct(Collection $entries)
+    public function __construct(User $user, Collection $entries)
     {
         $this->entries = $entries;
+        $this->user    = $user;
+        $this->rules   = $this->getUserRules();
 
     }
 
@@ -78,9 +86,16 @@ class ImportStorage
         Log::notice(sprintf('Started storing %d entry(ies).', $this->entries->count()));
         foreach ($this->entries as $index => $entry) {
             Log::debug(sprintf('--- import store start for row %d ---', $index));
-            $result = $this->storeSingle($index, $entry);
+
+            // store entry:
+            $journal = $this->storeSingle($index, $entry);
             $this->job->addStepsDone(1);
-            $collection->put($index, $result);
+
+            // apply rules:
+            $this->applyRules($journal);
+            $this->job->addStepsDone(1);
+
+            $collection->put($index, $journal);
         }
         Log::notice(sprintf('Finished storing %d entry(ies).', $collection->count()));
 
@@ -104,12 +119,36 @@ class ImportStorage
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    private function applyRules(TransactionJournal $journal): bool
+    {
+        if ($this->rules->count() > 0) {
+
+            /** @var Rule $rule */
+            foreach ($this->rules as $rule) {
+                Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($journal);
+
+                if ($rule->stop_processing) {
+                    return true;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @return Tag
      */
     private function createImportTag(): Tag
     {
         /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
+        $repository = app(TagRepositoryInterface::class, [$this->user]);
         $data       = [
             'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
             'date'        => null,
@@ -122,6 +161,28 @@ class ImportStorage
         $tag        = $repository->store($data);
 
         return $tag;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getUserRules(): Collection
+    {
+        $set = Rule::distinct()
+                   ->where('rules.user_id', $this->user->id)
+                   ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                   ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                   ->where('rule_groups.active', 1)
+                   ->where('rule_triggers.trigger_type', 'user_action')
+                   ->where('rule_triggers.trigger_value', 'store-journal')
+                   ->where('rules.active', 1)
+                   ->orderBy('rule_groups.order', 'ASC')
+                   ->orderBy('rules.order', 'ASC')
+                   ->get(['rules.*']);
+        Log::debug(sprintf('Found %d user rules.', $set->count()));
+
+        return $set;
+
     }
 
     /**
@@ -252,7 +313,7 @@ class ImportStorage
         $meta       = new TransactionJournalMeta;
         $meta->name = 'originalImportHash';
         $meta->data = $entry->hash;
-        $meta->transactionjournal()->associate($journal);
+        $meta->transactionJournal()->associate($journal);
         $meta->save();
 
         return $journal;
@@ -262,41 +323,35 @@ class ImportStorage
      * @param int         $index
      * @param ImportEntry $entry
      *
-     * @return ImportResult
+     * @return TransactionJournal
      * @throws FireflyException
      */
-    private function storeSingle(int $index, ImportEntry $entry): ImportResult
+    private function storeSingle(int $index, ImportEntry $entry): TransactionJournal
     {
         if ($entry->valid === false) {
             Log::warning(sprintf('Cannot import row %d, because the entry is not valid.', $index));
-            $result = new ImportResult();
-            $result->failed();
-            $errors    = join(', ', $entry->errors->all());
-            $errorText = sprintf('Row #%d: ' . $errors, $index);
-            $result->appendError($errorText);
+            $errors                     = join(', ', $entry->errors->all());
+            $errorText                  = sprintf('Row #%d: ' . $errors, $index);
             $extendedStatus             = $this->job->extended_status;
             $extendedStatus['errors'][] = $errorText;
             $this->job->extended_status = $extendedStatus;
             $this->job->save();
 
-            return $result;
+            return new TransactionJournal;
         }
         $alreadyImported = $this->alreadyImported($entry->hash);
         if (!is_null($alreadyImported->id)) {
             Log::warning(sprintf('Cannot import row %d, because it has already been imported (journal #%d).', $index, $alreadyImported->id));
-            $result = new ImportResult();
-            $result->failed();
-            $errorText = trans(
+            $errorText                  = trans(
                 'firefly.import_double',
                 ['row' => $index, 'link' => route('transactions.show', [$alreadyImported->id]), 'description' => $alreadyImported->description]
             );
-            $result->appendError($errorText);
             $extendedStatus             = $this->job->extended_status;
             $extendedStatus['errors'][] = $errorText;
             $this->job->extended_status = $extendedStatus;
             $this->job->save();
 
-            return $result;
+            return new TransactionJournal;
         }
 
         Log::debug(sprintf('Going to store row %d', $index));
@@ -337,13 +392,6 @@ class ImportStorage
         $this->storeCategory($journal, $entry);
         $this->storeBill($journal, $entry);
 
-        $result = new ImportResult();
-        $result->success();
-        $result->appendMessage(sprintf('Journal titled "%s" imported.', $journal->description));
-        $result->setJournal($journal);
-
-        return $result;
-
-
+        return $journal;
     }
 }

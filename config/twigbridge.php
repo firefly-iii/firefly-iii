@@ -2,9 +2,8 @@
 declare(strict_types = 1);
 
 
-
 return [
-    'twig'       => [
+    'twig' => [
         /*
         |--------------------------------------------------------------------------
         | Extension
@@ -135,8 +134,8 @@ return [
         'facades'   => [
             'Breadcrumbs'  => [
                 'is_safe' => [
-                    'renderIfExists'
-                ]
+                    'renderIfExists',
+                ],
             ],
             'Session',
             'Route',
@@ -148,13 +147,13 @@ return [
             'ExpandedForm' => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location',
-                    'multiRadio', 'file', 'multiCheckbox', 'staticText', 'amountSmall', 
-                ]
+                    'multiRadio', 'file', 'multiCheckbox', 'staticText', 'amountSmall',
+                ],
             ],
             'Form'         => [
                 'is_safe' => [
-                    'input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file'
-                ]
+                    'input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',
+                ],
             ],
         ],
 
@@ -190,7 +189,7 @@ return [
             'elixir',
             'head',
             'last',
-            'old'
+            'old',
         ],
 
         /*
@@ -222,5 +221,5 @@ return [
         |
         */
         'filters'   => [],
-    ]
+    ],
 ];

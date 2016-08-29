@@ -12,9 +12,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Import\ImportProcedure;
-use FireflyIII\Import\ImportResult;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Log;
 
@@ -67,24 +67,33 @@ class Import extends Command
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
 
-        $result = ImportProcedure::run($job);
+        $result = ImportProcedure::runImport($job);
+
 
         /**
-         * @var int          $index
-         * @var ImportResult $entry
+         * @var int                $index
+         * @var TransactionJournal $journal
          */
-        foreach ($result as $index => $entry) {
-            if ($entry->isSuccess()) {
-                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $entry->journal->id));
+        foreach ($result as $index => $journal) {
+            if (!is_null($journal->id)) {
+                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $journal->id));
                 continue;
             }
-            $errors = join(', ', $entry->errors->all());
-            $this->error(sprintf('Could not store line #%d, because: %s', $index, $errors));
+            $this->error(sprintf('Could not store line #%d', $index));
         }
-
 
         $this->line('The import has completed.');
 
+        // get any errors from the importer:
+        $extendedStatus = $job->extended_status;
+        if (isset($extendedStatus['errors']) && count($extendedStatus['errors']) > 0) {
+            $this->line(sprintf('The following %d error(s) occured during the import:', count($extendedStatus['errors'])));
+            foreach ($extendedStatus['errors'] as $error) {
+                $this->error($error);
+            }
+        }
+
+        return;
     }
 
     /**

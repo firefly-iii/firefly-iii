@@ -116,7 +116,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function firstUseDate(Budget $budget): Carbon
     {
         $oldest  = Carbon::create()->startOfYear();
-        $journal = $budget->transactionjournals()->orderBy('date', 'ASC')->first();
+        $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
         if (!is_null($journal)) {
             $oldest = $journal->date < $oldest ? $journal->date : $oldest;
         }
@@ -225,7 +225,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // first get all journals for all budget(s):
-        $journalQuery = $this->user->transactionjournals()
+        $journalQuery = $this->user->transactionJournals()
                                    ->expanded()
                                    ->sortCorrectly()
                                    ->before($end)
@@ -246,7 +246,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $journals = $journalQuery->get(TransactionJournal::queryFields());
 
         // then get transactions themselves.
-        $transactionQuery = $this->user->transactionjournals()
+        $transactionQuery = $this->user->transactionJournals()
                                        ->expanded()
                                        ->before($end)
                                        ->sortCorrectly()
@@ -290,7 +290,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         /** @var Collection $set */
         $query = $this->user
-            ->transactionjournals()
+            ->transactionJournals()
             ->expanded()
             ->sortCorrectly()
             ->transactionTypes([TransactionType::WITHDRAWAL])
@@ -322,9 +322,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             function (TransactionJournal $journal) {
                 foreach ($journal->transactions as $t) {
                     if ($t->budgets->count() === 0) {
-                        return $journal;
+                        return true;
                     }
                 }
+                return false;
             }
         );
 
@@ -343,7 +344,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         // first collect actual transaction journals (fairly easy)
         $query = $this->user
-            ->transactionjournals()
+            ->transactionJournals()
             ->leftJoin(
                 'transactions as source', function (JoinClause $join) {
                 $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
@@ -415,7 +416,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
         $types = [TransactionType::WITHDRAWAL];
-        $query = $this->user->transactionjournals()
+        $query = $this->user->transactionJournals()
                             ->distinct()
                             ->transactionTypes($types)
                             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')

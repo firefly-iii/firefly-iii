@@ -295,10 +295,10 @@ Route::group(
      * Preferences Controller
      */
     Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
-    Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
+    Route::post('/preferences', ['uses' => 'PreferencesController@postIndex', 'as' => 'preferences.update']);
     Route::get('/preferences/code', ['uses' => 'PreferencesController@code', 'as' => 'preferences.code']);
     Route::get('/preferences/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'preferences.delete-code']);
-    Route::post('/preferences/code', ['uses' => 'PreferencesController@postCode']);
+    Route::post('/preferences/code', ['uses' => 'PreferencesController@postCode', 'as' => 'preferences.code.store']);
 
     /**
      * Profile Controller
@@ -306,8 +306,8 @@ Route::group(
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'profile.change-password']);
     Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'profile.delete-account']);
-    Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account-post']);
-    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
+    Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'profile.delete-account.post']);
+    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'profile.change-password.store']);
 
     /**
      * Report Controller
@@ -434,6 +434,9 @@ Route::group(
     Route::get('/admin/domains', ['uses' => 'Admin\DomainController@domains', 'as' => 'admin.users.domains']);
     Route::get('/admin/domains/toggle/{domain}', ['uses' => 'Admin\DomainController@toggleDomain', 'as' => 'admin.users.domains.block-toggle']);
     Route::post('/admin/domains/manual', ['uses' => 'Admin\DomainController@manual', 'as' => 'admin.users.domains.manual']);
+
+    // FF configuration:
+    Route::get('/admin/configuration', ['uses' => 'Admin\ConfigurationController@index', 'as' => 'admin.configuration.index']);
 
 }
 );

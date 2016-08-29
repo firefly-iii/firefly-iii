@@ -43,7 +43,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -131,7 +131,7 @@ class CurrencyController extends Controller
     /**
      * @param TransactionCurrency $currency
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(TransactionCurrency $currency)
     {
@@ -154,7 +154,7 @@ class CurrencyController extends Controller
     /**
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index(CurrencyRepositoryInterface $repository)
     {
@@ -175,7 +175,7 @@ class CurrencyController extends Controller
      * @param CurrencyFormRequest         $request
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {

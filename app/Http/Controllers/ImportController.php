@@ -263,7 +263,7 @@ class ImportController extends Controller
      *
      * @param ImportJob $job
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return View
      * @throws FireflyException
      */
     public function settings(ImportJob $job)
@@ -305,8 +305,9 @@ class ImportController extends Controller
      */
     public function start(ImportJob $job)
     {
+        set_time_limit(0);
         if ($job->status == "settings_complete") {
-            ImportProcedure::run($job);
+            ImportProcedure::runImport($job);
         }
     }
 

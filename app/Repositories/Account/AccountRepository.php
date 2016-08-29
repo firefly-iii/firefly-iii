@@ -37,8 +37,6 @@ class AccountRepository implements AccountRepositoryInterface
 
     /** @var User */
     private $user;
-    /** @var array */
-    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
     /**
      * AttachmentRepository constructor.
@@ -76,7 +74,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function earnedFromInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
                             ->transactionTypes([TransactionType::DEPOSIT]);
 
         if ($end >= $start) {
@@ -113,7 +111,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
                             ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
 
         if ($end >= $start) {
@@ -142,7 +140,6 @@ class AccountRepository implements AccountRepositoryInterface
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
         $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
-
 
 
         // that should do it:
@@ -179,15 +176,16 @@ class AccountRepository implements AccountRepositoryInterface
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($accountIds) {
                 if ($journal->transaction_type_type == TransactionType::WITHDRAWAL) {
-                    return $journal;
+                    return true;
                 }
                 /*
                  * The source of a transfer must be one of the $accounts in order to
                  * be included. Otherwise, it would not be an expense.
                  */
                 if (in_array($journal->source_account_id, $accountIds)) {
-                    return $journal;
+                    return true;
                 }
+                return false;
             }
         );
 
@@ -363,15 +361,16 @@ class AccountRepository implements AccountRepositoryInterface
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($accountIds) {
                 if ($journal->transaction_type_type == TransactionType::DEPOSIT) {
-                    return $journal;
+                    return true;
                 }
                 /*
                  * The destination of a transfer must be one of the $accounts in order to
                  * be included. Otherwise, it would not be income.
                  */
                 if (in_array($journal->destination_account_id, $accountIds)) {
-                    return $journal;
+                    return true;
                 }
+                return false;
             }
         );
 
@@ -389,7 +388,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
     {
         // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly();
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
 
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -437,7 +436,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $balance = Steam::balanceIgnoreVirtual($account, $date);
         /** @var PiggyBank $p */
-        foreach ($account->piggybanks()->get() as $p) {
+        foreach ($account->piggyBanks()->get() as $p) {
             $currentAmount = $p->currentRelevantRep()->currentamount ?? '0';
 
             $balance = bcsub($balance, $currentAmount);
@@ -528,7 +527,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var HasMany $query */
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
                             ->transactionTypes([TransactionType::WITHDRAWAL]);
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -564,7 +563,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var HasMany $query */
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
                             ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
         if ($end >= $start) {
             $query->before($end)->after($start);

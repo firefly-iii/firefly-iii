@@ -82,8 +82,8 @@ class ReportHelper implements ReportHelperInterface
             $billLine = new BillLine;
             $billLine->setBill($bill);
             $billLine->setActive(intval($bill->active) === 1);
-            $billLine->setMin($bill->amount_min);
-            $billLine->setMax($bill->amount_max);
+            $billLine->setMin(strval($bill->amount_min));
+            $billLine->setMax(strval($bill->amount_max));
             $billLine->setHit(false);
             // is hit in period?
 

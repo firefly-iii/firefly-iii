@@ -131,7 +131,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $first = null;
 
         /** @var TransactionJournal $first */
-        $firstJournalQuery = $category->transactionjournals()->orderBy('date', 'ASC');
+        $firstJournalQuery = $category->transactionJournals()->orderBy('date', 'ASC');
 
         if ($accounts->count() > 0) {
             // filter journals:
@@ -198,13 +198,13 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $complete = new Collection;
         // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly();
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
         $query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
         $query->where('category_transaction_journal.category_id', $category->id);
         $first = $query->get(TransactionJournal::queryFields());
 
         // then collection transactions (harder)
-        $query  = $this->user->transactionjournals()->distinct()
+        $query  = $this->user->transactionJournals()->distinct()
                              ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                              ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id')
                              ->where('category_transaction.category_id', $category->id);
@@ -245,7 +245,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $complete = new Collection;
         // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionjournals()->expanded()->sortCorrectly();
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
 
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -270,7 +270,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
 
         // then collection transactions (harder)
-        $query = $this->user->transactionjournals()->distinct()
+        $query = $this->user->transactionJournals()->distinct()
                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
 
@@ -308,7 +308,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var Collection $set */
         $query = $this->user
-            ->transactionjournals();
+            ->transactionJournals();
         if (count($types) > 0) {
             $query->transactionTypes($types);
         }
@@ -348,7 +348,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         // this second set REALLY doesn't have any categories.
         $secondSet = $secondQuery->get(['transactions.transaction_journal_id']);
         $allIds    = $secondSet->pluck('transaction_journal_id')->toArray();
-        $return    = $this->user->transactionjournals()->sortCorrectly()->expanded()->whereIn('transaction_journals.id', $allIds)->get(
+        $return    = $this->user->transactionJournals()->sortCorrectly()->expanded()->whereIn('transaction_journals.id', $allIds)->get(
             TransactionJournal::queryFields()
         );
 
@@ -368,7 +368,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $last = null;
 
         /** @var TransactionJournal $first */
-        $lastJournalQuery = $category->transactionjournals()->orderBy('date', 'DESC');
+        $lastJournalQuery = $category->transactionJournals()->orderBy('date', 'DESC');
 
         if ($accounts->count() > 0) {
             // filter journals:
@@ -483,7 +483,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         // first collect actual transaction journals (fairly easy)
         $query = $this->user
-            ->transactionjournals()
+            ->transactionJournals()
             ->transactionTypes($types)
             ->leftJoin(
                 'transactions as source', function (JoinClause $join) {
@@ -548,7 +548,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     private function sumInPeriodWithoutCategory(Collection $accounts, array $types, Carbon $start, Carbon $end): string
     {
-        $query = $this->user->transactionjournals()
+        $query = $this->user->transactionJournals()
                             ->distinct()
                             ->transactionTypes($types)
                             ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')

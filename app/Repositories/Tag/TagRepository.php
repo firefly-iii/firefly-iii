@@ -189,8 +189,8 @@ class TagRepository implements TagRepositoryInterface
         /** @var TransactionType $deposit */
         $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
-        $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
-        $deposits    = $tag->transactionjournals()->where('transaction_type_id', $deposit->id)->count();
+        $withdrawals = $tag->transactionJournals()->where('transaction_type_id', $withdrawal->id)->count();
+        $deposits    = $tag->transactionJournals()->where('transaction_type_id', $deposit->id)->count();
 
         if ($journal->transaction_type_id == $transfer->id) { // advance payments cannot accept transfers:
             return false;
@@ -229,10 +229,10 @@ class TagRepository implements TagRepositoryInterface
     {
         /** @var TransactionType $withdrawal */
         $withdrawal  = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+        $withdrawals = $tag->transactionJournals()->where('transaction_type_id', $withdrawal->id)->count();
         /** @var TransactionType $transfer */
         $transfer  = TransactionType::whereType(TransactionType::TRANSFER)->first();
-        $transfers = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
+        $transfers = $tag->transactionJournals()->where('transaction_type_id', $transfer->id)->count();
 
 
         // only if this is the only withdrawal.

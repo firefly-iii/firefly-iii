@@ -110,8 +110,9 @@ class ReportController extends Controller
                     function (TransactionJournal $journal) {
                         $tags = $journal->tags()->where('tagMode', 'balancingAct')->count();
                         if ($tags === 0) {
-                            return $journal;
+                            return true;
                         }
+                        return false;
                     }
                 );
                 break;
@@ -191,8 +192,9 @@ class ReportController extends Controller
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($account) {
                 if ($journal->destination_account_id === $account->id) {
-                    return $journal;
+                    return true;
                 }
+                return false;
             }
         );
 
@@ -225,8 +227,9 @@ class ReportController extends Controller
                     $journal->source_account_id === $account->id
                     && in_array($journal->destination_account_id, $destinations)
                 ) {
-                    return $journal;
+                    return true;
                 }
+                return false;
             }
         );
 

@@ -233,7 +233,7 @@ class RuleController extends Controller
      * @param RuleRepositoryInterface $repository
      * @param RuleGroup               $ruleGroup
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(RuleFormRequest $request, RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
@@ -281,7 +281,7 @@ class RuleController extends Controller
      *
      * @param TestRuleFormRequest $request
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
@@ -336,7 +336,7 @@ class RuleController extends Controller
      * @param RuleFormRequest         $request
      * @param Rule                    $rule
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(RuleRepositoryInterface $repository, RuleFormRequest $request, Rule $rule)
     {

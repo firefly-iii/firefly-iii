@@ -35,7 +35,7 @@ class DomainController extends Controller
         $title         = strval(trans('firefly.administration'));
         $mainTitleIcon = 'fa-hand-spock-o';
         $subTitle      = strval(trans('firefly.blocked_domains'));
-        $subTitleIcon  = 'fa-users';
+        $subTitleIcon  = 'fa-exclamation-circle';
         $domains       = FireflyConfig::get('blocked-domains', [])->data;
 
         // known domains

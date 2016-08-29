@@ -34,8 +34,9 @@ class OpposingAccounts implements MapperInterface
             [
                 AccountType::DEFAULT, AccountType::ASSET,
                 AccountType::EXPENSE, AccountType::BENEFICIARY,
-                AccountType::REVENUE
-            ]);
+                AccountType::REVENUE,
+            ]
+        );
         $list = [];
 
         /** @var Account $account */

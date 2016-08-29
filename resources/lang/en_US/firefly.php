@@ -723,6 +723,8 @@ return [
     'no_domain_filled_in'                       => 'No domain filled in',
     'domain_already_blocked'                    => 'Domain :domain is already blocked',
     'domain_is_now_blocked'                     => 'Domain :domain is now blocked',
+    'instance_configuration'                    => 'Configuration',
+    'firefly_instance_configuration'            => 'Configuration options for Firefly III',
 
     // split a transaction:
     'transaction_meta_data'                     => 'Transaction meta-data',

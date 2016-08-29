@@ -10,11 +10,11 @@
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-The error was of type "{{ class }}".
+    The error was of type "{{ class }}".
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-The error occured on/at: {{ time }}.
+    The error occured on/at: {{ time }}.
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
@@ -23,14 +23,14 @@ The error occured on/at: {{ time }}.
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {% if loggedIn %}
-        The error was encountered by user #{{ user.id }}, <a href="mailto:{{ user.email }}">{{ user.email }}</a>.
+    The error was encountered by user #{{ user.id }}, <a href="mailto:{{ user.email }}">{{ user.email }}</a>.
     {% else %}
-        There was no user logged in for this error or no user was detected.
+    There was no user logged in for this error or no user was detected.
     {% endif %}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-	The IP address related to this error is: {{ ip }}
+    The IP address related to this error is: {{ ip }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">

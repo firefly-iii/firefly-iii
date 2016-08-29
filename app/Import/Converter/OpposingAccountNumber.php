@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Crud\Account\AccountCrudInterface;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Log;
@@ -37,6 +36,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new Account;
         }
 
@@ -50,6 +50,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
             if (!is_null($account->id)) {
                 Log::debug('Found account by ID', ['id' => $account->id]);
                 $this->setCertainty(100);
+
                 return $account;
             }
         }
@@ -59,6 +60,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         if (!is_null($account->id)) {
             Log::debug('Found account by number', ['id' => $account->id]);
             $this->setCertainty(50);
+
             return $account;
         }
 
@@ -79,6 +81,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
              'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]
         );
         $this->setCertainty(100);
+
         return $account;
 
     }

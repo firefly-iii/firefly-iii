@@ -1,0 +1,20 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <!-- configuration setting block -->
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'setting'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    Bla bla bla
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

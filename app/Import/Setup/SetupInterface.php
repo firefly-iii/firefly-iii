@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Setup;
 
-use FireflyIII\Import\Role\Map;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\FileBag;
@@ -47,14 +46,6 @@ interface SetupInterface
     public function getDataForSettings(): array;
 
     /**
-     * Store the settings filled in by the user, if applicable.
-     * 
-     * @param Request $request
-     *
-     */
-    public function storeSettings(Request $request);
-
-    /**
      * This method returns the name of the view that will be shown to the user to further configure
      * the import job.
      *
@@ -71,7 +62,9 @@ interface SetupInterface
     public function requireUserSettings(): bool;
 
     /**
-     * @param array $data
+     * @param array   $data
+     *
+     * @param FileBag $files
      *
      * @return bool
      */
@@ -82,4 +75,12 @@ interface SetupInterface
      *
      */
     public function setJob(ImportJob $job);
+
+    /**
+     * Store the settings filled in by the user, if applicable.
+     *
+     * @param Request $request
+     *
+     */
+    public function storeSettings(Request $request);
 }

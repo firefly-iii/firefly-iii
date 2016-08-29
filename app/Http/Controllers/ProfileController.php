@@ -19,6 +19,7 @@ use FireflyIII\User;
 use Hash;
 use Preferences;
 use Session;
+use View;
 
 /**
  * Class ProfileController
@@ -36,7 +37,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function changePassword()
     {
@@ -46,7 +47,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function deleteAccount()
     {
@@ -56,7 +57,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      *
      */
     public function index()

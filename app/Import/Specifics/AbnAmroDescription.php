@@ -133,7 +133,7 @@ class AbnAmroDescription implements SpecificInterface
                             break;
                         case 'NAAM':
                             $this->row[8] = $value;
-                            $name                                = $value;
+                            $name         = $value;
                             break;
                         case 'KENMERK':
                             $reference = $value;

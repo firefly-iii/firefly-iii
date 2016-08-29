@@ -64,7 +64,13 @@ class CsvImporter implements ImporterInterface
                 Log::debug(sprintf('Now going to import row %d.', $index));
                 $importEntry = $this->importSingleRow($index, $row);
                 $this->collection->put($line, $importEntry);
-                $this->job->addTotalSteps(3);
+                /**
+                 * 1. Build import entry.
+                 * 2. Validate import entry.
+                 * 3. Store journal.
+                 * 4. Run rules.
+                 */
+                $this->job->addTotalSteps(4);
                 $this->job->addStepsDone(1);
             }
         }

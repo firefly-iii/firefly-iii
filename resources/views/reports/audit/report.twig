@@ -18,7 +18,8 @@
                         {% for hide in hideable %}
                             <li><input
                                         {% if hide in defaultShow %}checked{% endif %}
-                                        type="checkbox" class="audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}" /> <label for="option_{{ hide }}" style="font-weight:normal;">{{ trans('list.'~hide) }}</label></li>
+                                        type="checkbox" class="audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}"/> <label
+                                        for="option_{{ hide }}" style="font-weight:normal;">{{ trans('list.'~hide) }}</label></li>
                         {% endfor %}
 
                     </ul>
@@ -41,13 +42,12 @@
 
                             <em>
                                 {{ trans('firefly.no_audit_activity',
-                                    {
-                                        account_name: account.name,
-                                        url: url,
-                                        start: start.formatLocalized(monthAndDayFormat),
-                                        end: end.formatLocalized(monthAndDayFormat),
-                                    })|raw
-                                }}
+                                {
+                                    account_name: account.name,
+                                    url: url,
+                                    start: start.formatLocalized(monthAndDayFormat),
+                                    end: end.formatLocalized(monthAndDayFormat),
+                                })|raw }}
                             </em>
                         </div>
                     {% else %}
@@ -60,8 +60,7 @@
                                     url: url,
                                     end: auditData[account.id].end,
                                     balance: auditData[account.id].endBalance|formatAmount
-                                })|raw
-                                }}
+                                })|raw }}
                             </p>
                             {% include 'reports/partials/journals-audit.twig'  with {'journals': auditData[account.id].journals,'account':account} %}
                             <p style="padding:10px;">
@@ -71,8 +70,7 @@
                                     url: url,
                                     end: auditData[account.id].dayBefore,
                                     balance: auditData[account.id].dayBeforeBalance|formatAmount
-                                })|raw
-                                }}
+                                })|raw }}
                             </p>
                         </div>
                     {% endif %}

@@ -200,7 +200,7 @@ class RuleGroupController extends Controller
      * @param RuleGroupFormRequest         $request
      * @param RuleGroupRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository)
     {
@@ -245,7 +245,7 @@ class RuleGroupController extends Controller
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {

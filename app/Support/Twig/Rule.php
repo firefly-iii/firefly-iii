@@ -26,6 +26,26 @@ class Rule extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
+    public function allActionTriggers(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'allRuleActions', function () {
+            // array of valid values for actions
+            $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+            $possibleActions = [];
+            foreach ($ruleActions as $key) {
+                $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
+            }
+            unset($key, $ruleActions);
+
+            return $possibleActions;
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
     public function allJournalTriggers(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
@@ -59,26 +79,6 @@ class Rule extends Twig_Extension
 
         );
 
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function allActionTriggers(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'allRuleActions', function () {
-            // array of valid values for actions
-            $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
-            $possibleActions = [];
-            foreach ($ruleActions as $key) {
-                $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
-            }
-            unset($key, $ruleActions);
-
-            return $possibleActions;
-        }
-        );
     }
 
     /**

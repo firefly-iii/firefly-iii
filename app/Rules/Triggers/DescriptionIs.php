@@ -53,7 +53,7 @@ final class DescriptionIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $description = strtolower($journal->description);
+        $description = strtolower($journal->description ?? '');
         $search      = strtolower($this->triggerValue);
 
         if ($description == $search) {

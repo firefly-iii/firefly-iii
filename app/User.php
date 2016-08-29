@@ -54,9 +54,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlockedCode($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[] $importjobs
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[]          $importjobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]          $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]        $transactions
  */
 class User extends Authenticatable
 {
@@ -143,17 +143,9 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function exportjobs(): HasMany
+    public function exportJobs(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\ExportJob');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function importjobs(): HasMany
-    {
-        return $this->hasMany('FireflyIII\Models\ImportJob');
     }
 
     /**
@@ -175,6 +167,14 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function importJobs(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\ImportJob');
     }
 
     /**
@@ -228,7 +228,7 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function transactionjournals(): HasMany
+    public function transactionJournals(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }

@@ -10,6 +10,7 @@
 declare(strict_types = 1);
 
 namespace FireflyIII\Import\Importer;
+
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\Collection;
 

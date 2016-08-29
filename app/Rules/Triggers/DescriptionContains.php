@@ -55,7 +55,7 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
     public function triggered(TransactionJournal $journal): bool
     {
         $search = strtolower($this->triggerValue);
-        $source = strtolower($journal->description);
+        $source = strtolower($journal->description ?? '');
 
         $strpos = strpos($source, $search);
         if (!($strpos === false)) {

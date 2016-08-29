@@ -51,6 +51,7 @@ class BudgetLine
     public function setBudget(BudgetModel $budget): BudgetLine
     {
         $this->budget = $budget;
+
         return $this;
     }
 
@@ -70,6 +71,7 @@ class BudgetLine
     public function setBudgeted(string $budgeted): BudgetLine
     {
         $this->budgeted = $budgeted;
+
         return $this;
     }
 
@@ -89,6 +91,7 @@ class BudgetLine
     public function setLeft(string $left): BudgetLine
     {
         $this->left = $left;
+
         return $this;
     }
 
@@ -108,6 +111,7 @@ class BudgetLine
     public function setOverspent(string $overspent): BudgetLine
     {
         $this->overspent = $overspent;
+
         return $this;
     }
 
@@ -127,6 +131,7 @@ class BudgetLine
     public function setRepetition(LimitRepetition $repetition): BudgetLine
     {
         $this->repetition = $repetition;
+
         return $this;
     }
 
@@ -146,6 +151,7 @@ class BudgetLine
     public function setSpent(string $spent): BudgetLine
     {
         $this->spent = $spent;
+
         return $this;
     }
 

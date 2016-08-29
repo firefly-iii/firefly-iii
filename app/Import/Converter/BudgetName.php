@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Log;
@@ -36,6 +35,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new Budget;
         }
 
@@ -48,6 +48,7 @@ class BudgetName extends BasicConverter implements ConverterInterface
             if (!is_null($budget->id)) {
                 Log::debug('Found budget by ID', ['id' => $budget->id]);
                 $this->setCertainty(100);
+
                 return $budget;
             }
         }
@@ -57,14 +58,15 @@ class BudgetName extends BasicConverter implements ConverterInterface
         if (!is_null($budget->id)) {
             Log::debug('Found budget by name ', ['id' => $budget->id]);
             $this->setCertainty(100);
+
             return $budget;
         }
 
         // create new budget. Use a lot of made up values.
         $budget = $repository->store(
             [
-                'name'        => $value,
-                'user'     => $this->user->id,
+                'name' => $value,
+                'user' => $this->user->id,
             ]
         );
         $this->setCertainty(100);

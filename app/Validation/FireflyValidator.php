@@ -54,10 +54,11 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
-     * @param $parameters
-     *
      *
      * @return bool
+     * @internal param $parameters
+     *
+     *
      */
     public function validate2faCode($attribute, $value): bool
     {

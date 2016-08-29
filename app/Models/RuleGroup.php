@@ -49,13 +49,19 @@ class RuleGroup extends Model
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param RuleGroup $value
+     *
+     * @return RuleGroup
      */
-    public function user()
+    public static function routeBinder(RuleGroup $value)
     {
-        return $this->belongsTo('FireflyIII\User');
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->id) {
+                return $value;
+            }
+        }
+        throw new NotFoundHttpException;
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -66,17 +72,10 @@ class RuleGroup extends Model
     }
 
     /**
-     * @param RuleGroup $value
-     *
-     * @return Rule
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public static function routeBinder(RuleGroup $value)
+    public function user()
     {
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
-                return $value;
-            }
-        }
-        throw new NotFoundHttpException;
+        return $this->belongsTo('FireflyIII\User');
     }
 }

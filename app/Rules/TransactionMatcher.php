@@ -85,6 +85,7 @@ class TransactionMatcher
             );
 
             // merge:
+            /** @var Collection $result */
             $result = $result->merge($filtered);
 
             // Update counters

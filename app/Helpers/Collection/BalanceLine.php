@@ -32,14 +32,12 @@ class BalanceLine
 
     /** @var BudgetModel */
     protected $budget;
-
-    /** @var  Carbon */
-    protected $startDate;
     /** @var  Carbon */
     protected $endDate;
-
     /** @var int */
     protected $role = self::ROLE_DEFAULTROLE;
+    /** @var  Carbon */
+    protected $startDate;
 
     /**
      *
@@ -91,6 +89,22 @@ class BalanceLine
     }
 
     /**
+     * @return Carbon
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param Carbon $endDate
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
      * @return int
      */
     public function getRole(): int
@@ -104,6 +118,22 @@ class BalanceLine
     public function setRole(int $role)
     {
         $this->role = $role;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param Carbon $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
     }
 
     /**
@@ -126,39 +156,6 @@ class BalanceLine
 
         return '';
     }
-
-    /**
-     * @return Carbon
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * @param Carbon $startDate
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * @return Carbon
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    /**
-     * @param Carbon $endDate
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-    }
-
 
     /**
      * If a BalanceLine has a budget/repetition, each BalanceEntry in this BalanceLine

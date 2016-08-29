@@ -54,7 +54,7 @@ class PiggyBankController extends Controller
      * @param ARI       $repository
      * @param PiggyBank $piggyBank
      *
-     * @return $this
+     * @return View
      */
     public function add(ARI $repository, PiggyBank $piggyBank)
     {
@@ -74,7 +74,7 @@ class PiggyBankController extends Controller
      * @param ARI       $repository
      * @param PiggyBank $piggyBank
      *
-     * @return $this
+     * @return View
      */
     public function addMobile(ARI $repository, PiggyBank $piggyBank)
     {
@@ -113,7 +113,7 @@ class PiggyBankController extends Controller
     /**
      * @param PiggyBank $piggyBank
      *
-     * @return $this
+     * @return View
      */
     public function delete(PiggyBank $piggyBank)
     {
@@ -254,6 +254,7 @@ class PiggyBankController extends Controller
     public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
     {
         $amount        = strval(round(Input::get('amount'), 2));
+        /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
@@ -320,7 +321,7 @@ class PiggyBankController extends Controller
      * @param PiggyBank $piggyBank
      *
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function remove(PiggyBank $piggyBank)
     {
@@ -332,7 +333,7 @@ class PiggyBankController extends Controller
      *
      * @param PiggyBank $piggyBank
      *
-     * @return $this
+     * @return View
      */
     public function removeMobile(PiggyBank $piggyBank)
     {
@@ -358,7 +359,7 @@ class PiggyBankController extends Controller
      * @param PiggyBankFormRequest         $request
      * @param PiggyBankRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {

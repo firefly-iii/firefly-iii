@@ -49,7 +49,7 @@ class TransactionController extends Controller
     /**
      * @param string $what
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create(string $what = TransactionType::DEPOSIT)
     {
@@ -88,7 +88,7 @@ class TransactionController extends Controller
      *
      * @param TransactionJournal $journal
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function delete(TransactionJournal $journal)
     {
@@ -273,7 +273,7 @@ class TransactionController extends Controller
 
         // store the journal only, flash the rest.
         if ($doSplit) {
-            $journal = $repository->storeJournal($journalData);
+            $journal            = $repository->storeJournal($journalData);
             $journal->completed = false;
             $journal->save();
 
@@ -336,7 +336,7 @@ class TransactionController extends Controller
      * @param AttachmentHelperInterface  $att
      * @param TransactionJournal         $journal
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
     {

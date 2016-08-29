@@ -97,7 +97,7 @@ class HomeController extends Controller
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            foreach ($tag->transactionjournals()->get() as $journal) {
+            foreach ($tag->transactionJournals()->get() as $journal) {
                 $count              = $journal->tags()->count();
                 $journal->tag_count = $count;
                 $journal->save();

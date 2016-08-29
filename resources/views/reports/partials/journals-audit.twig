@@ -33,11 +33,13 @@
         <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
             <td class="hide-buttons">
                 <div class="btn-group btn-group-xs">
-                <a href="{{ route('transactions.edit',journal.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a></div></td>
+                    <a href="{{ route('transactions.edit',journal.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a></div>
+            </td>
             <td class="hide-icon">{{ journal|typeIcon }}</td>
 
-            <td class="hide-description"><a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a></td>
+            <td class="hide-description"><a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
+            </td>
             <td class="hide-balance_before">{{ journal.before|formatAmount }}</td>
             <td class="hide-amount">{{ journal|formatJournal }}</td>
             <td class="hide-balance_after">{{ journal.after|formatAmount }}</td>

@@ -13,6 +13,7 @@ namespace FireflyIII\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Log;
+use URL;
 
 /**
  * Class AppServiceProvider
@@ -28,9 +29,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        // force root URL.
+        $forcedUrl = env('APP_FORCE_ROOT', '');
+        if (strlen($forcedUrl) > 0) {
+            URL::forceRootUrl($forcedUrl);
+        }
+
         // force https urls
         if (env('APP_FORCE_SSL', false)) {
-            \URL::forceSchema('https');
+            URL::forceSchema('https');
         }
     }
 

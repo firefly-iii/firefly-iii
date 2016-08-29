@@ -7,9 +7,9 @@
                     href="{{ route('transactions.show',journal.id) }}"
                 {% endif %}
         >
-        {{ journal|typeIcon }}
-        {{ journal.description }}
-        <span class="pull-right small">
+            {{ journal|typeIcon }}
+            {{ journal.description }}
+            <span class="pull-right small">
             {{ journal|formatJournal }}
         </span>
         </a>

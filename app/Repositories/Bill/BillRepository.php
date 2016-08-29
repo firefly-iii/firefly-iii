@@ -125,7 +125,7 @@ class BillRepository implements BillRepositoryInterface
     {
         $ids = $bills->pluck('id')->toArray();
 
-        $set = $this->user->transactionjournals()
+        $set = $this->user->transactionJournals()
                           ->leftJoin(
                               'transactions', function (JoinClause $join) {
                               $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
@@ -221,7 +221,7 @@ class BillRepository implements BillRepositoryInterface
             $ranges = $this->getRanges($bill, $start, $end);
 
             foreach ($ranges as $range) {
-                $paid      = $bill->transactionjournals()
+                $paid      = $bill->transactionJournals()
                                   ->before($range['end'])
                                   ->after($range['start'])
                                   ->leftJoin(
@@ -256,7 +256,7 @@ class BillRepository implements BillRepositoryInterface
             $ranges   = $this->getRanges($bill, $start, $end);
             $paidBill = '0';
             foreach ($ranges as $range) {
-                $paid      = $bill->transactionjournals()
+                $paid      = $bill->transactionJournals()
                                   ->before($range['end'])
                                   ->after($range['start'])
                                   ->leftJoin(
@@ -290,7 +290,7 @@ class BillRepository implements BillRepositoryInterface
     public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator
     {
         $offset    = ($page - 1) * $pageSize;
-        $query     = $bill->transactionjournals()
+        $query     = $bill->transactionJournals()
                           ->expanded()
                           ->sortCorrectly();
         $count     = $query->count();
@@ -311,7 +311,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        return $bill->transactionjournals()->before($end)->after($start)->get();
+        return $bill->transactionJournals()->before($end)->after($start)->get();
     }
 
     /**
@@ -321,7 +321,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getOverallAverage($bill): string
     {
-        $journals = $bill->transactionjournals()->get();
+        $journals = $bill->transactionJournals()->get();
         $sum      = '0';
         $count    = strval($journals->count());
         /** @var TransactionJournal $journal */
@@ -351,7 +351,7 @@ class BillRepository implements BillRepositoryInterface
 
         $journals = new Collection;
         if (count($ids) > 0) {
-            $journals = $this->user->transactionjournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
+            $journals = $this->user->transactionJournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
                 ['transaction_journals.*']
             );
         }
@@ -409,7 +409,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getYearAverage(Bill $bill, Carbon $date): string
     {
-        $journals = $bill->transactionjournals()
+        $journals = $bill->transactionJournals()
                          ->where('date', '>=', $date->year . '-01-01')
                          ->where('date', '<=', $date->year . '-12-31')
                          ->get();
@@ -434,7 +434,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function lastFoundMatch(Bill $bill): Carbon
     {
-        $last = $bill->transactionjournals()->orderBy('date', 'DESC')->first();
+        $last = $bill->transactionJournals()->orderBy('date', 'DESC')->first();
         if ($last) {
             return $last->date;
         }
@@ -476,7 +476,7 @@ class BillRepository implements BillRepositoryInterface
             if (($counter % $skip) == 0) {
                 // do something.
                 $end          = Navigation::endOfPeriod(clone $start, $bill->repeat_freq);
-                $journalCount = $bill->transactionjournals()->before($end)->after($start)->count();
+                $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();
                 if ($journalCount == 0) {
                     $finalDate = new Carbon($start->format('Y-m-d'));
                     break;

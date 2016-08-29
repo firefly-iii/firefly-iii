@@ -5,213 +5,210 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.open({'class' : 'form-horizontal','id' : 'preferences'}) }}
-
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_home_screen_accounts'|_ }}</h3>
+    <form method="POST" action="{{ route('preferences.update') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_home_screen_accounts'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">{{ 'pref_home_screen_accounts_help'|_ }}</p>
+                        {% for account in accounts %}
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
+                                                <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"
+                                                       checked> {{ account.name }}
+                                            {% else %}
+                                                <input type="checkbox" name="frontPageAccounts[]"
+                                                       value="{{ account.id }}"> {{ account.name }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'pref_home_screen_accounts_help'|_ }}</p>
-                    {% for account in accounts %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_budget_settings'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'pref_budget_settings_help'|_ }}
+                        </p>
+                        {{ ExpandedForm.amount('budgetMaximum',budgetMaximum,{'label' : 'budget_maximum'|_}) }}
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_custom_fiscal_year'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'pref_custom_fiscal_year_help'|_ }}
+                        </p>
+                        {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
+                        {{ ExpandedForm.checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
+                        {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_view_range'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">{{ 'pref_view_range_help'|_ }}</p>
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="viewRange"
+                                       value="1D" {% if viewRange == '1D' %} checked {% endif %}>
+                                {{ 'pref_1D'|_ }}
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="viewRange"
+                                       value="1W" {% if viewRange == '1W' %} checked {% endif %}>
+                                {{ 'pref_1W'|_ }}
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="viewRange"
+                                       value="1M" {% if viewRange == '1M' %} checked {% endif %}>
+                                {{ 'pref_1M'|_ }}
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="viewRange"
+                                       value="3M" {% if viewRange == '3M' %} checked {% endif %}>
+                                {{ 'pref_3M'|_ }}
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="viewRange"
+                                       value="6M" {% if viewRange == '6M' %} checked {% endif %}>
+                                {{ 'pref_6M'|_ }}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="viewRange"
+                                       value="1Y" {% if viewRange == '1Y' %} checked {% endif %}>
+                                {{ 'pref_1Y'|_ }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_languages'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
+                        {% for key, lang in Config.get('firefly.languages') %}
+                            {% if lang.complete == true or (lang.complete == false and showIncomplete) %}
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="language" value="{{ key }}"
+                                                {% if language == key %}
+                                                    checked
+                                                {% endif %}
+                                        />
+                                        {{ lang.name_locale }} ({{ lang.name_english }})
+                                        {% if lang.complete == false %}
+                                            <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- page size -->
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'transaction_page_size_title'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">{{ 'transaction_page_size_help'|_ }}</p>
+                        {{ ExpandedForm.integer('transactionPageSize',transactionPageSize,{'label' : 'transaction_page_size_label'|_}) }}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_two_factor_auth'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
                         <div class="form-group">
                             <div class="col-sm-10">
                                 <div class="checkbox">
                                     <label>
-                                        {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
-                                            <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"
-                                                   checked> {{ account.name }}
-                                        {% else %}
-                                            <input type="checkbox" name="frontPageAccounts[]"
-                                                   value="{{ account.id }}"> {{ account.name }}
-                                        {% endif %}
+                                        <input type="checkbox" name="twoFactorAuthEnabled" value="1"
+                                                {% if is2faEnabled == '1' %} checked {% endif %}> {{ 'pref_enable_two_factor_auth'|_ }}
                                     </label>
                                 </div>
                             </div>
+
+                            {% if is2faEnabled == 1 and has2faSecret == true %}
+
+                                <div class="col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            <a href="{{ route('preferences.code') }}">{{ 'pref_two_factor_auth_reset_code'|_ }}</a>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <a href="{{ route('preferences.delete-code') }}">{{ 'pref_two_factor_auth_remove_code'|_ }}</a>
+                                            {{ 'pref_two_factor_auth_remove_will_disable'|_ }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
             </div>
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_budget_settings'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">
-                        {{ 'pref_budget_settings_help'|_ }}
-                    </p>
-                    {{ ExpandedForm.amount('budgetMaximum',budgetMaximum,{'label' : 'budget_maximum'|_}) }}
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_custom_fiscal_year'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">
-                        {{ 'pref_custom_fiscal_year_help'|_ }}
-                    </p>
-                    {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
-                    {{ ExpandedForm.checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
-                    {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
-                </div>
-            </div>
+
 
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_view_range'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'pref_view_range_help'|_ }}</p>
-
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="viewRange"
-                                   value="1D" {% if viewRange == '1D' %} checked {% endif %}>
-                            {{ 'pref_1D'|_ }}
-                        </label>
-                    </div>
-
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="viewRange"
-                                   value="1W" {% if viewRange == '1W' %} checked {% endif %}>
-                            {{ 'pref_1W'|_ }}
-                        </label>
-                    </div>
-
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="viewRange"
-                                   value="1M" {% if viewRange == '1M' %} checked {% endif %}>
-                            {{ 'pref_1M'|_ }}
-                        </label>
-                    </div>
-
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="viewRange"
-                                   value="3M" {% if viewRange == '3M' %} checked {% endif %}>
-                            {{ 'pref_3M'|_ }}
-                        </label>
-                    </div>
-
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="viewRange"
-                                   value="6M" {% if viewRange == '6M' %} checked {% endif %}>
-                            {{ 'pref_6M'|_ }}
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="viewRange"
-                                   value="1Y" {% if viewRange == '1Y' %} checked {% endif %}>
-                            {{ 'pref_1Y'|_ }}
-                        </label>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-success btn-lg">{{ 'pref_save_settings'|_ }}</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_languages'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
-                    {% for key, lang in Config.get('firefly.languages') %}
-                        {% if lang.complete == true or (lang.complete == false and showIncomplete) %}
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="language" value="{{ key }}"
-                                            {% if language == key %}
-                                                checked
-                                            {% endif %}
-                                    />
-                                    {{ lang.name_locale }} ({{ lang.name_english }})
-                                    {% if lang.complete == false %}
-                                        <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
-                                    {% endif %}
-                                </label>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-
-                </div>
-            </div>
-        </div>
-
-        <!-- page size -->
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transaction_page_size_title'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'transaction_page_size_help'|_ }}</p>
-                    {{ ExpandedForm.integer('transactionPageSize',transactionPageSize,{'label' : 'transaction_page_size_label'|_}) }}
-                </div>
-            </div>
-        </div>
-
-
-		<div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_two_factor_auth'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>                    
-                    <div class="form-group">
-                        <div class="col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" name="twoFactorAuthEnabled" value="1"
-                                               {% if is2faEnabled == '1' %} checked {% endif %}> {{ 'pref_enable_two_factor_auth'|_ }}
-                                </label>
-                            </div>
-                        </div>
-
-                        {% if is2faEnabled == 1 and has2faSecret == true %}
-
-                        <div class="col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <a href="{{ route('preferences.code') }}">{{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <a href="{{ route('preferences.delete-code') }}">{{ 'pref_two_factor_auth_remove_code'|_ }}</a>
-                                    {{ 'pref_two_factor_auth_remove_will_disable'|_ }}
-                                </label>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-       
-
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <button type="submit" class="btn btn-success btn-lg">{{ 'pref_save_settings'|_ }}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- form close -->
-    {{ Form.close|raw }}
+    </form>
 {% endblock %}

@@ -12,10 +12,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Exceptions\FireflyException;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Log;
 
 /**
  * Class CrudServiceProvider
@@ -58,6 +56,7 @@ class CrudServiceProvider extends ServiceProvider
                 if (!isset($arguments[0]) && !$app->auth->check()) {
                     throw new FireflyException('There is no user present.');
                 }
+
                 return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
             }
         );

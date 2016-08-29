@@ -111,7 +111,7 @@ class Search implements SearchInterface
     public function searchTransactions(array $words): Collection
     {
         // decrypted transaction journals:
-        $decrypted = Auth::user()->transactionjournals()->expanded()->where('transaction_journals.encrypted', 0)->where(
+        $decrypted = Auth::user()->transactionJournals()->expanded()->where('transaction_journals.encrypted', 0)->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('transaction_journals.description', 'LIKE', '%' . e($word) . '%');
@@ -120,7 +120,7 @@ class Search implements SearchInterface
         )->get(TransactionJournal::queryFields());
 
         // encrypted
-        $all      = Auth::user()->transactionjournals()->expanded()->where('transaction_journals.encrypted', 1)->get(TransactionJournal::queryFields());
+        $all      = Auth::user()->transactionJournals()->expanded()->where('transaction_journals.encrypted', 1)->get(TransactionJournal::queryFields());
         $set      = $all->filter(
             function (TransactionJournal $journal) use ($words) {
                 foreach ($words as $word) {

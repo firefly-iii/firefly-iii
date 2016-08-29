@@ -37,7 +37,7 @@ class ConnectTransactionToPiggyBank
         $repository  = app(PiggyBankRepositoryInterface::class);
         $transaction = $event->transaction;
 
-        $piggyBank   = $repository->find($transaction['piggy_bank_id']);
+        $piggyBank = $repository->find($transaction['piggy_bank_id']);
 
         // valid piggy:
         if (is_null($piggyBank->id)) {

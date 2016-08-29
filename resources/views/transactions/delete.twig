@@ -5,38 +5,39 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('transactions.destroy',journal.id)}) }}
+    <form method="POST" action="{{ route('transactions.destroy',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
-    <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
-            <div class="box box-danger">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('form.delete_journal', {'description': journal.description}) }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-danger">
-                        {{ trans('form.permDeleteWarning') }}
-                    </p>
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('form.delete_journal', {'description': journal.description}) }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-danger">
+                            {{ trans('form.permDeleteWarning') }}
+                        </p>
 
-                    <p>
-                        {{ trans('form.journal_areYouSure', {'description': journal.description}) }}
-                    </p>
-                </div>
-                <div class="box-footer">
-                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
-                    {% if journal.transactiontype.type == 'Withdrawal' %}
-                        <a href="{{ route('transactions.index','withdrawal') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
-                    {% endif %}
-                    {% if journal.transactiontype.type == 'Deposit' %}
-                        <a href="{{ route('transactions.index','deposit') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
-                    {% endif %}
-                    {% if journal.transactiontype.type == 'Transfer' %}
-                        <a href="{{ route('transactions.index','transfers') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
-                    {% endif %}
+                        <p>
+                            {{ trans('form.journal_areYouSure', {'description': journal.description}) }}
+                        </p>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                        {% if journal.transactiontype.type == 'Withdrawal' %}
+                            <a href="{{ route('transactions.index','withdrawal') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                        {% endif %}
+                        {% if journal.transactiontype.type == 'Deposit' %}
+                            <a href="{{ route('transactions.index','deposit') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                        {% endif %}
+                        {% if journal.transactiontype.type == 'Transfer' %}
+                            <a href="{{ route('transactions.index','transfers') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    {{ Form.close|raw }}
+    </form>
 {% endblock %}

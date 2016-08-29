@@ -5,74 +5,74 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('transactions.mass-destroy')}) }}
+    <form method="POST" action="{{ route('transactions.mass-destroy') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-8 coll-offset-md-2 col-sm-12">
-            <div class="box box-danger">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'mass_delete_journals'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-danger">
-                        {{ trans('form.permDeleteWarning') }}
-                        {{ 'perm-delete-many'|_ }}
-                    </p>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-8 coll-offset-md-2 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mass_delete_journals'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-danger">
+                            {{ trans('form.permDeleteWarning') }}
+                            {{ 'perm-delete-many'|_ }}
+                        </p>
 
-                    <p>
-                        {{ trans('form.mass_journal_are_you_sure') }}
-                        {{ trans('form.mass_make_selection') }}
-                    </p>
+                        <p>
+                            {{ trans('form.mass_journal_are_you_sure') }}
+                            {{ trans('form.mass_make_selection') }}
+                        </p>
 
-                    <table class="table table-striped table-condensed">
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th>{{ trans('list.description') }}</th>
-                            <th>{{ trans('list.amount') }}</th>
-                            <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
-                            <th class="hidden-xs">{{ trans('list.from') }}</th>
-                            <th class="hidden-xs">{{ trans('list.to') }}</th>
-                        </tr>
-                        {% for journal in journals %}
+                        <table class="table table-striped table-condensed">
                             <tr>
-                                <td>
-                                    <input type="checkbox" name="confirm_mass_delete[]" value="{{ journal.id }}" checked />
-                                </td>
-                                <td>
-                                    <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
-                                </td>
-                                <td>
-                                    {{ journal|formatJournal }}
-                                </td>
-                                <td>
-                                    {{ journal.date.formatLocalized(monthAndDayFormat) }}
-                                </td>
-                                <td>
-                                    {% if journal.source_account_type == 'Cash account' %}
-                                        <span class="text-success">(cash)</span>
-                                    {% else %}
-                                        <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if journal.destination_account_type == 'Cash account' %}
-                                        <span class="text-success">(cash)</span>
-                                    {% else %}
-                                        <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
-                                    {% endif %}
-                                </td>
+                                <th>&nbsp;</th>
+                                <th>{{ trans('list.description') }}</th>
+                                <th>{{ trans('list.amount') }}</th>
+                                <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+                                <th class="hidden-xs">{{ trans('list.from') }}</th>
+                                <th class="hidden-xs">{{ trans('list.to') }}</th>
                             </tr>
-                        {% endfor %}
-                    </table>
+                            {% for journal in journals %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="confirm_mass_delete[]" value="{{ journal.id }}" checked/>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
+                                    </td>
+                                    <td>
+                                        {{ journal|formatJournal }}
+                                    </td>
+                                    <td>
+                                        {{ journal.date.formatLocalized(monthAndDayFormat) }}
+                                    </td>
+                                    <td>
+                                        {% if journal.source_account_type == 'Cash account' %}
+                                            <span class="text-success">(cash)</span>
+                                        {% else %}
+                                            <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if journal.destination_account_type == 'Cash account' %}
+                                            <span class="text-success">(cash)</span>
+                                        {% else %}
+                                            <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
 
-                </div>
-                <div class="box-footer">
-                    <input type="submit" name="submit" value="{{ trans('form.delete_all_permanently') }}" class="btn btn-danger pull-right"/>
-                    <a href="{{ route('index') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ trans('form.delete_all_permanently') }}" class="btn btn-danger pull-right"/>
+                        <a href="{{ route('index') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    {{ Form.close|raw }}
+    </form>
 {% endblock %}

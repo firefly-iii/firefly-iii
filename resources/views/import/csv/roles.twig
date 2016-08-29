@@ -49,14 +49,14 @@
                                             <em>{{ trans('csv.no_example_data') }}</em>
                                         {% else %}
                                             {% for example in data.columns[i] %}
-                                                <code>{{ example }}</code><br />
+                                                <code>{{ example }}</code><br/>
                                             {% endfor %}
                                         {% endif %}
 
                                     <td>
                                         {{ Form.select(('role['~loop.index0~']'),
                                         data.available_roles,
-                                            job.configuration['column-roles'][loop.index0],
+                                        job.configuration['column-roles'][loop.index0],
                                         {class: 'form-control'}) }}
                                     </td>
                                     <td>

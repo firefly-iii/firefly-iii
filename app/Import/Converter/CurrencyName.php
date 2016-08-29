@@ -35,6 +35,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new TransactionCurrency;
         }
 
@@ -47,6 +48,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
             if (!is_null($currency->id)) {
                 Log::debug('Found currency by ID', ['id' => $currency->id]);
                 $this->setCertainty(100);
+
                 return $currency;
             }
         }
@@ -56,6 +58,7 @@ class CurrencyName extends BasicConverter implements ConverterInterface
         if (!is_null($currency->id)) {
             Log::debug('Found currency by name ', ['id' => $currency->id]);
             $this->setCertainty(100);
+
             return $currency;
         }
 

@@ -46,8 +46,6 @@ class EncryptFile extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -64,6 +62,5 @@ class EncryptFile extends Command
         $path = storage_path('upload') . '/' . $newName;
         file_put_contents($path, $content);
         $this->line(sprintf('Encrypted "%s" and put it in "%s"', $file, $path));
-
     }
 }

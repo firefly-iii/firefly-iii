@@ -35,6 +35,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
 
         if (strlen($value) === 0) {
             $this->setCertainty(0);
+
             return new Account;
         }
 

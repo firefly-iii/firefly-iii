@@ -6,57 +6,56 @@
 
 {% block content %}
 
-    {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('bills.store')}) }}
+    <form method="POST" action="{{ route('bills.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
-    <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-6">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-6">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.text('name') }}
+                        {{ ExpandedForm.tags('match') }}
+                        {{ ExpandedForm.amount('amount_min') }}
+                        {{ ExpandedForm.amount('amount_max') }}
+                        {{ ExpandedForm.date('date',phpdate('Y-m-d'), {helpText: trans('firefly.bill_date_little_relevance')}) }}
+                        {{ ExpandedForm.select('repeat_freq',periods,'monthly') }}
+                    </div>
                 </div>
-                <div class="box-body">
-                    {{ ExpandedForm.text('name') }}
-                    {{ ExpandedForm.tags('match') }}
-                    {{ ExpandedForm.amount('amount_min') }}
-                    {{ ExpandedForm.amount('amount_max') }}
-                    {{ ExpandedForm.date('date',phpdate('Y-m-d'), {helpText: trans('firefly.bill_date_little_relevance')}) }}
-                    {{ ExpandedForm.select('repeat_freq',periods,'monthly') }}
-                </div>
+
             </div>
+            <div class="col-lg-6 col-md-12 col-sm-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.integer('skip',0) }}
+                        {{ ExpandedForm.checkbox('automatch',1,true) }}
+                        {{ ExpandedForm.checkbox('active',1,true) }}
+                    </div>
+                </div>
 
+                <!-- panel for options -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.optionsList('create','bill') }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn pull-right btn-success">
+                            {{ 'store_new_bill'|_ }}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="col-lg-6 col-md-12 col-sm-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ ExpandedForm.integer('skip',0) }}
-                    {{ ExpandedForm.checkbox('automatch',1,true) }}
-                    {{ ExpandedForm.checkbox('active',1,true) }}
-                </div>
-            </div>
-
-            <!-- panel for options -->
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'options'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ ExpandedForm.optionsList('create','bill') }}
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn pull-right btn-success">
-                        {{ 'store_new_bill'|_ }}
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    {{ Form.close|raw }}
+    </form>
 
 {% endblock %}
 

@@ -39,7 +39,7 @@ class ConnectJournalToPiggyBank
         $piggyBankId = $event->piggyBankId;
 
         /** @var PiggyBank $piggyBank */
-        $piggyBank = Auth::user()->piggybanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
+        $piggyBank = Auth::user()->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
 
         if (is_null($piggyBank)) {
             return true;

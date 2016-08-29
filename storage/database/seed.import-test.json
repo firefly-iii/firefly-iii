@@ -63,14 +63,116 @@
     {
       "name": "ExistingCategory",
       "user_id": 1
+    },
+    {
+      "name": "UnExpected Taxes",
+      "user_id": 1
     }
   ],
   "piggy-banks": [],
   "piggy-events": [],
-  "rule-groups": [],
-  "rules": [],
-  "rule-triggers": [],
-  "rule-actions": [],
+  "rule-groups": [
+    {
+      "user_id": 1,
+      "order": 1,
+      "title": "Default rules",
+      "description": "All your rules not in a particular group."
+    },
+    {
+      "user_id": 1,
+      "order": 2,
+      "title": "Unexpected rules",
+      "description": "Group for unexpected rules"
+    }
+  ],
+  "rules": [
+    {
+      "user_id": 1,
+      "rule_group_id": 1,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "title": "Your first default rule",
+      "description": "This rule is an example. You can safely delete it."
+    },
+    {
+      "user_id": 1,
+      "rule_group_id": 2,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "title": "Onverwachte belastingen",
+      "description": "Triggers on the storage of onverwachte belastingen."
+    }
+  ],
+  "rule-triggers": [
+    {
+      "rule_id": 1,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "user_action",
+      "trigger_value": "store-journal"
+    },
+    {
+      "rule_id": 1,
+      "order": 2,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "description_is",
+      "trigger_value": "The Man Who Sold the World"
+    },
+    {
+      "rule_id": 1,
+      "order": 3,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "from_account_is",
+      "trigger_value": "David Bowie"
+    },
+    {
+      "rule_id": 2,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "user_action",
+      "trigger_value": "store-journal"
+    },
+    {
+      "rule_id": 2,
+      "order": 2,
+      "active": 1,
+      "stop_processing": 0,
+      "trigger_type": "description_contains",
+      "trigger_value": "(on)verwachte"
+    }
+  ],
+  "rule-actions": [
+    {
+      "rule_id": 1,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "action_type": "prepend_description",
+      "action_value": "Bought the world from "
+    },
+    {
+      "rule_id": 1,
+      "order": 2,
+      "active": 1,
+      "stop_processing": 0,
+      "action_type": "set_category",
+      "action_value": "Large expenses"
+    },
+    {
+      "rule_id": 2,
+      "order": 1,
+      "active": 1,
+      "stop_processing": 0,
+      "action_type": "set_category",
+      "action_value": "UnExpected Taxes"
+    }
+  ],
   "tags": [
     {
       "user_id": 1,

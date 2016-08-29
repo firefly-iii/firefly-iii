@@ -132,12 +132,12 @@ return [
     'tag_keep_transactions'          => 'A única transação ligada a essa marca não será excluída.|Todos :count transações ligadas a essa marca não serão excluídos.',
 
     // admin
-    'domain'                         => 'Domain',
+    'domain'                         => 'Domínio',
 
     // import
-    'import_file'                    => 'Import file',
-    'configuration_file'             => 'Configuration file',
-    'import_file_type'               => 'Import file type',
+    'import_file'                    => 'Importar arquivo',
+    'configuration_file'             => 'Arquivo de configuração',
+    'import_file_type'               => 'Tipo de arquivo de importação',
     'csv_comma'                      => 'Uma vírgula (,)',
     'csv_semicolon'                  => 'Um ponto e vírgula (;)',
     'csv_tab'                        => 'Um Tab (invisível)',

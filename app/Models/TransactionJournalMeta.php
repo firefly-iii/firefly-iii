@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  * @property string                                     $hash
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta whereHash($value)
+ * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
  */
 class TransactionJournalMeta extends Model
 {

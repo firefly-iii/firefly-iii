@@ -158,46 +158,46 @@
             {% endif %}
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
-                {% for t in transactions %}
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ t.account.name }}</h3>
-                        </div>
-                        <table class="table table-bordered table-striped">
-
-                            <tr>
-                                <td style="width:30%;">{{ 'account'|_ }}</td>
-                                <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
-                            </tr>
-                            <tr>
-                                <td>{{ 'account_type'|_ }}</td>
-                                <td>{{ t.account.accounttype.type|_ }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{ 'balance'|_ }}</td>
-                                <td>{{ t.before|formatAmount }} &rarr; {{ (t.before+t.amount)|formatAmount }}</td>
-                            </tr>
-                            {% if t.description %}
-                                <tr>
-                                    <td>{{ trans('form.description') }}</td>
-                                    <td>{{ t.description }}</td>
-                                </tr>
-                            {% endif %}
-                            <tr>
-                                <td>{{ 'category'|_ }}</td>
-                                <td>
-                                    {{ transactionCategories(t)|raw }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{ 'budget'|_ }}</td>
-                                <td>
-                                    {{ transactionBudgets(t)|raw }}
-                                </td>
-                            </tr>
-                        </table>
+            {% for t in transactions %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ t.account.name }}</h3>
                     </div>
-                {% endfor %}
+                    <table class="table table-bordered table-striped">
+
+                        <tr>
+                            <td style="width:30%;">{{ 'account'|_ }}</td>
+                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'account_type'|_ }}</td>
+                            <td>{{ t.account.accounttype.type|_ }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'balance'|_ }}</td>
+                            <td>{{ t.before|formatAmount }} &rarr; {{ (t.before+t.amount)|formatAmount }}</td>
+                        </tr>
+                        {% if t.description %}
+                            <tr>
+                                <td>{{ trans('form.description') }}</td>
+                                <td>{{ t.description }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>{{ 'category'|_ }}</td>
+                            <td>
+                                {{ transactionCategories(t)|raw }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'budget'|_ }}</td>
+                            <td>
+                                {{ transactionBudgets(t)|raw }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

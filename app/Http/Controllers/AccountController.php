@@ -50,7 +50,7 @@ class AccountController extends Controller
     /**
      * @param string $what
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create(string $what = 'asset')
     {
@@ -116,7 +116,7 @@ class AccountController extends Controller
      * @param ARI     $repository
      * @param Account $account
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function edit(ARI $repository, Account $account)
     {
@@ -172,7 +172,9 @@ class AccountController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $crud->getAccountsByType($types);
+        /** @var Carbon $start */
         $start        = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end          = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
@@ -196,7 +198,7 @@ class AccountController extends Controller
      * @param ARI     $repository
      * @param Account $account
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function show(ARI $repository, Account $account)
     {
@@ -204,7 +206,9 @@ class AccountController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
+        /** @var Carbon $start */
         $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        /** @var Carbon $end */
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
@@ -287,7 +291,7 @@ class AccountController extends Controller
      * @param AccountFormRequest   $request
      * @param AccountCrudInterface $crud
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(AccountFormRequest $request, AccountCrudInterface $crud)
     {
@@ -335,7 +339,7 @@ class AccountController extends Controller
      * @param AccountCrudInterface $crud
      * @param Account              $account
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(AccountFormRequest $request, AccountCrudInterface $crud, Account $account)
     {

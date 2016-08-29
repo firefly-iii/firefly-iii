@@ -41,6 +41,7 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
             if (!is_null($currency->id)) {
                 Log::debug('Found currency by ID', ['id' => $currency->id]);
                 $this->setCertainty(100);
+
                 return $currency;
             }
         }
@@ -50,6 +51,7 @@ class CurrencyCode extends BasicConverter implements ConverterInterface
         if (!is_null($currency->id)) {
             Log::debug('Found currency by code', ['id' => $currency->id]);
             $this->setCertainty(100);
+
             return $currency;
         }
         $currency = $repository->store(

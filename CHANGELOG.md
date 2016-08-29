@@ -5,6 +5,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.10.2] - 2016-08-29
+### Added
+- New Chinese translations. Set Firefly III to show incomplete translations to follow the progress. Want to translate Firefly III in Chinese, or in any other language? Then check out [the Crowdin project](https://crowdin.com/project/firefly-iii).
+- Added more admin pages. They do nothing yet.
+
+### Changed
+- Import routine will now also apply user rules.
+- Various code cleanup.
+- Some small HTML changes.
+
+### Fixed
+- Bug in the mass edit routines.
+- Firefly III over a proxy will now work (see [issue #290](https://github.com/JC5/firefly-iii/issues/290)), thanks @dfiel for reporting.
+- Sneaky bug in the import routine, fixed by @Bonno 
+
 ## [3.10.1] - 2016-08-25
 ### Added
 - More feedback in the import procedure.

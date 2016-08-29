@@ -98,8 +98,7 @@ class TestData
      */
     private function createAttachments()
     {
-        $insert = [];
-        $disk   = Storage::disk('upload');
+        $disk = Storage::disk('upload');
         foreach ($this->data['attachments'] as $attachment) {
             $data         = Crypt::encrypt($attachment['content']);
             $attachmentId = DB::table('attachments')->insertGetId(

@@ -184,7 +184,9 @@ class CsvSetup implements SetupInterface
     }
 
     /**
-     * @param array $data
+     * @param array   $data
+     *
+     * @param FileBag $files
      *
      * @return bool
      */
