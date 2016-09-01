@@ -133,6 +133,7 @@ return [
 
     // admin
     'domain'                         => 'Domain',
+    'single_user_mode'               => 'Single user mode',
 
     // import
     'import_file'                    => 'Import file',
@@ -144,6 +145,5 @@ return [
     'csv_delimiter'                  => 'CSV field delimiter',
     'csv_import_account'             => 'Default import account',
     'csv_config'                     => 'CSV import configuration',
-
 
 ];

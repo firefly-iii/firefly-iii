@@ -80,6 +80,17 @@ class FireflyConfig
     }
 
     /**
+     * @param $name
+     * @param $value
+     *
+     * @return Configuration
+     */
+    public function put($name, $value): Configuration
+    {
+        return $this->set($name, $value);
+    }
+
+    /**
      * @param        $name
      * @param string $value
      *

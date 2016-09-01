@@ -437,6 +437,7 @@ Route::group(
 
     // FF configuration:
     Route::get('/admin/configuration', ['uses' => 'Admin\ConfigurationController@index', 'as' => 'admin.configuration.index']);
+    Route::post('/admin/configuration', ['uses' => 'Admin\ConfigurationController@store', 'as' => 'admin.configuration.store']);
 
 }
 );

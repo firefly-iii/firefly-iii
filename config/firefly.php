@@ -3,6 +3,12 @@ declare(strict_types = 1);
 
 
 return [
+
+    // default values for editable configuration:
+    'configuration' => [
+        'single_user_mode' => true,
+    ],
+
     'chart'               => 'chartjs',
     'version'             => '3.10.2',
     'csv_import_enabled'  => true,

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 return [
 
-    'allow_register' => true,
     'defaults'       => [
         'guard'     => 'web',
         'passwords' => 'users',
