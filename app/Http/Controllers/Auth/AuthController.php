@@ -110,8 +110,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         // is allowed to?
-        $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
-        if ($singleUserMode === true) {
+        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        if ($singleUserMode === true && $userCount > 0) {
             $message = 'Registration is currently not available.';
 
             return view('error', compact('message'));
@@ -163,9 +164,14 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         // is allowed to?
-        $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        $allowRegistration = true;
+        if ($singleUserMode === true && $userCount > 0) {
+            $allowRegistration = false;
+        }
 
-        return view('auth.login', compact('singleUserMode'));
+        return view('auth.login', compact('allowRegistration'));
     }
 
     /**
@@ -178,8 +184,9 @@ class AuthController extends Controller
         $showDemoWarning = env('SHOW_DEMO_WARNING', false);
 
         // is allowed to?
-        $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
-        if ($singleUserMode === true) {
+        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        if ($singleUserMode === true && $userCount > 0) {
             $message = 'Registration is currently not available.';
 
             return view('error', compact('message'));
