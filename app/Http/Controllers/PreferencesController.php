@@ -79,9 +79,7 @@ class PreferencesController extends Controller
         $viewRangePref       = Preferences::get('viewRange', '1M');
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
-        $budgetMax           = Preferences::get('budgetMaximum', 1000);
         $language            = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $budgetMaximum       = $budgetMax->data;
         $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
         $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
         $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
@@ -93,7 +91,7 @@ class PreferencesController extends Controller
         return view(
             'preferences.index',
             compact(
-                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts',
+                'language', 'accounts', 'frontPageAccounts',
                 'viewRange', 'customFiscalYear', 'transactionPageSize', 'fiscalYearStart', 'is2faEnabled',
                 'has2faSecret', 'showIncomplete'
             )
@@ -136,10 +134,6 @@ class PreferencesController extends Controller
         Session::forget('start');
         Session::forget('end');
         Session::forget('range');
-
-        // budget maximum:
-        $budgetMaximum = intval(Input::get('budgetMaximum'));
-        Preferences::set('budgetMaximum', $budgetMaximum);
 
         // custom fiscal year
         $customFiscalYear = intval(Input::get('customFiscalYear')) === 1;

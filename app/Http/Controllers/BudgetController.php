@@ -221,12 +221,11 @@ class BudgetController extends Controller
         }
 
 
-        $budgetMaximum   = Preferences::get('budgetMaximum', 1000)->data;
         $defaultCurrency = Amount::getDefaultCurrency();
 
         return view(
             'budgets.index', compact(
-                               'budgetMaximum', 'periodStart', 'periodEnd',
+                               'periodStart', 'periodEnd',
                                'period', 'range', 'budgetIncomeTotal',
                                'defaultCurrency', 'inactive', 'budgets',
                                'spent', 'budgeted'
