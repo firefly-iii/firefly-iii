@@ -89,16 +89,23 @@ class AccountRepository implements AccountRepositoryInterface
             }
             );
             $query->whereIn('source.account_id', $accountIds);
+            $query->whereNull('source.deleted_at');
 
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
 
-        // that should do it:
-        $sum = strval($query->sum('source.amount'));
-        $sum = bcmul($sum, '-1');
+        // get id's
+        $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
 
-        return $sum;
+        // that should do it:
+        $sum = $this->user->transactions()
+                          ->whereIn('transaction_journal_id', $ids)
+                          ->where('amount', '>', '0')
+                          ->whereNull('transactions.deleted_at')
+                          ->sum('amount');
+
+        return strval($sum);
 
     }
 
@@ -139,7 +146,9 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
-        $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
+
+        // get id's
+        $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
 
 
         // that should do it:
@@ -185,6 +194,7 @@ class AccountRepository implements AccountRepositoryInterface
                 if (in_array($journal->source_account_id, $accountIds)) {
                     return true;
                 }
+
                 return false;
             }
         );
@@ -370,6 +380,7 @@ class AccountRepository implements AccountRepositoryInterface
                 if (in_array($journal->destination_account_id, $accountIds)) {
                     return true;
                 }
+
                 return false;
             }
         );
