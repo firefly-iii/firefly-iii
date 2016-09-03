@@ -81,9 +81,13 @@ $(document).ready(function () {
     }
 
     // also for multi input:
-    if ($('input[name="category[]"]').length > 0) {
+    if ($('input[name^="category["]').length > 0) {
         $.getJSON('json/categories').done(function (data) {
-            $('input[name="category[]"]').typeahead({source: data});
+            $('input[name^="category["]').typeahead({source: data});
         });
     }
+
+
+
+
 });

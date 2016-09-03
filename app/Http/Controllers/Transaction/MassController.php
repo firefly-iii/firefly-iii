@@ -192,7 +192,7 @@ class MassController extends Controller
                     $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
 
                     $budgetId = $journal->budgets->first() ? $journal->budgets->first()->id : 0;
-                    $category = $journal->categories->first() ? $journal->categories->first()->name : '';
+                    $category = $request->get('category')[$journal->id];
                     $tags     = $journal->tags->pluck('tag')->toArray();
 
                     // build data array

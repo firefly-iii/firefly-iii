@@ -20,12 +20,14 @@
                         </p>
                         <table class="table table-striped table-condensed">
                             <tr>
-                                <th style="width: 5%;">&nbsp;</th>
-                                <th style="width: 20%;">{{ trans('list.description') }}</th>
-                                <th style="width: 15%;">{{ trans('list.amount') }}</th>
-                                <th style="width: 20%;">{{ trans('list.date') }}</th>
-                                <th style="width: 20%;">{{ trans('list.from') }}</th>
-                                <th style="width: 20%;">{{ trans('list.to') }}</th>
+                            <tr>
+                                <th class="">&nbsp;</th>
+                                <th class="col-lg-4 col-md-4 col-sm-4">{{ trans('list.description') }}</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.amount') }}</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.date') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.from') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.to') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.category') }}</th>
                             </tr>
                             {% for journal in journals %}
                                 {% if journal.transaction_count == 2 %}
@@ -76,7 +78,10 @@
 
                                                 {{ Form.input('text', 'destination_account_name['~journal.id~']', journal.destination_account_name, {'class': 'form-control', 'placeholder': trans('form.expense_account')}) }}
                                             {% endif %}
-
+                                        </td>
+                                        <!-- category -->
+                                        <td>
+                                            {{ Form.input('text', 'category['~journal.id~']', journal.categories[0].name, {'class': 'form-control', 'placeholder': trans('form.category')}) }}
                                         </td>
                                     </tr>
                                 {% endif %}
