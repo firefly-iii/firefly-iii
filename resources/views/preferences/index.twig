@@ -48,6 +48,38 @@
                     </div>
                 </div>
 
+                <!-- transaction preferences -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_optional_fields_transaction'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'pref_optional_fields_transaction_help'|_ }}
+                        </p>
+                        <h4>{{ 'optional_tj_date_fields'|_ }}</h4>
+                        {{ ExpandedForm.checkbox('tj[interest_date]','1', tjOptionalFields.interest_date,{ 'label' : 'pref_optional_tj_interest_date'|_ }) }}
+                        {{ ExpandedForm.checkbox('tj[book_date]','1', tjOptionalFields.book_date,{ 'label' : 'pref_optional_tj_book_date'|_ }) }}
+                        {{ ExpandedForm.checkbox('tj[process_date]','1', tjOptionalFields.process_date,{ 'label' : 'pref_optional_tj_process_date'|_ }) }}
+                        {{ ExpandedForm.checkbox('tj[due_date]','1', tjOptionalFields.due_date,{ 'label' : 'pref_optional_tj_due_date'|_ }) }}
+                        {{ ExpandedForm.checkbox('tj[payment_date]','1', tjOptionalFields.payment_date,{ 'label' : 'pref_optional_tj_payment_date'|_ }) }}
+
+                        <h4>{{ 'optional_tj_business_fields'|_ }}</h4>
+                        {{ ExpandedForm.checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
+                        {{ ExpandedForm.checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
+
+                        <h4>{{ 'optional_tj_attachment_fields'|_ }}</h4>
+                        {{ ExpandedForm.checkbox('tj[attachments]','1', tjOptionalFields.attachments,{ 'label' : 'pref_optional_tj_attachments'|_ }) }}
+
+
+
+                    </div>
+                </div>
+
+
+
+
+
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="box">

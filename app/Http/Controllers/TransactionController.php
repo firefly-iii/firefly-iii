@@ -65,6 +65,7 @@ class TransactionController extends Controller
         $preFilled        = Session::has('preFilled') ? session('preFilled') : [];
         $subTitle         = trans('form.add_new_' . $what);
         $subTitleIcon     = 'fa-plus';
+        $optionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
 
         Session::put('preFilled', $preFilled);
 
@@ -80,7 +81,7 @@ class TransactionController extends Controller
         asort($piggies);
 
 
-        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
+        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields'));
     }
 
     /**
@@ -148,6 +149,7 @@ class TransactionController extends Controller
         $subTitle            = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
         $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $preFilled           = [
             'date'                     => TransactionJournal::dateAsString($journal),
             'interest_date'            => TransactionJournal::dateAsString($journal, 'interest_date'),
@@ -183,9 +185,10 @@ class TransactionController extends Controller
         }
         Session::forget('transactions.edit.fromUpdate');
 
-        return view('transactions.edit', compact('journal', 'uploadSize', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle'))->with(
-            'data', $preFilled
-        );
+        return view(
+            'transactions.edit',
+            compact('journal', 'optionalFields', 'uploadSize', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle')
+        )->with('data', $preFilled);
     }
 
     /**

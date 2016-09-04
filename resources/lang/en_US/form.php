@@ -146,4 +146,8 @@ return [
     'csv_import_account'             => 'Default import account',
     'csv_config'                     => 'CSV import configuration',
 
+
+    'due_date'           => 'Due date',
+    'payment_date'       => 'Payment date',
+    'internal_reference' => 'Internal reference',
 ];
