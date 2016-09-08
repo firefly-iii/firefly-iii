@@ -81,19 +81,18 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param CurrencyRepositoryInterface $repository
      * @param TransactionCurrency         $currency
      *
      * @return \Illuminate\Http\RedirectResponse|View
      */
-    public function delete(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
+    public function delete(TransactionCurrency $currency)
     {
-
-        if ($repository->countJournals($currency) > 0) {
+        if (!$this->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currency.index'));
         }
+
 
         // put previous url in session
         Session::put('currency.delete.url', URL::previous());
@@ -106,15 +105,14 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param CurrencyRepositoryInterface $repository
      * @param TransactionCurrency         $currency
      *
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
+    public function destroy(TransactionCurrency $currency)
     {
-        if ($repository->countJournals($currency) > 0) {
+        if (!$this->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currency.index'));
@@ -227,6 +225,41 @@ class CurrencyController extends Controller
         // redirect to previous URL.
         return redirect(session('currency.edit.url'));
 
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    private function canDeleteCurrency(TransactionCurrency $currency): bool
+    {
+        $repository = app(CurrencyRepositoryInterface::class);
+
+        // has transactions still
+        if ($repository->countJournals($currency) > 0) {
+            return false;
+        }
+
+        // is the only currency left
+        if ($repository->get()->count() === 1) {
+            return false;
+        }
+
+        // is the default currency for the user or the system
+        $defaultCode = Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'))->data;
+        if ($currency->code === $defaultCode) {
+            return false;
+        }
+
+        // is the default currency for the system
+        $defaultSystemCode = env('DEFAULT_CURRENCY', 'EUR');
+        if ($currency->code === $defaultSystemCode) {
+            return false;
+        }
+
+        // can be deleted
+        return true;
     }
 
 }

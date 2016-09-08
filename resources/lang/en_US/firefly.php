@@ -359,7 +359,7 @@ return [
     'store_currency'                            => 'Store new currency',
     'update_currency'                           => 'Update currency',
     'new_default_currency'                      => ':name is now the default currency.',
-    'cannot_delete_currency'                    => 'Cannot delete :name because there are still transactions attached to it!',
+    'cannot_delete_currency'                    => 'Cannot delete :name because it is still in use.',
     'deleted_currency'                          => 'Currency :name deleted',
     'created_currency'                          => 'Currency :name created',
     'updated_currency'                          => 'Currency :name updated',
