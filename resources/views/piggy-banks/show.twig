@@ -48,7 +48,7 @@
                         </tr>
                         <tr>
                             <td>{{ 'left_to_save'|_ }}</td>
-                            <td>{{ piggyBank.targetamount - currentRelevantRepAmount(piggyBank)|formatAmount }}</td>
+                            <td>{{ (piggyBank.targetamount - currentRelevantRepAmount(piggyBank))|formatAmount }}</td>
                         </tr>
                         <tr>
                             <td>{{ 'start_date'|_ }}</td>
