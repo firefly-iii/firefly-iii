@@ -10,8 +10,6 @@
 
 return [
     'home'                  => 'Home',
-    'cash_accounts'         => 'Contant geldrekeningen',
-    'edit_account'          => 'Wijzig rekening ":name"',
     'edit_currency'         => 'Wijzig valuta ":name"',
     'delete_currency'       => 'Verwijder valuta ":name"',
     'newPiggyBank'          => 'Nieuw spaarpotje',
@@ -24,11 +22,6 @@ return [
     'edit_bill'             => 'Wijzig contract ":name"',
     'delete_bill'           => 'Verwijder contract ":name"',
     'reports'               => 'Overzichten',
-    'monthly_report'        => 'Maandoverzicht :date',
-    'monthly_report_shared' => 'Maandoverzicht :date (inclusief gedeelde rekeningen)',
-    'yearly_report'         => 'Jaaroverzicht :date',
-    'yearly_report_shared'  => 'Jaaroverzicht :date (inclusief gedeelde rekeningen)',
-    'budget_report'         => 'Budgetoverzicht :date',
     'searchResult'          => 'Zoeken naar ":query"',
     'withdrawal_list'       => 'Uitgaven',
     'deposit_list'          => 'Inkomsten',

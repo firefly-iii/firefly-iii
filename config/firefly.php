@@ -96,6 +96,7 @@ return [
             'Cash account'        => 'cash',
         ],
     'languages'                => [
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => false],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],

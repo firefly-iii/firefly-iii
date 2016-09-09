@@ -133,6 +133,7 @@ return [
 
     // admin
     'domain'                         => 'Domein',
+    'single_user_mode'               => 'Enkele gebruiker-modus',
 
     // import
     'import_file'                    => 'Importbestand',
@@ -146,4 +147,7 @@ return [
     'csv_config'                     => 'Configuratiebestand',
 
 
+    'due_date'           => 'Vervaldatum',
+    'payment_date'       => 'Betalingsdatum',
+    'internal_reference' => 'Interne verwijzing',
 ];
