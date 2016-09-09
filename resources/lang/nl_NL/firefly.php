@@ -9,6 +9,7 @@
 
 return [
     // general stuff:
+    'language_incomplete'                       => 'onvolledige vertaling',
     'close'                                     => 'Sluiten',
     'actions'                                   => 'Acties',
     'edit'                                      => 'Wijzig',

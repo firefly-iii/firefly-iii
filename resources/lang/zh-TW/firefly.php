@@ -9,6 +9,7 @@
 
 return [
     // general stuff:
+    'language_incomplete'                       => 'incomplete translation',
     'close'                                     => '關閉',
     'actions'                                   => '操作',
     'edit'                                      => '編輯',
