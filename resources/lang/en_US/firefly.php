@@ -9,10 +9,7 @@
 
 return [
     // general stuff:
-    'language_incomplete'                       => 'This language is not yet fully translated',
-    'test'                                      => 'You have selected English.',
     'close'                                     => 'Close',
-    'pleaseHold'                                => 'Please hold...',
     'actions'                                   => 'Actions',
     'edit'                                      => 'Edit',
     'delete'                                    => 'Delete',
@@ -23,8 +20,6 @@ return [
     'cancel'                                    => 'Cancel',
     'from'                                      => 'From',
     'to'                                        => 'To',
-    'total_sum'                                 => 'Total sum',
-    'period_sum'                                => 'Sum for period',
     'showEverything'                            => 'Show everything',
     'never'                                     => 'Never',
     'search_results_for'                        => 'Search results for ":query"',
@@ -32,7 +27,6 @@ return [
     'deleted_error'                             => 'These credentials do not match our records.',
     'general_blocked_error'                     => 'Your account has been disabled, so you cannot login.',
     'expired_error'                             => 'Your account has expired, and can no longer be used.',
-    'unbalanced_error'                          => 'Your transactions are unbalanced. This means a withdrawal, deposit or transfer was not stored properly. Please check your accounts and transactions for errors (unbalanced amount :amount).',
     'removed_amount'                            => 'Removed :amount',
     'added_amount'                              => 'Added :amount',
     'asset_account_role_help'                   => 'Any extra options resulting from your choice can be set later.',
@@ -250,8 +244,6 @@ return [
     // preferences
     'pref_home_screen_accounts'                 => 'Home screen accounts',
     'pref_home_screen_accounts_help'            => 'Which accounts should be displayed on the home page?',
-    'pref_budget_settings'                      => 'Budget settings',
-    'pref_budget_settings_help'                 => 'What\'s the maximum amount of money a budget envelope may contain?',
     'pref_view_range'                           => 'View range',
     'pref_view_range_help'                      => 'Some charts are automatically grouped in periods. What period would you prefer?',
     'pref_1D'                                   => 'One day',
@@ -281,7 +273,6 @@ return [
     'transaction_page_size_title'               => 'Page size',
     'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
     'transaction_page_size_label'               => 'Page size',
-    'budget_maximum'                            => 'Budget maximum',
     'between_dates'                             => '(:start and :end)',
     'pref_optional_fields_transaction'          => 'Optional fields for transactions',
     'pref_optional_fields_transaction_help'     => 'By default not all fields are enabled when creating a new transaction (because of the clutter). Below, you can enable these fields if you think they could be useful for you. Of course, any field that is disabled, but already filled in, will be visible regardless of the setting.',
@@ -296,9 +287,10 @@ return [
     'pref_optional_tj_internal_reference'       => 'Internal reference',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Attachments',
-    'optional_field_meta_dates' => 'Dates',
-    'optional_field_meta_business' => 'Business',
-    'optional_field_attachments' => 'Attachments',
+    'optional_field_meta_dates'                 => 'Dates',
+    'optional_field_meta_business'              => 'Business',
+    'optional_field_attachments'                => 'Attachments',
+    'optional_field_meta_data'                  => 'Optional meta data',
 
 
     // profile:
@@ -355,7 +347,6 @@ return [
 
     // currencies:
     'create_currency'                           => 'Create a new currency',
-    'edit_currency'                             => 'Edit currency ":name"',
     'store_currency'                            => 'Store new currency',
     'update_currency'                           => 'Update currency',
     'new_default_currency'                      => ':name is now the default currency.',
@@ -381,16 +372,13 @@ return [
     'mandatoryFields'                           => 'Mandatory fields',
     'optionalFields'                            => 'Optional fields',
     'options'                                   => 'Options',
-    'something'                                 => 'Something!',
 
     // budgets:
     'create_new_budget'                         => 'Create a new budget',
     'store_new_budget'                          => 'Store new budget',
     'stored_new_budget'                         => 'Stored new budget ":name"',
-    'availableIn'                               => 'Available in :date',
     'available_between'                         => 'Available between :start and :end',
     'transactionsWithoutBudget'                 => 'Expenses without budget',
-    'transactionsWithoutBudgetDate'             => 'Expenses without budget in :date',
     'transactions_no_budget'                    => 'Expenses without budget between :start and :end',
     'spent_between'                             => 'Spent between :start and :end',
     'createBudget'                              => 'New budget',
@@ -456,9 +444,6 @@ return [
     'revenue_accounts'                          => 'Revenue accounts',
     'cash_accounts'                             => 'Cash accounts',
     'Cash account'                              => 'Cash account',
-    'accountExtraHelp_asset'                    => '',
-    'accountExtraHelp_expense'                  => '',
-    'accountExtraHelp_revenue'                  => '',
     'account_type'                              => 'Account type',
     'save_transactions_by_moving'               => 'Save these transaction(s) by moving them to another account:',
     'stored_new_account'                        => 'New account ":name" stored!',
@@ -509,9 +494,6 @@ return [
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly!',
-    'createNewAsset'                            => 'Create a new asset account to get started. ' .
-                                                   'This will allow you to create transactions and start your financial management',
-    'createNewAssetButton'                      => 'Create new asset account',
 
     // home page:
     'yourAccounts'                              => 'Your accounts',
@@ -526,12 +508,10 @@ return [
     'moneyOut'                                  => 'Money out',
     'billsToPay'                                => 'Bills to pay',
     'billsPaid'                                 => 'Bills paid',
-    'viewDetails'                               => 'View details',
     'divided'                                   => 'divided',
     'toDivide'                                  => 'left to divide',
 
     // menu and titles, should be recycled as often as possible:
-    'toggleNavigation'                          => 'Toggle navigation',
     'currency'                                  => 'Currency',
     'preferences'                               => 'Preferences',
     'logout'                                    => 'Logout',
@@ -554,7 +534,6 @@ return [
     'moneyManagement'                           => 'Money management',
     'piggyBanks'                                => 'Piggy banks',
     'bills'                                     => 'Bills',
-    'createNew'                                 => 'Create new',
     'withdrawal'                                => 'Withdrawal',
     'deposit'                                   => 'Deposit',
     'account'                                   => 'Account',
@@ -566,7 +545,6 @@ return [
     'yes'                                       => 'Yes',
     'no'                                        => 'No',
     'amount'                                    => 'Amount',
-    'newBalance'                                => 'New balance',
     'overview'                                  => 'Overview',
     'saveOnAccount'                             => 'Save on account',
     'unknown'                                   => 'Unknown',
