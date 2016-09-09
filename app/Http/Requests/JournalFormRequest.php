@@ -60,6 +60,13 @@ class JournalFormRequest extends Request
             'category'                  => $this->get('category') ?? '',
             'tags'                      => explode(',', $tags),
             'piggy_bank_id'             => $this->get('piggy_bank_id') ? intval($this->get('piggy_bank_id')) : 0,
+
+            // new custom fields here:
+            'due_date'                  => $this->get('due_date') ? new Carbon($this->get('due_date')) : null,
+            'payment_date'              => $this->get('payment_date') ? new Carbon($this->get('payment_date')) : null,
+            'internal_reference'        => $this->get('internal_reference'),
+            'notes'                     => $this->get('notes'),
+
         ];
     }
 
@@ -81,6 +88,12 @@ class JournalFormRequest extends Request
             'category'                  => 'between:1,255',
             'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
             'piggy_bank_id'             => 'numeric',
+
+            // new custom fields here:
+            'due_date'                  => 'date',
+            'payment_date'              => 'date',
+            'internal_reference'        => 'min:1,max:255',
+            'notes'                     => 'min:1,max:65536',
         ];
 
         switch ($what) {

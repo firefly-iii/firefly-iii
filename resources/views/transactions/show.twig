@@ -21,22 +21,38 @@
                             <td>{{ trans('list.date') }}</td>
                             <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
                         </tr>
-                        {% if journal.interest_date %}
+                        {% if journal.getMeta('interest_date') %}
                             <tr>
                                 <td>{{ trans('list.interest_date') }}</td>
-                                <td>{{ journal.interest_date.formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
                         {% endif %}
-                        {% if journal.book_date %}
+
+                        {% if journal.getMeta('book_date') %}
                             <tr>
                                 <td>{{ trans('list.book_date') }}</td>
-                                <td>{{ journal.book_date.formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ journal.getMeta('book_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
                         {% endif %}
-                        {% if journal.process_date %}
+
+                        {% if journal.getMeta('process_date') %}
                             <tr>
                                 <td>{{ trans('list.process_date') }}</td>
-                                <td>{{ journal.process_date.formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ journal.getMeta('process_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if journal.getMeta('due_date') %}
+                            <tr>
+                                <td>{{ trans('list.due_date') }}</td>
+                                <td>{{ journal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if journal.getMeta('payment_date') %}
+                            <tr>
+                                <td>{{ trans('list.payment_date') }}</td>
+                                <td>{{ journal.getMeta('payment_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
                         {% endif %}
 
@@ -94,6 +110,21 @@
                                 </td>
                             </tr>
                         {% endif %}
+
+                        {% if journal.getMeta('internal_reference') %}
+                            <tr>
+                                <td>{{ trans('list.interal_reference') }}</td>
+                                <td>{{ journal.getMeta('internal_reference') }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if journal.getMeta('notes') %}
+                            <tr>
+                                <td>{{ trans('list.notes') }}</td>
+                                <td>{{ journal.getMeta('notes')|nl2br }}</td>
+                            </tr>
+                        {% endif %}
+
                     </table>
                 </div>
                 <div class="box-footer">
