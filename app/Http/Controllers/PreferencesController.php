@@ -175,6 +175,7 @@ class PreferencesController extends Controller
             'process_date'       => isset($setOptions['process_date']),
             'due_date'           => isset($setOptions['due_date']),
             'payment_date'       => isset($setOptions['payment_date']),
+            'invoice_date'       => isset($setOptions['invoice_date']),
             'internal_reference' => isset($setOptions['internal_reference']),
             'notes'              => isset($setOptions['notes']),
             'attachments'        => isset($setOptions['attachments']),

@@ -238,6 +238,16 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasMeta(string $name): bool
+    {
+        return !is_null($this->getMeta($name));
+    }
+
+    /**
      * @return bool
      */
     public function isDeposit()

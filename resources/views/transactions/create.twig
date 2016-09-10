@@ -90,6 +90,7 @@
                 not optionalFields.process_date or
                 not optionalFields.due_date or
                 not optionalFields.payment_date or
+                not optionalFields.invoice_date or
                 not optionalFields.internal_reference or
                 not optionalFields.notes or
                 not optionalFields.attachments
@@ -97,7 +98,11 @@
                 <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>  <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences')})|raw }}</em></p>
                 {% endif %}
                 <!-- box for dates -->
-                {% if optionalFields.interest_date or optionalFields.book_date or optionalFields.process_date or optionalFields.due_date or optionalFields.payment_date %}
+                {% if
+                    optionalFields.interest_date or optionalFields.book_date or optionalFields.process_date
+                    or optionalFields.due_date or optionalFields.payment_date
+                    or optionalFields.invoice_date
+                %}
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title">{{ 'optional_field_meta_dates'|_ }}</h3>
@@ -127,6 +132,11 @@
                             {% if optionalFields.payment_date %}
                                 <!-- PAYMENT DATE -->
                                 {{ ExpandedForm.date('payment_date') }}
+                            {% endif %}
+
+                            {% if optionalFields.invoice_date %}
+                                <!-- INVOICE DATE -->
+                                {{ ExpandedForm.date('invoice_date') }}
                             {% endif %}
 
                         </div>

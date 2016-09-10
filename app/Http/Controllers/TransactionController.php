@@ -177,6 +177,7 @@ class TransactionController extends Controller
             // new custom fields:
             'due_date'                 => TransactionJournal::dateAsString($journal, 'due_date'),
             'payment_date'             => TransactionJournal::dateAsString($journal, 'payment_date'),
+            'invoice_date'             => TransactionJournal::dateAsString($journal, 'invoice_date'),
             'interal_reference'        => $journal->getMeta('internal_reference'),
             'notes'                    => $journal->getMeta('notes'),
         ];

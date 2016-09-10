@@ -103,6 +103,7 @@
                 not optionalFields.due_date or
                 not optionalFields.payment_date or
                 not optionalFields.internal_reference or
+                not optionalFields.invoice_date or
                 not optionalFields.notes or
                 not optionalFields.attachments %}
                     <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -117,6 +118,7 @@
                     optionalFields.process_date or
                     optionalFields.due_date or
                     optionalFields.payment_date or
+                    optionalFields.invoice_date or
                     data.interest_date or
                     data.book_date or
                     data.process_date or
@@ -152,6 +154,11 @@
                             {% if optionalFields.payment_date or data['payment_date'] %}
                                 <!-- PAYMENT DATE -->
                                 {{ ExpandedForm.date('payment_date',data['payment_date']) }}
+                            {% endif %}
+
+                            {% if optionalFields.invoice_date or data['invoice_date'] %}
+                                <!-- INVOICE DATE -->
+                                {{ ExpandedForm.date('invoice_date',data['invoice_date']) }}
                             {% endif %}
 
                         </div>

@@ -42,7 +42,7 @@ class JournalRepository implements JournalRepositoryInterface
     private $user;
 
     /** @var array */
-    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'internal_reference', 'notes'];
+    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
 
     /**
      * JournalRepository constructor.

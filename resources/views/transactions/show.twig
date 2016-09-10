@@ -56,6 +56,13 @@
                             </tr>
                         {% endif %}
 
+                        {% if journal.getMeta('invoice_date') %}
+                            <tr>
+                                <td>{{ trans('list.invoice_date') }}</td>
+                                <td>{{ journal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+
                         <tr>
                             <td>{{ trans('list.type') }}</td>
                             <td>{{ journal.transactiontype.type|_ }}</td>

@@ -64,6 +64,7 @@ class JournalFormRequest extends Request
             // new custom fields here:
             'due_date'                  => $this->get('due_date') ? new Carbon($this->get('due_date')) : null,
             'payment_date'              => $this->get('payment_date') ? new Carbon($this->get('payment_date')) : null,
+            'invoice_date'              => $this->get('invoice_date') ? new Carbon($this->get('invoice_date')) : null,
             'internal_reference'        => $this->get('internal_reference'),
             'notes'                     => $this->get('notes'),
 
