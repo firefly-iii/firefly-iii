@@ -41,6 +41,8 @@ return [
     'process_date'          => 'Data de processamento',
     'due_date'              => 'Due date',
     'payment_date'          => 'Payment date',
+    'invoice_date'          => 'Invoice date',
+    'interal_reference'     => 'Internal reference',
     'notes'                 => 'Notes',
     'from'                  => 'De',
     'piggy_bank'            => 'Cofrinho',

@@ -41,6 +41,8 @@ return [
     'process_date'          => '處理日期',
     'due_date'              => 'Due date',
     'payment_date'          => 'Payment date',
+    'invoice_date'          => 'Invoice date',
+    'interal_reference'     => 'Internal reference',
     'notes'                 => 'Notes',
     'from'                  => '從',
     'piggy_bank'            => '存錢筒',

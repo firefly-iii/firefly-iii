@@ -149,5 +149,6 @@ return [
 
     'due_date'           => 'Vervaldatum',
     'payment_date'       => 'Betalingsdatum',
+    'invoice_date'       => 'Factuurdatum',
     'internal_reference' => 'Interne verwijzing',
 ];

@@ -5,6 +5,27 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.10.3] - 2016-08-29
+### Added
+- More fields for mass-edit, thanks to @Vissert (#282)
+- First start of German translation
+
+### Changed
+- More optional fields for transactions and the ability to filter them.
+
+### Removed
+- Preference for budget maximum.
+
+### Fixed
+- A bug in the translation routine broke the import.
+- It was possible to destroy your Firefly installation by removing all currencies. Thanks @mondjef
+- Translation bugs.
+- Import bug.
+
+### Security
+- Firefly will not accept registrations beyond the first one, by default.
+
+
 ## [3.10.2] - 2016-08-29
 ### Added
 - New Chinese translations. Set Firefly III to show incomplete translations to follow the progress. Want to translate Firefly III in Chinese, or in any other language? Then check out [the Crowdin project](https://crowdin.com/project/firefly-iii).

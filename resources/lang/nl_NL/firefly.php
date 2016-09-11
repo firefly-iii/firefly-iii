@@ -285,6 +285,7 @@ return [
     'pref_optional_tj_process_date'             => 'Verwerkingsdatum',
     'pref_optional_tj_due_date'                 => 'Vervaldatum',
     'pref_optional_tj_payment_date'             => 'Betalingsdatum',
+    'pref_optional_tj_invoice_date'             => 'Factuurdatum',
     'pref_optional_tj_internal_reference'       => 'Interne verwijzing',
     'pref_optional_tj_notes'                    => 'Notities',
     'pref_optional_tj_attachments'              => 'Bijlagen',

@@ -41,6 +41,8 @@ return [
     'process_date'          => 'Date de traitement',
     'due_date'              => 'Due date',
     'payment_date'          => 'Payment date',
+    'invoice_date'          => 'Invoice date',
+    'interal_reference'     => 'Internal reference',
     'notes'                 => 'Notes',
     'from'                  => 'Depuis',
     'piggy_bank'            => 'Tirelire',
