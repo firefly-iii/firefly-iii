@@ -57,7 +57,7 @@ class Transaction extends Model
                         = [
             'account_id'             => 'required|exists:accounts,id',
             'transaction_journal_id' => 'required|exists:transaction_journals,id',
-            'description'            => 'between:1,255',
+            'description'            => 'between:0,1024',
             'amount'                 => 'required|numeric',
         ];
 

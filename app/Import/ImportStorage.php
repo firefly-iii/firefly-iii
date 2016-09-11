@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
@@ -112,7 +113,11 @@ class ImportStorage
 
         $meta = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->first(['journal_meta.*']);
         if (!is_null($meta)) {
-            return $meta->transactionjournal;
+            /** @var TransactionJournal $journal */
+            $journal = $meta->transactionjournal;
+            if (intval($journal->completed) === 1) {
+                return $journal;
+            }
         }
 
         return new TransactionJournal;
@@ -151,7 +156,7 @@ class ImportStorage
         $repository = app(TagRepositoryInterface::class, [$this->user]);
         $data       = [
             'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
-            'date'        => null,
+            'date'        => new Carbon,
             'description' => null,
             'latitude'    => null,
             'longitude'   => null,
@@ -376,8 +381,31 @@ class ImportStorage
             'amount'                 => $amount,
         ];
 
-        $one = Transaction::create($sourceData);
-        $two = Transaction::create($destinationData);
+        $one   = Transaction::create($sourceData);
+        $two   = Transaction::create($destinationData);
+        $error = false;
+        if (is_null($one->id)) {
+            Log::error('Could not create transaction 1.', $one->getErrors()->all());
+            $error = true;
+        }
+
+        if (is_null($two->id)) {
+            Log::error('Could not create transaction 1.', $two->getErrors()->all());
+            $error = true;
+        }
+
+        // respond to error
+        if ($error === true) {
+            $errorText = sprintf('Cannot import row %d, because an error occured when storing data.', $index);
+            Log::error($errorText);
+            $extendedStatus             = $this->job->extended_status;
+            $extendedStatus['errors'][] = $errorText;
+            $this->job->extended_status = $extendedStatus;
+            $this->job->save();
+
+            return new TransactionJournal;
+        }
+
         Log::debug('Created transaction 1', ['id' => $one->id, 'account' => $one->account_id, 'account_name' => $accounts['source']->name]);
         Log::debug('Created transaction 2', ['id' => $two->id, 'account' => $two->account_id, 'account_name' => $accounts['destination']->name]);
 
