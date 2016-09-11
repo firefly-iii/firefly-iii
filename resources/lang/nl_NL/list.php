@@ -41,6 +41,8 @@ return [
     'process_date'          => 'Verwerkingsdatum',
     'due_date'              => 'Vervaldatum',
     'payment_date'          => 'Betalingsdatum',
+    'invoice_date'          => 'Factuurdatum',
+    'interal_reference'     => 'Interne verwijzing',
     'notes'                 => 'Notities',
     'from'                  => 'Van',
     'piggy_bank'            => 'Spaarpotje',

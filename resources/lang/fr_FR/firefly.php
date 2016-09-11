@@ -285,6 +285,7 @@ return [
     'pref_optional_tj_process_date'             => 'Processing date',
     'pref_optional_tj_due_date'                 => 'Due date',
     'pref_optional_tj_payment_date'             => 'Payment date',
+    'pref_optional_tj_invoice_date'             => 'Invoice date',
     'pref_optional_tj_internal_reference'       => 'Internal reference',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Attachments',
