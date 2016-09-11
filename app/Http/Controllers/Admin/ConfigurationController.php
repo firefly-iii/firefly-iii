@@ -12,7 +12,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 
+use Config;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\ConfigurationRequest;
+use FireflyIII\Support\Facades\FireflyConfig;
+use Preferences;
+use Redirect;
+use Session;
 use View;
 
 /**
@@ -42,8 +48,30 @@ class ConfigurationController extends Controller
         $subTitle     = strval(trans('firefly.instance_configuration'));
         $subTitleIcon = 'fa-wrench';
 
-        return view('admin.configuration.index', compact('subTitle', 'subTitleIcon'));
+        // all available configuration and their default value in case
+        // they don't exist yet.
+        $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
 
+        return view('admin.configuration.index', compact('subTitle', 'subTitleIcon', 'singleUserMode'));
+
+    }
+
+    /**
+     * @param ConfigurationRequest $request
+     */
+    public function store(ConfigurationRequest $request)
+    {
+        // get config values:
+        $singleUserMode = intval($request->get('single_user_mode')) === 1 ? true : false;
+
+        // store config values
+        FireflyConfig::set('single_user_mode', $singleUserMode);
+
+        // flash message
+        Session::flash('success', strval(trans('firefly.configuration_updated')));
+        Preferences::mark();
+
+        return Redirect::route('admin.configuration.index');
     }
 
 }

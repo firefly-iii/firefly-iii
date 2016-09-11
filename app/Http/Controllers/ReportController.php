@@ -215,8 +215,15 @@ class ReportController extends Controller
         $reportType = 'audit';
         $accountIds = join(',', $accounts->pluck('id')->toArray());
 
-        $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'book_date', 'process_date', 'interest_date',
-                        'from', 'to', 'budget', 'category', 'bill', 'create_date', 'update_date',
+        $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
+                         'interest_date','book_date', 'process_date',
+                        // three new optional fields.
+                        'due_date', 'payment_date', 'invoice_date',
+                        'from', 'to', 'budget', 'category', 'bill',
+                        // more new optional fields
+                        'internal_reference', 'notes',
+
+                        'create_date', 'update_date',
         ];
         $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
 

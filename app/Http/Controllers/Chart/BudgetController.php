@@ -350,8 +350,7 @@ class BudgetController extends Controller
             $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
 
             if ($repetitions->count() > 1) {
-                $name = $budget->name . ' ' . trans(
-                        'firefly.between_dates',
+                $name = $budget->name . ' ' . trans('firefly.between_dates',
                         ['start' => $repetition->startdate->formatLocalized($format), 'end' => $repetition->enddate->formatLocalized($format)]
                     );
             }

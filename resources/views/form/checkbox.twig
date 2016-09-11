@@ -1,7 +1,13 @@
 <div class="{{ classes }}" id="{{ name }}_holder">
-    <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
+    <label for="{{ options.id }}" class="
+    {% if options.small %}
+    col-sm-8
+    {% else %}
+    col-sm-4
+    {% endif %}
+    control-label">{{ label }}</label>
 
-    <div class="col-sm-8">
+    <div class="{% if options.small %}col-sm-4{% else %}col-sm-8{% endif %}">
         <div class="checkbox">
             <label>
                 {{ Form.checkbox(name, value, options.checked, options) }}

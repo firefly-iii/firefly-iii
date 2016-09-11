@@ -67,6 +67,7 @@ class SplitController extends Controller
         $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $piggyBanks         = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanksWithAmount());
         $subTitle           = trans('form.add_new_' . $sessionData['what']);
+        $optionalFields     = Preferences::get('transaction_journal_optional_fields', [])->data;
         $subTitleIcon       = 'fa-plus';
         $preFilled          = [
             'what'                        => $sessionData['what'] ?? 'withdrawal',
@@ -83,7 +84,7 @@ class SplitController extends Controller
 
         return view(
             'split.journals.create',
-            compact('journal', 'piggyBanks', 'subTitle', 'subTitleIcon', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize')
+            compact('journal', 'piggyBanks', 'subTitle', 'optionalFields', 'subTitleIcon', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize')
         );
     }
 
@@ -101,6 +102,7 @@ class SplitController extends Controller
         $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
         $assetAccounts      = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
+        $optionalFields     = Preferences::get('transaction_journal_optional_fields', [])->data;
         $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $preFilled          = $this->arrayFromJournal($request, $journal);
         $subTitle           = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
@@ -118,7 +120,8 @@ class SplitController extends Controller
         return view(
             'split.journals.edit',
             compact(
-                'subTitleIcon', 'currencies', 'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
+                'subTitleIcon', 'currencies', 'optionalFields',
+                'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
                 'budgets', 'journal'
             )
         );

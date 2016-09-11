@@ -14,10 +14,13 @@ namespace FireflyIII\Models;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Models\TransactionJournalSupport;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Log;
+use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
@@ -172,6 +175,18 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function deleteMeta(string $name):bool
+    {
+        $this->transactionJournalMeta()->where('name', $name)->delete();
+
+        return true;
+    }
+
+    /**
      *
      * @param $value
      *
@@ -188,19 +203,48 @@ class TransactionJournal extends TransactionJournalSupport
 
     /**
      *
-     * @param string $fieldName
+     * @param string $name
      *
      * @return string
      */
-    public function getMeta($fieldName)
+    public function getMeta(string $name)
     {
-        foreach ($this->transactionjournalmeta as $meta) {
-            if ($meta->name == $fieldName) {
-                return $meta->data;
-            }
+        $value = null;
+        $cache = new CacheProperties;
+        $cache->addProperty('journal-meta');
+        $cache->addProperty($this->id);
+        $cache->addProperty($name);
+
+        if ($cache->has()) {
+            return $cache->get();
         }
 
-        return '';
+        Log::debug(sprintf('Looking for journal #%d meta field "%s".', $this->id, $name));
+        $entry = $this->transactionJournalMeta()->where('name', $name)->first();
+        if (!is_null($entry)) {
+            $value = $entry->data;
+            // cache:
+            $cache->store($value);
+        }
+
+        // convert to Carbon if name is _date
+        if (!is_null($value) && substr($name, -5) === '_date') {
+            $value = new Carbon($value);
+            // cache:
+            $cache->store($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasMeta(string $name): bool
+    {
+        return !is_null($this->getMeta($name));
     }
 
     /**
@@ -355,6 +399,38 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
+     * @param string $name
+     * @param        $value
+     *
+     * @return TransactionJournalMeta
+     */
+    public function setMeta(string $name, $value): TransactionJournalMeta
+    {
+        if (is_null($value)) {
+            $this->deleteMeta($name);
+
+            return new TransactionJournalMeta();
+        }
+
+        if ($value instanceof Carbon) {
+            $value = $value->toW3cString();
+        }
+
+        Log::debug(sprintf('Going to set "%s" with value "%s"', $name, json_encode($value)));
+        $entry = $this->transactionJournalMeta()->where('name', $name)->first();
+        if (is_null($entry)) {
+            $entry = new TransactionJournalMeta();
+            $entry->transactionJournal()->associate($this);
+            $entry->name = $name;
+        }
+        $entry->data = $value;
+        $entry->save();
+        Preferences::mark();
+
+        return $entry;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()
@@ -371,27 +447,19 @@ class TransactionJournal extends TransactionJournalSupport
     }
 
     /**
+     * @return HasMany
+     */
+    public function transactionJournalMeta(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\TransactionJournalMeta');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionType()
     {
         return $this->belongsTo('FireflyIII\Models\TransactionType');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactiongroups()
-    {
-        return $this->belongsToMany('FireflyIII\Models\TransactionGroup');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function transactionjournalmeta(): HasMany
-    {
-        return $this->hasMany('FireflyIII\Models\TransactionJournalMeta');
     }
 
     /**
@@ -409,4 +477,5 @@ class TransactionJournal extends TransactionJournalSupport
     {
         return $this->belongsTo('FireflyIII\User');
     }
+
 }

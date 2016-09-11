@@ -9,10 +9,8 @@
 
 return [
     // general stuff:
-    'language_incomplete'                       => 'Este idioma não está totalmente traduzido',
-    'test'                                      => 'Você selecionou Inglês',
+    'language_incomplete'                       => 'incomplete translation',
     'close'                                     => 'Fechar',
-    'pleaseHold'                                => 'Por favor espere...',
     'actions'                                   => 'Ações',
     'edit'                                      => 'Editar',
     'delete'                                    => 'Apagar',
@@ -23,8 +21,6 @@ return [
     'cancel'                                    => 'Cancelar',
     'from'                                      => 'De',
     'to'                                        => 'Até',
-    'total_sum'                                 => 'Soma Total',
-    'period_sum'                                => 'Soma por período',
     'showEverything'                            => 'Mostrar tudo',
     'never'                                     => 'Nunca',
     'search_results_for'                        => 'Pesquisar resultados por ":query"',
@@ -32,7 +28,6 @@ return [
     'deleted_error'                             => 'Estas credenciais não correspondem aos nossos registros.',
     'general_blocked_error'                     => 'Sua conta foi desativada, você não pode entrar.',
     'expired_error'                             => 'Sua conta expirou e não pode mais ser usada.',
-    'unbalanced_error'                          => 'Suas operações estão desequilibrados. Isto significa uma retirada, depósito ou transferência não foi armazenado corretamente. Por favor verifique suas contas e transações por erros (quantidade desequilibrada :amount).',
     'removed_amount'                            => ':amount removido',
     'added_amount'                              => ':amount adicionada',
     'asset_account_role_help'                   => 'Quaisquer opções extras resultantes da sua escolha pode ser definido mais tarde.',
@@ -250,8 +245,6 @@ return [
     // preferences
     'pref_home_screen_accounts'                 => 'Conta da tela inicial',
     'pref_home_screen_accounts_help'            => 'Que conta deve ser exibida na tela inicial?',
-    'pref_budget_settings'                      => 'Definições de Orçamento',
-    'pref_budget_settings_help'                 => 'Qual a quantidade máxima de dinheiro um envelope orçamental pode conter?',
     'pref_view_range'                           => 'Ver intervalo',
     'pref_view_range_help'                      => 'Alguns gráficos são agrupados automaticamente em períodos. Qual período você prefere?',
     'pref_1D'                                   => 'Um dia',
@@ -281,8 +274,26 @@ return [
     'transaction_page_size_title'               => 'Tamanho da página',
     'transaction_page_size_help'                => 'Qualquer lista de transações mostra, no máximo, muitas transações',
     'transaction_page_size_label'               => 'Tamanho da página',
-    'budget_maximum'                            => 'Máximo de orçamento',
     'between_dates'                             => '(:start e :end)',
+    'pref_optional_fields_transaction'          => 'Optional fields for transactions',
+    'pref_optional_fields_transaction_help'     => 'By default not all fields are enabled when creating a new transaction (because of the clutter). Below, you can enable these fields if you think they could be useful for you. Of course, any field that is disabled, but already filled in, will be visible regardless of the setting.',
+    'optional_tj_date_fields'                   => 'Date fields',
+    'optional_tj_business_fields'               => 'Business fields',
+    'optional_tj_attachment_fields'             => 'Attachment fields',
+    'pref_optional_tj_interest_date'            => 'Interest date',
+    'pref_optional_tj_book_date'                => 'Book date',
+    'pref_optional_tj_process_date'             => 'Processing date',
+    'pref_optional_tj_due_date'                 => 'Due date',
+    'pref_optional_tj_payment_date'             => 'Payment date',
+    'pref_optional_tj_invoice_date'             => 'Invoice date',
+    'pref_optional_tj_internal_reference'       => 'Internal reference',
+    'pref_optional_tj_notes'                    => 'Notes',
+    'pref_optional_tj_attachments'              => 'Attachments',
+    'optional_field_meta_dates'                 => 'Dates',
+    'optional_field_meta_business'              => 'Business',
+    'optional_field_attachments'                => 'Attachments',
+    'optional_field_meta_data'                  => 'Optional meta data',
+
 
     // profile:
     'change_your_password'                      => 'Alterar sua senha',
@@ -338,11 +349,10 @@ return [
 
     // currencies:
     'create_currency'                           => 'Criar uma nova moeda',
-    'edit_currency'                             => 'Editar moeda ":name"',
     'store_currency'                            => 'Armazenar nova moeda',
     'update_currency'                           => 'Atualizar moeda',
     'new_default_currency'                      => 'Agora :name é a moeda padrão.',
-    'cannot_delete_currency'                    => 'Não é possível excluir :name porque ainda existem transações anexadas a ela!',
+    'cannot_delete_currency'                    => 'Cannot delete :name because it is still in use.',
     'deleted_currency'                          => 'Moeda :name excluída',
     'created_currency'                          => 'Moeda :name criada',
     'updated_currency'                          => 'Moeda :name atualizada',
@@ -364,16 +374,13 @@ return [
     'mandatoryFields'                           => 'Campos obrigatórios',
     'optionalFields'                            => 'Campos opcionais',
     'options'                                   => 'Opções',
-    'something'                                 => 'Qualquer coisa!',
 
     // budgets:
     'create_new_budget'                         => 'Criar um novo orçamento',
     'store_new_budget'                          => 'Armazenar novo orçamento',
     'stored_new_budget'                         => 'Novo orçamento armazenado ":name"',
-    'availableIn'                               => 'Disponível em :date',
     'available_between'                         => 'Disponível entre :start e :end',
     'transactionsWithoutBudget'                 => 'Despesas sem orçamentos',
-    'transactionsWithoutBudgetDate'             => 'Despesas sem orçamentos em :date',
     'transactions_no_budget'                    => 'Despesas sem orçamento entre :start e :end',
     'spent_between'                             => 'Gasto entre :start e :end',
     'createBudget'                              => 'Novo orçamento',
@@ -439,9 +446,6 @@ return [
     'revenue_accounts'                          => 'Contas de receitas',
     'cash_accounts'                             => 'Contas Correntes',
     'Cash account'                              => 'Conta Corrente',
-    'accountExtraHelp_asset'                    => '',
-    'accountExtraHelp_expense'                  => '',
-    'accountExtraHelp_revenue'                  => '',
     'account_type'                              => 'Tipo de conta',
     'save_transactions_by_moving'               => 'Salve essas transações, movendo-os para outra conta:',
     'stored_new_account'                        => 'Nova conta ":name" armazenado!',
@@ -492,9 +496,6 @@ return [
 
     // new user:
     'welcome'                                   => 'Bem Vindo ao Firefly!',
-    'createNewAsset'                            => 'Criar uma conta de ativo para começar. ' .
-                                                   'Isso permitirá que você crie transações e inicie a sua gestão financeira',
-    'createNewAssetButton'                      => 'Criar nova conta de ativo',
 
     // home page:
     'yourAccounts'                              => 'Suas contas',
@@ -509,12 +510,10 @@ return [
     'moneyOut'                                  => 'Dinheiro sai',
     'billsToPay'                                => 'Faturas a pagar',
     'billsPaid'                                 => 'Faturas pagas',
-    'viewDetails'                               => 'Ver Detalhes',
     'divided'                                   => 'dividida',
     'toDivide'                                  => 'esquerda para dividir',
 
     // menu and titles, should be recycled as often as possible:
-    'toggleNavigation'                          => 'Ativar/desativar navegação',
     'currency'                                  => 'Moeda',
     'preferences'                               => 'Preferências',
     'logout'                                    => 'Desconectar',
@@ -537,7 +536,6 @@ return [
     'moneyManagement'                           => 'Gerenciamento de Dinheiro',
     'piggyBanks'                                => 'Cofrinhos',
     'bills'                                     => 'Faturas',
-    'createNew'                                 => 'Criar nova(o)',
     'withdrawal'                                => 'Retirada',
     'deposit'                                   => 'Depósito',
     'account'                                   => 'Conta',
@@ -549,7 +547,6 @@ return [
     'yes'                                       => 'Sim',
     'no'                                        => 'Não',
     'amount'                                    => 'Valor',
-    'newBalance'                                => 'Novo saldo',
     'overview'                                  => 'Visão Geral',
     'saveOnAccount'                             => 'Salvar na conta',
     'unknown'                                   => 'Desconhecido',
@@ -725,6 +722,10 @@ return [
     'domain_is_now_blocked'                     => 'Domínio :domain está bloqueado',
     'instance_configuration'                    => 'Configuration',
     'firefly_instance_configuration'            => 'Configuration options for Firefly III',
+    'setting_single_user_mode'                  => 'Single user mode',
+    'setting_single_user_mode_explain'          => 'By default, Firefly III only accepts one (1) registration: you. This is a security measure, preventing others from using your instance unless you allow them to. Future registrations are blocked. When you uncheck this box, others can use your instance as wel, assuming they can reach it (when it is connected to the internet).',
+    'store_configuration'                       => 'Store configuration',
+    'hidden_fields_preferences'                 => 'Not all fields are visible right now. You must enable them in your <a href=":link">settings</a>.',
 
     // split a transaction:
     'transaction_meta_data'                     => 'Dados de transação',
@@ -797,4 +798,6 @@ return [
     'import_with_key'                           => 'Import with key \':key\'',
     'import_finished_report'                    => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
     'import_finished_link'                      => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+
+
 ];

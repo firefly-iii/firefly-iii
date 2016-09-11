@@ -4,17 +4,50 @@
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
-    <div class="row">
-        <!-- configuration setting block -->
-        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'setting'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    Bla bla bla
+    <form action="{{ route('admin.configuration.store') }}" method="post" id="store" class="form-horizontal">
+
+        <div class="row">
+
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+            <!-- single user mode -->
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'setting_single_user_mode'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'setting_single_user_mode_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('single_user_mode','1', singleUserMode) }}
+                    </div>
                 </div>
             </div>
+
+            <!-- configuration setting block -->
+            <!--
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'setting'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        Bla bla bla
+                    </div>
+                </div>
+            </div>
+            -->
         </div>
-    </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <button type="submit" class="btn btn-success">
+                    {{ ('store_configuration')|_ }}
+                </button>
+            </div>
+        </div>
+
+    </form>
+
 {% endblock %}

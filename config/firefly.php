@@ -3,8 +3,14 @@ declare(strict_types = 1);
 
 
 return [
+
+    // default values for editable configuration:
+    'configuration' => [
+        'single_user_mode' => true,
+    ],
+
     'chart'               => 'chartjs',
-    'version'             => '3.10.2',
+    'version'             => '3.10.3',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
@@ -90,6 +96,7 @@ return [
             'Cash account'        => 'cash',
         ],
     'languages'                => [
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => false],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],

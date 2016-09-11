@@ -23,7 +23,7 @@ return [
     'match'                          => '匹配於',
     'repeat_freq'                    => '循環週期',
     'journal_currency_id'            => '貨幣',
-    'journal_amount'                 => 'Amount',
+    'journal_amount'                 => '金額',
     'journal_asset_source_account'   => '資產帳戶 （源頭）',
     'journal_source_account_name'    => '收入帳戶 （源頭）',
     'journal_source_account_id'      => '資產帳戶 （源頭）',
@@ -31,11 +31,11 @@ return [
     'account_to_id'                  => '到帳戶',
     'journal_destination_account_id' => '資產帳戶 （目標）',
     'asset_destination_account'      => '資產帳戶 （目標）',
-    'asset_source_account'           => 'Asset account (source)',
-    'journal_description'            => 'Description',
-    'split_journal'                  => 'Split this transaction',
+    'asset_source_account'           => '資產帳戶 （來源）',
+    'journal_description'            => '描述',
+    'split_journal'                  => '拆分此交易',
     'split_journal_explanation'      => 'Split this transaction in multiple parts',
-    'currency'                       => 'Currency',
+    'currency'                       => '貨幣',
     'account_id'                     => 'Asset account',
     'budget_id'                      => 'Budget',
     'openingBalance'                 => '開戶金額',
@@ -133,6 +133,7 @@ return [
 
     // admin
     'domain'                         => 'Domain',
+    'single_user_mode'               => 'Single user mode',
 
     // import
     'import_file'                    => 'Import file',
@@ -146,4 +147,8 @@ return [
     'csv_config'                     => 'CSV import configuration',
 
 
+    'due_date'           => 'Due date',
+    'payment_date'       => 'Payment date',
+    'invoice_date'       => 'Invoice date',
+    'internal_reference' => 'Internal reference',
 ];

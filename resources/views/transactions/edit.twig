@@ -80,14 +80,6 @@
                         <!-- CATEGORY ALWAYS -->
                         {{ ExpandedForm.text('category',data['category']) }}
 
-                        <!-- INTEREST DATE -->
-                        {{ ExpandedForm.date('interest_date',data['interest_date']) }}
-                        <!-- BOOK DATE -->
-                        {{ ExpandedForm.date('book_date',data['book_date']) }}
-                        <!-- PROCESSING DATE -->
-                        {{ ExpandedForm.date('process_date',data['process_date']) }}
-
-
                         <!-- TAGS -->
                         {{ ExpandedForm.text('tags') }}
 
@@ -101,7 +93,121 @@
 
                     </div>
                 </div>
-                <!-- end of panel for options-->
+
+
+                <!-- explain if necessary -->
+                {% if
+                not optionalFields.interest_date or
+                not optionalFields.book_date or
+                not optionalFields.process_date or
+                not optionalFields.due_date or
+                not optionalFields.payment_date or
+                not optionalFields.internal_reference or
+                not optionalFields.invoice_date or
+                not optionalFields.notes or
+                not optionalFields.attachments %}
+                    <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>
+                        <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences')})|raw }}</em></p>
+                {% endif %}
+
+
+                <!-- box for dates -->
+                {% if
+                    optionalFields.interest_date or
+                    optionalFields.book_date or
+                    optionalFields.process_date or
+                    optionalFields.due_date or
+                    optionalFields.payment_date or
+                    optionalFields.invoice_date or
+                    data.interest_date or
+                    data.book_date or
+                    data.process_date or
+                    data.due_date or
+                    data.payment_date
+                    %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_meta_dates'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+
+                            {% if optionalFields.interest_date or data['interest_date'] %}
+                                <!-- INTEREST DATE -->
+                                {{ ExpandedForm.date('interest_date',data['interest_date']) }}
+                            {% endif %}
+
+                            {% if optionalFields.book_date or data['book_date'] %}
+                                <!-- BOOK DATE -->
+                                {{ ExpandedForm.date('book_date',data['book_date']) }}
+                            {% endif %}
+
+                            {% if optionalFields.process_date or data['process_date'] %}
+                                <!-- PROCESSING DATE -->
+                                {{ ExpandedForm.date('process_date',data['process_date']) }}
+                            {% endif %}
+
+                            {% if optionalFields.due_date or data['due_date'] %}
+                                <!-- DUE DATE -->
+                                {{ ExpandedForm.date('due_date',data['due_date']) }}
+                            {% endif %}
+
+                            {% if optionalFields.payment_date or data['payment_date'] %}
+                                <!-- PAYMENT DATE -->
+                                {{ ExpandedForm.date('payment_date',data['payment_date']) }}
+                            {% endif %}
+
+                            {% if optionalFields.invoice_date or data['invoice_date'] %}
+                                <!-- INVOICE DATE -->
+                                {{ ExpandedForm.date('invoice_date',data['invoice_date']) }}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% endif %}
+
+
+
+                <!-- box for business fields -->
+                {% if
+                    optionalFields.internal_reference or
+                    optionalFields.notes or
+                    data['interal_reference'] or
+                    data['notes']
+
+                %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_meta_business'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            {% if optionalFields.internal_reference or data['interal_reference'] %}
+                                <!-- REFERENCE -->
+                                {{ ExpandedForm.text('internal_reference', data['interal_reference']) }}
+                            {% endif %}
+
+                            {% if optionalFields.notes or data['notes'] %}
+                                <!-- NOTES -->
+                                {{ ExpandedForm.textarea('notes', data['notes']) }}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- box for attachments -->
+                {% if optionalFields.attachments %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_attachments'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            {% if optionalFields.attachments %}
+                                <!-- ATTACHMENTS -->
+                                {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
 
                 <!-- panel for options -->
                 <div class="box">

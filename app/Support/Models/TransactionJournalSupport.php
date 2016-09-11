@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
  */
 class TransactionJournalSupport extends Model
 {
+
     /**
      * @param TransactionJournal $journal
      *
@@ -123,7 +124,22 @@ class TransactionJournalSupport extends Model
             return $journal->date->format('Y-m-d');
         }
         if (!is_null($journal->$dateField) && $journal->$dateField instanceof Carbon) {
-            return $journal->$dateField->format('Y-m-d');
+            // make field NULL
+            $carbon              = clone $journal->$dateField;
+            $journal->$dateField = null;
+            $journal->save();
+
+            // create meta entry
+            $journal->setMeta($dateField, $carbon);
+
+            // return that one instead.
+            return $carbon->format('Y-m-d');
+        }
+        $metaField = $journal->getMeta($dateField);
+        if (!is_null($metaField)) {
+            $carbon = new Carbon($metaField);
+
+            return $carbon->format('Y-m-d');
         }
 
         return '';
@@ -288,6 +304,4 @@ class TransactionJournalSupport extends Model
 
         return $typeStr;
     }
-
-
 }

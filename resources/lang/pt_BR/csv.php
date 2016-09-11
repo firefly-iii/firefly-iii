@@ -17,7 +17,6 @@ return [
     'header_help'            => 'Verifique se a primeira linha do seu arquivo CSV está com os títulos de coluna',
     'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'config_file_help'       => 'Selecione a configuração de importação CSV aqui. Se você não sabe o que é isso, ignore. Será explicado mais tarde.',
     'import_account_help'    => 'Se seu arquivo CSV NÃO contém informações sobre sua(s) conta(s) ativa(s), use este combobox para selecionar para qual conta pertencem as transações no CSV.',
     'upload_not_writeable'   => 'Na caixa cinza contém um caminho de arquivo. Deve ser possível gravar nele. Por favor, certifique-se de que é.',
 

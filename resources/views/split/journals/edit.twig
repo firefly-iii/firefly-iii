@@ -33,7 +33,7 @@
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'transaction_meta_data'|_ }}</h3>
+                        <h3 class="box-title">{{ 'transaction_data'|_ }}</h3>
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('journal_description', journal.description) }}
@@ -61,16 +61,45 @@
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'transaction_dates'|_ }}</h3>
+                        <h3 class="box-title">{{ 'transaction_meta_data'|_ }}</h3>
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.date('date', journal.date) }}
 
-                        {{ ExpandedForm.date('interest_date', journal.interest_date) }}
+                        {% if optionalFields.interest_date or journal.interest_date %}
+                            <!-- INTEREST DATE -->
+                            {{ ExpandedForm.date('interest_date', journal.interest_date) }}
+                        {% endif %}
 
-                        {{ ExpandedForm.date('book_date', journal.book_date) }}
+                        {% if optionalFields.book_date or journal.book_date %}
+                            <!-- BOOK DATE -->
+                            {{ ExpandedForm.date('book_date', journal.book_date) }}
+                        {% endif %}
 
-                        {{ ExpandedForm.date('process_date', journal.process_date) }}
+                        {% if optionalFields.process_date or journal.process_date %}
+                            <!-- PROCESSING DATE -->
+                            {{ ExpandedForm.date('process_date', journal.process_date) }}
+                        {% endif %}
+
+                        {% if optionalFields.due_date or journal.due_date %}
+                            <!-- DUE DATE -->
+                            {{ ExpandedForm.date('due_date', journal.due_date) }}
+                        {% endif %}
+
+                        {% if optionalFields.payment_date or journal.payment_date %}
+                            <!-- PAYMENT DATE -->
+                            {{ ExpandedForm.date('payment_date', journal.payment_date) }}
+                        {% endif %}
+
+                        {% if optionalFields.internal_reference or journal.internal_reference %}
+                            <!-- REFERENCE -->
+                            {{ ExpandedForm.text('internal_reference', journal.internal_reference) }}
+                        {% endif %}
+
+                        {% if optionalFields.notes  or journal.notes %}
+                            <!-- NOTES -->
+                            {{ ExpandedForm.textarea('notes', journal.notes) }}
+                        {% endif %}
                     </div>
                 </div>
 
@@ -171,18 +200,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <!-- ATTACHMENTS -->
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+            {% if optionalFields.attachments %}
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <!-- ATTACHMENTS -->
+                            {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <!-- panel for options -->
                 <div class="box">

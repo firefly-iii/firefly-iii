@@ -16,12 +16,21 @@
         <th class="hide-process_date">{{ trans('list.process_date') }}</th>
         <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
 
+        <!-- new optional fields (3x) -->
+        <th class="hide-interest_date">{{ trans('list.due_date') }}</th>
+        <th class="hide-payment_date">{{ trans('list.payment_date') }}</th>
+        <th class="hide-invoice_date">{{ trans('list.invoice_date') }}</th>
+
         <th class="hide-from">{{ trans('list.from') }}</th>
         <th class="hide-to">{{ trans('list.to') }}</th>
 
         <th class="hide-budget"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
         <th class="hide-category"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
         <th class="hide-bill">{{ trans('list.bill') }}</th>
+
+        <!-- more optional fields (2x) -->
+        <th class="hide-internal_reference">{{ trans('list.internal_reference') }}</th>
+        <th class="hide-notes">{{ trans('list.notes') }}</th>
 
         <th class="hide-create_date">{{ trans('list.create_date') }}</th>
         <th class="hide-update_date">{{ trans('list.update_date') }}</th>
@@ -45,23 +54,45 @@
             <td class="hide-balance_after">{{ journal.after|formatAmount }}</td>
 
             <td class="hide-date">{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
-            <td class="hide-book_date">{{ journal.book_date.formatLocalized(monthAndDayFormat) }}</td>
-            <td class="hide-process_date">{{ journal.process_date.formatLocalized(monthAndDayFormat) }}</td>
-            <td class="hide-interest_date">{{ journal.interest_date.formatLocalized(monthAndDayFormat) }}</td>
-
-            <td class="hide-from">
-                {% if journal.source_account_type == 'Cash account' %}
-                    <span class="text-success">(cash)</span>
-                {% else %}
-                    <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
+            <td class="hide-book_date">
+                {% if journal.hasMeta('book_date') %}
+                    {{ journal.getMeta('book_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
             </td>
-            <td class="hide-to">
-                {% if journal.destination_account_type == 'Cash account' %}
-                    <span class="text-success">(cash)</span>
-                {% else %}
-                    <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
+            <td class="hide-process_date">
+                {% if journal.hasMeta('process_date') %}
+                    {{ journal.getMeta('process_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
+            </td>
+            <td class="hide-interest_date">
+                {% if journal.hasMeta('interest_date') %}
+                    {{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+
+            <!-- new optional fields (3x) -->
+            <td class="hide-due_date">
+                {% if journal.hasMeta('due_date') %}
+                    {{ journal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-payment_date">
+                {% if journal.hasMeta('payment_date') %}
+                    {{ journal.getMeta('payment_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-invoice_date">
+                {% if journal.hasMeta('invoice_date') %}
+                    {{ journal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+
+
+            <td class="hide-from">
+                {{ sourceAccount(journal)|raw }}
+            </td>
+            <td class="hide-to">
+                {{ destinationAccount(journal)|raw }}
             </td>
 
             <td class="hide-budget">
@@ -76,6 +107,18 @@
             {% else %}
                 <td class="hide-bill">&nbsp;</td>
             {% endif %}
+
+            <!-- new optional fields (2x) -->
+            <td class="hide-internal_reference">
+                {% if journal.hasMeta('internal_reference') %}
+                    {{ journal.getMeta('internal_reference') }}
+                {% endif %}
+            </td>
+            <td class="hide-notes">
+                {% if journal.hasMeta('notes') %}
+                    {{ journal.getMeta('notes')|nl2br }}
+                {% endif %}
+            </td>
 
             <td class="hide-create_date">
                 {{ journal.created_at.formatLocalized(dateTimeFormat) }}

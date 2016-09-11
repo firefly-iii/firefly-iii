@@ -41,6 +41,9 @@ class JournalRepository implements JournalRepositoryInterface
     /** @var User */
     private $user;
 
+    /** @var array */
+    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
+
     /**
      * JournalRepository constructor.
      *
@@ -344,8 +347,15 @@ class JournalRepository implements JournalRepositoryInterface
             $this->saveTags($journal, $data['tags']);
         }
 
-        return $journal;
+        foreach ($data as $key => $value) {
+            if (in_array($key, $this->validMetaFields)) {
+                $journal->setMeta($key, $value);
+                continue;
+            }
+            Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
+        }
 
+        return $journal;
 
     }
 
@@ -370,14 +380,17 @@ class JournalRepository implements JournalRepositoryInterface
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
-                'interest_date'           => $data['interest_date'],
-                'book_date'               => $data['book_date'],
-                'process_date'            => $data['process_date'],
             ]
         );
-        $journal->save();
 
-        return $journal;
+        $result = $journal->save();
+        if ($result) {
+            return $journal;
+        }
+
+        return new TransactionJournal();
+
+
     }
 
     /**
@@ -392,10 +405,6 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->transaction_currency_id = $data['amount_currency_id_amount'];
         $journal->description             = $data['description'];
         $journal->date                    = $data['date'];
-        $journal->interest_date           = $data['interest_date'];
-        $journal->book_date               = $data['book_date'];
-        $journal->process_date            = $data['process_date'];
-
 
         // unlink all categories, recreate them:
         $journal->categories()->detach();
@@ -437,6 +446,20 @@ class JournalRepository implements JournalRepositoryInterface
         // update tags:
         if (isset($data['tags']) && is_array($data['tags'])) {
             $this->updateTags($journal, $data['tags']);
+        }
+
+        // update meta fields:
+        $result = $journal->save();
+        if ($result) {
+            foreach ($data as $key => $value) {
+                if (in_array($key, $this->validMetaFields)) {
+                    $journal->setMeta($key, $value);
+                    continue;
+                }
+                Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
+            }
+
+            return $journal;
         }
 
         return $journal;

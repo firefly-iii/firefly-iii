@@ -14,7 +14,7 @@ use Auth;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
-use Input;
+use Illuminate\Http\Request;
 use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
 use Session;
@@ -79,13 +79,12 @@ class PreferencesController extends Controller
         $viewRangePref       = Preferences::get('viewRange', '1M');
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
-        $budgetMax           = Preferences::get('budgetMaximum', 1000);
         $language            = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
-        $budgetMaximum       = $budgetMax->data;
         $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
         $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
         $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart     = date('Y') . '-' . $fiscalYearStartStr;
+        $tjOptionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
         $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
         $has2faSecret        = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
         $showIncomplete      = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
@@ -93,7 +92,7 @@ class PreferencesController extends Controller
         return view(
             'preferences.index',
             compact(
-                'budgetMaximum', 'language', 'accounts', 'frontPageAccounts',
+                'language', 'accounts', 'frontPageAccounts', 'tjOptionalFields',
                 'viewRange', 'customFiscalYear', 'transactionPageSize', 'fiscalYearStart', 'is2faEnabled',
                 'has2faSecret', 'showIncomplete'
             )
@@ -117,38 +116,36 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postIndex()
+    public function postIndex(Request $request)
     {
         // front page accounts
         $frontPageAccounts = [];
-        if (is_array(Input::get('frontPageAccounts'))) {
-            foreach (Input::get('frontPageAccounts') as $id) {
+        if (is_array($request->get('frontPageAccounts'))) {
+            foreach ($request->get('frontPageAccounts') as $id) {
                 $frontPageAccounts[] = intval($id);
             }
             Preferences::set('frontPageAccounts', $frontPageAccounts);
         }
 
         // view range:
-        Preferences::set('viewRange', Input::get('viewRange'));
+        Preferences::set('viewRange', $request->get('viewRange'));
         // forget session values:
         Session::forget('start');
         Session::forget('end');
         Session::forget('range');
 
-        // budget maximum:
-        $budgetMaximum = intval(Input::get('budgetMaximum'));
-        Preferences::set('budgetMaximum', $budgetMaximum);
-
         // custom fiscal year
-        $customFiscalYear = intval(Input::get('customFiscalYear')) === 1;
-        $fiscalYearStart  = date('m-d', strtotime(Input::get('fiscalYearStart')));
+        $customFiscalYear = intval($request->get('customFiscalYear')) === 1;
+        $fiscalYearStart  = date('m-d', strtotime($request->get('fiscalYearStart')));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
         // save page size:
-        $transactionPageSize = intval(Input::get('transactionPageSize'));
+        $transactionPageSize = intval($request->get('transactionPageSize'));
         if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
             Preferences::set('transactionPageSize', $transactionPageSize);
         } else {
@@ -156,7 +153,7 @@ class PreferencesController extends Controller
         }
 
         // two factor auth
-        $twoFactorAuthEnabled   = intval(Input::get('twoFactorAuthEnabled'));
+        $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
         $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
 
         // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
@@ -165,10 +162,25 @@ class PreferencesController extends Controller
         }
 
         // language:
-        $lang = Input::get('language');
+        $lang = $request->get('language');
         if (in_array($lang, array_keys(config('firefly.languages')))) {
             Preferences::set('language', $lang);
         }
+
+        // optional fields for transactions:
+        $setOptions = $request->get('tj');
+        $optionalTj = [
+            'interest_date'      => isset($setOptions['interest_date']),
+            'book_date'          => isset($setOptions['book_date']),
+            'process_date'       => isset($setOptions['process_date']),
+            'due_date'           => isset($setOptions['due_date']),
+            'payment_date'       => isset($setOptions['payment_date']),
+            'invoice_date'       => isset($setOptions['invoice_date']),
+            'internal_reference' => isset($setOptions['internal_reference']),
+            'notes'              => isset($setOptions['notes']),
+            'attachments'        => isset($setOptions['attachments']),
+        ];
+        Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
 
         Session::flash('success', strval(trans('firefly.saved_preferences')));

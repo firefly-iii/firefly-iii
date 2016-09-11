@@ -133,6 +133,7 @@ return [
 
     // admin
     'domain'                         => 'Domínio',
+    'single_user_mode'               => 'Single user mode',
 
     // import
     'import_file'                    => 'Importar arquivo',
@@ -146,4 +147,8 @@ return [
     'csv_config'                     => 'Importar CSV de configuração',
 
 
+    'due_date'           => 'Due date',
+    'payment_date'       => 'Payment date',
+    'invoice_date'       => 'Invoice date',
+    'internal_reference' => 'Internal reference',
 ];

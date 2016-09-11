@@ -53,7 +53,7 @@
                 <!-- /.col -->
             </div>
         </form>
-        {% if Config.get('auth.allow_register') %}
+        {% if allowRegistration %}
             <a href="{{ URL.to('/register') }}" class="text-center">Register a new account</a><br>
         {% endif %}
         <a href="{{ URL.to('/password/reset') }}">I forgot my password</a>

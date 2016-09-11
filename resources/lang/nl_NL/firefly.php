@@ -9,10 +9,8 @@
 
 return [
     // general stuff:
-    'language_incomplete'                       => 'Deze taal is nog niet helemaal af',
-    'test'                                      => 'Nederlands geselecteerd!',
+    'language_incomplete'                       => 'onvolledige vertaling',
     'close'                                     => 'Sluiten',
-    'pleaseHold'                                => 'Momentje...',
     'actions'                                   => 'Acties',
     'edit'                                      => 'Wijzig',
     'delete'                                    => 'Verwijder',
@@ -23,8 +21,6 @@ return [
     'cancel'                                    => 'Annuleren',
     'from'                                      => 'Van',
     'to'                                        => 'Tot',
-    'total_sum'                                 => 'Totale som',
-    'period_sum'                                => 'Som van periode',
     'showEverything'                            => 'Laat alles zien',
     'never'                                     => 'Nooit',
     'search_results_for'                        => 'Zoekresultaten voor ":query"',
@@ -32,7 +28,6 @@ return [
     'deleted_error'                             => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                     => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
     'expired_error'                             => 'Je account is verlopen en kan niet meer worden gebruikt.',
-    'unbalanced_error'                          => 'Je transacties zijn uit balans. Eén of meerdere overschrijvingen, uitgaves of inkomsten zijn niet goed opgeslagen. Controleer je rekeningen en transacties (je bent :amount uit balans).',
     'removed_amount'                            => ':amount weggehaald',
     'added_amount'                              => ':amount toegevoegd',
     'asset_account_role_help'                   => 'Voorkeuren die voortkomen uit je keuze hier kan je later aangeven.',
@@ -250,8 +245,6 @@ return [
     // preferences
     'pref_home_screen_accounts'                 => 'Voorpaginarekeningen',
     'pref_home_screen_accounts_help'            => 'Welke betaalrekeningen wil je op de voorpagina zien?',
-    'pref_budget_settings'                      => 'Budgetinstellingen',
-    'pref_budget_settings_help'                 => 'Wat is het maximale bedrag dat je voor een budget kan instellen?',
     'pref_view_range'                           => 'Bereik',
     'pref_view_range_help'                      => 'Sommige pagina\'s springen naar een standaard bereik. Welk bereik heeft jouw voorkeur?',
     'pref_1D'                                   => 'Eén dag',
@@ -281,8 +274,26 @@ return [
     'transaction_page_size_title'               => 'Paginalengte',
     'transaction_page_size_help'                => 'Elke lijst met transacties er op is zo lang',
     'transaction_page_size_label'               => 'Paginalengte',
-    'budget_maximum'                            => 'Maximale budgetgrootte',
     'between_dates'                             => '(:start en :end)',
+    'pref_optional_fields_transaction'          => 'Optionele velden voor transacties',
+    'pref_optional_fields_transaction_help'     => 'Standaard staan niet alle velden aan (vanwege het overzicht). Hier kan je zulke extra velden alsnog aanzetten, als je denkt dat ze handig zijn. Als je een veld uitzet, maar deze heeft wel degelijk een waarde, dan is-ie altijd zichtbaar, wat je ook doet.',
+    'optional_tj_date_fields'                   => 'Datumvelden',
+    'optional_tj_business_fields'               => 'Zakelijke velden',
+    'optional_tj_attachment_fields'             => 'Bijlagen',
+    'pref_optional_tj_interest_date'            => 'Rentedatum',
+    'pref_optional_tj_book_date'                => 'Boekdatum',
+    'pref_optional_tj_process_date'             => 'Verwerkingsdatum',
+    'pref_optional_tj_due_date'                 => 'Vervaldatum',
+    'pref_optional_tj_payment_date'             => 'Betalingsdatum',
+    'pref_optional_tj_invoice_date'             => 'Factuurdatum',
+    'pref_optional_tj_internal_reference'       => 'Interne verwijzing',
+    'pref_optional_tj_notes'                    => 'Notities',
+    'pref_optional_tj_attachments'              => 'Bijlagen',
+    'optional_field_meta_dates'                 => 'Data',
+    'optional_field_meta_business'              => 'Zakelijk',
+    'optional_field_attachments'                => 'Bijlagen',
+    'optional_field_meta_data'                  => 'Optionele meta-gegevens',
+
 
     // profile:
     'change_your_password'                      => 'Verander je wachtwoord',
@@ -338,11 +349,10 @@ return [
 
     // currencies:
     'create_currency'                           => 'Voeg nieuwe valuta toe',
-    'edit_currency'                             => 'Wijzig valuta ":name"',
     'store_currency'                            => 'Sla nieuwe valuta op',
     'update_currency'                           => 'Wijzig valuta',
     'new_default_currency'                      => ':name is nu de standaard valuta.',
-    'cannot_delete_currency'                    => 'Kan :name niet verwijderen omdat er nog transacties van zijn!',
+    'cannot_delete_currency'                    => 'Kan ":name" niet verwijderen, want deze is in gebruik.',
     'deleted_currency'                          => 'Valuta :name verwijderd',
     'created_currency'                          => 'Nieuwe valuta :name opgeslagen',
     'updated_currency'                          => 'Valuta :name bijgewerkt',
@@ -364,16 +374,13 @@ return [
     'mandatoryFields'                           => 'Verplichte velden',
     'optionalFields'                            => 'Optionele velden',
     'options'                                   => 'Opties',
-    'something'                                 => 'Iets!',
 
     // budgets:
     'create_new_budget'                         => 'Maak een nieuw budget',
     'store_new_budget'                          => 'Sla nieuw budget op',
     'stored_new_budget'                         => 'Nieuw budget ":name" opgeslagen',
-    'availableIn'                               => 'Beschikbaar in :date',
     'available_between'                         => 'Beschikbaar tussen :start en :end',
     'transactionsWithoutBudget'                 => 'Uitgaven zonder budget',
-    'transactionsWithoutBudgetDate'             => 'Uitgaven zonder budget in :date',
     'transactions_no_budget'                    => 'Uitgaven zonder budget tussen :start en :end',
     'spent_between'                             => 'Uitgegeven tussen :start en :end',
     'createBudget'                              => 'Maak nieuw budget',
@@ -439,9 +446,6 @@ return [
     'revenue_accounts'                          => 'Debiteuren',
     'cash_accounts'                             => 'Contant geldrekeningen',
     'Cash account'                              => 'Contant geldrekening',
-    'accountExtraHelp_asset'                    => '',
-    'accountExtraHelp_expense'                  => '',
-    'accountExtraHelp_revenue'                  => '',
     'account_type'                              => 'Rekeningtype',
     'save_transactions_by_moving'               => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
     'stored_new_account'                        => 'Nieuwe rekening ":name" opgeslagen!',
@@ -492,9 +496,6 @@ return [
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly!',
-    'createNewAsset'                            => 'Maak om te beginnen een nieuwe betaalrekening .' .
-                                                   'Hiermee kan je nieuwe transacties opslaan en beginnen met het beheren van je geld',
-    'createNewAssetButton'                      => 'Maak een nieuwe betaalrekening',
 
     // home page:
     'yourAccounts'                              => 'Je betaalrekeningen',
@@ -509,12 +510,10 @@ return [
     'moneyOut'                                  => 'Uitgaven',
     'billsToPay'                                => 'Openstaande contracten',
     'billsPaid'                                 => 'Betaalde contracten',
-    'viewDetails'                               => 'Meer info',
     'divided'                                   => 'verdeeld',
     'toDivide'                                  => 'te verdelen',
 
     // menu and titles, should be recycled as often as possible:
-    'toggleNavigation'                          => 'Navigatie aan of uit',
     'currency'                                  => 'Valuta',
     'preferences'                               => 'Voorkeuren',
     'logout'                                    => 'Uitloggen',
@@ -537,7 +536,6 @@ return [
     'moneyManagement'                           => 'Geldbeheer',
     'piggyBanks'                                => 'Spaarpotjes',
     'bills'                                     => 'Contracten',
-    'createNew'                                 => 'Nieuw',
     'withdrawal'                                => 'Uitgave',
     'deposit'                                   => 'Inkomsten',
     'account'                                   => 'Rekening',
@@ -549,7 +547,6 @@ return [
     'yes'                                       => 'Ja',
     'no'                                        => 'Nee',
     'amount'                                    => 'Bedrag',
-    'newBalance'                                => 'Nieuw saldo',
     'overview'                                  => 'Overzicht',
     'saveOnAccount'                             => 'Sparen op rekening',
     'unknown'                                   => 'Onbekend',
@@ -725,6 +722,10 @@ return [
     'domain_is_now_blocked'                     => 'Domein :domain is nu geblokkeerd',
     'instance_configuration'                    => 'Instellingen',
     'firefly_instance_configuration'            => 'Instellingen voor Firefly III',
+    'setting_single_user_mode'                  => 'Enkele gebruiker-modus',
+    'setting_single_user_mode_explain'          => 'Standaard accepteert Firefly III maar één (1) gebruiker: jijzelf. Dit is een veiligheidsmaatregel, zodat anderen niet zomaar jouw installatie kunnen gebruiken, tenzij je dit aanzet. Toekomstige registraties zijn nu geblokkeerd. Als je dit vinkje uitzet kunnen anderen jouw installatie ook gebruiken, gegeven dat ze er bij kunnen (je installatie hangt aan het internet).',
+    'store_configuration'                       => 'Configuratie opslaan',
+    'hidden_fields_preferences'                 => 'Niet alle velden zijn zichtbaar. Zet ze aan in je <a href=":link">instellingen</a>.',
 
     // split a transaction:
     'transaction_meta_data'                     => 'Transactie meta-data',
@@ -797,4 +798,6 @@ return [
     'import_with_key'                           => 'Import met code \':key\'',
     'import_finished_report'                    => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
     'import_finished_link'                      => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+
+
 ];

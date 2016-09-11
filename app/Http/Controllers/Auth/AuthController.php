@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
+use Config;
 use FireflyIII\Events\UserRegistration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -108,6 +109,16 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        if ($singleUserMode === true && $userCount > 0) {
+            $message = 'Registration is currently not available.';
+
+            return view('error', compact('message'));
+        }
+
+
         $validator = $this->validator($request->all());
 
         if ($validator->fails()) {
@@ -146,6 +157,24 @@ class AuthController extends Controller
     }
 
     /**
+     * Show the application login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        $allowRegistration = true;
+        if ($singleUserMode === true && $userCount > 0) {
+            $allowRegistration = false;
+        }
+
+        return view('auth.login', compact('allowRegistration'));
+    }
+
+    /**
      * Show the application registration form.
      *
      * @return \Illuminate\Http\Response
@@ -153,6 +182,15 @@ class AuthController extends Controller
     public function showRegistrationForm()
     {
         $showDemoWarning = env('SHOW_DEMO_WARNING', false);
+
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        if ($singleUserMode === true && $userCount > 0) {
+            $message = 'Registration is currently not available.';
+
+            return view('error', compact('message'));
+        }
 
         return view('auth.register', compact('showDemoWarning'));
     }

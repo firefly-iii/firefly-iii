@@ -44,6 +44,12 @@ class TransactionController extends Controller
         parent::__construct();
         View::share('title', trans('firefly.transactions'));
         View::share('mainTitleIcon', 'fa-repeat');
+
+        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
+
+        View::share('uploadSize', $uploadSize);
     }
 
     /**
@@ -65,6 +71,7 @@ class TransactionController extends Controller
         $preFilled        = Session::has('preFilled') ? session('preFilled') : [];
         $subTitle         = trans('form.add_new_' . $what);
         $subTitleIcon     = 'fa-plus';
+        $optionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
 
         Session::put('preFilled', $preFilled);
 
@@ -80,7 +87,7 @@ class TransactionController extends Controller
         asort($piggies);
 
 
-        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle'));
+        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields'));
     }
 
     /**
@@ -135,19 +142,23 @@ class TransactionController extends Controller
         if ($count > 2) {
             return redirect(route('split.journal.edit', [$journal->id]));
         }
-        $budgetRepository    = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository     = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $crud                = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $assetAccounts       = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
-        $budgetList          = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBankList       = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
-        $maxFileSize         = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize         = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize          = min($maxFileSize, $maxPostSize);
-        $what                = strtolower(TransactionJournal::transactionTypeStr($journal));
-        $subTitle            = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+
+        // code to get list data:
+        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+        $crud             = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $assetAccounts    = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
+        $budgetList       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBankList    = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
+
+        // view related code
+        $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $what     = strtolower(TransactionJournal::transactionTypeStr($journal));
+
+        // journal related code
         $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
         $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $preFilled           = [
             'date'                     => TransactionJournal::dateAsString($journal),
             'interest_date'            => TransactionJournal::dateAsString($journal, 'interest_date'),
@@ -162,6 +173,13 @@ class TransactionController extends Controller
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->name,
             'amount'                   => TransactionJournal::amountPositive($journal),
+
+            // new custom fields:
+            'due_date'                 => TransactionJournal::dateAsString($journal, 'due_date'),
+            'payment_date'             => TransactionJournal::dateAsString($journal, 'payment_date'),
+            'invoice_date'             => TransactionJournal::dateAsString($journal, 'invoice_date'),
+            'interal_reference'        => $journal->getMeta('internal_reference'),
+            'notes'                    => $journal->getMeta('notes'),
         ];
 
         if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
@@ -183,9 +201,10 @@ class TransactionController extends Controller
         }
         Session::forget('transactions.edit.fromUpdate');
 
-        return view('transactions.edit', compact('journal', 'uploadSize', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle'))->with(
-            'data', $preFilled
-        );
+        return view(
+            'transactions.edit',
+            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle')
+        )->with('data', $preFilled);
     }
 
     /**
