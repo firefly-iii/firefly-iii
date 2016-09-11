@@ -30,5 +30,6 @@ return [
         '3.10'    => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-3.10',
         '3.10.1'  => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-3.10',
         '3.10.2'  => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-3.10',
+        '3.10.3'  => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-3.10',
     ],
 ];
