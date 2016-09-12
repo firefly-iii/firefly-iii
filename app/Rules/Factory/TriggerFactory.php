@@ -16,6 +16,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Rules\Triggers\AbstractTrigger;
 use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\Support\Domain;
+use Log;
 
 /**
  * Interface TriggerInterface
@@ -68,6 +69,7 @@ class TriggerFactory
         /** @var AbstractTrigger $class */
         $class = self::getTriggerClass($triggerType);
         $obj   = $class::makeFromStrings($triggerValue, $stopProcessing);
+        Log::debug('Created trigger from string', ['type' => $triggerType, 'value' => $triggerValue, 'stopProcessing' => $stopProcessing, 'class' => $class]);
 
         return $obj;
     }

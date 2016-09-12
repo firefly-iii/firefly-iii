@@ -98,5 +98,23 @@ class AbstractTrigger
         return $self;
     }
 
+    /**
+     * @return RuleTrigger
+     */
+    public function getTrigger(): RuleTrigger
+    {
+        return $this->trigger;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTriggerValue(): string
+    {
+        return $this->triggerValue;
+    }
+
+
+
 
 }
