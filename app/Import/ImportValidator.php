@@ -21,6 +21,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 
 /**
  * Class ImportValidator
@@ -357,13 +358,16 @@ class ImportValidator
     {
         if (is_null($entry->fields['currency'])) {
             /** @var CurrencyRepositoryInterface $repository */
-            $repository                = app(CurrencyRepositoryInterface::class);
-            $entry->fields['currency'] = $repository->findByCode(env('DEFAULT_CURRENCY', 'EUR'));
-            Log::debug('Set currency to EUR');
+            $repository = app(CurrencyRepositoryInterface::class, [$this->user]);
+            // is the default currency for the user or the system
+            $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', env('DEFAULT_CURRENCY', 'EUR'))->data;
+
+            $entry->fields['currency'] = $repository->findByCode($defaultCode);
+            Log::debug(sprintf('Set currency to %s', $defaultCode));
 
             return $entry;
         }
-        Log::debug('Currency is OK');
+        Log::debug(sprintf('Currency is OK: %s', $entry->fields['currency']->code));
 
         return $entry;
     }

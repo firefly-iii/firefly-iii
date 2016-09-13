@@ -171,7 +171,7 @@ class Amount
     }
 
     /**
-     * @return TransactionCurrency
+     * @return \FireflyIII\Models\TransactionCurrency
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
@@ -180,7 +180,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         }
-        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+        $currencyPreference = Prefs::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'));
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
         $cache->store($currency);
 
