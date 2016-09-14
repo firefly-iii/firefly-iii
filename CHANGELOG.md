@@ -5,6 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - No unreleased changes yet.
 
+## [3.10.4] - 2015-05-25
+### Fixed
+- Migration fix by @sandermulders
+- Tricky import bug fix thanks to @vissert
+- Currency preference will be correctly pulled from user settings, thanks to @fuf
+- Simplified code for upgrade instructions.
+
+
 ## [3.10.3] - 2016-08-29
 ### Added
 - More fields for mass-edit, thanks to @Vissert (#282)
@@ -74,13 +82,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - The date picker now supports more ranges and periods.
 - Rewrote all migrations. #272
 
-
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - Issue #264
 - Issue #265
@@ -94,10 +95,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed a bug where an expense would be assigned to a piggy bank if you created a transfer first.
 - Bulk update problems, #280, thanks @stickgrinder
 - Fixed various problems with amount reporting of split transactions.
-
-### Security
-- Initial release.
-
 
 [3.9.1]
 ### Fixed
