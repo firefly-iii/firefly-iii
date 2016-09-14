@@ -10,7 +10,7 @@ return [
     ],
 
     'chart'               => 'chartjs',
-    'version'             => '3.10.3',
+    'version'             => '3.10.4',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],

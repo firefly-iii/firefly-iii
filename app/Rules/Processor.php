@@ -20,6 +20,7 @@ use FireflyIII\Rules\Factory\ActionFactory;
 use FireflyIII\Rules\Factory\TriggerFactory;
 use FireflyIII\Rules\Triggers\AbstractTrigger;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class Processor
@@ -36,6 +37,8 @@ final class Processor
     public $rule;
     /** @var Collection */
     public $triggers;
+
+    protected $foundTriggers = 0;
 
     /**
      * Processor constructor.
@@ -57,8 +60,16 @@ final class Processor
      */
     public static function make(Rule $rule)
     {
+        Log::debug(sprintf('Making new rule from Rule %d', $rule->id));
         $self       = new self;
         $self->rule = $rule;
+
+        /*
+         * The number of "found triggers" must start at -1, because the first
+         * trigger is "create-journal" or "update-journal" when this Processor
+         * is called from a Rule.
+         */
+        $self->setFoundTriggers(-1);
 
         $triggerSet = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $trigger */
@@ -111,6 +122,22 @@ final class Processor
         }
 
         return $self;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFoundTriggers(): int
+    {
+        return $this->foundTriggers;
+    }
+
+    /**
+     * @param int $foundTriggers
+     */
+    public function setFoundTriggers(int $foundTriggers)
+    {
+        $this->foundTriggers = $foundTriggers;
     }
 
     /**
@@ -176,25 +203,30 @@ final class Processor
      *
      * @return bool
      */
-    private function triggered()
+    private function triggered(): bool
     {
-        $foundTriggers = 0;
+        Log::debug('start of Processor::triggered()');
+        $foundTriggers = $this->getFoundTriggers();
         $hitTriggers   = 0;
-        /** @var RuleTrigger $trigger */
+        /** @var AbstractTrigger $trigger */
         foreach ($this->triggers as $trigger) {
             $foundTriggers++;
-
+            Log::debug(sprintf('Now checking trigger %s with value %s', get_class($trigger), $trigger->getTriggerValue()));
             /** @var AbstractTrigger $trigger */
             if ($trigger->triggered($this->journal)) {
+                Log::debug('Is a match!');
                 $hitTriggers++;
             }
             if ($trigger->stopProcessing) {
+                Log::debug('Stop processing this trigger and break.');
                 break;
             }
 
         }
+        $result = ($hitTriggers == $foundTriggers && $foundTriggers > 0);
+        Log::debug('Result of triggered()', ['hitTriggers' => $hitTriggers, 'foundTriggers' => $foundTriggers, 'result' => $result]);
 
-        return ($hitTriggers == $foundTriggers && $foundTriggers > 0);
+        return $result;
 
     }
 

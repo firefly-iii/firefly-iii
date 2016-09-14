@@ -15,6 +15,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TransactionMatcher is used to find a list of
@@ -80,6 +81,8 @@ class TransactionMatcher
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(
                 function (TransactionJournal $journal) use ($processor) {
+                    Log::debug(sprintf('Test these triggers on #%d', $journal->id));
+
                     return $processor->handleTransactionJournal($journal);
                 }
             );
