@@ -51,15 +51,22 @@ class UpgradeFireflyInstructions extends Command
         /** @var string $version */
         $version = config('firefly.version');
         $config  = config('upgrade.text');
-        $text    = $config[$version] ?? null;
+        $text = null;
+        foreach (array_keys($config) as $compare) {
+            // if string starts with:
+            $len = strlen($compare);
+            if (substr($version, 0, $len) === $compare) {
+                $text = $config[$compare];
+            }
+
+        }
 
         $this->line('+------------------------------------------------------------------------------+');
         $this->line('');
 
         if (is_null($text)) {
             $this->line('Thank you for installing Firefly III, v' . $version);
-            $this->line('If you are upgrading from a previous version,');
-            $this->info('there are no extra upgrade instructions.');
+            $this->info('There are no extra upgrade instructions.');
             $this->line('Firefly III should be ready for use.');
         } else {
             $this->line('Thank you for installing Firefly III, v' . $version);
