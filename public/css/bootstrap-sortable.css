@@ -1,4 +1,14 @@
-﻿table.sortable span.sign {
+/**
+ * adding sorting ability to HTML tables with Bootstrap styling
+ * @summary HTML tables sorting ability
+ * @version 2.0.0
+ * @requires tinysort, moment.js, jQuery
+ * @license MIT
+ * @author Matus Brlit (drvic10k)
+ * @copyright Matus Brlit (drvic10k), bootstrap-sortable contributors
+ */
+
+table.sortable span.sign {
     display: block;
     position: absolute;
     top: 50%;
@@ -84,17 +94,17 @@ table.sortable span.month.up:before, th.month.up:after {
     content: "dec .. jan";
 }
 
-table.sortable thead th:not([data-defaultsort=disabled]) {
+table.sortable>thead th:not([data-defaultsort=disabled]) {
     cursor: pointer;
     position: relative;
     top: 0;
     left: 0;
 }
 
-table.sortable thead th:hover:not([data-defaultsort=disabled]) {
+table.sortable>thead th:hover:not([data-defaultsort=disabled]) {
     background: #efefef;
 }
 
-table.sortable thead th div.mozilla {
+table.sortable>thead th div.mozilla {
     position: relative;
 }
