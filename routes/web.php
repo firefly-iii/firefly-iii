@@ -21,8 +21,8 @@ Route::group(
     Route::post('login', 'Auth\LoginController@login'); #
 
     // Registration Routes...
-    Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
-    Route::post('/register', 'Auth\RegisterController@register');
+    Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']); #
+    Route::post('/register', 'Auth\RegisterController@register'); #
 
     Route::get('/password/reset', 'Auth\PasswordController@getReset');
 

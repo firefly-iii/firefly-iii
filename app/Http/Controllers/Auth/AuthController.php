@@ -56,84 +56,7 @@ class AuthController extends Controller
         parent::__construct();
     }
 
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param  \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     * @throws FireflyException
-     * @throws \Illuminate\Foundation\Validation\ValidationException
-     */
-    public function register(Request $request)
-    {
-        // is allowed to?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
-        if ($singleUserMode === true && $userCount > 0) {
-            $message = 'Registration is currently not available.';
 
-            return view('error', compact('message'));
-        }
-
-
-        $validator = $this->validator($request->all());
-
-        if ($validator->fails()) {
-            $this->throwValidationException(
-                $request, $validator
-            );
-        }
-
-        $data             = $request->all();
-        $data['password'] = bcrypt($data['password']);
-
-        // is user email domain blocked?
-        if ($this->isBlockedDomain($data['email'])) {
-            $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
-
-            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
-
-            $this->throwValidationException(
-                $request, $validator
-            );
-        }
-
-
-        $user = $this->create($request->all());
-
-        // trigger user registration event:
-        event(new UserRegistration($user, $request->ip()));
-
-        Auth::login($user);
-
-        Session::flash('success', strval(trans('firefly.registered')));
-        Session::flash('gaEventCategory', 'user');
-        Session::flash('gaEventAction', 'new-registration');
-
-        return redirect($this->redirectPath());
-    }
-
-    /**
-     * Show the application registration form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showRegistrationForm()
-    {
-        $showDemoWarning = env('SHOW_DEMO_WARNING', false);
-
-        // is allowed to?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
-        if ($singleUserMode === true && $userCount > 0) {
-            $message = 'Registration is currently not available.';
-
-            return view('error', compact('message'));
-        }
-
-        return view('auth.register', compact('showDemoWarning'));
-    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -152,30 +75,9 @@ class AuthController extends Controller
         );
     }
 
-    /**
-     * @return array
-     */
-    protected function getBlockedDomains()
-    {
-        return FireflyConfig::get('blocked-domains', [])->data;
-    }
 
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    protected function isBlockedDomain(string $email)
-    {
-        $parts   = explode('@', $email);
-        $blocked = $this->getBlockedDomains();
 
-        if (isset($parts[1]) && in_array($parts[1], $blocked)) {
-            return true;
-        }
 
-        return false;
-    }
 
 
 
@@ -196,31 +98,5 @@ class AuthController extends Controller
         );
     }
 
-    /**
-     * Send a message home about a blocked domain and the address attempted to register.
-     *
-     * @param string $registrationMail
-     * @param string $ipAddress
-     */
-    private function reportBlockedDomainRegistrationAttempt(string $registrationMail, string $ipAddress)
-    {
-        try {
-            $email  = env('SITE_OWNER', false);
-            $parts  = explode('@', $registrationMail);
-            $domain = $parts[1];
-            $fields = [
-                'email_address'  => $registrationMail,
-                'blocked_domain' => $domain,
-                'ip'             => $ipAddress,
-            ];
 
-            Mail::send(
-                ['emails.blocked-registration-html', 'emails.blocked-registration'], $fields, function (Message $message) use ($email, $domain) {
-                $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
-    }
 }

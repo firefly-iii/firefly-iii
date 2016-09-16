@@ -97,7 +97,7 @@ class Handler extends ExceptionHandler
 
             // create job that will mail.
             $ip  = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-            $job = new MailError($userData, env('SITE_OWNER'), $ip, $data);
+            $job = new MailError($userData, env('SITE_OWNER', ''), $ip, $data);
             dispatch($job);
         }
 
