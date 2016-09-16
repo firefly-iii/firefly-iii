@@ -26,7 +26,6 @@ class Steam
 {
 
 
-
     /**
      *
      * @param \FireflyIII\Models\Account $account
@@ -187,8 +186,8 @@ class Steam
         $list = [];
 
         $set = Auth::user()->transactions()
-                   ->whereIn('account_id', $accounts)
-                   ->groupBy('account_id')
+                   ->whereIn('transactions.account_id', $accounts)
+                   ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
                    ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
 
         foreach ($set as $entry) {
