@@ -580,7 +580,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var HasMany $query */
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()
                             ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
         if ($end >= $start) {
             $query->before($end)->after($start);
