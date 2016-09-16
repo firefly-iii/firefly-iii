@@ -78,7 +78,7 @@ class CreateMainTables extends Migration
                 $table->integer('account_type_id', false, true);
                 $table->string('name', 1024);
                 $table->decimal('virtual_balance', 10, 4);
-                $table->string('iban', 255);
+                $table->string('iban', 255)->nullable();
 
                 $table->boolean('active')->default(1);
                 $table->boolean('encrypted')->default(0);
@@ -612,7 +612,7 @@ class CreateMainTables extends Migration
                 $table->softDeletes();
                 $table->integer('account_id', false, true);
                 $table->integer('transaction_journal_id', false, true);
-                $table->string('description', 255);
+                $table->string('description', 1024)->nullable();
                 $table->decimal('amount', 10, 4);
 
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');

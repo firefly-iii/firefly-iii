@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('AccountTypeSeeder');
-        $this->call('TransactionCurrencySeeder');
-        $this->call('TransactionTypeSeeder');
-        $this->call('PermissionSeeder');
-        $this->call('TestDataSeeder');
+        $this->call(AccountTypeSeeder::class);
+        $this->call(TransactionCurrencySeeder::class);
+        $this->call(TransactionTypeSeeder::class);
+        $this->call(PermissionSeeder::class);
+        $this->call(TestDataSeeder::class);
 
     }
 }

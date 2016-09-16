@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
                 $table->string('email', 255);
                 $table->string('password', 60);
                 $table->string('remember_token', 100);
-                $table->string('reset', 32);
+                $table->string('reset', 32)->nullable();
                 $table->tinyInteger('blocked', false, true)->default('0');
                 $table->string('blocked_code', 25)->nullable();
             }
