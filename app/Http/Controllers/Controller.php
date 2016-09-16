@@ -48,36 +48,11 @@ class Controller extends BaseController
         View::share('hideBills', false);
         View::share('hideTags', false);
 
-        if (Auth::check()) {
-            $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
-            $lang = $pref->data;
+        // save some formats:
+        $this->monthFormat       = (string)trans('config.month');
+        $this->monthAndDayFormat = (string)trans('config.month_and_day');
+        $this->dateTimeFormat    = (string)trans('config.date_time');
 
-            App::setLocale($lang);
-            Carbon::setLocale(substr($lang, 0, 2));
-            $locale = explode(',', trans('config.locale'));
-            $locale = array_map('trim', $locale);
-
-            setlocale(LC_TIME, $locale);
-            setlocale(LC_MONETARY, $locale);
-
-            // save some formats:
-            $this->monthFormat       = (string)trans('config.month');
-            $this->monthAndDayFormat = (string)trans('config.month_and_day');
-            $this->dateTimeFormat    = (string)trans('config.date_time');
-
-            // change localeconv to a new array:
-            $numberFormatter = numfmt_create($lang, NumberFormatter::CURRENCY);
-            $localeconv      = [
-                'mon_decimal_point' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL)),
-                'mon_thousands_sep' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL)),
-                'frac_digits'       => $numberFormatter->getAttribute(NumberFormatter::MAX_FRACTION_DIGITS),
-            ];
-            View::share('monthFormat', $this->monthFormat);
-            View::share('monthAndDayFormat', $this->monthAndDayFormat);
-            View::share('dateTimeFormat', $this->dateTimeFormat);
-            View::share('language', $lang);
-            View::share('localeconv', $localeconv);
-        }
     }
 
     /**

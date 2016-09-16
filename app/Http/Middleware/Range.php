@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Middleware;
 
+use App;
 use Carbon\Carbon;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
@@ -19,6 +20,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Navigation;
+use NumberFormatter;
 use Preferences;
 use Session;
 use View;
@@ -62,36 +64,56 @@ class Range
     public function handle(Request $request, Closure $theNext, $guard = null)
     {
         if (!Auth::guard($guard)->guest()) {
-            // ignore preference. set the range to be the current month:
-            if (!Session::has('start') && !Session::has('end')) {
 
-                $viewRange = Preferences::get('viewRange', '1M')->data;
-                $start     = new Carbon;
-                $start     = Navigation::updateStartDate($viewRange, $start);
-                $end       = Navigation::updateEndDate($viewRange, $start);
+            // set start, end and finish:
+            $this->setRange();
 
-                Session::put('start', $start);
-                Session::put('end', $end);
-            }
-            if (!Session::has('first')) {
-                /** @var JournalRepositoryInterface $repository */
-                $repository = app(JournalRepositoryInterface::class);
-                $journal    = $repository->first();
-                $first      = Carbon::now()->startOfYear();
+            // get variables for date range:
+            $this->datePicker();
 
-                if (!is_null($journal->id)) {
-                    $first = $journal->date;
-                }
-                Session::put('first', $first);
-            }
-
+            // set view variables.
+            $this->configureView();
         }
-        $this->datePicker();
 
         return $theNext($request);
 
     }
 
+    private function configureView()
+    {
+        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
+        $lang = $pref->data;
+
+        App::setLocale($lang);
+        Carbon::setLocale(substr($lang, 0, 2));
+        $locale = explode(',', trans('config.locale'));
+        $locale = array_map('trim', $locale);
+
+        setlocale(LC_TIME, $locale);
+        setlocale(LC_MONETARY, $locale);
+
+        // save some formats:
+        $monthFormat       = (string)trans('config.month');
+        $monthAndDayFormat = (string)trans('config.month_and_day');
+        $dateTimeFormat    = (string)trans('config.date_time');
+
+        // change localeconv to a new array:
+        $numberFormatter = numfmt_create($lang, NumberFormatter::CURRENCY);
+        $localeconv      = [
+            'mon_decimal_point' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL)),
+            'mon_thousands_sep' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL)),
+            'frac_digits'       => $numberFormatter->getAttribute(NumberFormatter::MAX_FRACTION_DIGITS),
+        ];
+        View::share('monthFormat', $monthFormat);
+        View::share('monthAndDayFormat', $monthAndDayFormat);
+        View::share('dateTimeFormat', $dateTimeFormat);
+        View::share('language', $lang);
+        View::share('localeconv', $localeconv);
+    }
+
+    /**
+     * @throws FireflyException
+     */
     private function datePicker()
     {
         $viewRange          = Preferences::get('viewRange', '1M')->data;
@@ -139,6 +161,35 @@ class Range
         View::share('dpPrevious', $prev);
         View::share('dpNext', $next);
         View::share('dpRanges', $ranges);
+    }
+
+    /**
+     *
+     */
+    private function setRange()
+    {
+        // ignore preference. set the range to be the current month:
+        if (!Session::has('start') && !Session::has('end')) {
+
+            $viewRange = Preferences::get('viewRange', '1M')->data;
+            $start     = new Carbon;
+            $start     = Navigation::updateStartDate($viewRange, $start);
+            $end       = Navigation::updateEndDate($viewRange, $start);
+
+            Session::put('start', $start);
+            Session::put('end', $end);
+        }
+        if (!Session::has('first')) {
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            $journal    = $repository->first();
+            $first      = Carbon::now()->startOfYear();
+
+            if (!is_null($journal->id)) {
+                $first = $journal->date;
+            }
+            Session::put('first', $first);
+        }
     }
 
 }
