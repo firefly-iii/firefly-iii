@@ -1,8 +1,5 @@
 <?php
-declare(strict_types = 1);
 
-
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 /**
@@ -10,7 +7,6 @@ use Illuminate\Database\Seeder;
  */
 class DatabaseSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -18,13 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
         $this->call('AccountTypeSeeder');
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
         $this->call('PermissionSeeder');
         $this->call('TestDataSeeder');
-    }
 
+    }
 }
