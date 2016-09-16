@@ -109,7 +109,7 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
         // TODO move to FireflyConfig
         $showDemoWarning = env('SHOW_DEMO_WARNING', false);
@@ -123,7 +123,9 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        return view('auth.register', compact('showDemoWarning'));
+        $email = $request->old('email');
+
+        return view('auth.register', compact('showDemoWarning', 'email'));
     }
 
     /**

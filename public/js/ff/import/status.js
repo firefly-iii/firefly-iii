@@ -29,7 +29,7 @@ $(function () {
 function checkImportStatus() {
     "use strict";
     console.log('checkImportStatus()');
-    $.getJSON(jobImportUrl).success(reportOnJobImport).fail(failedJobImport);
+    $.getJSON(jobImportUrl).done(reportOnJobImport).fail(failedJobImport);
 }
 
 function importComplete(data) {

@@ -104,7 +104,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         // is allowed to?
         $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
@@ -114,7 +114,10 @@ class LoginController extends Controller
             $allowRegistration = false;
         }
 
-        return view('auth.login', compact('allowRegistration'));
+        $email    = $request->old('email');
+        $remember = $request->old('remember');
+
+        return view('auth.login', compact('allowRegistration', 'email', 'remember'));
     }
 
     /**

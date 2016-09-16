@@ -34,7 +34,7 @@ function clickInfoButton(e) {
     attributes.reportType = reportType;
     attributes.accounts = accountIds;
 
-    $.getJSON('popup/report', {attributes: attributes}).success(respondInfoButton).fail(errorInfoButton);
+    $.getJSON('popup/report', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
 }
 
 function errorInfoButton(data) {
