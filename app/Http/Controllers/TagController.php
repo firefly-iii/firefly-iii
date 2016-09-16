@@ -226,8 +226,16 @@ class TagController extends Controller
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
+
+        // TODO move to repository.
+
         /** @var Collection $journals */
-        $journals = $tag->transactionJournals()->sortCorrectly()->expanded()->get(TransactionJournal::queryFields());
+        $journals = $tag
+            ->transactionJournals()
+            ->sortCorrectly()
+            ->expanded()
+            ->groupBy(['tag_transaction_journal.tag_id'])
+            ->get(TransactionJournal::queryFields());
 
         $sum = $journals->sum(
             function (TransactionJournal $journal) {
