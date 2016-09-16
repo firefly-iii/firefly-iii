@@ -84,9 +84,7 @@ class JournalRepository implements JournalRepositoryInterface
                               ->where('transactions.id', '!=', $transaction->id)
                               ->whereNull('transactions.deleted_at')
                               ->whereNull('transaction_journals.deleted_at')
-                              ->orderBy('transaction_journals.date', 'DESC')
-                              ->orderBy('transaction_journals.order', 'ASC')
-                              ->orderBy('transaction_journals.id', 'DESC');
+                              ->groupBy('transaction_journals.id');
         $sum     = $query->sum('transactions.amount');
 
         return strval($sum);
@@ -227,22 +225,23 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactions(TransactionJournal $journal): Collection
     {
         $transactions = new Collection;
+        $fields       = ['transactions.id', 'transactions.created_at', 'transactions.updated_at', 'transactions.deleted_at', 'transactions.account_id',
+                         'transactions.transaction_journal_id', 'transactions.description', 'transactions.amount',
+                         DB::raw('SUM(`transactions`.`amount`) as `sum`')];
+        $groupBy      = ['transactions.id', 'transactions.created_at', 'transactions.updated_at', 'transactions.deleted_at', 'transactions.account_id',
+                         'transactions.transaction_journal_id', 'transactions.description', 'transactions.amount'];
         switch ($journal->transactionType->type) {
             case TransactionType::DEPOSIT:
                 /** @var Collection $transactions */
                 $transactions = $journal->transactions()
                                         ->groupBy('transactions.account_id')
                                         ->where('amount', '<', 0)
-                                        ->groupBy('transactions.id')
-                                        ->orderBy('amount', 'ASC')->get(
-                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
-                    );
+                                        ->groupBy($groupBy)
+                                        ->orderBy('amount', 'ASC')->get($fields);
                 $final        = $journal->transactions()
-                                        ->groupBy('transactions.account_id')
+                                        ->groupBy($groupBy)
                                         ->where('amount', '>', 0)
-                                        ->orderBy('amount', 'ASC')->first(
-                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
-                    );
+                                        ->orderBy('amount', 'ASC')->first($fields);
                 $transactions->push($final);
                 break;
             case TransactionType::TRANSFER:
@@ -250,25 +249,19 @@ class JournalRepository implements JournalRepositoryInterface
                 /** @var Collection $transactions */
                 $transactions = $journal->transactions()
                                         ->groupBy('transactions.id')
-                                        ->orderBy('transactions.id')->get(
-                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
-                    );
+                                        ->orderBy('transactions.id')->get($fields);
                 break;
             case TransactionType::WITHDRAWAL:
 
                 /** @var Collection $transactions */
                 $transactions = $journal->transactions()
                                         ->where('amount', '>', 0)
-                                        ->groupBy('transactions.id')
-                                        ->orderBy('amount', 'ASC')->get(
-                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
-                    );
+                                        ->groupBy($groupBy)
+                                        ->orderBy('amount', 'ASC')->get($fields);
                 $final        = $journal->transactions()
                                         ->where('amount', '<', 0)
-                                        ->groupBy('transactions.account_id')
-                                        ->orderBy('amount', 'ASC')->first(
-                        ['transactions.*', DB::raw('SUM(`transactions`.`amount`) as `sum`')]
-                    );
+                                        ->groupBy($groupBy)
+                                        ->orderBy('amount', 'ASC')->first($fields);
                 $transactions->push($final);
                 break;
         }
