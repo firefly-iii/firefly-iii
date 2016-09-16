@@ -11,22 +11,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use Auth;
-use Config;
-use FireflyIII\Events\UserRegistration;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
-use Illuminate\Support\Facades\Lang;
-use Log;
-use Mail;
-use Session;
-use Swift_TransportException;
 use Validator;
 
 
@@ -57,7 +45,6 @@ class AuthController extends Controller
     }
 
 
-
     /**
      * Create a new user instance after a valid registration.
      *
@@ -74,11 +61,6 @@ class AuthController extends Controller
             ]
         );
     }
-
-
-
-
-
 
 
     /**

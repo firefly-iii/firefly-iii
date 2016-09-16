@@ -34,7 +34,7 @@ class AccountList implements BinderInterface
     public static function routeBinder($value, $route): Collection
     {
 
-        if (Auth::check()) {
+        if (auth()->check()) {
 
             $ids = explode(',', $value);
             // filter ids:

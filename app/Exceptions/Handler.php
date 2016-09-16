@@ -81,7 +81,7 @@ class Handler extends ExceptionHandler
                 'id'    => 0,
                 'email' => 'unknown@example.com',
             ];
-            if (Auth::check()) {
+            if (auth()->check()) {
                 $userData['id']    = Auth::user()->id;
                 $userData['email'] = Auth::user()->email;
             }

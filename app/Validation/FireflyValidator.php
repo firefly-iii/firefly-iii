@@ -224,7 +224,7 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
-        if (!Auth::check()) {
+        if (!auth()->check()) {
             return $this->validateAccountAnonymously();
         }
 

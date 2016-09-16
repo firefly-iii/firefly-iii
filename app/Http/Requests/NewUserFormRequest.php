@@ -11,8 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Auth;
-
 /**
  * Class NewUserFormRequest
  *
@@ -27,7 +25,7 @@ class NewUserFormRequest extends Request
     public function authorize()
     {
         // Only allow logged in users
-        return Auth::check();
+        return auth()->check();
     }
 
     /**

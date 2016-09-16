@@ -33,7 +33,7 @@ class BudgetList implements BinderInterface
      */
     public static function routeBinder($value, $route): Collection
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $ids = explode(',', $value);
             /** @var \Illuminate\Support\Collection $object */
             $object = Budget::where('active', 1)

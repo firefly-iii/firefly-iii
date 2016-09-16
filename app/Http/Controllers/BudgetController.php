@@ -252,7 +252,8 @@ class BudgetController extends Controller
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $list     = new LengthAwarePaginator($journals, $count, $pageSize);
-        $subTitle = trans('firefly.without_budget_between',
+        $subTitle = trans(
+            'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
         $list->setPath('/budgets/list/noBudget');

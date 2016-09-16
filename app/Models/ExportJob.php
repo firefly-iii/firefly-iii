@@ -44,7 +44,7 @@ class ExportJob extends Model
      */
     public static function routeBinder($value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $model = self::where('key', $value)->where('user_id', Auth::user()->id)->first();
             if (!is_null($model)) {
                 return $model;

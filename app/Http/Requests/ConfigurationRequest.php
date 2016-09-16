@@ -27,7 +27,7 @@ class ConfigurationRequest extends Request
     public function authorize()
     {
         // Only allow logged in users and admins
-        return Auth::check() && Auth::user()->hasRole('owner');
+        return auth()->check() && Auth::user()->hasRole('owner');
     }
 
     /**

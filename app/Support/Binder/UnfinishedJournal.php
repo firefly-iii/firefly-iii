@@ -32,7 +32,7 @@ class UnfinishedJournal implements BinderInterface
      */
     public static function routeBinder($value, $route): TransactionJournal
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $object = TransactionJournal::where('transaction_journals.id', $value)
                                         ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                         ->where('completed', 0)

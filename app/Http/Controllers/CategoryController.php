@@ -166,9 +166,9 @@ class CategoryController extends Controller
      */
     public function show(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
-        $range        = Preferences::get('viewRange', '1M')->data;
+        $range = Preferences::get('viewRange', '1M')->data;
         /** @var Carbon $start */
-        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
         /** @var Carbon $end */
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $hideCategory = true; // used in list.

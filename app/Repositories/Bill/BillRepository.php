@@ -134,7 +134,7 @@ class BillRepository implements BillRepositoryInterface
                           ->whereIn('bill_id', $ids)
                           ->before($end)
                           ->after($start)
-                          ->groupBy(['transaction_journals.bill_id','transaction_journals.id'])
+                          ->groupBy(['transaction_journals.bill_id', 'transaction_journals.id'])
                           ->get(
                               [
                                   'transaction_journals.bill_id',

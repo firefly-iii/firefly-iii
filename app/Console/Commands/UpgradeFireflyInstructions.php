@@ -51,7 +51,7 @@ class UpgradeFireflyInstructions extends Command
         /** @var string $version */
         $version = config('firefly.version');
         $config  = config('upgrade.text');
-        $text = null;
+        $text    = null;
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             $len = strlen($compare);

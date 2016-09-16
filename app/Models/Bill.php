@@ -81,7 +81,7 @@ class Bill extends Model
      */
     public static function routeBinder(Bill $value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             if ($value->user_id == Auth::user()->id) {
                 return $value;
             }

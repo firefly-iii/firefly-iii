@@ -115,6 +115,4 @@ class AbstractTrigger
     }
 
 
-
-
 }

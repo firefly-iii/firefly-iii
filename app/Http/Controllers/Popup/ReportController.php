@@ -112,6 +112,7 @@ class ReportController extends Controller
                         if ($tags === 0) {
                             return true;
                         }
+
                         return false;
                     }
                 );
@@ -194,6 +195,7 @@ class ReportController extends Controller
                 if ($journal->destination_account_id === $account->id) {
                     return true;
                 }
+
                 return false;
             }
         );
@@ -229,6 +231,7 @@ class ReportController extends Controller
                 ) {
                     return true;
                 }
+
                 return false;
             }
         );

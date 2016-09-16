@@ -96,7 +96,7 @@ class Tag extends TagSupport
      */
     public static function routeBinder(Tag $value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             if ($value->user_id == Auth::user()->id) {
                 return $value;
             }

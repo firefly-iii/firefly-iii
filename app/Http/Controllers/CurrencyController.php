@@ -81,7 +81,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency         $currency
+     * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|View
      */
@@ -105,7 +105,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency         $currency
+     * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception

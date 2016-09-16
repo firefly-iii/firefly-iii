@@ -54,7 +54,7 @@ class LimitRepetition extends Model
      */
     public static function routeBinder($value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $object = LimitRepetition::where('limit_repetitions.id', $value)
                                      ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
                                      ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')

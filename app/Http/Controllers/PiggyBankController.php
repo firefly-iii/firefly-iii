@@ -253,7 +253,7 @@ class PiggyBankController extends Controller
      */
     public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
     {
-        $amount        = strval(round(Input::get('amount'), 2));
+        $amount = strval(round(Input::get('amount'), 2));
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);

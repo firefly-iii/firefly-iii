@@ -70,7 +70,7 @@ class PiggyBank extends Model
      */
     public static function routeBinder(PiggyBank $value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             if ($value->account->user_id == Auth::user()->id) {
                 return $value;
             }

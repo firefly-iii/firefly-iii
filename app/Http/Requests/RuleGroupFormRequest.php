@@ -18,7 +18,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Auth;
 use FireflyIII\Models\RuleGroup;
 use Input;
 
@@ -36,7 +35,7 @@ class RuleGroupFormRequest extends Request
     public function authorize()
     {
         // Only allow logged in users
-        return Auth::check();
+        return auth()->check();
     }
 
     /**

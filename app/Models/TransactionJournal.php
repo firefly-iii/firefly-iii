@@ -128,7 +128,7 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public static function routeBinder($value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
             $object     = TransactionJournal::where('transaction_journals.id', $value)
                                             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -380,7 +380,8 @@ class TransactionJournal extends TransactionJournalSupport
                 'transaction_journals.completed',
                 'transaction_types.type',
                 'transaction_currencies.code',
-            ]);
+            ]
+        );
         $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
     }
 

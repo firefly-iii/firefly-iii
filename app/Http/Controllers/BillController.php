@@ -130,7 +130,7 @@ class BillController extends Controller
         /** @var Carbon $start */
         $start = session('start');
         /** @var Carbon $end */
-        $end   = session('end');
+        $end = session('end');
 
         $bills = $repository->getBills();
         $bills->each(

@@ -29,7 +29,7 @@ class BillFormRequest extends Request
     public function authorize()
     {
         // Only allow logged in users
-        return Auth::check();
+        return auth()->check();
     }
 
     /**
