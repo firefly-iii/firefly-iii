@@ -57,48 +57,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle a login request to the application.
-     *
-     * @param  \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function login(Request $request)
-    {
-
-        $this->validate($request, [$this->loginUsername() => 'required', 'password' => 'required',]);
-        $throttles = $this->isUsingThrottlesLoginsTrait();
-
-        if ($throttles && $this->hasTooManyLoginAttempts($request)) {
-            return $this->sendLockoutResponse($request);
-        }
-
-        $credentials            = $this->getCredentials($request);
-        $credentials['blocked'] = 0; // most not be blocked.
-
-        if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-            return $this->handleUserWasAuthenticated($request, $throttles);
-        }
-
-        // check if user is blocked:
-        $errorMessage = '';
-        /** @var User $foundUser */
-        $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
-        if (!is_null($foundUser)) {
-            // if it exists, show message:
-            $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
-            $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
-            $this->reportBlockedUserLoginAttempt($foundUser, $code, $request->ip());
-        }
-
-        if ($throttles) {
-            $this->incrementLoginAttempts($request);
-        }
-
-        return $this->sendFailedLoginResponse($request, $errorMessage);
-    }
-
-    /**
      * Handle a registration request for the application.
      *
      * @param  \Illuminate\Http\Request $request
@@ -157,24 +115,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the application login form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showLoginForm()
-    {
-        // is allowed to?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
-        $allowRegistration = true;
-        if ($singleUserMode === true && $userCount > 0) {
-            $allowRegistration = false;
-        }
-
-        return view('auth.login', compact('allowRegistration'));
-    }
-
-    /**
      * Show the application registration form.
      *
      * @return \Illuminate\Http\Response
@@ -221,24 +161,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the failed login message.
-     *
-     * @param string $message
-     *
-     * @return string
-     */
-    protected function getFailedLoginMessage(string $message)
-    {
-        if (strlen($message) > 0) {
-            return $message;
-        }
-
-        return Lang::has('auth.failed')
-            ? Lang::get('auth.failed')
-            : 'These credentials do not match our records.';
-    }
-
-    /**
      * @param string $email
      *
      * @return bool
@@ -255,24 +177,7 @@ class AuthController extends Controller
         return false;
     }
 
-    /**
-     * Get the failed login response instance.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $message
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function sendFailedLoginResponse(Request $request, string $message)
-    {
-        return redirect()->back()
-                         ->withInput($request->only($this->loginUsername(), 'remember'))
-                         ->withErrors(
-                             [
-                                 $this->loginUsername() => $this->getFailedLoginMessage($message),
-                             ]
-                         );
-    }
+
 
     /**
      * Get a validator for an incoming registration request.
@@ -312,36 +217,6 @@ class AuthController extends Controller
             Mail::send(
                 ['emails.blocked-registration-html', 'emails.blocked-registration'], $fields, function (Message $message) use ($email, $domain) {
                 $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
-    }
-
-    /**
-     * Send a message home about the  blocked attempt to login.
-     * Perhaps in a later stage, simply log these messages.
-     *
-     * @param User   $user
-     * @param string $code
-     * @param string $ipAddress
-     */
-    private function reportBlockedUserLoginAttempt(User $user, string $code, string $ipAddress)
-    {
-
-        try {
-            $email  = env('SITE_OWNER', false);
-            $fields = [
-                'user_id'      => $user->id,
-                'user_address' => $user->email,
-                'code'         => $code,
-                'ip'           => $ipAddress,
-            ];
-
-            Mail::send(
-                ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email, $user) {
-                $message->to($email, $email)->subject('Blocked a login attempt from ' . trim($user->email) . '.');
             }
             );
         } catch (Swift_TransportException $e) {

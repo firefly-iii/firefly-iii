@@ -17,8 +17,8 @@ Route::group(
     ['middleware' => 'user-not-logged-in'], function () {
 
     // Authentication Routes...
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login'); #
+    Route::post('login', 'Auth\LoginController@login'); #
 
     // Registration Routes...
     Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
