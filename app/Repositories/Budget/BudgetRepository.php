@@ -259,6 +259,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                                                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', '0');
                                            }
                                        )
+                                       ->groupBy(['source.account_id'])
                                        ->whereIn('budget_transaction.budget_id', $budgets->pluck('id')->toArray());
 
         if (count($accountIds) > 0) {
@@ -325,6 +326,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                         return true;
                     }
                 }
+
                 return false;
             }
         );
