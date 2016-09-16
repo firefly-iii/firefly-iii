@@ -358,8 +358,29 @@ class TransactionJournal extends TransactionJournalSupport
         // left join transaction currency:
         $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
 
-        // left join destination (for amount and account info).
-        $query->groupBy('transaction_journals.id');
+        // extend group by:
+        $query->groupBy(
+            [
+                'transaction_journals.id',
+                'transaction_journals.created_at',
+                'transaction_journals.updated_at',
+                'transaction_journals.deleted_at',
+                'transaction_journals.user_id',
+                'transaction_journals.transaction_type_id',
+                'transaction_journals.bill_id',
+                'transaction_journals.transaction_currency_id',
+                'transaction_journals.description',
+                'transaction_journals.date',
+                'transaction_journals.interest_date',
+                'transaction_journals.book_date',
+                'transaction_journals.process_date',
+                'transaction_journals.order',
+                'transaction_journals.tag_count',
+                'transaction_journals.encrypted',
+                'transaction_journals.completed',
+                'transaction_types.type',
+                'transaction_currencies.code',
+            ]);
         $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
     }
 

@@ -430,6 +430,12 @@ class AccountRepository implements AccountRepositoryInterface
         $fields[] = 'source.amount as source_amount';
         $fields[] = 'destination.account_id as destination_account_id';
         $fields[] = 'destination.amount as destination_amount';
+
+        $query->groupBy(['source.account_id',
+                'source.amount',
+                'destination.account_id',
+                'destination.amount',]);
+
         $complete = $query->get($fields);
 
         return $complete;
