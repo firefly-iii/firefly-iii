@@ -24,13 +24,11 @@ Route::group(
     Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']); #
     Route::post('/register', 'Auth\RegisterController@register'); #
 
-    Route::get('/password/reset', 'Auth\PasswordController@getReset');
-
     // Password Reset Routes...
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
-    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-    Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm'); #
+    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'); #
+    Route::post('/password/reset', 'Auth\ResetPasswordController@reset'); #
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm'); #
 
 
 }
@@ -42,7 +40,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
     Route::get('/error', 'HomeController@displayError');
-    Route::post('logout', ['uses' => 'Auth\LoginController@logout','as' => 'logout']);
+    Route::any('logout', ['uses' => 'Auth\LoginController@logout','as' => 'logout']);
     Route::get('/flush', ['uses' => 'HomeController@flush']);
 }
 );
