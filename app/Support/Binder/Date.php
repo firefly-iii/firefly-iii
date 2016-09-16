@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Binder;
 
-use Auth;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Helpers\FiscalHelper;
@@ -42,7 +41,7 @@ class Date implements BinderInterface
                 try {
                     $date = new Carbon($value);
                 } catch (Exception $e) {
-                    Log::error('Could not parse date "' . $value . '" for user #' . Auth::user()->id);
+                    Log::error('Could not parse date "' . $value . '" for user #' . auth()->user()->id);
                     throw new NotFoundHttpException;
                 }
 

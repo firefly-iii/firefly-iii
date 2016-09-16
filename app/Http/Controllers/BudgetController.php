@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Amount;
-use Auth;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Crud\Account\AccountCrudInterface;
@@ -359,7 +358,7 @@ class BudgetController extends Controller
     {
         $budgetData = [
             'name' => $request->input('name'),
-            'user' => Auth::user()->id,
+            'user' => auth()->user()->id,
         ];
         $budget     = $repository->store($budgetData);
 

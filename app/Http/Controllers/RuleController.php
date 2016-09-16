@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
@@ -189,7 +188,7 @@ class RuleController extends Controller
     {
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
-        $ruleGroups = $repository->getRuleGroupsWithRules(Auth::user());
+        $ruleGroups = $repository->getRuleGroupsWithRules(auth()->user());
 
         return view('rules.index', compact('ruleGroups'));
     }
@@ -243,7 +242,7 @@ class RuleController extends Controller
         $data = [
             'rule_group_id'       => $ruleGroup->id,
             'title'               => $request->get('title'),
-            'user_id'             => Auth::user()->id,
+            'user_id'             => auth()->user()->id,
             'trigger'             => $request->get('trigger'),
             'description'         => $request->get('description'),
             'rule-triggers'       => $request->get('rule-trigger'),
@@ -380,7 +379,7 @@ class RuleController extends Controller
             $data = [
                 'rule_group_id'       => $repository->getFirstRuleGroup()->id,
                 'stop_processing'     => 0,
-                'user_id'             => Auth::user()->id,
+                'user_id'             => auth()->user()->id,
                 'title'               => trans('firefly.default_rule_name'),
                 'description'         => trans('firefly.default_rule_description'),
                 'trigger'             => 'store-journal',
@@ -413,7 +412,7 @@ class RuleController extends Controller
 
         if ($repository->count() === 0) {
             $data = [
-                'user_id'     => Auth::user()->id,
+                'user_id'     => auth()->user()->id,
                 'title'       => trans('firefly.default_rule_group_name'),
                 'description' => trans('firefly.default_rule_group_description'),
             ];

@@ -11,8 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Auth;
-
 /**
  * Class ConfigurationRequest
  *
@@ -27,7 +25,7 @@ class ConfigurationRequest extends Request
     public function authorize()
     {
         // Only allow logged in users and admins
-        return auth()->check() && Auth::user()->hasRole('owner');
+        return auth()->check() && auth()->user()->hasRole('owner');
     }
 
     /**

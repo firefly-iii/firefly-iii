@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use Auth;
 use FireflyIII\Events\ResendConfirmation;
 use FireflyIII\Events\UserIsConfirmed;
 use FireflyIII\Exceptions\FireflyException;
@@ -55,10 +54,10 @@ class ConfirmationController extends Controller
         if ($database === $code && ($now - $time <= $maxDiff)) {
 
             // trigger user registration event:
-            event(new UserIsConfirmed(Auth::user(), $request->ip()));
+            event(new UserIsConfirmed(auth()->user(), $request->ip()));
 
-            Preferences::setForUser(Auth::user(), 'user_confirmed', true);
-            Preferences::setForUser(Auth::user(), 'user_confirmed_confirmed', time());
+            Preferences::setForUser(auth()->user(), 'user_confirmed', true);
+            Preferences::setForUser(auth()->user(), 'user_confirmed_confirmed', time());
             Session::flash('success', strval(trans('firefly.account_is_confirmed')));
 
             return redirect(route('home'));
@@ -79,7 +78,7 @@ class ConfirmationController extends Controller
         $owner   = env('SITE_OWNER', 'mail@example.com');
         $view    = 'auth.confirmation.no-resent';
         if ($now - $time > $maxDiff) {
-            event(new ResendConfirmation(Auth::user(), $request->ip()));
+            event(new ResendConfirmation(auth()->user(), $request->ip()));
             $view = 'auth.confirmation.resent';
         }
 

@@ -17,7 +17,6 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class FireRulesForStore
@@ -38,7 +37,7 @@ class FireRulesForStore
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         /** @var User $user */
-        $user   = Auth::user();
+        $user   = auth()->user();
         $groups = $user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get();
         //
         /** @var RuleGroup $group */

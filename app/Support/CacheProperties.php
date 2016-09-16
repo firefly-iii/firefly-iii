@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Support;
 
 
-use Auth;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -39,7 +38,7 @@ class CacheProperties
     {
         $this->properties = new Collection;
         if (auth()->check()) {
-            $this->addProperty(Auth::user()->id);
+            $this->addProperty(auth()->user()->id);
             $this->addProperty(Prefs::lastActivity());
         }
     }

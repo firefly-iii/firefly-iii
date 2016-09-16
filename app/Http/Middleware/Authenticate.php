@@ -41,7 +41,7 @@ class Authenticate
 
             return redirect()->guest('login');
         }
-        if (intval(Auth::user()->blocked) === 1) {
+        if (intval(auth()->user()->blocked) === 1) {
             Auth::guard($guard)->logout();
             Session::flash('logoutMessage', trans('firefly.block_account_logout'));
 

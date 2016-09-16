@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -58,7 +57,7 @@ class LimitRepetition extends Model
             $object = LimitRepetition::where('limit_repetitions.id', $value)
                                      ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
                                      ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                     ->where('budgets.user_id', Auth::user()->id)
+                                     ->where('budgets.user_id', auth()->user()->id)
                                      ->first(['limit_repetitions.*']);
             if ($object) {
                 return $object;

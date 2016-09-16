@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Report;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Helpers\Collection\Balance;
@@ -102,34 +101,34 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     private function allCoveredByBalancingActs(Collection $accounts, Carbon $start, Carbon $end): Collection
     {
         $ids = $accounts->pluck('id')->toArray();
-        $set = Auth::user()->tags()
-                   ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                   ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                   ->leftJoin(
-                       'transactions AS t_source', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_source.transaction_journal_id')->where('t_source.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin(
-                       'transactions AS t_destination', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 't_destination.transaction_journal_id')->where('t_destination.amount', '>', 0);
-                   }
-                   )
-                   ->where('tags.tagMode', 'balancingAct')
-                   ->where('transaction_types.type', TransactionType::TRANSFER)
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->whereNull('transaction_journals.deleted_at')
-                   ->whereIn('t_source.account_id', $ids)
-                   ->whereIn('t_destination.account_id', $ids)
-                   ->groupBy('t_destination.account_id')
-                   ->get(
-                       [
-                           't_destination.account_id',
-                           DB::raw('SUM(`t_destination`.`amount`) as `sum`'),
-                       ]
-                   );
+        $set = auth()->user()->tags()
+                     ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                     ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                     ->leftJoin(
+                         'transactions AS t_source', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 't_source.transaction_journal_id')->where('t_source.amount', '<', 0);
+                     }
+                     )
+                     ->leftJoin(
+                         'transactions AS t_destination', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 't_destination.transaction_journal_id')->where('t_destination.amount', '>', 0);
+                     }
+                     )
+                     ->where('tags.tagMode', 'balancingAct')
+                     ->where('transaction_types.type', TransactionType::TRANSFER)
+                     ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                     ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                     ->whereNull('transaction_journals.deleted_at')
+                     ->whereIn('t_source.account_id', $ids)
+                     ->whereIn('t_destination.account_id', $ids)
+                     ->groupBy('t_destination.account_id')
+                     ->get(
+                         [
+                             't_destination.account_id',
+                             DB::raw('SUM(`t_destination`.`amount`) as `sum`'),
+                         ]
+                     );
 
         return $set;
     }

@@ -10,7 +10,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
@@ -47,7 +46,7 @@ class PreferencesController extends Controller
     {
         $domain = $this->getDomain();
         /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $secret = $google2fa->generateSecretKey(16, Auth::user()->id);
+        $secret = $google2fa->generateSecretKey(16, auth()->user()->id);
         Session::flash('two-factor-secret', $secret);
         $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, null, $secret, 150);
 

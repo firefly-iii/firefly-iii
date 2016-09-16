@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrudInterface;
@@ -301,7 +300,7 @@ class AccountController extends Controller
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'virtualBalanceCurrency' => intval($request->input('amount_currency_id_virtualBalance')),
             'active'                 => true,
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'iban'                   => $request->input('iban'),
             'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),
@@ -347,7 +346,7 @@ class AccountController extends Controller
         $accountData = [
             'name'                   => $request->input('name'),
             'active'                 => $request->input('active'),
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'iban'                   => $request->input('iban'),
             'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),

@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Binder;
 
-use Auth;
 use FireflyIII\Models\Category;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -36,7 +35,7 @@ class CategoryList implements BinderInterface
             $ids = explode(',', $value);
             /** @var \Illuminate\Support\Collection $object */
             $object = Category::whereIn('id', $ids)
-                              ->where('user_id', Auth::user()->id)
+                              ->where('user_id', auth()->user()->id)
                               ->get();
 
             // add empty category if applicable.

@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
@@ -133,7 +132,7 @@ class TransactionJournal extends TransactionJournalSupport
             $object     = TransactionJournal::where('transaction_journals.id', $value)
                                             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                             ->whereIn('transaction_types.type', $validTypes)
-                                            ->where('user_id', Auth::user()->id)->first(['transaction_journals.*']);
+                                            ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
             if ($object) {
                 return $object;
             }

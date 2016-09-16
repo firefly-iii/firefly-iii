@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Binder;
 
 
-use Auth;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -43,7 +42,7 @@ class AccountList implements BinderInterface
             /** @var \Illuminate\Support\Collection $object */
             $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                              ->whereIn('accounts.id', $ids)
-                             ->where('user_id', Auth::user()->id)
+                             ->where('user_id', auth()->user()->id)
                              ->get(['accounts.*']);
             if ($object->count() > 0) {
                 return $object;

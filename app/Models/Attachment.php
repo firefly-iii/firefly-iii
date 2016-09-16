@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,7 +70,7 @@ class Attachment extends Model
     {
         if (auth()->check()) {
 
-            if ($value->user_id == Auth::user()->id) {
+            if ($value->user_id == auth()->user()->id) {
                 return $value;
             }
         }

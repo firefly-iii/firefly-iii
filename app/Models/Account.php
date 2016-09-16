@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -154,7 +153,7 @@ class Account extends Model
     {
 
         if (auth()->check()) {
-            if ($value->user_id == Auth::user()->id) {
+            if ($value->user_id == auth()->user()->id) {
                 return $value;
             }
         }

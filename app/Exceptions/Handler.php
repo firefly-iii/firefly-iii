@@ -10,7 +10,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Exceptions;
 
-use Auth;
 use ErrorException;
 use Exception;
 use FireflyIII\Jobs\MailError;
@@ -82,8 +81,8 @@ class Handler extends ExceptionHandler
                 'email' => 'unknown@example.com',
             ];
             if (auth()->check()) {
-                $userData['id']    = Auth::user()->id;
-                $userData['email'] = Auth::user()->email;
+                $userData['id']    = auth()->user()->id;
+                $userData['email'] = auth()->user()->email;
             }
             $data = [
                 'class'        => get_class($exception),

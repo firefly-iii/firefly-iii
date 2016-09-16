@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
@@ -185,10 +184,10 @@ class Steam
     {
         $list = [];
 
-        $set = Auth::user()->transactions()
-                   ->whereIn('transactions.account_id', $accounts)
-                   ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                   ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
+        $set = auth()->user()->transactions()
+                     ->whereIn('transactions.account_id', $accounts)
+                     ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
+                     ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
 
         foreach ($set as $entry) {
             $list[intval($entry->account_id)] = new Carbon($entry->max_date);

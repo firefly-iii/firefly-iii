@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Twig;
 
-use Auth;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
@@ -39,14 +38,14 @@ class Budget extends Twig_Extension
                 return $cache->get();
             }
             $sum
-                = Auth::user()->transactionJournals()
-                      ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                      ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budget_transaction_journal.budget_id')
-                      ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                      ->before($repetition->enddate)
-                      ->after($repetition->startdate)
-                      ->where('limit_repetitions.id', '=', $repetition->id)
-                      ->get(['transaction_journals.*'])->sum('amount');
+                = auth()->user()->transactionJournals()
+                        ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                        ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budget_transaction_journal.budget_id')
+                        ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                        ->before($repetition->enddate)
+                        ->after($repetition->startdate)
+                        ->where('limit_repetitions.id', '=', $repetition->id)
+                        ->get(['transaction_journals.*'])->sum('amount');
             $cache->store($sum);
 
             return $sum;

@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
@@ -194,7 +193,7 @@ class TagController extends Controller
         foreach ($types as $type) {
 
             /** @var Collection $tags */
-            $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
+            $tags = auth()->user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
             $tags = $tags->sortBy(
                 function (Tag $tag) {
                     $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';

@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use FireflyIII\Events\UserIsDeleted;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
@@ -41,7 +40,7 @@ class ProfileController extends Controller
      */
     public function changePassword()
     {
-        return view('profile.change-password')->with('title', Auth::user()->email)->with('subTitle', trans('firefly.change_your_password'))->with(
+        return view('profile.change-password')->with('title', auth()->user()->email)->with('subTitle', trans('firefly.change_your_password'))->with(
             'mainTitleIcon', 'fa-user'
         );
     }
@@ -51,7 +50,7 @@ class ProfileController extends Controller
      */
     public function deleteAccount()
     {
-        return view('profile.delete-account')->with('title', Auth::user()->email)->with('subTitle', trans('firefly.delete_account'))->with(
+        return view('profile.delete-account')->with('title', auth()->user()->email)->with('subTitle', trans('firefly.delete_account'))->with(
             'mainTitleIcon', 'fa-user'
         );
     }
@@ -62,7 +61,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('profile.index')->with('title', trans('firefly.profile'))->with('subTitle', Auth::user()->email)->with('mainTitleIcon', 'fa-user');
+        return view('profile.index')->with('title', trans('firefly.profile'))->with('subTitle', auth()->user()->email)->with('mainTitleIcon', 'fa-user');
     }
 
     /**
@@ -73,7 +72,7 @@ class ProfileController extends Controller
     public function postChangePassword(ProfileFormRequest $request)
     {
         // old, new1, new2
-        if (!Hash::check($request->get('current_password'), Auth::user()->password)) {
+        if (!Hash::check($request->get('current_password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_current_password')));
 
             return redirect(route('profile.change-password'));
@@ -86,8 +85,8 @@ class ProfileController extends Controller
         }
 
         // update the user with the new password.
-        Auth::user()->password = bcrypt($request->get('new_password'));
-        Auth::user()->save();
+        auth()->user()->password = bcrypt($request->get('new_password'));
+        auth()->user()->save();
 
         Session::flash('success', strval(trans('firefly.password_changed')));
 
@@ -103,22 +102,22 @@ class ProfileController extends Controller
     public function postDeleteAccount(DeleteAccountFormRequest $request)
     {
         // old, new1, new2
-        if (!Hash::check($request->get('password'), Auth::user()->password)) {
+        if (!Hash::check($request->get('password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_password')));
 
             return redirect(route('profile.delete-account'));
         }
 
         // respond to deletion:
-        event(new UserIsDeleted(Auth::user(), $request->ip()));
+        event(new UserIsDeleted(auth()->user(), $request->ip()));
 
         // store some stuff for the future:
         $registration = Preferences::get('registration_ip_address')->data;
         $confirmation = Preferences::get('confirmation_ip_address')->data;
 
         // DELETE!
-        $email = Auth::user()->email;
-        Auth::user()->delete();
+        $email = auth()->user()->email;
+        auth()->user()->delete();
         Session::flush();
         Session::flash('gaEventCategory', 'user');
         Session::flash('gaEventAction', 'delete-account');

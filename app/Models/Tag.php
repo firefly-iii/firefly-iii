@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
 use FireflyIII\Support\Models\TagSupport;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -97,7 +96,7 @@ class Tag extends TagSupport
     public static function routeBinder(Tag $value)
     {
         if (auth()->check()) {
-            if ($value->user_id == Auth::user()->id) {
+            if ($value->user_id == auth()->user()->id) {
                 return $value;
             }
         }

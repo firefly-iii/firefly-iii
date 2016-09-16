@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -71,7 +70,7 @@ class PiggyBank extends Model
     public static function routeBinder(PiggyBank $value)
     {
         if (auth()->check()) {
-            if ($value->account->user_id == Auth::user()->id) {
+            if ($value->account->user_id == auth()->user()->id) {
                 return $value;
             }
         }

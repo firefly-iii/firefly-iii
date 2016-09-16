@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Binder;
 
-use Auth;
 use FireflyIII\Models\Budget;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -38,7 +37,7 @@ class BudgetList implements BinderInterface
             /** @var \Illuminate\Support\Collection $object */
             $object = Budget::where('active', 1)
                             ->whereIn('id', $ids)
-                            ->where('user_id', Auth::user()->id)
+                            ->where('user_id', auth()->user()->id)
                             ->get();
 
             // add empty budget if applicable.

@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -265,7 +264,7 @@ class CategoryController extends Controller
     {
         $categoryData = [
             'name' => $request->input('name'),
-            'user' => Auth::user()->id,
+            'user' => auth()->user()->id,
         ];
         $category     = $repository->store($categoryData);
 

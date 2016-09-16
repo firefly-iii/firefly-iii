@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -45,7 +44,7 @@ class ExportJob extends Model
     public static function routeBinder($value)
     {
         if (auth()->check()) {
-            $model = self::where('key', $value)->where('user_id', Auth::user()->id)->first();
+            $model = self::where('key', $value)->where('user_id', auth()->user()->id)->first();
             if (!is_null($model)) {
                 return $model;
             }

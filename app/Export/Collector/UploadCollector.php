@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export\Collector;
 
-use Auth;
 use Crypt;
 use FireflyIII\Models\ExportJob;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -50,7 +49,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         $this->exportDisk = Storage::disk('export');
 
         // file names associated with the old import routine.
-        $this->expected = 'csv-upload-' . Auth::user()->id . '-';
+        $this->expected = 'csv-upload-' . auth()->user()->id . '-';
 
         // for the new import routine:
         $this->getImportKeys();
@@ -76,7 +75,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
      */
     private function getImportKeys()
     {
-        $set = Auth::user()->importJobs()->where('status', 'import_complete')->get(['import_jobs.*']);
+        $set = auth()->user()->importJobs()->where('status', 'import_complete')->get(['import_jobs.*']);
         if ($set->count() > 0) {
             $keys             = $set->pluck('key')->toArray();
             $this->importKeys = $keys;
@@ -158,7 +157,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         // find job associated with import file:
         $name    = str_replace('.upload', '', $entry);
-        $job     = Auth::user()->importJobs()->where('key', $name)->first();
+        $job     = auth()->user()->importJobs()->where('key', $name)->first();
         $content = '';
         try {
             $content = Crypt::decrypt($this->uploadDisk->get($entry));

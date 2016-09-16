@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
@@ -205,7 +204,7 @@ class MassController extends Controller
                         'destination_account_id'    => $sourceAccountName,
                         'destination_account_name'  => $destAccountName,
                         'amount'                    => round($request->get('amount')[$journal->id], 4),
-                        'user'                      => Auth::user()->id,
+                        'user'                      => auth()->user()->id,
                         'amount_currency_id_amount' => intval($request->get('amount_currency_id_amount_' . $journal->id)),
                         'date'                      => new Carbon($request->get('date')[$journal->id]),
                         'interest_date'             => $journal->interest_date,

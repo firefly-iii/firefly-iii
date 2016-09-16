@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Auth;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -50,7 +49,7 @@ class JournalFormRequest extends Request
             'destination_account_id'    => intval($this->get('destination_account_id')),
             'destination_account_name'  => $this->get('destination_account_name') ?? '',
             'amount'                    => round($this->get('amount'), 2),
-            'user'                      => Auth::user()->id,
+            'user'                      => auth()->user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
             'date'                      => new Carbon($this->get('date')),
             'interest_date'             => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,

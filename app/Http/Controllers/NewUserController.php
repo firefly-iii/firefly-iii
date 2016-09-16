@@ -10,7 +10,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
@@ -107,7 +106,7 @@ class NewUserController extends Controller
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
             'active'                 => true,
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'accountRole'            => 'defaultAsset',
             'openingBalance'         => round($request->input('bank_balance'), 2),
             'openingBalanceDate'     => new Carbon,
@@ -133,7 +132,7 @@ class NewUserController extends Controller
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
             'active'                 => true,
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'accountRole'            => 'savingAsset',
             'openingBalance'         => round($request->input('savings_balance'), 2),
             'openingBalanceDate'     => new Carbon,
@@ -158,7 +157,7 @@ class NewUserController extends Controller
             'accountType'            => 'asset',
             'virtualBalance'         => round($request->get('credit_card_limit'), 2),
             'active'                 => true,
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'accountRole'            => 'ccAsset',
             'openingBalance'         => null,
             'openingBalanceDate'     => null,

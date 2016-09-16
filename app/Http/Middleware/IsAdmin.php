@@ -43,7 +43,7 @@ class IsAdmin
             return redirect()->guest('login');
         }
         /** @var User $user */
-        $user = Auth::user();
+        $user = auth()->user();
         if (!$user->hasRole('owner')) {
             return redirect(route('home'));
         }
