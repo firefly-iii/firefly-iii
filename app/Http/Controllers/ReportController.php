@@ -50,17 +50,10 @@ class ReportController extends Controller
 
     /**
      *
-     *
-     * @param ReportHelperInterface $helper
      */
-    public function __construct(ReportHelperInterface $helper)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->helper        = $helper;
-        $this->accountHelper = app(AccountReportHelperInterface::class);
-        $this->budgetHelper  = app(BudgetReportHelperInterface::class);
-        $this->balanceHelper = app(BalanceReportHelperInterface::class);
 
         View::share('title', trans('firefly.reports'));
         View::share('mainTitleIcon', 'fa-line-chart');
@@ -74,6 +67,7 @@ class ReportController extends Controller
      */
     public function index(AccountCrudInterface $crud)
     {
+        $this->createRepositories();
         /** @var Carbon $start */
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
@@ -104,6 +98,7 @@ class ReportController extends Controller
      */
     public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
+        $this->createRepositories();
         // throw an error if necessary.
         if ($end < $start) {
             throw new FireflyException('End date cannot be before start date, silly!');
@@ -216,7 +211,7 @@ class ReportController extends Controller
         $accountIds = join(',', $accounts->pluck('id')->toArray());
 
         $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
-                         'interest_date','book_date', 'process_date',
+                        'interest_date', 'book_date', 'process_date',
                         // three new optional fields.
                         'due_date', 'payment_date', 'invoice_date',
                         'from', 'to', 'budget', 'category', 'bill',
@@ -228,6 +223,17 @@ class ReportController extends Controller
         $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
 
         return view('reports.audit.report', compact('start', 'end', 'reportType', 'accountIds', 'accounts', 'auditData', 'hideable', 'defaultShow'));
+    }
+
+    /**
+     *
+     */
+    private function createRepositories()
+    {
+        $this->helper        = app(ReportHelperInterface::class);
+        $this->accountHelper = app(AccountReportHelperInterface::class);
+        $this->budgetHelper  = app(BudgetReportHelperInterface::class);
+        $this->balanceHelper = app(BalanceReportHelperInterface::class);
     }
 
     /**
