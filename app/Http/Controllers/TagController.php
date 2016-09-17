@@ -226,7 +226,7 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
 
-        // TODO move to repository.
+
 
         /** @var Collection $journals */
         $journals = $tag

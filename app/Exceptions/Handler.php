@@ -18,7 +18,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\ValidationException as ValException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler
             HttpException::class,
             ModelNotFoundException::class,
             TokenMismatchException::class,
-            ValidationException::class,
+            ValException::class,
         ];
 
     /**

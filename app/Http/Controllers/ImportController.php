@@ -421,6 +421,7 @@ class ImportController extends Controller
     {
         // create proper importer (depends on job)
         $type = $job->file_type;
+
         /** @var SetupInterface $importer */
         $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
         $importer->setJob($job);

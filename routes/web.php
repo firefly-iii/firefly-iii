@@ -17,18 +17,18 @@ Route::group(
     ['middleware' => 'user-not-logged-in'], function () {
 
     // Authentication Routes...
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login'); #
-    Route::post('login', 'Auth\LoginController@login'); #
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Auth\LoginController@login');
 
     // Registration Routes...
-    Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']); #
-    Route::post('/register', 'Auth\RegisterController@register'); #
+    Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
+    Route::post('/register', 'Auth\RegisterController@register');
 
     // Password Reset Routes...
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm'); #
-    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'); #
-    Route::post('/password/reset', 'Auth\ResetPasswordController@reset'); #
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm'); #
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
 
 }

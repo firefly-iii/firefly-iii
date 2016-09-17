@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\ImportJob;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\User;
 use Illuminate\Support\Str;
@@ -42,7 +43,13 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function create(string $fileType): ImportJob
     {
-        $count = 0;
+        $count    = 0;
+        $fileType = strtolower($fileType);
+        $keys     = array_keys(config('firefly.import_formats'));
+        if (!in_array($fileType, $keys)) {
+            throw new FireflyException(sprintf('Cannot use type "%s" for import job.', $fileType));
+        }
+
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);

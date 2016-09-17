@@ -124,8 +124,9 @@ class CsvImporter implements ImporterInterface
             $doMap          = $config['column-do-mapping'][$rowIndex] ?? false;
             $converterClass = config('csv.import_roles.' . $role . '.converter');
             $mapping        = $config['column-mapping-config'][$rowIndex] ?? [];
+            $className      = sprintf('FireflyIII\\Import\\Converter\\%s', $converterClass);
             /** @var ConverterInterface $converter */
-            $converter = app('FireflyIII\\Import\\Converter\\' . $converterClass);
+            $converter = app($className);
             // set some useful values for the converter:
             $converter->setMapping($mapping);
             $converter->setDoMap($doMap);
