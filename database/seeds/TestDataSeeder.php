@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 /**
  * TestDataSeeder.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -8,6 +6,8 @@ declare(strict_types = 1);
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+
+declare(strict_types = 1);
 
 use FireflyIII\Support\Migration\TestData;
 use Illuminate\Database\Seeder;

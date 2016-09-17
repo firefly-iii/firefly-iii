@@ -11,14 +11,14 @@ declare(strict_types = 1);
 
 return [
 
-    'import_configure_title' => 'Configure your import',
+    'import_configure_title' => 'Konfigurieren Sie Ihren Import',
     'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
     'import_configure_form'  => 'Formular',
-    'header_help'            => 'Check this if the first row of your CSV file are the column titles',
+    'header_help'            => 'Hier auswählen, wenn die ersten Zeilen der CSV-Datei die Spaltenüberschriften sind',
     'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'import_account_help'    => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'upload_not_writeable'   => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
+    'upload_not_writeable'   => 'Das graue Feld enthält einen Dateipfad. Dieser sollte schreibbar sein. Bitte stellen Sie sicher, dass er es ist.',
 
     // roles
     'column_roles_title'     => 'Define column roles',
@@ -29,9 +29,9 @@ return [
     'column_role'            => 'Column data meaning',
     'do_map_value'           => 'Map these values',
     'column'                 => 'Spalte',
-    'no_example_data'        => 'No example data available',
-    'store_column_roles'     => 'Continue import',
-    'do_not_map'             => '(do not map)',
+    'no_example_data'        => 'Keine Beispieldaten vorhanden',
+    'store_column_roles'     => 'Import fortsetzen',
+    'do_not_map'             => '(keine Zuordnung)',
     'map_title'              => 'Connect import data to Firefly III data',
     'map_text'               => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
 
@@ -42,24 +42,24 @@ return [
     // map things.
 
 
-    'column__ignore'                => '(ignore this column)',
+    'column__ignore'                => '(diese Spalte ignorieren)',
     'column_account-iban'           => 'Asset account (IBAN)',
     'column_account-id'             => 'Asset account  ID (matching Firefly)',
     'column_account-name'           => 'Asset account (name)',
-    'column_amount'                 => 'Amount',
-    'column_amount-comma-separated' => 'Amount (comma as decimal separator)',
+    'column_amount'                 => 'Betrag',
+    'column_amount-comma-separated' => 'Betrag (Komma als Dezimaltrennzeichen)',
     'column_bill-id'                => 'Bill ID (matching Firefly)',
-    'column_bill-name'              => 'Bill name',
+    'column_bill-name'              => 'Name der Rechnung',
     'column_budget-id'              => 'Budget ID (matching Firefly)',
     'column_budget-name'            => 'Budgetname',
     'column_category-id'            => 'Category ID (matching Firefly)',
-    'column_category-name'          => 'Category name',
+    'column_category-name'          => 'Name der Kategorie',
     'column_currency-code'          => 'Currency code (ISO 4217)',
     'column_currency-id'            => 'Currency ID (matching Firefly)',
     'column_currency-name'          => 'Currency name (matching Firefly)',
     'column_currency-symbol'        => 'Currency symbol (matching Firefly)',
     'column_date-interest'          => 'Interest calculation date',
-    'column_date-book'              => 'Transaction booking date',
+    'column_date-book'              => 'Buchungsdatum der Überweisung',
     'column_date-process'           => 'Transaction process date',
     'column_date-transaction'       => 'Datum',
     'column_description'            => 'Beschreibung',
@@ -72,8 +72,8 @@ return [
     'column_sepa-ct-id'             => 'SEPA Credit Transfer end-to-end ID',
     'column_sepa-ct-op'             => 'SEPA Credit Transfer opposing account',
     'column_sepa-db'                => 'SEPA Direct Debet',
-    'column_tags-comma'             => 'Tags (comma separated)',
-    'column_tags-space'             => 'Tags (space separated)',
+    'column_tags-comma'             => 'Tags (durch Komma getrennt)',
+    'column_tags-space'             => 'Tags (durch Leerzeichen getrennt)',
     'column_account-number'         => 'Asset account (account number)',
     'column_opposing-number'        => 'Opposing account (account number)',
 ];
