@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="robots" content="noindex, nofolllow, noarchive, noodp, NoImageIndex, noydir">
     <title>Firefly
         {% if title != "Firefly" %}
@@ -13,7 +14,6 @@
         {% endif %}
     </title>
     <base href="{{ route('index') }}/">
-
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
@@ -33,7 +33,7 @@
     {% include('partials/favicons.twig') %}
 
 </head>
-<body class="skin-blue-light sidebar-mini">
+<body class="skin-blue-light sidebar-mini hold-transition">
 <div class="wrapper">
 
     <header class="main-header">
