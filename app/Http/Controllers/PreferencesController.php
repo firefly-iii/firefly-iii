@@ -78,7 +78,7 @@ class PreferencesController extends Controller
         $viewRangePref       = Preferences::get('viewRange', '1M');
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
-        $language            = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $language            = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
         $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
         $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;

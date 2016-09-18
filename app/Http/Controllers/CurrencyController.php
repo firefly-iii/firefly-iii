@@ -156,7 +156,7 @@ class CurrencyController extends Controller
     public function index(CurrencyRepositoryInterface $repository)
     {
         $currencies      = $repository->get();
-        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR')));
+        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
 
 
         if (!auth()->user()->hasRole('owner')) {
@@ -246,13 +246,13 @@ class CurrencyController extends Controller
         }
 
         // is the default currency for the user or the system
-        $defaultCode = Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'))->data;
+        $defaultCode = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'))->data;
         if ($currency->code === $defaultCode) {
             return false;
         }
 
         // is the default currency for the system
-        $defaultSystemCode = env('DEFAULT_CURRENCY', 'EUR');
+        $defaultSystemCode = config('firefly.default_currency', 'EUR');
         if ($currency->code === $defaultSystemCode) {
             return false;
         }

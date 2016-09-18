@@ -360,7 +360,7 @@ class ImportValidator
             /** @var CurrencyRepositoryInterface $repository */
             $repository = app(CurrencyRepositoryInterface::class, [$this->user]);
             // is the default currency for the user or the system
-            $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', env('DEFAULT_CURRENCY', 'EUR'))->data;
+            $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
 
             $entry->fields['currency'] = $repository->findByCode($defaultCode);
             Log::debug(sprintf('Set currency to %s', $defaultCode));

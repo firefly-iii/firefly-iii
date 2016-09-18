@@ -81,7 +81,7 @@ class Range
 
     private function configureView()
     {
-        $pref = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'));
+        $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang = $pref->data;
 
         App::setLocale($lang);
