@@ -85,7 +85,7 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->integer('account_type_id', false, true);
                 $table->string('name', 1024);
-                $table->decimal('virtual_balance', 10, 4);
+                $table->decimal('virtual_balance', 10, 4)->nullable();
                 $table->string('iban', 255)->nullable();
 
                 $table->boolean('active')->default(1);
