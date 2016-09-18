@@ -314,7 +314,7 @@ class CreateMainTables extends Migration
                 $table->decimal('targetamount', 10, 4);
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(0);
                 $table->boolean('encrypted')->default(1);
 
@@ -399,7 +399,7 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->string('title', 255);
                 $table->text('description');
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
 
                 // link user id to users table
@@ -417,7 +417,7 @@ class CreateMainTables extends Migration
                 $table->integer('rule_group_id', false, true);
                 $table->string('title', 255);
                 $table->text('description');
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
 
@@ -439,7 +439,7 @@ class CreateMainTables extends Migration
                 $table->string('action_type', 50);
                 $table->string('action_value', 255);
 
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
 
@@ -459,7 +459,7 @@ class CreateMainTables extends Migration
                 $table->string('trigger_type', 50);
                 $table->string('trigger_value', 255);
 
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
 
@@ -524,7 +524,7 @@ class CreateMainTables extends Migration
                 $table->date('book_date')->nullable();
                 $table->date('process_date')->nullable();
 
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->integer('tag_count', false, true);
 
                 $table->boolean('encrypted')->default(1);
