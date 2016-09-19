@@ -23,17 +23,6 @@ class Amount extends BasicConverter implements ConverterInterface
      * Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
      * - Jamie Zawinski
      *
-     * 0.01 4 1
-     * 0.10 4 1
-     * 0.1  3 0
-     * 1.00 4 1
-     * 1.0  3 0
-     * 1    1 -3
-     * 1.01 4 1
-     * 1.10 4 1
-     * 1.1  3 0
-     * 1.11 4 1
-     *
      *
      * @param $value
      *
@@ -47,7 +36,8 @@ class Amount extends BasicConverter implements ConverterInterface
 
         if (($len > 2 && $value{$decimalPosition} == '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
             $decimal = '.';
-        } else if ($len > 2 && $value{$decimalPosition} == ',') {
+        }
+        if ($len > 2 && $value{$decimalPosition} == ',') {
             $decimal = ',';
         } 
 
