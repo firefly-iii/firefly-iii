@@ -223,11 +223,14 @@ class ReportController extends Controller
         $journals     = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $destinations = $attributes['accounts']->pluck('id')->toArray();
         // filter for transfers and withdrawals FROM the given $account
+
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($account, $destinations) {
+                $currentSources = TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray();
+                $currentDest    = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
                 if (
-                    $journal->source_account_id === $account->id
-                    && in_array($journal->destination_account_id, $destinations)
+                    !empty(array_intersect([$account->id], $currentSources))
+                    && !empty(array_intersect($destinations, $currentDest))
                 ) {
                     return true;
                 }
