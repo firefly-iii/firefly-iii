@@ -133,10 +133,10 @@ class CreateMainTables extends Migration
                 $table->string('attachable_type', 255);
                 $table->string('md5', 32);
                 $table->string('filename', 1024);
-                $table->string('title', 1024);
-                $table->text('description');
-                $table->text('notes');
-                $table->string('mime', 200);
+                $table->string('title', 1024)->nullable();
+                $table->text('description')->nullable();
+                $table->text('notes')->nullable();
+                $table->string('mime', 1024);
                 $table->integer('size', false, true);
                 $table->boolean('uploaded')->default(1);
 

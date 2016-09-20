@@ -161,7 +161,7 @@
                                     <td>
                                         <i class="fa {{ att.mime|mimeIcon }}"></i>
                                         <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
-                                            {% if att.title %}
+                                            {% if strlen(att.title) > 0 %}
                                                 {{ att.title }}
                                             {% else %}
                                                 {{ att.filename }}
