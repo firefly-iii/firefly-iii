@@ -104,7 +104,7 @@ class Attachment extends Model
      */
     public function getDescriptionAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -118,7 +118,7 @@ class Attachment extends Model
      */
     public function getFilenameAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -132,7 +132,7 @@ class Attachment extends Model
      */
     public function getMimeAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -147,7 +147,7 @@ class Attachment extends Model
      */
     public function getNotesAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -162,7 +162,7 @@ class Attachment extends Model
      */
     public function getTitleAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
