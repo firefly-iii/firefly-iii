@@ -70,9 +70,13 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
 
         $search = strtolower($this->triggerValue);
 
-        if ($toAccountName == $search) {
+        if ($toAccountName === $search) {
+            Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is "%s", return true.', $journal->id, $toAccountName, $search));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is NOT "%s", return true.', $journal->id, $toAccountName, $search));
 
         return false;
 

@@ -66,9 +66,13 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
 
         $part = substr($description, 0, strlen($search));
 
-        if ($part == $search) {
+        if ($part === $search) {
+            Log::debug(sprintf('RuleTrigger DescriptionStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $description, $search));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger DescriptionStarts for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $description, $search));
 
         return false;
     }

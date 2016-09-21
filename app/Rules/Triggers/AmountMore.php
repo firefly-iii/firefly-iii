@@ -66,8 +66,12 @@ final class AmountMore extends AbstractTrigger implements TriggerInterface
         $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare, 4);
         if ($result === 1) {
+            Log::debug(sprintf('RuleTrigger AmountMore for journal #%d: %d is more than %d, so return true', $journal->id, $amount, $compare));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger AmountMore for journal #%d: %d is NOT more than %d, so return false', $journal->id, $amount, $compare));
 
         return false;
 

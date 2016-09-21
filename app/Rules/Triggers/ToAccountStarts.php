@@ -71,9 +71,12 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
         $search = strtolower($this->triggerValue);
         $part   = substr($toAccountName, 0, strlen($search));
 
-        if ($part == $search) {
+        if ($part === $search) {
+            Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $toAccountName, $search));
             return true;
         }
+        Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $toAccountName, $search));
+
 
         return false;
 

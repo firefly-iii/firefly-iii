@@ -72,8 +72,17 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         $strpos = strpos($fromAccountName, $search);
 
         if (!($strpos === false)) {
+
+            Log::debug(sprintf('RuleTrigger FromAccountContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $fromAccountName, $search));
+
             return true;
         }
+
+        Log::debug(
+            sprintf(
+                'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
+                $journal->id, $fromAccountName, $search)
+        );
 
         return false;
 

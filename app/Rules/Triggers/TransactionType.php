@@ -58,9 +58,13 @@ final class TransactionType extends AbstractTrigger implements TriggerInterface
         $type   = !is_null($journal->transaction_type_type) ? $journal->transaction_type_type : strtolower($journal->transactionType->type);
         $search = strtolower($this->triggerValue);
 
-        if ($type == $search) {
+        if ($type === $search) {
+            Log::debug(sprintf('RuleTrigger TransactionType for journal #%d: "%s" is "%s". Return true', $journal->id, $type, $search));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger TransactionType for journal #%d: "%s" is NOT "%s". Return false', $journal->id, $type, $search));
 
         return false;
     }

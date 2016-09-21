@@ -82,9 +82,12 @@ final class ToAccountEnds extends AbstractTrigger implements TriggerInterface
 
         $part = substr($toAccountName, $searchLength * -1);
 
-        if ($part == $search) {
+        if ($part === $search) {
+            Log::debug(sprintf('RuleTrigger ToAccountEnds for journal #%d: "%s" ends with "%s", return true.', $journal->id, $toAccountName, $search));
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger ToAccountEnds for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $toAccountName, $search));
 
         return false;
     }
