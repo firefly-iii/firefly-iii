@@ -15,6 +15,7 @@ namespace FireflyIII\Rules\Actions;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class SetCategory
@@ -47,6 +48,8 @@ class SetCategory implements ActionInterface
         $name     = $this->action->action_value;
         $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => $journal->user->id]);
         $journal->categories()->sync([$category->id]);
+
+        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to budget #%d ("%s").', $journal->id, $category->id, $category->name));
 
         return true;
     }

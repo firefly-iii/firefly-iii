@@ -15,6 +15,7 @@ namespace FireflyIII\Rules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class RemoveTag
@@ -54,8 +55,12 @@ class RemoveTag implements ActionInterface
         )->first();
 
         if (!is_null($tag)) {
+            Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal->id));
             $journal->tags()->detach([$tag->id]);
+
+            return true;
         }
+        Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal->id));
 
         return true;
     }
