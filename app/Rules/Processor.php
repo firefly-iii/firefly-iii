@@ -93,6 +93,7 @@ final class Processor
      */
     public static function makeFromString(string $triggerName, string $triggerValue)
     {
+        Log::debug(sprintf('Processor::makeFromString("%s", "%s")', $triggerName, $triggerValue));
         $self    = new self;
         $trigger = TriggerFactory::makeTriggerFromStrings($triggerName, $triggerValue, false);
         $self->triggers->push($trigger);
@@ -160,6 +161,7 @@ final class Processor
      */
     public function handleTransactionJournal(TransactionJournal $journal): bool
     {
+        Log::debug(sprintf('handleTransactionJournal for journal %d', $journal->id));
         $this->journal = $journal;
         // get all triggers:
         $triggered = $this->triggered();
@@ -187,8 +189,10 @@ final class Processor
         foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
             $actionClass = ActionFactory::getAction($action);
+            Log::debug(sprintf('Fire action %s on journal #%d', $actionClass, $this->journal->id));
             $actionClass->act($this->journal);
             if ($action->stop_processing) {
+                Log::debug('Stop processing now and break.');
                 break;
             }
 
