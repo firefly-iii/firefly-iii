@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Triggers;
 
 
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class AmountExactly
@@ -43,6 +44,7 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
         if (!is_null($value)) {
             return false;
         }
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }

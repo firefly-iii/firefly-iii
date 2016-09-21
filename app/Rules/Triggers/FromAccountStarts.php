@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class FromAccountStarts
@@ -41,8 +42,14 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === '';
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }

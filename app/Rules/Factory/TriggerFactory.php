@@ -46,6 +46,9 @@ class TriggerFactory
         $class = self::getTriggerClass($triggerType);
         $obj   = $class::makeFromTriggerValue($trigger->trigger_value);
 
+        Log::debug(sprintf('self::getTriggerClass("%s") = "%s"', $triggerType, $class));
+        Log::debug(sprintf('%s::makeFromTriggerValue(%s) = object of class "%s"', $class, $trigger->trigger_value, get_class($obj)));
+
         return $obj;
     }
 

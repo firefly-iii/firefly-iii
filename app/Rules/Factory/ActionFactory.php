@@ -8,14 +8,13 @@ declare(strict_types = 1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
-
 namespace FireflyIII\Rules\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Support\Domain;
+use Log;
 
 /**
  * Interface ActionInterface
@@ -39,6 +38,7 @@ class ActionFactory
     public static function getAction(RuleAction $action): ActionInterface
     {
         $class = self::getActionClass($action->action_type);
+        Log::debug(sprintf('self::getActionClass("%s") = "%s"', $action->action_type, $class));
 
         return new $class($action);
     }
