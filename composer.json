@@ -38,7 +38,8 @@
     "rmccue/requests": "^1.6",
     "pragmarx/google2fa": "^1.0",
     "barryvdh/laravel-debugbar": "^2.2",
-    "barryvdh/laravel-ide-helper": "^2.2"
+    "barryvdh/laravel-ide-helper": "^2.2",
+    "bacon/bacon-qr-code": "^1.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
