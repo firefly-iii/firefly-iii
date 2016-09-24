@@ -534,7 +534,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var HasMany $query */
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()
                             ->transactionTypes([TransactionType::WITHDRAWAL]);
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -552,7 +552,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
-        $query->groupBy('aggregate');
 
         // that should do it:
         $sum = strval($query->sum('destination.amount'));
