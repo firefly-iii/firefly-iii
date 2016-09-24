@@ -110,6 +110,9 @@ class ImportJob extends Model
      */
     public function getConfigurationAttribute($value)
     {
+        if (is_null($value)) {
+            return [];
+        }
         if (strlen($value) == 0) {
             return [];
         }

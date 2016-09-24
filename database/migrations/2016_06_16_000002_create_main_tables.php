@@ -290,7 +290,7 @@ class CreateMainTables extends Migration
                 $table->string('key', 12)->unique();
                 $table->string('file_type', 12);
                 $table->string('status', 45);
-                $table->text('configuration');
+                $table->text('configuration')->nullable();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
             );
@@ -398,7 +398,7 @@ class CreateMainTables extends Migration
                 $table->softDeletes();
                 $table->integer('user_id', false, true);
                 $table->string('title', 255);
-                $table->text('description');
+                $table->text('description')->nullable();
                 $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
 
@@ -416,7 +416,7 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->integer('rule_group_id', false, true);
                 $table->string('title', 255);
-                $table->text('description');
+                $table->text('description')->nullable();
                 $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
