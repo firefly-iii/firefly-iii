@@ -293,7 +293,7 @@ class ImportStorage
     private function storeJournal($entry): TransactionJournal
     {
 
-        $billId      = is_null($entry->fields['bill']) ? null : $entry->fields['bill']->id;
+        $billId      = is_null($entry->fields['bill']) || intval($entry->fields['bill']->id) === 0 ? null : intval($entry->fields['bill']->id);
         $journalData = [
             'user_id'                 => $entry->user->id,
             'transaction_type_id'     => $entry->fields['transaction-type']->id,
@@ -310,7 +310,7 @@ class ImportStorage
         $journal = TransactionJournal::create($journalData);
 
         foreach ($journal->getErrors()->all() as $err) {
-            Log::error($err);
+            Log::error('Error when storing journal: ' . $err);
         }
         Log::debug('Created journal', ['id' => $journal->id]);
 

@@ -178,10 +178,25 @@ class ImportValidator
         $result     = $repository->findByName($account->name, [$type]);
         if (is_null($result->id)) {
             // can convert account:
-            Log::debug(sprintf('No account named %s of type %s, will convert.', $account->name, $type));
-            $result = $repository->updateAccountType($account, $type);
-
+            Log::debug(sprintf('No account named %s of type %s, create new account.', $account->name, $type));
+            $result = $repository->store(
+                [
+                    'user'            => $this->user->id,
+                    'accountType'     => config('firefly.shortNamesByFullName.' . $type),
+                    'name'            => $account->name,
+                    'virtualBalance' => 0,
+                    'active'          => true,
+                    'iban'            => null,
+                    'openingBalance'  => 0,
+                ]
+            );
         }
+        Log::debug(
+            sprintf(
+                'Using another account named %s (#%d) of type %s, will use that one instead of %s (#%d)', $account->name, $result->id, $type, $account->name,
+                $account->id
+            )
+        );
 
         return $result;
 

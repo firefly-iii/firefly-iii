@@ -111,7 +111,6 @@ class TransactionJournal extends TransactionJournalSupport
         = [
             'user_id'                 => 'required|exists:users,id',
             'transaction_type_id'     => 'required|exists:transaction_types,id',
-            'bill_id'                 => 'exists:bills,id',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'description'             => 'required|between:1,1024',
             'completed'               => 'required|boolean',
