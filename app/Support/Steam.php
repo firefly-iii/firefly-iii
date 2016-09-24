@@ -49,7 +49,8 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
-        $balance = bcadd($balance, $account->virtual_balance);
+        $virtual = is_null($account->virtual_balance) ? '0' : strval($account->virtual_balance);
+        $balance = bcadd($balance, $virtual);
         $cache->store($balance);
 
         return $balance;
@@ -124,7 +125,8 @@ class Steam
                                   ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `modified`')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
-            $currentBalance         = bcadd($currentBalance, $entry->modified);
+            $modified               = is_null($entry->modified) ? '0' : strval($entry->modified);
+            $currentBalance         = bcadd($currentBalance, $modified);
             $balances[$entry->date] = $currentBalance;
         }
 

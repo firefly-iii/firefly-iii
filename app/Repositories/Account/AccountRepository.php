@@ -552,9 +552,13 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // remove group by
         $query->getQuery()->getQuery()->groups = null;
+        $query->groupBy('aggregate');
 
         // that should do it:
         $sum = strval($query->sum('destination.amount'));
+        if (is_null($sum)) {
+            $sum = '0';
+        }
         $sum = bcmul($sum, '-1');
 
         return $sum;
