@@ -762,7 +762,7 @@ return [
     'no_edit_multiple_left'                     => 'You have selected no valid transactions to edit.',
 
     // import
-    'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you.',
+    'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/JC5/firefly-iii/wiki/Import-configurations">configuration file</a>.',
     'import_data_index'                         => 'Index',
     'import_file_type_csv'                      => 'CSV (comma separated values)',
     'import_file_type_help'                     => 'Select the type of file you will upload',
