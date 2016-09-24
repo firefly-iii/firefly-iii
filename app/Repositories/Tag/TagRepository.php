@@ -132,6 +132,24 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @param Tag $tag
+     *
+     * @return Collection
+     */
+    public function getJournals(Tag $tag) : Collection
+    {
+        /** @var Collection $journals */
+        $journals = $tag
+            ->transactionJournals()
+            ->sortCorrectly()
+            ->expanded()
+            ->groupBy(['tag_transaction_journal.tag_id'])
+            ->get(TransactionJournal::queryFields());
+
+        return $journals;
+    }
+
+    /**
      * @param array $data
      *
      * @return Tag

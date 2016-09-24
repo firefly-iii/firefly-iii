@@ -217,26 +217,17 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag                    $tag
+     * @param TagRepositoryInterface $repository
      *
      * @return View
      */
-    public function show(Tag $tag)
+    public function show(Tag $tag, TagRepositoryInterface $repository)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-
-
-
-        /** @var Collection $journals */
-        $journals = $tag
-            ->transactionJournals()
-            ->sortCorrectly()
-            ->expanded()
-            ->groupBy(['tag_transaction_journal.tag_id'])
-            ->get(TransactionJournal::queryFields());
-
-        $sum = $journals->sum(
+        $journals     = $repository->getJournals($tag);
+        $sum          = $journals->sum(
             function (TransactionJournal $journal) {
                 return TransactionJournal::amount($journal);
             }
