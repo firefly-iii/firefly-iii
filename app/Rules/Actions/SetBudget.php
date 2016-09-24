@@ -15,6 +15,7 @@ namespace FireflyIII\Rules\Actions;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Log;
 
@@ -55,13 +56,22 @@ class SetBudget implements ActionInterface
                 return $current->name == $search;
             }
         )->first();
-        if (!is_null($budget)) {
-            Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
+        if (is_null($budget)) {
+            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
 
-            $journal->budgets()->sync([$budget->id]);
+            return true;
         }
 
-        Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
+        if ($journal->transactionType->type == TransactionType::TRANSFER) {
+            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a transfer.', $journal->id, $search));
+
+            return true;
+        }
+
+        Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
+
+        $journal->budgets()->sync([$budget->id]);
+
 
         return true;
     }

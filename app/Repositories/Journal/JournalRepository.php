@@ -248,7 +248,7 @@ class JournalRepository implements JournalRepositoryInterface
 
                 /** @var Collection $transactions */
                 $transactions = $journal->transactions()
-                                        ->groupBy('transactions.id')
+                                        ->groupBy($groupBy)
                                         ->orderBy('transactions.id')->get($fields);
                 break;
             case TransactionType::WITHDRAWAL:
