@@ -119,7 +119,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(Request $request)
     {
-        $showDemoWarning = env('SHOW_DEMO_WARNING', false);
+        $showDemoWarning = config('firefly.show-demo-warning', false);
 
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;

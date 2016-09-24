@@ -188,4 +188,5 @@ return [
     ],
     'default_currency'         => 'EUR',
     'default_language'         => 'en_US',
+    'show-demo-warning'        => false,
 ];
