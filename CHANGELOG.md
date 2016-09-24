@@ -2,8 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
-- No unreleased changes yet.
+## [4.0.0] - 2015-05-25
+### Added
+- Upgraded to Laravel 5.3, most other libraries upgraded as well.
+- Added GBP as currency, thanks to @Mortalife
+
+### Changed
+- Jump to version 4.0.0.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Support for specific decimal places, thanks to @Mortalife
+- Various CSS fixes
+- Various bugs, thanks to @fuf, @sandermulders and @vissert
+- Various queries optimized for MySQL 5.7
 
 ## [3.10.4] - 2015-09-14
 ### Fixed
