@@ -308,7 +308,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store or get budget
-        if (intval($data['budget_id']) > 0) {
+        if (intval($data['budget_id']) > 0 && $transactionType->type !== TransactionType::TRANSFER) {
             /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::find($data['budget_id']);
             $journal->budgets()->save($budget);
@@ -408,7 +408,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // unlink all budgets and recreate them:
         $journal->budgets()->detach();
-        if (intval($data['budget_id']) > 0) {
+        if (intval($data['budget_id']) > 0 && $journal->transactionType->type !== TransactionType::TRANSFER) {
             /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::where('user_id', $this->user->id)->where('id', $data['budget_id'])->first();
             $journal->budgets()->save($budget);
