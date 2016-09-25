@@ -10,6 +10,7 @@ return [
     'import_specifics' => [
         'RabobankDescription' => 'FireflyIII\Import\Specifics\RabobankDescription',
         'AbnAmroDescription'  => 'FireflyIII\Import\Specifics\AbnAmroDescription',
+        'PresidentsChoice'    => 'FireflyIII\Import\Specifics\PresidentsChoice',
     ],
 
     /*
@@ -279,7 +280,7 @@ return [
 
     // number of example rows:
     'example_rows'     => 5,
-    'default_config' => [
+    'default_config'   => [
         'has-headers'             => false, // assume
         'date-format'             => 'Ymd', // assume
         'delimiter'               => ',', // assume
