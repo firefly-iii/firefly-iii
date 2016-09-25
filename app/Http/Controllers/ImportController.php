@@ -416,17 +416,24 @@ class ImportController extends Controller
      * @param ImportJob $job
      *
      * @return SetupInterface
+     * @throws FireflyException
      */
     private function makeImporter(ImportJob $job): SetupInterface
     {
         // create proper importer (depends on job)
-        $type = $job->file_type;
+        $type = strtolower($job->file_type);
 
-        /** @var SetupInterface $importer */
-        $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
-        $importer->setJob($job);
+        // validate type:
+        $validTypes = array_keys('firefly.import_formats');
 
-        return $importer;
+        if (in_array($type, $validTypes)) {
+            /** @var SetupInterface $importer */
+            $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
+            $importer->setJob($job);
+
+            return $importer;
+        }
+        throw new FireflyException(sprintf('"%s" is not a valid file type', $type));
 
     }
 

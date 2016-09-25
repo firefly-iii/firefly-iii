@@ -14,6 +14,7 @@ namespace FireflyIII\Import\Setup;
 
 use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrud;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Import\Specifics\SpecificInterface;
@@ -326,6 +327,7 @@ class CsvSetup implements SetupInterface
 
     /**
      * @return array
+     * @throws FireflyException
      */
     private function getDataForColumnMapping(): array
     {
@@ -335,11 +337,19 @@ class CsvSetup implements SetupInterface
 
         foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
             if ($mustBeMapped) {
-                $column        = $config['column-roles'][$index] ?? '_ignore';
+                $column = $config['column-roles'][$index] ?? '_ignore';
+
+                // is valid column?
+                $validColumns = array_keys(config('csv.import_roles'));
+                if (!in_array($column, $validColumns)) {
+                    throw new FireflyException(sprintf('"%s" is not a valid column.', $column));
+                }
+
                 $canBeMapped   = config('csv.import_roles.' . $column . '.mappable');
                 $preProcessMap = config('csv.import_roles.' . $column . '.pre-process-map');
                 if ($canBeMapped) {
-                    $mapperName = '\FireflyIII\Import\Mapper\\' . config('csv.import_roles.' . $column . '.mapper');
+                    $mapperClass = config('csv.import_roles.' . $column . '.mapper');
+                    $mapperName  = sprintf('\\FireflyIII\\Import\Mapper\\%s', $mapperClass);
                     /** @var MapperInterface $mapper */
                     $mapper       = new $mapperName;
                     $indexes[]    = $index;
@@ -352,8 +362,11 @@ class CsvSetup implements SetupInterface
                         'values'        => [],
                     ];
                     if ($preProcessMap) {
-                        $data[$index]['preProcessMap'] = '\FireflyIII\Import\MapperPreProcess\\' .
-                                                         config('csv.import_roles.' . $column . '.pre-process-mapper');
+                        $preClass                      = sprintf(
+                            '\\FireflyIII\\Import\\MapperPreProcess\\%s',
+                            config('csv.import_roles.' . $column . '.pre-process-mapper')
+                        );
+                        $data[$index]['preProcessMap'] = $preClass;
                     }
                 }
 
@@ -365,15 +378,21 @@ class CsvSetup implements SetupInterface
         /** @var Reader $reader */
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $results = $reader->fetch();
+        $results        = $reader->fetch();
+        $validSpecifics = array_keys('csv.import_specifics');
 
         foreach ($results as $rowIndex => $row) {
 
             // run specifics here:
             // and this is the point where the specifix go to work.
             foreach ($config['specifics'] as $name => $enabled) {
+
+                if (!in_array($name, $validSpecifics)) {
+                    throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
+                }
+                $class = config('csv.import_specifics.' . $name);
                 /** @var SpecificInterface $specific */
-                $specific = app('FireflyIII\Import\Specifics\\' . $name);
+                $specific = app($class);
 
                 // it returns the row, possibly modified:
                 $row = $specific->run($row);
