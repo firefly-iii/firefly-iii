@@ -361,7 +361,7 @@ class CsvSetup implements SetupInterface
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
         $results        = $reader->fetch();
-        $validSpecifics = array_keys('csv.import_specifics');
+        $validSpecifics = array_keys(config('csv.import_specifics'));
 
         foreach ($results as $rowIndex => $row) {
 

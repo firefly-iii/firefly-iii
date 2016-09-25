@@ -424,7 +424,8 @@ class ImportController extends Controller
         $type = strtolower($job->file_type);
 
         // validate type:
-        $validTypes = array_keys('firefly.import_formats');
+        $validTypes = array_keys(config('firefly.import_formats'));
+
 
         if (in_array($type, $validTypes)) {
             /** @var SetupInterface $importer */

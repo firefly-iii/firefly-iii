@@ -123,7 +123,7 @@ class CsvImporter implements ImporterInterface
             // find the role for this column:
             $role            = $config['column-roles'][$rowIndex] ?? '_ignore';
             $doMap           = $config['column-do-mapping'][$rowIndex] ?? false;
-            $validConverters = array_keys('csv.import_roles');
+            $validConverters = array_keys(config('csv.import_roles'));
 
             // throw error when not a valid converter.
             if (!in_array($role, $validConverters)) {
