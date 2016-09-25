@@ -32,12 +32,15 @@ class CsvImporter implements ImporterInterface
     /** @var  ImportJob */
     public $job;
 
+    public $validSpecifics = [];
+
     /**
      * CsvImporter constructor.
      */
     public function __construct()
     {
-        $this->collection = new Collection;
+        $this->collection     = new Collection;
+        $this->validSpecifics = array_keys(config('csv.import_specifics'));
     }
 
     /**
@@ -112,6 +115,11 @@ class CsvImporter implements ImporterInterface
 
         // and this is the point where the specifix go to work.
         foreach ($config['specifics'] as $name => $enabled) {
+
+            if (!in_array($name, $this->validSpecifics)) {
+                throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
+            }
+
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
 
