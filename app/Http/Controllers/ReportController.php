@@ -187,8 +187,9 @@ class ReportController extends Controller
                 $transactionAmount = $journal->source_amount;
 
                 // get currently relevant transaction:
-                if (intval($journal->destination_account_id) === $account->id) {
-                    $transactionAmount = $journal->destination_amount;
+                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
+                if (in_array($account->id, $destinations)) {
+                    $transactionAmount = TransactionJournal::amountPositive($journal);
                 }
                 $newBalance     = bcadd($startBalance, $transactionAmount);
                 $journal->after = $newBalance;

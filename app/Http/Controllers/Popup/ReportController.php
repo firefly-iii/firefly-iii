@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers\Popup;
 
 
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Http\Controllers\Controller;
@@ -184,7 +185,7 @@ class ReportController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $crud       = app(AccountCrudInterface::class);
         $account    = $crud->find(intval($attributes['accountId']));
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $journals   = $repository->journalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
@@ -192,7 +193,8 @@ class ReportController extends Controller
         // filter for transfers and withdrawals TO the given $account
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($account) {
-                if ($journal->destination_account_id === $account->id) {
+                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
+                if (in_array($account->id, $destinations)) {
                     return true;
                 }
 
