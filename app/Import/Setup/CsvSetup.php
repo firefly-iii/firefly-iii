@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\FileBag;
  */
 class CsvSetup implements SetupInterface
 {
-    const EXAMPLE_ROWS = 5;
     /** @var  Account */
     public $defaultImportAccount;
     /** @var  ImportJob */
@@ -50,29 +49,13 @@ class CsvSetup implements SetupInterface
     /**
      * Create initial (empty) configuration array.
      *
-     *
-     *
      * @return bool
      */
     public function configure(): bool
     {
         if (is_null($this->job->configuration) || (is_array($this->job->configuration) && count($this->job->configuration) === 0)) {
             Log::debug('No config detected, will create empty one.');
-
-            $config                   = [
-                'has-headers'             => false, // assume
-                'date-format'             => 'Ymd', // assume
-                'delimiter'               => ',', // assume
-                'import-account'          => 0, // none,
-                'specifics'               => [], // none
-                'column-count'            => 0, // unknown
-                'column-roles'            => [], // unknown
-                'column-do-mapping'       => [], // not yet set which columns must be mapped
-                'column-roles-complete'   => false, // not yet configured roles for columns
-                'column-mapping-config'   => [], // no mapping made yet.
-                'column-mapping-complete' => false, // so mapping is not complete.
-            ];
-            $this->job->configuration = $config;
+            $this->job->configuration = config('csv.default_config');
             $this->job->save();
 
             return true;
@@ -149,6 +132,7 @@ class CsvSetup implements SetupInterface
      * the import job.
      *
      * @return string
+     * @throws FireflyException
      */
     public function getViewForSettings(): string
     {
@@ -159,9 +143,7 @@ class CsvSetup implements SetupInterface
         if ($this->doColumnMapping()) {
             return 'import.csv.map';
         }
-
-        echo 'no view for settings';
-        exit;
+        throw new FireflyException('There is no view for the current CSV import step.');
     }
 
     /**
@@ -172,8 +154,8 @@ class CsvSetup implements SetupInterface
      */
     public function requireUserSettings(): bool
     {
-        Log::debug('doColumnMapping is ' . ($this->doColumnMapping() ? 'true' : 'false'));
-        Log::debug('doColumnRoles is ' . ($this->doColumnRoles() ? 'true' : 'false'));
+        Log::debug(sprintf('doColumnMapping is %s', $this->doColumnMapping()));
+        Log::debug(sprintf('doColumnRoles is %s', $this->doColumnRoles()));
         if ($this->doColumnMapping() || $this->doColumnRoles()) {
             Log::debug('Return true');
 
@@ -448,7 +430,7 @@ class CsvSetup implements SetupInterface
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
         $start = $config['has-headers'] ? 1 : 0;
-        $end   = $start + self::EXAMPLE_ROWS; // first X rows
+        $end   = $start + config('csv.example_rows');
 
         // collect example data in $data['columns']
         while ($start < $end) {

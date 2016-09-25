@@ -276,4 +276,20 @@ return [
             'field'           => 'description',
         ],
     ],
+
+    // number of example rows:
+    'example_rows'     => 5,
+    'default_config' => [
+        'has-headers'             => false, // assume
+        'date-format'             => 'Ymd', // assume
+        'delimiter'               => ',', // assume
+        'import-account'          => 0, // none,
+        'specifics'               => [], // none
+        'column-count'            => 0, // unknown
+        'column-roles'            => [], // unknown
+        'column-do-mapping'       => [], // not yet set which columns must be mapped
+        'column-roles-complete'   => false, // not yet configured roles for columns
+        'column-mapping-config'   => [], // no mapping made yet.
+        'column-mapping-complete' => false, // so mapping is not complete.
+    ],
 ];

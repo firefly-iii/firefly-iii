@@ -39,31 +39,31 @@ class JournalFormRequest extends Request
      */
     public function getJournalData()
     {
-        $tags = $this->get('tags') ?? '';
+        $tags = $this->getFieldOrEmptyString('tags');
 
         return [
             'what'                      => $this->get('what'),
             'description'               => $this->get('description'),
             'source_account_id'         => intval($this->get('source_account_id')),
-            'source_account_name'       => $this->get('source_account_name') ?? '',
+            'source_account_name'       => $this->getFieldOrEmptyString('source_account_name'),
             'destination_account_id'    => intval($this->get('destination_account_id')),
-            'destination_account_name'  => $this->get('destination_account_name') ?? '',
+            'destination_account_name'  => $this->getFieldOrEmptyString('destination_account_name'),
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => auth()->user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
             'date'                      => new Carbon($this->get('date')),
-            'interest_date'             => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
-            'book_date'                 => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
-            'process_date'              => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
+            'interest_date'             => $this->getDateOrNull('interest_date'),
+            'book_date'                 => $this->getDateOrNull('book_date'),
+            'process_date'              => $this->getDateOrNull('process_date'),
             'budget_id'                 => intval($this->get('budget_id')),
-            'category'                  => $this->get('category') ?? '',
+            'category'                  => $this->getFieldOrEmptyString('category'),
             'tags'                      => explode(',', $tags),
-            'piggy_bank_id'             => $this->get('piggy_bank_id') ? intval($this->get('piggy_bank_id')) : 0,
+            'piggy_bank_id'             => intval($this->get('piggy_bank_id')),
 
             // new custom fields here:
-            'due_date'                  => $this->get('due_date') ? new Carbon($this->get('due_date')) : null,
-            'payment_date'              => $this->get('payment_date') ? new Carbon($this->get('payment_date')) : null,
-            'invoice_date'              => $this->get('invoice_date') ? new Carbon($this->get('invoice_date')) : null,
+            'due_date'                  => $this->getDateOrNull('due_date'),
+            'payment_date'              => $this->getDateOrNull('payment_date'),
+            'invoice_date'              => $this->getDateOrNull('invoice_date'),
             'internal_reference'        => $this->get('internal_reference'),
             'notes'                     => $this->get('notes'),
 
@@ -118,5 +118,25 @@ class JournalFormRequest extends Request
         }
 
         return $rules;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    private function getDateOrNull(string $field)
+    {
+        return $this->get($field) ? new Carbon($this->get($field)) : null;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
+    private function getFieldOrEmptyString(string $field): string
+    {
+        return $this->get($field) ?? '';
     }
 }
