@@ -58,7 +58,7 @@ class CategoryController extends Controller
      */
     public function all(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
-        $start              = $repository->firstUseDate($category, new Collection);
+        $start              = $repository->firstUseDate($category);
         $range              = Preferences::get('viewRange', '1M')->data;
         $start              = Navigation::startOfPeriod($start, $range);
         $categoryCollection = new Collection([$category]);

@@ -183,7 +183,7 @@ class CategoryController extends Controller
         $journals->setPath('categories/show/' . $category->id);
 
         // oldest transaction in category:
-        $start = $repository->firstUseDate($category, new Collection);
+        $start = $repository->firstUseDate($category);
         if ($start->year == 1900) {
             $start = new Carbon;
         }

@@ -121,26 +121,17 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
+     * @param Category $category
      *
      * @return Carbon
      */
-    public function firstUseDate(Category $category, Collection $accounts): Carbon
+    public function firstUseDate(Category $category): Carbon
     {
         $first = null;
 
+
         /** @var TransactionJournal $first */
-        $firstJournalQuery = $category->transactionJournals()->orderBy('date', 'ASC');
-
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $ids = $accounts->pluck('id')->toArray();
-            $firstJournalQuery->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
-            $firstJournalQuery->whereIn('t.account_id', $ids);
-        }
-
-        $firstJournal = $firstJournalQuery->first(['transaction_journals.date']);
+        $firstJournal = $category->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.date']);
 
         if ($firstJournal) {
             $first = $firstJournal->date;
@@ -148,16 +139,9 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         // check transactions:
 
-        $firstTransactionQuery = $category->transactions()
-                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                          ->orderBy('transaction_journals.date', 'ASC');
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $ids = $accounts->pluck('id')->toArray();
-            $firstTransactionQuery->whereIn('transactions.account_id', $ids);
-        }
-
-        $firstTransaction = $firstTransactionQuery->first(['transaction_journals.date']);
+        $firstTransaction = $category->transactions()
+                                     ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                     ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
 
         if (!is_null($firstTransaction) && ((!is_null($first) && $firstTransaction->date < $first) || is_null($first))) {
             $first = new Carbon($firstTransaction->date);
