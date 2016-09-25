@@ -41,7 +41,6 @@ return [
             'debug'               => env('APP_DEBUG', false),
 
             // The charset used by the templates.
-            // default: utf-8
             'charset'             => 'utf-8',
 
             // The base template class to use for generated templates.

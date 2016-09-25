@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Password;
  * Class PasswordController
  *
  * @package FireflyIII\Http\Controllers\Auth
+ * @method getEmailSubject
  */
 class PasswordController extends Controller
 {
