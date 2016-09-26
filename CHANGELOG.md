@@ -9,12 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Jump to version 4.0.0.
-
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
+- Firefly III is now subject to a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/) license. Previous versions of this software are still MIT licensed.
 
 ### Fixed
 - Support for specific decimal places, thanks to @Mortalife
