@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Search;
 
 
-use Auth;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
@@ -33,7 +32,7 @@ class Search implements SearchInterface
      */
     public function searchAccounts(array $words): Collection
     {
-        return Auth::user()->accounts()->with('accounttype')->where(
+        return auth()->user()->accounts()->with('accounttype')->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('name', 'LIKE', '%' . e($word) . '%');
@@ -50,7 +49,7 @@ class Search implements SearchInterface
     public function searchBudgets(array $words): Collection
     {
         /** @var Collection $set */
-        $set    = Auth::user()->budgets()->get();
+        $set    = auth()->user()->budgets()->get();
         $newSet = $set->filter(
             function (Budget $b) use ($words) {
                 $found = 0;
@@ -75,7 +74,7 @@ class Search implements SearchInterface
     public function searchCategories(array $words): Collection
     {
         /** @var Collection $set */
-        $set    = Auth::user()->categories()->get();
+        $set    = auth()->user()->categories()->get();
         $newSet = $set->filter(
             function (Category $c) use ($words) {
                 $found = 0;
@@ -111,7 +110,7 @@ class Search implements SearchInterface
     public function searchTransactions(array $words): Collection
     {
         // decrypted transaction journals:
-        $decrypted = Auth::user()->transactionJournals()->expanded()->where('transaction_journals.encrypted', 0)->where(
+        $decrypted = auth()->user()->transactionJournals()->expanded()->where('transaction_journals.encrypted', 0)->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('transaction_journals.description', 'LIKE', '%' . e($word) . '%');
@@ -120,7 +119,7 @@ class Search implements SearchInterface
         )->get(TransactionJournal::queryFields());
 
         // encrypted
-        $all      = Auth::user()->transactionJournals()->expanded()->where('transaction_journals.encrypted', 1)->get(TransactionJournal::queryFields());
+        $all      = auth()->user()->transactionJournals()->expanded()->where('transaction_journals.encrypted', 1)->get(TransactionJournal::queryFields());
         $set      = $all->filter(
             function (TransactionJournal $journal) use ($words) {
                 foreach ($words as $word) {

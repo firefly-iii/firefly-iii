@@ -6,6 +6,7 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -306,7 +307,7 @@ class ImportController extends Controller
     public function start(ImportJob $job)
     {
         set_time_limit(0);
-        if ($job->status == "settings_complete") {
+        if ($job->status == 'settings_complete') {
             ImportProcedure::runImport($job);
         }
     }
@@ -415,16 +416,25 @@ class ImportController extends Controller
      * @param ImportJob $job
      *
      * @return SetupInterface
+     * @throws FireflyException
      */
     private function makeImporter(ImportJob $job): SetupInterface
     {
         // create proper importer (depends on job)
-        $type = $job->file_type;
-        /** @var SetupInterface $importer */
-        $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
-        $importer->setJob($job);
+        $type = strtolower($job->file_type);
 
-        return $importer;
+        // validate type:
+        $validTypes = array_keys(config('firefly.import_formats'));
+
+
+        if (in_array($type, $validTypes)) {
+            /** @var SetupInterface $importer */
+            $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
+            $importer->setJob($job);
+
+            return $importer;
+        }
+        throw new FireflyException(sprintf('"%s" is not a valid file type', $type));
 
     }
 
@@ -450,8 +460,7 @@ class ImportController extends Controller
                 Log::debug('Will redirect to complete()');
 
                 return redirect(route('import.complete', [$job->key]));
-            case
-            'import_complete':
+            case 'import_complete':
                 Log::debug('Will redirect to finished()');
 
                 return redirect(route('import.finished', [$job->key]));

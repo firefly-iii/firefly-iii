@@ -63,14 +63,6 @@ final class Processor
         Log::debug(sprintf('Making new rule from Rule %d', $rule->id));
         $self       = new self;
         $self->rule = $rule;
-
-        /*
-         * The number of "found triggers" must start at -1, because the first
-         * trigger is "create-journal" or "update-journal" when this Processor
-         * is called from a Rule.
-         */
-        $self->setFoundTriggers(-1);
-
         $triggerSet = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $trigger */
         foreach ($triggerSet as $trigger) {
@@ -93,6 +85,7 @@ final class Processor
      */
     public static function makeFromString(string $triggerName, string $triggerValue)
     {
+        Log::debug(sprintf('Processor::makeFromString("%s", "%s")', $triggerName, $triggerValue));
         $self    = new self;
         $trigger = TriggerFactory::makeTriggerFromStrings($triggerName, $triggerValue, false);
         $self->triggers->push($trigger);
@@ -160,6 +153,7 @@ final class Processor
      */
     public function handleTransactionJournal(TransactionJournal $journal): bool
     {
+        Log::debug(sprintf('handleTransactionJournal for journal %d', $journal->id));
         $this->journal = $journal;
         // get all triggers:
         $triggered = $this->triggered();
@@ -187,8 +181,10 @@ final class Processor
         foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
             $actionClass = ActionFactory::getAction($action);
+            Log::debug(sprintf('Fire action %s on journal #%d', get_class($actionClass), $this->journal->id));
             $actionClass->act($this->journal);
             if ($action->stop_processing) {
+                Log::debug('Stop processing now and break.');
                 break;
             }
 
@@ -208,6 +204,7 @@ final class Processor
         Log::debug('start of Processor::triggered()');
         $foundTriggers = $this->getFoundTriggers();
         $hitTriggers   = 0;
+        Log::debug(sprintf('Found triggers starts at %d', $foundTriggers));
         /** @var AbstractTrigger $trigger */
         foreach ($this->triggers as $trigger) {
             $foundTriggers++;

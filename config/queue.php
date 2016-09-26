@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 
 return [
 
@@ -13,8 +11,7 @@ return [
     | API, giving you convenient access to each back-end using the same
     | syntax for each one. Here you may set the default queue driver.
     |
-    | Supported: "null", "sync", "database", "beanstalkd",
-    |            "sqs", "redis"
+    | Supported: "sync", "database", "beanstalkd", "sqs", "redis", "null"
     |
     */
 
@@ -39,32 +36,32 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'table'  => 'jobs',
-            'queue'  => 'default',
-            'expire' => 60,
+            'table' => 'jobs',
+            'queue' => 'default',
+            'retry_after' => 90,
         ],
 
         'beanstalkd' => [
             'driver' => 'beanstalkd',
-            'host'   => 'localhost',
-            'queue'  => 'default',
-            'ttr'    => 60,
+            'host' => 'localhost',
+            'queue' => 'default',
+            'retry_after' => 90,
         ],
 
         'sqs' => [
             'driver' => 'sqs',
-            'key'    => 'your-public-key',
+            'key' => 'your-public-key',
             'secret' => 'your-secret-key',
             'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-            'queue'  => 'your-queue-name',
+            'queue' => 'your-queue-name',
             'region' => 'us-east-1',
         ],
 
         'redis' => [
-            'driver'     => 'redis',
+            'driver' => 'redis',
             'connection' => 'default',
-            'queue'      => 'default',
-            'expire'     => 60,
+            'queue' => 'default',
+            'retry_after' => 90,
         ],
 
     ],
@@ -82,7 +79,7 @@ return [
 
     'failed' => [
         'database' => env('DB_CONNECTION', 'mysql'),
-        'table'    => 'failed_jobs',
+        'table' => 'failed_jobs',
     ],
 
 ];

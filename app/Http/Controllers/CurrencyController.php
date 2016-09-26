@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Cache;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
@@ -81,7 +80,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency         $currency
+     * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|View
      */
@@ -105,7 +104,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency         $currency
+     * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
@@ -119,7 +118,7 @@ class CurrencyController extends Controller
         }
 
         Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
-        if (Auth::user()->hasRole('owner')) {
+        if (auth()->user()->hasRole('owner')) {
             $currency->delete();
         }
 
@@ -157,10 +156,10 @@ class CurrencyController extends Controller
     public function index(CurrencyRepositoryInterface $repository)
     {
         $currencies      = $repository->get();
-        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR')));
+        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
 
 
-        if (!Auth::user()->hasRole('owner')) {
+        if (!auth()->user()->hasRole('owner')) {
             Session::flash('warning', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
         }
 
@@ -177,8 +176,8 @@ class CurrencyController extends Controller
      */
     public function store(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {
-        if (!Auth::user()->hasRole('owner')) {
-            Log::error('User ' . Auth::user()->id . ' is not admin, but tried to store a currency.');
+        if (!auth()->user()->hasRole('owner')) {
+            Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
 
             return redirect(session('currency.create.url'));
         }
@@ -209,7 +208,7 @@ class CurrencyController extends Controller
     public function update(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         $data = $request->getCurrencyData();
-        if (Auth::user()->hasRole('owner')) {
+        if (auth()->user()->hasRole('owner')) {
             $currency = $repository->update($currency, $data);
         }
         Session::flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
@@ -247,13 +246,13 @@ class CurrencyController extends Controller
         }
 
         // is the default currency for the user or the system
-        $defaultCode = Preferences::get('currencyPreference', env('DEFAULT_CURRENCY', 'EUR'))->data;
+        $defaultCode = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'))->data;
         if ($currency->code === $defaultCode) {
             return false;
         }
 
         // is the default currency for the system
-        $defaultSystemCode = env('DEFAULT_CURRENCY', 'EUR');
+        $defaultSystemCode = config('firefly.default_currency', 'EUR');
         if ($currency->code === $defaultSystemCode) {
             return false;
         }

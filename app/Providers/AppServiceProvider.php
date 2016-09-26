@@ -12,7 +12,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Log;
 use URL;
 
 /**
@@ -49,10 +48,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // make sure the logger doesn't log everything when it doesn't need to.
-        $monolog = Log::getMonolog();
-        foreach ($monolog->getHandlers() as $handler) {
-            $handler->setLevel(config('app.log-level'));
-        }
     }
 }

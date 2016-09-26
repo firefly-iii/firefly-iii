@@ -39,7 +39,7 @@ class HelpController extends Controller
      */
     public function show(HelpInterface $help, string $route)
     {
-        $language = Preferences::get('language', env('DEFAULT_LANGUAGE', 'en_US'))->data;
+        $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         $content  = [
             'text'  => '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>',
             'title' => 'Help',

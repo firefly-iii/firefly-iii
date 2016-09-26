@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -34,7 +33,7 @@ class TwoFactorController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
         $secret = Preferences::get('twoFactorAuthSecret', '')->data;
@@ -54,7 +53,7 @@ class TwoFactorController extends Controller
      */
     public function lostTwoFactor()
     {
-        $user      = Auth::user();
+        $user      = auth()->user();
         $siteOwner = env('SITE_OWNER', '');
         $title     = strval(trans('firefly.two_factor_forgot_title'));
 

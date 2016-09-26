@@ -10,14 +10,15 @@
 declare(strict_types = 1);
 namespace FireflyIII\Exceptions;
 
-use Auth;
 use ErrorException;
 use Exception;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Request;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException as ValException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -34,9 +35,12 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport
         = [
+            AuthenticationException::class,
             AuthorizationException::class,
             HttpException::class,
             ModelNotFoundException::class,
+            TokenMismatchException::class,
+            ValException::class,
         ];
 
     /**
@@ -71,15 +75,14 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
             ];
-            if (Auth::check()) {
-                $userData['id']    = Auth::user()->id;
-                $userData['email'] = Auth::user()->email;
+            if (auth()->check()) {
+                $userData['id']    = auth()->user()->id;
+                $userData['email'] = auth()->user()->email;
             }
             $data = [
                 'class'        => get_class($exception),
@@ -92,10 +95,26 @@ class Handler extends ExceptionHandler
             ];
 
             // create job that will mail.
-            $job = new MailError($userData, env('SITE_OWNER'), Request::ip(), $data);
+            $ip  = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+            $job = new MailError($userData, env('SITE_OWNER', ''), $ip, $data);
             dispatch($job);
         }
 
         parent::report($exception);
+    }
+
+    /**
+     * Convert an authentication exception into an unauthenticated response.
+     *
+     * @param  \Illuminate\Http\Request                 $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function unauthenticated($request)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+
+        return redirect()->guest('login');
     }
 }

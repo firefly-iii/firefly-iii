@@ -5,6 +5,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    */
+
+    'name' => 'Firefly III',
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
@@ -40,7 +52,7 @@ return [
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => env('APP_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -109,8 +121,9 @@ return [
     |
     */
 
-    'log'       => env('APP_LOG', 'daily'),
-    'log-level' => env('LOG_LEVEL', 'info'),
+    'log' => env('APP_LOG', 'daily'),
+
+    'log_level' => env('APP_LOG_LEVEL', 'info'),
 
     /*
     |--------------------------------------------------------------------------
@@ -140,6 +153,7 @@ return [
         Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
@@ -157,22 +171,22 @@ return [
          */
         FireflyIII\Providers\AppServiceProvider::class,
         FireflyIII\Providers\AuthServiceProvider::class,
+        // FireflyIII\Providers\BroadcastServiceProvider::class,
         FireflyIII\Providers\EventServiceProvider::class,
         FireflyIII\Providers\RouteServiceProvider::class,
         FireflyIII\Providers\FireflyServiceProvider::class,
 
 
         // own stuff:
-//        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-//        Barryvdh\Debugbar\ServiceProvider::class,
-        'DaveJamesMiller\Breadcrumbs\ServiceProvider',
-        'TwigBridge\ServiceProvider',
+        //Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        //Barryvdh\Debugbar\ServiceProvider::class,
+        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+        TwigBridge\ServiceProvider::class,
         'PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider',
 
-
         /*
- * More service providers.
- */
+* More service providers.
+*/
         FireflyIII\Providers\CrudServiceProvider::class,
         FireflyIII\Providers\AccountServiceProvider::class,
         FireflyIII\Providers\AttachmentServiceProvider::class,
@@ -219,6 +233,7 @@ return [
         'Lang'          => Illuminate\Support\Facades\Lang::class,
         'Log'           => Illuminate\Support\Facades\Log::class,
         'Mail'          => Illuminate\Support\Facades\Mail::class,
+        'Notification'  => Illuminate\Support\Facades\Notification::class,
         'Password'      => Illuminate\Support\Facades\Password::class,
         'Queue'         => Illuminate\Support\Facades\Queue::class,
         'Redirect'      => Illuminate\Support\Facades\Redirect::class,
@@ -245,6 +260,7 @@ return [
         'Entrust'       => 'Zizaco\Entrust\EntrustFacade',
         'Input'         => 'Illuminate\Support\Facades\Input',
         'Google2FA'     => 'PragmaRX\Google2FA\Vendor\Laravel\Facade',
+
 
     ],
 

@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers\Popup;
 
 
 use Carbon\Carbon;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Http\Controllers\Controller;
@@ -112,6 +113,7 @@ class ReportController extends Controller
                         if ($tags === 0) {
                             return true;
                         }
+
                         return false;
                     }
                 );
@@ -183,7 +185,7 @@ class ReportController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $crud       = app(AccountCrudInterface::class);
         $account    = $crud->find(intval($attributes['accountId']));
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $journals   = $repository->journalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
@@ -191,9 +193,11 @@ class ReportController extends Controller
         // filter for transfers and withdrawals TO the given $account
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($account) {
-                if ($journal->destination_account_id === $account->id) {
+                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
+                if (in_array($account->id, $destinations)) {
                     return true;
                 }
+
                 return false;
             }
         );
@@ -221,14 +225,18 @@ class ReportController extends Controller
         $journals     = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $destinations = $attributes['accounts']->pluck('id')->toArray();
         // filter for transfers and withdrawals FROM the given $account
+
         $journals = $journals->filter(
             function (TransactionJournal $journal) use ($account, $destinations) {
+                $currentSources = TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray();
+                $currentDest    = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
                 if (
-                    $journal->source_account_id === $account->id
-                    && in_array($journal->destination_account_id, $destinations)
+                    !empty(array_intersect([$account->id], $currentSources))
+                    && !empty(array_intersect($destinations, $currentDest))
                 ) {
                     return true;
                 }
+
                 return false;
             }
         );

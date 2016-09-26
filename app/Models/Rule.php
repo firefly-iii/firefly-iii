@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -59,8 +58,8 @@ class Rule extends Model
      */
     public static function routeBinder(Rule $value)
     {
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
+        if (auth()->check()) {
+            if ($value->user_id == auth()->user()->id) {
                 return $value;
             }
         }

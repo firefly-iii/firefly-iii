@@ -44,6 +44,7 @@ class ClearCategory implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         $journal->categories()->detach();
+        Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal %d.', $journal->id));
 
         return true;
     }

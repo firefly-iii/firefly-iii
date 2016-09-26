@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class SetDescription
@@ -42,8 +43,18 @@ class SetDescription implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
+        $oldDescription = $journal->description;
+
         $journal->description = $this->action->action_value;
         $journal->save();
+
+        Log::debug(
+            sprintf(
+                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".', $journal->id,
+                $oldDescription,
+                $this->action->action_value
+            )
+        );
 
         return true;
     }

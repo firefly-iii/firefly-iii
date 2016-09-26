@@ -14,6 +14,7 @@ namespace FireflyIII\Rules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class RemoveAllTags
@@ -42,6 +43,7 @@ class RemoveAllTags implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
+        Log::debug(sprintf('RuleAction ClearCategory removed all tags from journal %d.', $journal->id));
         $journal->tags()->detach();
 
         return true;

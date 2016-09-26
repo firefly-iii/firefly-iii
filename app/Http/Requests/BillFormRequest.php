@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Auth;
 use Carbon\Carbon;
 use Input;
 
@@ -29,7 +28,7 @@ class BillFormRequest extends Request
     public function authorize()
     {
         // Only allow logged in users
-        return Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -45,7 +44,7 @@ class BillFormRequest extends Request
             'amount_currency_id_amount_max' => intval($this->get('amount_currency_id_amount_max')),
             'amount_max'                    => round($this->get('amount_max'), 2),
             'date'                          => new Carbon($this->get('date')),
-            'user'                          => Auth::user()->id,
+            'user'                          => auth()->user()->id,
             'repeat_freq'                   => $this->get('repeat_freq'),
             'skip'                          => intval($this->get('skip')),
             'automatch'                     => intval($this->get('automatch')) === 1,

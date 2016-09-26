@@ -20,6 +20,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -35,19 +36,14 @@ class BudgetController extends Controller
     /** @var BudgetChartGeneratorInterface */
     protected $generator;
 
-    /** @var BudgetRepositoryInterface */
-    protected $repository;
-
     /**
-     *
+     * BudgetController constructor.
      */
     public function __construct()
     {
         parent::__construct();
         // create chart generator:
         $this->generator = app(BudgetChartGeneratorInterface::class);
-
-        $this->repository = app(BudgetRepositoryInterface::class);
     }
 
     /**
@@ -143,8 +139,9 @@ class BudgetController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage()
+    public function frontpage(BudgetRepositoryInterface $repository)
     {
+        Log::debug('Hello');
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
         // chart properties for cache:
@@ -156,8 +153,8 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $budgets     = $this->repository->getActiveBudgets();
-        $repetitions = $this->repository->getAllBudgetLimitRepetitions($start, $end);
+        $budgets     = $repository->getActiveBudgets();
+        $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
         $allEntries  = new Collection;
 
         /** @var Budget $budget */
@@ -166,15 +163,15 @@ class BudgetController extends Controller
             $reps = $this->filterRepetitions($repetitions, $budget, $start, $end);
 
             if ($reps->count() === 0) {
-                $collection = $this->spentInPeriodSingle($budget, $start, $end);
+                $collection = $this->spentInPeriodSingle($repository, $budget, $start, $end);
                 $allEntries = $allEntries->merge($collection);
                 continue;
             }
-            $collection = $this->spentInPeriodMulti($budget, $reps);
+            $collection = $this->spentInPeriodMulti($repository, $budget, $reps);
             $allEntries = $allEntries->merge($collection);
 
         }
-        $entry = $this->spentInPeriodWithout($start, $end);
+        $entry = $this->spentInPeriodWithout($repository, $start, $end);
         $allEntries->push($entry);
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
@@ -216,6 +213,7 @@ class BudgetController extends Controller
                 if (in_array(strval($repetition->budget_id), $budgetIds)) {
                     return true;
                 }
+
                 return false;
             }
         );
@@ -292,6 +290,7 @@ class BudgetController extends Controller
                     if ($repetition->budget_id === $budget->id && $repetition->startdate == $currentStart) {
                         return true;
                     }
+
                     return false;
                 }
             );
@@ -329,28 +328,31 @@ class BudgetController extends Controller
                 if ($repetition->startdate < $end && $repetition->enddate > $start && $repetition->budget_id === $budget->id) {
                     return true;
                 }
+
                 return false;
             }
         );
     }
 
     /**
-     * @param Budget     $budget
-     * @param Collection $repetitions
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param Collection                $repetitions
      *
      * @return Collection
      */
-    private function spentInPeriodMulti(Budget $budget, Collection $repetitions): Collection
+    private function spentInPeriodMulti(BudgetRepositoryInterface $repository, Budget $budget, Collection $repetitions): Collection
     {
         $format     = strval(trans('config.month_and_day'));
         $collection = new Collection;
         $name       = $budget->name;
         /** @var LimitRepetition $repetition */
         foreach ($repetitions as $repetition) {
-            $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
+            $expenses = $repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
 
             if ($repetitions->count() > 1) {
-                $name = $budget->name . ' ' . trans('firefly.between_dates',
+                $name = $budget->name . ' ' . trans(
+                        'firefly.between_dates',
                         ['start' => $repetition->startdate->formatLocalized($format), 'end' => $repetition->enddate->formatLocalized($format)]
                     );
             }
@@ -366,18 +368,19 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param Carbon                    $start
+     * @param Carbon                    $end
      *
      * @return Collection
      */
-    private function spentInPeriodSingle(Budget $budget, Carbon $start, Carbon $end): Collection
+    private function spentInPeriodSingle(BudgetRepositoryInterface $repository, Budget $budget, Carbon $start, Carbon $end): Collection
     {
         $collection = new Collection;
         $amount     = '0';
         $left       = '0';
-        $spent      = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
         $overspent  = '0';
         $array      = [$budget->name, $left, $spent, $overspent, $amount, $spent];
         $collection->push($array);
@@ -386,14 +389,15 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param BudgetRepositoryInterface $repository
+     * @param Carbon                    $start
+     * @param Carbon                    $end
      *
      * @return array
      */
-    private function spentInPeriodWithout(Carbon $start, Carbon $end):array
+    private function spentInPeriodWithout(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end):array
     {
-        $list = $this->repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $list = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
         $sum  = '0';
         /** @var TransactionJournal $entry */
         foreach ($list as $entry) {

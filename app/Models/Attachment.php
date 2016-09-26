@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,9 +68,9 @@ class Attachment extends Model
      */
     public static function routeBinder(Attachment $value)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
 
-            if ($value->user_id == Auth::user()->id) {
+            if ($value->user_id == auth()->user()->id) {
                 return $value;
             }
         }
@@ -105,7 +104,7 @@ class Attachment extends Model
      */
     public function getDescriptionAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -119,7 +118,7 @@ class Attachment extends Model
      */
     public function getFilenameAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -133,7 +132,7 @@ class Attachment extends Model
      */
     public function getMimeAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -148,7 +147,7 @@ class Attachment extends Model
      */
     public function getNotesAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 
@@ -163,7 +162,7 @@ class Attachment extends Model
      */
     public function getTitleAttribute($value)
     {
-        if (is_null($value)) {
+        if (is_null($value) || strlen($value) === 0) {
             return null;
         }
 

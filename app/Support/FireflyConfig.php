@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
-use Auth;
 use Cache;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
@@ -32,11 +31,11 @@ class FireflyConfig
      */
     public function delete($name): bool
     {
-        $fullName = 'preference' . Auth::user()->id . $name;
+        $fullName = 'preference' . auth()->user()->id . $name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Preference::where('user_id', Auth::user()->id)->where('name', $name)->delete();
+        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
 
         return true;
     }

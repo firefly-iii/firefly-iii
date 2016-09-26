@@ -88,9 +88,6 @@
                             {{ ExpandedForm.select('piggy_bank_id',piggyBankList,data['piggy_bank_id']) }}
                         {% endif %}
 
-                        <!-- ATTACHMENTS -->
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
-
                     </div>
                 </div>
 

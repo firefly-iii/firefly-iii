@@ -23,6 +23,7 @@ class Amount extends BasicConverter implements ConverterInterface
      * Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
      * - Jamie Zawinski
      *
+     *
      * @param $value
      *
      * @return float
@@ -33,12 +34,12 @@ class Amount extends BasicConverter implements ConverterInterface
         $decimalPosition = $len - 3;
         $decimal         = null;
 
-        if ($len > 2 && $value{$decimalPosition} == '.') {
+        if (($len > 2 && $value{$decimalPosition} == '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
             $decimal = '.';
         }
         if ($len > 2 && $value{$decimalPosition} == ',') {
             $decimal = ',';
-        }
+        } 
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ($decimal === '.') {

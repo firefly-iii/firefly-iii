@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class UserAction
@@ -51,6 +52,8 @@ final class UserAction extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
+        Log::debug(sprintf('RuleTrigger UserAction for journal %d always triggers.', $journal->id));
+
         return true;
     }
 }

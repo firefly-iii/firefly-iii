@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -166,9 +165,9 @@ class CategoryController extends Controller
      */
     public function show(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
-        $range        = Preferences::get('viewRange', '1M')->data;
+        $range = Preferences::get('viewRange', '1M')->data;
         /** @var Carbon $start */
-        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
         /** @var Carbon $end */
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $hideCategory = true; // used in list.
@@ -184,7 +183,7 @@ class CategoryController extends Controller
         $journals->setPath('categories/show/' . $category->id);
 
         // oldest transaction in category:
-        $start = $repository->firstUseDate($category, new Collection);
+        $start = $repository->firstUseDate($category);
         if ($start->year == 1900) {
             $start = new Carbon;
         }
@@ -265,7 +264,7 @@ class CategoryController extends Controller
     {
         $categoryData = [
             'name' => $request->input('name'),
-            'user' => Auth::user()->id,
+            'user' => auth()->user()->id,
         ];
         $category     = $repository->store($categoryData);
 

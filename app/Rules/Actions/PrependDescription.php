@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class AppendDescription
@@ -42,8 +43,10 @@ class PrependDescription implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
+        Log::debug(sprintf('RuleAction PrependDescription prepended "%s" to "%s".', $this->action->action_value, $journal->description));
         $journal->description = $this->action->action_value . $journal->description;
         $journal->save();
+
 
         return true;
     }

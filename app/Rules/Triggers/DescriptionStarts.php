@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class DescriptionStarts
@@ -40,8 +41,15 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === '';
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
+
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }
@@ -58,9 +66,13 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
 
         $part = substr($description, 0, strlen($search));
 
-        if ($part == $search) {
+        if ($part === $search) {
+            Log::debug(sprintf('RuleTrigger DescriptionStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $description, $search));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger DescriptionStarts for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $description, $search));
 
         return false;
     }

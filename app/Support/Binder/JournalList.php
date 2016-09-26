@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Binder;
 
-use Auth;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -32,12 +31,12 @@ class JournalList implements BinderInterface
      */
     public static function routeBinder($value, $route): Collection
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $ids = explode(',', $value);
             /** @var \Illuminate\Support\Collection $object */
             $object = TransactionJournal::whereIn('transaction_journals.id', $ids)
                                         ->expanded()
-                                        ->where('transaction_journals.user_id', Auth::user()->id)
+                                        ->where('transaction_journals.user_id', auth()->user()->id)
                                         ->get(TransactionJournal::queryFields());
 
             if ($object->count() > 0) {

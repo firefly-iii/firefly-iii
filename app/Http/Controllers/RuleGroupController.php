@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrudInterface;
@@ -96,7 +95,7 @@ class RuleGroupController extends Controller
     {
 
         $title  = $ruleGroup->title;
-        $moveTo = Auth::user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
+        $moveTo = auth()->user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
 
         $repository->destroy($ruleGroup, $moveTo);
 
@@ -163,7 +162,7 @@ class RuleGroupController extends Controller
         $job = new ExecuteRuleGroupOnExistingTransactions($ruleGroup);
 
         // Apply parameters to the job
-        $job->setUser(Auth::user());
+        $job->setUser(auth()->user());
         $job->setAccounts($accounts);
         $job->setStartDate($startDate);
         $job->setEndDate($endDate);
@@ -207,7 +206,7 @@ class RuleGroupController extends Controller
         $data = [
             'title'       => $request->input('title'),
             'description' => $request->input('description'),
-            'user_id'     => Auth::user()->id,
+            'user_id'     => auth()->user()->id,
         ];
 
         $ruleGroup = $repository->store($data);

@@ -58,7 +58,7 @@ class CategoryController extends Controller
      */
     public function all(CRI $repository, AccountCrudInterface $crud, Category $category)
     {
-        $start              = $repository->firstUseDate($category, new Collection);
+        $start              = $repository->firstUseDate($category);
         $range              = Preferences::get('viewRange', '1M')->data;
         $start              = Navigation::startOfPeriod($start, $range);
         $categoryCollection = new Collection([$category]);
@@ -108,13 +108,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show this month's category overview.
+     * @param CRI                  $repository
+     * @param AccountCrudInterface $crud
      *
-     * @param CRI $repository
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function frontpage(CRI $repository)
+    public function frontpage(CRI $repository, AccountCrudInterface $crud)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -128,10 +127,11 @@ class CategoryController extends Controller
             return Response::json($cache->get());
         }
         $categories = $repository->getCategories();
+        $accounts   = $crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         $set        = new Collection;
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent = $repository->spentInPeriod(new Collection([$category]), new Collection, $start, $end);
+            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
             if (bccomp($spent, '0') === -1) {
                 $category->spent = $spent;
                 $set->push($category);

@@ -1,4 +1,12 @@
 <?php
+/**
+ * 2016_06_16_000002_create_main_tables.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+declare(strict_types = 1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -77,8 +85,8 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->integer('account_type_id', false, true);
                 $table->string('name', 1024);
-                $table->decimal('virtual_balance', 10, 4);
-                $table->string('iban', 255);
+                $table->decimal('virtual_balance', 10, 4)->nullable();
+                $table->string('iban', 255)->nullable();
 
                 $table->boolean('active')->default(1);
                 $table->boolean('encrypted')->default(0);
@@ -125,10 +133,10 @@ class CreateMainTables extends Migration
                 $table->string('attachable_type', 255);
                 $table->string('md5', 32);
                 $table->string('filename', 1024);
-                $table->string('title', 1024);
-                $table->text('description');
-                $table->text('notes');
-                $table->string('mime', 200);
+                $table->string('title', 1024)->nullable();
+                $table->text('description')->nullable();
+                $table->text('notes')->nullable();
+                $table->string('mime', 1024);
                 $table->integer('size', false, true);
                 $table->boolean('uploaded')->default(1);
 
@@ -282,7 +290,7 @@ class CreateMainTables extends Migration
                 $table->string('key', 12)->unique();
                 $table->string('file_type', 12);
                 $table->string('status', 45);
-                $table->text('configuration');
+                $table->text('configuration')->nullable();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
             );
@@ -306,7 +314,7 @@ class CreateMainTables extends Migration
                 $table->decimal('targetamount', 10, 4);
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(0);
                 $table->boolean('encrypted')->default(1);
 
@@ -390,8 +398,8 @@ class CreateMainTables extends Migration
                 $table->softDeletes();
                 $table->integer('user_id', false, true);
                 $table->string('title', 255);
-                $table->text('description');
-                $table->integer('order', false, true);
+                $table->text('description')->nullable();
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
 
                 // link user id to users table
@@ -408,8 +416,8 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->integer('rule_group_id', false, true);
                 $table->string('title', 255);
-                $table->text('description');
-                $table->integer('order', false, true);
+                $table->text('description')->nullable();
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
 
@@ -431,7 +439,7 @@ class CreateMainTables extends Migration
                 $table->string('action_type', 50);
                 $table->string('action_value', 255);
 
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
 
@@ -451,7 +459,7 @@ class CreateMainTables extends Migration
                 $table->string('trigger_type', 50);
                 $table->string('trigger_value', 255);
 
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(1);
                 $table->boolean('stop_processing')->default(0);
 
@@ -516,7 +524,7 @@ class CreateMainTables extends Migration
                 $table->date('book_date')->nullable();
                 $table->date('process_date')->nullable();
 
-                $table->integer('order', false, true);
+                $table->integer('order', false, true)->default(0);
                 $table->integer('tag_count', false, true);
 
                 $table->boolean('encrypted')->default(1);
@@ -612,7 +620,7 @@ class CreateMainTables extends Migration
                 $table->softDeletes();
                 $table->integer('account_id', false, true);
                 $table->integer('transaction_journal_id', false, true);
-                $table->string('description', 255);
+                $table->string('description', 1024)->nullable();
                 $table->decimal('amount', 10, 4);
 
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');

@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Triggers;
 
 
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class DescriptionContains
@@ -41,8 +42,15 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === '';
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
+
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }
@@ -59,8 +67,13 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
 
         $strpos = strpos($source, $search);
         if (!($strpos === false)) {
+
+            Log::debug(sprintf('RuleTrigger DescriptionContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $source, $search));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger DescriptionContains for journal #%d: "%s" does NOT contain "%s", return false.', $journal->id, $source, $search));
 
         return false;
 

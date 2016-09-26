@@ -10,7 +10,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Attachments;
 
-use Auth;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
@@ -60,7 +59,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        $path = storage_path('upload') . DIRECTORY_SEPARATOR . 'at-' . $attachment->id . '.data';
+        $path = sprintf('%s%sat-%d.data', storage_path('upload'), DIRECTORY_SEPARATOR, intval($attachment->id));
 
         return $path;
     }
@@ -112,7 +111,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
         $class = get_class($model);
-        $count = Auth::user()->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        $count = auth()->user()->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
 
         if ($count > 0) {
             $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
@@ -139,7 +138,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         $attachment = new Attachment; // create Attachment object.
-        $attachment->user()->associate(Auth::user());
+        $attachment->user()->associate(auth()->user());
         $attachment->attachable()->associate($model);
         $attachment->md5      = md5_file($file->getRealPath());
         $attachment->filename = $file->getClientOriginalName();

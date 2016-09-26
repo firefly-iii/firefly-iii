@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class ToAccountIs
@@ -41,8 +42,14 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return false;
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }
@@ -63,9 +70,13 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
 
         $search = strtolower($this->triggerValue);
 
-        if ($toAccountName == $search) {
+        if ($toAccountName === $search) {
+            Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is "%s", return true.', $journal->id, $toAccountName, $search));
+
             return true;
         }
+
+        Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is NOT "%s", return true.', $journal->id, $toAccountName, $search));
 
         return false;
 

@@ -70,11 +70,10 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Category   $category
-     * @param Collection $accounts
      *
      * @return Carbon
      */
-    public function firstUseDate(Category $category, Collection $accounts): Carbon;
+    public function firstUseDate(Category $category): Carbon;
 
     /**
      * Returns a list of all the categories belonging to a user.

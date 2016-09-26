@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class ToAccountStarts
@@ -41,8 +42,14 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === '';
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }
@@ -64,9 +71,12 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
         $search = strtolower($this->triggerValue);
         $part   = substr($toAccountName, 0, strlen($search));
 
-        if ($part == $search) {
+        if ($part === $search) {
+            Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $toAccountName, $search));
             return true;
         }
+        Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $toAccountName, $search));
+
 
         return false;
 

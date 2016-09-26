@@ -22,24 +22,40 @@ use Illuminate\Log\Writer;
  */
 class ConfigureLogging extends IlluminateConfigureLogging
 {
+
     /**
-     * @param Application $app
-     * @param Writer      $log
+     * Configure the Monolog handlers for the application.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application $app
+     * @param  \Illuminate\Log\Writer                       $log
+     *
+     * @return void
      */
     protected function configureDailyHandler(Application $app, Writer $log)
     {
+        $config = $app->make('config');
+
+        $maxFiles = $config->get('app.log_max_files');
+
         $log->useDailyFiles(
-            $app->storagePath() . '/logs/firefly-iii.log',
-            $app->make('config')->get('app.log_max_files', 5)
+            $app->storagePath() . '/logs/firefly-iii.log', is_null($maxFiles) ? 5 : $maxFiles,
+            $config->get('app.log_level', 'debug')
         );
     }
 
     /**
-     * @param Application $app
-     * @param Writer      $log
+     * Configure the Monolog handlers for the application.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application $app
+     * @param  \Illuminate\Log\Writer                       $log
+     *
+     * @return void
      */
     protected function configureSingleHandler(Application $app, Writer $log)
     {
-        $log->useFiles($app->storagePath() . '/logs/firefly-iii.log');
+        $log->useFiles(
+            $app->storagePath() . '/logs/firefly-iii.log',
+            $app->make('config')->get('app.log_level', 'debug')
+        );
     }
 }

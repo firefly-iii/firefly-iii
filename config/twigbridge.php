@@ -1,8 +1,19 @@
 <?php
-declare(strict_types = 1);
 
+/**
+ * This file is part of the TwigBridge package.
+ *
+ * @copyright Robert Crowe <hello@vivalacrowe.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+/**
+ * Configuration options for Twig.
+ */
 return [
+
     'twig' => [
         /*
         |--------------------------------------------------------------------------
@@ -27,7 +38,7 @@ return [
             // When set to true, the generated templates have a __toString() method
             // that you can use to display the generated nodes.
             // default: false
-            'debug'               => config('app.debug', false),
+            'debug'               => env('APP_DEBUG', false),
 
             // The charset used by the templates.
             'charset'             => 'utf-8',
@@ -53,8 +64,8 @@ return [
             'strict_variables'    => false,
 
             // If set to true, auto-escaping will be enabled by default for all templates.
-            // default: true
-            'autoescape'          => true,
+            // default: 'html'
+            'autoescape'          => 'html',
 
             // A flag that indicates which optimizations to apply
             // (default to -1 -- all optimizations are enabled; set it to 0 to disable)
@@ -98,8 +109,9 @@ return [
             'TwigBridge\Extension\Laravel\Str',
             'TwigBridge\Extension\Laravel\Translator',
             'TwigBridge\Extension\Laravel\Url',
+            // 'TwigBridge\Extension\Laravel\Gate',
 
-            //                             'TwigBridge\Extension\Laravel\Form',
+            // 'TwigBridge\Extension\Laravel\Form',
             // 'TwigBridge\Extension\Laravel\Html',
             // 'TwigBridge\Extension\Laravel\Legacy\Facades',
         ],
@@ -156,6 +168,7 @@ return [
                 ],
             ],
         ],
+
 
         /*
         |--------------------------------------------------------------------------
@@ -220,6 +233,8 @@ return [
         | </code>
         |
         */
-        'filters'   => [],
+        'filters'   => [
+            'get' => 'data_get',
+        ],
     ],
 ];

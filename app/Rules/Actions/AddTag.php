@@ -15,6 +15,7 @@ namespace FireflyIII\Rules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class AddTag
@@ -44,13 +45,19 @@ class AddTag implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
+
         // journal has this tag maybe?
         $tag = Tag::firstOrCreateEncrypted(['tag' => $this->action->action_value, 'user_id' => $journal->user->id]);
 
         $count = $journal->tags()->where('tag_id', $tag->id)->count();
-        if ($count == 0) {
+        if ($count === 0) {
             $journal->tags()->save($tag);
+            Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal->id));
+
+            return true;
         }
+
+        Log::debug(sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal->id));
 
         return true;
     }

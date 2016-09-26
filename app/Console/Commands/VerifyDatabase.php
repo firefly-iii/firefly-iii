@@ -12,13 +12,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Console\Commands;
 
 use Crypt;
-use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
@@ -79,6 +79,9 @@ class VerifyDatabase extends Command
 
         // report on journals with no transactions at all.
         $this->reportNoTransactions();
+
+        // transfers with budgets.
+        $this->reportTransfersBudgets();
     }
 
     /**
@@ -89,11 +92,10 @@ class VerifyDatabase extends Command
         $set = Account
             ::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
             ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
-            ->groupBy('accounts.id')
-            ->having('transaction_count', '=', 0)
+            ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
+            ->whereNull('transactions.account_id')
             ->get(
-                ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email',
-                 DB::raw('COUNT(`transactions`.`id`) AS `transaction_count`')]
+                ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
             );
 
         /** @var stdClass $entry */
@@ -113,9 +115,9 @@ class VerifyDatabase extends Command
         $set = Budget
             ::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
             ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
-            ->groupBy('budgets.id')
-            ->having('budget_limit_count', '=', 0)
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email', DB::raw('COUNT(`budget_limits`.`id`) AS `budget_limit_count`')]);
+            ->groupBy(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
+            ->whereNull('budget_limits.id')
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -225,19 +227,16 @@ class VerifyDatabase extends Command
         }
     }
 
+    /**
+     *
+     */
     private function reportNoTransactions()
     {
-        /*
-         * select transaction_journals.id, count(transactions.id) as transaction_count from transaction_journals
-left join transactions ON transaction_journals.id = transactions.transaction_journal_id
-group by transaction_journals.id
-having transaction_count = 0
-         */
         $set = TransactionJournal
             ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->groupBy('transaction_journals.id')
-            ->having('transaction_count', '=', 0)
-            ->get(['transaction_journals.id', DB::raw('COUNT(`transactions`.`id`) as `transaction_count`')]);
+            ->whereNull('transactions.transaction_journal_id')
+            ->get(['transaction_journals.id']);
 
         foreach ($set as $entry) {
             $this->error(
@@ -305,5 +304,30 @@ having transaction_count = 0
                 ' Find it in the table called `transaction_journals` and change the `deleted_at` field to: "' . $entry->transaction_deleted . '"'
             );
         }
+    }
+
+    /**
+     *
+     */
+    private function reportTransfersBudgets()
+    {
+        $set = TransactionJournal
+            ::distinct()
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+            ->where('transaction_types.type', TransactionType::TRANSFER)
+            ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.id']);
+
+        /** @var TransactionJournal $entry */
+        foreach ($set as $entry) {
+            $this->error(
+                sprintf(
+                    'Error: Transaction journal #%d is a transfer, but has a budget. Edit it without changing anything, so the budget will be removed.',
+                    $entry->id
+                )
+            );
+        }
+
+
     }
 }

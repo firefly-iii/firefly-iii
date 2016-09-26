@@ -17,19 +17,18 @@ Route::group(
     ['middleware' => 'user-not-logged-in'], function () {
 
     // Authentication Routes...
-    Route::get('/login', 'Auth\AuthController@showLoginForm');
-    Route::post('/login', 'Auth\AuthController@login');
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Auth\LoginController@login');
 
     // Registration Routes...
-    Route::get('/register', ['uses' => 'Auth\AuthController@showRegistrationForm', 'as' => 'register']);
-    Route::post('/register', 'Auth\AuthController@register');
-
-    Route::get('/password/reset', 'Auth\PasswordController@getReset');
+    Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
+    Route::post('/register', 'Auth\RegisterController@register');
 
     // Password Reset Routes...
-    Route::get('/password/reset/{token?}', 'Auth\PasswordController@showResetForm');
-    Route::post('/password/email', 'Auth\PasswordController@sendResetLinkEmail');
-    Route::post('/password/reset', 'Auth\PasswordController@reset');
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
 
 }
@@ -41,7 +40,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
     Route::get('/error', 'HomeController@displayError');
-    Route::get('/logout', ['uses' => 'Auth\AuthController@logout', 'as' => 'logout']);
+    Route::any('logout', ['uses' => 'Auth\LoginController@logout','as' => 'logout']);
     Route::get('/flush', ['uses' => 'HomeController@flush']);
 }
 );
@@ -276,8 +275,6 @@ Route::group(
     Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']);
     Route::get('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'piggy-banks.add-money-mobile']);
     Route::get('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'piggy-banks.remove-money-mobile']);
-    // Route::post('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@postAddMobile', 'as' => 'piggy-banks.post-add-mobile']);
-    // Route::post('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@postRemoveMobile', 'as' => 'piggy-banks.post-remove-mobile']);
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);

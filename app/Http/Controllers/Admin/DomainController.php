@@ -58,7 +58,7 @@ class DomainController extends Controller
             return redirect(route('admin.users.domains'));
         }
 
-        $domain  = $request->get('domain');
+        $domain  = strtolower($request->get('domain'));
         $blocked = FireflyConfig::get('blocked-domains', [])->data;
 
         if (in_array($domain, $blocked)) {

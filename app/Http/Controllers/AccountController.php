@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Crud\Account\AccountCrudInterface;
@@ -173,9 +172,9 @@ class AccountController extends Controller
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $crud->getAccountsByType($types);
         /** @var Carbon $start */
-        $start        = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end          = clone session('end', Carbon::now()->endOfMonth());
+        $end = clone session('end', Carbon::now()->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -207,16 +206,16 @@ class AccountController extends Controller
         $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
         /** @var Carbon $start */
-        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
         /** @var Carbon $end */
-        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page         = intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
-        $count        = $set->count();
-        $subSet       = $set->splice($offset, $pageSize);
-        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page     = intval(Input::get('page'));
+        $pageSize = Preferences::get('transactionPageSize', 50)->data;
+        $offset   = ($page - 1) * $pageSize;
+        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $count    = $set->count();
+        $subSet   = $set->splice($offset, $pageSize);
+        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
         $journals->setPath('accounts/show/' . $account->id);
 
         // grouped other months thing:
@@ -301,7 +300,7 @@ class AccountController extends Controller
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'virtualBalanceCurrency' => intval($request->input('amount_currency_id_virtualBalance')),
             'active'                 => true,
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'iban'                   => $request->input('iban'),
             'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),
@@ -347,7 +346,7 @@ class AccountController extends Controller
         $accountData = [
             'name'                   => $request->input('name'),
             'active'                 => $request->input('active'),
-            'user'                   => Auth::user()->id,
+            'user'                   => auth()->user()->id,
             'iban'                   => $request->input('iban'),
             'accountNumber'          => $request->input('accountNumber'),
             'accountRole'            => $request->input('accountRole'),

@@ -6,7 +6,6 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-
 declare(strict_types = 1);
 
 namespace FireflyIII\Http;
@@ -23,9 +22,11 @@ use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
@@ -37,10 +38,11 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
  */
 class Kernel extends HttpKernel
 {
+
     /**
      * The bootstrap classes for the application.
      *
-     * Next upgrade should verify these are all here.
+     * Next upgrade verify these are the same.
      *
      * @var array
      */
@@ -83,6 +85,7 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
             ],
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
             'user-not-logged-in'               => [
@@ -91,9 +94,9 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
                 RedirectIfAuthenticated::class,
             ],
-
             // MUST be logged in.
             // MUST NOT have 2FA
             // don't care about confirmation:
@@ -103,6 +106,7 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
             ],
@@ -115,6 +119,7 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 IsNotConfirmed::class,
@@ -129,6 +134,7 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
                 Authenticate::class,
             ],
 
@@ -142,6 +148,7 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 IsConfirmed::class,
@@ -159,6 +166,7 @@ class Kernel extends HttpKernel
                 StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
+                SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 IsConfirmed::class,
@@ -168,8 +176,10 @@ class Kernel extends HttpKernel
 
             ],
 
+
             'api' => [
                 'throttle:60,1',
+                'bindings',
             ],
         ];
 
@@ -184,6 +194,8 @@ class Kernel extends HttpKernel
         = [
             'auth'       => Authenticate::class,
             'auth.basic' => AuthenticateWithBasicAuth::class,
+            'bindings'   => SubstituteBindings::class,
+            'can'        => Authorize::class,
             'guest'      => RedirectIfAuthenticated::class,
             'throttle'   => ThrottleRequests::class,
             'range'      => Range::class,

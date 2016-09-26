@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,7 +52,7 @@ class TransactionCurrency extends Model
      */
     public static function routeBinder(TransactionCurrency $currency)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             return $currency;
         }
         throw new NotFoundHttpException;

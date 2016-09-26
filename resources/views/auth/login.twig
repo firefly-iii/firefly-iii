@@ -33,7 +33,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
-                <input type="email" name="email" class="form-control" placeholder="Email"/>
+                <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="Email"/>
             </div>
             <div class="form-group has-feedback">
                 <input type="password" name="password" class="form-control" placeholder="Password"/>
@@ -42,7 +42,7 @@
                 <div class="col-xs-8">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="remember" value="1"> Remember Me
+                            <input type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1"> Remember Me
                         </label>
                     </div>
                 </div>

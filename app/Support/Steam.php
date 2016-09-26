@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
-use Auth;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
@@ -24,7 +23,6 @@ use FireflyIII\Models\Transaction;
  */
 class Steam
 {
-
 
 
     /**
@@ -51,7 +49,8 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
-        $balance = bcadd($balance, $account->virtual_balance);
+        $virtual = is_null($account->virtual_balance) ? '0' : strval($account->virtual_balance);
+        $balance = bcadd($balance, $virtual);
         $cache->store($balance);
 
         return $balance;
@@ -126,7 +125,8 @@ class Steam
                                   ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `modified`')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
-            $currentBalance         = bcadd($currentBalance, $entry->modified);
+            $modified               = is_null($entry->modified) ? '0' : strval($entry->modified);
+            $currentBalance         = bcadd($currentBalance, $modified);
             $balances[$entry->date] = $currentBalance;
         }
 
@@ -186,10 +186,10 @@ class Steam
     {
         $list = [];
 
-        $set = Auth::user()->transactions()
-                   ->whereIn('account_id', $accounts)
-                   ->groupBy('account_id')
-                   ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
+        $set = auth()->user()->transactions()
+                     ->whereIn('transactions.account_id', $accounts)
+                     ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
+                     ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
 
         foreach ($set as $entry) {
             $list[intval($entry->account_id)] = new Carbon($entry->max_date);

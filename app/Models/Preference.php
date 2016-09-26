@@ -42,7 +42,7 @@ class Preference extends Model
 {
 
     protected $dates    = ['created_at', 'updated_at'];
-    protected $fillable = ['user_id', 'data', 'name'];
+    protected $fillable = ['user_id', 'data', 'name','data'];
 
     /**
      * @param $value
@@ -55,7 +55,7 @@ class Preference extends Model
         try {
             $data = Crypt::decrypt($value);
         } catch (DecryptException $e) {
-            Log::error('Could not decrypt preference.', ['id' => $this->id, 'name' => $this->name, 'data' => $this->data]);
+            Log::error('Could not decrypt preference.', ['id' => $this->id, 'name' => $this->name, 'data' => $value]);
             throw new FireflyException('Could not decrypt preference #' . $this->id . '.');
         }
 

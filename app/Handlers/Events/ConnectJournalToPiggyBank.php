@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Auth;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
@@ -39,7 +38,7 @@ class ConnectJournalToPiggyBank
         $piggyBankId = $event->piggyBankId;
 
         /** @var PiggyBank $piggyBank */
-        $piggyBank = Auth::user()->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
+        $piggyBank = auth()->user()->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
 
         if (is_null($piggyBank)) {
             return true;

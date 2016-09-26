@@ -5,3 +5,4 @@ filter:
     excluded_paths:
         - app/Support/Migration/*
         - app/database/migrations/*
+        - database/migrations/*

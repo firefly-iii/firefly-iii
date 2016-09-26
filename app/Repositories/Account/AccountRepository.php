@@ -426,10 +426,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // that should do it:
         $fields   = TransactionJournal::queryFields();
-        $fields[] = 'source.account_id as source_account_id';
-        $fields[] = 'source.amount as source_amount';
-        $fields[] = 'destination.account_id as destination_account_id';
-        $fields[] = 'destination.amount as destination_amount';
         $complete = $query->get($fields);
 
         return $complete;
@@ -538,7 +534,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var HasMany $query */
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()
                             ->transactionTypes([TransactionType::WITHDRAWAL]);
         if ($end >= $start) {
             $query->before($end)->after($start);
@@ -559,6 +555,9 @@ class AccountRepository implements AccountRepositoryInterface
 
         // that should do it:
         $sum = strval($query->sum('destination.amount'));
+        if (is_null($sum)) {
+            $sum = '0';
+        }
         $sum = bcmul($sum, '-1');
 
         return $sum;
@@ -574,7 +573,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var HasMany $query */
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
+        $query = $this->user->transactionJournals()->expanded()
                             ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
         if ($end >= $start) {
             $query->before($end)->after($start);

@@ -1,4 +1,14 @@
 /**
+ * adding sorting ability to HTML tables with Bootstrap styling
+ * @summary HTML tables sorting ability
+ * @version 2.0.0
+ * @requires tinysort, moment.js, jQuery
+ * @license MIT
+ * @author Matus Brlit (drvic10k)
+ * @copyright Matus Brlit (drvic10k), bootstrap-sortable contributors
+ */
+
+/**
  * TinySort is a small script that sorts HTML elements. It sorts by text- or attribute value, or by that of one of it's children.
  * @summary A nodeElement sorting script.
  * @version 2.2.0
@@ -13,25 +23,42 @@
 
     var $document = $(document),
         signClass,
-        sortEngine;
+        sortEngine,
+        emptyEnd;
 
-    $.bootstrapSortable = function (applyLast, sign, customSort) {
+    $.bootstrapSortable = function (options) {
+        if (options == undefined) {
+            initialize({});
+        }
+        else if (options.constructor === Boolean) {
+            initialize({ applyLast: options });
+        }
+        else if (options.sortingHeader !== undefined) {
+            sortByColumn(options.sortingHeader);
+        }
+        else {
+            initialize(options);
+        }
+    };
 
+    function initialize(options) {
         // Check if moment.js is available
         var momentJsAvailable = (typeof moment !== 'undefined');
 
         // Set class based on sign parameter
-        signClass = !sign ? "arrow" : sign;
+        signClass = !options.sign ? "arrow" : options.sign;
 
         // Set sorting algorithm
-        if (customSort == 'default')
-            customSort = defaultSortEngine;
-        sortEngine = customSort || sortEngine || defaultSortEngine;
+        if (options.customSort == 'default')
+            options.customSort = defaultSortEngine;
+        sortEngine = options.customSort || sortEngine || defaultSortEngine;
+
+        emptyEnd = options.emptyEnd;
 
         // Set attributes needed for sorting
         $('table.sortable').each(function () {
             var $this = $(this);
-            applyLast = (applyLast === true);
+            var applyLast = (options.applyLast === true);
             $this.find('span.sign').remove();
 
             // Add placeholder cells for colspans
@@ -57,24 +84,46 @@
             // Set indexes to header cells
             $this.find('thead tr').each(function (rowIndex) {
                 $(this).find('th').each(function (columnIndex) {
-                    var $this = $(this);
-                    $this.addClass('nosort').removeClass('up down');
-                    $this.attr('data-sortcolumn', columnIndex);
-                    $this.attr('data-sortkey', columnIndex + '-' + rowIndex);
+                    var $header = $(this);
+                    $header.addClass('nosort').removeClass('up down');
+                    $header.attr('data-sortcolumn', columnIndex);
+                    $header.attr('data-sortkey', columnIndex + '-' + rowIndex);
                 });
             });
 
             // Cleanup placeholder cells
             $this.find('thead .rowspan-compensate, .colspan-compensate').remove();
 
+            // Initialize sorting values specified in header
+            $this.find('th').each(function () {
+                var $header = $(this);
+                if ($header.attr('data-dateformat') !== undefined && momentJsAvailable) {
+                    var colNumber = parseFloat($header.attr('data-sortcolumn'));
+                    $this.find('td:nth-child(' + (colNumber + 1) + ')').each(function () {
+                        var $cell = $(this);
+                        $cell.attr('data-value', moment($cell.text(), $header.attr('data-dateformat')).format('YYYY/MM/DD/HH/mm/ss'));
+                    });
+                }
+                else if ($header.attr('data-valueprovider') !== undefined) {
+                    var colNumber = parseFloat($header.attr('data-sortcolumn'));
+                    $this.find('td:nth-child(' + (colNumber + 1) + ')').each(function () {
+                        var $cell = $(this);
+                        $cell.attr('data-value', new RegExp($header.attr('data-valueprovider')).exec($cell.text())[0]);
+                    });
+                }
+            });
+
             // Initialize sorting values
             $this.find('td').each(function () {
-                var $this = $(this);
-                if ($this.attr('data-dateformat') !== undefined && momentJsAvailable) {
-                    $this.attr('data-value', moment($this.text(), $this.attr('data-dateformat')).format('YYYY/MM/DD/HH/mm/ss'));
+                var $cell = $(this);
+                if ($cell.attr('data-dateformat') !== undefined && momentJsAvailable) {
+                    $cell.attr('data-value', moment($cell.text(), $cell.attr('data-dateformat')).format('YYYY/MM/DD/HH/mm/ss'));
+                }
+                else if ($cell.attr('data-valueprovider') !== undefined) {
+                    $cell.attr('data-value', new RegExp($cell.attr('data-valueprovider')).exec($cell.text())[0]);
                 }
                 else {
-                    $this.attr('data-value') === undefined && $this.attr('data-value', $this.text());
+                    $cell.attr('data-value') === undefined && $cell.attr('data-value', $cell.text());
                 }
             });
 
@@ -82,28 +131,33 @@
                 bsSort = context.bsSort;
 
             $this.find('thead th[data-defaultsort!="disabled"]').each(function (index) {
-                var $this = $(this);
-                var $sortTable = $this.closest('table.sortable');
-                $this.data('sortTable', $sortTable);
-                var sortKey = $this.attr('data-sortkey');
+                var $header = $(this);
+                var $sortTable = $header.closest('table.sortable');
+                $header.data('sortTable', $sortTable);
+                var sortKey = $header.attr('data-sortkey');
                 var thisLastSort = applyLast ? context.lastSort : -1;
-                bsSort[sortKey] = applyLast ? bsSort[sortKey] : $this.attr('data-defaultsort');
+                bsSort[sortKey] = applyLast ? bsSort[sortKey] : $header.attr('data-defaultsort');
                 if (bsSort[sortKey] !== undefined && (applyLast === (sortKey === thisLastSort))) {
                     bsSort[sortKey] = bsSort[sortKey] === 'asc' ? 'desc' : 'asc';
-                    doSort($this, $sortTable);
+                    doSort($header, $sortTable);
                 }
             });
             $this.trigger('sorted');
         });
-    };
+    }
 
     // Add click event to table header
-    $document.on('click', 'table.sortable thead th[data-defaultsort!="disabled"]', function (e) {
-        var $this = $(this), $table = $this.data('sortTable') || $this.closest('table.sortable');
+    $document.on('click', 'table.sortable>thead th[data-defaultsort!="disabled"]', function (e) {
+        sortByColumn(this);
+    });
+
+    // element is the header of the column to sort (the clicked header)
+    function sortByColumn(element) {
+        var $this = $(element), $table = $this.data('sortTable') || $this.closest('table.sortable');
         $table.trigger('before-sort');
         doSort($this, $table);
         $table.trigger('sorted');
-    });
+    }
 
     // Look up sorting data appropriate for the specified table (jQuery element).
     // This allows multiple tables on one page without collisions.
@@ -173,8 +227,13 @@
         var sortKey = $this.attr('data-sortkey');
         var initialDirection = $this.attr('data-firstsort') !== 'desc' ? 'desc' : 'asc';
 
+        var newDirection = (bsSort[sortKey] || initialDirection);
+        if (context.lastSort === sortKey || bsSort[sortKey] === undefined) {
+            newDirection = newDirection === 'asc' ? 'desc' : 'asc';
+        }
+        bsSort[sortKey] = newDirection;
         context.lastSort = sortKey;
-        bsSort[sortKey] = (bsSort[sortKey] || initialDirection) === 'asc' ? 'desc' : 'asc';
+
         if (bsSort[sortKey] === 'desc') {
             $this.find('span.sign').addClass('up');
             $this.addClass('up').removeClass('down nosort');
@@ -182,13 +241,34 @@
             $this.addClass('down').removeClass('up nosort');
         }
 
-        // sort rows
+        // remove rows that should not be sorted
         var rows = $table.children('tbody').children('tr');
-        sortEngine(rows, { selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value' });
+        var fixedRows = [];
+        $(rows.filter('[data-disablesort="true"]').get().reverse()).each(function (index, fixedRow) {
+            var $fixedRow = $(fixedRow);
+            fixedRows.push({ index: rows.index($fixedRow), row: $fixedRow });
+            $fixedRow.remove();
+        });
+
+        // sort rows
+        var rowsToSort = rows.not('[data-disablesort="true"]');
+        if (rowsToSort.length != 0) {
+            var emptySorting = bsSort[sortKey] === 'asc' ? emptyEnd : false;
+            sortEngine(rowsToSort, { emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value' });
+        }
+
+        // add back the fixed rows
+        $(fixedRows.reverse()).each(function (index, row) {
+            if (row.index === 0) {
+                $table.children('tbody').prepend(row.row);
+            } else {
+                $table.children('tbody').children('tr').eq(row.index - 1).after(row.row);
+            }
+        });
 
         // add class to sorted column cells
         $table.find('td.sorted, th.sorted').removeClass('sorted');
-        rows.find('td:eq(' + sortColumn + ')').addClass('sorted');
+        rowsToSort.find('td:eq(' + sortColumn + ')').addClass('sorted');
         $this.addClass('sorted');
     }
 

@@ -13,6 +13,7 @@ namespace FireflyIII\Rules\Triggers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class FromAccountContains
@@ -41,8 +42,14 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return strval($value) === '';
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
+        Log::error(sprintf('Cannot use %s with a null value.', self::class));
 
         return true;
     }
@@ -65,8 +72,17 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         $strpos = strpos($fromAccountName, $search);
 
         if (!($strpos === false)) {
+
+            Log::debug(sprintf('RuleTrigger FromAccountContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $fromAccountName, $search));
+
             return true;
         }
+
+        Log::debug(
+            sprintf(
+                'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
+                $journal->id, $fromAccountName, $search)
+        );
 
         return false;
 

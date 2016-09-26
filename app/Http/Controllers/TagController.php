@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
@@ -194,7 +193,7 @@ class TagController extends Controller
         foreach ($types as $type) {
 
             /** @var Collection $tags */
-            $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
+            $tags = auth()->user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
             $tags = $tags->sortBy(
                 function (Tag $tag) {
                     $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
@@ -218,18 +217,17 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag                    $tag
+     * @param TagRepositoryInterface $repository
      *
      * @return View
      */
-    public function show(Tag $tag)
+    public function show(Tag $tag, TagRepositoryInterface $repository)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        /** @var Collection $journals */
-        $journals = $tag->transactionJournals()->sortCorrectly()->expanded()->get(TransactionJournal::queryFields());
-
-        $sum = $journals->sum(
+        $journals     = $repository->getJournals($tag);
+        $sum          = $journals->sum(
             function (TransactionJournal $journal) {
                 return TransactionJournal::amount($journal);
             }

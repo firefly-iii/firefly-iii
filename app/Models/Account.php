@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -153,8 +152,8 @@ class Account extends Model
     public static function routeBinder(Account $value)
     {
 
-        if (Auth::check()) {
-            if ($value->user_id == Auth::user()->id) {
+        if (auth()->check()) {
+            if ($value->user_id == auth()->user()->id) {
                 return $value;
             }
         }

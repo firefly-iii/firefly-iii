@@ -13,8 +13,10 @@ namespace FireflyIII\Console;
 
 use FireflyIII\Console\Commands\EncryptFile;
 use FireflyIII\Console\Commands\Import;
+use FireflyIII\Console\Commands\ScanAttachments;
 use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
 use FireflyIII\Console\Commands\VerifyDatabase;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /**
@@ -24,11 +26,10 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
  */
 class Kernel extends ConsoleKernel
 {
-
     /**
      * The bootstrap classes for the application.
      *
-     * This needs to be for with the next upgrade.
+     * Next upgrade verify these are the same.
      *
      * @var array
      */
@@ -55,5 +56,28 @@ class Kernel extends ConsoleKernel
             VerifyDatabase::class,
             Import::class,
             EncryptFile::class,
+            ScanAttachments::class,
+
         ];
+
+    /**
+     * Register the Closure based commands for the application.
+     *
+     * @return void
+     */
+    protected function commands()
+    {
+        require base_path('routes/console.php');
+    }
+
+    /**
+     * Define the application's command schedule.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     *
+     * @return void
+     */
+    protected function schedule(Schedule $schedule)
+    {
+    }
 }

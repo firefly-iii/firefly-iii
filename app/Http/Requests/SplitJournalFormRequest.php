@@ -11,7 +11,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Auth;
 use Carbon\Carbon;
 
 
@@ -28,7 +27,7 @@ class SplitJournalFormRequest extends Request
     public function authorize(): bool
     {
         // Only allow logged in users
-        return Auth::check();
+        return auth()->check();
     }
 
     /**

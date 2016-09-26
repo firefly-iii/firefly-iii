@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Importer;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\ImportEntry;
 use FireflyIII\Import\Specifics\SpecificInterface;
@@ -31,12 +32,15 @@ class CsvImporter implements ImporterInterface
     /** @var  ImportJob */
     public $job;
 
+    public $validSpecifics = [];
+
     /**
      * CsvImporter constructor.
      */
     public function __construct()
     {
-        $this->collection = new Collection;
+        $this->collection     = new Collection;
+        $this->validSpecifics = array_keys(config('csv.import_specifics'));
     }
 
     /**
@@ -111,6 +115,11 @@ class CsvImporter implements ImporterInterface
 
         // and this is the point where the specifix go to work.
         foreach ($config['specifics'] as $name => $enabled) {
+
+            if (!in_array($name, $this->validSpecifics)) {
+                throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
+            }
+
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
 
@@ -120,12 +129,19 @@ class CsvImporter implements ImporterInterface
 
         foreach ($row as $rowIndex => $value) {
             // find the role for this column:
-            $role           = $config['column-roles'][$rowIndex] ?? '_ignore';
-            $doMap          = $config['column-do-mapping'][$rowIndex] ?? false;
+            $role            = $config['column-roles'][$rowIndex] ?? '_ignore';
+            $doMap           = $config['column-do-mapping'][$rowIndex] ?? false;
+            $validConverters = array_keys(config('csv.import_roles'));
+
+            // throw error when not a valid converter.
+            if (!in_array($role, $validConverters)) {
+                throw new FireflyException(sprintf('"%s" is not a valid role.', $role));
+            }
             $converterClass = config('csv.import_roles.' . $role . '.converter');
             $mapping        = $config['column-mapping-config'][$rowIndex] ?? [];
+            $className      = sprintf('FireflyIII\\Import\\Converter\\%s', $converterClass);
             /** @var ConverterInterface $converter */
-            $converter = app('FireflyIII\\Import\\Converter\\' . $converterClass);
+            $converter = app($className);
             // set some useful values for the converter:
             $converter->setMapping($mapping);
             $converter->setDoMap($doMap);

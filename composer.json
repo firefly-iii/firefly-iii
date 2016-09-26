@@ -26,26 +26,27 @@
     }
   ],
   "require": {
-    "laravel/framework": "5.2.*",
-    "davejamesmiller/laravel-breadcrumbs": "~3.0",
-    "watson/validating": "~2.0",
-    "doctrine/dbal": "~2.5",
-    "league/commonmark": "~0.7",
-    "rcrowe/twigbridge": "~0.9",
-    "league/csv": "^7.1",
-    "laravelcollective/html": "^5.2",
+    "php": ">=7.0.0",
+    "laravel/framework": "5.3.*",
+    "davejamesmiller/laravel-breadcrumbs": "^3.0",
+    "watson/validating": "^3.0",
+    "doctrine/dbal": "^2.5",
+    "league/commonmark": "^0.15.0",
+    "rcrowe/twigbridge": "^0.9.3",
+    "league/csv": "^8.1",
+    "laravelcollective/html": "^5.3",
     "rmccue/requests": "^1.6",
-    "pragmarx/google2fa": "^0.7.1"
+    "pragmarx/google2fa": "^1.0",
+    "barryvdh/laravel-debugbar": "^2.2",
+    "barryvdh/laravel-ide-helper": "^2.2",
+    "bacon/bacon-qr-code": "^1.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
-    "mockery/mockery": "dev-master",
-    "phpunit/phpunit": "~4.0",
-    "symfony/css-selector": "2.8.*|3.0.*",
-    "symfony/dom-crawler": "2.8.*|3.0.*",
-    "barryvdh/laravel-debugbar": "@stable",
-    "barryvdh/laravel-ide-helper": "~2.0",
-    "hamcrest/hamcrest-php": "^2.0@dev"
+    "mockery/mockery": "0.9.*",
+    "phpunit/phpunit": "~5.0",
+    "symfony/css-selector": "3.1.*",
+    "symfony/dom-crawler": "3.1.*"
   },
   "autoload": {
     "classmap": [
@@ -62,25 +63,20 @@
   },
   "scripts": {
     "post-root-package-install": [
-      "php -r \"copy('.env.example', '.env');\""
+      "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "post-create-project-cmd": [
       "php artisan key:generate"
     ],
     "post-install-cmd": [
-      "php artisan cache:clear",
-      "php artisan clear-compiled",
-      "php artisan optimize",
-      "php artisan firefly:upgrade-instructions"
-    ],
-    "pre-update-cmd": [
-      "php artisan clear-compiled"
+      "Illuminate\\Foundation\\ComposerScripts::postInstall",
+      "php artisan optimize"
     ],
     "post-update-cmd": [
-      "php artisan cache:clear",
-      "php artisan optimize",
+      "Illuminate\\Foundation\\ComposerScripts::postUpdate",
       "php artisan firefly:upgrade-instructions",
-      "php artisan firefly:verify"
+      "php artisan firefly:verify",
+      "php artisan optimize"
     ]
   },
   "config": {
