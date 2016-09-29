@@ -50,8 +50,14 @@ class AbnAmroDescription implements SpecificInterface
     public function run(array $row): array
     {
         $this->row = $row;
+
+        if (!isset($row[7])) {
+            return $row;
+        }
+
         // Try to parse the description in known formats.
         $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
+
 
         // If the description could not be parsed, specify an unknown opposing
         // account, as an opposing account is required
