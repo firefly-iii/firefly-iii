@@ -64,8 +64,8 @@ class JournalFormRequest extends Request
             'due_date'                  => $this->getDateOrNull('due_date'),
             'payment_date'              => $this->getDateOrNull('payment_date'),
             'invoice_date'              => $this->getDateOrNull('invoice_date'),
-            'internal_reference'        => trim($this->get('internal_reference')),
-            'notes'                     => trim($this->get('notes')),
+            'internal_reference'        => trim(strval($this->get('internal_reference'))),
+            'notes'                     => trim(strval($this->get('notes'))),
 
         ];
     }
