@@ -189,22 +189,22 @@ class BillRepository implements BillRepositoryInterface
                    'bills.active',
                    'bills.name_encrypted',
                    'bills.match_encrypted'];
-        $ids = $accounts->pluck('id')->toArray();
-        $set = $this->user->bills()
-                          ->leftJoin(
-                              'transaction_journals', function (JoinClause $join) {
-                              $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
-                          }
-                          )
-                          ->leftJoin(
-                              'transactions', function (JoinClause $join) {
-                              $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                          }
-                          )
-                          ->whereIn('transactions.account_id', $ids)
-                          ->whereNull('transaction_journals.deleted_at')
-                          ->groupBy($fields)
-                          ->get($fields);
+        $ids    = $accounts->pluck('id')->toArray();
+        $set    = $this->user->bills()
+                             ->leftJoin(
+                                 'transaction_journals', function (JoinClause $join) {
+                                 $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
+                             }
+                             )
+                             ->leftJoin(
+                                 'transactions', function (JoinClause $join) {
+                                 $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                             }
+                             )
+                             ->whereIn('transactions.account_id', $ids)
+                             ->whereNull('transaction_journals.deleted_at')
+                             ->groupBy($fields)
+                             ->get($fields);
 
         $set = $set->sortBy(
             function (Bill $bill) {
