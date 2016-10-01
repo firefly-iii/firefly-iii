@@ -295,14 +295,14 @@ class AccountController extends Controller
     public function store(AccountFormRequest $request, AccountCrudInterface $crud)
     {
         $accountData = [
-            'name'                   => $request->input('name'),
+            'name'                   => trim($request->input('name')),
             'accountType'            => $request->input('what'),
             'virtualBalance'         => round($request->input('virtualBalance'), 2),
             'virtualBalanceCurrency' => intval($request->input('amount_currency_id_virtualBalance')),
             'active'                 => true,
             'user'                   => auth()->user()->id,
-            'iban'                   => $request->input('iban'),
-            'accountNumber'          => $request->input('accountNumber'),
+            'iban'                   => trim($request->input('iban')),
+            'accountNumber'          => trim($request->input('accountNumber')),
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => round($request->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),

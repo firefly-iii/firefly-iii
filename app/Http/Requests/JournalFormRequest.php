@@ -43,11 +43,11 @@ class JournalFormRequest extends Request
 
         return [
             'what'                      => $this->get('what'),
-            'description'               => $this->get('description'),
+            'description'               => trim($this->get('description')),
             'source_account_id'         => intval($this->get('source_account_id')),
-            'source_account_name'       => $this->getFieldOrEmptyString('source_account_name'),
+            'source_account_name'       => trim($this->getFieldOrEmptyString('source_account_name')),
             'destination_account_id'    => intval($this->get('destination_account_id')),
-            'destination_account_name'  => $this->getFieldOrEmptyString('destination_account_name'),
+            'destination_account_name'  => trim($this->getFieldOrEmptyString('destination_account_name')),
             'amount'                    => round($this->get('amount'), 2),
             'user'                      => auth()->user()->id,
             'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
@@ -56,7 +56,7 @@ class JournalFormRequest extends Request
             'book_date'                 => $this->getDateOrNull('book_date'),
             'process_date'              => $this->getDateOrNull('process_date'),
             'budget_id'                 => intval($this->get('budget_id')),
-            'category'                  => $this->getFieldOrEmptyString('category'),
+            'category'                  => trim($this->getFieldOrEmptyString('category')),
             'tags'                      => explode(',', $tags),
             'piggy_bank_id'             => intval($this->get('piggy_bank_id')),
 
@@ -64,8 +64,8 @@ class JournalFormRequest extends Request
             'due_date'                  => $this->getDateOrNull('due_date'),
             'payment_date'              => $this->getDateOrNull('payment_date'),
             'invoice_date'              => $this->getDateOrNull('invoice_date'),
-            'internal_reference'        => $this->get('internal_reference'),
-            'notes'                     => $this->get('notes'),
+            'internal_reference'        => trim($this->get('internal_reference')),
+            'notes'                     => trim($this->get('notes')),
 
         ];
     }

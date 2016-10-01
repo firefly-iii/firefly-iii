@@ -263,7 +263,7 @@ class CategoryController extends Controller
     public function store(CategoryFormRequest $request, CRI $repository)
     {
         $categoryData = [
-            'name' => $request->input('name'),
+            'name' => trim($request->input('name')),
             'user' => auth()->user()->id,
         ];
         $category     = $repository->store($categoryData);
