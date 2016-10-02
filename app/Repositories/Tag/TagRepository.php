@@ -143,7 +143,7 @@ class TagRepository implements TagRepositoryInterface
             ->transactionJournals()
             ->sortCorrectly()
             ->expanded()
-            ->groupBy(['tag_transaction_journal.tag_id'])
+            ->groupBy(['tag_transaction_journal.tag_id','tag_transaction_journal.transaction_journal_id'])
             ->get(TransactionJournal::queryFields());
 
         return $journals;

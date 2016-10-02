@@ -181,13 +181,13 @@ class ImportValidator
             Log::debug(sprintf('No account named %s of type %s, create new account.', $account->name, $type));
             $result = $repository->store(
                 [
-                    'user'            => $this->user->id,
-                    'accountType'     => config('firefly.shortNamesByFullName.' . $type),
-                    'name'            => $account->name,
+                    'user'           => $this->user->id,
+                    'accountType'    => config('firefly.shortNamesByFullName.' . $type),
+                    'name'           => $account->name,
                     'virtualBalance' => 0,
-                    'active'          => true,
-                    'iban'            => null,
-                    'openingBalance'  => 0,
+                    'active'         => true,
+                    'iban'           => null,
+                    'openingBalance' => 0,
                 ]
             );
         }
@@ -262,6 +262,7 @@ class ImportValidator
             $entry->valid = false;
             Log::warning('Cannot import entry. Asset account is NULL and import account is also NULL.');
 
+            return $entry;
         }
         Log::debug('Asset account is OK.', ['id' => $entry->fields['asset-account']->id, 'name' => $entry->fields['asset-account']->name]);
 
