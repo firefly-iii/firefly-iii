@@ -2,7 +2,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.0.0] - 2015-05-25
+## [4.0.1] - 2016-10-04
+### Added
+- New ING import specific by @tomwerf
+- New Presidents Choice specific to fix #307
+- Added some trimming (#335)
+
+### Changed
+- Initial release.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Fixed a bug where incoming transactions would not be properly filtered in several reports.
+- #334 by @cyberkov
+- #337
+- #336
+- #338 found by @roberthorlings
+
+### Security
+- Initial release.
+
+
+
+
+## [4.0.0] - 2015-09-26
 ### Added
 - Upgraded to Laravel 5.3, most other libraries upgraded as well.
 - Added GBP as currency, thanks to @Mortalife
