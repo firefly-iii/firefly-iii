@@ -29,7 +29,6 @@ class Description extends BasicConverter implements ConverterInterface
         // this should replace all control characters
         // but leave utf8 intact:
         $value = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $value);
-	$value = $value;
         $this->setCertainty(100);
 
         return strval($value);
