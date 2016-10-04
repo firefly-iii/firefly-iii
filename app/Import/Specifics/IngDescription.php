@@ -16,7 +16,9 @@ namespace FireflyIII\Import\Specifics;
  *
  * Parses the description from CSV files for Ing bank accounts.
  *
- * With Mutation 'InternetBankieren', 'Incasso' and Overschrijving remove Name and IBAN from description
+ * With Mutation 'InternetBankieren', 'Overschrijving', 'Verzamelbetaling' and 'Incasso' the
+ * Name of Opposing account the Opposing IBAN number are in the Description
+ * This class will remove them
  * Add Name in description by 'Betaalautomaat' so those are easily recognizable
  *
  * @package FireflyIII\Import\Specifics
@@ -31,7 +33,7 @@ class IngDescription implements SpecificInterface
      */
     public static function getDescription(): string
     {
-        return 'Fixes Ing descriptions.';
+        return 'Create better descriptions in ING import files.';
     }
 
     /**
@@ -39,7 +41,7 @@ class IngDescription implements SpecificInterface
      */
     public static function getName(): string
     {
-        return 'Ing description';
+        return 'ING description';
     }
 
     /**
@@ -50,56 +52,56 @@ class IngDescription implements SpecificInterface
     public function run(array $row): array
     {
         $this->row = $row;
-        if (count($this->row) >= 8) { // check if the array is correct
-            switch ($this->row[4]) { //update Decription only for the next Mutations
-                case 'GT': // InternetBanieren
-                case 'OV': // OV
-                case 'VZ': // Verzamelbetaling
-                case 'IC'://Incasso
+        if (count($this->row) >= 8) {                    // check if the array is correct
+            switch ($this->row[4]) {                     // Get value for the mutation type
+                case 'GT':                               // InternetBanieren
+                case 'OV':                               // Overschrijving
+                case 'VZ':                               // Verzamelbetaling
+                case 'IC':                               // Incasso
                     $this->removeIBANIngDescription();
                     $this->removeNameIngDescription();
                     break;
-                case 'BA' ://Betaalautomaat
+                case 'BA' :                              // Betaalautomaat
                     $this->addNameIngDescription();
                     break;
             }
         }
 
-//var_dump($this->row);die;
-
         return $this->row;
     }
 
     /**
-     * Parses the current description without the IBAN in the description 
+     * Remove IBAN number out of the  description
+     * Default description of Description is: Naam: <OPPOS NAME> Omschrijving: <DESCRIPTION> IBAN: <OPPOS IBAN NR>
      *
-     * @return always true
+     * @return bool true
      */
     protected function removeIBANIngDescription()
     {
-        // Try remove the iban number from the third cell 'IBAN: NL00XXXX0000000 '
+        // Try replace the iban number with nothing. The IBAN nr is found in the third row
         $this->row[8] = preg_replace('/\sIBAN:\s'.$this->row[3].'/', '', $this->row[8]);
         return true;
     }
 
 
     /**
-     * Parses the current description without the name 
+     * Remove name from the description (Remove everything before the description incl the word 'Omschrijving' )
      *
-     * @return bool always true
+     * @return bool true
      */
     protected function removeNameIngDescription()
     {
-        // Try remove the name
+        // Try remove everything bevore the 'Omschrijving'
         $this->row[8] = preg_replace('/.+Omschrijving: /', '', $this->row[8]);
         return true;
     }
 
 
     /**
-     * Parses the current description without the name and IBAN
+     * Add the Opposing name from cell 1 in the description for Betaalautomaten
+     * Otherwise the description is only: 'Pasvolgnr:<nr> <date> Transactie:<NR> Term:<nr>'
      *
-     * @return bool true if the description is GEA/BEA-format, false otherwise
+     * @return bool true
      */
     protected function addNameIngDescription()
     {
