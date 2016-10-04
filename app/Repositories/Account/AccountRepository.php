@@ -377,7 +377,10 @@ class AccountRepository implements AccountRepositoryInterface
                  * The destination of a transfer must be one of the $accounts in order to
                  * be included. Otherwise, it would not be income.
                  */
-                if (in_array($journal->destination_account_id, $accountIds)) {
+                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
+
+                if (count(array_intersect($destinations, $accountIds)) > 0) {
+                    // at least one of $target is in $haystack
                     return true;
                 }
 

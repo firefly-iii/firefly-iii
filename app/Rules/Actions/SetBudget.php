@@ -48,7 +48,7 @@ class SetBudget implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
+        $repository = app(BudgetRepositoryInterface::class, [$journal->user]);
         $search     = $this->action->action_value;
         $budgets    = $repository->getActiveBudgets();
         $budget     = $budgets->filter(

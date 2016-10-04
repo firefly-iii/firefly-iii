@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -59,12 +60,12 @@ class TransactionController extends Controller
      */
     public function create(string $what = TransactionType::DEPOSIT)
     {
-        $crud             = app('FireflyIII\Crud\Account\AccountCrudInterface');
+        $crud             = app(AccountCrudInterface::class);
         $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $what             = strtolower($what);
         $uploadSize       = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts    = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
+        $assetAccounts    = ExpandedForm::makeSelectList($crud->getActiveAccountsByType(['Default account', 'Asset account']));
         $budgets          = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
         $piggyBanks       = $piggyRepository->getPiggyBanksWithAmount();
         $piggies          = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
