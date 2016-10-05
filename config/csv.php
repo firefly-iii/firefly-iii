@@ -8,6 +8,7 @@ return [
      * Configuration for the CSV specifics.
      */
     'import_specifics' => [
+        'IngDescription'      => 'FireflyIII\Import\Specifics\IngDescription',
         'RabobankDescription' => 'FireflyIII\Import\Specifics\RabobankDescription',
         'AbnAmroDescription'  => 'FireflyIII\Import\Specifics\AbnAmroDescription',
         'PresidentsChoice'    => 'FireflyIII\Import\Specifics\PresidentsChoice',
