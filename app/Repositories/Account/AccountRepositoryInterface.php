@@ -80,15 +80,6 @@ interface AccountRepositoryInterface
     public function firstUseDate(Account $account): Carbon;
 
     /**
-     * Gets all the accounts by ID, for a given set.
-     *
-     * @param array $ids
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function get(array $ids): Collection;
-
-    /**
      * @param TransactionJournal $journal
      * @param Account            $account
      *

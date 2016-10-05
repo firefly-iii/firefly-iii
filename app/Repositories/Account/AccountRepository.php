@@ -228,18 +228,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Gets all the accounts by ID, for a given set.
-     *
-     * @param array $ids
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function get(array $ids): Collection
-    {
-        return $this->user->accounts()->whereIn('id', $ids)->get(['accounts.*']);
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param Account            $account
      *

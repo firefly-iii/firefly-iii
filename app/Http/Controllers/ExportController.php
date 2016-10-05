@@ -22,7 +22,6 @@ use FireflyIII\Export\Processor;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
 use Preferences;
 use Response;
@@ -117,20 +116,20 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportFormRequest $request
-     * @param ARI               $repository
+     * @param ExportFormRequest    $request
+     * @param AccountCrudInterface $crud
      *
-     * @param EJRI              $jobs
+     * @param EJRI                 $jobs
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function postIndex(ExportFormRequest $request, ARI $repository, EJRI $jobs)
+    public function postIndex(ExportFormRequest $request, AccountCrudInterface $crud, EJRI $jobs)
     {
         set_time_limit(0);
         $job      = $jobs->findByKey($request->get('job'));
         $settings = [
-            'accounts'           => $repository->get($request->get('accounts')),
+            'accounts'           => $crud->getAccountsById($request->get('accounts')),
             'startDate'          => new Carbon($request->get('export_start_range')),
             'endDate'            => new Carbon($request->get('export_end_range')),
             'exportFormat'       => $request->get('exportFormat'),
