@@ -128,7 +128,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
                      ->get(
                          [
                              't_destination.account_id',
-                             DB::raw('SUM(`t_destination`.`amount`) as `sum`'),
+                             DB::raw('SUM(t_destination.amount) AS sum'),
                          ]
                      );
 

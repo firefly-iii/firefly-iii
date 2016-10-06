@@ -139,6 +139,6 @@ class AccountReportHelper implements AccountReportHelperInterface
                       ->whereNull('transactions.deleted_at')
                       ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                       ->groupBy('accounts.id')
-                      ->get(['accounts.id', DB::raw('SUM(`transactions`.`amount`) as `balance`')]);
+                      ->get(['accounts.id', DB::raw('SUM(transactions.amount) AS balance')]);
     }
 }
