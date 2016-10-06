@@ -185,7 +185,7 @@ class ImportStorage
                    ->where('rules.active', 1)
                    ->orderBy('rule_groups.order', 'ASC')
                    ->orderBy('rules.order', 'ASC')
-                   ->get(['rules.*']);
+                   ->get(['rules.*', 'rule_groups.order']);
         Log::debug(sprintf('Found %d user rules.', $set->count()));
 
         return $set;
