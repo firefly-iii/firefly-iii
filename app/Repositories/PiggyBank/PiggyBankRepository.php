@@ -200,6 +200,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         // remove money from the rep.
         $repetition = $piggyBank->currentRelevantRep();
         if ($repetition->currentamount > $piggyBank->targetamount) {
+
+            $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
+            $this->createEvent($piggyBank, $diff);
+
             $repetition->currentamount = $piggyBank->targetamount;
             $repetition->save();
         }
