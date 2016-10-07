@@ -22,8 +22,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Steam;
@@ -415,23 +415,23 @@ class AccountRepository implements AccountRepositoryInterface
             }
             );
             $query->where(
-                // source.account_id in accountIds XOR destination.account_id in accountIds
-                function (Builder $sourceXorDestinationQuery) use ($accountIds) {
-                    $sourceXorDestinationQuery->where(
-                        function (Builder $inSourceButNotDestinationQuery) use ($accountIds) {
-                            $inSourceButNotDestinationQuery->whereIn('source.account_id', $accountIds)
-                                                           ->whereNotIn('destination.account_id', $accountIds);
+            // source.account_id in accountIds XOR destination.account_id in accountIds
+                function (Builder $query) use ($accountIds) {
+                    $query->where(
+                        function (Builder $q1) use ($accountIds) {
+                            $q1->whereIn('source.account_id', $accountIds)
+                               ->whereNotIn('destination.account_id', $accountIds);
                         }
                     )->orWhere(
-                        function (Builder $inDestinationButNotSourceQuery) use ($accountIds) {
-                            $inDestinationButNotSourceQuery->whereIn('destination.account_id', $accountIds)
-                                                           ->whereNotIn('source.account_id', $accountIds);
+                        function (Builder $q2) use ($accountIds) {
+                            $q2->whereIn('destination.account_id', $accountIds)
+                               ->whereNotIn('source.account_id', $accountIds);
                         }
                     );
                 }
             );
         }
-        
+
         // that should do it:
         $fields   = TransactionJournal::queryFields();
         $complete = $query->get($fields);

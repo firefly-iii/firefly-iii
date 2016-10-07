@@ -36,13 +36,6 @@ interface TagRepositoryInterface
     public function connect(TransactionJournal $journal, Tag $tag): bool;
 
     /**
-     * @param Tag $tag
-     *
-     * @return Collection
-     */
-    public function getJournals(Tag $tag) : Collection;
-
-    /**
      * This method destroys a tag.
      *
      * @param Tag $tag
@@ -71,6 +64,13 @@ interface TagRepositoryInterface
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Collection
+     */
+    public function getJournals(Tag $tag) : Collection;
 
     /**
      * This method stores a tag.

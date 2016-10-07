@@ -83,7 +83,8 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         Log::debug(
             sprintf(
                 'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
-                $journal->id, $fromAccountName, $search)
+                $journal->id, $fromAccountName, $search
+            )
         );
 
         return false;

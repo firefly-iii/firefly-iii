@@ -44,7 +44,7 @@ class Preference extends Model
 {
 
     protected $dates    = ['created_at', 'updated_at'];
-    protected $fillable = ['user_id', 'data', 'name','data'];
+    protected $fillable = ['user_id', 'data', 'name', 'data'];
 
     /**
      * @param $value

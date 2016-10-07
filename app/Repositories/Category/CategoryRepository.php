@@ -489,17 +489,17 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $query->where(
-                // source.account_id in accountIds XOR destination.account_id in accountIds
-                function (Builder $sourceXorDestinationQuery) use ($accountIds) {
-                    $sourceXorDestinationQuery->where(
-                        function (Builder $inSourceButNotDestinationQuery) use ($accountIds) {
-                            $inSourceButNotDestinationQuery->whereIn('source.account_id', $accountIds)
-                                                           ->whereNotIn('destination.account_id', $accountIds);
+            // source.account_id in accountIds XOR destination.account_id in accountIds
+                function (Builder $query) use ($accountIds) {
+                    $query->where(
+                        function (Builder $q1) use ($accountIds) {
+                            $q1->whereIn('source.account_id', $accountIds)
+                               ->whereNotIn('destination.account_id', $accountIds);
                         }
                     )->orWhere(
-                        function (Builder $inDestinationButNotSourceQuery) use ($accountIds) {
-                            $inDestinationButNotSourceQuery->whereIn('destination.account_id', $accountIds)
-                                                           ->whereNotIn('source.account_id', $accountIds);
+                        function (Builder $q2) use ($accountIds) {
+                            $q2->whereIn('destination.account_id', $accountIds)
+                               ->whereNotIn('source.account_id', $accountIds);
                         }
                     );
                 }

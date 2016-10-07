@@ -257,17 +257,17 @@ class ReportHelper implements ReportHelperInterface
                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                          ->where(
-                             // source.account_id in accountIds XOR destination.account_id in accountIds
-                             function (Builder $sourceXorDestinationQuery) use ($ids) {
-                                 $sourceXorDestinationQuery->where(
-                                     function (Builder $inSourceButNotDestinationQuery) use ($ids) {
-                                         $inSourceButNotDestinationQuery->whereIn('source.account_id', $ids)
-                                                                        ->whereNotIn('destination.account_id', $ids);
+                         // source.account_id in accountIds XOR destination.account_id in accountIds
+                             function (Builder $query) use ($ids) {
+                                 $query->where(
+                                     function (Builder $q1) use ($ids) {
+                                         $q1->whereIn('source.account_id', $ids)
+                                            ->whereNotIn('destination.account_id', $ids);
                                      }
                                  )->orWhere(
-                                     function (Builder $inDestinationButNotSourceQuery) use ($ids) {
-                                         $inDestinationButNotSourceQuery->whereIn('destination.account_id', $ids)
-                                                                        ->whereNotIn('source.account_id', $ids);
+                                     function (Builder $q2) use ($ids) {
+                                         $q2->whereIn('destination.account_id', $ids)
+                                            ->whereNotIn('source.account_id', $ids);
                                      }
                                  );
                              }

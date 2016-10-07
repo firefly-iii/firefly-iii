@@ -41,7 +41,7 @@ class Amount extends BasicConverter implements ConverterInterface
         }
         if ($len > 2 && $value{$decimalPosition} == ',') {
             $decimal = ',';
-        } 
+        }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ($decimal === '.') {

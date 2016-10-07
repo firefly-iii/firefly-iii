@@ -71,7 +71,7 @@ interface CategoryRepositoryInterface
     public function findByName(string $name) : Category;
 
     /**
-     * @param Category   $category
+     * @param Category $category
      *
      * @return Carbon
      */
