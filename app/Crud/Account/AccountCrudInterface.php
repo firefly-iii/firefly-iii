@@ -108,11 +108,4 @@ interface AccountCrudInterface
      */
     public function update(Account $account, array $data): Account;
 
-    /**
-     * @param Account $account
-     * @param string  $type
-     *
-     * @return Account
-     */
-    public function updateAccountType(Account $account, string $type): Account;
 }

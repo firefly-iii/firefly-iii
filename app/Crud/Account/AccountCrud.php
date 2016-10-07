@@ -119,7 +119,7 @@ class AccountCrud implements AccountCrudInterface
      */
     public function findByIban(string $iban, array $types): Account
     {
-        $query = $this->user->accounts()->where('iban', '!=', '');
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
         if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -176,11 +176,7 @@ class AccountCrud implements AccountCrudInterface
     public function getAccountsById(array $accountIds): Collection
     {
         /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        );
+        $query = $this->user->accounts();
 
         if (count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
@@ -204,11 +200,7 @@ class AccountCrud implements AccountCrudInterface
     public function getAccountsByType(array $types): Collection
     {
         /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        );
+        $query = $this->user->accounts();
         if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
@@ -301,24 +293,6 @@ class AccountCrud implements AccountCrudInterface
         $this->updateInitialBalance($account, $data);
 
         return $account;
-    }
-
-    /**
-     * @param Account $account
-     * @param string  $type
-     *
-     * @return Account
-     */
-    public function updateAccountType(Account $account, string $type): Account
-    {
-        $type = AccountType::whereType($type)->first();
-        if (!is_null($type)) {
-            $account->accountType()->associate($type);
-            $account->save();
-        }
-
-        return $this->find($account->id);
-
     }
 
     /**

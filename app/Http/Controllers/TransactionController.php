@@ -62,6 +62,7 @@ class TransactionController extends Controller
      */
     public function create(string $what = TransactionType::DEPOSIT)
     {
+        /** @var AccountCrudInterface $crud */
         $crud             = app(AccountCrudInterface::class);
         $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
