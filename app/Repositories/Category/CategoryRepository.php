@@ -18,6 +18,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -487,9 +488,22 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $set        = join(', ', $accountIds);
-            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
-
+            $query->where(
+                // source.account_id in accountIds XOR destination.account_id in accountIds
+                function (Builder $sourceXorDestinationQuery) use ($accountIds) {
+                    $sourceXorDestinationQuery->where(
+                        function (Builder $inSourceButNotDestinationQuery) use ($accountIds) {
+                            $inSourceButNotDestinationQuery->whereIn('source.account_id', $accountIds)
+                                                           ->whereNotIn('destination.account_id', $accountIds);
+                        }
+                    )->orWhere(
+                        function (Builder $inDestinationButNotSourceQuery) use ($accountIds) {
+                            $inDestinationButNotSourceQuery->whereIn('destination.account_id', $accountIds)
+                                                           ->whereNotIn('source.account_id', $accountIds);
+                        }
+                    );
+                }
+            );
         }
         if ($categories->count() > 0) {
             $categoryIds = $categories->pluck('id')->toArray();

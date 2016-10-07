@@ -23,6 +23,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Steam;
@@ -413,10 +414,24 @@ class AccountRepository implements AccountRepositoryInterface
                 $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
             }
             );
-            $set = join(', ', $accountIds);
-            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
-
+            $query->where(
+                // source.account_id in accountIds XOR destination.account_id in accountIds
+                function (Builder $sourceXorDestinationQuery) use ($accountIds) {
+                    $sourceXorDestinationQuery->where(
+                        function (Builder $inSourceButNotDestinationQuery) use ($accountIds) {
+                            $inSourceButNotDestinationQuery->whereIn('source.account_id', $accountIds)
+                                                           ->whereNotIn('destination.account_id', $accountIds);
+                        }
+                    )->orWhere(
+                        function (Builder $inDestinationButNotSourceQuery) use ($accountIds) {
+                            $inDestinationButNotSourceQuery->whereIn('destination.account_id', $accountIds)
+                                                           ->whereNotIn('source.account_id', $accountIds);
+                        }
+                    );
+                }
+            );
         }
+        
         // that should do it:
         $fields   = TransactionJournal::queryFields();
         $complete = $query->get($fields);

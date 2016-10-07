@@ -257,9 +257,19 @@ class ReportHelper implements ReportHelperInterface
                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                          ->where(
-                             function (Builder $q) use ($ids) {
-                                 $q->whereIn('source.account_id', $ids)
-                                   ->whereIn('destination.account_id', $ids, 'xor');
+                             // source.account_id in accountIds XOR destination.account_id in accountIds
+                             function (Builder $sourceXorDestinationQuery) use ($ids) {
+                                 $sourceXorDestinationQuery->where(
+                                     function (Builder $inSourceButNotDestinationQuery) use ($ids) {
+                                         $inSourceButNotDestinationQuery->whereIn('source.account_id', $ids)
+                                                                        ->whereNotIn('destination.account_id', $ids);
+                                     }
+                                 )->orWhere(
+                                     function (Builder $inDestinationButNotSourceQuery) use ($ids) {
+                                         $inDestinationButNotSourceQuery->whereIn('destination.account_id', $ids)
+                                                                        ->whereNotIn('source.account_id', $ids);
+                                     }
+                                 );
                              }
                          )
                          ->get(['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'destination.amount']);
