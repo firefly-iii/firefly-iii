@@ -33,11 +33,11 @@ class FireflyConfig
      */
     public function delete($name): bool
     {
-        $fullName = 'preference' . auth()->user()->id . $name;
+        $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+        Configuration::where('name', $name)->delete();
 
         return true;
     }

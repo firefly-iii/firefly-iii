@@ -33,9 +33,9 @@ class TagSupport extends Model
     public static function tagAllowAdvance(Tag $tag): bool
     {
         /*
-                * If this tag is a balancing act, and it contains transfers, it cannot be
-                * changes to an advancePayment.
-                */
+         * If this tag is a balancing act, and it contains transfers, it cannot be
+         * changes to an advancePayment.
+         */
 
         if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
             foreach ($tag->transactionjournals as $journal) {
