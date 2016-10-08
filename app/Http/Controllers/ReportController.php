@@ -24,6 +24,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -40,8 +41,8 @@ use View;
 class ReportController extends Controller
 {
 
-    /** @var AccountReportHelperInterface */
-    protected $accountHelper;
+    /** @var AccountTaskerInterface */
+    protected $accountTasker;
     /** @var BalanceReportHelperInterface */
     protected $balanceHelper;
 
@@ -234,7 +235,7 @@ class ReportController extends Controller
     private function createRepositories()
     {
         $this->helper        = app(ReportHelperInterface::class);
-        $this->accountHelper = app(AccountReportHelperInterface::class);
+        $this->accountTasker = app(AccountTaskerInterface::class);
         $this->budgetHelper  = app(BudgetReportHelperInterface::class);
         $this->balanceHelper = app(BalanceReportHelperInterface::class);
     }
@@ -253,7 +254,7 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $accountReport = $this->accountTasker->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
         $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
@@ -297,7 +298,7 @@ class ReportController extends Controller
         // list of users stuff:
         $budgets       = app(BudgetRepositoryInterface::class)->getActiveBudgets();
         $categories    = app(CategoryRepositoryInterface::class)->getCategories();
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $accountReport = $this->accountTasker->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
         $tags          = $this->helper->tagReport($start, $end, $accounts);
@@ -332,7 +333,7 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
+        $accountReport = $this->accountTasker->getAccountReport($start, $end, $accounts);
         $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
         $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
         $tags          = $this->helper->tagReport($start, $end, $accounts);

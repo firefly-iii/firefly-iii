@@ -55,5 +55,19 @@ class AccountServiceProvider extends ServiceProvider
                 return app('FireflyIII\Repositories\Account\AccountRepository', $arguments);
             }
         );
+
+        $this->app->bind(
+            'FireflyIII\Repositories\Account\AccountTaskerInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\Account\AccountTasker', [auth()->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Repositories\Account\AccountTasker', $arguments);
+            }
+        );
     }
 }
