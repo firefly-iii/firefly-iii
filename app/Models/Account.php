@@ -122,31 +122,6 @@ class Account extends Model
     }
 
     /**
-     * @param array $fields
-     *
-     * @return Account|null
-     */
-    public static function firstOrNullEncrypted(array $fields)
-    {
-        // everything but the name:
-        $query  = Account::orderBy('id');
-        $search = $fields;
-        unset($search['name']);
-        foreach ($search as $name => $value) {
-            $query->where($name, $value);
-        }
-        $set = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($set as $account) {
-            if ($account->name == $fields['name']) {
-                return $account;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * @param Account $value
      *
      * @return Account
