@@ -40,7 +40,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
     Route::get('/error', 'HomeController@displayError');
-    Route::any('logout', ['uses' => 'Auth\LoginController@logout','as' => 'logout']);
+    Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
     Route::get('/flush', ['uses' => 'HomeController@flush']);
 }
 );
@@ -311,6 +311,14 @@ Route::group(
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
     Route::get('/reports/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
+
+    /**
+     * Report AJAX data Controller:
+     */
+    Route::get(
+        '/reports/data/accountReport/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\AccountController@accountReport', 'as' => 'reports.data.accountReport']
+    );
 
     /**
      * Rules Controller

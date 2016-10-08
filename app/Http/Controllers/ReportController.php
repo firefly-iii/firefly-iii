@@ -16,7 +16,6 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Report\AccountReportHelperInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
@@ -24,7 +23,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -41,8 +39,6 @@ use View;
 class ReportController extends Controller
 {
 
-    /** @var AccountTaskerInterface */
-    protected $accountTasker;
     /** @var BalanceReportHelperInterface */
     protected $balanceHelper;
 
@@ -235,7 +231,6 @@ class ReportController extends Controller
     private function createRepositories()
     {
         $this->helper        = app(ReportHelperInterface::class);
-        $this->accountTasker = app(AccountTaskerInterface::class);
         $this->budgetHelper  = app(BudgetReportHelperInterface::class);
         $this->balanceHelper = app(BalanceReportHelperInterface::class);
     }
@@ -254,14 +249,13 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->accountTasker->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
-        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
-        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
-        $bills         = $this->helper->getBillReport($start, $end, $accounts);
-        $tags          = $this->helper->tagReport($start, $end, $accounts);
+        $incomes    = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses   = $this->helper->getExpenseReport($start, $end, $accounts);
+        $budgets    = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
+        $categories = $this->helper->getCategoryReport($start, $end, $accounts);
+        $balance    = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
+        $bills      = $this->helper->getBillReport($start, $end, $accounts);
+        $tags       = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = join(',', $accounts->pluck('id')->toArray());
@@ -271,7 +265,7 @@ class ReportController extends Controller
             'reports.default.month',
             compact(
                 'start', 'end', 'reportType',
-                'accountReport', 'tags',
+                'tags',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
                 'budgets', 'balance',
@@ -296,12 +290,11 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
         // list of users stuff:
-        $budgets       = app(BudgetRepositoryInterface::class)->getActiveBudgets();
-        $categories    = app(CategoryRepositoryInterface::class)->getCategories();
-        $accountReport = $this->accountTasker->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $tags          = $this->helper->tagReport($start, $end, $accounts);
+        $budgets    = app(BudgetRepositoryInterface::class)->getActiveBudgets();
+        $categories = app(CategoryRepositoryInterface::class)->getCategories();
+        $incomes    = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses   = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags       = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = [];
@@ -314,7 +307,8 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
+                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType',
+                'incomes', 'expenses',
                 'incomeTopLength', 'expenseTopLength', 'tags'
             )
         );
@@ -333,11 +327,10 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
-        $accountReport = $this->accountTasker->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $tags          = $this->helper->tagReport($start, $end, $accounts);
-        $budgets       = $this->budgetHelper->budgetYearOverview($start, $end, $accounts);
+        $incomes  = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags     = $this->helper->tagReport($start, $end, $accounts);
+        $budgets  = $this->budgetHelper->budgetYearOverview($start, $end, $accounts);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
@@ -354,7 +347,7 @@ class ReportController extends Controller
         return view(
             'reports.default.year',
             compact(
-                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
+                'start', 'incomes', 'reportType', 'accountIds', 'end',
                 'expenses', 'incomeTopLength', 'expenseTopLength', 'tags', 'budgets'
             )
         );
