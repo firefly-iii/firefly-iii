@@ -15,6 +15,7 @@ namespace FireflyIII\Crud\Account;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -49,6 +50,18 @@ class AccountCrud implements AccountCrudInterface
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return int
+     */
+    public function count(array $types):int
+    {
+        $count = $this->user->accounts()->accountTypeIn($types)->count();
+
+        return $count;
     }
 
     /**
@@ -250,13 +263,14 @@ class AccountCrud implements AccountCrudInterface
     public function store(array $data): Account
     {
         $newAccount = $this->storeAccount($data);
-        if (!is_null($newAccount->id)) {
-            $this->storeMetadata($newAccount, $data);
-        }
+        $this->updateMetadata($newAccount, $data);
 
-        if ($data['openingBalance'] != 0) {
-            $this->storeInitialBalance($newAccount, $data);
+        if ($this->validOpeningBalanceData($data)) {
+            $this->updateInitialBalance($newAccount, $data);
+
+            return $newAccount;
         }
+        $this->deleteInitialBalance($newAccount);
 
         return $newAccount;
 
@@ -296,15 +310,65 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
+     * @param Account $account
+     */
+    protected function deleteInitialBalance(Account $account)
+    {
+        $journal = $this->openingBalanceTransaction($account);
+        if (!is_null($journal->id)) {
+            $journal->delete();
+        }
+
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    protected function openingBalanceTransaction(Account $account): TransactionJournal
+    {
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            Log::debug('Could not find a opening balance journal, return empty one.');
+
+            return new TransactionJournal;
+        }
+        Log::debug(sprintf('Found opening balance: journal #%d.', $journal->id));
+
+        return $journal;
+    }
+
+    /**
      * @param array $data
      *
      * @return Account
+     * @throws FireflyException
      */
     protected function storeAccount(array $data): Account
     {
-        $type        = config('firefly.accountTypeByIdentifier.' . $data['accountType']);
-        $accountType = AccountType::whereType($type)->first();
-        $newAccount  = new Account(
+        $data['accountType'] = $data['accountType'] ?? 'invalid';
+        $type                = config('firefly.accountTypeByIdentifier.' . $data['accountType']);
+        $accountType         = AccountType::whereType($type)->first();
+
+        // verify account type
+        if (is_null($accountType)) {
+            throw new FireflyException(sprintf('Account type "%s" is invalid. Cannot create account.', $data['accountType']));
+        }
+
+        // account may exist already:
+        $existingAccount = $this->findByName($data['name'], [$data['accountType']]);
+        if (!is_null($existingAccount->id)) {
+            throw new FireflyException(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $data['accountType']));
+        }
+
+        // create it:
+        $newAccount = new Account(
             [
                 'user_id'         => $data['user'],
                 'account_type_id' => $accountType->id,
@@ -314,26 +378,14 @@ class AccountCrud implements AccountCrudInterface
                 'iban'            => $data['iban'],
             ]
         );
-
-        if (!$newAccount->isValid()) {
-            // does the account already exist?
-            $searchData      = [
-                'user_id'         => $data['user'],
-                'account_type_id' => $accountType->id,
-                'virtual_balance' => $data['virtualBalance'],
-                'name'            => $data['name'],
-                'iban'            => $data['iban'],
-            ];
-            $existingAccount = Account::firstOrNullEncrypted($searchData);
-            if (!$existingAccount) {
-                Log::error('Account create error', $newAccount->getErrors()->toArray());
-
-                return new Account;
-            }
-            $newAccount = $existingAccount;
-
-        }
         $newAccount->save();
+        // verify its creation:
+        if (is_null($newAccount->id)) {
+            Log::error(
+                sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()), $newAccount->getErrors()->toArray()
+            );
+            throw new FireflyException(sprintf('Tried to create account named "%s" but failed. The logs have more details.', $data['name']));
+        }
 
         return $newAccount;
     }
@@ -362,6 +414,7 @@ class AccountCrud implements AccountCrudInterface
                 'encrypted'               => true,
             ]
         );
+        Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));
 
         $firstAccount  = $account;
         $secondAccount = $opposing;
@@ -380,27 +433,32 @@ class AccountCrud implements AccountCrudInterface
         $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
         $two->save(); // second transaction: to
 
+        Log::debug(sprintf('Stored two transactions, #%d and #%d', $one->id, $two->id));
+
         return $journal;
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param float  $amount
+     * @param int    $user
+     * @param string $name
+     *
+     * @return Account
      */
-    protected function storeMetadata(Account $account, array $data)
+    protected function storeOpposingAccount(float $amount, int $user, string $name):Account
     {
-        foreach ($this->validFields as $field) {
-            if (isset($data[$field])) {
-                $metaData = new AccountMeta(
-                    [
-                        'account_id' => $account->id,
-                        'name'       => $field,
-                        'data'       => $data[$field],
-                    ]
-                );
-                $metaData->save();
-            }
-        }
+        $type         = $amount < 0 ? 'expense' : 'revenue';
+        $opposingData = [
+            'user'           => $user,
+            'accountType'    => $type,
+            'name'           => $name . ' initial balance',
+            'active'         => false,
+            'iban'           => '',
+            'virtualBalance' => 0,
+        ];
+        Log::debug('Going to create an opening balance opposing account');
+
+        return $this->storeAccount($opposingData);
     }
 
     /**
@@ -412,21 +470,24 @@ class AccountCrud implements AccountCrudInterface
     protected function updateInitialBalance(Account $account, array $data): bool
     {
         $openingBalance = $this->openingBalanceTransaction($account);
-        if ($data['openingBalance'] != 0) {
-            if (!is_null($openingBalance->id)) {
-                $date   = $data['openingBalanceDate'];
-                $amount = $data['openingBalance'];
 
-                return $this->updateJournal($account, $openingBalance, $date, $amount);
-            }
-
+        // no opening balance journal? create it:
+        if (is_null($openingBalance->id)) {
+            Log::debug('No opening balance journal yet, create journal.');
             $this->storeInitialBalance($account, $data);
 
             return true;
         }
-        // else, delete it:
-        if ($openingBalance) { // opening balance is zero, should we delete it?
-            $openingBalance->delete(); // delete existing opening balance.
+        // opening balance data? update it!
+        if (!is_null($openingBalance->id)) {
+            $date   = $data['openingBalanceDate'];
+            $amount = $data['openingBalance'];
+
+            Log::debug('Opening balance journal found, update journal.');
+
+            $this->updateOpeningBalanceJournal($account, $openingBalance, $date, $amount);
+
+            return true;
         }
 
         return true;
@@ -440,69 +501,39 @@ class AccountCrud implements AccountCrudInterface
     protected function updateMetadata(Account $account, array $data)
     {
         foreach ($this->validFields as $field) {
+            /** @var AccountMeta $entry */
             $entry = $account->accountMeta()->where('name', $field)->first();
 
-            if (isset($data[$field])) {
-                // update if new data is present:
-                if (!is_null($entry)) {
-                    $entry->data = $data[$field];
-                    $entry->save();
-
-                    continue;
-                }
-                $metaData = new AccountMeta(
+            // if $data has field and $entry is null, create new one:
+            if (isset($data[$field]) && is_null($entry)) {
+                Log::debug(
+                    sprintf(
+                        'Created meta-field "%s":"%s" for account #%d ("%s") ',
+                        $field, $data[$field], $account->id, $account->name
+                    )
+                );
+                AccountMeta::create(
                     [
                         'account_id' => $account->id,
                         'name'       => $field,
                         'data'       => $data[$field],
                     ]
                 );
-                $metaData->save();
+            }
+
+            // if $data has field and $entry is not null, update $entry:
+            if (isset($data[$field]) && !is_null($entry)) {
+                $entry->data = $data[$field];
+                $entry->save();
+                Log::debug(
+                    sprintf(
+                        'Updated meta-field "%s":"%s" for account #%d ("%s") ',
+                        $field, $data[$field], $account->id, $account->name
+                    )
+                );
             }
         }
 
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     */
-    private function openingBalanceTransaction(Account $account): TransactionJournal
-    {
-        $journal = TransactionJournal
-            ::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new TransactionJournal;
-        }
-
-        return $journal;
-    }
-
-    /**
-     * @param float  $amount
-     * @param int    $user
-     * @param string $name
-     *
-     * @return Account
-     */
-    private function storeOpposingAccount(float $amount, int $user, string $name):Account
-    {
-        $type         = $amount < 0 ? 'expense' : 'revenue';
-        $opposingData = [
-            'user'           => $user,
-            'accountType'    => $type,
-            'name'           => $name . ' initial balance',
-            'active'         => false,
-            'iban'           => '',
-            'virtualBalance' => 0,
-        ];
-
-        return $this->storeAccount($opposingData);
     }
 
     /**
@@ -513,7 +544,7 @@ class AccountCrud implements AccountCrudInterface
      *
      * @return bool
      */
-    private function updateJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
     {
         // update date:
         $journal->date = $date;
@@ -530,8 +561,30 @@ class AccountCrud implements AccountCrudInterface
                 $transaction->save();
             }
         }
+        Log::debug('Updated opening balance journal.');
 
         return true;
 
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
+    protected function validOpeningBalanceData(array $data): bool
+    {
+        if (isset($data['openingBalance'])
+            && isset($data['openingBalanceDate'])
+            && isset($data['openingBalanceCurrency'])
+            && bccomp(strval($data['openingBalance']), '0') !== 0
+        ) {
+            Log::debug('Array has valid opening balance data.');
+
+            return true;
+        }
+        Log::debug('Array does not have valid opening balance data.');
+
+        return false;
     }
 }

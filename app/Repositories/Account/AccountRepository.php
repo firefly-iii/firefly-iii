@@ -52,18 +52,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param array $types
-     *
-     * @return int
-     */
-    public function countAccounts(array $types): int
-    {
-        $count = $this->user->accounts()->accountTypeIn($types)->count();
-
-        return $count;
-    }
-
-    /**
      * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
      * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
      * how much money was earned by the given asset accounts. This method will tell you how much money

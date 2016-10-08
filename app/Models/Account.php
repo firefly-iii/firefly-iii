@@ -237,20 +237,6 @@ class Account extends Model
     }
 
     /**
-     *
-     * @return string
-     */
-    public function getNameForEditformAttribute(): string
-    {
-        $name = $this->name;
-        if ($this->accountType->type == 'Cash account') {
-            $name = '';
-        }
-
-        return $name;
-    }
-
-    /**
      * @return HasMany
      */
     public function piggyBanks(): HasMany

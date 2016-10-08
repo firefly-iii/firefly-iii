@@ -37,11 +37,11 @@ class NewUserController extends Controller
 
 
     /**
-     * @param ARI $repository
+     * @param AccountCrudInterface $crud
      *
-     * @@return View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function index(ARI $repository)
+    public function index(AccountCrudInterface $crud)
     {
 
         View::share('title', trans('firefly.welcome'));
@@ -49,7 +49,7 @@ class NewUserController extends Controller
 
 
         $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $repository->countAccounts($types);
+        $count = $crud->count($types);
 
         if ($count > 0) {
             return redirect(route('index'));

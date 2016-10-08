@@ -28,13 +28,6 @@ interface AccountRepositoryInterface
 {
 
     /**
-     * @param array $types
-     *
-     * @return int
-     */
-    public function countAccounts(array $types): int;
-
-    /**
      * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
      * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
      * how much money was earned by the given asset accounts. This method will tell you how much money
