@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Account;
 
+use FireflyIII\User;
+
 /**
  * Class AccountTasker
  *
@@ -20,5 +22,16 @@ namespace FireflyIII\Repositories\Account;
  */
 class AccountTasker
 {
+    /** @var User */
+    private $user;
 
+    /**
+     * AttachmentRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 }
