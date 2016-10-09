@@ -65,6 +65,26 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Moved here from account CRUD.
+     *
+     * @param Account $account
+     * @param Account $moveTo
+     *
+     * @return bool
+     */
+    public function destroy(Account $account, Account $moveTo): bool
+    {
+        if (!is_null($moveTo->id)) {
+            DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+        }
+        if (!is_null($account)) {
+            $account->delete();
+        }
+
+        return true;
+    }
+
+    /**
      * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
      * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
      * than made by journalsInPeriod itself.

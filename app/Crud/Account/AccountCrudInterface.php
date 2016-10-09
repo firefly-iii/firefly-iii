@@ -24,13 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountCrudInterface
 {
-    /**
-     * @param Account $account
-     * @param Account $moveTo
-     *
-     * @return bool
-     */
-    public function destroy(Account $account, Account $moveTo): bool;
 
     /**
      * @param int $accountId

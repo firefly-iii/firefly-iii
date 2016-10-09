@@ -26,6 +26,7 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * Moved here from account CRUD.
      *
@@ -34,6 +35,16 @@ interface AccountRepositoryInterface
      * @return int
      */
     public function count(array $types): int;
+
+    /**
+     * Moved here from account CRUD.
+     *
+     * @param Account $account
+     * @param Account $moveTo
+     *
+     * @return bool
+     */
+    public function destroy(Account $account, Account $moveTo): bool;
 
     /**
      * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
