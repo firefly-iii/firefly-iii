@@ -112,6 +112,8 @@ class LoginController extends Controller
     /**
      * Show the application login form.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function showLoginForm(Request $request)

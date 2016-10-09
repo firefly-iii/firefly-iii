@@ -117,6 +117,8 @@ class RegisterController extends Controller
      * OLD
      * Show the application registration form.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm(Request $request)

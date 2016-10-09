@@ -139,6 +139,8 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
+     * @param BudgetRepositoryInterface $repository
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function frontpage(BudgetRepositoryInterface $repository)

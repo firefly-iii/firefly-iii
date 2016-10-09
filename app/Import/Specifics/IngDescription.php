@@ -63,7 +63,7 @@ class IngDescription implements SpecificInterface
                     $this->removeIBANIngDescription();
                     $this->removeNameIngDescription();
                     break;
-                case 'BA' :                              // Betaalautomaat
+                case 'BA':                              // Betaalautomaat
                     $this->addNameIngDescription();
                     break;
             }
@@ -80,7 +80,7 @@ class IngDescription implements SpecificInterface
      */
     protected function addNameIngDescription()
     {
-        $this->row[8] = $this->row[1] . " " . $this->row[8];
+        $this->row[8] = $this->row[1] . ' ' . $this->row[8];
 
         return true;
     }

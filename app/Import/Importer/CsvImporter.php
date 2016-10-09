@@ -99,6 +99,7 @@ class CsvImporter implements ImporterInterface
      * @param array $row
      *
      * @return ImportEntry
+     * @throws FireflyException
      */
     private function importSingleRow(int $index, array $row): ImportEntry
     {

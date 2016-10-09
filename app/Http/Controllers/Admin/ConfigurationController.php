@@ -60,6 +60,8 @@ class ConfigurationController extends Controller
 
     /**
      * @param ConfigurationRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(ConfigurationRequest $request)
     {

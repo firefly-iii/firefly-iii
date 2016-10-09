@@ -15,7 +15,6 @@ namespace FireflyIII\Support;
 
 use Cache;
 use FireflyIII\Models\Configuration;
-use FireflyIII\Models\Preference;
 use Log;
 
 /**

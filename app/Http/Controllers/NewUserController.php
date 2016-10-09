@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use Preferences;
 use Session;
 use View;

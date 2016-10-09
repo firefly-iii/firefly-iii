@@ -26,6 +26,30 @@ interface AccountTaskerInterface
 {
 
     /**
+     * @param Collection $accounts
+     * @param Collection $excluded
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountTasker::amountInPeriod()
+     *
+     * @return string
+     */
+    public function amountInInPeriod(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $excluded
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountTasker::amountInPeriod()
+     *
+     * @return string
+     */
+    public function amountOutInPeriod(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): string;
+
+    /**
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts

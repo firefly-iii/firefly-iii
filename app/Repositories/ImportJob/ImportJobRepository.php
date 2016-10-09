@@ -42,6 +42,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param string $fileType
      *
      * @return ImportJob
+     * @throws FireflyException
      */
     public function create(string $fileType): ImportJob
     {
