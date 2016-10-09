@@ -25,13 +25,6 @@ use Illuminate\Support\Collection;
 interface AccountCrudInterface
 {
     /**
-     * @param array $types
-     *
-     * @return int
-     */
-    public function count(array $types):int;
-
-    /**
      * @param Account $account
      * @param Account $moveTo
      *

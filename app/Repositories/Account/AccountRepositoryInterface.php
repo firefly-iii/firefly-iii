@@ -26,6 +26,14 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+    /**
+     * Moved here from account CRUD.
+     *
+     * @param array $types
+     *
+     * @return int
+     */
+    public function count(array $types): int;
 
     /**
      * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,

@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Preferences;
 use Session;
 use View;
@@ -36,11 +37,11 @@ class NewUserController extends Controller
 
 
     /**
-     * @param AccountCrudInterface $crud
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function index(AccountCrudInterface $crud)
+    public function index(AccountRepositoryInterface $repository)
     {
 
         View::share('title', trans('firefly.welcome'));
@@ -48,7 +49,7 @@ class NewUserController extends Controller
 
 
         $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $crud->count($types);
+        $count = $repository->count($types);
 
         if ($count > 0) {
             return redirect(route('index'));

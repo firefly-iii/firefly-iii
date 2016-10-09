@@ -53,18 +53,6 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
-     * @param array $types
-     *
-     * @return int
-     */
-    public function count(array $types):int
-    {
-        $count = $this->user->accounts()->accountTypeIn($types)->count();
-
-        return $count;
-    }
-
-    /**
      * @param Account $account
      * @param Account $moveTo
      *
