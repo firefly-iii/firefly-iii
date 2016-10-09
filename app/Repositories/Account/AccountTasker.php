@@ -191,6 +191,67 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
+    {
+        $accountIds = $accounts->pluck('id')->toArray();
+        $query      = Transaction
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
+            ->whereIn('transactions.account_id', $accountIds)
+            ->whereNull('transactions.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC');
+
+        if (count($types) > 0) {
+            $query->whereIn('transaction_types.type', $types);
+        }
+
+        $set = $query->get(
+            [
+                'transaction_journals.id',
+                'transaction_journals.description',
+                'transaction_journals.date',
+                'transaction_journals.encrypted',
+                'transaction_journals.transaction_currency_id',
+                'transaction_currencies.code as transaction_currency_code',
+                'transaction_currencies.symbol as transaction_currency_symbol',
+                'transaction_journals.transaction_type_id',
+                'transaction_types.type as transaction_type_type',
+                'transaction_journals.bill_id',
+                'bills.name as bill_name',
+                'transactions.id as transaction_id',
+                'transactions.amount as transaction_amount',
+                'transactions.description as transaction_description',
+            ]
+        );
+
+        // loop for decryption.
+        $set->each(
+            function (Transaction $transaction) {
+                $transaction->date = new Carbon($transaction->date);
+                $transaction->description = intval($transaction->encrypted) === 1 ? Crypt::decrypt($transaction->description) : $transaction->description;
+                $transaction->bill_name = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * @param Collection $accounts
      * @param Collection $excluded
      * @param Carbon     $start
      * @param Carbon     $end

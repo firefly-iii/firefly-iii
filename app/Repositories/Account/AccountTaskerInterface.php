@@ -63,6 +63,18 @@ interface AccountTaskerInterface
     public function expenseReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection;
 
     /**
+     * Experimental getJournals method.
+     *
+     * @param Collection $accounts
+     * @param array      $types
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
+
+    /**
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
