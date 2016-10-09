@@ -321,6 +321,7 @@ class AccountTasker implements AccountTaskerInterface
         }
         $set = $query->get(
             [
+                'transaction_journals.id',
                 'other_side.account_id',
                 'other_account.name',
                 'other_account.encrypted',
