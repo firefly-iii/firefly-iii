@@ -108,6 +108,7 @@ class ImportController extends Controller
         $config                            = $job->configuration;
         $config['column-roles-complete']   = false;
         $config['column-mapping-complete'] = false;
+        $config['delimiter']               = $config['delimiter'] === "\t" ? 'tab' : $config['delimiter'];
         $result                            = json_encode($config, JSON_PRETTY_PRINT);
         $name                              = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
