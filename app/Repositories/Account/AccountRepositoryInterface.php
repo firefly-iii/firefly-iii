@@ -28,20 +28,6 @@ interface AccountRepositoryInterface
 {
 
     /**
-     * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
-     * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
-     * how much money was earned by the given asset accounts. This method will tell you how much money
-     * these given revenue accounts sent. Ie. how much money was made FROM these revenue accounts.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function earnedFromInPeriod(Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
      * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
      * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
      * than made by journalsInPeriod itself.

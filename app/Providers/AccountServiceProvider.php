@@ -49,7 +49,7 @@ class AccountServiceProvider extends ServiceProvider
     }
 
     /**
-     * 
+     *
      */
     private function registerRepository()
     {
