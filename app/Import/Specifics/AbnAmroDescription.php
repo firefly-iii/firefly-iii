@@ -62,7 +62,7 @@ class AbnAmroDescription implements SpecificInterface
         // If the description could not be parsed, specify an unknown opposing
         // account, as an opposing account is required
         if (!$parsed) {
-            $this->row[7] = trans('firefly.unknown'); // opposing-account-name
+            $this->row[8] = trans('firefly.unknown'); // opposing-account-name
         }
 
         return $this->row;
