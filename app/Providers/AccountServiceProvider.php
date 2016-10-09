@@ -42,6 +42,17 @@ class AccountServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerRepository();
+        $this->registerTasker();
+
+
+    }
+
+    /**
+     * 
+     */
+    private function registerRepository()
+    {
         $this->app->bind(
             'FireflyIII\Repositories\Account\AccountRepositoryInterface',
             function (Application $app, array $arguments) {
@@ -55,7 +66,13 @@ class AccountServiceProvider extends ServiceProvider
                 return app('FireflyIII\Repositories\Account\AccountRepository', $arguments);
             }
         );
+    }
 
+    /**
+     *
+     */
+    private function registerTasker()
+    {
         $this->app->bind(
             'FireflyIII\Repositories\Account\AccountTaskerInterface',
             function (Application $app, array $arguments) {
