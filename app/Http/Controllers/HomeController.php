@@ -19,6 +19,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -26,7 +27,6 @@ use Log;
 use Preferences;
 use Route;
 use Session;
-use Steam;
 
 
 /**
@@ -114,12 +114,13 @@ class HomeController extends Controller
     }
 
     /**
-     * @param ARI                  $repository
-     * @param AccountCrudInterface $crud
+     * @param ARI                    $repository
+     * @param AccountCrudInterface   $crud
+     * @param AccountTaskerInterface $tasker
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function index(ARI $repository, AccountCrudInterface $crud)
+    public function index(ARI $repository, AccountCrudInterface $crud, AccountTaskerInterface $tasker)
     {
 
         $types = config('firefly.accountTypesByIdentifier.asset');
@@ -139,12 +140,12 @@ class HomeController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end               = session('end', Carbon::now()->endOfMonth());
-        $showTour          = Preferences::get('tour', true)->data;
-        $accounts          = $crud->getAccountsById($frontPage->data);
+        $end      = session('end', Carbon::now()->endOfMonth());
+        $showTour = Preferences::get('tour', true)->data;
+        $accounts = $crud->getAccountsById($frontPage->data);
 
         foreach ($accounts as $account) {
-            $set = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+            $set = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
             $set = $set->splice(0, 10);
 
             if (count($set) > 0) {
@@ -153,7 +154,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title','subTitle', 'mainTitleIcon', 'transactions')
+            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions')
         );
     }
 

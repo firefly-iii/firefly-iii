@@ -149,7 +149,7 @@ class CategoryController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->startOfMonth());
-        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end);
+        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end); // category
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -176,7 +176,7 @@ class CategoryController extends Controller
         $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
+        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
         $count        = $set->count();
         $subSet       = $set->splice($offset, $pageSize);
         $subTitle     = $category->name;
@@ -247,7 +247,7 @@ class CategoryController extends Controller
         $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
+        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
         $count        = $set->count();
         $subSet       = $set->splice($offset, $pageSize);
         $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);

@@ -218,7 +218,7 @@ class AccountController extends Controller
         $page     = intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $set      = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
         $count    = $set->count();
         $subSet   = $set->splice($offset, $pageSize);
         $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
@@ -269,13 +269,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
-     * @param string  $date
+     * @param AccountTaskerInterface $tasker
+     * @param Account                $account
+     * @param string                 $date
      *
      * @return View
      */
-    public function showWithDate(ARI $repository, Account $account, string $date)
+    public function showWithDate(AccountTaskerInterface $tasker, Account $account, string $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;
@@ -286,7 +286,7 @@ class AccountController extends Controller
         $page     = $page === 0 ? 1 : $page;
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $set      = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+        $set      = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
         $count    = $set->count();
         $subSet   = $set->splice($offset, $pageSize);
         $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);

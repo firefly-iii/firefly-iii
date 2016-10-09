@@ -245,6 +245,7 @@ class TransactionController extends Controller
         $date = new Carbon($request->get('date'));
         if (count($ids) > 0) {
             $order = 0;
+            $ids = array_unique($ids);
             foreach ($ids as $id) {
                 $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {

@@ -190,6 +190,8 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
+     * It might be worth it to expand this query to include all account information required.
+     *
      * @param Collection $accounts
      * @param array      $types
      * @param Carbon     $start
@@ -205,6 +207,8 @@ class AccountTasker implements AccountTaskerInterface
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
             ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
             ->whereIn('transactions.account_id', $accountIds)
             ->whereNull('transactions.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
@@ -221,29 +225,35 @@ class AccountTasker implements AccountTaskerInterface
 
         $set = $query->get(
             [
-                'transaction_journals.id',
+                'transaction_journals.id as journal_id',
                 'transaction_journals.description',
                 'transaction_journals.date',
                 'transaction_journals.encrypted',
-                'transaction_journals.transaction_currency_id',
+                //'transaction_journals.transaction_currency_id',
                 'transaction_currencies.code as transaction_currency_code',
-                'transaction_currencies.symbol as transaction_currency_symbol',
-                'transaction_journals.transaction_type_id',
+                //'transaction_currencies.symbol as transaction_currency_symbol',
                 'transaction_types.type as transaction_type_type',
                 'transaction_journals.bill_id',
                 'bills.name as bill_name',
-                'transactions.id as transaction_id',
+                'transactions.id as id',
                 'transactions.amount as transaction_amount',
                 'transactions.description as transaction_description',
+                'transactions.account_id',
+                'transactions.identifier',
+                'transactions.transaction_journal_id',
+                'accounts.name as account_name',
+                'accounts.encrypted as account_encrypted',
+                'account_types.type as account_type',
+
             ]
         );
 
         // loop for decryption.
         $set->each(
             function (Transaction $transaction) {
-                $transaction->date = new Carbon($transaction->date);
+                $transaction->date        = new Carbon($transaction->date);
                 $transaction->description = intval($transaction->encrypted) === 1 ? Crypt::decrypt($transaction->description) : $transaction->description;
-                $transaction->bill_name = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
+                $transaction->bill_name   = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
             }
         );
 

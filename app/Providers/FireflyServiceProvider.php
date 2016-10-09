@@ -25,6 +25,7 @@ use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
 use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Translation;
+use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Twig;
@@ -52,6 +53,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Journal);
         Twig::addExtension(new Budget);
         Twig::addExtension(new Translation);
+        Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
     }
 

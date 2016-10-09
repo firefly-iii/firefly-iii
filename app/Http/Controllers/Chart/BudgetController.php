@@ -401,7 +401,7 @@ class BudgetController extends Controller
      */
     private function spentInPeriodWithout(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end):array
     {
-        $list = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $list = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end); // budget
         $sum  = '0';
         /** @var TransactionJournal $entry */
         foreach ($list as $entry) {

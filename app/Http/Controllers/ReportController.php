@@ -21,8 +21,9 @@ use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -121,7 +122,7 @@ class ReportController extends Controller
 
         switch ($reportType) {
             default:
-                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
+                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not available at this time.');
             case 'default':
 
                 // more than one year date difference means year report.
@@ -153,54 +154,36 @@ class ReportController extends Controller
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         /** @var ARI $repos */
-        $repos     = app(ARI::class);
+        $repos = app(ARI::class);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker    = app(AccountTaskerInterface::class);
         $auditData = [];
         $dayBefore = clone $start;
         $dayBefore->subDay();
         /** @var Account $account */
         foreach ($accounts as $account) {
-
             // balance the day before:
             $id               = $account->id;
-            $first            = $repos->oldestJournalDate($account);
-            $last             = $repos->newestJournalDate($account);
-            $exists           = false;
-            $journals         = new Collection;
             $dayBeforeBalance = Steam::balance($account, $dayBefore);
-            /*
-             * Is there even activity on this account between the requested dates?
-             */
-            if ($start->between($first, $last) || $end->between($first, $last)) {
-                $exists   = true;
-                $journals = $repos->journalsInPeriod(new Collection([$account]), [], $start, $end);
+            $journals         = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
+            $journals         = $journals->reverse();
+            $startBalance     = $dayBeforeBalance;
 
-            }
-            /*
-             * Reverse set, get balances.
-             */
-            $journals     = $journals->reverse();
-            $startBalance = $dayBeforeBalance;
-            /** @var TransactionJournal $journal */
-            foreach ($journals as $journal) {
-                $journal->before   = $startBalance;
-                $transactionAmount = $journal->source_amount;
 
-                // get currently relevant transaction:
-                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
-                if (in_array($account->id, $destinations)) {
-                    $transactionAmount = TransactionJournal::amountPositive($journal);
-                }
-                $newBalance     = bcadd($startBalance, $transactionAmount);
-                $journal->after = $newBalance;
-                $startBalance   = $newBalance;
-
+            /** @var Transaction $journal */
+            foreach ($journals as $transaction) {
+                $transaction->before = $startBalance;
+                $transactionAmount   = $transaction->transaction_amount;
+                $newBalance          = bcadd($startBalance, $transactionAmount);
+                $transaction->after  = $newBalance;
+                $startBalance        = $newBalance;
             }
 
             /*
              * Reverse set again.
              */
             $auditData[$id]['journals']         = $journals->reverse();
-            $auditData[$id]['exists']           = $exists;
+            $auditData[$id]['exists']           = $journals->count() > 0;
             $auditData[$id]['end']              = $end->formatLocalized(strval(trans('config.month_and_day')));
             $auditData[$id]['endBalance']       = Steam::balance($account, $end);
             $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(strval(trans('config.month_and_day')));

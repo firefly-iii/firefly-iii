@@ -120,6 +120,41 @@ class Amount
     }
 
     /**
+     * This method will properly format the given number, in color or "black and white",
+     * as a currency, given two things: the currency required and the currency code.
+     *
+     * @param string $code
+     * @param string $amount
+     * @param bool   $coloured
+     *
+     * @return string
+     */
+    public function formatWithCode(string $code, string $amount, bool $coloured = true): string
+    {
+        $locale    = setlocale(LC_MONETARY, 0);
+        $float     = round($amount, 2);
+        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $result    = $formatter->formatCurrency($float, $code);
+
+        if ($coloured === true) {
+
+            if ($amount > 0) {
+                return '<span class="text-success" title="' . e($float) . '">' . $result . '</span>';
+            } else {
+                if ($amount < 0) {
+                    return '<span class="text-danger" title="' . e($float) . '">' . $result . '</span>';
+                }
+            }
+
+            return '<span style="color:#999" title="' . e($float) . '">' . $result . '</span>';
+
+
+        }
+
+        return $result;
+    }
+
+    /**
      * @return Collection
      */
     public function getAllCurrencies(): Collection

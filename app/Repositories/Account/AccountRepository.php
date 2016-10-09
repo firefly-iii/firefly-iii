@@ -112,63 +112,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
-    {
-        // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
-
-        if ($end >= $start) {
-            $query->before($end)->after($start);
-        }
-
-        if (count($types) > 0) {
-            $query->transactionTypes($types);
-        }
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-            }
-            );
-            $query->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
-            );
-            $query->where(
-            // source.account_id in accountIds XOR destination.account_id in accountIds
-                function (Builder $query) use ($accountIds) {
-                    $query->where(
-                        function (Builder $q1) use ($accountIds) {
-                            $q1->whereIn('source.account_id', $accountIds)
-                               ->whereNotIn('destination.account_id', $accountIds);
-                        }
-                    )->orWhere(
-                        function (Builder $q2) use ($accountIds) {
-                            $q2->whereIn('destination.account_id', $accountIds)
-                               ->whereNotIn('source.account_id', $accountIds);
-                        }
-                    );
-                }
-            );
-        }
-
-        // that should do it:
-        $fields   = TransactionJournal::queryFields();
-        $complete = $query->get($fields);
-
-        return $complete;
-    }
-
-    /**
      *
      * @param Account $account
      * @param Carbon  $date

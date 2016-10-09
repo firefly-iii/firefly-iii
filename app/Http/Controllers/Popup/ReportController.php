@@ -19,9 +19,11 @@ use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
@@ -185,22 +187,22 @@ class ReportController extends Controller
      */
     private function expenseEntry(array $attributes): string
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $crud       = app(AccountCrudInterface::class);
-        $account    = $crud->find(intval($attributes['accountId']));
-        $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals   = $repository->journalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker   = app(AccountTaskerInterface::class);
+        $crud     = app(AccountCrudInterface::class);
+        $account  = $crud->find(intval($attributes['accountId']));
+        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $journals = $tasker->getJournalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
+        $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter for transfers and withdrawals TO the given $account
         $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($account) {
-                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
-                if (in_array($account->id, $destinations)) {
-                    return true;
-                }
+            function (Transaction $transaction) use ($report) {
+                // get the destinations:
+                $destinations = TransactionJournal::destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
 
-                return false;
+                // do these intersect with the current list?
+                return !empty(array_intersect($report, $destinations));
             }
         );
 
@@ -219,27 +221,23 @@ class ReportController extends Controller
      */
     private function incomeEntry(array $attributes): string
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository   = app(AccountRepositoryInterface::class);
-        $crud         = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $account      = $crud->find(intval($attributes['accountId']));
-        $types        = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals     = $repository->journalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
-        $destinations = $attributes['accounts']->pluck('id')->toArray();
-        // filter for transfers and withdrawals FROM the given $account
+        /** @var AccountTaskerInterface $tasker */
+        $tasker = app(AccountTaskerInterface::class);
+        /** @var AccountCrudInterface $crud */
+        $crud     = app(AccountCrudInterface::class);
+        $account  = $crud->find(intval($attributes['accountId']));
+        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $journals = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
+        $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
+        // filter the set so the destinations outside of $attributes['accounts'] are not included.
         $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($account, $destinations) {
-                $currentSources = TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray();
-                $currentDest    = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
-                if (
-                    !empty(array_intersect([$account->id], $currentSources))
-                    && !empty(array_intersect($destinations, $currentDest))
-                ) {
-                    return true;
-                }
+            function (Transaction $transaction) use ($report) {
+                // get the destinations:
+                $destinations = TransactionJournal::destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
 
-                return false;
+                // do these intersect with the current list?
+                return !empty(array_intersect($report, $destinations));
             }
         );
 

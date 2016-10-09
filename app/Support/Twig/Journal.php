@@ -20,6 +20,7 @@ use FireflyIII\Models\Budget as ModelBudget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -164,7 +165,9 @@ class Journal extends Twig_Extension
      */
     public function getFilters(): array
     {
-        $filters = [$this->typeIcon()];
+        $filters = [
+            $this->typeIcon(),
+        ];
 
         return $filters;
     }
@@ -407,4 +410,5 @@ class Journal extends Twig_Extension
         }, ['is_safe' => ['html']]
         );
     }
+
 }

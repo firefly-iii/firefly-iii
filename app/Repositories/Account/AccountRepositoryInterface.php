@@ -61,16 +61,6 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 
     /**
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
-
-    /**
      *
      * @param Account $account
      * @param Carbon  $date
