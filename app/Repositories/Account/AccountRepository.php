@@ -85,46 +85,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
-     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
-     * than made by journalsInPeriod itself.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountRepositoryInterface::journalsInPeriod
-     *
-     * @return Collection
-     */
-    public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals   = $this->journalsInPeriod($accounts, $types, $start, $end);
-        $accountIds = $accounts->pluck('id')->toArray();
-
-        // filter because some of these journals are still too much.
-        $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($accountIds) {
-                if ($journal->transaction_type_type == TransactionType::WITHDRAWAL) {
-                    return true;
-                }
-                /*
-                 * The source of a transfer must be one of the $accounts in order to
-                 * be included. Otherwise, it would not be an expense.
-                 */
-                if (in_array($journal->source_account_id, $accountIds)) {
-                    return true;
-                }
-
-                return false;
-            }
-        );
-
-        return $journals;
-    }
-
-    /**
      * @param Account $account
      *
      * @return Carbon
@@ -256,49 +216,6 @@ class AccountRepository implements AccountRepositoryInterface
 
 
         return $accounts;
-    }
-
-    /**
-     * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made to the given $accounts,
-     * as well as the transfers that move away to those $accounts. This is a slightly sharper selection
-     * than made by journalsInPeriod itself.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountRepositoryInterface::journalsInPeriod
-     *
-     * @return Collection
-     */
-    public function incomesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals   = $this->journalsInPeriod($accounts, $types, $start, $end);
-        $accountIds = $accounts->pluck('id')->toArray();
-
-        // filter because some of these journals are still too much.
-        $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($accountIds) {
-                if ($journal->transaction_type_type == TransactionType::DEPOSIT) {
-                    return true;
-                }
-                /*
-                 * The destination of a transfer must be one of the $accounts in order to
-                 * be included. Otherwise, it would not be income.
-                 */
-                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
-
-                if (count(array_intersect($destinations, $accountIds)) > 0) {
-                    // at least one of $target is in $haystack
-                    return true;
-                }
-
-                return false;
-            }
-        );
-
-        return $journals;
     }
 
     /**

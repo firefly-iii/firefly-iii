@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Crud\Account;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -51,7 +50,6 @@ class AccountCrud implements AccountCrudInterface
     {
         $this->user = $user;
     }
-
 
 
     /**

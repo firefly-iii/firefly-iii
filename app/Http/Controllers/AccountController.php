@@ -247,7 +247,13 @@ class AccountController extends Controller
             //            $entries = $cache->get();
             //            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
         }
-        $assets = $crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+
+        // only include asset accounts when this account is an asset:
+        $assets = new Collection;
+        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
+            $assets = $crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        }
+
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);

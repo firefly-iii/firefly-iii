@@ -14,6 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use Crypt;
+use DB;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -21,6 +23,7 @@ use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
+use stdClass;
 use Steam;
 
 /**
@@ -102,6 +105,35 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
+     * @param Collection $accounts
+     * @param Collection $excluded
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     * @see self::financialReport
+     *
+     */
+    public function expenseReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection
+    {
+        $idList = [
+            'accounts' => $accounts->pluck('id')->toArray(),
+            'exclude'  => $excluded->pluck('id')->toArray(),
+        ];
+
+        Log::debug(
+            'Now calling expenseReport.',
+            ['accounts' => $idList['accounts'], 'excluded' => $idList['exclude'],
+             'start'    => $start->format('Y-m-d'),
+             'end'      => $end->format('Y-m-d'),
+            ]
+        );
+
+        return $this->financialReport($idList, $start, $end, false);
+
+    }
+
+    /**
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -155,6 +187,35 @@ class AccountTasker implements AccountTaskerInterface
 
 
         return $object;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $excluded
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @see AccountTasker::financialReport()
+     *
+     * @return Collection
+     *
+     */
+    public function incomeReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection
+    {
+        $idList = [
+            'accounts' => $accounts->pluck('id')->toArray(),
+            'exclude'  => $excluded->pluck('id')->toArray(),
+        ];
+
+        Log::debug(
+            'Now calling expenseReport.',
+            ['accounts' => $idList['accounts'], 'excluded' => $idList['exclude'],
+             'start'    => $start->format('Y-m-d'),
+             'end'      => $end->format('Y-m-d'),
+            ]
+        );
+
+        return $this->financialReport($idList, $start, $end, true);
     }
 
     /**
@@ -213,5 +274,87 @@ class AccountTasker implements AccountTaskerInterface
         Log::debug(sprintf('Result is %s', $sum));
 
         return $sum;
+    }
+
+    /**
+     *
+     * This method will determin how much has flown (in the given period) from OR to $accounts to/from anywhere else,
+     * except $excluded. This could be a list of incomes, or a list of expenses. This method shows
+     * the name, the amount and the number of transactions. It is a summary, and only used in some reports.
+     *
+     * $incoming=true a list of incoming money (earnings)
+     * $incoming=false a list of outgoing money (expenses).
+     *
+     * @param array  $accounts
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param bool   $incoming
+     *
+     * @return Collection
+     */
+    protected function financialReport(array $accounts, Carbon $start, Carbon $end, bool $incoming): Collection
+    {
+        $collection   = new Collection;
+        $joinModifier = $incoming ? '<' : '>';
+        $selection    = $incoming ? '>' : '<';
+        $query        = Transaction
+            ::distinct()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin(
+                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
+                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
+            }
+            )
+            ->leftJoin('accounts as other_account', 'other_account.id', '=', 'other_side.account_id')
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->whereNull('transactions.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->whereIn('transactions.account_id', $accounts['accounts'])
+            ->where('other_side.amount', '=', DB::raw('transactions.amount * -1'))
+            ->where('transactions.amount', $selection, 0)
+            ->orderBy('transactions.amount');
+
+        if (count($accounts['exclude']) > 0) {
+            $query->whereNotIn('other_side.account_id', $accounts['exclude']);
+        }
+        $set = $query->get(
+            [
+                'other_side.account_id',
+                'other_account.name',
+                'other_account.encrypted',
+                'transactions.amount',
+            ]
+        );
+        // summarize ourselves:
+        $temp = [];
+        foreach ($set as $entry) {
+            // save into $temp:
+            $id = intval($entry->account_id);
+            if (isset($temp[$id])) {
+                $temp[$id]['count']++;
+                $temp[$id]['amount'] = bcadd($temp[$id]['amount'], $entry->amount);
+            }
+            if (!isset($temp[$id])) {
+                $temp[$id] = [
+                    'name'   => intval($entry->encrypted) === 1 ? Crypt::decrypt($entry->name) : $entry->name,
+                    'amount' => $entry->amount,
+                    'count'  => 1,
+                ];
+            }
+        }
+
+        // loop $temp and create collection:
+        foreach ($temp as $key => $entry) {
+            $object         = new stdClass();
+            $object->id     = $key;
+            $object->name   = $entry['name'];
+            $object->count  = $entry['count'];
+            $object->amount = $entry['amount'];
+            $collection->push($object);
+        }
+
+        return $collection;
     }
 }

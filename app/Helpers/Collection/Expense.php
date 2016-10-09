@@ -12,7 +12,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use stdClass;
 
@@ -38,36 +37,11 @@ class Expense
     }
 
     /**
-     * @param TransactionJournal $entry
+     * @param stdClass $entry
      */
-    public function addOrCreateExpense(TransactionJournal $entry)
+    public function addOrCreateExpense(stdClass $entry)
     {
-        // add each account individually:
-        $destinations = TransactionJournal::destinationTransactionList($entry);
-
-        foreach ($destinations as $transaction) {
-            $amount  = strval($transaction->amount);
-            $account = $transaction->account;
-            if (bccomp('0', $amount) === -1) {
-                $amount = bcmul($amount, '-1');
-            }
-
-            $object         = new stdClass;
-            $object->amount = $amount;
-            $object->name   = $account->name;
-            $object->count  = 1;
-            $object->id     = $account->id;
-
-            // overrule some properties:
-            if ($this->expenses->has($account->id)) {
-                $object         = $this->expenses->get($account->id);
-                $object->amount = bcadd($object->amount, $amount);
-                $object->count++;
-            }
-            $this->expenses->put($account->id, $object);
-        }
-
-
+        $this->expenses->put($entry->id, $entry);
     }
 
     /**

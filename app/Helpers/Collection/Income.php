@@ -12,7 +12,6 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 use stdClass;
 
@@ -39,32 +38,11 @@ class Income
     }
 
     /**
-     * @param TransactionJournal $entry
+     * @param stdClass $entry
      */
-    public function addOrCreateIncome(TransactionJournal $entry)
+    public function addOrCreateIncome(stdClass $entry)
     {
-        // add each account individually:
-        $sources = TransactionJournal::sourceTransactionList($entry);
-
-        foreach ($sources as $transaction) {
-            $amount  = strval($transaction->amount);
-            $account = $transaction->account;
-            $amount  = bcmul($amount, '-1');
-
-            $object         = new stdClass;
-            $object->amount = $amount;
-            $object->name   = $account->name;
-            $object->count  = 1;
-            $object->id     = $account->id;
-
-            // overrule some properties:
-            if ($this->incomes->has($account->id)) {
-                $object         = $this->incomes->get($account->id);
-                $object->amount = bcadd($object->amount, $amount);
-                $object->count++;
-            }
-            $this->incomes->put($account->id, $object);
-        }
+        $this->incomes->put($entry->id, $entry);
 
     }
 
