@@ -18,9 +18,7 @@ use Amount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget as ModelBudget;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -184,8 +182,6 @@ class Journal extends Twig_Extension
             $this->formatBudgetPerspective(),
             $this->journalBudgets(),
             $this->journalCategories(),
-            $this->transactionBudgets(),
-            $this->transactionCategories(),
         ];
 
         return $functions;
@@ -312,68 +308,6 @@ class Journal extends Twig_Extension
             $cache->store($string);
 
             return $string;
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function transactionBudgets(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionBudgets', function (Transaction $transaction): string {
-            $cache = new CacheProperties;
-            $cache->addProperty($transaction->id);
-            $cache->addProperty('transaction');
-            $cache->addProperty('budget-string');
-            if ($cache->has()) {
-                return $cache->get();
-            }
-
-            $budgets = [];
-            // get all budgets:
-            foreach ($transaction->budgets as $budget) {
-                $budgets[] = '<a href="' . route('budgets.show', [$budget->id]) . '" title="' . e($budget->name) . '">' . e($budget->name) . '</a>';
-            }
-            $string = join(', ', array_unique($budgets));
-            $cache->store($string);
-
-            return $string;
-
-
-        }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function transactionCategories(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionCategories', function (Transaction $transaction): string {
-            $cache = new CacheProperties;
-            $cache->addProperty($transaction->id);
-            $cache->addProperty('transaction');
-            $cache->addProperty('category-string');
-            if ($cache->has()) {
-                return $cache->get();
-            }
-
-
-            $categories = [];
-            // get all budgets:
-            foreach ($transaction->categories as $category) {
-                $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name) . '</a>';
-            }
-
-            $string = join(', ', array_unique($categories));
-            $cache->store($string);
-
-            return $string;
-
-
         }
         );
     }

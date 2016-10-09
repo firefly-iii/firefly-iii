@@ -149,7 +149,7 @@ class Transaction extends Twig_Extension
             if ($budgets->count() > 0) {
                 $str = [];
                 foreach ($budgets as $budget) {
-                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', $budget->id), $budget->name, $budget->name);
+                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
                 }
 
                 return join(', ', $str);
@@ -176,7 +176,7 @@ class Transaction extends Twig_Extension
             if ($categories->count() > 0) {
                 $str = [];
                 foreach ($categories as $category) {
-                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', $category->id), $category->name, $category->name);
+                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
                 }
 
                 return join(', ', $str);
@@ -219,7 +219,7 @@ class Transaction extends Twig_Extension
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return '<a title="' . e($name) . '" href="' . route('accounts.show', $id) . '">' . e($name) . '</a>';
+            return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
 
         }, ['is_safe' => ['html']]
         );
@@ -257,7 +257,7 @@ class Transaction extends Twig_Extension
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return '<a title="' . e($name) . '" href="' . route('accounts.show', $id) . '">' . e($name) . '</a>';
+            return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
 
         }, ['is_safe' => ['html']]
         );
