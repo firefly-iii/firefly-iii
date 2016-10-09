@@ -64,7 +64,7 @@ class Journal implements JournalInterface
      *
      * @return Collection
      */
-    public function storeTransaction(TransactionJournal $journal, array $transaction): Collection
+    public function storeTransaction(TransactionJournal $journal, array $transaction, int $identifier): Collection
     {
         // store accounts (depends on type)
         list($sourceAccount, $destinationAccount) = $this->storeAccounts($journal->transactionType->type, $transaction);
@@ -73,11 +73,11 @@ class Journal implements JournalInterface
         /** @var Transaction $one */
         $one = Transaction::create(
             ['account_id'  => $sourceAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $transaction['amount'] * -1,
-             'description' => $transaction['description']]
+             'description' => $transaction['description'], 'identifier' => $identifier]
         );
         $two = Transaction::create(
             ['account_id'  => $destinationAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $transaction['amount'],
-             'description' => $transaction['description']]
+             'description' => $transaction['description'], 'identifier' => $identifier]
         );
 
         if (strlen($transaction['category']) > 0) {
@@ -118,8 +118,10 @@ class Journal implements JournalInterface
         // delete original transactions, and recreate them.
         $journal->transactions()->delete();
 
+        $identifier = 0;
         foreach ($data['transactions'] as $transaction) {
-            $this->storeTransaction($journal, $transaction);
+            $this->storeTransaction($journal, $transaction, $identifier);
+            $identifier++;
         }
 
         $journal->completed = true;
