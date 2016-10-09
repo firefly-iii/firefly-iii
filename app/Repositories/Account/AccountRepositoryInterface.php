@@ -48,15 +48,6 @@ interface AccountRepositoryInterface
     public function destroy(Account $account, Account $moveTo): bool;
 
     /**
-     * Returns the date of the first time the Account has been used, or today if it has never been used.
-     *
-     * @param Account $account
-     *
-     * @return Carbon
-     */
-    public function firstUseDate(Account $account): Carbon;
-
-    /**
      * Returns the transaction from a journal that is related to a given account. Since a journal generally only contains
      * two transactions, this will return one of the two. This method fails horribly when the journal has more than two transactions,
      * but luckily it isn't used for such folly.

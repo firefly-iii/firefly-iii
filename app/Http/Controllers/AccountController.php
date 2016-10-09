@@ -226,7 +226,7 @@ class AccountController extends Controller
 
         // grouped other months thing:
         // oldest transaction in account:
-        $start   = $repository->firstUseDate($account);
+        $start   = $repository->oldestJournalDate($account);
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = Navigation::endOfX(new Carbon, $range);

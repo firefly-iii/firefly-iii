@@ -85,30 +85,6 @@ class AccountRepository implements AccountRepositoryInterface
         return true;
     }
 
-    /**
-     * Returns the date of the first time the Account has been used, or today if it has never been used.
-     *
-     * @param Account $account
-     *
-     * @return Carbon
-     */
-    public function firstUseDate(Account $account): Carbon
-    {
-        $first = new Carbon;
-
-        /** @var Transaction $first */
-        $date = $account->transactions()
-                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                        ->orderBy('transaction_journals.date', 'ASC')
-                        ->orderBy('transaction_journals.order', 'DESC')
-                        ->orderBy('transaction_journals.id', 'ASC')
-                        ->first(['transaction_journals.date']);
-        if (!is_null($date)) {
-            $first = new Carbon($date->date);
-        }
-
-        return $first;
-    }
 
     /**
      * Returns the transaction from a journal that is related to a given account. Since a journal generally only contains
@@ -340,19 +316,20 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): Carbon
     {
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::
-        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->orderBy('transaction_journals.date', 'ASC')
-                                     ->orderBy('transaction_journals.order', 'DESC')
-                                     ->orderBy('transaction_journals.id', 'ÅSC')
-                                     ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new Carbon('1900-01-01');
+        $first = new Carbon;
+
+        /** @var Transaction $first */
+        $date = $account->transactions()
+                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                        ->orderBy('transaction_journals.date', 'ASC')
+                        ->orderBy('transaction_journals.order', 'DESC')
+                        ->orderBy('transaction_journals.id', 'ASC')
+                        ->first(['transaction_journals.date']);
+        if (!is_null($date)) {
+            $first = new Carbon($date->date);
         }
 
-        return $journal->date;
+        return $first;
     }
 
     /**
