@@ -61,26 +61,6 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 
     /**
-     * Get the accounts of a user that have piggy banks connected to them.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getPiggyBankAccounts(Carbon $start, Carbon $end): Collection;
-
-    /**
-     * Get savings accounts.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getSavingsAccounts(Carbon $start, Carbon $end): Collection;
-
-    /**
      * @param Collection $accounts
      * @param array      $types
      * @param Carbon     $start
