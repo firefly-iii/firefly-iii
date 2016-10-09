@@ -3,8 +3,10 @@
  * Amount.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -39,7 +41,7 @@ class Amount extends BasicConverter implements ConverterInterface
         }
         if ($len > 2 && $value{$decimalPosition} == ',') {
             $decimal = ',';
-        } 
+        }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ($decimal === '.') {

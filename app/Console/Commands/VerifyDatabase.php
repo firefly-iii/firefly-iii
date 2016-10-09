@@ -3,8 +3,10 @@
  * VerifyDatabase.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -195,7 +197,7 @@ class VerifyDatabase extends Command
             $date = is_null($entry->transaction_deleted_at) ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
             $this->error(
                 'Error: Account #' . $entry->account_id . ' should have been deleted, but has not.' .
-                ' Find it in the table called `accounts` and change the `deleted_at` field to: "' . $date . '"'
+                ' Find it in the table called "accounts" and change the "deleted_at" field to: "' . $date . '"'
             );
         }
     }
@@ -222,7 +224,7 @@ class VerifyDatabase extends Command
         foreach ($set as $entry) {
             $this->error(
                 'Error: Transaction #' . $entry->transaction_id . ' should have been deleted, but has not.' .
-                ' Find it in the table called `transactions` and change the `deleted_at` field to: "' . $entry->journal_deleted . '"'
+                ' Find it in the table called "transactions" and change the "deleted_at" field to: "' . $entry->journal_deleted . '"'
             );
         }
     }
@@ -240,7 +242,7 @@ class VerifyDatabase extends Command
 
         foreach ($set as $entry) {
             $this->error(
-                'Error: Journal #' . $entry->id . ' has zero transactions. Open table `transaction_journals` and delete the entry with id #' . $entry->id
+                'Error: Journal #' . $entry->id . ' has zero transactions. Open table "transaction_journals" and delete the entry with id #' . $entry->id
             );
         }
 
@@ -301,7 +303,7 @@ class VerifyDatabase extends Command
         foreach ($set as $entry) {
             $this->error(
                 'Error: Transaction journal #' . $entry->journal_id . ' should have been deleted, but has not.' .
-                ' Find it in the table called `transaction_journals` and change the `deleted_at` field to: "' . $entry->transaction_deleted . '"'
+                ' Find it in the table called "transaction_journals" and change the "deleted_at" field to: "' . $entry->transaction_deleted . '"'
             );
         }
     }

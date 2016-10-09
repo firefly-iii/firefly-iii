@@ -3,8 +3,10 @@
  * HomeController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -121,7 +123,7 @@ class HomeController extends Controller
     {
 
         $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $repository->countAccounts($types);
+        $count = $repository->count($types);
 
         if ($count == 0) {
             return redirect(route('new-user.index'));
@@ -140,14 +142,6 @@ class HomeController extends Controller
         $end               = session('end', Carbon::now()->endOfMonth());
         $showTour          = Preferences::get('tour', true)->data;
         $accounts          = $crud->getAccountsById($frontPage->data);
-        $savings           = $repository->getSavingsAccounts($start, $end);
-        $piggyBankAccounts = $repository->getPiggyBankAccounts($start, $end);
-
-
-        $savingsTotal = '0';
-        foreach ($savings as $savingAccount) {
-            $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
-        }
 
         foreach ($accounts as $account) {
             $set = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
@@ -159,7 +153,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts')
+            'index', compact('count', 'showTour', 'title','subTitle', 'mainTitleIcon', 'transactions')
         );
     }
 

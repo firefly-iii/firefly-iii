@@ -3,8 +3,10 @@
  * ReportController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -15,7 +17,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -90,15 +92,16 @@ class ReportController extends Controller
 
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param string                     $reportType
-     * @param Carbon                     $start
-     * @param Carbon                     $end
-     * @param Collection                 $accounts
+     * @param AccountTaskerInterface $accountTasker
+     * @param string                 $reportType
+     * @param Carbon                 $start
+     * @param Carbon                 $end
+     * @param Collection             $accounts
      *
      * @return \Illuminate\Http\JsonResponse
+     * @internal param AccountRepositoryInterface $repository
      */
-    public function yearInOut(AccountRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOut(AccountTaskerInterface $accountTasker, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -118,8 +121,8 @@ class ReportController extends Controller
         while ($currentStart <= $end) {
             $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
             $date               = $currentStart->format('Y-m');
-            $spent              = $repository->spentInPeriod($accounts, $currentStart, $currentEnd);
-            $earned             = $repository->earnedInPeriod($accounts, $currentStart, $currentEnd);
+            $spent              = $accountTasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
+            $earned             = $accountTasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
             $spentArray[$date]  = bcmul($spent, '-1');
             $earnedArray[$date] = $earned;
             $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
@@ -143,15 +146,16 @@ class ReportController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param string                     $reportType
-     * @param Carbon                     $start
-     * @param Carbon                     $end
-     * @param Collection                 $accounts
+     * @param AccountTaskerInterface $accountTasker
+     * @param string                 $reportType
+     * @param Carbon                 $start
+     * @param Carbon                 $end
+     * @param Collection             $accounts
      *
      * @return \Illuminate\Http\JsonResponse
+     * @internal param AccountRepositoryInterface $repository
      */
-    public function yearInOutSummarized(AccountRepositoryInterface $repository, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOutSummarized(AccountTaskerInterface $accountTasker, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:
@@ -172,8 +176,8 @@ class ReportController extends Controller
         while ($currentStart <= $end) {
             $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
             $date               = $currentStart->format('Y-m');
-            $spent              = $repository->spentInPeriod($accounts, $currentStart, $currentEnd);
-            $earned             = $repository->earnedInPeriod($accounts, $currentStart, $currentEnd);
+            $spent              = $accountTasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
+            $earned             = $accountTasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
             $spentArray[$date]  = bcmul($spent, '-1');
             $earnedArray[$date] = $earned;
             $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);

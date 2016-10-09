@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+
+## [4.0.2] - 2016-10-x
+### Added
+- Initial release.
+
+### Changed
+- Initial release.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- PostgreSQL compatibility thanks to @SanderKleykens
+
+### Security
+- Initial release.
+
+
 ## [4.0.1] - 2016-10-04
 ### Added
 - New ING import specific by @tomwerf

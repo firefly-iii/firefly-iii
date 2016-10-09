@@ -3,8 +3,10 @@
  * Steam.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -122,7 +124,7 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
-                                  ->get(['transaction_journals.date', DB::raw('SUM(`transactions`.`amount`) as `modified`')]);
+                                  ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
             $modified               = is_null($entry->modified) ? '0' : strval($entry->modified);
@@ -162,7 +164,7 @@ class Steam
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
-                               ->get(['transactions.account_id', DB::raw('sum(`transactions`.`amount`) as aggregate')]);
+                               ->get(['transactions.account_id', DB::raw('sum(transactions.amount) AS aggregate')]);
 
         $result = [];
         foreach ($balances as $entry) {
@@ -189,7 +191,7 @@ class Steam
         $set = auth()->user()->transactions()
                      ->whereIn('transactions.account_id', $accounts)
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', DB::raw('MAX(`transaction_journals`.`date`) as `max_date`')]);
+                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
         foreach ($set as $entry) {
             $list[intval($entry->account_id)] = new Carbon($entry->max_date);

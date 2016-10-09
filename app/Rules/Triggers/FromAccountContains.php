@@ -3,8 +3,10 @@
  * FromAccountContains.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -81,7 +83,8 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         Log::debug(
             sprintf(
                 'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
-                $journal->id, $fromAccountName, $search)
+                $journal->id, $fromAccountName, $search
+            )
         );
 
         return false;

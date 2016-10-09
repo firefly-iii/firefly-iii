@@ -3,8 +3,10 @@
  * TagSupport.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -31,9 +33,9 @@ class TagSupport extends Model
     public static function tagAllowAdvance(Tag $tag): bool
     {
         /*
-                * If this tag is a balancing act, and it contains transfers, it cannot be
-                * changes to an advancePayment.
-                */
+         * If this tag is a balancing act, and it contains transfers, it cannot be
+         * changes to an advancePayment.
+         */
 
         if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
             foreach ($tag->transactionjournals as $journal) {

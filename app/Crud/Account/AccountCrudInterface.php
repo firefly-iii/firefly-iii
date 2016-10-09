@@ -3,8 +3,10 @@
  * AccountCrudInterface.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -22,13 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountCrudInterface
 {
-    /**
-     * @param Account $account
-     * @param Account $moveTo
-     *
-     * @return bool
-     */
-    public function destroy(Account $account, Account $moveTo): bool;
 
     /**
      * @param int $accountId
@@ -106,11 +101,4 @@ interface AccountCrudInterface
      */
     public function update(Account $account, array $data): Account;
 
-    /**
-     * @param Account $account
-     * @param string  $type
-     *
-     * @return Account
-     */
-    public function updateAccountType(Account $account, string $type): Account;
 }

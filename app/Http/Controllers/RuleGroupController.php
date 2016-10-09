@@ -3,8 +3,10 @@
  * RuleGroupController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -19,7 +21,6 @@ use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Input;
 use Preferences;
@@ -145,16 +146,16 @@ class RuleGroupController extends Controller
     /**
      * Execute the given rulegroup on a set of existing transactions
      *
-     * @param SelectTransactionsRequest  $request
-     * @param AccountRepositoryInterface $repository
-     * @param RuleGroup                  $ruleGroup
+     * @param SelectTransactionsRequest $request
+     * @param AccountCrudInterface      $crud
+     * @param RuleGroup                 $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function execute(SelectTransactionsRequest $request, AccountCrudInterface $crud, RuleGroup $ruleGroup)
     {
         // Get parameters specified by the user
-        $accounts  = $repository->get($request->get('accounts'));
+        $accounts  = $crud->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
 

@@ -3,8 +3,10 @@
  * NewUserController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -13,7 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Preferences;
 use Session;
 use View;
@@ -35,11 +37,11 @@ class NewUserController extends Controller
 
 
     /**
-     * @param ARI $repository
+     * @param AccountRepositoryInterface $repository
      *
-     * @@return View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function index(ARI $repository)
+    public function index(AccountRepositoryInterface $repository)
     {
 
         View::share('title', trans('firefly.welcome'));
@@ -47,7 +49,7 @@ class NewUserController extends Controller
 
 
         $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $repository->countAccounts($types);
+        $count = $repository->count($types);
 
         if ($count > 0) {
             return redirect(route('index'));

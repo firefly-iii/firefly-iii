@@ -3,8 +3,10 @@
  * JournalRepository.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -227,7 +229,7 @@ class JournalRepository implements JournalRepositoryInterface
         $transactions = new Collection;
         $fields       = ['transactions.id', 'transactions.created_at', 'transactions.updated_at', 'transactions.deleted_at', 'transactions.account_id',
                          'transactions.transaction_journal_id', 'transactions.description', 'transactions.amount',
-                         DB::raw('SUM(`transactions`.`amount`) as `sum`')];
+                         DB::raw('SUM(transactions.amount) AS sum')];
         $groupBy      = ['transactions.id', 'transactions.created_at', 'transactions.updated_at', 'transactions.deleted_at', 'transactions.account_id',
                          'transactions.transaction_journal_id', 'transactions.description', 'transactions.amount'];
         switch ($journal->transactionType->type) {

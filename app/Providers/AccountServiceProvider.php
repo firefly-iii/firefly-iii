@@ -3,8 +3,10 @@
  * AccountServiceProvider.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -40,6 +42,17 @@ class AccountServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerRepository();
+        $this->registerTasker();
+
+
+    }
+
+    /**
+     *
+     */
+    private function registerRepository()
+    {
         $this->app->bind(
             'FireflyIII\Repositories\Account\AccountRepositoryInterface',
             function (Application $app, array $arguments) {
@@ -51,6 +64,26 @@ class AccountServiceProvider extends ServiceProvider
                 }
 
                 return app('FireflyIII\Repositories\Account\AccountRepository', $arguments);
+            }
+        );
+    }
+
+    /**
+     *
+     */
+    private function registerTasker()
+    {
+        $this->app->bind(
+            'FireflyIII\Repositories\Account\AccountTaskerInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Repositories\Account\AccountTasker', [auth()->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Repositories\Account\AccountTasker', $arguments);
             }
         );
     }

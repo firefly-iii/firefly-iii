@@ -20,8 +20,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            {% include 'reports/partials/accounts.twig' %}
+        <div class="col-lg-6 col-md-6 col-sm-6 loading" id="accountReport">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <!-- income -->
@@ -93,6 +92,9 @@
         var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
         var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
         var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
+
+        <!-- some URL's -->
+        var accountReportUrl = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>
     <script type="text/javascript" src="js/ff/reports/default/month.js"></script>
