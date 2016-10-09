@@ -37,6 +37,7 @@ return [
     'repeat_freq'           => 'Repeats',
     'description'           => 'Description',
     'amount'                => 'Amount',
+    'internal_reference'    => 'Internal reference',
     'date'                  => 'Date',
     'interest_date'         => 'Interest date',
     'book_date'             => 'Book date',
