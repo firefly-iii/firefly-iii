@@ -28,7 +28,7 @@ class ExpandTransactionsTable extends Migration
     {
         Schema::table(
             'transactions', function (Blueprint $table) {
-            $table->smallInteger('identifier', false, false)->default(0);
+            $table->smallInteger('identifier', false, true)->default(0);
         }
         );
     }
