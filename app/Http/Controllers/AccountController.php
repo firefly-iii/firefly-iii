@@ -226,10 +226,7 @@ class AccountController extends Controller
 
         // grouped other months thing:
         // oldest transaction in account:
-        $start = $repository->firstUseDate($account);
-        if ($start->year == 1900) {
-            $start = new Carbon;
-        }
+        $start   = $repository->firstUseDate($account);
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = Navigation::startOfPeriod($start, $range);
         $end     = Navigation::endOfX(new Carbon, $range);
@@ -244,8 +241,9 @@ class AccountController extends Controller
 
 
         if ($cache->has()) {
-            //            $entries = $cache->get();
-            //            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+            $entries = $cache->get();
+
+            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
         }
 
         // only include asset accounts when this account is an asset:

@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -47,6 +48,8 @@ interface AccountRepositoryInterface
     public function destroy(Account $account, Account $moveTo): bool;
 
     /**
+     * Returns the date of the first time the Account has been used, or today if it has never been used.
+     *
      * @param Account $account
      *
      * @return Carbon
@@ -54,10 +57,15 @@ interface AccountRepositoryInterface
     public function firstUseDate(Account $account): Carbon;
 
     /**
+     * Returns the transaction from a journal that is related to a given account. Since a journal generally only contains
+     * two transactions, this will return one of the two. This method fails horribly when the journal has more than two transactions,
+     * but luckily it isn't used for such folly.
+     *
      * @param TransactionJournal $journal
      * @param Account            $account
      *
      * @return Transaction
+     * @throws FireflyException
      */
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 

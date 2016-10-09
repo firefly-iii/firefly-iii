@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
@@ -85,13 +86,15 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns the date of the first time the Account has been used, or today if it has never been used.
+     *
      * @param Account $account
      *
      * @return Carbon
      */
     public function firstUseDate(Account $account): Carbon
     {
-        $first = new Carbon('1900-01-01');
+        $first = new Carbon;
 
         /** @var Transaction $first */
         $date = $account->transactions()
@@ -108,13 +111,22 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns the transaction from a journal that is related to a given account. Since a journal generally only contains
+     * two transactions, this will return one of the two. This method fails horribly when the journal has more than two transactions,
+     * but luckily it isn't used for such folly.
+     *
      * @param TransactionJournal $journal
      * @param Account            $account
      *
      * @return Transaction
+     * @throws FireflyException
      */
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction
     {
+        $count = $journal->transactions()->count();
+        if ($count > 2) {
+            throw new FireflyException(sprintf('Cannot use getFirstTransaction on journal #%d', $journal->id));
+        }
         $transaction = $journal->transactions()->where('account_id', $account->id)->first();
         if (is_null($transaction)) {
             $transaction = new Transaction;
