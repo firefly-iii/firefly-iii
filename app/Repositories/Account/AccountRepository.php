@@ -112,28 +112,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     *
-     * @param Account $account
-     * @param Carbon  $date
-     *
-     * @return string
-     */
-    public function leftOnAccount(Account $account, Carbon $date): string
-    {
-
-        $balance = Steam::balanceIgnoreVirtual($account, $date);
-        /** @var PiggyBank $p */
-        foreach ($account->piggyBanks()->get() as $p) {
-            $currentAmount = $p->currentRelevantRep()->currentamount ?? '0';
-
-            $balance = bcsub($balance, $currentAmount);
-        }
-
-        return $balance;
-
-    }
-
-    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account

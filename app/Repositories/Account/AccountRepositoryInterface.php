@@ -61,15 +61,6 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction;
 
     /**
-     *
-     * @param Account $account
-     * @param Carbon  $date
-     *
-     * @return string
-     */
-    public function leftOnAccount(Account $account, Carbon $date): string;
-
-    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account

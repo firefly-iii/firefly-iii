@@ -19,7 +19,6 @@ use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -53,16 +52,15 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank
      *
-     * @param ARI       $repository
      * @param PiggyBank $piggyBank
      *
      * @return View
      */
-    public function add(ARI $repository, PiggyBank $piggyBank)
+    public function add(PiggyBank $piggyBank)
     {
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
-        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
+        $leftOnAccount = $piggyBank->leftOnAccount($date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount ?? '0';
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
@@ -73,16 +71,15 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank (for mobile devices)
      *
-     * @param ARI       $repository
      * @param PiggyBank $piggyBank
      *
      * @return View
      */
-    public function addMobile(ARI $repository, PiggyBank $piggyBank)
+    public function addMobile(PiggyBank $piggyBank)
     {
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
-        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
+        $leftOnAccount = $piggyBank->leftOnAccount($date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount?? '0';
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
@@ -185,12 +182,11 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param ARI                          $repository
      * @param PiggyBankRepositoryInterface $piggyRepository
      *
      * @return View
      */
-    public function index(ARI $repository, PiggyBankRepositoryInterface $piggyRepository)
+    public function index(PiggyBankRepositoryInterface $piggyRepository)
     {
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
@@ -213,7 +209,7 @@ class PiggyBankController extends Controller
                 $accounts[$account->id] = [
                     'name'              => $account->name,
                     'balance'           => Steam::balanceIgnoreVirtual($account, $end),
-                    'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
+                    'leftForPiggyBanks' => $piggyBank->leftOnAccount($end),
                     'sumOfSaved'        => strval($piggyBank->savedSoFar),
                     'sumOfTargets'      => strval(round($piggyBank->targetamount, 2)),
                     'leftToSave'        => $piggyBank->leftToSave,
@@ -248,17 +244,16 @@ class PiggyBankController extends Controller
 
     /**
      * @param PiggyBankRepositoryInterface $repository
-     * @param ARI                          $accounts
      * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAdd(PiggyBankRepositoryInterface $repository, ARI $accounts, PiggyBank $piggyBank)
+    public function postAdd(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $amount = strval(round(Input::get('amount'), 2));
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
-        $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
+        $leftOnAccount = $piggyBank->leftOnAccount($date);
         $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);

@@ -13,9 +13,11 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -105,8 +107,6 @@ class PiggyBank extends Model
         $this->currentRep = $rep;
 
         return $rep;
-
-
     }
 
     /**
@@ -123,6 +123,27 @@ class PiggyBank extends Model
         }
 
         return $value;
+    }
+
+    /**
+     *
+     * @param Carbon $date
+     *
+     * @return string
+     */
+    public function leftOnAccount(Carbon $date): string
+    {
+
+        $balance = Steam::balanceIgnoreVirtual($this->account, $date);
+        /** @var PiggyBank $p */
+        foreach ($this->account->piggyBanks as $piggyBank) {
+            $currentAmount = $piggyBank->currentRelevantRep()->currentamount ?? '0';
+
+            $balance = bcsub($balance, $currentAmount);
+        }
+
+        return $balance;
+
     }
 
     /**
