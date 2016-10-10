@@ -19,7 +19,6 @@ use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
-use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
@@ -51,7 +50,6 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);
         Twig::addExtension(new Journal);
-        Twig::addExtension(new Budget);
         Twig::addExtension(new Translation);
         Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
