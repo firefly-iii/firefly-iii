@@ -59,7 +59,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $crud->findByAccountNumber($value, [AccountType::ASSET]);
+        $account = $repository->findByAccountNumber($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
             $this->setCertainty(50);

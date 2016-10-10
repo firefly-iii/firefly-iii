@@ -62,7 +62,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $crud->findByAccountNumber($value, []);
+        $account = $repository->findByAccountNumber($value, []);
         if (!is_null($account->id)) {
             Log::debug('Found account by number', ['id' => $account->id]);
             $this->setCertainty(50);
