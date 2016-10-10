@@ -59,6 +59,14 @@ interface AccountRepositoryInterface
     public function findByAccountNumber(string $number, array $types): Account;
 
     /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByIban(string $iban, array $types): Account;
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account

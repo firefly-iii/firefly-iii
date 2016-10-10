@@ -62,7 +62,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $crud->findByIban($value, [AccountType::ASSET]);
+        $account = $repository->findByIban($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by IBAN', ['id' => $account->id]);
             $this->setCertainty(50);

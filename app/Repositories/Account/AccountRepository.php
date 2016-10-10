@@ -19,6 +19,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -114,6 +115,32 @@ class AccountRepository implements AccountRepositoryInterface
         $accounts = $query->get(['accounts.*']);
         if ($accounts->count() > 0) {
             return $accounts->first();
+        }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByIban(string $iban, array $types): Account
+    {
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->iban === $iban) {
+                return $account;
+            }
         }
 
         return new Account;

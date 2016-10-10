@@ -23,6 +23,7 @@ use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use League\Csv\Reader;
 use Log;
@@ -177,8 +178,9 @@ class CsvSetup implements SetupInterface
      */
     public function saveImportConfiguration(array $data, FileBag $files): bool
     {
-        /** @var AccountCrud $repository */
-        $repository = app(AccountCrud::class, [auth()->user()]);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [auth()->user()]);
+
         $importId   = $data['csv_import_account'] ?? 0;
         $account    = $repository->find(intval($importId));
 
@@ -384,6 +386,10 @@ class CsvSetup implements SetupInterface
 
             //do something here
             foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
+                if (!isset($row[$index])) {
+                    // don't really know how to handle this. Just skip, for now.
+                    continue;
+                }
                 $value = $row[$index];
                 if (strlen($value) > 0) {
 

@@ -26,14 +26,6 @@ interface AccountCrudInterface
 {
 
     /**
-     * @param string $iban
-     * @param array  $types
-     *
-     * @return Account
-     */
-    public function findByIban(string $iban, array $types): Account;
-
-    /**
      * @param string $name
      * @param array  $types
      *

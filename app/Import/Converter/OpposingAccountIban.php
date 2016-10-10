@@ -61,7 +61,7 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $crud->findByIban($value, []);
+        $account = $repository->findByIban($value, []);
         if (!is_null($account->id)) {
             Log::debug('Found account by IBAN', ['id' => $account->id]);
             Log::info(
