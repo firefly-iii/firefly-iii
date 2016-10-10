@@ -106,9 +106,10 @@ return [
     'languages'                => [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => false],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
+        'hr_HR' => ['name_locale' => 'Croatian', 'name_english' => 'Croatian', 'complete' => false],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
         'zh-HK' => ['name_locale' => 'Chinese Traditional, Hong Kong', 'name_english' => 'Chinese Traditional, Hong Kong', 'complete' => false],
         'zh-TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional', 'complete' => false],
     ],
