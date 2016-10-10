@@ -760,7 +760,7 @@ return [
     'split_this_deposit'                        => 'Splits deze inkomsten',
     'split_this_transfer'                       => 'Splits deze overboeking',
     'cannot_edit_multiple_source'               => 'Je kan transactie #:id met omschrijving ":description" niet splitsen, want deze bevat meerdere bronrekeningen.',
-    'cannot_edit_multiple_dest'                 => 'Je kan transactie #:id met omschrijving ":description" niet splitsen, want deze bevat meerdere doelrekeningen.',
+    'cannot_edit_multiple_dest'                 => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
     'no_edit_multiple_left'                     => 'Je hebt geen geldige transacties geselecteerd.',
 
     // import
