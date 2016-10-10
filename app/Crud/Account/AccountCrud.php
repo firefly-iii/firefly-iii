@@ -85,30 +85,6 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
-    public function getAccountsById(array $accountIds): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts();
-
-        if (count($accountIds) > 0) {
-            $query->whereIn('accounts.id', $accountIds);
-        }
-
-        $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
      * @param array $types
      *
      * @return Collection

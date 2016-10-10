@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use Illuminate\Support\Collection;
 
 /**
  * Interface AccountRepositoryInterface
@@ -32,6 +33,13 @@ interface AccountRepositoryInterface
      * @return int
      */
     public function count(array $types): int;
+
+    /**
+     * @param array $accountIds
+     *
+     * @return Collection
+     */
+    public function getAccountsById(array $accountIds): Collection;
 
     /**
      * @param string $name

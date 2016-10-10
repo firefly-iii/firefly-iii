@@ -142,7 +142,7 @@ class HomeController extends Controller
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->endOfMonth());
         $showTour = Preferences::get('tour', true)->data;
-        $accounts = $crud->getAccountsById($frontPage->data);
+        $accounts = $repository->getAccountsById($frontPage->data);
 
         foreach ($accounts as $account) {
             $set = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);

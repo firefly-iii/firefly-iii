@@ -21,6 +21,7 @@ use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Input;
 use Preferences;
@@ -146,16 +147,16 @@ class RuleGroupController extends Controller
     /**
      * Execute the given rulegroup on a set of existing transactions
      *
-     * @param SelectTransactionsRequest $request
-     * @param AccountCrudInterface      $crud
-     * @param RuleGroup                 $ruleGroup
+     * @param SelectTransactionsRequest  $request
+     * @param AccountRepositoryInterface $repository
+     * @param RuleGroup                  $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function execute(SelectTransactionsRequest $request, AccountCrudInterface $crud, RuleGroup $ruleGroup)
+    public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         // Get parameters specified by the user
-        $accounts  = $crud->getAccountsById($request->get('accounts'));
+        $accounts  = $repository->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
 

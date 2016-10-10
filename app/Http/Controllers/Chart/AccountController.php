@@ -21,6 +21,7 @@ use FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -102,11 +103,12 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param AccountCrudInterface $crud
+     * @param AccountCrudInterface       $crud
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function frontpage(AccountCrudInterface $crud)
+    public function frontpage(AccountCrudInterface $crud, AccountRepositoryInterface $repository)
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -123,7 +125,7 @@ class AccountController extends Controller
         }
 
         $frontPage = Preferences::get('frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
-        $accounts  = $crud->getAccountsById($frontPage->data);
+        $accounts  = $repository->getAccountsById($frontPage->data);
 
         foreach ($accounts as $account) {
             $balances = [];
