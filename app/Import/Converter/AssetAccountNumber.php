@@ -69,7 +69,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
 
         // try to find by the name we would give it:
         $accountName = 'Asset account with number ' . e($value);
-        $account     = $crud->findByName($accountName, [AccountType::ASSET]);
+        $account     = $repository->findByName($accountName, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
             $this->setCertainty(50);

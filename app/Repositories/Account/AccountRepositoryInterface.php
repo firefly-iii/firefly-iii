@@ -34,6 +34,14 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account;
+
+    /**
      * Moved here from account CRUD.
      *
      * @param Account $account

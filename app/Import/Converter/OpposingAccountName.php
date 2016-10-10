@@ -61,7 +61,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $crud->findByName($value, []);
+        $account = $repository->findByName($value, []);
         if (!is_null($account->id)) {
             Log::debug('Found opposing account by name', ['id' => $account->id]);
             Log::info(

@@ -20,6 +20,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 
 /**
@@ -142,6 +143,37 @@ class AccountRepository implements AccountRepositoryInterface
                 return $account;
             }
         }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account
+    {
+        $query = $this->user->accounts();
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+
+        }
+        Log::debug(sprintf('Searching for account named %s of the following type(s)', $name), ['types' => $types]);
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name) {
+                Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+
+                return $account;
+            }
+        }
+        Log::debug('Found nothing.');
 
         return new Account;
     }

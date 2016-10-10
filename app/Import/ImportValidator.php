@@ -19,6 +19,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -175,13 +176,17 @@ class ImportValidator
             return $account;
         }
         // find it first by new type:
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
-        $result     = $repository->findByName($account->name, [$type]);
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class, [$this->user]);
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+
+        $result = $repository->findByName($account->name, [$type]);
         if (is_null($result->id)) {
             // can convert account:
             Log::debug(sprintf('No account named %s of type %s, create new account.', $account->name, $type));
-            $result = $repository->store(
+            $result = $crud->store(
                 [
                     'user'           => $this->user->id,
                     'accountType'    => config('firefly.shortNamesByFullName.' . $type),
@@ -211,12 +216,16 @@ class ImportValidator
     private function fallbackExpenseAccount(): Account
     {
 
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
-        $name       = 'Unknown expense account';
-        $result     = $repository->findByName($name, [AccountType::EXPENSE]);
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class, [$this->user]);
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+
+        $name   = 'Unknown expense account';
+        $result = $repository->findByName($name, [AccountType::EXPENSE]);
         if (is_null($result->id)) {
-            $result = $repository->store(
+            $result = $crud->store(
                 ['name'   => $name, 'iban' => null, 'openingBalance' => 0, 'user' => $this->user->id, 'accountType' => 'expense', 'virtualBalance' => 0,
                  'active' => true]
             );
@@ -231,12 +240,18 @@ class ImportValidator
     private function fallbackRevenueAccount(): Account
     {
 
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
-        $name       = 'Unknown revenue account';
-        $result     = $repository->findByName($name, [AccountType::REVENUE]);
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class, [$this->user]);
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+
+        $name   = 'Unknown revenue account';
+        $result = $repository->findByName($name, [AccountType::REVENUE]);
+
+
         if (is_null($result->id)) {
-            $result = $repository->store(
+            $result = $crud->store(
                 ['name'   => $name, 'iban' => null, 'openingBalance' => 0, 'user' => $this->user->id, 'accountType' => 'revenue', 'virtualBalance' => 0,
                  'active' => true]
             );

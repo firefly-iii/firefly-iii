@@ -52,6 +52,8 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
+     * WILL BE REMOVED.
+     *
      * @param string $name
      * @param array  $types
      *

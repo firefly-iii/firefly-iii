@@ -62,7 +62,7 @@ class AssetAccountName extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $crud->findByName($value, [AccountType::ASSET]);
+        $account = $repository->findByName($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found asset account by name', ['value' => $value, 'id' => $account->id]);
 
