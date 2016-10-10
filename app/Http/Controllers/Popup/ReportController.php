@@ -22,7 +22,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -192,17 +191,17 @@ class ReportController extends Controller
         $crud     = app(AccountCrudInterface::class);
         $account  = $crud->find(intval($attributes['accountId']));
         $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals = $tasker->getJournalsInPeriod($attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']);
+        $journals = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter for transfers and withdrawals TO the given $account
         $journals = $journals->filter(
             function (Transaction $transaction) use ($report) {
                 // get the destinations:
-                $destinations = TransactionJournal::destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
+                $sources = TransactionJournal::sourceAccountList($transaction->transactionJournal)->pluck('id')->toArray();
 
                 // do these intersect with the current list?
-                return !empty(array_intersect($report, $destinations));
+                return !empty(array_intersect($report, $sources));
             }
         );
 
