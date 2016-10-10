@@ -26,13 +26,6 @@ interface AccountCrudInterface
 {
 
     /**
-     * @param int $accountId
-     *
-     * @return Account
-     */
-    public function find(int $accountId): Account;
-
-    /**
      * @param string $number
      * @param array  $types
      *

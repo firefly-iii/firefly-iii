@@ -16,6 +16,7 @@ namespace FireflyIII\Import\Converter;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
 /**
@@ -42,8 +43,11 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
             return new Account;
         }
 
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class, [$this->user]);
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
 
 
         if (isset($this->mapping[$value])) {
@@ -58,7 +62,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $repository->findByAccountNumber($value, []);
+        $account = $crud->findByAccountNumber($value, []);
         if (!is_null($account->id)) {
             Log::debug('Found account by number', ['id' => $account->id]);
             $this->setCertainty(50);
@@ -68,7 +72,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
 
         // try to find by the name we would give it:
         $accountName = 'Import account with number ' . e($value);
-        $account     = $repository->findByName($accountName, [AccountType::IMPORT]);
+        $account     = $crud->findByName($accountName, [AccountType::IMPORT]);
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
             $this->setCertainty(50);
@@ -77,7 +81,7 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         }
 
 
-        $account = $repository->store(
+        $account = $crud->store(
             ['name'           => $accountName, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id,
              'accountType'    => 'import',
              'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]

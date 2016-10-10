@@ -16,17 +16,9 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Support\Collection;
-use Steam;
 
 
 /**
@@ -83,6 +75,21 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param $accountId
+     *
+     * @return Account
+     */
+    public function find(int $accountId): Account
+    {
+        $account = $this->user->accounts()->find($accountId);
+        if (is_null($account)) {
+            return new Account;
+        }
+
+        return $account;
     }
 
     /**

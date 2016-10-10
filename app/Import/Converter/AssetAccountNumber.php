@@ -16,6 +16,7 @@ namespace FireflyIII\Import\Converter;
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
 /**
@@ -40,8 +41,11 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
             return new Account;
         }
 
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class, [$this->user]);
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
 
 
         if (isset($this->mapping[$value])) {
@@ -55,7 +59,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $repository->findByAccountNumber($value, [AccountType::ASSET]);
+        $account = $crud->findByAccountNumber($value, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
             $this->setCertainty(50);
@@ -65,7 +69,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
 
         // try to find by the name we would give it:
         $accountName = 'Asset account with number ' . e($value);
-        $account     = $repository->findByName($accountName, [AccountType::ASSET]);
+        $account     = $crud->findByName($accountName, [AccountType::ASSET]);
         if (!is_null($account->id)) {
             Log::debug('Found account by name', ['id' => $account->id]);
             $this->setCertainty(50);
@@ -74,7 +78,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         }
 
 
-        $account = $repository->store(
+        $account = $crud->store(
             ['name'           => $accountName, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id,
              'accountType'    => 'asset',
              'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]

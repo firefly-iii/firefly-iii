@@ -14,11 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use Illuminate\Support\Collection;
 
 /**
  * Interface AccountRepositoryInterface
@@ -46,6 +42,13 @@ interface AccountRepositoryInterface
      * @return bool
      */
     public function destroy(Account $account, Account $moveTo): bool;
+
+    /**
+     * @param int $accountId
+     *
+     * @return Account
+     */
+    public function find(int $accountId): Account;
 
     /**
      * Returns the date of the very first transaction in this account.

@@ -13,8 +13,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
 /**
@@ -39,8 +39,9 @@ class AccountId extends BasicConverter implements ConverterInterface
 
             return new Account;
         }
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+
         if (isset($this->mapping[$value])) {
             Log::debug('Found account in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);
             $account = $repository->find(intval($this->mapping[$value]));

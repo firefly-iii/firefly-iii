@@ -13,9 +13,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import;
 
-use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Importer\ImporterInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -56,7 +56,9 @@ class ImportProcedure
         $validator->setUser($job->user);
         $validator->setJob($job);
         if ($job->configuration['import-account'] != 0) {
-            $repository = app(AccountCrud::class, [$job->user]);
+
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepositoryInterface::class, [$job->user]);
             $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
         }
 

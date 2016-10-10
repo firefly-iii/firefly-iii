@@ -53,21 +53,6 @@ class AccountCrud implements AccountCrudInterface
 
 
     /**
-     * @param $accountId
-     *
-     * @return Account
-     */
-    public function find(int $accountId): Account
-    {
-        $account = $this->user->accounts()->find($accountId);
-        if (is_null($account)) {
-            return new Account;
-        }
-
-        return $account;
-    }
-
-    /**
      * @param string $number
      * @param array  $types
      *

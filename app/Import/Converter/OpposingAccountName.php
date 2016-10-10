@@ -15,6 +15,7 @@ namespace FireflyIII\Import\Converter;
 
 use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
 /**
@@ -41,8 +42,11 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
             return new Account;
         }
 
-        /** @var AccountCrudInterface $repository */
-        $repository = app(AccountCrudInterface::class, [$this->user]);
+        /** @var AccountCrudInterface $crud */
+        $crud = app(AccountCrudInterface::class, [$this->user]);
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
 
 
         if (isset($this->mapping[$value])) {
@@ -57,7 +61,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
         }
 
         // not mapped? Still try to find it first:
-        $account = $repository->findByName($value, []);
+        $account = $crud->findByName($value, []);
         if (!is_null($account->id)) {
             Log::debug('Found opposing account by name', ['id' => $account->id]);
             Log::info(
@@ -69,7 +73,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
             return $account;
         }
 
-        $account = $repository->store(
+        $account = $crud->store(
             ['name'           => $value, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'import', 'virtualBalance' => 0, 'active' => true,
              'openingBalance' => 0,
             ]

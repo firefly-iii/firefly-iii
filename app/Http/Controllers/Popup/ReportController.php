@@ -15,13 +15,13 @@ namespace FireflyIII\Http\Controllers\Popup;
 
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -93,8 +93,11 @@ class ReportController extends Controller
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budget           = $budgetRepository->find(intval($attributes['budgetId']));
-        $crud             = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $account          = $crud->find(intval($attributes['accountId']));
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        $account = $repository->find(intval($attributes['accountId']));
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
@@ -187,9 +190,11 @@ class ReportController extends Controller
     private function expenseEntry(array $attributes): string
     {
         /** @var AccountTaskerInterface $tasker */
-        $tasker   = app(AccountTaskerInterface::class);
-        $crud     = app(AccountCrudInterface::class);
-        $account  = $crud->find(intval($attributes['accountId']));
+        $tasker = app(AccountTaskerInterface::class);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        $account  = $repository->find(intval($attributes['accountId']));
         $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $journals = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
@@ -222,12 +227,12 @@ class ReportController extends Controller
     {
         /** @var AccountTaskerInterface $tasker */
         $tasker = app(AccountTaskerInterface::class);
-        /** @var AccountCrudInterface $crud */
-        $crud     = app(AccountCrudInterface::class);
-        $account  = $crud->find(intval($attributes['accountId']));
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
-        $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $account    = $repository->find(intval($attributes['accountId']));
+        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $journals   = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
+        $report     = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter the set so the destinations outside of $attributes['accounts'] are not included.
         $journals = $journals->filter(
