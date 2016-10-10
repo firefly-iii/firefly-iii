@@ -34,6 +34,7 @@ interface JournalInterface
     /**
      * @param TransactionJournal $journal
      * @param array              $transaction
+     * @param int                $identifier
      *
      * @return Collection
      */

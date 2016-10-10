@@ -48,7 +48,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]   $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction transactionTypes($types)
- * @property integer $identifier
+ * @property integer                                                                     $identifier
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereIdentifier($value)
  */
 class Transaction extends Model

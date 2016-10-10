@@ -23,27 +23,27 @@ use Watson\Validating\ValidatingTrait;
 /**
  * FireflyIII\Models\Bill
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property integer                                                            $user_id
- * @property string                                                             $name
- * @property string                                                             $match
- * @property float                                                              $amount_min
- * @property float                                                              $amount_max
- * @property \Carbon\Carbon                                                     $date
- * @property boolean                                                            $active
- * @property boolean                                                            $automatch
- * @property string                                                             $repeat_freq
- * @property integer                                                            $skip
- * @property boolean                                                            $name_encrypted
- * @property boolean                                                            $match_encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                              $user
- * @property \Carbon\Carbon                                                     $nextExpectedMatch
- * @property \Carbon\Carbon                                                     $lastFoundMatch
- * @property bool                                                               $paidInPeriod
- * @property string                                                             $lastPaidAmount
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property integer                                                                               $user_id
+ * @property string                                                                                $name
+ * @property string                                                                                $match
+ * @property float                                                                                 $amount_min
+ * @property float                                                                                 $amount_max
+ * @property \Carbon\Carbon                                                                        $date
+ * @property boolean                                                                               $active
+ * @property boolean                                                                               $automatch
+ * @property string                                                                                $repeat_freq
+ * @property integer                                                                               $skip
+ * @property boolean                                                                               $name_encrypted
+ * @property boolean                                                                               $match_encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]                    $transactionjournals
+ * @property-read \FireflyIII\User                                                                 $user
+ * @property \Carbon\Carbon                                                                        $nextExpectedMatch
+ * @property \Carbon\Carbon                                                                        $lastFoundMatch
+ * @property bool                                                                                  $paidInPeriod
+ * @property string                                                                                $lastPaidAmount
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
@@ -60,7 +60,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
  * @mixin \Eloquent
- * @property string                                                             $deleted_at
+ * @property string                                                                                $deleted_at
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereDeletedAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
  */

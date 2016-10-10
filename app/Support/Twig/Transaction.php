@@ -118,6 +118,9 @@ class Transaction extends Twig_Extension
         );
     }
 
+    /**
+     * @return Twig_SimpleFunction
+     */
     public function splitJournalIndicator(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(

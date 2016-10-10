@@ -19,14 +19,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\TransactionGroup
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property \Carbon\Carbon                                                     $deleted_at
- * @property integer                                                            $user_id
- * @property string                                                             $relation
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                              $user
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property \Carbon\Carbon                                                                        $deleted_at
+ * @property integer                                                                               $user_id
+ * @property string                                                                                $relation
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]                    $transactionjournals
+ * @property-read \FireflyIII\User                                                                 $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup whereUpdatedAt($value)

@@ -21,21 +21,21 @@ use Watson\Validating\ValidatingTrait;
 /**
  * FireflyIII\Models\Tag
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property string                                                             $deleted_at
- * @property integer                                                            $user_id
- * @property string                                                             $tag
- * @property string                                                             $tagMode
- * @property \Carbon\Carbon                                                     $date
- * @property string                                                             $description
- * @property float                                                              $latitude
- * @property float                                                              $longitude
- * @property integer                                                            $zoomLevel
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User                                              $user
- * @property int                                                                $account_id
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property string                                                                                $deleted_at
+ * @property integer                                                                               $user_id
+ * @property string                                                                                $tag
+ * @property string                                                                                $tagMode
+ * @property \Carbon\Carbon                                                                        $date
+ * @property string                                                                                $description
+ * @property float                                                                                 $latitude
+ * @property float                                                                                 $longitude
+ * @property integer                                                                               $zoomLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]                    $transactionjournals
+ * @property-read \FireflyIII\User                                                                 $user
+ * @property int                                                                                   $account_id
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)
