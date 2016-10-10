@@ -49,6 +49,7 @@ use Watson\Validating\ValidatingTrait;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]     $transactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\LimitRepetition[] $limitrepetitions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
  */
 class Budget extends Model
 {

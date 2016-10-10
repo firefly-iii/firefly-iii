@@ -62,6 +62,7 @@ use Watson\Validating\ValidatingTrait;
  * @mixin \Eloquent
  * @property string                                                             $deleted_at
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereDeletedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
  */
 class Bill extends Model
 {

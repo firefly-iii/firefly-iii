@@ -24,6 +24,42 @@ use Illuminate\Notifications\Notifiable;
  * Class User
  *
  * @package FireflyIII
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $email
+ * @property string $password
+ * @property string $remember_token
+ * @property string $reset
+ * @property boolean $blocked
+ * @property string $blocked_code
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Bill[] $bills
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[] $exportJobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[] $importJobs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[] $preferences
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[] $ruleGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $unreadNotifications
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereReset($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlocked($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereBlockedCode($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {

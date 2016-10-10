@@ -94,6 +94,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal expanded()
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal sortCorrectly()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionJournalMeta
  */
 class TransactionJournal extends TransactionJournalSupport
 {

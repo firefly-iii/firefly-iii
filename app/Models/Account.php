@@ -212,6 +212,24 @@ class Account extends Model
     }
 
     /**
+     * @return TransactionJournal|null
+     */
+    public function openingBalanceTransaction(): TransactionJournal
+    {
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $this->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return new TransactionJournal;
+        }
+
+        return $journal;
+    }
+
+    /**
      * @return HasMany
      */
     public function piggyBanks(): HasMany
