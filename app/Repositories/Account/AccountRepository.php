@@ -158,23 +158,4 @@ class AccountRepository implements AccountRepositoryInterface
         return $first;
     }
 
-    /**
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     */
-    public function openingBalanceTransaction(Account $account): TransactionJournal
-    {
-        $journal = TransactionJournal
-            ::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new TransactionJournal;
-        }
-
-        return $journal;
-    }
 }

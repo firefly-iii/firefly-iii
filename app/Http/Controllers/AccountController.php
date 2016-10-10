@@ -127,7 +127,7 @@ class AccountController extends Controller
         $what           = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle       = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
         $subTitleIcon   = config('firefly.subIconsByIdentifier.' . $what);
-        $openingBalance = $repository->openingBalanceTransaction($account);
+        $openingBalance = $account->openingBalanceTransaction($account);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {

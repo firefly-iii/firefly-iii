@@ -78,12 +78,4 @@ interface AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): Carbon;
 
-    /**
-     *
-     * @param Account $account
-     *
-     * @return TransactionJournal
-     */
-    public function openingBalanceTransaction(Account $account) : TransactionJournal;
-
 }
