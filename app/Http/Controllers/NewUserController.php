@@ -164,12 +164,10 @@ class NewUserController extends Controller
             'openingBalance'         => null,
             'openingBalanceDate'     => null,
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_credit_card_limit')),
+            'ccType'                 => 'monthlyFull',
+            'ccMonthlyPaymentDate'   => Carbon::now()->year . '-01-01',
         ];
-        $creditCard    = $crud->store($creditAccount);
-
-        // store meta for CC:
-        $crud->storeMeta($creditCard, 'ccType', 'monthlyFull');
-        $crud->storeMeta($creditCard, 'ccMonthlyPaymentDate', Carbon::now()->year . '-01-01');
+        $crud->store($creditAccount);
 
         return true;
     }
