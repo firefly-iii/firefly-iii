@@ -107,7 +107,7 @@ return [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => false],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
-        'hr_HR' => ['name_locale' => 'Croatian', 'name_english' => 'Croatian', 'complete' => false],
+        'hr_HR' => ['name_locale' => 'hrvatski', 'name_english' => 'Croatian', 'complete' => false],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
         'zh-HK' => ['name_locale' => '繁體中文（香港）', 'name_english' => 'Chinese Traditional, Hong Kong', 'complete' => false],
