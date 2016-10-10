@@ -13,9 +13,9 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Mapper;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AssetAccounts
@@ -30,10 +30,10 @@ class AssetAccounts implements MapperInterface
      */
     public function getMap(): array
     {
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class);
-        $set  = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $list = [];
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $set               = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $list              = [];
 
         /** @var Account $account */
         foreach ($set as $account) {

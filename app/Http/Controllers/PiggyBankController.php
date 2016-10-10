@@ -15,10 +15,10 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -88,13 +88,14 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
+     * @param AccountRepositoryInterface $repository
      *
      * @return View
+     *
      */
-    public function create(AccountCrudInterface $crud)
+    public function create(AccountRepositoryInterface $repository)
     {
-        $accounts     = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
@@ -144,15 +145,15 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
-     * @param PiggyBank            $piggyBank
+     * @param AccountRepositoryInterface $repository
+     * @param PiggyBank                  $piggyBank
      *
      * @return View
      */
-    public function edit(AccountCrudInterface $crud, PiggyBank $piggyBank)
+    public function edit(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
 
-        $accounts     = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;

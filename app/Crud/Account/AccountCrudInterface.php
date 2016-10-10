@@ -40,13 +40,6 @@ interface AccountCrudInterface
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types): Collection;
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
     public function getActiveAccountsByType(array $types): Collection;
 
     /**

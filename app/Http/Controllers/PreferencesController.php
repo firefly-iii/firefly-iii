@@ -12,9 +12,9 @@
 declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
@@ -70,13 +70,13 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
+     * @param AccountRepositoryInterface $repository
      *
      * @return View
      */
-    public function index(AccountCrudInterface $crud)
+    public function index(AccountRepositoryInterface $repository)
     {
-        $accounts            = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts            = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $viewRangePref       = Preferences::get('viewRange', '1M');
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);

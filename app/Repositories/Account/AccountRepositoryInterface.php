@@ -35,21 +35,6 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
-    public function getAccountsById(array $accountIds): Collection;
-
-    /**
-     * @param string $name
-     * @param array  $types
-     *
-     * @return Account
-     */
-    public function findByName(string $name, array $types): Account;
-
-    /**
      * Moved here from account CRUD.
      *
      * @param Account $account
@@ -81,6 +66,28 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function findByIban(string $iban, array $types): Account;
+
+    /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account;
+
+    /**
+     * @param array $accountIds
+     *
+     * @return Collection
+     */
+    public function getAccountsById(array $accountIds): Collection;
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types): Collection;
 
     /**
      * Returns the date of the very first transaction in this account.

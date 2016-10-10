@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -54,11 +53,11 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's expense accounts.
      *
-     * @param AccountCrudInterface $crud
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAccounts(AccountCrudInterface $crud)
+    public function expenseAccounts(AccountRepositoryInterface $repository)
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -70,7 +69,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $accounts = $crud->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
+        $accounts = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
 
         $start->subDay();
         $ids           = $accounts->pluck('id')->toArray();
@@ -103,12 +102,11 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param AccountCrudInterface       $crud
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function frontpage(AccountCrudInterface $crud, AccountRepositoryInterface $repository)
+    public function frontpage(AccountRepositoryInterface $repository)
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -124,7 +122,7 @@ class AccountController extends Controller
             return Response::json($cache->get());
         }
 
-        $frontPage = Preferences::get('frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
+        $frontPage = Preferences::get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
         $accounts  = $repository->getAccountsById($frontPage->data);
 
         foreach ($accounts as $account) {

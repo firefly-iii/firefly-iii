@@ -15,7 +15,6 @@ namespace FireflyIII\Import\Setup;
 
 
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
@@ -75,9 +74,10 @@ class CsvSetup implements SetupInterface
      */
     public function getConfigurationData(): array
     {
-        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $accounts   = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $delimiters = [
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $delimiters        = [
             ','   => trans('form.csv_comma'),
             ';'   => trans('form.csv_semicolon'),
             'tab' => trans('form.csv_tab'),
@@ -181,8 +181,8 @@ class CsvSetup implements SetupInterface
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [auth()->user()]);
 
-        $importId   = $data['csv_import_account'] ?? 0;
-        $account    = $repository->find(intval($importId));
+        $importId = $data['csv_import_account'] ?? 0;
+        $account  = $repository->find(intval($importId));
 
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
         $config                = $this->job->configuration;

@@ -73,16 +73,16 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
-     * @param Account              $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return View
      */
-    public function delete(AccountCrudInterface $crud, Account $account)
+    public function delete(ARI $repository, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectListWithEmpty($crud->getAccountsByType([$account->accountType->type]));
+        $accountList = ExpandedForm::makeSelectListWithEmpty($repository->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -94,8 +94,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI                  $repository
-     * @param Account              $account
+     * @param ARI     $repository
+     * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -158,19 +158,19 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
-     * @param string               $what
+     * @param ARI    $repository
+     * @param string $what
      *
      * @return View
      */
-    public function index(AccountCrudInterface $crud, string $what)
+    public function index(ARI $repository, string $what)
     {
         $what = $what ?? 'asset';
 
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = $crud->getAccountsByType($types);
+        $accounts     = $repository->getAccountsByType($types);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -195,13 +195,12 @@ class AccountController extends Controller
 
     /**
      * @param AccountTaskerInterface $tasker
-     * @param AccountCrudInterface   $crud
      * @param ARI                    $repository
      * @param Account                $account
      *
      * @return View
      */
-    public function show(AccountTaskerInterface $tasker, AccountCrudInterface $crud, ARI $repository, Account $account)
+    public function show(AccountTaskerInterface $tasker, ARI $repository, Account $account)
     {
         // show journals from current period only:
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
@@ -245,7 +244,7 @@ class AccountController extends Controller
         // only include asset accounts when this account is an asset:
         $assets = new Collection;
         if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
-            $assets = $crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         }
 
         while ($end >= $start) {

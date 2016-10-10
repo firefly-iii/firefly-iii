@@ -24,6 +24,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -61,17 +62,20 @@ class SplitController extends Controller
         $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
         $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository    = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $crud               = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $assetAccounts      = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
-        $sessionData        = session('journal-data', []);
-        $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
-        $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBanks         = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanksWithAmount());
-        $subTitle           = trans('form.add_new_' . $sessionData['what']);
-        $optionalFields     = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $subTitleIcon       = 'fa-plus';
-        $preFilled          = [
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+
+        $assetAccounts  = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $sessionData    = session('journal-data', []);
+        $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $currencies     = ExpandedForm::makeSelectList($currencyRepository->get());
+        $budgets        = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks     = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanksWithAmount());
+        $subTitle       = trans('form.add_new_' . $sessionData['what']);
+        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $subTitleIcon   = 'fa-plus';
+        $preFilled      = [
             'what'                        => $sessionData['what'] ?? 'withdrawal',
             'journal_amount'              => $sessionData['amount'] ?? 0,
             'journal_source_account_id'   => $sessionData['source_account_id'] ?? 0,
@@ -100,15 +104,18 @@ class SplitController extends Controller
     {
         $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
         $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $crud               = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $uploadSize         = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $currencies         = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts      = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
-        $optionalFields     = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $budgets            = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $preFilled          = $this->arrayFromJournal($request, $journal);
-        $subTitle           = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $subTitleIcon       = 'fa-pencil';
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+
+        $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $currencies     = ExpandedForm::makeSelectList($currencyRepository->get());
+        $assetAccounts  = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $budgets        = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $preFilled      = $this->arrayFromJournal($request, $journal);
+        $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitleIcon   = 'fa-pencil';
 
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);

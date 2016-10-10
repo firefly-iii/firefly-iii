@@ -20,6 +20,7 @@ use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -107,9 +108,11 @@ class MassController extends Controller
      */
     public function massEdit(Collection $journals)
     {
-        $subTitle    = trans('firefly.mass_edit_journals');
-        $crud        = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $accountList = ExpandedForm::makeSelectList($crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
+        $subTitle = trans('firefly.mass_edit_journals');
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository  = app(AccountRepositoryInterface::class);
+        $accountList = ExpandedForm::makeSelectList($repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
 
         // skip transactions that have multiple destinations
         // or multiple sources:

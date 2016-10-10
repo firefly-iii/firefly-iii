@@ -89,29 +89,6 @@ class AccountCrud implements AccountCrudInterface
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts();
-        if (count($types) > 0) {
-            $query->accountTypeIn($types);
-        }
-
-        $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
     public function getActiveAccountsByType(array $types): Collection
     {
         /** @var Collection $result */

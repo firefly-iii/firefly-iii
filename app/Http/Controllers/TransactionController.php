@@ -23,6 +23,7 @@ use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
 use Preferences;
@@ -150,10 +151,13 @@ class TransactionController extends Controller
         // code to get list data:
         $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $crud             = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $assetAccounts    = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
-        $budgetList       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBankList    = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        $assetAccounts = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
+        $budgetList    = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
@@ -245,7 +249,7 @@ class TransactionController extends Controller
         $date = new Carbon($request->get('date'));
         if (count($ids) > 0) {
             $order = 0;
-            $ids = array_unique($ids);
+            $ids   = array_unique($ids);
             foreach ($ids as $id) {
                 $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {

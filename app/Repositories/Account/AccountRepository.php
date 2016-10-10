@@ -203,6 +203,29 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types): Collection
+    {
+        /** @var Collection $result */
+        $query = $this->user->accounts();
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
+
+        $result = $query->get(['accounts.*']);
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
+            }
+        );
+
+        return $result;
+    }
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account

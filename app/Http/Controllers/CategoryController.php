@@ -14,10 +14,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -159,13 +159,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                  $repository
-     * @param AccountCrudInterface $crud
-     * @param Category             $category
+     * @param CRI                        $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Category                   $category
      *
      * @return View
      */
-    public function show(CRI $repository, AccountCrudInterface $crud, Category $category)
+    public function show(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
     {
         $range = Preferences::get('viewRange', '1M')->data;
         /** @var Carbon $start */
@@ -210,7 +210,7 @@ class CategoryController extends Controller
 
 
         $categoryCollection = new Collection([$category]);
-        $accounts           = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts           = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);

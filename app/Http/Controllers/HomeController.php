@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Artisan;
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
@@ -115,12 +114,11 @@ class HomeController extends Controller
 
     /**
      * @param ARI                    $repository
-     * @param AccountCrudInterface   $crud
      * @param AccountTaskerInterface $tasker
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function index(ARI $repository, AccountCrudInterface $crud, AccountTaskerInterface $tasker)
+    public function index(ARI $repository, AccountTaskerInterface $tasker)
     {
 
         $types = config('firefly.accountTypesByIdentifier.asset');
@@ -135,7 +133,7 @@ class HomeController extends Controller
         $mainTitleIcon = 'fa-fire';
         $transactions  = [];
         $frontPage     = Preferences::get(
-            'frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+            'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());

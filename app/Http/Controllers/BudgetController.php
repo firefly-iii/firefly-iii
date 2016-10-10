@@ -16,12 +16,12 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use Config;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -158,12 +158,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param AccountCrudInterface      $crud
+     * @param BudgetRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return View
+     *
      */
-    public function index(BudgetRepositoryInterface $repository, AccountCrudInterface $crud)
+    public function index(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
         $repository->cleanupBudgets();
 
@@ -187,7 +188,7 @@ class BudgetController extends Controller
         $period            = Navigation::periodShow($start, $range);
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $accounts          = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $startAsString     = $start->format('Y-m-d');
         $endAsString       = $end->format('Y-m-d');
 
