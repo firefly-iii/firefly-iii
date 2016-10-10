@@ -85,33 +85,6 @@ class AccountCrud implements AccountCrudInterface
     }
 
     /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getActiveAccountsByType(array $types): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        );
-        if (count($types) > 0) {
-            $query->accountTypeIn($types);
-        }
-        $query->where('active', 1);
-        $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
      * @param array $data
      *
      * @return Account
@@ -130,18 +103,6 @@ class AccountCrud implements AccountCrudInterface
 
         return $newAccount;
 
-    }
-
-    /**
-     * @param $account
-     * @param $name
-     * @param $value
-     *
-     * @return AccountMeta
-     */
-    public function storeMeta(Account $account, string $name, $value): AccountMeta
-    {
-        return AccountMeta::create(['name' => $name, 'data' => $value, 'account_id' => $account->id,]);
     }
 
     /**

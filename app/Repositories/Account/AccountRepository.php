@@ -226,6 +226,33 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getActiveAccountsByType(array $types): Collection
+    {
+        /** @var Collection $result */
+        $query = $this->user->accounts()->with(
+            ['accountmeta' => function (HasMany $query) {
+                $query->where('name', 'accountRole');
+            }]
+        );
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
+        $query->where('active', 1);
+        $result = $query->get(['accounts.*']);
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
+            }
+        );
+
+        return $result;
+    }
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account

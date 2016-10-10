@@ -36,27 +36,11 @@ interface AccountCrudInterface
     public function findByName(string $name, array $types): Account;
 
     /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getActiveAccountsByType(array $types): Collection;
-
-    /**
      * @param array $data
      *
      * @return Account
      */
     public function store(array $data) : Account;
-
-    /**
-     * @param $account
-     * @param $name
-     * @param $value
-     *
-     * @return AccountMeta
-     */
-    public function storeMeta(Account $account, string $name, $value): AccountMeta;
 
     /**
      * @param Account $account
