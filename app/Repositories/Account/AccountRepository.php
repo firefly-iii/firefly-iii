@@ -16,8 +16,13 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -34,6 +39,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     /** @var User */
     private $user;
+    /** @var array */
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
     /**
      * AttachmentRepository constructor.
@@ -275,6 +282,327 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $first;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Account
+     */
+    public function store(array $data): Account
+    {
+        $newAccount = $this->storeAccount($data);
+        $this->updateMetadata($newAccount, $data);
+
+        if ($this->validOpeningBalanceData($data)) {
+            $this->updateInitialBalance($newAccount, $data);
+
+            return $newAccount;
+        }
+        $this->deleteInitialBalance($newAccount);
+
+        return $newAccount;
+
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return Account
+     */
+    public function update(Account $account, array $data): Account
+    {
+        // update the account:
+        $account->name            = $data['name'];
+        $account->active          = $data['active'] == '1' ? true : false;
+        $account->virtual_balance = $data['virtualBalance'];
+        $account->iban            = $data['iban'];
+        $account->save();
+
+        $this->updateMetadata($account, $data);
+        $this->updateInitialBalance($account, $data);
+
+        return $account;
+    }
+
+    /**
+     * @param Account $account
+     */
+    protected function deleteInitialBalance(Account $account)
+    {
+        $journal = $this->openingBalanceTransaction($account);
+        if (!is_null($journal->id)) {
+            $journal->delete();
+        }
+
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    protected function openingBalanceTransaction(Account $account): TransactionJournal
+    {
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            Log::debug('Could not find a opening balance journal, return empty one.');
+
+            return new TransactionJournal;
+        }
+        Log::debug(sprintf('Found opening balance: journal #%d.', $journal->id));
+
+        return $journal;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Account
+     * @throws FireflyException
+     */
+    protected function storeAccount(array $data): Account
+    {
+        $data['accountType'] = $data['accountType'] ?? 'invalid';
+        $type                = config('firefly.accountTypeByIdentifier.' . $data['accountType']);
+        $accountType         = AccountType::whereType($type)->first();
+
+        // verify account type
+        if (is_null($accountType)) {
+            throw new FireflyException(sprintf('Account type "%s" is invalid. Cannot create account.', $data['accountType']));
+        }
+
+        // account may exist already:
+        $existingAccount = $this->findByName($data['name'], [$data['accountType']]);
+        if (!is_null($existingAccount->id)) {
+            throw new FireflyException(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $data['accountType']));
+        }
+
+        // create it:
+        $newAccount = new Account(
+            [
+                'user_id'         => $data['user'],
+                'account_type_id' => $accountType->id,
+                'name'            => $data['name'],
+                'virtual_balance' => $data['virtualBalance'],
+                'active'          => $data['active'] === true ? true : false,
+                'iban'            => $data['iban'],
+            ]
+        );
+        $newAccount->save();
+        // verify its creation:
+        if (is_null($newAccount->id)) {
+            Log::error(
+                sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()), $newAccount->getErrors()->toArray()
+            );
+            throw new FireflyException(sprintf('Tried to create account named "%s" but failed. The logs have more details.', $data['name']));
+        }
+
+        return $newAccount;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return TransactionJournal
+     */
+    protected function storeInitialBalance(Account $account, array $data): TransactionJournal
+    {
+        $amount          = $data['openingBalance'];
+        $user            = $data['user'];
+        $name            = $data['name'];
+        $opposing        = $this->storeOpposingAccount($amount, $user, $name);
+        $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        $journal         = TransactionJournal::create(
+            [
+                'user_id'                 => $data['user'],
+                'transaction_type_id'     => $transactionType->id,
+                'transaction_currency_id' => $data['openingBalanceCurrency'],
+                'description'             => 'Initial balance for "' . $account->name . '"',
+                'completed'               => true,
+                'date'                    => $data['openingBalanceDate'],
+                'encrypted'               => true,
+            ]
+        );
+        Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));
+
+        $firstAccount  = $account;
+        $secondAccount = $opposing;
+        $firstAmount   = $amount;
+        $secondAmount  = $amount * -1;
+
+        if ($data['openingBalance'] < 0) {
+            $firstAccount  = $opposing;
+            $secondAccount = $account;
+            $firstAmount   = $amount * -1;
+            $secondAmount  = $amount;
+        }
+
+        $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
+        $one->save();// first transaction: from
+        $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
+        $two->save(); // second transaction: to
+
+        Log::debug(sprintf('Stored two transactions, #%d and #%d', $one->id, $two->id));
+
+        return $journal;
+    }
+
+    /**
+     * @param float  $amount
+     * @param int    $user
+     * @param string $name
+     *
+     * @return Account
+     */
+    protected function storeOpposingAccount(float $amount, int $user, string $name):Account
+    {
+        $type         = $amount < 0 ? 'expense' : 'revenue';
+        $opposingData = [
+            'user'           => $user,
+            'accountType'    => $type,
+            'name'           => $name . ' initial balance',
+            'active'         => false,
+            'iban'           => '',
+            'virtualBalance' => 0,
+        ];
+        Log::debug('Going to create an opening balance opposing account');
+
+        return $this->storeAccount($opposingData);
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return bool
+     */
+    protected function updateInitialBalance(Account $account, array $data): bool
+    {
+        $openingBalance = $this->openingBalanceTransaction($account);
+
+        // no opening balance journal? create it:
+        if (is_null($openingBalance->id)) {
+            Log::debug('No opening balance journal yet, create journal.');
+            $this->storeInitialBalance($account, $data);
+
+            return true;
+        }
+        // opening balance data? update it!
+        if (!is_null($openingBalance->id)) {
+            $date   = $data['openingBalanceDate'];
+            $amount = $data['openingBalance'];
+
+            Log::debug('Opening balance journal found, update journal.');
+
+            $this->updateOpeningBalanceJournal($account, $openingBalance, $date, $amount);
+
+            return true;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     */
+    protected function updateMetadata(Account $account, array $data)
+    {
+        foreach ($this->validFields as $field) {
+            /** @var AccountMeta $entry */
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            // if $data has field and $entry is null, create new one:
+            if (isset($data[$field]) && is_null($entry)) {
+                Log::debug(
+                    sprintf(
+                        'Created meta-field "%s":"%s" for account #%d ("%s") ',
+                        $field, $data[$field], $account->id, $account->name
+                    )
+                );
+                AccountMeta::create(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field],
+                    ]
+                );
+            }
+
+            // if $data has field and $entry is not null, update $entry:
+            if (isset($data[$field]) && !is_null($entry)) {
+                $entry->data = $data[$field];
+                $entry->save();
+                Log::debug(
+                    sprintf(
+                        'Updated meta-field "%s":"%s" for account #%d ("%s") ',
+                        $field, $data[$field], $account->id, $account->name
+                    )
+                );
+            }
+        }
+
+    }
+
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $journal
+     * @param Carbon             $date
+     * @param float              $amount
+     *
+     * @return bool
+     */
+    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    {
+        // update date:
+        $journal->date = $date;
+        $journal->save();
+        // update transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($account->id == $transaction->account_id) {
+                $transaction->amount = $amount;
+                $transaction->save();
+            }
+            if ($account->id != $transaction->account_id) {
+                $transaction->amount = $amount * -1;
+                $transaction->save();
+            }
+        }
+        Log::debug('Updated opening balance journal.');
+
+        return true;
+
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
+    protected function validOpeningBalanceData(array $data): bool
+    {
+        if (isset($data['openingBalance'])
+            && isset($data['openingBalanceDate'])
+            && isset($data['openingBalanceCurrency'])
+            && bccomp(strval($data['openingBalance']), '0') !== 0
+        ) {
+            Log::debug('Array has valid opening balance data.');
+
+            return true;
+        }
+        Log::debug('Array does not have valid opening balance data.');
+
+        return false;
     }
 
 }

@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -291,12 +290,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest   $request
-     * @param AccountCrudInterface $crud
+     * @param AccountFormRequest $request
+     * @param ARI                $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      */
-    public function store(AccountFormRequest $request, AccountCrudInterface $crud)
+    public function store(AccountFormRequest $request, ARI $repository)
     {
         $accountData = [
             'name'                   => trim($request->input('name')),
@@ -314,7 +314,7 @@ class AccountController extends Controller
 
         ];
 
-        $account = $crud->store($accountData);
+        $account = $repository->store($accountData);
 
         Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
@@ -338,13 +338,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest   $request
-     * @param AccountCrudInterface $crud
-     * @param Account              $account
+     * @param AccountFormRequest $request
+     * @param ARI                $repository
+     * @param Account            $account
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(AccountFormRequest $request, AccountCrudInterface $crud, Account $account)
+    public function update(AccountFormRequest $request, ARI $repository, Account $account)
     {
 
         $accountData = [
@@ -361,7 +361,7 @@ class AccountController extends Controller
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
-        $crud->update($account, $accountData);
+        $repository->update($account, $accountData);
 
         Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();

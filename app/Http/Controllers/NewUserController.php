@@ -13,7 +13,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Preferences;
@@ -60,27 +59,27 @@ class NewUserController extends Controller
     }
 
     /**
-     * @param NewUserFormRequest   $request
-     * @param AccountCrudInterface $crud
+     * @param NewUserFormRequest         $request
+     * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function submit(NewUserFormRequest $request, AccountCrudInterface $crud)
+    public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository)
     {
         $count = 1;
         // create normal asset account:
-        $this->createAssetAccount($request, $crud);
+        $this->createAssetAccount($request, $repository);
 
         // create savings account
         if (strlen($request->get('savings_balance')) > 0) {
-            $this->createSavingsAccount($request, $crud);
+            $this->createSavingsAccount($request, $repository);
             $count++;
         }
 
 
         // create credit card.
         if (strlen($request->get('credit_card_limit')) > 0) {
-            $this->storeCreditCard($request, $crud);
+            $this->storeCreditCard($request, $repository);
             $count++;
         }
         $message = strval(trans('firefly.stored_new_accounts_new_user'));
@@ -95,12 +94,12 @@ class NewUserController extends Controller
     }
 
     /**
-     * @param NewUserFormRequest   $request
-     * @param AccountCrudInterface $crud
+     * @param NewUserFormRequest         $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return bool
      */
-    private function createAssetAccount(NewUserFormRequest $request, AccountCrudInterface $crud): bool
+    private function createAssetAccount(NewUserFormRequest $request, AccountRepositoryInterface $repository): bool
     {
         $assetAccount = [
             'name'                   => $request->get('bank_name'),
@@ -115,18 +114,18 @@ class NewUserController extends Controller
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_bank_balance')),
         ];
 
-        $crud->store($assetAccount);
+        $repository->store($assetAccount);
 
         return true;
     }
 
     /**
-     * @param NewUserFormRequest   $request
-     * @param AccountCrudInterface $crud
+     * @param NewUserFormRequest         $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return bool
      */
-    private function createSavingsAccount(NewUserFormRequest $request, AccountCrudInterface $crud): bool
+    private function createSavingsAccount(NewUserFormRequest $request, AccountRepositoryInterface $repository): bool
     {
         $savingsAccount = [
             'name'                   => $request->get('bank_name') . ' savings account',
@@ -140,18 +139,18 @@ class NewUserController extends Controller
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
         ];
-        $crud->store($savingsAccount);
+        $repository->store($savingsAccount);
 
         return true;
     }
 
     /**
-     * @param NewUserFormRequest   $request
-     * @param AccountCrudInterface $crud
+     * @param NewUserFormRequest         $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return bool
      */
-    private function storeCreditCard(NewUserFormRequest $request, AccountCrudInterface $crud): bool
+    private function storeCreditCard(NewUserFormRequest $request, AccountRepositoryInterface $repository): bool
     {
         $creditAccount = [
             'name'                   => 'Credit card',
@@ -167,7 +166,7 @@ class NewUserController extends Controller
             'ccType'                 => 'monthlyFull',
             'ccMonthlyPaymentDate'   => Carbon::now()->year . '-01-01',
         ];
-        $crud->store($creditAccount);
+        $repository->store($creditAccount);
 
         return true;
     }

@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -40,9 +39,6 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         if (strlen($value) === 0) {
             return new Account;
         }
-
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class, [$this->user]);
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
@@ -78,7 +74,7 @@ class AssetAccountNumber extends BasicConverter implements ConverterInterface
         }
 
 
-        $account = $crud->store(
+        $account = $repository->store(
             ['name'           => $accountName, 'openingBalance' => 0, 'iban' => null, 'user' => $this->user->id,
              'accountType'    => 'asset',
              'virtualBalance' => 0, 'accountNumber' => $value, 'active' => true]

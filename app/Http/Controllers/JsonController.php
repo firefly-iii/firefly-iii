@@ -101,7 +101,6 @@ class JsonController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
-     * @internal param AccountCrudInterface $crud
      *
      * @internal param ARI $accountRepository
      */

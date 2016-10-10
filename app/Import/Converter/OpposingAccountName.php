@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
@@ -41,9 +40,6 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
 
             return new Account;
         }
-
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class, [$this->user]);
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
@@ -73,7 +69,7 @@ class OpposingAccountName extends BasicConverter implements ConverterInterface
             return $account;
         }
 
-        $account = $crud->store(
+        $account = $repository->store(
             ['name'           => $value, 'iban' => null, 'user' => $this->user->id, 'accountType' => 'import', 'virtualBalance' => 0, 'active' => true,
              'openingBalance' => 0,
             ]

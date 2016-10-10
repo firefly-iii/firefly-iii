@@ -105,4 +105,11 @@ interface AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): Carbon;
 
+    /**
+     * @param array $data
+     *
+     * @return Account
+     */
+    public function store(array $data) : Account;
+
 }

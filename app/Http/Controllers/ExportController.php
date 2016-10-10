@@ -121,7 +121,6 @@ class ExportController extends Controller
      * @param EJRI                       $jobs
      *
      * @return string
-     * @internal param AccountCrudInterface $crud
      *
      */
     public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, EJRI $jobs)

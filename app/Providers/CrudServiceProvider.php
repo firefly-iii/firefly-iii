@@ -42,26 +42,6 @@ class CrudServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerJournal();
-        $this->registerAccount();
-    }
-
-    private function registerAccount()
-    {
-
-        $this->app->bind(
-            'FireflyIII\Crud\Account\AccountCrudInterface',
-            function (Application $app, array $arguments) {
-
-                if (!isset($arguments[0]) && auth()->check()) {
-                    return app('FireflyIII\Crud\Account\AccountCrud', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
-                }
-
-                return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
-            }
-        );
     }
 
     private function registerJournal()

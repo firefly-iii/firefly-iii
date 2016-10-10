@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -43,9 +42,6 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
             return new Account;
         }
 
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class, [$this->user]);
-
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
 
@@ -71,7 +67,7 @@ class AssetAccountIban extends BasicConverter implements ConverterInterface
         }
 
 
-        $account = $crud->store(
+        $account = $repository->store(
             ['name'   => 'Asset account with IBAN ' . $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'asset', 'virtualBalance' => 0,
              'active' => true, 'openingBalance' => 0]
         );

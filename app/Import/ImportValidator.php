@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Import;
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
@@ -176,8 +175,6 @@ class ImportValidator
             return $account;
         }
         // find it first by new type:
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class, [$this->user]);
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
@@ -186,7 +183,7 @@ class ImportValidator
         if (is_null($result->id)) {
             // can convert account:
             Log::debug(sprintf('No account named %s of type %s, create new account.', $account->name, $type));
-            $result = $crud->store(
+            $result = $repository->store(
                 [
                     'user'           => $this->user->id,
                     'accountType'    => config('firefly.shortNamesByFullName.' . $type),
@@ -216,16 +213,13 @@ class ImportValidator
     private function fallbackExpenseAccount(): Account
     {
 
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class, [$this->user]);
-
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
 
         $name   = 'Unknown expense account';
         $result = $repository->findByName($name, [AccountType::EXPENSE]);
         if (is_null($result->id)) {
-            $result = $crud->store(
+            $result = $repository->store(
                 ['name'   => $name, 'iban' => null, 'openingBalance' => 0, 'user' => $this->user->id, 'accountType' => 'expense', 'virtualBalance' => 0,
                  'active' => true]
             );
@@ -240,9 +234,6 @@ class ImportValidator
     private function fallbackRevenueAccount(): Account
     {
 
-        /** @var AccountCrudInterface $crud */
-        $crud = app(AccountCrudInterface::class, [$this->user]);
-
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
 
@@ -251,7 +242,7 @@ class ImportValidator
 
 
         if (is_null($result->id)) {
-            $result = $crud->store(
+            $result = $repository->store(
                 ['name'   => $name, 'iban' => null, 'openingBalance' => 0, 'user' => $this->user->id, 'accountType' => 'revenue', 'virtualBalance' => 0,
                  'active' => true]
             );
