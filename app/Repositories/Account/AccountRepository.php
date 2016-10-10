@@ -85,54 +85,6 @@ class AccountRepository implements AccountRepositoryInterface
         return true;
     }
 
-
-    /**
-     * Returns the transaction from a journal that is related to a given account. Since a journal generally only contains
-     * two transactions, this will return one of the two. This method fails horribly when the journal has more than two transactions,
-     * but luckily it isn't used for such folly.
-     *
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        $count = $journal->transactions()->count();
-        if ($count > 2) {
-            throw new FireflyException(sprintf('Cannot use getFirstTransaction on journal #%d', $journal->id));
-        }
-        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        if (is_null($transaction)) {
-            $transaction = new Transaction;
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * Returns the date of the very last transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon
-     */
-    public function newestJournalDate(Account $account): Carbon
-    {
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::
-        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->sortCorrectly()
-                                     ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new Carbon('1900-01-01');
-        }
-
-        return $journal->date;
-    }
-
     /**
      * Returns the date of the very first transaction in this account.
      *

@@ -124,10 +124,9 @@ class AccountController extends Controller
     public function edit(ARI $repository, Account $account)
     {
 
-        $what           = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle       = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon   = config('firefly.subIconsByIdentifier.' . $what);
-        $openingBalance = $account->openingBalanceTransaction($account);
+        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {
@@ -138,19 +137,17 @@ class AccountController extends Controller
         // pre fill some useful values.
 
         // the opening balance is tricky:
-        $openingBalanceAmount = null;
-
-        if ($openingBalance->id) {
-            $transaction          = $repository->getFirstTransaction($openingBalance, $account);
-            $openingBalanceAmount = $transaction->amount;
-        }
+        $openingBalanceAmount = $account->getOpeningBalanceAmount();
+        $openingBalanceAmount = $account->getOpeningBalanceAmount() === '0' ? '' : $openingBalanceAmount;
+        $openingBalanceDate   = $account->getOpeningBalanceDate();
+        $openingBalanceDate   = $openingBalanceDate->year === 1900 ? null : $openingBalanceDate->format('Y-m-d');
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
             'accountRole'          => $account->getMeta('accountRole'),
             'ccType'               => $account->getMeta('ccType'),
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
-            'openingBalanceDate'   => $openingBalance->id ? $openingBalance->date->format('Y-m-d') : null,
+            'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => round($account->virtual_balance, 2),
         ];

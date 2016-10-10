@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -212,9 +213,12 @@ class Account extends Model
     }
 
     /**
-     * @return TransactionJournal|null
+     * Returns the amount of the opening balance for this account.
+     *
+     * @return string
+     * @throws FireflyException
      */
-    public function openingBalanceTransaction(): TransactionJournal
+    public function getOpeningBalanceAmount(): string
     {
         $journal = TransactionJournal
             ::sortCorrectly()
@@ -223,10 +227,41 @@ class Account extends Model
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->first(['transaction_journals.*']);
         if (is_null($journal)) {
-            return new TransactionJournal;
+            return '0';
         }
 
-        return $journal;
+        $count = $journal->transactions()->count();
+        if ($count !== 2) {
+            throw new FireflyException(sprintf('Cannot use getFirstTransaction on journal #%d', $journal->id));
+        }
+        $transaction = $journal->transactions()->where('account_id', $this->id)->first();
+        if (is_null($transaction)) {
+            return '0';
+        }
+
+        return strval($transaction->amount);
+    }
+
+    /**
+     * Returns the date of the opening balance for this account. If no date, will return 01-01-1900
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
+    public function getOpeningBalanceDate(): Carbon
+    {
+        $date    = new Carbon('1900-01-01');
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $this->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return $date;
+        }
+
+        return $journal->date;
     }
 
     /**
