@@ -43,7 +43,8 @@
             <td class="hide-buttons">
                 <div class="btn-group btn-group-xs">
                     <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                    <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a></div>
+                    <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
             </td>
             <td class="hide-icon">{{ transaction|typeIconTransaction }}</td>
 
@@ -141,7 +142,7 @@
                 {% if transaction.transactionJournal.hasMeta('notes') %}
                     {{ transaction.transactionJournal.getMeta('notes')|nl2br }}
                 {% endif %}
-                
+
             </td>
 
             <td class="hide-create_date">
