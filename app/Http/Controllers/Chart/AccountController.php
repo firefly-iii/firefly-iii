@@ -228,7 +228,7 @@ class AccountController extends Controller
         );
 
 
-        $accounts = $accounts->sortBy(
+        $accounts = $accounts->sortByDesc(
             function (Account $account) {
                 return $account->difference;
             }
