@@ -115,7 +115,24 @@
                                 </div>
                                 <!-- frontpage settings column b -->
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-
+                                    <!-- show deposit chart -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_home_show_deposits'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_home_show_deposits_info'|_ }}</p>
+                                        <div class="form-group">
+                                            <div class="col-sm-10">
+                                                <div class="checkbox">
+                                                    <label>
+                                                            <input type="checkbox" name="showDepositsFrontpage[]" value="{{ showDepositsFrontpage }}"
+                                                                   {% if showDepositsFrontpage %}
+                                                                    checked
+                                                                   {% endif %}
+                                                                   > {{ 'pref_home_do_show_deposits'|_ }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
