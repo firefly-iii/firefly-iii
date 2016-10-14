@@ -84,6 +84,30 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
     }
 
     /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function revenueAccounts(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $data = [
+            'count'  => 1,
+            'labels' => [], 'datasets' => [[
+                                               'label' => trans('firefly.earned'),
+                                               'data'  => []]]];
+        foreach ($accounts as $account) {
+            if ($account->difference > 0) {
+                $data['labels'][]              = $account->name;
+                $data['datasets'][0]['data'][] = $account->difference;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * @param Account $account
      * @param array   $labels
      * @param array   $dataSet
@@ -105,5 +129,4 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
 
         return $data;
     }
-
 }
