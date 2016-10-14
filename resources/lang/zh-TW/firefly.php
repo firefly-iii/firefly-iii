@@ -804,8 +804,8 @@ return [
 
     'import_share_configuration' => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
 
-    'import_finished_report'                    => '匯入已完成。請留意在這行上面的錯誤記錄。這次所匯入的所有交易都已經進行標記，你可以在下面查看。 ',
-    'import_finished_link'                      => '匯入成功的所有交易都可以在標籤 <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> 內找到。',
+    'import_finished_report' => '匯入已完成。請留意在這行上面的錯誤記錄。這次所匯入的所有交易都已經進行標記，你可以在下面查看。 ',
+    'import_finished_link'   => '匯入成功的所有交易都可以在標籤 <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> 內找到。',
 
 
 ];

@@ -804,8 +804,8 @@ return [
 
     'import_share_configuration' => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
 
-    'import_finished_report'                    => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
-    'import_finished_link'                      => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_finished_report' => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
+    'import_finished_link'   => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
 
 
 ];
