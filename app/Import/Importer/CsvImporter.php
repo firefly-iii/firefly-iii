@@ -113,7 +113,11 @@ class CsvImporter implements ImporterInterface
         $config = $this->job->configuration;
 
         // hash the row:
-        $hash = hash('sha256', json_encode($row));
+        $json = json_encode($row);
+        if ($json === false) {
+            throw new FireflyException(sprintf('Could not process row %d. Please make sure the uploaded file is encoded as "UTF-8".', $index));
+        }
+        $hash = hash('sha256', $json);
         $object->importValue('hash', 100, $hash);
 
         // and this is the point where the specifix go to work.
