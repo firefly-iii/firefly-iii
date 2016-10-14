@@ -37,6 +37,7 @@ return [
     'repeat_freq'           => 'Wiederholungen',
     'description'           => 'Beschreibung',
     'amount'                => 'Betrag',
+    'internal_reference'    => 'Internal reference',
     'date'                  => 'Datum',
     'interest_date'         => 'Zinstermin',
     'book_date'             => 'Buchungsdatum',

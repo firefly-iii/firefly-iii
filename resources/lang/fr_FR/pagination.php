@@ -10,6 +10,8 @@
  */
 
 return [
-    'previous' => '&laquo; Precedent',
+
+    'previous' => '&laquo; Précédent',
     'next'     => 'Suivant &raquo;',
+
 ];

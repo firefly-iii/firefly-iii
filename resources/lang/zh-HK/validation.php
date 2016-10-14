@@ -79,4 +79,9 @@ return [
     'url'                            => 'The :attribute format is invalid.',
     'timezone'                       => 'The :attribute must be a valid zone.',
     '2fa_code'                       => 'The :attribute field is invalid.',
+    'dimensions'                     => 'The :attribute has invalid image dimensions.',
+    'distinct'                       => 'The :attribute field has a duplicate value.',
+    'file'                           => 'The :attribute must be a file.',
+    'in_array'                       => 'The :attribute field does not exist in :other.',
+    'present'                        => 'The :attribute field must be present.',
 ];

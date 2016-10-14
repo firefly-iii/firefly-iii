@@ -37,6 +37,7 @@ return [
     'repeat_freq'           => 'Herhaling',
     'description'           => 'Omschrijving',
     'amount'                => 'Bedrag',
+    'internal_reference'    => 'Interne referentie',
     'date'                  => 'Datum',
     'interest_date'         => 'Rentedatum',
     'book_date'             => 'Boekdatum',

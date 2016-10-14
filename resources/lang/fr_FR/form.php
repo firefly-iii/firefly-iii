@@ -61,7 +61,7 @@ return [
     'date'                           => 'Date',
     'interest_date'                  => 'Interest date',
     'book_date'                      => 'Book date',
-    'process_date'                   => 'Processing date',
+    'process_date'                   => 'Date de traitement',
     'category'                       => 'Catégorie',
     'tags'                           => 'Tags',
     'deletePermanently'              => 'Supprimer définitivement',
@@ -134,13 +134,13 @@ return [
     'tag_keep_transactions'          => 'La seule opération liée à ce tag ne sera pas supprimée.|Les :count opérations liées à ce tag ne seront pas supprimées.',
 
     // admin
-    'domain'                         => 'Domain',
-    'single_user_mode'               => 'Single user mode',
+    'domain'                         => 'Domaine',
+    'single_user_mode'               => 'Mode utilisateur unique',
 
     // import
-    'import_file'                    => 'Import file',
-    'configuration_file'             => 'Configuration file',
-    'import_file_type'               => 'Import file type',
+    'import_file'                    => 'Fichier à importer',
+    'configuration_file'             => 'Fichier de configuration',
+    'import_file_type'               => 'Type de fichier de configuration',
     'csv_comma'                      => 'Une virgule (,)',
     'csv_semicolon'                  => 'Un point-virgule (;)',
     'csv_tab'                        => 'Un onglet (invisible)',
@@ -150,7 +150,7 @@ return [
 
 
     'due_date'           => 'Due date',
-    'payment_date'       => 'Payment date',
-    'invoice_date'       => 'Invoice date',
-    'internal_reference' => 'Internal reference',
+    'payment_date'       => 'Date de paiement',
+    'invoice_date'       => 'Date de facturation',
+    'internal_reference' => 'Référence interne',
 ];

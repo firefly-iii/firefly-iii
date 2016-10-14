@@ -79,4 +79,9 @@ return [
     'url'                            => ':attribute Format ist ungültig.',
     'timezone'                       => ':attribute muss in einem gültigen Bereich liegen.',
     '2fa_code'                       => ':attribute Feld ist ungültig.',
+    'dimensions'                     => 'The :attribute has invalid image dimensions.',
+    'distinct'                       => 'The :attribute field has a duplicate value.',
+    'file'                           => 'The :attribute must be a file.',
+    'in_array'                       => 'The :attribute field does not exist in :other.',
+    'present'                        => 'The :attribute field must be present.',
 ];

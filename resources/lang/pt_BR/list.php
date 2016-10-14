@@ -37,6 +37,7 @@ return [
     'repeat_freq'           => 'Repetições',
     'description'           => 'Descrição',
     'amount'                => 'Total',
+    'internal_reference'    => 'Internal reference',
     'date'                  => 'Data',
     'interest_date'         => 'Data de interesse',
     'book_date'             => 'Data reserva',

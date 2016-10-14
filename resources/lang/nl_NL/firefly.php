@@ -764,7 +764,7 @@ return [
     'no_edit_multiple_left'                     => 'Je hebt geen geldige transacties geselecteerd.',
 
     // import
-    'configuration_file_help'                   => 'Als je eerder gegevens in Firefly III hebt geïmporteerd, heb je een configuratiebestand, dat voor jou de instellingen zal doen.',
+    'configuration_file_help'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
     'import_data_index'                         => 'Index',
     'import_file_type_csv'                      => 'CSV (kommagescheiden waardes)',
     'import_file_type_help'                     => 'Selecteer het type bestand dat je zal uploaden',
@@ -782,7 +782,10 @@ return [
     'import_data'                               => 'Importeer data',
     'import_data_full'                          => 'Gegevens importeren in Firefly III',
     'import'                                    => 'Import',
-    'import_intro_text'                         => 'Welkom bij de import-routine van Firefly III. Deze pagina\'s helpen je data in Firefly III te importeren. Om dat te doen, download of exporteer je transacties uit andere systemen, en upload ze hier. In de volgende stappen help je Firefly met het bepalen wat de inhoud is van de bestanden die je upload, en hoe er mee om te gaan. Selecteer een bestand, en lees alle instructies zorgvuldig.',
+    'import_intro_what_it_does'                 => 'Vanaf deze pagina kan je gegevens importeren in Firefly III. Exporteer ze eerst vanuit je internetbankieren of financiële software. Upload dat bestandje hier. Firefly III zal de transacties omzetten. Je zult wel wat hints moeten geven. Selecteer alsjeblieft een bestand en volg de instructies.',
+    'import_intro_import_conf_title'            => 'Importconfiguratie',
+    'import_intro_beta_warning'                 => 'Waarschuwing',
+    'import_intro_import_conf_text'             => 'Zoals je wel zult ontdekken heeft de import-routine veel opties. Deze opties verschillen voornamelijk per bank (of softwarepakket). Grote kans dat iemand anders je al voor was en zijn of haar <em>configuratiebestand</em> heeft gedeeld. Kijk vlug op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong> of er al een bestand is voor jouw bank (of softwarepakket). Als die er is, download dit bestand dan en selecteer deze. Het kan veel tijd schelen!',
     'import_file_help'                          => 'Selecteer je bestand',
     'import_status_settings_complete'           => 'De import is klaar om te beginnen.',
     'import_status_import_complete'             => 'Het importeren is voltooid.',
@@ -798,6 +801,9 @@ return [
     'import_double'                             => 'Rij: #:row: Deze rij is al geimporteerd en is opgeslagen als <a href=":link">:description</a>.',
     'import_finished_all'                       => 'Het importeren is voltooid. Hieronder zie je de resultaten.',
     'import_with_key'                           => 'Import met code \':key\'',
+
+    'import_share_configuration' => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
+
     'import_finished_report'                    => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
     'import_finished_link'                      => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
 

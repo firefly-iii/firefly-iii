@@ -79,4 +79,9 @@ return [
     'url'                            => 'O formato do URL indicado para o campo :attribute é inválido.',
     'timezone'                       => 'O campo :attribute deverá ter um fuso horário válido.',
     '2fa_code'                       => 'O campo :attribute é inválido.',
+    'dimensions'                     => 'The :attribute has invalid image dimensions.',
+    'distinct'                       => 'The :attribute field has a duplicate value.',
+    'file'                           => 'The :attribute must be a file.',
+    'in_array'                       => 'The :attribute field does not exist in :other.',
+    'present'                        => 'The :attribute field must be present.',
 ];
