@@ -3,8 +3,10 @@
  * ReportController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -12,16 +14,16 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Report\AccountReportHelperInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -38,8 +40,6 @@ use View;
 class ReportController extends Controller
 {
 
-    /** @var AccountReportHelperInterface */
-    protected $accountHelper;
     /** @var BalanceReportHelperInterface */
     protected $balanceHelper;
 
@@ -61,11 +61,11 @@ class ReportController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
+     * @param AccountRepositoryInterface $repository
      *
      * @return View
      */
-    public function index(AccountCrudInterface $crud)
+    public function index(AccountRepositoryInterface $repository)
     {
         $this->createRepositories();
         /** @var Carbon $start */
@@ -74,7 +74,7 @@ class ReportController extends Controller
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
 
         // does the user have shared accounts?
-        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         // get id's for quick links:
         $accountIds = [];
         /** @var Account $account */
@@ -122,7 +122,7 @@ class ReportController extends Controller
 
         switch ($reportType) {
             default:
-                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not yet available. ');
+                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not available at this time.');
             case 'default':
 
                 // more than one year date difference means year report.
@@ -154,54 +154,36 @@ class ReportController extends Controller
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
         /** @var ARI $repos */
-        $repos     = app(ARI::class);
+        $repos = app(ARI::class);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker    = app(AccountTaskerInterface::class);
         $auditData = [];
         $dayBefore = clone $start;
         $dayBefore->subDay();
         /** @var Account $account */
         foreach ($accounts as $account) {
-
             // balance the day before:
             $id               = $account->id;
-            $first            = $repos->oldestJournalDate($account);
-            $last             = $repos->newestJournalDate($account);
-            $exists           = false;
-            $journals         = new Collection;
             $dayBeforeBalance = Steam::balance($account, $dayBefore);
-            /*
-             * Is there even activity on this account between the requested dates?
-             */
-            if ($start->between($first, $last) || $end->between($first, $last)) {
-                $exists   = true;
-                $journals = $repos->journalsInPeriod(new Collection([$account]), [], $start, $end);
+            $journals         = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
+            $journals         = $journals->reverse();
+            $startBalance     = $dayBeforeBalance;
 
-            }
-            /*
-             * Reverse set, get balances.
-             */
-            $journals     = $journals->reverse();
-            $startBalance = $dayBeforeBalance;
-            /** @var TransactionJournal $journal */
-            foreach ($journals as $journal) {
-                $journal->before   = $startBalance;
-                $transactionAmount = $journal->source_amount;
 
-                // get currently relevant transaction:
-                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
-                if (in_array($account->id, $destinations)) {
-                    $transactionAmount = TransactionJournal::amountPositive($journal);
-                }
-                $newBalance     = bcadd($startBalance, $transactionAmount);
-                $journal->after = $newBalance;
-                $startBalance   = $newBalance;
-
+            /** @var Transaction $journal */
+            foreach ($journals as $transaction) {
+                $transaction->before = $startBalance;
+                $transactionAmount   = $transaction->transaction_amount;
+                $newBalance          = bcadd($startBalance, $transactionAmount);
+                $transaction->after  = $newBalance;
+                $startBalance        = $newBalance;
             }
 
             /*
              * Reverse set again.
              */
             $auditData[$id]['journals']         = $journals->reverse();
-            $auditData[$id]['exists']           = $exists;
+            $auditData[$id]['exists']           = $journals->count() > 0;
             $auditData[$id]['end']              = $end->formatLocalized(strval(trans('config.month_and_day')));
             $auditData[$id]['endBalance']       = Steam::balance($account, $end);
             $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(strval(trans('config.month_and_day')));
@@ -232,7 +214,6 @@ class ReportController extends Controller
     private function createRepositories()
     {
         $this->helper        = app(ReportHelperInterface::class);
-        $this->accountHelper = app(AccountReportHelperInterface::class);
         $this->budgetHelper  = app(BudgetReportHelperInterface::class);
         $this->balanceHelper = app(BalanceReportHelperInterface::class);
     }
@@ -251,14 +232,13 @@ class ReportController extends Controller
         $expenseTopLength = 8;
 
         // get report stuff!
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $budgets       = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
-        $categories    = $this->helper->getCategoryReport($start, $end, $accounts);
-        $balance       = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
-        $bills         = $this->helper->getBillReport($start, $end, $accounts);
-        $tags          = $this->helper->tagReport($start, $end, $accounts);
+        $incomes    = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses   = $this->helper->getExpenseReport($start, $end, $accounts);
+        $budgets    = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
+        $categories = $this->helper->getCategoryReport($start, $end, $accounts);
+        $balance    = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
+        $bills      = $this->helper->getBillReport($start, $end, $accounts);
+        $tags       = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = join(',', $accounts->pluck('id')->toArray());
@@ -268,7 +248,7 @@ class ReportController extends Controller
             'reports.default.month',
             compact(
                 'start', 'end', 'reportType',
-                'accountReport', 'tags',
+                'tags',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
                 'budgets', 'balance',
@@ -293,12 +273,11 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
         // list of users stuff:
-        $budgets       = app(BudgetRepositoryInterface::class)->getActiveBudgets();
-        $categories    = app(CategoryRepositoryInterface::class)->getCategories();
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $tags          = $this->helper->tagReport($start, $end, $accounts);
+        $budgets    = app(BudgetRepositoryInterface::class)->getActiveBudgets();
+        $categories = app(CategoryRepositoryInterface::class)->getCategories();
+        $incomes    = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses   = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags       = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = [];
@@ -311,7 +290,8 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'accountReport', 'incomes', 'expenses',
+                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType',
+                'incomes', 'expenses',
                 'incomeTopLength', 'expenseTopLength', 'tags'
             )
         );
@@ -330,11 +310,10 @@ class ReportController extends Controller
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
 
-        $accountReport = $this->accountHelper->getAccountReport($start, $end, $accounts);
-        $incomes       = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses      = $this->helper->getExpenseReport($start, $end, $accounts);
-        $tags          = $this->helper->tagReport($start, $end, $accounts);
-        $budgets       = $this->budgetHelper->budgetYearOverview($start, $end, $accounts);
+        $incomes  = $this->helper->getIncomeReport($start, $end, $accounts);
+        $expenses = $this->helper->getExpenseReport($start, $end, $accounts);
+        $tags     = $this->helper->tagReport($start, $end, $accounts);
+        $budgets  = $this->budgetHelper->budgetYearOverview($start, $end, $accounts);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
@@ -351,7 +330,7 @@ class ReportController extends Controller
         return view(
             'reports.default.year',
             compact(
-                'start', 'accountReport', 'incomes', 'reportType', 'accountIds', 'end',
+                'start', 'incomes', 'reportType', 'accountIds', 'end',
                 'expenses', 'incomeTopLength', 'expenseTopLength', 'tags', 'budgets'
             )
         );

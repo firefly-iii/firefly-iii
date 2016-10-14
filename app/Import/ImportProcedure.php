@@ -3,17 +3,19 @@
  * ImportProcedure.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
 
 namespace FireflyIII\Import;
 
-use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Import\Importer\ImporterInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -54,7 +56,9 @@ class ImportProcedure
         $validator->setUser($job->user);
         $validator->setJob($job);
         if ($job->configuration['import-account'] != 0) {
-            $repository = app(AccountCrud::class, [$job->user]);
+
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepositoryInterface::class, [$job->user]);
             $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
         }
 

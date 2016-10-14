@@ -3,8 +3,10 @@
  * firefly.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -762,7 +764,7 @@ return [
     'no_edit_multiple_left'                     => 'Você não selecionou nenhuma transação válida para editar.',
 
     // import
-    'configuration_file_help'                   => 'Se você importou anteriormente dados para Firefly III, você pode ter um arquivo de configuração, que pre-definirá valores de configuração para você.',
+    'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_data_index'                         => 'Index',
     'import_file_type_csv'                      => 'CSV (valores separados por vírgula)',
     'import_file_type_help'                     => 'Selecione o tipo de arquivo que você fará o upload',
@@ -780,7 +782,10 @@ return [
     'import_data'                               => 'Importar dados',
     'import_data_full'                          => 'Importar dados para o Firefly III',
     'import'                                    => 'Importar',
-    'import_intro_text'                         => 'Bem-vindo à rotina de importação de dados do Firefly III. Neste momento, essa rotina pode ajudá-lo a importar arquivos para o Firefly. Para fazer isso, você deve baixar ou exportar suas transações de outros sistemas ou software e enviá-los aqui. As próximas etapas permitirá que você ajude Firefly III determine qual é o conteúdo do seu arquivo e como lidar com ele. Por favor, selecione um arquivo e leia todas as instruções cuidadosamente.',
+    'import_intro_what_it_does'                 => 'This page allows you to import data into Firefly III. To do so, export data from your bank, or from another financial management system. Upload that file here. Firefly III will convert the data. You need to give it some directions. Please select a file and follow the instructions.',
+    'import_intro_import_conf_title'            => 'Import "configuration"',
+    'import_intro_beta_warning'                 => 'Warning',
+    'import_intro_import_conf_text'             => 'As you will discover over the next few pages, this import routine has a lot of settings. These settings are mainly dependent on the bank (or financial management software) your file comes from. There is a good chance somebody else already imported such a file and has shared their <em>configuration file</em>. Please visit the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong> to see if there already is a configuration available for your bank or system. If there is, you should download this configuration file and upload it here as well. It will save you a lot of time!',
     'import_file_help'                          => 'Selecione seu arquivo',
     'import_status_settings_complete'           => 'The import is ready to start.',
     'import_status_import_complete'             => 'The import has completed.',
@@ -796,8 +801,11 @@ return [
     'import_double'                             => 'Row #:row: This row has been imported before, and is stored in <a href=":link">:description</a>.',
     'import_finished_all'                       => 'The import has finished. Please check out the results below.',
     'import_with_key'                           => 'Import with key \':key\'',
-    'import_finished_report'                    => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
-    'import_finished_link'                      => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+
+    'import_share_configuration' => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
+
+    'import_finished_report' => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
+    'import_finished_link'   => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
 
 
 ];

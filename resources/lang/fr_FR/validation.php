@@ -3,8 +3,10 @@
  * validation.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -12,7 +14,7 @@ return [
     'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
     'rule_trigger_value'             => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
     'rule_action_value'              => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
-    'invalid_domain'                 => 'Compte tenu des contraintes de sécurité, vous ne peut pas vous enregistrer depuis ce domaine.',
+    'invalid_domain'                 => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous enregistrer depuis ce domaine.',
     'file_already_attached'          => 'Le fichier téléchargé ":name" est déjà attaché à cet objet.',
     'file_attached'                  => 'Envoi du fichier ":name" avec succès.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
@@ -20,13 +22,13 @@ return [
     'belongs_to_user'                => 'La valeur de :attribute est inconnue',
     'accepted'                       => 'Le champ :attribute doit être accepté.',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
-    'after'                          => 'Le champ :attribute doit être une date postérieure au :date.',
+    'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',
     'alpha'                          => 'Le champ :attribute doit seulement contenir des lettres.',
-    'alpha_dash'                     => 'Le champ :attribute doit seulement contenir des lettres, des chiffres et des tirets.',
-    'alpha_num'                      => 'Le champ :attribute doit seulement contenir des chiffres et des lettres.',
+    'alpha_dash'                     => 'Le champ :attribute peut seulement contenir des lettres, des chiffres et des tirets.',
+    'alpha_num'                      => 'Le champ :attribute peut seulement contenir des chiffres et des lettres.',
     'array'                          => 'Le champ :attribute doit être un tableau.',
     'unique_for_user'                => 'Il existe déjà une entrée avec ceci :attribute.',
-    'before'                         => 'Le champ :attribute doit être une date antérieure au :date.',
+    'before'                         => 'Le champ :attribute doit être une date antérieure à :date.',
     'unique_object_for_user'         => 'Ce nom est déjà utilisé',
     'unique_account_for_user'        => 'Ce nom de compte est déjà utilisé',
     'between.numeric'                => 'La valeur de :attribute doit être comprise entre :min et :max.',
@@ -77,4 +79,9 @@ return [
     'url'                            => 'Le format de l\'URL de :attribute n\'est pas valide.',
     'timezone'                       => 'Le champ :attribute doit être un fuseau horaire valide.',
     '2fa_code'                       => 'Le champ :attribute est invalide.',
+    'dimensions'                     => 'The :attribute has invalid image dimensions.',
+    'distinct'                       => 'The :attribute field has a duplicate value.',
+    'file'                           => 'The :attribute must be a file.',
+    'in_array'                       => 'The :attribute field does not exist in :other.',
+    'present'                        => 'The :attribute field must be present.',
 ];

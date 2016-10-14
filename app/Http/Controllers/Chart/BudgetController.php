@@ -3,8 +3,10 @@
  * BudgetController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -136,6 +138,8 @@ class BudgetController extends Controller
 
     /**
      * Shows a budget list with spent/left/overspent.
+     *
+     * @param BudgetRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -397,7 +401,7 @@ class BudgetController extends Controller
      */
     private function spentInPeriodWithout(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end):array
     {
-        $list = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $list = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end); // budget
         $sum  = '0';
         /** @var TransactionJournal $entry */
         foreach ($list as $entry) {

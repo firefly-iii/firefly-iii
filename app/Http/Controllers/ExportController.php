@@ -3,8 +3,10 @@
  * ExportController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -14,13 +16,12 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Processor;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
 use Preferences;
 use Response;
@@ -89,12 +90,12 @@ class ExportController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
-     * @param EJRI                 $jobs
+     * @param AccountRepositoryInterface $repository
+     * @param EJRI                       $jobs
      *
      * @return View
      */
-    public function index(AccountCrudInterface $crud, EJRI $jobs)
+    public function index(AccountRepositoryInterface $repository, EJRI $jobs)
     {
         // create new export job.
         $job = $jobs->create();
@@ -102,7 +103,7 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts      = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));
@@ -115,20 +116,19 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportFormRequest $request
-     * @param ARI               $repository
-     *
-     * @param EJRI              $jobs
+     * @param ExportFormRequest          $request
+     * @param AccountRepositoryInterface $repository
+     * @param EJRI                       $jobs
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
+     *
      */
-    public function postIndex(ExportFormRequest $request, ARI $repository, EJRI $jobs)
+    public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, EJRI $jobs)
     {
         set_time_limit(0);
         $job      = $jobs->findByKey($request->get('job'));
         $settings = [
-            'accounts'           => $repository->get($request->get('accounts')),
+            'accounts'           => $repository->getAccountsById($request->get('accounts')),
             'startDate'          => new Carbon($request->get('export_start_range')),
             'endDate'            => new Carbon($request->get('export_end_range')),
             'exportFormat'       => $request->get('exportFormat'),

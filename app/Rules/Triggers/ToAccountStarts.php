@@ -3,8 +3,10 @@
  * ToAccountStarts.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -73,6 +75,7 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
 
         if ($part === $search) {
             Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $toAccountName, $search));
+
             return true;
         }
         Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $toAccountName, $search));

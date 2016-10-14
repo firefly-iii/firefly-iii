@@ -3,8 +3,10 @@
  * CsvSetup.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -13,7 +15,6 @@ namespace FireflyIII\Import\Setup;
 
 
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrud;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
@@ -21,6 +22,7 @@ use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use League\Csv\Reader;
 use Log;
@@ -72,9 +74,10 @@ class CsvSetup implements SetupInterface
      */
     public function getConfigurationData(): array
     {
-        $crud       = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $accounts   = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $delimiters = [
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $delimiters        = [
             ','   => trans('form.csv_comma'),
             ';'   => trans('form.csv_semicolon'),
             'tab' => trans('form.csv_tab'),
@@ -175,10 +178,11 @@ class CsvSetup implements SetupInterface
      */
     public function saveImportConfiguration(array $data, FileBag $files): bool
     {
-        /** @var AccountCrud $repository */
-        $repository = app(AccountCrud::class, [auth()->user()]);
-        $importId   = $data['csv_import_account'] ?? 0;
-        $account    = $repository->find(intval($importId));
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [auth()->user()]);
+
+        $importId = $data['csv_import_account'] ?? 0;
+        $account  = $repository->find(intval($importId));
 
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
         $config                = $this->job->configuration;
@@ -382,6 +386,10 @@ class CsvSetup implements SetupInterface
 
             //do something here
             foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
+                if (!isset($row[$index])) {
+                    // don't really know how to handle this. Just skip, for now.
+                    continue;
+                }
                 $value = $row[$index];
                 if (strlen($value) > 0) {
 

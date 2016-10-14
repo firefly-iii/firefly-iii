@@ -3,8 +3,10 @@
  * validation.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -77,4 +79,9 @@ return [
     'url'                            => ':attribute is geen geldige URL.',
     'timezone'                       => 'Het :attribute moet een geldige zone zijn.',
     '2fa_code'                       => 'De waarde in het :attribute-veld is niet geldig.',
+    'dimensions'                     => 'Het :attribute heeft het verkeerde afbeeldingsformaat.',
+    'distinct'                       => 'Het :attribute veld heeft een dubbele waarde.',
+    'file'                           => ':attribute moet een bestand zijn.',
+    'in_array'                       => 'Het :attribute veld bestaat niet in :other.',
+    'present'                        => 'Het :attribute veld moet aanwezig zijn.',
 ];

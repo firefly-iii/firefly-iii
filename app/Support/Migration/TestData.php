@@ -3,8 +3,10 @@
  * TestData.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -465,7 +467,7 @@ class TestData
     private function createMultiDeposits()
     {
         foreach ($this->data['multi-deposits'] as $deposit) {
-            $journalId = DB::table('transaction_journals')->insertGetId(
+            $journalId  = DB::table('transaction_journals')->insertGetId(
                 [
                     'created_at'              => $this->time,
                     'updated_at'              => $this->time,
@@ -483,6 +485,7 @@ class TestData
                     'tag_count'               => 0,
                 ]
             );
+            $identifier = 0;
             foreach ($deposit['source_ids'] as $index => $source) {
                 $description = $deposit['description'] . ' (#' . ($index + 1) . ')';
                 $amount      = $deposit['amounts'][$index];
@@ -494,6 +497,7 @@ class TestData
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
                         'amount'                 => $amount,
+                        'identifier'             => $identifier,
                     ]
                 );
                 $second      = DB::table('transactions')->insertGetId(
@@ -504,8 +508,10 @@ class TestData
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
                         'amount'                 => $amount * -1,
+                        'identifier'             => $identifier,
                     ]
                 );
+                $identifier++;
                 // link first and second to budget and category, if present.
 
                 if (isset($deposit['category_ids'][$index])) {
@@ -529,7 +535,7 @@ class TestData
     private function createMultiTransfers()
     {
         foreach ($this->data['multi-transfers'] as $transfer) {
-            $journalId = DB::table('transaction_journals')->insertGetId(
+            $journalId  = DB::table('transaction_journals')->insertGetId(
                 [
                     'created_at'              => $this->time,
                     'updated_at'              => $this->time,
@@ -547,6 +553,7 @@ class TestData
                     'tag_count'               => 0,
                 ]
             );
+            $identifier = 0;
             foreach ($transfer['destination_ids'] as $index => $destination) {
                 $description = $transfer['description'] . ' (#' . ($index + 1) . ')';
                 $amount      = $transfer['amounts'][$index];
@@ -559,6 +566,7 @@ class TestData
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
                         'amount'                 => $amount * -1,
+                        'identifier'             => $identifier,
                     ]
                 );
                 $second      = DB::table('transactions')->insertGetId(
@@ -569,9 +577,10 @@ class TestData
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
                         'amount'                 => $amount,
+                        'identifier'             => $identifier,
                     ]
                 );
-
+                $identifier++;
                 if (isset($transfer['category_ids'][$index])) {
                     DB::table('category_transaction')->insert(
                         [
@@ -596,7 +605,7 @@ class TestData
     private function createMultiWithdrawals()
     {
         foreach ($this->data['multi-withdrawals'] as $withdrawal) {
-            $journalId = DB::table('transaction_journals')->insertGetId(
+            $journalId  = DB::table('transaction_journals')->insertGetId(
                 [
                     'created_at'              => $this->time,
                     'updated_at'              => $this->time,
@@ -614,6 +623,7 @@ class TestData
                     'tag_count'               => 0,
                 ]
             );
+            $identifier = 0;
             foreach ($withdrawal['destination_ids'] as $index => $destination) {
                 $description = $withdrawal['description'] . ' (#' . ($index + 1) . ')';
                 $amount      = $withdrawal['amounts'][$index];
@@ -625,6 +635,7 @@ class TestData
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
                         'amount'                 => $amount * -1,
+                        'identifier'             => $identifier,
                     ]
                 );
                 $second      = DB::table('transactions')->insertGetId(
@@ -635,8 +646,10 @@ class TestData
                         'transaction_journal_id' => $journalId,
                         'description'            => $description,
                         'amount'                 => $amount,
+                        'identifier'             => $identifier,
                     ]
                 );
+                $identifier++;
                 // link first and second to budget and category, if present.
                 if (isset($withdrawal['budget_ids'][$index])) {
                     DB::table('budget_transaction')->insert(

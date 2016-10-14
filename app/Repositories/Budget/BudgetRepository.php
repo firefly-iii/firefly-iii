@@ -3,8 +3,10 @@
  * BudgetRepository.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -20,6 +22,7 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -366,9 +369,22 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $set        = join(', ', $accountIds);
-            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
-
+            $query->where(
+            // source.account_id in accountIds XOR destination.account_id in accountIds
+                function (Builder $query) use ($accountIds) {
+                    $query->where(
+                        function (Builder $q1) use ($accountIds) {
+                            $q1->whereIn('source.account_id', $accountIds)
+                               ->whereNotIn('destination.account_id', $accountIds);
+                        }
+                    )->orWhere(
+                        function (Builder $q2) use ($accountIds) {
+                            $q2->whereIn('destination.account_id', $accountIds)
+                               ->whereNotIn('source.account_id', $accountIds);
+                        }
+                    );
+                }
+            );
         }
         if ($budgets->count() > 0) {
             $budgetIds = $budgets->pluck('id')->toArray();
@@ -443,9 +459,22 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-
-            $set = join(', ', $accountIds);
-            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
+            $query->where(
+            // source.account_id in accountIds XOR destination.account_id in accountIds
+                function (Builder $sourceXorDestinationQuery) use ($accountIds) {
+                    $sourceXorDestinationQuery->where(
+                        function (Builder $inSourceButNotDestinationQuery) use ($accountIds) {
+                            $inSourceButNotDestinationQuery->whereIn('source.account_id', $accountIds)
+                                                           ->whereNotIn('destination.account_id', $accountIds);
+                        }
+                    )->orWhere(
+                        function (Builder $inDestinationButNotSourceQuery) use ($accountIds) {
+                            $inDestinationButNotSourceQuery->whereIn('destination.account_id', $accountIds)
+                                                           ->whereNotIn('source.account_id', $accountIds);
+                        }
+                    );
+                }
+            );
         }
         $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
         $sum = '0';

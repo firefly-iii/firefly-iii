@@ -3,8 +3,10 @@
  * General.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -38,7 +40,6 @@ class General extends Twig_Extension
     {
         return [
             $this->formatAmount(),
-            $this->formatTransaction(),
             $this->formatAmountPlain(),
             $this->formatJournal(),
             $this->balance(),
@@ -230,18 +231,6 @@ class General extends Twig_Extension
         return new Twig_SimpleFilter(
             'formatJournal', function (TransactionJournal $journal) : string {
             return app('amount')->formatJournal($journal);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatTransaction(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'formatTransaction', function (Transaction $transaction) : string {
-            return app('amount')->formatTransaction($transaction);
         }, ['is_safe' => ['html']]
         );
     }

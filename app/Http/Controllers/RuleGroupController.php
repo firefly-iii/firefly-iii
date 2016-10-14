@@ -3,8 +3,10 @@
  * RuleGroupController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -13,7 +15,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
@@ -154,7 +155,7 @@ class RuleGroupController extends Controller
     public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         // Get parameters specified by the user
-        $accounts  = $repository->get($request->get('accounts'));
+        $accounts  = $repository->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
 
@@ -177,15 +178,15 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param AccountCrudInterface $crud
-     * @param RuleGroup            $ruleGroup
+     * @param AccountRepositoryInterface $repository
+     * @param RuleGroup                  $ruleGroup
      *
      * @return View
      */
-    public function selectTransactions(AccountCrudInterface $crud, RuleGroup $ruleGroup)
+    public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         // does the user have shared accounts?
-        $accounts        = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts        = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList     = ExpandedForm::makeSelectList($accounts);
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');

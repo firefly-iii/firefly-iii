@@ -3,8 +3,10 @@
  * CategoryController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -12,10 +14,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -147,7 +149,7 @@ class CategoryController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->startOfMonth());
-        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end);
+        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end); // category
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -157,13 +159,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                  $repository
-     * @param AccountCrudInterface $crud
-     * @param Category             $category
+     * @param CRI                        $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Category                   $category
      *
      * @return View
      */
-    public function show(CRI $repository, AccountCrudInterface $crud, Category $category)
+    public function show(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
     {
         $range = Preferences::get('viewRange', '1M')->data;
         /** @var Carbon $start */
@@ -174,7 +176,7 @@ class CategoryController extends Controller
         $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
+        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
         $count        = $set->count();
         $subSet       = $set->splice($offset, $pageSize);
         $subTitle     = $category->name;
@@ -208,7 +210,7 @@ class CategoryController extends Controller
 
 
         $categoryCollection = new Collection([$category]);
-        $accounts           = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts           = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
@@ -245,7 +247,7 @@ class CategoryController extends Controller
         $page         = intval(Input::get('page'));
         $pageSize     = Preferences::get('transactionPageSize', 50)->data;
         $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end);
+        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
         $count        = $set->count();
         $subSet       = $set->splice($offset, $pageSize);
         $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);

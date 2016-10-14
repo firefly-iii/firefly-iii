@@ -3,14 +3,17 @@
  * Account.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -120,31 +123,6 @@ class Account extends Model
     }
 
     /**
-     * @param array $fields
-     *
-     * @return Account|null
-     */
-    public static function firstOrNullEncrypted(array $fields)
-    {
-        // everything but the name:
-        $query  = Account::orderBy('id');
-        $search = $fields;
-        unset($search['name']);
-        foreach ($search as $name => $value) {
-            $query->where($name, $value);
-        }
-        $set = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($set as $account) {
-            if ($account->name == $fields['name']) {
-                return $account;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * @param Account $value
      *
      * @return Account
@@ -235,17 +213,55 @@ class Account extends Model
     }
 
     /**
+     * Returns the amount of the opening balance for this account.
      *
      * @return string
+     * @throws FireflyException
      */
-    public function getNameForEditformAttribute(): string
+    public function getOpeningBalanceAmount(): string
     {
-        $name = $this->name;
-        if ($this->accountType->type == 'Cash account') {
-            $name = '';
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $this->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return '0';
         }
 
-        return $name;
+        $count = $journal->transactions()->count();
+        if ($count !== 2) {
+            throw new FireflyException(sprintf('Cannot use getFirstTransaction on journal #%d', $journal->id));
+        }
+        $transaction = $journal->transactions()->where('account_id', $this->id)->first();
+        if (is_null($transaction)) {
+            return '0';
+        }
+
+        return strval($transaction->amount);
+    }
+
+    /**
+     * Returns the date of the opening balance for this account. If no date, will return 01-01-1900
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
+    public function getOpeningBalanceDate(): Carbon
+    {
+        $date    = new Carbon('1900-01-01');
+        $journal = TransactionJournal
+            ::sortCorrectly()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $this->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return $date;
+        }
+
+        return $journal->date;
     }
 
     /**

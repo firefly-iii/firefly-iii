@@ -3,8 +3,10 @@
  * TransactionController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -13,7 +15,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Events\TransactionJournalStored;
 use FireflyIII\Events\TransactionJournalUpdated;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -21,6 +22,7 @@ use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
 use Preferences;
@@ -60,19 +62,20 @@ class TransactionController extends Controller
      */
     public function create(string $what = TransactionType::DEPOSIT)
     {
-        $crud             = app(AccountCrudInterface::class);
-        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $what             = strtolower($what);
-        $uploadSize       = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts    = ExpandedForm::makeSelectList($crud->getActiveAccountsByType(['Default account', 'Asset account']));
-        $budgets          = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBanks       = $piggyRepository->getPiggyBanksWithAmount();
-        $piggies          = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
-        $preFilled        = Session::has('preFilled') ? session('preFilled') : [];
-        $subTitle         = trans('form.add_new_' . $what);
-        $subTitleIcon     = 'fa-plus';
-        $optionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $budgetRepository  = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $piggyRepository   = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+        $what              = strtolower($what);
+        $uploadSize        = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $assetAccounts     = ExpandedForm::makeSelectList($accountRepository->getActiveAccountsByType(['Default account', 'Asset account']));
+        $budgets           = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBanks        = $piggyRepository->getPiggyBanksWithAmount();
+        $piggies           = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
+        $preFilled         = Session::has('preFilled') ? session('preFilled') : [];
+        $subTitle          = trans('form.add_new_' . $what);
+        $subTitleIcon      = 'fa-plus';
+        $optionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
 
         Session::put('preFilled', $preFilled);
 
@@ -147,10 +150,13 @@ class TransactionController extends Controller
         // code to get list data:
         $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $crud             = app('FireflyIII\Crud\Account\AccountCrudInterface');
-        $assetAccounts    = ExpandedForm::makeSelectList($crud->getAccountsByType(['Default account', 'Asset account']));
-        $budgetList       = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBankList    = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        $assetAccounts = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
+        $budgetList    = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
@@ -242,6 +248,7 @@ class TransactionController extends Controller
         $date = new Carbon($request->get('date'));
         if (count($ids) > 0) {
             $order = 0;
+            $ids   = array_unique($ids);
             foreach ($ids as $id) {
                 $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {

@@ -3,8 +3,10 @@
  * FireflyConfig.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -13,7 +15,6 @@ namespace FireflyIII\Support;
 
 use Cache;
 use FireflyIII\Models\Configuration;
-use FireflyIII\Models\Preference;
 use Log;
 
 /**
@@ -31,11 +32,11 @@ class FireflyConfig
      */
     public function delete($name): bool
     {
-        $fullName = 'preference' . auth()->user()->id . $name;
+        $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+        Configuration::where('name', $name)->delete();
 
         return true;
     }

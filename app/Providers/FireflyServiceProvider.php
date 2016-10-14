@@ -3,8 +3,10 @@
  * FireflyServiceProvider.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -17,11 +19,11 @@ use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
-use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
 use FireflyIII\Support\Twig\Rule;
+use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
@@ -48,8 +50,8 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);
         Twig::addExtension(new Journal);
-        Twig::addExtension(new Budget);
         Twig::addExtension(new Translation);
+        Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
     }
 

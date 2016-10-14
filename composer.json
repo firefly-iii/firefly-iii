@@ -27,6 +27,7 @@
   ],
   "require": {
     "php": ">=7.0.0",
+    "ext-intl": "*",
     "laravel/framework": "5.3.*",
     "davejamesmiller/laravel-breadcrumbs": "^3.0",
     "watson/validating": "^3.0",

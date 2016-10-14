@@ -3,8 +3,10 @@
  * CrudServiceProvider.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -40,26 +42,6 @@ class CrudServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerJournal();
-        $this->registerAccount();
-    }
-
-    private function registerAccount()
-    {
-
-        $this->app->bind(
-            'FireflyIII\Crud\Account\AccountCrudInterface',
-            function (Application $app, array $arguments) {
-
-                if (!isset($arguments[0]) && auth()->check()) {
-                    return app('FireflyIII\Crud\Account\AccountCrud', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
-                }
-
-                return app('FireflyIII\Crud\Account\AccountCrud', $arguments);
-            }
-        );
     }
 
     private function registerJournal()

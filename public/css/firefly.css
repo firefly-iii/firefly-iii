@@ -74,3 +74,8 @@ body.waiting * {
     margin-bottom: 10px;
     width: 100%;
 }
+
+.loading {
+    background:url('/images/loading-small.gif') no-repeat center center;
+    min-height:30px;
+}

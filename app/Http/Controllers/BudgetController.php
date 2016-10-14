@@ -3,8 +3,10 @@
  * BudgetController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -14,12 +16,12 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use Config;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -156,12 +158,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param AccountCrudInterface      $crud
+     * @param BudgetRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return View
+     *
      */
-    public function index(BudgetRepositoryInterface $repository, AccountCrudInterface $crud)
+    public function index(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
         $repository->cleanupBudgets();
 
@@ -185,7 +188,7 @@ class BudgetController extends Controller
         $period            = Navigation::periodShow($start, $range);
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $accounts          = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $startAsString     = $start->format('Y-m-d');
         $endAsString       = $end->format('Y-m-d');
 
@@ -247,7 +250,7 @@ class BudgetController extends Controller
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end);
+        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end); // budget
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $list     = new LengthAwarePaginator($journals, $count, $pageSize);
@@ -293,7 +296,7 @@ class BudgetController extends Controller
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end); // budget
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $journals = new LengthAwarePaginator($journals, $count, $pageSize);
@@ -332,7 +335,7 @@ class BudgetController extends Controller
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize = Preferences::get('transactionPageSize', 50)->data;
         $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end); // budget
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $journals = new LengthAwarePaginator($journals, $count, $pageSize);

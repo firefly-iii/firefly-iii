@@ -3,17 +3,19 @@
  * OpposingAccountIbans.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
 
 namespace FireflyIII\Import\Mapper;
 
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class OpposingAccounts
@@ -28,17 +30,17 @@ class OpposingAccountIbans implements MapperInterface
      */
     public function getMap(): array
     {
-        /** @var AccountCrudInterface $crud */
-        $crud    = app(AccountCrudInterface::class);
-        $set     = $crud->getAccountsByType(
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $set               = $accountRepository->getAccountsByType(
             [
                 AccountType::DEFAULT, AccountType::ASSET,
                 AccountType::EXPENSE, AccountType::BENEFICIARY,
                 AccountType::REVENUE,
             ]
         );
-        $topList = [];
-        $list    = [];
+        $topList           = [];
+        $list              = [];
 
         /** @var Account $account */
         foreach ($set as $account) {

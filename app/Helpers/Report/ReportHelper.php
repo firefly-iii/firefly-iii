@@ -3,8 +3,10 @@
  * ReportHelper.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -22,7 +24,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -30,6 +32,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use stdClass;
 
 /**
  * Class ReportHelper
@@ -144,14 +147,14 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense
     {
         $object = new Expense;
-        /** @var AccountRepositoryInterface $repos */
-        $repos    = app(AccountRepositoryInterface::class);
-        $journals = $repos->expensesInPeriod($accounts, $start, $end);
 
-        /** @var TransactionJournal $entry */
-        foreach ($journals as $entry) {
-            $amount = TransactionJournal::amount($entry);
-            $object->addToTotal($amount);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker     = app(AccountTaskerInterface::class);
+        $collection = $tasker->expenseReport($accounts, $accounts, $start, $end);
+
+        /** @var stdClass $entry */
+        foreach ($collection as $entry) {
+            $object->addToTotal($entry->amount);
             $object->addOrCreateExpense($entry);
         }
 
@@ -170,13 +173,13 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income
     {
         $object = new Income;
-        /** @var AccountRepositoryInterface $repos */
-        $repos    = app(AccountRepositoryInterface::class);
-        $journals = $repos->incomesInPeriod($accounts, $start, $end);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker     = app(AccountTaskerInterface::class);
+        $collection = $tasker->incomeReport($accounts, $accounts, $start, $end);
 
-        foreach ($journals as $entry) {
-            $amount = TransactionJournal::amount($entry);
-            $object->addToTotal($amount);
+        /** @var stdClass $entry */
+        foreach ($collection as $entry) {
+            $object->addToTotal($entry->amount);
             $object->addOrCreateIncome($entry);
         }
 
@@ -255,9 +258,19 @@ class ReportHelper implements ReportHelperInterface
                          ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                          ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                          ->where(
-                             function (Builder $q) use ($ids) {
-                                 $q->whereIn('source.account_id', $ids)
-                                   ->whereIn('destination.account_id', $ids, 'xor');
+                         // source.account_id in accountIds XOR destination.account_id in accountIds
+                             function (Builder $query) use ($ids) {
+                                 $query->where(
+                                     function (Builder $q1) use ($ids) {
+                                         $q1->whereIn('source.account_id', $ids)
+                                            ->whereNotIn('destination.account_id', $ids);
+                                     }
+                                 )->orWhere(
+                                     function (Builder $q2) use ($ids) {
+                                         $q2->whereIn('destination.account_id', $ids)
+                                            ->whereNotIn('source.account_id', $ids);
+                                     }
+                                 );
                              }
                          )
                          ->get(['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'destination.amount']);

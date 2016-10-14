@@ -17,7 +17,25 @@ $(function () {
     // find the little info buttons and respond to them.
     $('.firefly-info-button').click(clickInfoButton);
 
+    // load the account report, which this report shows:
+    loadAccountReport();
+
 });
+
+function loadAccountReport() {
+    "use strict";
+    $.get(accountReportUrl).done(placeAccountReport).fail(failAccountReport);
+}
+
+function placeAccountReport(data) {
+    "use strict";
+    $('#accountReport').removeClass('loading').html(data);
+}
+
+function failAccountReport(data) {
+    "use strict";
+    $('#accountReport').removeClass('loading').addClass('general-chart-error');
+}
 
 function clickInfoButton(e) {
     "use strict";

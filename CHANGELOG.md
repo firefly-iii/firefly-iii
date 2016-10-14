@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+
+## [4.0.2] - 2016-10-14
+### Added
+- Added ``intl`` dependency to composer file to ease installation (thanks @telyn)
+- Added support for Croatian.
+
+### Changed
+- Updated all copyright notices to refer to the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
+- Fixed #344
+- Fixed #346, thanks to @SanderKleykens
+- #351
+- Did some internal remodelling.
+
+### Fixed
+- PostgreSQL compatibility thanks to @SanderKleykens
+- @RobertHorlings fixed a bug in the ABN Amro import specific.
+
+
 ## [4.0.1] - 2016-10-04
 ### Added
 - New ING import specific by @tomwerf

@@ -3,8 +3,10 @@
  * AccountRepository.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -14,16 +16,17 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Steam;
+use Log;
 
 
 /**
@@ -37,6 +40,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     /** @var User */
     private $user;
+    /** @var array */
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
 
     /**
      * AttachmentRepository constructor.
@@ -49,11 +54,13 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Moved here from account CRUD
+     *
      * @param array $types
      *
      * @return int
      */
-    public function countAccounts(array $types): int
+    public function count(array $types):int
     {
         $count = $this->user->accounts()->accountTypeIn($types)->count();
 
@@ -61,155 +68,208 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * This method is almost the same as ::earnedInPeriod, but only works for revenue accounts
-     * instead of the implied asset accounts for ::earnedInPeriod. ::earnedInPeriod will tell you
-     * how much money was earned by the given asset accounts. This method will tell you how much money
-     * these given revenue accounts sent. Ie. how much money was made FROM these revenue accounts.
+     * Moved here from account CRUD.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Account $account
+     * @param Account $moveTo
      *
-     * @return string
+     * @return bool
      */
-    public function earnedFromInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    public function destroy(Account $account, Account $moveTo): bool
     {
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
-                            ->transactionTypes([TransactionType::DEPOSIT]);
-
-        if ($end >= $start) {
-            $query->before($end)->after($start);
+        if (!is_null($moveTo->id)) {
+            DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+        }
+        if (!is_null($account)) {
+            $account->delete();
         }
 
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-            }
-            );
-            $query->whereIn('source.account_id', $accountIds);
-            $query->whereNull('source.deleted_at');
-
-        }
-        // remove group by
-        $query->getQuery()->getQuery()->groups = null;
-
-        // get id's
-        $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
-
-        // that should do it:
-        $sum = $this->user->transactions()
-                          ->whereIn('transaction_journal_id', $ids)
-                          ->where('amount', '>', '0')
-                          ->whereNull('transactions.deleted_at')
-                          ->sum('amount');
-
-        return strval($sum);
-
+        return true;
     }
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param $accountId
      *
-     * @return string
+     * @return Account
      */
-    public function earnedInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    public function find(int $accountId): Account
     {
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly()
-                            ->transactionTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-
-        if ($end >= $start) {
-            $query->before($end)->after($start);
+        $account = $this->user->accounts()->find($accountId);
+        if (is_null($account)) {
+            return new Account;
         }
 
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
-            );
-            $query->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-            }
-            );
-
-            $query->whereIn('destination.account_id', $accountIds);
-            $query->whereNotIn('source.account_id', $accountIds);
-            $query->whereNull('destination.deleted_at');
-            $query->whereNull('source.deleted_at');
-
-        }
-        // remove group by
-        $query->getQuery()->getQuery()->groups = null;
-
-        // get id's
-        $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
-
-
-        // that should do it:
-        $sum = $this->user->transactions()
-                          ->whereIn('transaction_journal_id', $ids)
-                          ->where('amount', '>', '0')
-                          ->whereNull('transactions.deleted_at')
-                          ->sum('amount');
-
-        return strval($sum);
-
+        return $account;
     }
 
     /**
-     * This method will call AccountRepositoryInterface::journalsInPeriod and get all withdrawaks made from the given $accounts,
-     * as well as the transfers that move away from those $accounts. This is a slightly sharper selection
-     * than made by journalsInPeriod itself.
+     * @param string $number
+     * @param array  $types
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @return Account
+     */
+    public function findByAccountNumber(string $number, array $types): Account
+    {
+        $query = $this->user->accounts()
+                            ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                            ->where('account_meta.name', 'accountNumber')
+                            ->where('account_meta.data', json_encode($number));
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        /** @var Collection $accounts */
+        $accounts = $query->get(['accounts.*']);
+        if ($accounts->count() > 0) {
+            return $accounts->first();
+        }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $iban
+     * @param array  $types
      *
-     * @see AccountRepositoryInterface::journalsInPeriod
+     * @return Account
+     */
+    public function findByIban(string $iban, array $types): Account
+    {
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->iban === $iban) {
+                return $account;
+            }
+        }
+
+        return new Account;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account
+     */
+    public function findByName(string $name, array $types): Account
+    {
+        $query = $this->user->accounts();
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+
+        }
+        Log::debug(sprintf('Searching for account named %s of the following type(s)', $name), ['types' => $types]);
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name) {
+                Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+
+                return $account;
+            }
+        }
+        Log::debug('Found nothing.');
+
+        return new Account;
+    }
+
+    /**
+     * @param array $accountIds
      *
      * @return Collection
      */
-    public function expensesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection
+    public function getAccountsById(array $accountIds): Collection
     {
-        $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals   = $this->journalsInPeriod($accounts, $types, $start, $end);
-        $accountIds = $accounts->pluck('id')->toArray();
+        /** @var Collection $result */
+        $query = $this->user->accounts();
 
-        // filter because some of these journals are still too much.
-        $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($accountIds) {
-                if ($journal->transaction_type_type == TransactionType::WITHDRAWAL) {
-                    return true;
-                }
-                /*
-                 * The source of a transfer must be one of the $accounts in order to
-                 * be included. Otherwise, it would not be an expense.
-                 */
-                if (in_array($journal->source_account_id, $accountIds)) {
-                    return true;
-                }
+        if (count($accountIds) > 0) {
+            $query->whereIn('accounts.id', $accountIds);
+        }
 
-                return false;
+        $result = $query->get(['accounts.*']);
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
             }
         );
 
-        return $journals;
+        return $result;
     }
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types): Collection
+    {
+        /** @var Collection $result */
+        $query = $this->user->accounts();
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
+
+        $result = $query->get(['accounts.*']);
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
+            }
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getActiveAccountsByType(array $types): Collection
+    {
+        /** @var Collection $result */
+        $query = $this->user->accounts()->with(
+            ['accountmeta' => function (HasMany $query) {
+                $query->where('name', 'accountRole');
+            }]
+        );
+        if (count($types) > 0) {
+            $query->accountTypeIn($types);
+        }
+        $query->where('active', 1);
+        $result = $query->get(['accounts.*']);
+        $result = $result->sortBy(
+            function (Account $account) {
+                return strtolower($account->name);
+            }
+        );
+
+        return $result;
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
      * @param Account $account
      *
      * @return Carbon
      */
-    public function firstUseDate(Account $account): Carbon
+    public function oldestJournalDate(Account $account): Carbon
     {
-        $first = new Carbon('1900-01-01');
+        $first = new Carbon;
 
         /** @var Transaction $first */
         $date = $account->transactions()
@@ -226,280 +286,57 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Gets all the accounts by ID, for a given set.
+     * @param array $data
      *
-     * @param array $ids
-     *
-     * @return \Illuminate\Support\Collection
+     * @return Account
      */
-    public function get(array $ids): Collection
+    public function store(array $data): Account
     {
-        return $this->user->accounts()->whereIn('id', $ids)->get(['accounts.*']);
-    }
+        $newAccount = $this->storeAccount($data);
+        $this->updateMetadata($newAccount, $data);
 
-    /**
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     */
-    public function getFirstTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        if (is_null($transaction)) {
-            $transaction = new Transaction;
+        if ($this->validOpeningBalanceData($data)) {
+            $this->updateInitialBalance($newAccount, $data);
+
+            return $newAccount;
         }
+        $this->deleteInitialBalance($newAccount);
 
-        return $transaction;
-    }
-
-    /**
-     * Get the accounts of a user that have piggy banks connected to them.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getPiggyBankAccounts(Carbon $start, Carbon $end): Collection
-    {
-        $collection = new Collection(DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']));
-        $accountIds = $collection->pluck('account_id')->toArray();
-        $accounts   = new Collection;
-        $accountIds = array_unique($accountIds);
-        if (count($accountIds) > 0) {
-            $accounts = $this->user->accounts()->whereIn('id', $accountIds)->where('accounts.active', 1)->get();
-        }
-
-        $accounts->each(
-            function (Account $account) use ($start, $end) {
-                $account->startBalance = Steam::balanceIgnoreVirtual($account, $start);
-                $account->endBalance   = Steam::balanceIgnoreVirtual($account, $end);
-                $account->piggyBalance = '0';
-                /** @var PiggyBank $piggyBank */
-                foreach ($account->piggyBanks as $piggyBank) {
-                    $account->piggyBalance = bcadd($account->piggyBalance, $piggyBank->currentRelevantRep()->currentamount);
-                }
-                // sum of piggy bank amounts on this account:
-                // diff between endBalance and piggyBalance.
-                // then, percentage.
-                $difference          = bcsub($account->endBalance, $account->piggyBalance);
-                $account->difference = $difference;
-                $account->percentage = $difference != 0 && $account->endBalance != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
-
-            }
-        );
-
-
-        return $accounts;
+        return $newAccount;
 
     }
 
     /**
-     * Get savings accounts.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getSavingsAccounts(Carbon $start, Carbon $end): Collection
-    {
-        $accounts = $this->user->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
-                               ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                               ->where('account_meta.name', 'accountRole')
-                               ->where('accounts.active', 1)
-                               ->where('account_meta.data', '"savingAsset"')
-                               ->get(['accounts.*']);
-
-        $accounts->each(
-            function (Account $account) use ($start, $end) {
-                $account->startBalance = Steam::balance($account, $start);
-                $account->endBalance   = Steam::balance($account, $end);
-
-                // diff (negative when lost, positive when gained)
-                $diff = bcsub($account->endBalance, $account->startBalance);
-
-                if ($diff < 0 && $account->startBalance > 0) {
-                    // percentage lost compared to start.
-                    $pct = (($diff * -1) / $account->startBalance) * 100;
-
-                    $pct                 = $pct > 100 ? 100 : $pct;
-                    $account->difference = $diff;
-                    $account->percentage = round($pct);
-
-                    return;
-                }
-                if ($diff >= 0 && $account->startBalance > 0) {
-                    $pct                 = ($diff / $account->startBalance) * 100;
-                    $pct                 = $pct > 100 ? 100 : $pct;
-                    $account->difference = $diff;
-                    $account->percentage = round($pct);
-
-                    return;
-                }
-                $account->difference = $diff;
-                $account->percentage = 100;
-
-            }
-        );
-
-
-        return $accounts;
-    }
-
-    /**
-     * This method will call AccountRepositoryInterface::journalsInPeriod and get all deposits made to the given $accounts,
-     * as well as the transfers that move away to those $accounts. This is a slightly sharper selection
-     * than made by journalsInPeriod itself.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountRepositoryInterface::journalsInPeriod
-     *
-     * @return Collection
-     */
-    public function incomesInPeriod(Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals   = $this->journalsInPeriod($accounts, $types, $start, $end);
-        $accountIds = $accounts->pluck('id')->toArray();
-
-        // filter because some of these journals are still too much.
-        $journals = $journals->filter(
-            function (TransactionJournal $journal) use ($accountIds) {
-                if ($journal->transaction_type_type == TransactionType::DEPOSIT) {
-                    return true;
-                }
-                /*
-                 * The destination of a transfer must be one of the $accounts in order to
-                 * be included. Otherwise, it would not be income.
-                 */
-                $destinations = TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray();
-
-                if (count(array_intersect($destinations, $accountIds)) > 0) {
-                    // at least one of $target is in $haystack
-                    return true;
-                }
-
-                return false;
-            }
-        );
-
-        return $journals;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
-    {
-        // first collect actual transaction journals (fairly easy)
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
-
-        if ($end >= $start) {
-            $query->before($end)->after($start);
-        }
-
-        if (count($types) > 0) {
-            $query->transactionTypes($types);
-        }
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-            }
-            );
-            $query->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
-            );
-            $set = join(', ', $accountIds);
-            $query->whereRaw('(source.account_id in (' . $set . ') XOR destination.account_id in (' . $set . '))');
-
-        }
-        // that should do it:
-        $fields   = TransactionJournal::queryFields();
-        $complete = $query->get($fields);
-
-        return $complete;
-    }
-
-    /**
-     *
      * @param Account $account
-     * @param Carbon  $date
+     * @param array   $data
      *
-     * @return string
+     * @return Account
      */
-    public function leftOnAccount(Account $account, Carbon $date): string
+    public function update(Account $account, array $data): Account
     {
+        // update the account:
+        $account->name            = $data['name'];
+        $account->active          = $data['active'] == '1' ? true : false;
+        $account->virtual_balance = $data['virtualBalance'];
+        $account->iban            = $data['iban'];
+        $account->save();
 
-        $balance = Steam::balanceIgnoreVirtual($account, $date);
-        /** @var PiggyBank $p */
-        foreach ($account->piggyBanks()->get() as $p) {
-            $currentAmount = $p->currentRelevantRep()->currentamount ?? '0';
+        $this->updateMetadata($account, $data);
+        $this->updateInitialBalance($account, $data);
 
-            $balance = bcsub($balance, $currentAmount);
-        }
-
-        return $balance;
-
+        return $account;
     }
 
     /**
-     * Returns the date of the very last transaction in this account.
-     *
      * @param Account $account
-     *
-     * @return Carbon
      */
-    public function newestJournalDate(Account $account): Carbon
+    protected function deleteInitialBalance(Account $account)
     {
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::
-        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->sortCorrectly()
-                                     ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new Carbon('1900-01-01');
+        $journal = $this->openingBalanceTransaction($account);
+        if (!is_null($journal->id)) {
+            $journal->delete();
         }
 
-        return $journal->date;
-    }
-
-    /**
-     * Returns the date of the very first transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon
-     */
-    public function oldestJournalDate(Account $account): Carbon
-    {
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::
-        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->orderBy('transaction_journals.date', 'ASC')
-                                     ->orderBy('transaction_journals.order', 'DESC')
-                                     ->orderBy('transaction_journals.id', 'ÅSC')
-                                     ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
-            return new Carbon('1900-01-01');
-        }
-
-        return $journal->date;
     }
 
     /**
@@ -507,7 +344,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return TransactionJournal|null
      */
-    public function openingBalanceTransaction(Account $account): TransactionJournal
+    protected function openingBalanceTransaction(Account $account): TransactionJournal
     {
         $journal = TransactionJournal
             ::sortCorrectly()
@@ -516,103 +353,257 @@ class AccountRepository implements AccountRepositoryInterface
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->first(['transaction_journals.*']);
         if (is_null($journal)) {
+            Log::debug('Could not find a opening balance journal, return empty one.');
+
             return new TransactionJournal;
         }
+        Log::debug(sprintf('Found opening balance: journal #%d.', $journal->id));
 
         return $journal;
     }
 
     /**
-     * This method is almost the same as ::spentInPeriod, but only works for expense accounts
-     * instead of the implied asset accounts for ::spentInPeriod. ::spentInPeriod will tell you
-     * how much money was spent by the given asset accounts. This method will tell you how much money
-     * these given expense accounts received. Ie. how much money was spent AT these expense accounts.
+     * @param array $data
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
+     * @return Account
+     * @throws FireflyException
      */
-    public function spentAtInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    protected function storeAccount(array $data): Account
     {
-        /** @var HasMany $query */
-        $query = $this->user->transactionJournals()->expanded()
-                            ->transactionTypes([TransactionType::WITHDRAWAL]);
-        if ($end >= $start) {
-            $query->before($end)->after($start);
+        $data['accountType'] = $data['accountType'] ?? 'invalid';
+        $type                = config('firefly.accountTypeByIdentifier.' . $data['accountType']);
+        $accountType         = AccountType::whereType($type)->first();
+
+        // verify account type
+        if (is_null($accountType)) {
+            throw new FireflyException(sprintf('Account type "%s" is invalid. Cannot create account.', $data['accountType']));
         }
 
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
+        // account may exist already:
+        $existingAccount = $this->findByName($data['name'], [$data['accountType']]);
+        if (!is_null($existingAccount->id)) {
+            throw new FireflyException(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $data['accountType']));
+        }
+
+        // create it:
+        $newAccount = new Account(
+            [
+                'user_id'         => $data['user'],
+                'account_type_id' => $accountType->id,
+                'name'            => $data['name'],
+                'virtual_balance' => $data['virtualBalance'],
+                'active'          => $data['active'] === true ? true : false,
+                'iban'            => $data['iban'],
+            ]
+        );
+        $newAccount->save();
+        // verify its creation:
+        if (is_null($newAccount->id)) {
+            Log::error(
+                sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()), $newAccount->getErrors()->toArray()
             );
-            $query->whereIn('destination.account_id', $accountIds);
-
+            throw new FireflyException(sprintf('Tried to create account named "%s" but failed. The logs have more details.', $data['name']));
         }
-        // remove group by
-        $query->getQuery()->getQuery()->groups = null;
 
-        // that should do it:
-        $sum = strval($query->sum('destination.amount'));
-        if (is_null($sum)) {
-            $sum = '0';
-        }
-        $sum = bcmul($sum, '-1');
-
-        return $sum;
+        return $newAccount;
     }
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Account $account
+     * @param array   $data
      *
-     * @return string
+     * @return TransactionJournal
      */
-    public function spentInPeriod(Collection $accounts, Carbon $start, Carbon $end): string
+    protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
-        /** @var HasMany $query */
-        $query = $this->user->transactionJournals()->expanded()
-                            ->transactionTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
-        if ($end >= $start) {
-            $query->before($end)->after($start);
+        $amount          = $data['openingBalance'];
+        $user            = $data['user'];
+        $name            = $data['name'];
+        $opposing        = $this->storeOpposingAccount($amount, $user, $name);
+        $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        $journal         = TransactionJournal::create(
+            [
+                'user_id'                 => $data['user'],
+                'transaction_type_id'     => $transactionType->id,
+                'transaction_currency_id' => $data['openingBalanceCurrency'],
+                'description'             => 'Initial balance for "' . $account->name . '"',
+                'completed'               => true,
+                'date'                    => $data['openingBalanceDate'],
+                'encrypted'               => true,
+            ]
+        );
+        Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));
+
+        $firstAccount  = $account;
+        $secondAccount = $opposing;
+        $firstAmount   = $amount;
+        $secondAmount  = $amount * -1;
+
+        if ($data['openingBalance'] < 0) {
+            $firstAccount  = $opposing;
+            $secondAccount = $account;
+            $firstAmount   = $amount * -1;
+            $secondAmount  = $amount;
         }
 
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-            }
-            );
+        $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
+        $one->save();// first transaction: from
+        $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
+        $two->save(); // second transaction: to
 
-            $query->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
-            );
-            $query->whereIn('source.account_id', $accountIds);
-            $query->whereNotIn('destination.account_id', $accountIds);
-            $query->whereNull('source.deleted_at');
-            $query->whereNull('destination.deleted_at');
-            $query->distinct();
+        Log::debug(sprintf('Stored two transactions, #%d and #%d', $one->id, $two->id));
 
+        return $journal;
+    }
+
+    /**
+     * @param float  $amount
+     * @param int    $user
+     * @param string $name
+     *
+     * @return Account
+     */
+    protected function storeOpposingAccount(float $amount, int $user, string $name):Account
+    {
+        $type         = $amount < 0 ? 'expense' : 'revenue';
+        $opposingData = [
+            'user'           => $user,
+            'accountType'    => $type,
+            'name'           => $name . ' initial balance',
+            'active'         => false,
+            'iban'           => '',
+            'virtualBalance' => 0,
+        ];
+        Log::debug('Going to create an opening balance opposing account');
+
+        return $this->storeAccount($opposingData);
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return bool
+     */
+    protected function updateInitialBalance(Account $account, array $data): bool
+    {
+        $openingBalance = $this->openingBalanceTransaction($account);
+
+        // no opening balance journal? create it:
+        if (is_null($openingBalance->id)) {
+            Log::debug('No opening balance journal yet, create journal.');
+            $this->storeInitialBalance($account, $data);
+
+            return true;
         }
-        // remove group by
-        $query->getQuery()->getQuery()->groups = null;
-        $ids                                   = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
+        // opening balance data? update it!
+        if (!is_null($openingBalance->id)) {
+            $date   = $data['openingBalanceDate'];
+            $amount = $data['openingBalance'];
 
-        $sum = $this->user->transactions()
-                          ->whereIn('transaction_journal_id', $ids)
-                          ->where('amount', '<', '0')
-                          ->whereNull('transactions.deleted_at')
-                          ->sum('amount');
+            Log::debug('Opening balance journal found, update journal.');
 
-        return strval($sum);
+            $this->updateOpeningBalanceJournal($account, $openingBalance, $date, $amount);
+
+            return true;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     */
+    protected function updateMetadata(Account $account, array $data)
+    {
+        foreach ($this->validFields as $field) {
+            /** @var AccountMeta $entry */
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            // if $data has field and $entry is null, create new one:
+            if (isset($data[$field]) && is_null($entry)) {
+                Log::debug(
+                    sprintf(
+                        'Created meta-field "%s":"%s" for account #%d ("%s") ',
+                        $field, $data[$field], $account->id, $account->name
+                    )
+                );
+                AccountMeta::create(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field],
+                    ]
+                );
+            }
+
+            // if $data has field and $entry is not null, update $entry:
+            if (isset($data[$field]) && !is_null($entry)) {
+                $entry->data = $data[$field];
+                $entry->save();
+                Log::debug(
+                    sprintf(
+                        'Updated meta-field "%s":"%s" for account #%d ("%s") ',
+                        $field, $data[$field], $account->id, $account->name
+                    )
+                );
+            }
+        }
+
+    }
+
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $journal
+     * @param Carbon             $date
+     * @param float              $amount
+     *
+     * @return bool
+     */
+    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    {
+        // update date:
+        $journal->date = $date;
+        $journal->save();
+        // update transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($account->id == $transaction->account_id) {
+                $transaction->amount = $amount;
+                $transaction->save();
+            }
+            if ($account->id != $transaction->account_id) {
+                $transaction->amount = $amount * -1;
+                $transaction->save();
+            }
+        }
+        Log::debug('Updated opening balance journal.');
+
+        return true;
+
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
+    protected function validOpeningBalanceData(array $data): bool
+    {
+        if (isset($data['openingBalance'])
+            && isset($data['openingBalanceDate'])
+            && isset($data['openingBalanceCurrency'])
+            && bccomp(strval($data['openingBalance']), '0') !== 0
+        ) {
+            Log::debug('Array has valid opening balance data.');
+
+            return true;
+        }
+        Log::debug('Array does not have valid opening balance data.');
+
+        return false;
     }
 
 }

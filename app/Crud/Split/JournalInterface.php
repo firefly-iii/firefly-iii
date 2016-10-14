@@ -3,8 +3,10 @@
  * JournalInterface.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -32,10 +34,11 @@ interface JournalInterface
     /**
      * @param TransactionJournal $journal
      * @param array              $transaction
+     * @param int                $identifier
      *
      * @return Collection
      */
-    public function storeTransaction(TransactionJournal $journal, array $transaction): Collection;
+    public function storeTransaction(TransactionJournal $journal, array $transaction, int $identifier): Collection;
 
     /**
      * @param TransactionJournal $journal

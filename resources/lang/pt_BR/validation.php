@@ -3,8 +3,10 @@
  * validation.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -77,4 +79,9 @@ return [
     'url'                            => 'O formato do URL indicado para o campo :attribute é inválido.',
     'timezone'                       => 'O campo :attribute deverá ter um fuso horário válido.',
     '2fa_code'                       => 'O campo :attribute é inválido.',
+    'dimensions'                     => 'The :attribute has invalid image dimensions.',
+    'distinct'                       => 'The :attribute field has a duplicate value.',
+    'file'                           => 'The :attribute must be a file.',
+    'in_array'                       => 'The :attribute field does not exist in :other.',
+    'present'                        => 'The :attribute field must be present.',
 ];

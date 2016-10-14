@@ -11,20 +11,37 @@
                     <h3 class="box-title">{{ 'import'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>
-                        {{ 'import_intro_text'|_ }}
-                    </p>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h4>
+                                {{ 'import_data_full'|_ }}
+                            </h4>
+                            <p>
+                                {{ 'import_intro_what_it_does'|_ }}
+                            </p>
+                            <h4>
+                                {{ 'import_intro_import_conf_title'|_ }}
+                            </h4>
+                            <p>
+                                {{ 'import_intro_import_conf_text'|_ }}
+                            </p>
+                            <h4>
+                                {{ 'import_intro_beta_warning'|_ }}
+                            </h4>
 
-                    <p class="text-danger">
-                        &nbsp;{{ 'import_intro_beta'|_ }}
-                    </p>
+                            <p class="text-danger">
+                                &nbsp;{{ 'import_intro_beta'|_ }}
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <form method="POST" action="{{ route('import.upload') }}" accept-charset="UTF-8" class="form-horizontal" id="update"
                               enctype="multipart/form-data">
 
                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
-                            <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+                            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                                 {{ ExpandedForm.file('import_file', {helpText: 'import_file_help'|_}) }}
                                 {{ ExpandedForm.file('configuration_file', {helpText: 'configuration_file_help'|_|raw}) }}
 

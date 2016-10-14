@@ -3,8 +3,10 @@
  * list.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -35,14 +37,15 @@ return [
     'repeat_freq'           => 'Répétitions',
     'description'           => 'Description',
     'amount'                => 'Montant',
+    'internal_reference'    => 'Internal reference',
     'date'                  => 'Date',
     'interest_date'         => 'Date des intérêts',
     'book_date'             => 'Book date',
     'process_date'          => 'Date de traitement',
     'due_date'              => 'Due date',
-    'payment_date'          => 'Payment date',
-    'invoice_date'          => 'Invoice date',
-    'interal_reference'     => 'Internal reference',
+    'payment_date'          => 'Date de paiement',
+    'invoice_date'          => 'Date de facturation',
+    'interal_reference'     => 'Référence interne',
     'notes'                 => 'Notes',
     'from'                  => 'Depuis',
     'piggy_bank'            => 'Tirelire',
@@ -66,6 +69,6 @@ return [
     'confirmed_from'        => 'Confirmed from',
     'registered_from'       => 'Registered from',
     'blocked_code'          => 'Code de blocage',
-    'domain'                => 'Domain',
+    'domain'                => 'Domaine',
     'registration_attempts' => 'Registration attempts',
 ];

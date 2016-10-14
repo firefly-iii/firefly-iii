@@ -3,8 +3,10 @@
  * list.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -27,36 +29,37 @@ return [
     'account'               => '帳戶',
     'matchingAmount'        => '金額',
     'lastMatch'             => '最後出現',
-    'split_number'          => '拆分編號 #',
+    'split_number'          => '分割編號 #',
     'destination'           => '到',
     'source'                => '來源',
     'expectedMatch'         => 'Expected match',
     'automatch'             => '自動匹配？',
     'repeat_freq'           => '重複',
-    'description'           => 'Description',
-    'amount'                => 'Amount',
-    'date'                  => 'Date',
+    'description'           => '描述',
+    'amount'                => '金額',
+    'internal_reference'    => 'Internal reference',
+    'date'                  => '日期',
     'interest_date'         => '付息日',
     'book_date'             => 'Book date',
     'process_date'          => '處理日期',
-    'due_date'              => 'Due date',
-    'payment_date'          => 'Payment date',
-    'invoice_date'          => 'Invoice date',
-    'interal_reference'     => 'Internal reference',
-    'notes'                 => 'Notes',
+    'due_date'              => '到期日',
+    'payment_date'          => '付款日期',
+    'invoice_date'          => '發票日期',
+    'interal_reference'     => '內部參考',
+    'notes'                 => '備註',
     'from'                  => '從',
     'piggy_bank'            => '存錢筒',
     'to'                    => '至',
     'budget'                => '預算',
     'category'              => '類別',
     'bill'                  => '賬單',
-    'withdrawal'            => 'Withdrawal',
-    'deposit'               => 'Deposit',
-    'transfer'              => 'Transfer',
-    'type'                  => 'Type',
-    'completed'             => 'Completed',
+    'withdrawal'            => '取款',
+    'deposit'               => '存款',
+    'transfer'              => '轉帳',
+    'type'                  => '類型',
+    'completed'             => '已完成',
     'iban'                  => 'IBAN',
-    'paid_current_period'   => 'Paid this period',
+    'paid_current_period'   => '在這期間已付',
     'email'                 => '電子郵件',
     'registered_at'         => '註冊於',
     'is_activated'          => '已經啟動',

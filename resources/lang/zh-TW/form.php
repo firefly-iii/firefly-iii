@@ -3,8 +3,10 @@
  * form.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
@@ -33,11 +35,11 @@ return [
     'asset_destination_account'      => '資產帳戶 （目標）',
     'asset_source_account'           => '資產帳戶 （來源）',
     'journal_description'            => '描述',
-    'split_journal'                  => '拆分此交易',
-    'split_journal_explanation'      => 'Split this transaction in multiple parts',
+    'split_journal'                  => '分割此交易',
+    'split_journal_explanation'      => '分割這個交易為幾個部分',
     'currency'                       => '貨幣',
-    'account_id'                     => 'Asset account',
-    'budget_id'                      => 'Budget',
+    'account_id'                     => '資產帳戶',
+    'budget_id'                      => '預算',
     'openingBalance'                 => '開戶金額',
     'tagMode'                        => '標記模式',
     'tagPosition'                    => '標籤位置',
@@ -46,13 +48,13 @@ return [
     'targetamount'                   => '目標金額',
     'accountRole'                    => '帳戶角色',
     'openingBalanceDate'             => '開戶日期',
-    'ccType'                         => 'Credit card payment plan',
-    'ccMonthlyPaymentDate'           => 'Credit card monthly payment date',
-    'piggy_bank_id'                  => 'Piggy bank',
-    'returnHere'                     => 'Return here',
-    'returnHereExplanation'          => 'After storing, return here to create another one.',
-    'returnHereUpdateExplanation'    => 'After updating, return here.',
-    'description'                    => 'Description',
+    'ccType'                         => '信用卡付款計畫',
+    'ccMonthlyPaymentDate'           => '信用卡每月付款日期',
+    'piggy_bank_id'                  => '存錢筒',
+    'returnHere'                     => '回到這裡',
+    'returnHereExplanation'          => '儲存後，回到這裡創建另一個記錄。',
+    'returnHereUpdateExplanation'    => '更新後，回到這裡。',
+    'description'                    => '描述',
     'expense_account'                => '支出帳戶',
     'revenue_account'                => '收入帳戶',
     'amount'                         => '金額',
@@ -62,16 +64,16 @@ return [
     'process_date'                   => '處理日期',
     'category'                       => '類別',
     'tags'                           => '標籤',
-    'deletePermanently'              => 'Delete permanently',
-    'cancel'                         => 'Cancel',
-    'targetdate'                     => 'Target date',
-    'tag'                            => 'Tag',
-    'under'                          => 'Under',
+    'deletePermanently'              => '永久刪除',
+    'cancel'                         => '取消',
+    'targetdate'                     => '儲蓄目標日期',
+    'tag'                            => '標籤',
+    'under'                          => '低於',
     'symbol'                         => 'Symbol',
     'code'                           => 'Code',
     'iban'                           => 'IBAN',
     'accountNumber'                  => '帳戶號碼',
-    'has_headers'                    => 'Headers',
+    'has_headers'                    => '標頭',
     'date_format'                    => '日期格式',
     'specifix'                       => 'Bank- or file specific fixes',
     'attachments[]'                  => '附檔',
@@ -79,12 +81,12 @@ return [
     'store_new_deposit'              => '存儲新存款',
     'store_new_transfer'             => '存儲新轉帳',
     'add_new_withdrawal'             => '新增提款',
-    'add_new_deposit'                => 'Add a new deposit',
+    'add_new_deposit'                => '新增新存款',
     'add_new_transfer'               => 'Add a new transfer',
     'noPiggybank'                    => '(no piggy bank)',
-    'title'                          => 'Title',
-    'notes'                          => 'Notes',
-    'filename'                       => 'File name',
+    'title'                          => '標題',
+    'notes'                          => '備註',
+    'filename'                       => '檔案名稱',
     'mime'                           => 'Mime type',
     'size'                           => 'Size',
     'trigger'                        => 'Trigger',
@@ -116,9 +118,9 @@ return [
     'category_areYouSure'            => 'Are you sure you want to delete the category named ":name"?',
     'currency_areYouSure'            => 'Are you sure you want to delete the currency named ":name"?',
     'piggyBank_areYouSure'           => 'Are you sure you want to delete the piggy bank named ":name"?',
-    'journal_areYouSure'             => 'Are you sure you want to delete the transaction described ":description"?',
+    'journal_areYouSure'             => '你真的要刪除這個描述為 ":description" 的交易嗎？',
     'mass_journal_are_you_sure'      => 'Are you sure you want to delete these transactions?',
-    'tag_areYouSure'                 => 'Are you sure you want to delete the tag ":tag"?',
+    'tag_areYouSure'                 => '你真的要要刪除標籤 ":tag" 嗎？',
     'permDeleteWarning'              => 'Deleting stuff from Firely is permanent and cannot be undone.',
     'mass_make_selection'            => 'You can still prevent items from being deleted by removing the checkbox.',
     'delete_all_permanently'         => 'Delete selected permanently',
@@ -136,9 +138,9 @@ return [
     'single_user_mode'               => 'Single user mode',
 
     // import
-    'import_file'                    => 'Import file',
+    'import_file'                    => '匯入檔案',
     'configuration_file'             => 'Configuration file',
-    'import_file_type'               => 'Import file type',
+    'import_file_type'               => '匯入檔案類型',
     'csv_comma'                      => 'A comma (,)',
     'csv_semicolon'                  => 'A semicolon (;)',
     'csv_tab'                        => 'A tab (invisible)',
@@ -147,7 +149,7 @@ return [
     'csv_config'                     => 'CSV import configuration',
 
 
-    'due_date'           => 'Due date',
+    'due_date'           => '到期日',
     'payment_date'       => 'Payment date',
     'invoice_date'       => 'Invoice date',
     'internal_reference' => 'Internal reference',

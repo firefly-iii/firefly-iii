@@ -3,8 +3,10 @@
  * HomeController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -12,11 +14,11 @@ namespace FireflyIII\Http\Controllers;
 
 use Artisan;
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -24,7 +26,6 @@ use Log;
 use Preferences;
 use Route;
 use Session;
-use Steam;
 
 
 /**
@@ -112,16 +113,16 @@ class HomeController extends Controller
     }
 
     /**
-     * @param ARI                  $repository
-     * @param AccountCrudInterface $crud
+     * @param ARI                    $repository
+     * @param AccountTaskerInterface $tasker
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function index(ARI $repository, AccountCrudInterface $crud)
+    public function index(ARI $repository, AccountTaskerInterface $tasker)
     {
 
         $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $repository->countAccounts($types);
+        $count = $repository->count($types);
 
         if ($count == 0) {
             return redirect(route('new-user.index'));
@@ -132,25 +133,17 @@ class HomeController extends Controller
         $mainTitleIcon = 'fa-fire';
         $transactions  = [];
         $frontPage     = Preferences::get(
-            'frontPageAccounts', $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+            'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end               = session('end', Carbon::now()->endOfMonth());
-        $showTour          = Preferences::get('tour', true)->data;
-        $accounts          = $crud->getAccountsById($frontPage->data);
-        $savings           = $repository->getSavingsAccounts($start, $end);
-        $piggyBankAccounts = $repository->getPiggyBankAccounts($start, $end);
-
-
-        $savingsTotal = '0';
-        foreach ($savings as $savingAccount) {
-            $savingsTotal = bcadd($savingsTotal, Steam::balance($savingAccount, $end));
-        }
+        $end      = session('end', Carbon::now()->endOfMonth());
+        $showTour = Preferences::get('tour', true)->data;
+        $accounts = $repository->getAccountsById($frontPage->data);
 
         foreach ($accounts as $account) {
-            $set = $repository->journalsInPeriod(new Collection([$account]), [], $start, $end);
+            $set = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
             $set = $set->splice(0, 10);
 
             if (count($set) > 0) {
@@ -159,7 +152,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts')
+            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions')
         );
     }
 

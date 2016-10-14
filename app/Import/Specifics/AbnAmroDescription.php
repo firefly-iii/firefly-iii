@@ -3,8 +3,10 @@
  * AbnAmroDescription.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -62,7 +64,7 @@ class AbnAmroDescription implements SpecificInterface
         // If the description could not be parsed, specify an unknown opposing
         // account, as an opposing account is required
         if (!$parsed) {
-            $this->row[7] = trans('firefly.unknown'); // opposing-account-name
+            $this->row[8] = trans('firefly.unknown'); // opposing-account-name
         }
 
         return $this->row;

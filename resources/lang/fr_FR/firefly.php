@@ -3,13 +3,15 @@
  * firefly.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 return [
     // general stuff:
-    'language_incomplete'                       => 'incomplete translation',
+    'language_incomplete'                       => 'traduction incomplète',
     'close'                                     => 'Fermer',
     'actions'                                   => 'Actions',
     'edit'                                      => 'Modifier',
@@ -123,7 +125,7 @@ return [
     'rules_explanation'                         => 'Ici vous pouvez gérer les règles. Les règles sont déclenchées lorsqu’une opération est créée ou mise à jour. Ensuite, si l\'opération a certaines propriétés (appelées "déclencheurs" ) Firefly exécutera des "actions". Combiné, vous pouvez faire réagir Firefly d’une certaine façon aux nouvelles opérations.',
     'rule_name'                                 => 'Nom de la règle',
     'rule_triggers'                             => 'La règle se déclenchera lorsque',
-    'rule_actions'                              => 'Rule will',
+    'rule_actions'                              => 'La règle va',
     'new_rule'                                  => 'Nouvelle règle',
     'new_rule_group'                            => 'Nouveau groupe de règles',
     'rule_priority_up'                          => 'Donner à la règle plus de priorité',
@@ -153,7 +155,7 @@ return [
     'default_rule_description'                  => 'Cette règle est un exemple. Vous pouvez la supprimer en toute sécurité.',
     'default_rule_trigger_description'          => 'L’homme qui a vendu le monde',
     'default_rule_trigger_from_account'         => 'David Bowie',
-    'default_rule_action_prepend'               => 'Bought the world from ',
+    'default_rule_action_prepend'               => 'Achat du Monde de ',
     'default_rule_action_set_category'          => 'Grandes dépenses',
     'trigger'                                   => 'Déclencheur',
     'trigger_value'                             => 'Déclenchement sur valeur',
@@ -173,8 +175,8 @@ return [
     'execute_on_existing_transactions'          => 'Exécuter des opérations existantes',
     'execute_on_existing_transactions_intro'    => 'Lorsqu’une règle ou un groupe a été modifié ou ajouté, vous pouvez l’exécuter pour des opérations existantes',
     'execute_on_existing_transactions_short'    => 'Opérations existantes',
-    'executed_group_on_existing_transactions'   => 'Executed group ":title" for existing transactions',
-    'execute_group_on_existing_transactions'    => 'Execute group ":title" for existing transactions',
+    'executed_group_on_existing_transactions'   => 'Exécution groupe « : titre » pour les transactions existantes',
+    'execute_group_on_existing_transactions'    => 'Exécutez groupe « : titre » pour les transactions existantes',
     'include_transactions_from_accounts'        => 'Iclure les opérations depuis ces comptes',
     'execute'                                   => 'Executer',
 
@@ -272,27 +274,27 @@ return [
     'pref_save_settings'                        => 'Enregistrer les paramètres',
     'saved_preferences'                         => 'Préférences enregistrées!',
     'transaction_page_size_title'               => 'Taille de la page',
-    'transaction_page_size_help'                => 'Any list of transactions shows at most this many transactions',
+    'transaction_page_size_help'                => 'N’importe quelle liste de transactions montre au plus ce nombre de transactions',
     'transaction_page_size_label'               => 'Taille de la page',
     'between_dates'                             => '(:start et :end)',
-    'pref_optional_fields_transaction'          => 'Optional fields for transactions',
+    'pref_optional_fields_transaction'          => 'Champs optionnels pour les transactions',
     'pref_optional_fields_transaction_help'     => 'By default not all fields are enabled when creating a new transaction (because of the clutter). Below, you can enable these fields if you think they could be useful for you. Of course, any field that is disabled, but already filled in, will be visible regardless of the setting.',
-    'optional_tj_date_fields'                   => 'Date fields',
-    'optional_tj_business_fields'               => 'Business fields',
+    'optional_tj_date_fields'                   => 'Champ date',
+    'optional_tj_business_fields'               => 'Champs professionnels',
     'optional_tj_attachment_fields'             => 'Attachment fields',
-    'pref_optional_tj_interest_date'            => 'Interest date',
-    'pref_optional_tj_book_date'                => 'Book date',
-    'pref_optional_tj_process_date'             => 'Processing date',
-    'pref_optional_tj_due_date'                 => 'Due date',
-    'pref_optional_tj_payment_date'             => 'Payment date',
-    'pref_optional_tj_invoice_date'             => 'Invoice date',
-    'pref_optional_tj_internal_reference'       => 'Internal reference',
+    'pref_optional_tj_interest_date'            => 'Date des intérêts',
+    'pref_optional_tj_book_date'                => 'Date de réservation',
+    'pref_optional_tj_process_date'             => 'Date de traitement',
+    'pref_optional_tj_due_date'                 => 'Échéance',
+    'pref_optional_tj_payment_date'             => 'Date de paiement',
+    'pref_optional_tj_invoice_date'             => 'Date de facturation',
+    'pref_optional_tj_internal_reference'       => 'Référence interne',
     'pref_optional_tj_notes'                    => 'Notes',
-    'pref_optional_tj_attachments'              => 'Attachments',
+    'pref_optional_tj_attachments'              => 'Pièces jointes',
     'optional_field_meta_dates'                 => 'Dates',
     'optional_field_meta_business'              => 'Business',
-    'optional_field_attachments'                => 'Attachments',
-    'optional_field_meta_data'                  => 'Optional meta data',
+    'optional_field_attachments'                => 'Pièces jointes',
+    'optional_field_meta_data'                  => 'Métadonnées facultatives',
 
 
     // profile:
@@ -351,8 +353,8 @@ return [
     'create_currency'                           => 'Créer une nouvelle devise',
     'store_currency'                            => 'Créer une nouvelle devise',
     'update_currency'                           => 'Mise à jour de la balance',
-    'new_default_currency'                      => ':name is now the default currency.',
-    'cannot_delete_currency'                    => 'Cannot delete :name because it is still in use.',
+    'new_default_currency'                      => ':name est maintenant la devise par défaut.',
+    'cannot_delete_currency'                    => 'Impossible de supprimer :name car il est encore utilisé.',
     'deleted_currency'                          => 'Devise ":name" supprimée',
     'created_currency'                          => 'Devise ":name" créée',
     'updated_currency'                          => 'Devise ":name" mise à jour',
@@ -379,7 +381,7 @@ return [
     'create_new_budget'                         => 'Créer un nouveau budget',
     'store_new_budget'                          => 'Créer un nouveau budget',
     'stored_new_budget'                         => 'Nouveau budget ":name" créé',
-    'available_between'                         => 'Available between :start and :end',
+    'available_between'                         => 'Disponible entre le :start et le :end',
     'transactionsWithoutBudget'                 => 'Dépenses non budgétisées',
     'transactions_no_budget'                    => 'Dépenses non budgetisées entre le :start et le :end',
     'spent_between'                             => 'Dépensé entre le :start et le :end',
@@ -415,7 +417,7 @@ return [
     'cannot_scan_inactive_bill'                 => 'Les factures inactives ne peuvent pas être analysées.',
     'rescanned_bill'                            => 'Réanalyser tout.',
     'bill_date_little_relevance'                => 'La seule partie de cette date utilisée par Firefly est le jour. Il n’est utile que lorsque votre facture arrive à exactement la même date chaque mois. Si la date de paiement de vos factures varie, il suffit d’utiliser le premier jour du mois.',
-    'average_bill_amount_year'                  => 'Average bill amount (:year)',
+    'average_bill_amount_year'                  => 'Montant moyen des factures ( :year)',
     'average_bill_amount_overall'               => 'Average bill amount (overall)',
 
     // accounts:
@@ -486,7 +488,7 @@ return [
     'stop_selection'                            => 'Stop selecting transactions',
     'edit_selected'                             => 'Modifier la sélection',
     'delete_selected'                           => 'Supprimer la sélection',
-    'mass_delete_journals'                      => 'Delete a number of transactions',
+    'mass_delete_journals'                      => 'Supprimer un certain nombre de transactions',
     'mass_edit_journals'                        => 'Modifier un certain nombre d’opérations',
     'cannot_edit_other_fields'                  => 'Vous ne peut pas modifier en masse d\'autres champs que ceux ici, car il n’y a pas de place pour tous les montrer. S’il vous plaît suivez le lien et modifiez les par un par un, si vous devez modifier ces champs.',
     'perm-delete-many'                          => 'Deleting many items in one go can be very disruptive. Please be cautious.',
@@ -553,7 +555,7 @@ return [
     'daily'                                     => 'Journalier',
     'monthly'                                   => 'Mensuel',
     'profile'                                   => 'Profil',
-    'errors'                                    => 'Errors',
+    'errors'                                    => 'Erreurs',
 
     // reports:
     'report_default'                            => 'Rapport financier par défaut du :start au :end',
@@ -565,22 +567,22 @@ return [
     'report_this_year_quick'                    => 'Année en cours, tous les comptes',
     'report_this_fiscal_year_quick'             => 'Année fiscale en cours, tous les comptes',
     'report_all_time_quick'                     => 'All-time, all accounts',
-    'reports_can_bookmark'                      => 'Remember that reports can be bookmarked.',
+    'reports_can_bookmark'                      => 'N’oubliez pas que les rapports peuvent être mis en signet.',
     'incomeVsExpenses'                          => 'Revenus vs dépenses',
     'accountBalances'                           => 'Solde du compte',
     'balanceStartOfYear'                        => 'Solde au début de l\'année',
     'balanceEndOfYear'                          => 'Solde à la fin de l\'année',
     'balanceStartOfMonth'                       => 'Solde au début du mois',
     'balanceEndOfMonth'                         => 'Solde à la fin du mois',
-    'balanceStart'                              => 'Balance at start of period',
-    'balanceEnd'                                => 'Balance at end of period',
+    'balanceStart'                              => 'Solde au début de la période',
+    'balanceEnd'                                => 'Solde à la fin de la période',
     'reportsOwnAccounts'                        => 'Rapport pour vos propres comptes',
     'reportsOwnAccountsAndShared'               => 'Rapport pour vos comptes et ceux partagés',
     'splitByAccount'                            => 'Split by account',
     'balancedByTransfersAndTags'                => 'Balanced by transfers and tags',
     'coveredWithTags'                           => 'Covered with tags',
     'leftUnbalanced'                            => 'Left unbalanced',
-    'expectedBalance'                           => 'Expected balance',
+    'expectedBalance'                           => 'Solde attendu',
     'outsideOfBudgets'                          => 'Outside of budgets',
     'leftInBudget'                              => 'Budget restant',
     'sumOfSums'                                 => 'Montant des sommes',
@@ -604,8 +606,8 @@ return [
     'report_type_default'                       => 'Rapport financier par défaut',
     'report_type_audit'                         => 'Historique des transactions',
     'report_type_meta-history'                  => 'Vue d’ensemble des budgets, des catégories et des factures',
-    'more_info_help'                            => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
-    'report_included_accounts'                  => 'Included accounts',
+    'more_info_help'                            => 'Plus d’informations sur ces types de rapports se trouvent dans les pages d’aide. Appuyez sur l’icône ( ?) dans le coin supérieur droit.',
+    'report_included_accounts'                  => 'Comptes inclus',
     'report_date_range'                         => 'Intervalle de dates',
     'report_include_help'                       => 'Dans tous les cas, les transferts vers des comptes partagés comptes comme des dépenses, et les transferts depuis les comptes partagés comme un revenu.',
     'report_preset_ranges'                      => 'Pré-configurer les étendues',
@@ -762,7 +764,7 @@ return [
     'no_edit_multiple_left'                     => 'You have selected no valid transactions to edit.',
 
     // import
-    'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you.',
+    'configuration_file_help'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_data_index'                         => 'Index',
     'import_file_type_csv'                      => 'CSV (comma separated values)',
     'import_file_type_help'                     => 'Select the type of file you will upload',
@@ -780,7 +782,10 @@ return [
     'import_data'                               => 'Import data',
     'import_data_full'                          => 'Import data into Firefly III',
     'import'                                    => 'Import',
-    'import_intro_text'                         => 'Welcome to the Firefly III data import routine. At the moment, this routine can help you import files into Firefly. To do so, you must download or export transactions from other systems or software, and upload them here. The next steps will let you help Firefly III determin what the content is of your file, and how to handle it. Please select a file, and read all instructions carefully.',
+    'import_intro_what_it_does'                 => 'This page allows you to import data into Firefly III. To do so, export data from your bank, or from another financial management system. Upload that file here. Firefly III will convert the data. You need to give it some directions. Please select a file and follow the instructions.',
+    'import_intro_import_conf_title'            => 'Import "configuration"',
+    'import_intro_beta_warning'                 => 'Warning',
+    'import_intro_import_conf_text'             => 'As you will discover over the next few pages, this import routine has a lot of settings. These settings are mainly dependent on the bank (or financial management software) your file comes from. There is a good chance somebody else already imported such a file and has shared their <em>configuration file</em>. Please visit the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong> to see if there already is a configuration available for your bank or system. If there is, you should download this configuration file and upload it here as well. It will save you a lot of time!',
     'import_file_help'                          => 'Select your file',
     'import_status_settings_complete'           => 'The import is ready to start.',
     'import_status_import_complete'             => 'The import has completed.',
@@ -796,8 +801,11 @@ return [
     'import_double'                             => 'Row #:row: This row has been imported before, and is stored in <a href=":link">:description</a>.',
     'import_finished_all'                       => 'The import has finished. Please check out the results below.',
     'import_with_key'                           => 'Import with key \':key\'',
-    'import_finished_report'                    => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
-    'import_finished_link'                      => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+
+    'import_share_configuration' => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
+
+    'import_finished_report' => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
+    'import_finished_link'   => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
 
 
 ];

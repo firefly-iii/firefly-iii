@@ -1,0 +1,92 @@
+<table class="table table-hover table-condensed">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th>{{ trans('list.description') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+        {% if not hideSource %}
+            <th class="hidden-xs">{{ trans('list.from') }}</th>
+        {% endif %}
+        {% if not hideDestination %}
+            <th class="hidden-xs">{{ trans('list.to') }}</th>
+        {% endif %}
+        <!-- Hide budgets? -->
+        {% if not hideBudget %}
+            <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        {% endif %}
+
+        <!-- Hide categories? -->
+        {% if not hideCategory %}
+            <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    <!--
+    Make sum:
+    {% set sum = 0 %}
+    -->
+    {% for transaction in journals %}
+        <!-- add to sum
+        {% set sum = (sum + transaction.transaction_amount) %}
+        -->
+        <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
+            <td class="hidden-xs">
+                {{ transaction|typeIconTransaction }}
+            </td>
+            <td>
+                <a href="{{ route('transactions.show',transaction.journal_id) }}">
+                    {% if transaction.transaction_description|length > 0 %}
+                        {{ transaction.transaction_description }} ({{ transaction.description }})
+                    {% else %}
+                        {{ transaction.description }}
+                    {% endif %}
+                </a>
+            </td>
+            <td>
+                <!-- format amount of transaction -->
+                {{ formatAmountWithCode(transaction.transaction_amount, transaction.transaction_currency_code) }}
+                <!-- and then amount of journal itself. -->
+                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount,
+                transaction.transaction_currency_code, transaction.transaction_type_type) }}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+            </td>
+            {% if not hideSource %}
+                <td class="hidden-xs">
+                    {{ transactionSourceAccount(transaction) }}
+                </td>
+            {% endif %}
+            {% if not hideDestination %}
+                <td class="hidden-xs">
+                    {{ transactionDestinationAccount(transaction) }}
+                </td>
+            {% endif %}
+
+            <!-- Do NOT hide the budget? -->
+            {% if not hideBudget %}
+                <td class="hidden-xs">
+                    {{ transactionBudgets(transaction) }}
+                </td>
+            {% endif %}
+
+            <!-- Do NOT hide the category? -->
+            {% if not hideCategory %}
+                <td class="hidden-xs">
+                    {{ transactionCategories(transaction) }}
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2" style="text-align: right;"><em>{{ 'sum'|_ }}:</em></td>
+        <td>{{ sum|formatAmount }}</td>
+    </tr>
+    </tfoot>
+</table>
+
+{{ journals.render|raw }}

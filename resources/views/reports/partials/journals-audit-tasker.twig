@@ -1,0 +1,161 @@
+{{ journals.render|raw }}
+
+<table class="table table-hover table-compressed">
+    <thead>
+    <tr class="ignore">
+        <th class="hide-buttons">&nbsp;</th>
+        <th class="hide-icon">&nbsp;</th>
+
+        <th class="hide-description">{{ trans('list.description') }}</th>
+        <th class="hide-balance_before">{{ trans('list.balance_before') }}</th>
+        <th class="hide-amount">{{ trans('list.amount') }}</th>
+        <th class="hide-balance_after">{{ trans('list.balance_after') }}</th>
+
+        <th class="hide-date">{{ trans('list.date') }}</th>
+        <th class="hide-book_date">{{ trans('list.book_date') }}</th>
+        <th class="hide-process_date">{{ trans('list.process_date') }}</th>
+        <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
+
+        <!-- new optional fields (3x) -->
+        <th class="hide-interest_date">{{ trans('list.due_date') }}</th>
+        <th class="hide-payment_date">{{ trans('list.payment_date') }}</th>
+        <th class="hide-invoice_date">{{ trans('list.invoice_date') }}</th>
+
+        <th class="hide-from">{{ trans('list.from') }}</th>
+        <th class="hide-to">{{ trans('list.to') }}</th>
+
+        <th class="hide-budget"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        <th class="hide-category"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        <th class="hide-bill">{{ trans('list.bill') }}</th>
+
+        <!-- more optional fields (2x) -->
+        <th class="hide-internal_reference">{{ trans('list.internal_reference') }}</th>
+        <th class="hide-notes">{{ trans('list.notes') }}</th>
+
+        <th class="hide-create_date">{{ trans('list.create_date') }}</th>
+        <th class="hide-update_date">{{ trans('list.update_date') }}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for transaction in journals %}
+        <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
+            <td class="hide-buttons">
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
+            </td>
+            <td class="hide-icon">{{ transaction|typeIconTransaction }}</td>
+
+            <td class="hide-description">
+                <a href="{{ route('transactions.show',transaction.journal_id) }}">
+                    {% if transaction.transaction_description|length > 0 %}
+                        {{ transaction.transaction_description }} ({{ transaction.description }})
+                    {% else %}
+                        {{ transaction.description }}
+                    {% endif %}
+                </a>
+            </td>
+            <td class="hide-balance_before">{{ transaction.before|formatAmount }}</td>
+            <td class="hide-amount">
+                <!-- format amount of transaction -->
+                {{ formatAmountWithCode(transaction.transaction_amount, transaction.transaction_currency_code) }}
+                <!-- and then amount of journal itself. -->
+                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount,
+                transaction.transaction_currency_code, transaction.transaction_type_type) }}
+            </td>
+            <td class="hide-balance_after">{{ transaction.after|formatAmount }}</td>
+
+            <td class="hide-date">{{ transaction.date.formatLocalized(monthAndDayFormat) }}</td>
+            <td class="hide-book_date">
+                {% if transaction.transactionJournal.hasMeta('book_date') %}
+                    {{ transaction.transactionJournal.getMeta('book_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-process_date">
+                {% if transaction.transactionJournal.hasMeta('process_date') %}
+                    {{ transaction.transactionJournal.getMeta('process_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+
+            </td>
+            <td class="hide-interest_date">
+                {% if transaction.transactionJournal.hasMeta('interest_date') %}
+                    {{ transaction.transactionJournal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+
+            </td>
+
+            <!-- new optional fields (3x) -->
+            <td class="hide-due_date">
+                {% if transaction.transactionJournal.hasMeta('due_date') %}
+                    {{ transaction.transactionJournal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+
+            </td>
+            <td class="hide-payment_date">
+                {% if transaction.transactionJournal.hasMeta('payment_date') %}
+                    {{ transaction.transactionJournal.getMeta('payment_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+
+            </td>
+            <td class="hide-invoice_date">
+                {% if transaction.transactionJournal.hasMeta('invoice_date') %}
+                    {{ transaction.transactionJournal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+
+            </td>
+
+
+            <td class="hide-from">
+                {{ transactionSourceAccount(transaction) }}
+            </td>
+            <td class="hide-to">
+                {{ transactionDestinationAccount(transaction) }}
+            </td>
+
+            <td class="hide-budget">
+                {{ transactionBudgets(transaction) }}
+            </td>
+            <td class="hide-category">
+                {{ transactionCategories(transaction) }}
+            </td>
+            {% if transaction.bill_id %}
+                <td class="hide-bill">
+                    <i class="fa fa-fw fa-rotate-right" title="{{ trans('list.bill') }}"></i>&nbsp
+                    <a href="{{ route('bills.show',transaction.bill_id) }}">{{ transaction.bill_name }}</a>
+                </td>
+            {% else %}
+                <td class="hide-bill">&nbsp;</td>
+            {% endif %}
+
+            <!-- new optional fields (2x) -->
+            <td class="hide-internal_reference">
+
+                {% if transaction.transactionJournal.hasMeta('internal_reference') %}
+                    {{ transaction.transactionJournal.getMeta('internal_reference') }}
+                {% endif %}
+
+            </td>
+            <td class="hide-notes">
+
+                {% if transaction.transactionJournal.hasMeta('notes') %}
+                    {{ transaction.transactionJournal.getMeta('notes')|nl2br }}
+                {% endif %}
+
+            </td>
+
+            <td class="hide-create_date">
+                {{ transaction.transactionJournal.created_at.formatLocalized(dateTimeFormat) }}
+            </td>
+
+            <td class="hide-update_date">
+                {{ transaction.transactionJournal.updated_at.formatLocalized(dateTimeFormat) }}
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ journals.render|raw }}

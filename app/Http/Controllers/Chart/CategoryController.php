@@ -3,8 +3,10 @@
  * CategoryController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -13,11 +15,11 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
-use FireflyIII\Crud\Account\AccountCrudInterface;
 use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -50,13 +52,13 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
-     * @param CRI                  $repository
-     * @param AccountCrudInterface $crud
-     * @param Category             $category
+     * @param CRI                        $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Category                   $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(CRI $repository, AccountCrudInterface $crud, Category $category)
+    public function all(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
     {
         $start              = $repository->firstUseDate($category);
         $range              = Preferences::get('viewRange', '1M')->data;
@@ -65,7 +67,7 @@ class CategoryController extends Controller
         $end                = new Carbon;
         $entries            = new Collection;
         $cache              = new CacheProperties;
-        $accounts           = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts           = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('all');
@@ -108,12 +110,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                  $repository
-     * @param AccountCrudInterface $crud
+     * @param CRI                        $repository
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function frontpage(CRI $repository, AccountCrudInterface $crud)
+    public function frontpage(CRI $repository, AccountRepositoryInterface $accountRepository)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -127,7 +129,7 @@ class CategoryController extends Controller
             return Response::json($cache->get());
         }
         $categories = $repository->getCategories();
-        $accounts   = $crud->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accounts   = $accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         $set        = new Collection;
         /** @var Category $category */
         foreach ($categories as $category) {
@@ -254,9 +256,10 @@ class CategoryController extends Controller
     {
         $categoryCollection = new Collection([$category]);
         $cache              = new CacheProperties;
-        /** @var AccountCrudInterface $crud */
-        $crud     = app(AccountCrudInterface::class);
-        $accounts = $crud->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         $cache->addProperty($start);
         $cache->addProperty($end);
