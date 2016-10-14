@@ -4,24 +4,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
-## [4.0.2] - 2016-10-x
+## [4.0.2] - 2016-10-14
 ### Added
-- Initial release.
+- Added ``intl`` dependency to composer file to ease installation (thanks @telyn)
+- Added support for Croatian.
 
 ### Changed
-- Initial release.
-
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
+- Updated all copyright notices to refer to the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
+- Fixed #344
+- Fixed #346, thanks to @SanderKleykens
+- #351
+- Did some internal remodelling.
 
 ### Fixed
 - PostgreSQL compatibility thanks to @SanderKleykens
-
-### Security
-- Initial release.
+- @RobertHorlings fixed a bug in the ABN Amro import specific.
 
 
 ## [4.0.1] - 2016-10-04
