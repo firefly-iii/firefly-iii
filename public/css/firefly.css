@@ -20,6 +20,13 @@ body.waiting * {
     height: 1px;
 }
 
+.preferences-box {
+    border:1px #ddd solid;
+    border-radius: 4px 4px 0 0;
+    padding: 15px;
+    margin: 15px;
+}
+
 #map-canvas {
     height: 100%;
     margin: 0;
@@ -76,6 +83,6 @@ body.waiting * {
 }
 
 .loading {
-    background:url('/images/loading-small.gif') no-repeat center center;
-    min-height:30px;
+    background: url('/images/loading-small.gif') no-repeat center center;
+    min-height: 30px;
 }
