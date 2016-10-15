@@ -76,6 +76,7 @@
     "post-update-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postUpdate",
       "php artisan firefly:upgrade-instructions",
+      "php artisan firefly:upgrade-database",
       "php artisan firefly:verify",
       "php artisan optimize"
     ]

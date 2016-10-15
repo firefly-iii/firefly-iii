@@ -104,15 +104,16 @@ class UpgradeDatabase extends Command
                     $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
                     break 2;
                 }
-
-                // give both a new identifier:
-                $transaction->identifier = $identifier;
-                $transaction->save();
-                $opposing->identifier = $identifier;
-                $opposing->save();
-                $processed[] = $transaction->id;
-                $processed[] = $opposing->id;
-                $this->line(sprintf('Database upgrade for journal #%d, transactions #%d and #%d', $journalId, $transaction->id, $opposing->id));
+                if (!is_null($opposing)) {
+                    // give both a new identifier:
+                    $transaction->identifier = $identifier;
+                    $transaction->save();
+                    $opposing->identifier = $identifier;
+                    $opposing->save();
+                    $processed[] = $transaction->id;
+                    $processed[] = $opposing->id;
+                    $this->line(sprintf('Database upgrade for journal #%d, transactions #%d and #%d', $journalId, $transaction->id, $opposing->id));
+                }
                 $identifier++;
             }
         }
