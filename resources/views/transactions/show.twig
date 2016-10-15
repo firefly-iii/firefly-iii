@@ -122,14 +122,14 @@
                                 <td>{{ journal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
                         {% endif %}
-                        {% if journal.hasMeta('internal_reference') %}
+                        {% if journal.hasMeta('internal_reference') and journal.getMeta('internal_reference') != "" %}
                             <tr>
                                 <td>{{ trans('list.internal_reference') }}</td>
                                 <td>{{ journal.getMeta('internal_reference') }}</td>
                             </tr>
                         {% endif %}
 
-                        {% if journal.hasMeta('notes') %}
+                        {% if journal.hasMeta('notes') and journal.getMeta('notes') != "" %}
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
                                 <td>{{ journal.getMeta('notes')|nl2br }}</td>
@@ -237,7 +237,7 @@
                     <tbody>
                     {% for transaction in transactions %}
                         <tr>
-                            <td>#{{ transaction.source_id }}
+                            <td>
                                 {% if transaction.description == "" %}
                                     {{ journal.description }}
                                 {% else %}
