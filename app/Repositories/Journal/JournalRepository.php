@@ -57,42 +57,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Returns the amount in the account before the specified transaction took place.
-     *
-     * @param Transaction $transaction
-     *
-     * @return string
-     */
-    public function balanceBeforeTransaction(Transaction $transaction): string
-    {
-        // some dates from journal
-        $journal = $transaction->transactionJournal;
-        $query   = Transaction::
-        leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->where('transactions.account_id', $transaction->account_id)
-                              ->where('transaction_journals.user_id', $this->user->id)
-                              ->where(
-                                  function (Builder $q) use ($journal) {
-                                      $q->where('transaction_journals.date', '<', $journal->date->format('Y-m-d'));
-                                      $q->orWhere(
-                                          function (Builder $qq) use ($journal) {
-                                              $qq->where('transaction_journals.date', '=', $journal->date->format('Y-m-d'));
-                                              $qq->where('transaction_journals.order', '>', $journal->order);
-                                          }
-                                      );
-
-                                  }
-                              )
-                              ->where('transactions.id', '!=', $transaction->id)
-                              ->whereNull('transactions.deleted_at')
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->groupBy('transaction_journals.id');
-        $sum     = $query->sum('transactions.amount');
-
-        return strval($sum);
-    }
-
-    /**
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -217,64 +181,6 @@ class JournalRepository implements JournalRepositoryInterface
         );
 
         return $events;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getTransactions(TransactionJournal $journal): Collection
-    {
-        $transactions = new Collection;
-        $fields       = ['transactions.id', 'transactions.created_at', 'transactions.updated_at', 'transactions.deleted_at', 'transactions.account_id',
-                         'transactions.transaction_journal_id', 'transactions.description', 'transactions.amount',
-                         DB::raw('SUM(transactions.amount) AS sum')];
-        $groupBy      = ['transactions.id', 'transactions.created_at', 'transactions.updated_at', 'transactions.deleted_at', 'transactions.account_id',
-                         'transactions.transaction_journal_id', 'transactions.description', 'transactions.amount'];
-        switch ($journal->transactionType->type) {
-            case TransactionType::DEPOSIT:
-                /** @var Collection $transactions */
-                $transactions = $journal->transactions()
-                                        ->groupBy('transactions.account_id')
-                                        ->where('amount', '<', 0)
-                                        ->groupBy($groupBy)
-                                        ->orderBy('amount', 'ASC')->get($fields);
-                $final        = $journal->transactions()
-                                        ->groupBy($groupBy)
-                                        ->where('amount', '>', 0)
-                                        ->orderBy('amount', 'ASC')->first($fields);
-                $transactions->push($final);
-                break;
-            case TransactionType::TRANSFER:
-
-                /** @var Collection $transactions */
-                $transactions = $journal->transactions()
-                                        ->groupBy($groupBy)
-                                        ->orderBy('transactions.id')->get($fields);
-                break;
-            case TransactionType::WITHDRAWAL:
-
-                /** @var Collection $transactions */
-                $transactions = $journal->transactions()
-                                        ->where('amount', '>', 0)
-                                        ->groupBy($groupBy)
-                                        ->orderBy('amount', 'ASC')->get($fields);
-                $final        = $journal->transactions()
-                                        ->where('amount', '<', 0)
-                                        ->groupBy($groupBy)
-                                        ->orderBy('amount', 'ASC')->first($fields);
-                $transactions->push($final);
-                break;
-        }
-        // foreach do balance thing
-        $transactions->each(
-            function (Transaction $t) {
-                $t->before = $this->balanceBeforeTransaction($t);
-            }
-        );
-
-        return $transactions;
     }
 
     /**

@@ -28,15 +28,6 @@ interface JournalRepositoryInterface
 {
 
     /**
-     * Returns the amount in the account before the specified transaction took place.
-     *
-     * @param Transaction $transaction
-     *
-     * @return string
-     */
-    public function balanceBeforeTransaction(Transaction $transaction): string;
-
-    /**
      * Deletes a journal.
      *
      * @param TransactionJournal $journal
@@ -89,13 +80,6 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getTransactions(TransactionJournal $journal): Collection;
 
     /**
      * @param array $data
