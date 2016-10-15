@@ -435,6 +435,7 @@ Route::group(
     // user manager
     Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
     Route::get('/admin/users/edit/{user}', ['uses' => 'Admin\UserController@edit', 'as' => 'admin.users.edit']);
+    Route::get('/admin/users/show/{user}', ['uses' => 'Admin\UserController@show', 'as' => 'admin.users.show']);
 
     // user domains:
     Route::get('/admin/domains', ['uses' => 'Admin\DomainController@domains', 'as' => 'admin.users.domains']);

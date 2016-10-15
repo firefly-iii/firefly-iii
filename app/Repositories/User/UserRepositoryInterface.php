@@ -32,6 +32,15 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
+     * Return basic user information.
+     *
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getUserData(User $user): array;
+
+    /**
      * Gives a user a role.
      *
      * @param User   $user

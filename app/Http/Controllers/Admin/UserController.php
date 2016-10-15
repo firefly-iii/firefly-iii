@@ -78,5 +78,41 @@ class UserController extends Controller
 
     }
 
+    /**
+     * @param UserRepositoryInterface $repository
+     * @param User                    $user
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show(UserRepositoryInterface $repository, User $user)
+    {
+        $title            = strval(trans('firefly.administration'));
+        $mainTitleIcon    = 'fa-hand-spock-o';
+        $subTitle         = strval(trans('firefly.single_user_administration', ['email' => $user->email]));
+        $subTitleIcon     = 'fa-user';
+        $defaultIp        = '0.0.0.0';
+        $registration     = Preferences::getForUser($user, 'registration_ip_address', $defaultIp)->data;
+        $confirmation     = Preferences::getForUser($user, 'confirmation_ip_address', $defaultIp)->data;
+        $registrationHost = '';
+        $confirmationHost = '';
+
+        if ($registration != $defaultIp) {
+            $registrationHost = gethostbyaddr($registration);
+        }
+        if ($confirmation != $defaultIp) {
+            $confirmationHost = gethostbyaddr($confirmation);
+        }
+
+        $information = $repository->getUserData($user);
+
+        return view(
+            'admin.users.show',
+            compact(
+                'title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'information',
+                'user', 'registration', 'confirmation', 'registrationHost', 'confirmationHost'
+            )
+        );
+    }
+
 
 }

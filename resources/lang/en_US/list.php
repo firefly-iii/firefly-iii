@@ -25,6 +25,7 @@ return [
     'matchedOn'             => 'Matched on',
     'matchesOn'             => 'Matched on',
     'account_type'          => 'Account type',
+    'created_at'            => 'Created at',
     'new_balance'           => 'New balance',
     'account'               => 'Account',
     'matchingAmount'        => 'Amount',
@@ -71,4 +72,15 @@ return [
     'blocked_code'          => 'Block code',
     'domain'                => 'Domain',
     'registration_attempts' => 'Registration attempts',
+
+    'accounts_count'        => 'Number of accounts',
+    'journals_count'        => 'Number of journals',
+    'attachments_count'     => 'Number of attachments',
+    'bills_count'           => 'Number of bills',
+    'categories_count'      => 'Number of categories',
+    'export_jobs_count'     => 'Number of export jobs',
+    'import_jobs_count'     => 'Number of import jobs',
+    'budget_count'          => 'Number of budgets',
+    'rule_and_groups_count' => 'Number of rules and rule groups',
+    'tags_count'            => 'Number of tags',
 ];
