@@ -72,6 +72,8 @@ return [
     'blocked_code'          => 'Block code',
     'domain'                => 'Domain',
     'registration_attempts' => 'Registration attempts',
+    'source_account'        => 'Source account',
+    'destination_account'   => 'Destination account',
 
     'accounts_count'        => 'Number of accounts',
     'journals_count'        => 'Number of journals',

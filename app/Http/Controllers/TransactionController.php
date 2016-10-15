@@ -24,6 +24,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
 use Preferences;
 use Response;
@@ -270,16 +271,12 @@ class TransactionController extends Controller
      *
      * @return View
      */
-    public function show(TransactionJournal $journal, JournalRepositoryInterface $repository)
+    public function show(TransactionJournal $journal, JournalRepositoryInterface $repository, JournalTaskerInterface $tasker)
     {
         $events       = $repository->getPiggyBankEvents($journal);
-        $transactions = $repository->getTransactions($journal);
+        $transactions = $tasker->getTransactionsOverview($journal);
         $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
-
-        if ($transactions->count() > 2) {
-            return view('split.journals.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
-        }
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
 

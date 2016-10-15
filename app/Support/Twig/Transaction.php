@@ -32,6 +32,20 @@ class Transaction extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
+    public function formatAmountPlainWithCode(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatAmountPlainWithCode', function (string $amount, string $code): string {
+
+            return Amount::formatWithCode($code, $amount, false);
+
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
     public function formatAmountWithCode(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
@@ -62,11 +76,14 @@ class Transaction extends Twig_Extension
     {
         $functions = [
             $this->formatAmountWithCode(),
+            $this->formatAmountPlainWithCode(),
             $this->transactionSourceAccount(),
             $this->transactionDestinationAccount(),
             $this->optionalJournalAmount(),
             $this->transactionBudgets(),
+            $this->transactionIdBudgets(),
             $this->transactionCategories(),
+            $this->transactionIdCategories(),
             $this->splitJournalIndicator(),
         ];
 
@@ -144,22 +161,7 @@ class Transaction extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'transactionBudgets', function (TransactionModel $transaction): string {
-            // see if the transaction has a budget:
-            $budgets = $transaction->budgets()->get();
-            if ($budgets->count() === 0) {
-                $budgets = $transaction->transactionJournal()->first()->budgets()->get();
-            }
-            if ($budgets->count() > 0) {
-                $str = [];
-                foreach ($budgets as $budget) {
-                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
-                }
-
-                return join(', ', $str);
-            }
-
-
-            return '';
+            return $this->getTransactionBudgets($transaction);
         }, ['is_safe' => ['html']]
         );
     }
@@ -171,21 +173,7 @@ class Transaction extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'transactionCategories', function (TransactionModel $transaction): string {
-            // see if the transaction has a category:
-            $categories = $transaction->categories()->get();
-            if ($categories->count() === 0) {
-                $categories = $transaction->transactionJournal()->first()->categories()->get();
-            }
-            if ($categories->count() > 0) {
-                $str = [];
-                foreach ($categories as $category) {
-                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
-                }
-
-                return join(', ', $str);
-            }
-
-            return '';
+            return $this->getTransactionCategories($transaction);
         }, ['is_safe' => ['html']]
         );
     }
@@ -224,6 +212,34 @@ class Transaction extends Twig_Extension
 
             return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
 
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function transactionIdBudgets(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'transactionIdBudgets', function (int $transactionId): string {
+            $transaction = TransactionModel::find($transactionId);
+
+            return $this->getTransactionBudgets($transaction);
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function transactionIdCategories(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'transactionIdCategories', function (int $transactionId): string {
+            $transaction = TransactionModel::find($transactionId);
+
+            return $this->getTransactionCategories($transaction);
         }, ['is_safe' => ['html']]
         );
     }
@@ -297,5 +313,54 @@ class Transaction extends Twig_Extension
             return $txt;
         }, ['is_safe' => ['html']]
         );
+    }
+
+    /**
+     * @param TransactionModel $transaction
+     *
+     * @return string
+     */
+    private function getTransactionBudgets(TransactionModel $transaction): string
+    {
+        // see if the transaction has a budget:
+        $budgets = $transaction->budgets()->get();
+        if ($budgets->count() === 0) {
+            $budgets = $transaction->transactionJournal()->first()->budgets()->get();
+        }
+        if ($budgets->count() > 0) {
+            $str = [];
+            foreach ($budgets as $budget) {
+                $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
+            }
+
+            return join(', ', $str);
+        }
+
+
+        return '';
+    }
+
+    /**
+     * @param TransactionModel $transaction
+     *
+     * @return string
+     */
+    private function getTransactionCategories(TransactionModel $transaction): string
+    {
+        // see if the transaction has a category:
+        $categories = $transaction->categories()->get();
+        if ($categories->count() === 0) {
+            $categories = $transaction->transactionJournal()->first()->categories()->get();
+        }
+        if ($categories->count() > 0) {
+            $str = [];
+            foreach ($categories as $category) {
+                $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
+            }
+
+            return join(', ', $str);
+        }
+
+        return '';
     }
 }

@@ -26,6 +26,7 @@ use Illuminate\Support\Collection;
  */
 interface JournalRepositoryInterface
 {
+
     /**
      * Returns the amount in the account before the specified transaction took place.
      *
