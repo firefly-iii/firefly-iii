@@ -59,7 +59,7 @@
                         <tr>
                             <td>{{ trans('list.is_activated') }}</td>
                             <td>
-                                {% if information.activated %}
+                                {% if information.is_activated %}
                                     <small class="text-success"><i class="fa fa-fw fa-check"></i></small> Yes
                                 {% else %}
                                     <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> No
@@ -69,7 +69,7 @@
                         <tr>
                             <td>{{ trans('list.is_blocked') }}</td>
                             <td>
-                                {% if information.blocked == 1 %}
+                                {% if information.blocked %}
                                     <small class="text-danger"><i class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></i></small> Yes:
 
                                     {% if information.blocked_code == "" %}
