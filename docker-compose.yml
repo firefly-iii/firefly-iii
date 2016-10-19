@@ -1,0 +1,15 @@
+mysql:
+        restart: always
+        image: mariadb
+        environment:
+                - MYSQL_DATABASE=${DB_DATABASE}
+                - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        volumes:
+                - persistentmysqldirectory:/var/lib/mysql
+firefly:
+        restart: always
+        links:
+                - mysql:mysql
+        ports:
+                - "80:80"
+        build: .
