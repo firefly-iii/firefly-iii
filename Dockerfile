@@ -20,8 +20,6 @@ WORKDIR /var/www/firefly-iii
 
 RUN composer install --no-scripts --no-dev
 
-RUN php artisan key:generate
-
 USER root
 
 CMD /root/run-firefly.sh
