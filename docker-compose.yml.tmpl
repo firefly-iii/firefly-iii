@@ -6,14 +6,18 @@ mysql:
                 - MYSQL_RANDOM_ROOT_PASSWORD=true
                 - MYSQL_PASSWORD=${DB_PASSWORD}
                 - MYSQL_USER=${DB_USERNAME}
-        volumes:
-                - persistentstoragemysql:/var/lib/mysql
+#        volumes:
+#                - persistentstoragemysql:/var/lib/mysql
 firefly:
         restart: always
         links:
                 - mysql:mysql
         ports:
                 - "80:80"
+        environment:
+                - MYSQL_DATABASE=${DB_DATABASE}
+                - MYSQL_PASSWORD=${DB_PASSWORD}
+                - MYSQL_USER=${DB_USERNAME} 
         build: .
-        volumes:
-                - persistentstorage:/var/www/firefly-iii/storage
+#        volumes:
+#                - persistentstorage:/var/www/firefly-iii/storage
