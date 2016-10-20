@@ -137,7 +137,7 @@ class BillController extends Controller
         $bills = $repository->getBills();
         $bills->each(
             function (Bill $bill) use ($repository, $start, $end) {
-                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
+                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
                 $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
                 $journals                = $repository->getJournalsInRange($bill, $start, $end);
                 // loop journals, find average:
@@ -204,7 +204,7 @@ class BillController extends Controller
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
         $journals->setPath('/bills/show/' . $bill->id);
-        $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
+        $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;
         $subTitle                = e($bill->name);
 

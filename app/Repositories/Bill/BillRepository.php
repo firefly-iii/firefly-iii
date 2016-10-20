@@ -18,10 +18,12 @@ use DB;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 
 /**
@@ -461,52 +463,44 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * @param Bill $bill
+     * @param Bill   $bill
+     * @param Carbon $date
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
-    public function nextExpectedMatch(Bill $bill): Carbon
+    public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {
-
-        $finalDate       = Carbon::now();
-        $finalDate->year = 1900;
-        if ($bill->active == 0) {
-            return $finalDate;
+        $cache = new CacheProperties;
+        $cache->addProperty($bill->id);
+        $cache->addProperty('nextExpectedMatch');
+        if ($cache->has()) {
+            return $cache->get();
         }
+        // find the most recent date for this bill NOT in the future. Cache this date:
+        $start = clone $bill->date;
+        $now   = new Carbon;
+        Log::debug('Start is ' . $start->format('Y-m-d'));
 
-        /*
-         * $today is the start of the next period, to make sure FF3 won't miss anything
-         * when the current period has a transaction journal.
-         */
-        /** @var \Carbon\Carbon $obj */
-        $obj   = new Carbon;
-        $today = Navigation::addPeriod($obj, $bill->repeat_freq, 0);
+        do {
+            $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+            Log::debug('Start is now ' . $start->format('Y-m-d'));
+        } while ($start <= $now);
 
-        $skip  = $bill->skip + 1;
-        $start = Navigation::startOfPeriod($obj, $bill->repeat_freq);
-        /*
-         * go back exactly one month/week/etc because FF3 does not care about 'next'
-         * bills if they're too far into the past.
-         */
+        $end = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+        Log::debug('Final start is ' . $start->format('Y-m-d'));
+        Log::debug('Matching end is ' . $end->format('Y-m-d'));
 
-        $counter = 0;
-        while ($start <= $today) {
-            if (($counter % $skip) == 0) {
-                // do something.
-                $end          = Navigation::endOfPeriod(clone $start, $bill->repeat_freq);
-                $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();
-                if ($journalCount == 0) {
-                    $finalDate = new Carbon($start->format('Y-m-d'));
-                    break;
-                }
-            }
+        // see if the bill was paid in this period.
+        $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();
 
-            // add period for next round!
-            $start = Navigation::addPeriod($start, $bill->repeat_freq, 0);
-            $counter++;
+        if ($journalCount > 0) {
+            // this period had in fact a bill. The new start is the current end, and we create a new end.
+            $start = clone $end;
+            $end   = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
+        $cache->store($start);
 
-        return $finalDate;
+        return $start;
     }
 
     /**

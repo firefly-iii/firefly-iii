@@ -168,11 +168,12 @@ interface BillRepositoryInterface
 
 
     /**
-     * @param Bill $bill
+     * @param Bill   $bill
+     * @param Carbon $date
      *
      * @return \Carbon\Carbon
      */
-    public function nextExpectedMatch(Bill $bill): Carbon;
+    public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon;
 
     /**
      * @param Bill               $bill
