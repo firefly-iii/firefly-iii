@@ -60,6 +60,21 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param int $userId
+     *
+     * @return User
+     */
+    public function find(int $userId): User
+    {
+        $user = User::find($userId);
+        if (!is_null($user)) {
+            return $user;
+        }
+
+        return new User;
+    }
+
+    /**
      * Return basic user information.
      *
      * @param User $user

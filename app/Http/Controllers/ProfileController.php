@@ -35,6 +35,9 @@ class ProfileController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        View::share('title', trans('firefly.profile'));
+        View::share('mainTitleIcon', 'fa-user');
     }
 
     /**
@@ -63,7 +66,10 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('profile.index')->with('title', trans('firefly.profile'))->with('subTitle', auth()->user()->email)->with('mainTitleIcon', 'fa-user');
+        $subTitle = auth()->user()->email;
+        $userId   = auth()->user()->id;
+
+        return view('profile.index', compact('subTitle', 'userId'));
     }
 
     /**

@@ -32,6 +32,13 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
+     * @param int $userId
+     *
+     * @return User
+     */
+    public function find(int $userId): User;
+
+    /**
      * Return basic user information.
      *
      * @param User $user
