@@ -390,28 +390,27 @@ Route::group(
     /**
      * Transaction Controller
      */
-    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::get('/transaction/edit/{tj}', ['uses' => 'TransactionController@edit', 'as' => 'transactions.edit']);
-    Route::get('/transaction/delete/{tj}', ['uses' => 'TransactionController@delete', 'as' => 'transactions.delete']);
+
+    // normal controller
+    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
     Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
-    // transaction controller:
-    Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::post('/transaction/update/{tj}', ['uses' => 'TransactionController@update', 'as' => 'transactions.update']);
-    Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
-    // mass edit and mass delete.
+    // single controller
+    Route::get('/transactions/create/{what}', ['uses' => 'Transaction\SingleController@create', 'as' => 'transactions.create'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::get('/transaction/edit/{tj}', ['uses' => 'Transaction\SingleController@edit', 'as' => 'transactions.edit']);
+    Route::get('/transaction/delete/{tj}', ['uses' => 'Transaction\SingleController@delete', 'as' => 'transactions.delete']);
+    Route::post('/transactions/store/{what}', ['uses' => 'Transaction\SingleController@store', 'as' => 'transactions.store'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::post('/transaction/update/{tj}', ['uses' => 'Transaction\SingleController@update', 'as' => 'transactions.update']);
+    Route::post('/transaction/destroy/{tj}', ['uses' => 'Transaction\SingleController@destroy', 'as' => 'transactions.destroy']);
+
+    // mass controller:
     Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'Transaction\MassController@massEdit', 'as' => 'transactions.mass-edit']);
     Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'Transaction\MassController@massDelete', 'as' => 'transactions.mass-delete']);
     Route::post('/transactions/mass-update', ['uses' => 'Transaction\MassController@massUpdate', 'as' => 'transactions.mass-update']);
     Route::post('/transactions/mass-destroy', ['uses' => 'Transaction\MassController@massDestroy', 'as' => 'transactions.mass-destroy']);
+
+    // split (will be here):
 
     /**
      * POPUP Controllers
