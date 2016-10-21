@@ -36,72 +36,147 @@
                         <h3 class="box-title">{{ 'transaction_data'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('journal_description', journal.description) }}
-                        {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.transaction_currency_id) }}
-                        {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
-                        <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
 
-                        <!-- show  source if withdrawal or transfer -->
+                        {# DESCRIPTION IS ALWAYS AVAILABLE #}
+                        {{ ExpandedForm.text('journal_description', journal.description) }}
+
+                        {# CURRENCY IS NEW FOR SPLIT JOURNALS #}
+                        {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.transaction_currency_id) }}
+
+                        {# show source if withdrawal or transfer #}
                         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
                             {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
                         {% endif %}
 
-                        <!-- show destination account id, if deposit (is asset): -->
+                        {# show destination account id, if deposit (is asset): #}
                         {% if preFilled.what == 'deposit' %}
                             {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
                         {% endif %}
 
-                        <!-- show static destination if transfer -->
+                        {# show static destination if transfer #}
                         {% if preFilled.what == 'transfer' %}
                             {{ ExpandedForm.select('journal_destination_account_id', assetAccounts, preFilled.journal_destination_account_id) }}
                         {% endif %}
+
+                        {# TOTAL AMOUNT IS STATIC TEXT #}
+                        {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
+                        <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+
+                        {# DATE #}
+                        {{ ExpandedForm.date('date', journal.date) }}
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'transaction_meta_data'|_ }}</h3>
+                        <h3 class="box-title">{{ 'optional_field_meta_data'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.date('date', journal.date) }}
+                        {# NO BUDGET #}
+                        {# NO CATEGORY #}
 
-                        {% if optionalFields.interest_date or journal.interest_date %}
-                            <!-- INTEREST DATE -->
-                            {{ ExpandedForm.date('interest_date', journal.interest_date) }}
-                        {% endif %}
+                        {# ALWAYS TAGS #}
+                        {{ ExpandedForm.text('tags', preFilled.tags) }}
 
-                        {% if optionalFields.book_date or journal.book_date %}
-                            <!-- BOOK DATE -->
-                            {{ ExpandedForm.date('book_date', journal.book_date) }}
-                        {% endif %}
-
-                        {% if optionalFields.process_date or journal.process_date %}
-                            <!-- PROCESSING DATE -->
-                            {{ ExpandedForm.date('process_date', journal.process_date) }}
-                        {% endif %}
-
-                        {% if optionalFields.due_date or journal.due_date %}
-                            <!-- DUE DATE -->
-                            {{ ExpandedForm.date('due_date', journal.due_date) }}
-                        {% endif %}
-
-                        {% if optionalFields.payment_date or journal.payment_date %}
-                            <!-- PAYMENT DATE -->
-                            {{ ExpandedForm.date('payment_date', journal.payment_date) }}
-                        {% endif %}
-
-                        {% if optionalFields.internal_reference or journal.internal_reference %}
-                            <!-- REFERENCE -->
-                            {{ ExpandedForm.text('internal_reference', journal.internal_reference) }}
-                        {% endif %}
-
-                        {% if optionalFields.notes  or journal.notes %}
-                            <!-- NOTES -->
-                            {{ ExpandedForm.textarea('notes', journal.notes) }}
-                        {% endif %}
+                        {# NO PIGGY BANK #}
                     </div>
                 </div>
+
+                {# EXPLANATION IF NECESSARY: #}
+                {% if
+                not optionalFields.interest_date or
+                not optionalFields.book_date or
+                not optionalFields.process_date or
+                not optionalFields.due_date or
+                not optionalFields.payment_date or
+                not optionalFields.invoice_date or
+                not optionalFields.internal_reference or
+                not optionalFields.notes or
+                not optionalFields.attachments %}
+                    <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>
+                        <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences')})|raw }}</em></p>
+                {% endif %}
+
+                {# BOX FOR DATES #}
+                {% if
+                optionalFields.interest_date or optionalFields.book_date or optionalFields.process_date
+                or optionalFields.due_date or optionalFields.payment_date
+                or optionalFields.invoice_date %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_meta_dates'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+
+                            {# INTEREST DATE #}
+                            {% if optionalFields.interest_date or journal.interest_date %}
+                                {{ ExpandedForm.date('interest_date', journal.interest_date) }}
+                            {% endif %}
+
+                            {# BOOK DATE #}
+                            {% if optionalFields.book_date or journal.book_date %}
+                                {{ ExpandedForm.date('book_date', journal.book_date) }}
+                            {% endif %}
+
+                            {# PROCESSING DATE #}
+                            {% if optionalFields.process_date or journal.process_date %}
+                                {{ ExpandedForm.date('process_date', journal.process_date) }}
+                            {% endif %}
+
+                            {# DUE DATE #}
+                            {% if optionalFields.due_date or journal.due_date %}
+                                {{ ExpandedForm.date('due_date', journal.due_date) }}
+                            {% endif %}
+
+                            {# PAYMENT DATE #}
+                            {% if optionalFields.payment_date or journal.payment_date %}
+                                {{ ExpandedForm.date('payment_date', journal.payment_date) }}
+                            {% endif %}
+
+                            {# INVOICE DATE #}
+                            {% if optionalFields.invoice_date or journal.invoice_date %}
+                                {{ ExpandedForm.date('invoice_date', journal.invoice_date) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# BOX FOR BUSINESS FIELDS #}
+                {% if optionalFields.internal_reference or optionalFields.notes %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_meta_business'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+
+                            {# INTERNAL REFERENCE #}
+                            {% if optionalFields.internal_reference or journal.internal_reference %}
+                                {{ ExpandedForm.text('internal_reference', journal.internal_reference) }}
+                            {% endif %}
+
+                            {# NOTES #}
+                            {% if optionalFields.notes  or journal.notes %}
+                                {{ ExpandedForm.textarea('notes', journal.notes) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# BOX FOR ATTACHMENTS #}
+                {% if optionalFields.attachments %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_attachments'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            {# ATTACHMENTS #}
+                            {% if optionalFields.attachments %}
+                                {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
 
             </div>
         </div>
@@ -115,39 +190,47 @@
                         <table class="table table-bordered table-condensed table-striped split-table">
                             <thead>
                             <tr>
+                                <th>&nbsp;</th>
                                 <th>{{ trans('list.split_number') }}</th>
                                 <th>{{ trans('list.description') }}</th>
 
-                                <!-- withdrawal and deposit have a destination. -->
+                                {# withdrawal and deposit have a destination. #}
                                 {% if preFilled.what == 'withdrawal' %}
                                     <th>{{ trans('list.destination') }}</th>
                                 {% endif %}
 
+                                {# DEPOSIT HAS A SOURCE #}
                                 {% if preFilled.what == 'deposit' %}
                                     <th>{{ trans('list.source') }}</th>
                                 {% endif %}
 
                                 <th>{{ trans('list.amount') }}</th>
 
-                                <!-- only withdrawal has budget -->
+                                {# only withdrawal has budget #}
                                 {% if preFilled.what == 'withdrawal' %}
                                     <th>{{ trans('list.budget') }}</th>
                                 {% endif %}
+
                                 <th>{{ trans('list.category') }}</th>
+
+                                <!-- piggy bank -->
                             </tr>
                             </thead>
                             <tbody>
-                            {% for index, descr in preFilled.description %}
+                            {% for index, transaction in preFilled.transactions %}
                                 <tr class="{% if loop.index == 1 %}initial-row{% else %}not-initial-row{% endif %}">
+                                    <td><a href="#" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></td>
                                     <td class="count">#{{ loop.index }}</td>
                                     <td>
-                                        <input type="text" name="description[]" value="{{ descr }}" class="form-control"/>
+                                        <input type="text" name="transactions[{{ loop.index0 }}][description]" value="{{ transaction.description }}"
+                                               class="form-control"/>
                                     </td>
 
                                     <!-- withdrawal has several destination names. -->
                                     {% if preFilled.what == 'withdrawal' %}
                                         <td>
-                                            <input type="text" name="destination_account_name[]" value="{{ preFilled.destination_account_name[index] }}"
+                                            <input type="text" name="transactions[{{ loop.index0 }}][destination_account_name]"
+                                                   value="{{ transaction.destination_account_name }}"
                                                    class="form-control"/>
                                         </td>
                                     {% endif %}
@@ -155,22 +238,24 @@
                                     <!-- deposit has several source names -->
                                     {% if preFilled.what == 'deposit' %}
                                         <td>
-                                            <input type="text" name="source_account_name[]" value="{{ preFilled.source_account_name[index] }}"
+                                            <input type="text" name="transactions[{{ loop.index0 }}][source_account_name]"
+                                                   value="{{ transaction.source_account_name }}"
                                                    class="form-control"/>
                                         </td>
                                     {% endif %}
 
 
                                     <td style="width:10%;">
-                                        <input type="number" name="amount[]" value="{{ preFilled.amount[index] }}"
+                                        <input type="number" name="transactions[{{ loop.index0 }}][amount]" value="{{ transaction.amount }}"
                                                class="form-control" autocomplete="off" step="any" min="0.01">
                                     </td>
+
                                     {% if preFilled.what == 'withdrawal' %}
                                         <td>
-                                            <select class="form-control" name="budget_id[]">
+                                            <select class="form-control" name="transactions[{{ loop.index0 }}][budget_id]">
                                                 {% for key, budget in budgets %}
                                                     <option label="{{ budget }}" value="{{ key }}"
-                                                            {% if preFilled.budget_id[index] == key %}
+                                                            {% if transaction.budget_id == key %}
                                                                 selected="selected"
                                                             {% endif %}
                                                     >{{ budget }}</option>
@@ -179,7 +264,8 @@
                                         </td>
                                     {% endif %}
                                     <td>
-                                        <input type="text" name="category[]" value="{{ preFilled.category[index] }}" class="form-control"/>
+                                        <input type="text" name="transactions[{{ loop.index0 }}][category]" value="{{ transaction.category }}"
+                                               class="form-control" />
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -189,30 +275,11 @@
                             <br/>
                             <a href="#" class="btn btn-default btn-do-split"><i class="fa fa-plus-circle"></i> {{ 'add_another_split'|_ }}</a>
                         </p>
-                        <!--<p class="pull-right">
-                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
-                            {{ ('update_splitted_'~preFilled.what)|_ }}
-                        </button>
-                    </p>
-                    -->
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            {% if optionalFields.attachments %}
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <!-- ATTACHMENTS -->
-                            {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <!-- panel for options -->
                 <div class="box">
@@ -231,14 +298,16 @@
     </form>
 
 {% endblock %}
+{% block styles %}
+    <link href="css/bootstrap-tagsinput.css" type="text/css" rel="stylesheet" media="all">
+{% endblock %}
 {% block scripts %}
     <script type="text/javascript">
         var originalSum = {{ preFilled.journal_amount }};
         var what = "{{ preFilled.what }}";
     </script>
     <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>
     <script type="text/javascript" src="js/ff/transactions/create-edit.js"></script>
     <script type="text/javascript" src="js/ff/split/journal/from-store.js"></script>
-{% endblock %}
-{% block styles %}
 {% endblock %}

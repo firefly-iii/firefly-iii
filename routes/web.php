@@ -364,14 +364,6 @@ Route::group(
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 
     /**
-     * Split controller
-     */
-
-    Route::get('/transaction/create-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@create', 'as' => 'split.journal.create']);
-    Route::post('/transaction/store-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@store', 'as' => 'split.journal.store']);
-    Route::get('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
-    Route::post('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
-    /**
      * Tag Controller
      */
     Route::get('/tags', ['uses' => 'TagController@index', 'as' => 'tags.index']);
@@ -411,6 +403,8 @@ Route::group(
     Route::post('/transactions/mass-destroy', ['uses' => 'Transaction\MassController@massDestroy', 'as' => 'transactions.mass-destroy']);
 
     // split (will be here):
+    Route::get('/transaction/split/edit/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'transactions.edit-split']);
+    Route::post('/transaction/split/update/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
 
     /**
      * POPUP Controllers

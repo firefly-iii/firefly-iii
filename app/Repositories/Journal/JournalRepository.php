@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Journal;
 
 use DB;
+use FireflyIII\Events\TransactionStored;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -25,6 +26,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -252,6 +254,92 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Same as above but for transaction journal with multiple transactions.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal
+    {
+        // update actual journal:
+        $journal->transaction_currency_id = $data['transaction_currency_id'];
+        $journal->description             = $data['journal_description'];
+        $journal->date                    = $data['date'];
+
+        // unlink all categories:
+        $journal->categories()->detach();
+        $journal->budgets()->detach();
+
+        // update meta fields:
+        $result = $journal->save();
+        if ($result) {
+            foreach ($data as $key => $value) {
+                if (in_array($key, $this->validMetaFields)) {
+                    $journal->setMeta($key, $value);
+                    continue;
+                }
+                Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
+            }
+
+            return $journal;
+        }
+
+
+        // update tags:
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->updateTags($journal, $data['tags']);
+        }
+
+        // delete original transactions, and recreate them.
+        $journal->transactions()->delete();
+
+        // store each transaction.
+        $identifier = 0;
+        foreach ($data['transactions'] as $transaction) {
+            Log::debug(sprintf('Split journal update split transaction %d', $identifier));
+            $transaction = $this->appendTransactionData($transaction, $data);
+            $this->storeSplitTransaction($journal, $transaction, $identifier);
+            $identifier++;
+        }
+
+        $journal->save();
+
+        return $journal;
+    }
+
+    /**
+     * When the user edits a split journal, each line is missing crucial data:
+     *
+     * - Withdrawal lines are missing the source account ID
+     * - Deposit lines are missing the destination account ID
+     * - Transfers are missing both.
+     *
+     * We need to append the array.
+     *
+     * @param array $transaction
+     * @param array $data
+     *
+     * @return array
+     */
+    private function appendTransactionData(array $transaction, array $data): array
+    {
+        switch ($data['what']) {
+            case strtolower(TransactionType::TRANSFER):
+            case strtolower(TransactionType::WITHDRAWAL):
+                $transaction['source_account_id'] = intval($data['journal_source_account_id']);
+                break;
+            case strtolower(TransactionType::TRANSFER):
+            case strtolower(TransactionType::DEPOSIT):
+                $transaction['destination_account_id'] = intval($data['journal_destination_account_id']);
+                break;
+        }
+
+        return $transaction;
+    }
+
+    /**
      *
      * * Remember: a balancingAct takes at most one expense and one transfer.
      *            an advancePayment takes at most one expense, infinite deposits and NO transfers.
@@ -291,6 +379,7 @@ class JournalRepository implements JournalRepositoryInterface
             'source'      => null,
             'destination' => null,
         ];
+        Log::debug(sprintf('Going to store accounts for type %s', $type->type));
         switch ($type->type) {
             case TransactionType::WITHDRAWAL:
                 $accounts = $this->storeWithdrawalAccounts($data);
@@ -310,13 +399,13 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         if (is_null($accounts['source'])) {
-            Log::error('"destination"-account is null, so we cannot continue!', ['data' => $data]);
-            throw new FireflyException('"destination"-account is null, so we cannot continue!');
+            Log::error('"source"-account is null, so we cannot continue!', ['data' => $data]);
+            throw new FireflyException('"source"-account is null, so we cannot continue!');
         }
 
         if (is_null($accounts['destination'])) {
-            Log::error('"source"-account is null, so we cannot continue!', ['data' => $data]);
-            throw new FireflyException('"source"-account is null, so we cannot continue!');
+            Log::error('"destination"-account is null, so we cannot continue!', ['data' => $data]);
+            throw new FireflyException('"destination"-account is null, so we cannot continue!');
 
         }
 
@@ -338,6 +427,19 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param Transaction $transaction
+     * @param int         $budgetId
+     */
+    private function storeBudgetWithTransaction(Transaction $transaction, int $budgetId)
+    {
+        if (intval($budgetId) > 0 && $transaction->transactionJournal->transactionType->type !== TransactionType::TRANSFER) {
+            /** @var \FireflyIII\Models\Budget $budget */
+            $budget = Budget::find($budgetId);
+            $transaction->budgets()->save($budget);
+        }
+    }
+
+    /**
      * @param TransactionJournal $journal
      * @param string             $category
      */
@@ -346,6 +448,18 @@ class JournalRepository implements JournalRepositoryInterface
         if (strlen($category) > 0) {
             $category = Category::firstOrCreateEncrypted(['name' => $category, 'user_id' => $journal->user_id]);
             $journal->categories()->save($category);
+        }
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param string      $category
+     */
+    private function storeCategoryWithTransaction(Transaction $transaction, string $category)
+    {
+        if (strlen($category) > 0) {
+            $category = Category::firstOrCreateEncrypted(['name' => $category, 'user_id' => $transaction->transactionJournal->user_id]);
+            $transaction->categories()->save($category);
         }
     }
 
@@ -380,7 +494,61 @@ class JournalRepository implements JournalRepositoryInterface
         ];
     }
 
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $transaction
+     * @param int                $identifier
+     *
+     * @return Collection
+     */
+    private function storeSplitTransaction(TransactionJournal $journal, array $transaction, int $identifier): Collection
+    {
+        // store source and destination accounts (depends on type)
+        $accounts = $this->storeAccounts($journal->transactionType, $transaction);
 
+        // store transaction one way:
+        $one = $this->storeTransaction(
+            [
+                'journal'     => $journal,
+                'account'     => $accounts['source'],
+                'amount'      => bcmul(strval($transaction['amount']), '-1'),
+                'description' => $transaction['description'],
+                'category'    => null,
+                'budget'      => null,
+                'identifier'  => $identifier,
+            ]
+        );
+        $this->storeCategoryWithTransaction($one, $transaction['category']);
+        $this->storeBudgetWithTransaction($one, $transaction['budget_id']);
+
+        // and the other way:
+        $two = $this->storeTransaction(
+            [
+                'journal'     => $journal,
+                'account'     => $accounts['destination'],
+                'amount'      => strval($transaction['amount']),
+                'description' => $transaction['description'],
+                'category'    => null,
+                'budget'      => null,
+                'identifier'  => $identifier,
+            ]
+        );
+        $this->storeCategoryWithTransaction($two, $transaction['category']);
+        $this->storeBudgetWithTransaction($two, $transaction['budget_id']);
+
+        if ($transaction['piggy_bank_id'] > 0) {
+            $transaction['date'] = $journal->date->format('Y-m-d');
+            event(new TransactionStored($transaction));
+        }
+
+        return new Collection([$one, $two]);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Transaction
+     */
     private function storeTransaction(array $data): Transaction
     {
         /** @var Transaction $transaction */
@@ -393,6 +561,9 @@ class JournalRepository implements JournalRepositoryInterface
                 'identifier'             => $data['identifier'],
             ]
         );
+
+        Log::debug(sprintf('Transaction stored with ID: %s', $transaction->id));
+
         if (!is_null($data['category'])) {
             $transaction->categories()->save($data['category']);
         }
@@ -415,7 +586,7 @@ class JournalRepository implements JournalRepositoryInterface
         $sourceAccount = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first(['accounts.*']);
 
         if (strlen($data['destination_account_name']) > 0) {
-            $destinationType    = AccountType::where('type', 'Expense account')->first();
+            $destinationType    = AccountType::where('type', AccountType::EXPENSE)->first();
             $destinationAccount = Account::firstOrCreateEncrypted(
                 [
                     'user_id'         => $data['user'],

@@ -175,12 +175,15 @@ class JournalTasker implements JournalTaskerInterface
                 $join
                     ->on('transactions.transaction_journal_id', '=', 'destination.transaction_journal_id')
                     ->where('transactions.amount', '=', DB::raw('destination.amount * -1'))
-                    ->where('transactions.identifier', '=', DB::raw('destination.identifier'));
+                    ->where('transactions.identifier', '=', DB::raw('destination.identifier'))
+                    ->whereNull('destination.deleted_at');
             }
             )
+            ->with(['budgets', 'categories'])
             ->leftJoin('accounts as source_accounts', 'transactions.account_id', '=', 'source_accounts.id')
             ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
             ->where('transactions.amount', '<', 0)
+            ->whereNull('transactions.deleted_at')
             ->get(
                 [
                     'transactions.id',
@@ -202,6 +205,8 @@ class JournalTasker implements JournalTaskerInterface
         foreach ($set as $entry) {
             $sourceBalance      = $this->getBalance($entry->id);
             $destinationBalance = $this->getBalance($entry->destination_id);
+            $budget             = $entry->budgets->first();
+            $category           = $entry->categories->first();
             $transaction        = [
                 'source_id'     => $entry->id,
                 'source_amount' => $entry->amount,
@@ -218,7 +223,10 @@ class JournalTasker implements JournalTaskerInterface
                     intval($entry->destination_account_encrypted) === 1 ? Crypt::decrypt($entry->destination_account_name) : $entry->destination_account_name,
                 'destination_account_before' => $destinationBalance,
                 'destination_account_after'  => bcadd($destinationBalance, bcmul($entry->amount, '-1')),
+                'budget_id'                  => is_null($budget) ? 0 : $budget->id,
+                'category'                   => is_null($category) ? '' : $category->name,
             ];
+
 
             $transactions[] = $transaction;
         }
@@ -237,40 +245,6 @@ class JournalTasker implements JournalTaskerInterface
      */
     private function getBalance(int $transactionId): string
     {
-        /*
-select
-
--- transactions.*, transaction_journals.date, transaction_journals.order, transaction_journals.id, transactions.identifier
-sum(transactions.amount)
-
-from transactions
-
-
-and (
-	-- first things first: remove all transaction journals that are newer by selecting only those that are earlier:
-	or
-	-- date is 03 but sorted lower: (fucntion 1)
-	(
-        transaction_journals.date = "2016-09-20"
-	and transaction_journals.order > 2)
-	or
-	-- date is 03 and sort is the same but id is higher (func 2)
-	(transaction_journals.date = "2016-09-20"
-	and transaction_journals.order = 2
-	and transaction_journals.id < 6966
-	)
-	-- date is 03 and sort is the same, and id is the same but identifier is 1 and not 0.(func 3)
-	or
-	(transaction_journals.date = "2016-09-20"
-	and transaction_journals.order = 2
-	and transaction_journals.id = 6966
-	and transactions.identifier > 1
-	)
-) -- 14048
-and transactions.id != 14048 -- just in case
-
-order by transaction_journals.date DESC, transaction_journals.order ASC, transaction_journals.id DESC, transactions.identifier ASC
-         */
         // find the transaction first:
         $transaction = Transaction::find($transactionId);
         $date        = $transaction->transactionJournal->date->format('Y-m-d');

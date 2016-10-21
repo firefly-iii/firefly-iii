@@ -33,15 +33,15 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <!-- ALWAYS AVAILABLE -->
+                        {# ALWAYS AVAILABLE #}
                         {{ ExpandedForm.text('description',journal.description) }}
 
-                        <!-- SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS -->
+                        {# SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS #}
                         {% if what == 'transfer' or what == 'withdrawal' %}
                             {{ ExpandedForm.select('source_account_id',assetAccounts, data.source_account_id, {label: trans('form.asset_source_account')}) }}
                         {% endif %}
 
-                        <!-- FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS -->
+                        {# FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS #}
                         {% if what == 'deposit' %}
                             {{ ExpandedForm.text('source_account_name',data.source_account_name, {label: trans('form.revenue_account')}) }}
                         {% endif %}
@@ -99,8 +99,8 @@
                 not optionalFields.process_date or
                 not optionalFields.due_date or
                 not optionalFields.payment_date or
-                not optionalFields.internal_reference or
                 not optionalFields.invoice_date or
+                not optionalFields.internal_reference or
                 not optionalFields.notes or
                 not optionalFields.attachments %}
                     <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>

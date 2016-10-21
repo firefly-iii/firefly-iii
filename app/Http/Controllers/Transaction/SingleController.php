@@ -49,7 +49,7 @@ class SingleController extends Controller
 
     /** @var  BudgetRepositoryInterface */
     private $budgets;
-    
+
     /** @var  PiggyBankRepositoryInterface */
     private $piggyBanks;
 
@@ -91,7 +91,7 @@ class SingleController extends Controller
     {
         $what           = strtolower($what);
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType(['Default account', 'Asset account']));
+        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
         $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
@@ -166,10 +166,10 @@ class SingleController extends Controller
     {
         $count = $journal->transactions()->count();
         if ($count > 2) {
-            return redirect(route('journal.edit-split', [$journal->id]));
+            return redirect(route('transactions.edit-split', [$journal->id]));
         }
 
-        $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType(['Default account', 'Asset account']));
+        $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBankList = ExpandedForm::makeSelectListWithEmpty($this->piggyBanks->getPiggyBanks());
 

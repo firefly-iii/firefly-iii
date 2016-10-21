@@ -18,40 +18,58 @@ $(function () {
     $.getJSON('json/expense-accounts').done(function (data) {
         destAccounts = data;
         console.log('destAccounts length is now ' + destAccounts.length);
+        $('input[name$="destination_account_name]"]').typeahead({source: destAccounts});
     });
 
     $.getJSON('json/revenue-accounts').done(function (data) {
         srcAccounts = data;
         console.log('srcAccounts length is now ' + srcAccounts.length);
+        $('input[name$="source_account_name]"]').typeahead({source: srcAccounts});
     });
 
     $.getJSON('json/categories').done(function (data) {
         categories = data;
         console.log('categories length is now ' + categories.length);
+        $('input[name$="category]"]').typeahead({source: categories});
     });
 
-    $('input[name="amount[]"]').on('input', calculateSum)
+    $('input[name$="][amount]"]').on('input', calculateSum);
+
+    // add auto complete:
+
+
+
+
 });
 
 function cloneRow() {
     "use strict";
     var source = $('.initial-row').clone();
     var count = $('.split-table tbody tr').length + 1;
+    var index = count - 1;
     source.removeClass('initial-row');
     source.find('.count').text('#' + count);
-    source.find('input[name="amount[]"]').val("").on('input', calculateSum);
+
+    // get each input, change the name?
+    $.each(source.find('input, select'), function (i, v) {
+        var obj = $(v);
+        var name = obj.attr('name').replace('[0]', '[' + index + ']');
+        obj.attr('name', name);
+    });
+
+    source.find('input[name$="][amount]"]').val("").on('input', calculateSum);
     if (destAccounts.length > 0) {
         console.log('Will be able to extend dest-accounts.');
-        source.find('input[name="destination_account_name[]"]').typeahead({source: destAccounts});
+        source.find('input[name$="destination_account_name]"]').typeahead({source: destAccounts});
     }
 
     if (destAccounts.length > 0) {
         console.log('Will be able to extend src-accounts.');
-        source.find('input[name="source_account_name[]"]').typeahead({source: srcAccounts});
+        source.find('input[name$="source_account_name]"]').typeahead({source: srcAccounts});
     }
-    if(categories.length > 0) {
+    if (categories.length > 0) {
         console.log('Will be able to extend categories.');
-        source.find('input[name="category[]"]').typeahead({source: categories});
+        source.find('input[name$="category]"]').typeahead({source: categories});
     }
 
     $('.split-table tbody').append(source);
@@ -64,7 +82,7 @@ function cloneRow() {
 function calculateSum() {
     "use strict";
     var sum = 0;
-    var set = $('input[name="amount[]"]');
+    var set = $('input[name$="][amount]"]');
     for (var i = 0; i < set.length; i++) {
         var current = $(set[i]);
         sum += (current.val() == "" ? 0 : parseFloat(current.val()));

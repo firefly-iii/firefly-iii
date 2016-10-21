@@ -96,6 +96,7 @@
                     <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>
                         <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences')})|raw }}</em></p>
                 {% endif %}
+
                 <!-- box for dates -->
                 {% if
                 optionalFields.interest_date or optionalFields.book_date or optionalFields.process_date
@@ -136,7 +137,6 @@
                             {% if optionalFields.invoice_date %}
                                 {{ ExpandedForm.date('invoice_date') }}
                             {% endif %}
-
                         </div>
                     </div>
                 {% endif %}
