@@ -298,7 +298,9 @@ class BillRepository implements BillRepositoryInterface
                  * If $nextExpectedMatch is after $end, we continue:
                  */
                 if ($nextExpectedMatch > $end) {
-                    Log::debug(sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch, $end));
+                    Log::debug(
+                        sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
+                    );
                     break;
                 }
                 /*
@@ -318,6 +320,9 @@ class BillRepository implements BillRepositoryInterface
                             $average, $sum
                         )
                     );
+                }
+                if ($count != 0) {
+                    Log::info(sprintf('getBillsUnpaidInRange: Bill "%s" is paid (%d) so ignore it.', $bill->name, $count));
                 }
 
                 Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
