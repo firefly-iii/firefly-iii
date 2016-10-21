@@ -162,11 +162,6 @@ return [
                     'multiRadio', 'file', 'multiCheckbox', 'staticText', 'amountSmall',
                 ],
             ],
-            'ExpandedMultiForm' => [
-                'is_safe' => [
-                    'text','select','amount'
-                ],
-            ],
             'Form'         => [
                 'is_safe' => [
                     'input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',

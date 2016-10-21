@@ -267,7 +267,6 @@ return [
         'Amount'            => 'FireflyIII\Support\Facades\Amount',
         'Steam'             => 'FireflyIII\Support\Facades\Steam',
         'ExpandedForm'      => 'FireflyIII\Support\Facades\ExpandedForm',
-        'ExpandedMultiForm' => 'FireflyIII\Support\Facades\ExpandedMultiForm',
         'Entrust'           => 'Zizaco\Entrust\EntrustFacade',
         'Input'             => 'Illuminate\Support\Facades\Input',
         'Google2FA'         => 'PragmaRX\Google2FA\Vendor\Laravel\Facade',

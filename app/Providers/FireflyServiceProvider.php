@@ -15,7 +15,6 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
-use FireflyIII\Support\ExpandedMultiForm;
 use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
@@ -91,11 +90,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(
             'expandedform', function () {
             return new ExpandedForm;
-        }
-        );
-        $this->app->bind(
-            'expandedmultiform', function () {
-            return new ExpandedMultiForm;
         }
         );
 

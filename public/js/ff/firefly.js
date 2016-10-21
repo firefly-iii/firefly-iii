@@ -5,9 +5,6 @@ $(function () {
     // when you click on a currency, this happens:
     $('.currency-option').click(currencySelect);
 
-    // when you click on a multi currency, this happens:
-    $('.multi-currency-option').click(multiCurrencySelect);
-
     var ranges = {};
     ranges[dateRangeConfig.currentPeriod] = [moment(dateRangeConfig.ranges.current[0]), moment(dateRangeConfig.ranges.current[1])];
     ranges[dateRangeConfig.previousPeriod] = [moment(dateRangeConfig.ranges.previous[0]), moment(dateRangeConfig.ranges.previous[1])];
@@ -59,47 +56,6 @@ $(function () {
     );
 
 });
-
-function multiCurrencySelect(e) {
-    "use strict";
-    // clicked on
-    var target = $(e.target); // target is the <A> tag.
-
-    // name of the field in question:
-    var name = target.data('name');
-
-    // index of the field in question:
-    var index = target.data('index');
-    console.log('name is ' + name + ':' + index);
-
-    // id of menu button (used later on):
-    var menuID = 'currency_dropdown_' + name + '_' + index;
-
-    // the hidden input with the actual value of the selected currency:
-    var hiddenInputName = 'amount_currency_id_' + name + '_' + index;
-    console.log('Looking for hidden input: ' + hiddenInputName);
-
-    // span with the current selection (next to the caret):
-    var spanId = 'currency_select_symbol_' + name + '_' + index;
-
-    // the selected currency symbol:
-    var symbol = target.data('symbol');
-
-    // id of the selected currency.
-    var id = target.data('id');
-
-    // update the hidden input:
-    $('input[name="' + hiddenInputName + '"]').val(id);
-
-    // update the symbol:
-    $('#' + spanId).text(symbol);
-
-    // close the menu (hack hack)
-    $('#' + menuID).click();
-
-
-    return false;
-}
 
 function currencySelect(e) {
     "use strict";
