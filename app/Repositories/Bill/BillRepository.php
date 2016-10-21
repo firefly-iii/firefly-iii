@@ -260,6 +260,11 @@ class BillRepository implements BillRepositoryInterface
                             $amount, $sum
                         )
                     );
+                    // add day to make sure we jump to the next period.
+                    $nextExpectedMatch->addDay();
+                }
+                if ($currentStart->diffInDays($nextExpectedMatch) === 0) {
+                    $nextExpectedMatch->addDay();
                 }
                 $currentStart = clone $nextExpectedMatch;
             }
@@ -322,10 +327,27 @@ class BillRepository implements BillRepositoryInterface
                     );
                 }
                 if ($count != 0) {
-                    Log::info(sprintf('getBillsUnpaidInRange: Bill "%s" is paid (%d) so ignore it.', $bill->name, $count));
+                    Log::info(sprintf('getBillsUnpaidInRange: Bill "%s" is paid (%d) between %s and %s so ignore it.', $bill->name, $count,
+                                      $currentStart->format('Y-m-d'),
+                                      $nextExpectedMatch->format('Y-m-d')
+                              ));
+                    // add day to make sure we jump to the next period.
+                    $nextExpectedMatch->addDay();
+                }
+
+                // if $currentStart and $nextExpectedMatch are equal, add a day for good measure.
+                if ($currentStart->diffInDays($nextExpectedMatch) === 0) {
+                    Log::debug(
+                        sprintf(
+                            '$nextExpectedMatch (%s) is equal to $currentStart (%s). Added a day.', $nextExpectedMatch->format('Y-m-d'),
+                            $currentStart->format('Y-m-d')
+                        )
+                    );
+                    $nextExpectedMatch->addDay();
                 }
 
                 Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+
                 $currentStart = clone $nextExpectedMatch;
             }
             Log::debug(sprintf('end of bill "%s"', $bill->name));
@@ -558,15 +580,13 @@ class BillRepository implements BillRepositoryInterface
         $start = clone $bill->date;
         Log::debug('nextExpectedMatch: Start is ' . $start->format('Y-m-d'));
 
-        // do loop instead of while loop:
-        do {
+        while ($start < $date) {
+            Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
             $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
             Log::debug('Start is now ' . $start->format('Y-m-d'));
-        } while ($start <= $date);
+        }
 
         $end = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
-        Log::debug('Final start is ' . $start->format('Y-m-d'));
-        Log::debug('Matching end is ' . $end->format('Y-m-d'));
 
         // see if the bill was paid in this period.
         $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();
@@ -575,8 +595,11 @@ class BillRepository implements BillRepositoryInterface
             // this period had in fact a bill. The new start is the current end, and we create a new end.
             Log::debug(sprintf('Journal count is %d, so start becomes %s', $journalCount, $end->format('Y-m-d')));
             $start = clone $end;
-            //$end   = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $end   = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
+        Log::debug('nextExpectedMatch: Final start is ' . $start->format('Y-m-d'));
+        Log::debug('nextExpectedMatch: Matching end is ' . $end->format('Y-m-d'));
+
         $cache->store($start);
 
         return $start;
