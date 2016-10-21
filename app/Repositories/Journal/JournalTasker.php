@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use Carbon\Carbon;
 use Crypt;
 use DB;
 use FireflyIII\Models\Transaction;
@@ -20,6 +21,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 /**
  * Class JournalTasker
@@ -40,6 +43,91 @@ class JournalTasker implements JournalTaskerInterface
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Returns a page of a specific type(s) of journal.
+     *
+     * @param array $types
+     * @param int   $page
+     * @param int   $pageSize
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getJournals(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
+    {
+        $offset = ($page - 1) * $pageSize;
+        $query  = $this->user->transactionJournals()->expanded()->sortCorrectly();
+        $query->where('transaction_journals.completed', 1);
+        if (count($types) > 0) {
+            $query->transactionTypes($types);
+        }
+        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
+        $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
+        $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
+
+        return $journals;
+    }
+
+    /**
+     * Returns a collection of ALL journals, given a specific account and a date range.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection
+    {
+        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
+        $query->where('transaction_journals.completed', 1);
+        $query->before($end);
+        $query->after($start);
+
+        if ($accounts->count() > 0) {
+            $ids = $accounts->pluck('id')->toArray();
+            // join source and destination:
+            $query->leftJoin(
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            }
+            );
+            $query->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            }
+            );
+
+            $query->where(
+                function (Builder $q) use ($ids) {
+                    $q->whereIn('destination.account_id', $ids);
+                    $q->orWhereIn('source.account_id', $ids);
+                }
+            );
+        }
+
+        $set = $query->get(TransactionJournal::queryFields());
+
+        return $set;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection
+    {
+        /** @var Collection $set */
+        $events = $journal->piggyBankEvents()->get();
+        $events->each(
+            function (PiggyBankEvent $event) {
+                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
+            }
+        );
+
+        return $events;
     }
 
     /**
@@ -137,7 +225,6 @@ class JournalTasker implements JournalTaskerInterface
 
         return $transactions;
     }
-
 
     /**
      * Collect the balance of an account before the given transaction has hit. This is tricky, because

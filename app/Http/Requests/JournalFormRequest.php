@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 use Input;
@@ -37,86 +36,110 @@ class JournalFormRequest extends Request
     }
 
     /**
+     * Returns and validates the data required to store a new journal. Can handle both single transaction journals and split journals.
+     *
      * @return array
      */
     public function getJournalData()
     {
-        $tags = $this->getFieldOrEmptyString('tags');
+        $data = [
+            'what'                     => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
+            'user'                     => auth()->user()->id,
+            'date'                     => new Carbon($this->get('date')),
+            'tags'                     => explode(',', $this->getFieldOrEmptyString('tags')),
+            'currency_id'              => intval($this->get('amount_currency_id_amount')),
 
-        return [
-            'what'                      => $this->get('what'),
-            'description'               => trim($this->get('description')),
-            'source_account_id'         => intval($this->get('source_account_id')),
-            'source_account_name'       => trim($this->getFieldOrEmptyString('source_account_name')),
-            'destination_account_id'    => intval($this->get('destination_account_id')),
-            'destination_account_name'  => trim($this->getFieldOrEmptyString('destination_account_name')),
-            'amount'                    => round($this->get('amount'), 2),
-            'user'                      => auth()->user()->id,
-            'amount_currency_id_amount' => intval($this->get('amount_currency_id_amount')),
-            'date'                      => new Carbon($this->get('date')),
-            'interest_date'             => $this->getDateOrNull('interest_date'),
-            'book_date'                 => $this->getDateOrNull('book_date'),
-            'process_date'              => $this->getDateOrNull('process_date'),
-            'budget_id'                 => intval($this->get('budget_id')),
-            'category'                  => trim($this->getFieldOrEmptyString('category')),
-            'tags'                      => explode(',', $tags),
-            'piggy_bank_id'             => intval($this->get('piggy_bank_id')),
+            // all custom fields:
+            'interest_date'            => $this->getDateOrNull('interest_date'),
+            'book_date'                => $this->getDateOrNull('book_date'),
+            'process_date'             => $this->getDateOrNull('process_date'),
+            'due_date'                 => $this->getDateOrNull('due_date'),
+            'payment_date'             => $this->getDateOrNull('payment_date'),
+            'invoice_date'             => $this->getDateOrNull('invoice_date'),
+            'internal_reference'       => trim(strval($this->get('internal_reference'))),
+            'notes'                    => trim(strval($this->get('notes'))),
 
-            // new custom fields here:
-            'due_date'                  => $this->getDateOrNull('due_date'),
-            'payment_date'              => $this->getDateOrNull('payment_date'),
-            'invoice_date'              => $this->getDateOrNull('invoice_date'),
-            'internal_reference'        => trim(strval($this->get('internal_reference'))),
-            'notes'                     => trim(strval($this->get('notes'))),
+            // transaction / journal data:
+            'description'              => $this->getFieldOrEmptyString('description'),
+            'amount'                   => round($this->get('amount'), 2),
+            'budget_id'                => intval($this->get('budget_id')),
+            'category'                 => $this->getFieldOrEmptyString('category'),
+            'source_account_id'        => intval($this->get('source_account_id')),
+            'source_account_name'      => $this->getFieldOrEmptyString('source_account_name'),
+            'destination_account_id'   => $this->getFieldOrEmptyString('destination_account_id'),
+            'destination_account_name' => $this->getFieldOrEmptyString('destination_account_name'),
+            'piggy_bank_id'            => intval($this->get('piggy_bank_id')),
 
         ];
+
+        return $data;
     }
 
     /**
      * @return array
-     * @throws Exception
      */
     public function rules()
     {
         $what  = Input::get('what');
         $rules = [
-            'description'               => 'required|min:1,max:255',
-            'what'                      => 'required|in:withdrawal,deposit,transfer',
-            'amount'                    => 'numeric|required|min:0.01',
-            'date'                      => 'required|date',
-            'process_date'              => 'date',
-            'book_date'                 => 'date',
-            'interest_date'             => 'date',
-            'category'                  => 'between:1,255',
-            'amount_currency_id_amount' => 'required|exists:transaction_currencies,id',
-            'piggy_bank_id'             => 'numeric',
+            'what'                     => 'required|in:withdrawal,deposit,transfer',
+            'date'                     => 'required|date',
 
-            // new custom fields here:
-            'due_date'                  => 'date',
-            'payment_date'              => 'date',
-            'internal_reference'        => 'min:1,max:255',
-            'notes'                     => 'min:1,max:65536',
+            // then, custom fields:
+            'interest_date'            => 'date',
+            'book_date'                => 'date',
+            'process_date'             => 'date',
+            'due_date'                 => 'date',
+            'payment_date'             => 'date',
+            'invoice_date'             => 'date',
+            'internal_reference'       => 'min:1,max:255',
+            'notes'                    => 'min:1,max:50000',
+            // and then transaction rules:
+            'description'              => 'required|between:1,255',
+            'amount'                   => 'numeric|required|min:0.01',
+            'budget_id'                => 'mustExist:budgets,id|belongsToUser:budgets,id',
+            'category'                 => 'between:1,255',
+            'source_account_id'        => 'numeric|belongsToUser:accounts,id',
+            'source_account_name'      => 'between:1,255',
+            'destination_account_id'   => 'numeric|belongsToUser:accounts,id',
+            'destination_account_name' => 'between:1,255',
+            'piggy_bank_id'            => 'between:1,255',
         ];
 
+        // some rules get an upgrade depending on the type of data:
+        $rules = $this->enhanceRules($what, $rules);
+
+        return $rules;
+    }
+
+    /**
+     * Inspired by https://www.youtube.com/watch?v=WwnI0RS6J5A
+     *
+     * @param string $what
+     * @param array  $rules
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function enhanceRules(string $what, array $rules): array
+    {
         switch ($what) {
             case strtolower(TransactionType::WITHDRAWAL):
                 $rules['source_account_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
                 $rules['destination_account_name'] = 'between:1,255';
-                if (intval(Input::get('budget_id')) != 0) {
-                    $rules['budget_id'] = 'exists:budgets,id|belongsToUser:budgets';
-                }
                 break;
             case strtolower(TransactionType::DEPOSIT):
                 $rules['source_account_name']    = 'between:1,255';
                 $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
                 break;
             case strtolower(TransactionType::TRANSFER):
+                // this may not work:
                 $rules['source_account_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_account_id';
                 $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_account_id';
 
                 break;
             default:
-                throw new FireflyException('Cannot handle transaction type of type ' . e($what) . '.');
+                throw new FireflyException('Cannot handle transaction type of type ' . e($what) . ' . ');
         }
 
         return $rules;
@@ -141,4 +164,63 @@ class JournalFormRequest extends Request
     {
         return $this->get($field) ?? '';
     }
+    //
+    //    /**
+    //     * @param int    $index
+    //     * @param string $field
+    //     *
+    //     * @return int
+    //     */
+    //    private function getIntFromArray(int $index, string $field): int
+    //    {
+    //        $array = $this->get($field);
+    //        if (isset($array[$index])) {
+    //            return intval($array[$index]);
+    //        }
+    //
+    //        return 0;
+    //    }
+    //
+    //    /**
+    //     * @param int    $index
+    //     * @param string $field
+    //     *
+    //     * @return string
+    //     */
+    //    private function getStringFromArray(int $index, string $field): string
+    //    {
+    //        $array = $this->get($field);
+    //        if (isset($array[$index])) {
+    //            return trim($array[$index]);
+    //        }
+    //
+    //        return '';
+    //    }
+    //
+    //    /**
+    //     * @return array
+    //     */
+    //    private function getTransactionData(): array
+    //    {
+    //        $transactions = [];
+    //        $array        = $this->get('amount');
+    //        if (is_array($array) && count($array) > 0) {
+    //            foreach ($array as $index => $amount) {
+    //                $transaction    = [
+    //                    'description'              => $this->getStringFromArray($index, 'description'),
+    //                    'amount'                   => round($amount, 2),
+    //                    'budget_id'                => $this->getIntFromArray($index, 'budget_id'),
+    //                    'category'                 => $this->getStringFromArray($index, 'category'),
+    //                    'source_account_id'        => $this->getIntFromArray($index, 'source_account_id'),
+    //                    'source_account_name'      => $this->getStringFromArray($index, 'source_account_name'),
+    //                    'destination_account_id'   => $this->getIntFromArray($index, 'destination_account_id'),
+    //                    'destination_account_name' => $this->getStringFromArray($index, 'destination_account_name'),
+    //                    'piggy_bank_id'            => $this->getIntFromArray($index, 'piggy_bank_id'),
+    //                ];
+    //                $transactions[] = $transaction;
+    //            }
+    //        }
+    //
+    //        return $transactions;
+    //    }
 }

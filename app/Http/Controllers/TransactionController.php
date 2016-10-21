@@ -23,9 +23,12 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -40,6 +43,14 @@ use View;
  */
 class TransactionController extends Controller
 {
+    /** @var  AccountRepositoryInterface */
+    private $accounts;
+    private $attachments;
+    /** @var  BudgetRepositoryInterface */
+    private $budgets;
+    /** @var  PiggyBankRepositoryInterface */
+    private $piggyBanks;
+
     /**
      *
      */
@@ -52,8 +63,21 @@ class TransactionController extends Controller
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-
         View::share('uploadSize', $uploadSize);
+
+        // some useful repositories:
+        $this->middleware(
+            function ($request, $next) {
+                $this->accounts    = app(AccountRepositoryInterface::class);
+                $this->budgets     = app(BudgetRepositoryInterface::class);
+                $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
+
+                return $next($request);
+            }
+        );
+
+
     }
 
     /**
@@ -63,20 +87,16 @@ class TransactionController extends Controller
      */
     public function create(string $what = TransactionType::DEPOSIT)
     {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $budgetRepository  = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository   = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-        $what              = strtolower($what);
-        $uploadSize        = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts     = ExpandedForm::makeSelectList($accountRepository->getActiveAccountsByType(['Default account', 'Asset account']));
-        $budgets           = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBanks        = $piggyRepository->getPiggyBanksWithAmount();
-        $piggies           = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
-        $preFilled         = Session::has('preFilled') ? session('preFilled') : [];
-        $subTitle          = trans('form.add_new_' . $what);
-        $subTitleIcon      = 'fa-plus';
-        $optionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $what           = strtolower($what);
+        $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType(['Default account', 'Asset account']));
+        $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
+        $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
+        $preFilled      = Session::has('preFilled') ? session('preFilled') : [];
+        $subTitle       = trans('form.add_new_' . $what);
+        $subTitleIcon   = 'fa-plus';
+        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
 
         Session::put('preFilled', $preFilled);
 
@@ -90,7 +110,6 @@ class TransactionController extends Controller
         Session::flash('gaEventAction', 'create-' . $what);
 
         asort($piggies);
-
 
         return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields'));
     }
@@ -145,19 +164,12 @@ class TransactionController extends Controller
     {
         $count = $journal->transactions()->count();
         if ($count > 2) {
-            return redirect(route('split.journal.edit', [$journal->id]));
+            return redirect(route('journal.edit-split', [$journal->id]));
         }
 
-        // code to get list data:
-        $budgetRepository = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository  = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
-
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        $assetAccounts = ExpandedForm::makeSelectList($repository->getAccountsByType(['Default account', 'Asset account']));
-        $budgetList    = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanks());
+        $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType(['Default account', 'Asset account']));
+        $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($this->piggyBanks->getPiggyBanks());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
@@ -216,20 +228,20 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param JournalRepositoryInterface $repository
-     * @param string                     $what
+     * @param Request                $request
+     * @param JournalTaskerInterface $tasker
+     * @param string                 $what
      *
      * @return View
      */
-    public function index(Request $request, JournalRepositoryInterface $repository, string $what)
+    public function index(Request $request, JournalTaskerInterface $tasker, string $what)
     {
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $subTitle     = trans('firefly.title_' . $what);
         $page         = intval($request->get('page'));
-        $journals     = $repository->getJournals($types, $page, $pageSize);
+        $journals     = $tasker->getJournals($types, $page, $pageSize);
 
         $journals->setPath('transactions/' . $what);
 
@@ -266,14 +278,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal         $journal
-     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal     $journal
+     * @param JournalTaskerInterface $tasker
      *
      * @return View
      */
-    public function show(TransactionJournal $journal, JournalRepositoryInterface $repository, JournalTaskerInterface $tasker)
+    public function show(TransactionJournal $journal, JournalTaskerInterface $tasker)
     {
-        $events       = $repository->getPiggyBankEvents($journal);
+        $events       = $tasker->getPiggyBankEvents($journal);
         $transactions = $tasker->getTransactionsOverview($journal);
         $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
@@ -291,62 +303,46 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-        $att         = app('FireflyIII\Helpers\Attachments\AttachmentHelperInterface');
-        $doSplit     = intval($request->get('split_journal')) === 1;
-        $journalData = $request->getJournalData();
+        $doSplit       = intval($request->get('split_journal')) === 1;
+        $createAnother = intval($request->get('create_another')) === 1;
+        $data          = $request->getJournalData();
+        $journal       = $repository->store($data);
+        if (is_null($journal->id)) {
+            // error!
+            Log::error('Could not store transaction journal: ', $journal->getErrors()->toArray());
+            Session::flash('error', $journal->getErrors()->first());
+
+            return redirect(route('transactions.create', [$request->input('what')]))->withInput();
+        }
+
+        $this->attachments->saveAttachmentsForModel($journal);
 
         // store the journal only, flash the rest.
-        if ($doSplit) {
-            $journal            = $repository->storeJournal($journalData);
-            $journal->completed = false;
-            $journal->save();
-
-            // store attachments:
-            $att->saveAttachmentsForModel($journal);
-
-            // flash errors
-            if (count($att->getErrors()->get('attachments')) > 0) {
-                Session::flash('error', $att->getErrors()->get('attachments'));
-            }
-            // flash messages
-            if (count($att->getMessages()->get('attachments')) > 0) {
-                Session::flash('info', $att->getMessages()->get('attachments'));
-            }
-
-            Session::put('journal-data', $journalData);
-
-            return redirect(route('split.journal.create', [$journal->id]));
-        }
-
-
-        // if not withdrawal, unset budgetid.
-        if ($journalData['what'] != strtolower(TransactionType::WITHDRAWAL)) {
-            $journalData['budget_id'] = 0;
-        }
-
-        $journal = $repository->store($journalData);
-        $att->saveAttachmentsForModel($journal);
-
-        // flash errors
-        if (count($att->getErrors()->get('attachments')) > 0) {
-            Session::flash('error', $att->getErrors()->get('attachments'));
+        if (count($this->attachments->getErrors()->get('attachments')) > 0) {
+            Session::flash('error', $this->attachments->getErrors()->get('attachments'));
         }
         // flash messages
-        if (count($att->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $att->getMessages()->get('attachments'));
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        event(new TransactionJournalStored($journal, intval($journalData['piggy_bank_id'])));
+        event(new TransactionJournalStored($journal, $data['piggy_bank_id']));
 
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();
 
-        if (intval($request->get('create_another')) === 1) {
+        if ($createAnother === true) {
             // set value so create routine will not overwrite URL:
             Session::put('transactions.create.fromStore', true);
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
+
+        if ($doSplit === true) {
+            // redirect to edit screen:
+            return redirect(route('transactions.edit', [$journal->id]));
+        }
+
 
         // redirect to previous URL.
         return redirect(session('transactions.create.url'));
@@ -355,35 +351,31 @@ class TransactionController extends Controller
 
 
     /**
-     * @param JournalFormRequest         $request
-     * @param JournalRepositoryInterface $repository
-     * @param AttachmentHelperInterface  $att
-     * @param TransactionJournal         $journal
+     * @param JournalFormRequest $request
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, AttachmentHelperInterface $att, TransactionJournal $journal)
+    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
-        $journalData = $request->getJournalData();
-        $repository->update($journal, $journalData);
-
-        // save attachments:
-        $att->saveAttachmentsForModel($journal);
+        $data    = $request->getJournalData();
+        $journal = $repository->update($journal, $data);
+        $this->attachments->saveAttachmentsForModel($journal);
 
         // flash errors
-        if (count($att->getErrors()->get('attachments')) > 0) {
-            Session::flash('error', $att->getErrors()->get('attachments'));
+        if (count($this->attachments->getErrors()->get('attachments')) > 0) {
+            Session::flash('error', $this->attachments->getErrors()->get('attachments'));
         }
         // flash messages
-        if (count($att->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $att->getMessages()->get('attachments'));
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         event(new TransactionJournalUpdated($journal));
         // update, get events by date and sort DESC
 
-        $type = strtolower($journal->transaction_type_type ?? TransactionJournal::transactionTypeStr($journal));
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($journalData['description'])])));
+        $type = strtolower(TransactionJournal::transactionTypeStr($journal));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['description'])])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

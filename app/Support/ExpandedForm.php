@@ -427,6 +427,7 @@ class ExpandedForm
      */
     protected function expandOptionArray(string $name, $label, array $options): array
     {
+        $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
@@ -494,6 +495,7 @@ class ExpandedForm
         if (isset($options['label'])) {
             return $options['label'];
         }
+        $name = str_replace('[]', '', $name);
 
         return strval(trans('form.' . $name));
 

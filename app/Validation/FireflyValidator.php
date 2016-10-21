@@ -126,6 +126,28 @@ class FireflyValidator extends Validator
 
     /**
      * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateMustExist($attribute, $value, $parameters): bool
+    {
+        $field = $parameters[1] ?? 'id';
+
+        if (intval($value) === 0) {
+            return true;
+        }
+        $count = DB::table($parameters[0])->where($field, $value)->count();
+        if ($count === 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $attribute
      *
      * @return bool
      */

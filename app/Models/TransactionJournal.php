@@ -434,6 +434,9 @@ class TransactionJournal extends TransactionJournalSupport
 
             return new TransactionJournalMeta();
         }
+        if (is_string($value) && strlen($value) === 0) {
+            return new TransactionJournalMeta();
+        }
 
         if ($value instanceof Carbon) {
             $value = $value->toW3cString();
