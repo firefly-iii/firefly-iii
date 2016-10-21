@@ -241,7 +241,7 @@ class BillRepository implements BillRepositoryInterface
         foreach ($bills as $bill) {
             $currentStart = clone $start;
             while ($currentStart <= $end) {
-                $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
+                $nextExpectedMatch = $this->nextExpectedMatch($bill, $currentStart);
                 if ($nextExpectedMatch > $end) {
                     break;
                 }
@@ -253,7 +253,7 @@ class BillRepository implements BillRepositoryInterface
                     $sum        = bcadd($sum, $amount);
                     Log::info(
                         sprintf(
-                            'Bill "%s" is PAID in period %s to %s (%d transaction(s)), add %f to sum (sum is now %f).', $bill->name,
+                            'getBillsPaidInRange: Bill "%s" is PAID in period %s to %s (%d transaction(s)), add %f to sum (sum is now %f).', $bill->name,
                             $currentStart->format('Y-m-d'),
                             $nextExpectedMatch->format('Y-m-d'),
                             $set->count(),
@@ -292,7 +292,7 @@ class BillRepository implements BillRepositoryInterface
 
             while ($currentStart <= $end) {
                 Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
-                $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
+                $nextExpectedMatch = $this->nextExpectedMatch($bill, $currentStart);
                 Log::debug(sprintf('next Expected match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
                 /*
                  * If $nextExpectedMatch is after $end, we continue:
@@ -312,7 +312,7 @@ class BillRepository implements BillRepositoryInterface
                     $sum     = bcadd($sum, $average);
                     Log::info(
                         sprintf(
-                            'Bill "%s" is unpaid in period %s to %s, add %f to sum (sum is now %f).', $bill->name,
+                            'getBillsUnpaidInRange: Bill "%s" is unpaid in period %s to %s, add %f to sum (sum is now %f).', $bill->name,
                             $currentStart->format('Y-m-d'),
                             $nextExpectedMatch->format('Y-m-d'),
                             $average, $sum
