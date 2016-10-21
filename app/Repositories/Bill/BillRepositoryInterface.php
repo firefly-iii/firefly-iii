@@ -150,19 +150,6 @@ interface BillRepositoryInterface
     public function getPossiblyRelatedJournals(Bill $bill): Collection;
 
     /**
-     * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
-     * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
-     * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill (from the 14th to the 31th).
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getRanges(Bill $bill, Carbon $start, Carbon $end): array;
-
-    /**
      * @param Bill   $bill
      * @param Carbon $date
      *

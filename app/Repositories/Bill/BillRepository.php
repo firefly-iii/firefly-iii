@@ -426,48 +426,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
-     * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
-     * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill.
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getRanges(Bill $bill, Carbon $start, Carbon $end): array
-    {
-        $startOfBill = Navigation::startOfPeriod($start, $bill->repeat_freq);
-
-
-        // all periods of this bill up until the current period:
-        $billStarts = [];
-        while ($startOfBill < $end) {
-
-            $endOfBill = Navigation::endOfPeriod($startOfBill, $bill->repeat_freq);
-
-            $billStarts[] = [
-                'start' => clone $startOfBill,
-                'end'   => clone $endOfBill,
-            ];
-            // actually the next one:
-            $startOfBill = Navigation::addPeriod($startOfBill, $bill->repeat_freq, $bill->skip);
-
-        }
-        // for each
-        $validRanges = [];
-        foreach ($billStarts as $dateEntry) {
-            if ($dateEntry['end'] > $start && $dateEntry['start'] < $end) {
-                // count transactions for bill in this range (not relevant yet!):
-                $validRanges[] = $dateEntry;
-            }
-        }
-
-        return $validRanges;
-    }
-
-    /**
      * @param Bill   $bill
      * @param Carbon $date
      *
