@@ -239,35 +239,15 @@ class BillRepository implements BillRepositoryInterface
         $sum   = '0';
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $currentStart = clone $start;
-            while ($currentStart <= $end) {
-                $nextExpectedMatch = $this->nextExpectedMatch($bill, $currentStart);
-                if ($nextExpectedMatch > $end) {
-                    break;
-                }
-                /** @var Collection $set */
-                $set = $bill->transactionJournals()->after($currentStart)->before($nextExpectedMatch)->get(['transaction_journals.*']);
-                if ($set->count() > 0) {
-                    $journalIds = $set->pluck('id')->toArray();
-                    $amount     = strval(Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount'));
-                    $sum        = bcadd($sum, $amount);
-                    Log::info(
-                        sprintf(
-                            'getBillsPaidInRange: Bill "%s" is PAID in period %s to %s (%d transaction(s)), add %f to sum (sum is now %f).', $bill->name,
-                            $currentStart->format('Y-m-d'),
-                            $nextExpectedMatch->format('Y-m-d'),
-                            $set->count(),
-                            $amount, $sum
-                        )
-                    );
-                    // add day to make sure we jump to the next period.
-                    $nextExpectedMatch->addDay();
-                }
-                if ($currentStart->diffInDays($nextExpectedMatch) === 0) {
-                    $nextExpectedMatch->addDay();
-                }
-                $currentStart = clone $nextExpectedMatch;
+            /** @var Collection $set */
+            $set = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
+            if ($set->count() > 0) {
+                $journalIds = $set->pluck('id')->toArray();
+                $amount     = strval(Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount'));
+                $sum        = bcadd($sum, $amount);
+                Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $amount, $sum));
             }
+            Log::debug('---');
         }
 
         return $sum;
@@ -287,72 +267,22 @@ class BillRepository implements BillRepositoryInterface
         $sum   = '0';
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+            Log::debug(sprintf('Now at bill #%d (%s)', $bill->id, $bill->name));
+            $dates = $this->getPayDatesInRange($bill, $start, $end);
+            $count = $bill->transactionJournals()->after($start)->before($end)->count();
+            $total = $dates->count() - $count;
 
-            /*
-             * Start at 2016-10-01, see when we expect the bill to hit:
-             */
-            $currentStart = clone $start;
-            Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+            Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
 
-            while ($currentStart <= $end) {
-                Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
-                $nextExpectedMatch = $this->nextExpectedMatch($bill, $currentStart);
-                Log::debug(sprintf('next Expected match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
-                /*
-                 * If $nextExpectedMatch is after $end, we continue:
-                 */
-                if ($nextExpectedMatch > $end) {
-                    Log::debug(
-                        sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
-                    );
-                    break;
-                }
-                /*
-                 * If it is not, we search for transactions between $currentStart and $nextExpectedMatch
-                 */
-                $count = $bill->transactionJournals()->after($currentStart)->before($nextExpectedMatch)->count();
-                Log::debug(sprintf('%d transactions found', $count));
+            if ($total > 0) {
 
-                if ($count === 0) {
-                    $average = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2', 4);
-                    $sum     = bcadd($sum, $average);
-                    Log::info(
-                        sprintf(
-                            'getBillsUnpaidInRange: Bill "%s" is unpaid in period %s to %s, add %f to sum (sum is now %f).', $bill->name,
-                            $currentStart->format('Y-m-d'),
-                            $nextExpectedMatch->format('Y-m-d'),
-                            $average, $sum
-                        )
-                    );
-                }
-                if ($count != 0) {
-                    Log::info(sprintf('getBillsUnpaidInRange: Bill "%s" is paid (%d) between %s and %s so ignore it.', $bill->name, $count,
-                                      $currentStart->format('Y-m-d'),
-                                      $nextExpectedMatch->format('Y-m-d')
-                              ));
-                    // add day to make sure we jump to the next period.
-                    $nextExpectedMatch->addDay();
-                }
-
-                // if $currentStart and $nextExpectedMatch are equal, add a day for good measure.
-                if ($currentStart->diffInDays($nextExpectedMatch) === 0) {
-                    Log::debug(
-                        sprintf(
-                            '$nextExpectedMatch (%s) is equal to $currentStart (%s). Added a day.', $nextExpectedMatch->format('Y-m-d'),
-                            $currentStart->format('Y-m-d')
-                        )
-                    );
-                    $nextExpectedMatch->addDay();
-                }
-
-                Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
-
-                $currentStart = clone $nextExpectedMatch;
+                $average = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
+                $multi   = bcmul($average, strval($total));
+                $sum     = bcadd($sum, $multi);
+                Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $multi, $sum));
             }
-            Log::debug(sprintf('end of bill "%s"', $bill->name));
+            Log::debug('---');
         }
-        Log::debug(sprintf('Sum became %f', $sum));
 
         return $sum;
     }
@@ -415,6 +345,61 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
+    }
+
+    /**
+     * Between start and end, tells you on which date(s) the bill is expected to hit.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
+    {
+        $set = new Collection;
+        Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+
+        /*
+         * Start at 2016-10-01, see when we expect the bill to hit:
+         */
+        $currentStart = clone $start;
+        Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+
+        while ($currentStart <= $end) {
+            Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
+            Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            /*
+             * If $nextExpectedMatch is after $end, we continue:
+             */
+            if ($nextExpectedMatch > $end) {
+                Log::debug(
+                    sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
+                );
+                break;
+            }
+            // add to set
+            $set->push(clone $nextExpectedMatch);
+            Log::debug(sprintf('Now %d dates in set.', $set->count()));
+
+            // add day if necessary.
+            $nextExpectedMatch->addDay();
+
+            Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+
+            $currentStart = clone $nextExpectedMatch;
+        }
+        $simple = $set->each(
+            function (Carbon $date) {
+                return $date->format('Y-m-d');
+            }
+        );
+        Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
+
+
+        return $set;
     }
 
     /**
@@ -539,21 +524,23 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextDateMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            //return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
-        Log::debug('NextDatematch: Start is ' . $start->format('Y-m-d'));
+        Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
 
-
-        while ($start <= $date) {
+        while ($start < $date) {
+            Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
             $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
-            Log::debug('NextDateMatch: Start is now ' . $start->format('Y-m-d'));
+            Log::debug('Start is now ' . $start->format('Y-m-d'));
         }
 
         $end = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
-        Log::debug('NextDateMatch: Final start is ' . $start->format('Y-m-d'));
-        Log::debug('NextDateMatch: Matching end is ' . $end->format('Y-m-d'));
+
+        Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
+        Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
+
         $cache->store($start);
 
         return $start;
@@ -574,7 +561,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            //return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;

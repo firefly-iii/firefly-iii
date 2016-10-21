@@ -132,6 +132,17 @@ interface BillRepositoryInterface
     public function getOverallAverage($bill): string;
 
     /**
+     * Between start and end, tells you on which date(s) the bill is expected to hit.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
+
+    /**
      * @param Bill $bill
      *
      * @return Collection
