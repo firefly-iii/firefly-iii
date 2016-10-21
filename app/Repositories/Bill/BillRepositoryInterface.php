@@ -168,6 +168,17 @@ interface BillRepositoryInterface
 
 
     /**
+     * Given a bill and a date, this method will tell you at which moment this bill expects its next
+     * transaction. Whether or not it is there already, is not relevant.
+     *
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return \Carbon\Carbon
+     */
+    public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
+
+    /**
      * @param Bill   $bill
      * @param Carbon $date
      *
