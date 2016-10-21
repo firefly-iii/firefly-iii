@@ -274,7 +274,7 @@ class SingleController extends Controller
 
         if ($doSplit === true) {
             // redirect to edit screen:
-            return redirect(route('transactions.edit', [$journal->id]));
+            return redirect(route('transactions.edit-split', [$journal->id]));
         }
 
 
@@ -310,6 +310,9 @@ class SingleController extends Controller
         $type = strtolower(TransactionJournal::transactionTypeStr($journal));
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['description'])])));
         Preferences::mark();
+
+        // if wishes to split:
+
 
         if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
