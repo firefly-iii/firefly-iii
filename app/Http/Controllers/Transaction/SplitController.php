@@ -249,7 +249,7 @@ class SplitController extends Controller
                 'destination_account_id'   => $transaction['destination_account_id'],
                 'destination_account_name' => $transaction['destination_account_name'],
                 'amount'                   => round($transaction['destination_amount'], 2),
-                'budget_id'                => $transaction['budget_id'],
+                'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'],
             ];
         }
