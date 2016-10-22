@@ -43,7 +43,7 @@ class StoredJournalEventHandler
         $piggyBankId = $event->piggyBankId;
 
         /** @var PiggyBank $piggyBank */
-        $piggyBank = $journal->user()->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
+        $piggyBank = $journal->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
 
         if (is_null($piggyBank)) {
             return true;
