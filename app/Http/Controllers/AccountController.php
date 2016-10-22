@@ -297,23 +297,8 @@ class AccountController extends Controller
      */
     public function store(AccountFormRequest $request, ARI $repository)
     {
-        $accountData = [
-            'name'                   => trim($request->input('name')),
-            'accountType'            => $request->input('what'),
-            'virtualBalance'         => round($request->input('virtualBalance'), 2),
-            'virtualBalanceCurrency' => intval($request->input('amount_currency_id_virtualBalance')),
-            'active'                 => true,
-            'user'                   => auth()->user()->id,
-            'iban'                   => trim($request->input('iban')),
-            'accountNumber'          => trim($request->input('accountNumber')),
-            'accountRole'            => $request->input('accountRole'),
-            'openingBalance'         => round($request->input('openingBalance'), 2),
-            'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($request->input('amount_currency_id_openingBalance')),
-
-        ];
-
-        $account = $repository->store($accountData);
+        $data    = $request->getAccountData();
+        $account = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
@@ -345,22 +330,8 @@ class AccountController extends Controller
      */
     public function update(AccountFormRequest $request, ARI $repository, Account $account)
     {
-
-        $accountData = [
-            'name'                   => $request->input('name'),
-            'active'                 => $request->input('active'),
-            'user'                   => auth()->user()->id,
-            'iban'                   => $request->input('iban'),
-            'accountNumber'          => $request->input('accountNumber'),
-            'accountRole'            => $request->input('accountRole'),
-            'virtualBalance'         => round($request->input('virtualBalance'), 2),
-            'openingBalance'         => round($request->input('openingBalance'), 2),
-            'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($request->input('amount_currency_id_openingBalance')),
-            'ccType'                 => $request->input('ccType'),
-            'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
-        ];
-        $repository->update($account, $accountData);
+        $data    = $request->getAccountData();
+        $repository->update($account, $data);
 
         Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();

@@ -7,6 +7,7 @@
     <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="what" value="{{ what }}"/>
+        <input type="hidden" name="active" value="1"/>
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
