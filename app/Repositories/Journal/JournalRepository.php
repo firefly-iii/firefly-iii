@@ -264,10 +264,11 @@ class JournalRepository implements JournalRepositoryInterface
     public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal
     {
         // update actual journal:
-        $journal->transaction_currency_id = $data['transaction_currency_id'];
+        $journal->transaction_currency_id = $data['currency_id'];
         $journal->description             = $data['journal_description'];
         $journal->date                    = $data['date'];
-
+        $journal->save();
+        
         // unlink all categories:
         $journal->categories()->detach();
         $journal->budgets()->detach();
@@ -330,6 +331,9 @@ class JournalRepository implements JournalRepositoryInterface
             case strtolower(TransactionType::WITHDRAWAL):
                 $transaction['source_account_id'] = intval($data['journal_source_account_id']);
                 break;
+        }
+
+        switch ($data['what']) {
             case strtolower(TransactionType::TRANSFER):
             case strtolower(TransactionType::DEPOSIT):
                 $transaction['destination_account_id'] = intval($data['journal_destination_account_id']);
@@ -379,6 +383,7 @@ class JournalRepository implements JournalRepositoryInterface
             'source'      => null,
             'destination' => null,
         ];
+
         Log::debug(sprintf('Going to store accounts for type %s', $type->type));
         switch ($type->type) {
             case TransactionType::WITHDRAWAL:
@@ -390,7 +395,6 @@ class JournalRepository implements JournalRepositoryInterface
 
                 break;
             case TransactionType::TRANSFER:
-
                 $accounts['source']      = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first();
                 $accounts['destination'] = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first();
                 break;
@@ -535,11 +539,6 @@ class JournalRepository implements JournalRepositoryInterface
         );
         $this->storeCategoryWithTransaction($two, $transaction['category']);
         $this->storeBudgetWithTransaction($two, $transaction['budget_id']);
-
-        if ($transaction['piggy_bank_id'] > 0) {
-            $transaction['date'] = $journal->date->format('Y-m-d');
-            event(new TransactionStored($transaction));
-        }
 
         return new Collection([$one, $two]);
     }

@@ -126,7 +126,6 @@ class SplitController extends Controller
      */
     public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
-
         $data    = $this->arrayFromInput($request, $journal);
         $journal = $repository->updateSplitJournal($journal, $data);
 
@@ -170,7 +169,7 @@ class SplitController extends Controller
             'journal_source_account_id'      => $request->get('journal_source_account_id'),
             'journal_source_account_name'    => $request->get('journal_source_account_name'),
             'journal_destination_account_id' => $request->get('journal_destination_account_id'),
-            'transaction_currency_id'        => $request->get('transaction_currency_id'),
+            'currency_id'        => $request->get('currency_id'),
             'what'                           => $request->get('what'),
             'date'                           => $request->get('date'),
             // all custom fields:
@@ -208,7 +207,7 @@ class SplitController extends Controller
             'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
             'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
             'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
-            'transaction_currency_id'        => $request->old('transaction_currency_id', $journal->transaction_currency_id),
+            'currency_id'                    => $request->old('currency_id', $journal->transaction_currency_id),
             'destinationAccounts'            => $destinationAccounts,
             'what'                           => strtolower(TransactionJournal::transactionTypeStr($journal)),
             'date'                           => $request->old('date', $journal->date),
@@ -277,7 +276,6 @@ class SplitController extends Controller
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'] ?? '',
                 'user'                     => auth()->user()->id, // needed for accounts.
-                'piggy_bank_id'            => $transaction['piggy_bank_id'] ?? 0,
             ];
         }
 

@@ -41,7 +41,7 @@
                         {{ ExpandedForm.text('journal_description', journal.description) }}
 
                         {# CURRENCY IS NEW FOR SPLIT JOURNALS #}
-                        {{ ExpandedForm.select('journal_currency_id', currencies, preFilled.transaction_currency_id) }}
+                        {{ ExpandedForm.select('currency_id', currencies, preFilled.currency_id) }}
 
                         {# show source if withdrawal or transfer #}
                         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
@@ -218,8 +218,9 @@
                             </thead>
                             <tbody>
                             {% for index, transaction in preFilled.transactions %}
-                                <tr class="{% if loop.index == 1 %}initial-row{% else %}not-initial-row{% endif %}">
-                                    <td><a href="#" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></td>
+                                <tr data-split="{{ loop.index0 }}">
+                                    <td><a href="#" class="btn btn-xs btn-danger remove-current-split" data-split="{{ loop.index0 }}"><i
+                                                    class="fa fa-trash" data-split="{{ loop.index0 }}"></i></a></td>
                                     <td class="count">#{{ loop.index }}</td>
                                     <td>
                                         <input type="text" name="transactions[{{ loop.index0 }}][description]" value="{{ transaction.description }}"
@@ -265,7 +266,7 @@
                                     {% endif %}
                                     <td>
                                         <input type="text" name="transactions[{{ loop.index0 }}][category]" value="{{ transaction.category }}"
-                                               class="form-control" />
+                                               class="form-control"/>
                                     </td>
                                 </tr>
                             {% endfor %}

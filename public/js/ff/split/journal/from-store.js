@@ -14,6 +14,7 @@ var categories = {};
 $(function () {
     "use strict";
     $('.btn-do-split').click(cloneRow);
+    $('.remove-current-split').click(removeRow);
 
     $.getJSON('json/expense-accounts').done(function (data) {
         destAccounts = data;
@@ -38,24 +39,42 @@ $(function () {
     // add auto complete:
 
 
-
-
 });
+
+function removeRow(e) {
+    "use strict";
+    var rows = $('table.split-table tbody tr');
+    if (rows.length === 1) {
+        console.log('Will not remove last split');
+        return false;
+    }
+    var row = $(e.target);
+    var index = row.data('split');
+    console.log('Trying to remove row with split ' + index);
+    $('table.split-table tbody tr[data-split="' + index + '"]').remove();
+
+
+
+    resetSplits();
+
+    return false;
+
+}
 
 function cloneRow() {
     "use strict";
-    var source = $('.initial-row').clone();
+    var source = $('.table.split-table tbody tr').last().clone();
     var count = $('.split-table tbody tr').length + 1;
     var index = count - 1;
     source.removeClass('initial-row');
     source.find('.count').text('#' + count);
 
-    // get each input, change the name?
-    $.each(source.find('input, select'), function (i, v) {
-        var obj = $(v);
-        var name = obj.attr('name').replace('[0]', '[' + index + ']');
-        obj.attr('name', name);
-    });
+    // // get each input, change the name?
+    // $.each(source.find('input, select'), function (i, v) {
+    //     var obj = $(v);
+    //     var name = obj.attr('name').replace('[0]', '[' + index + ']');
+    //     obj.attr('name', name);
+    // });
 
     source.find('input[name$="][amount]"]').val("").on('input', calculateSum);
     if (destAccounts.length > 0) {
@@ -74,9 +93,82 @@ function cloneRow() {
 
     $('.split-table tbody').append(source);
 
+    // remove original click things, add them again:
+    $('.remove-current-split').unbind('click').click(removeRow);
+
+
     calculateSum();
+    resetSplits();
 
     return false;
+}
+
+function resetSplits() {
+    "use strict";
+    // loop rows, reset numbers:
+
+    // update the row split number:
+    $.each($('table.split-table tbody tr'), function (i, v) {
+        var row = $(v);
+        row.attr('data-split', i);
+        console.log('Row is now ' + row.data('split'));
+    });
+
+    // loop each remove button, update the index
+    $.each($('.remove-current-split'), function (i, v) {
+        var button = $(v);
+        button.attr('data-split', i);
+        button.find('i').attr('data-split', i);
+        console.log('Remove button index is now ' + button.data('split'));
+
+    });
+
+    // loop each indicator (#) and update it:
+    $.each($('td.count'), function (i, v) {
+        var cell = $(v);
+        var index = i + 1;
+        cell.text('#' + index);
+        console.log('Cell is now ' + cell.text());
+    });
+
+    // loop each possible field.
+
+    // ends with ][description]
+    $.each($('input[name$="][description]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transaction[' + i + '][description]');
+        console.log('description is now ' + input.attr('name'));
+    });
+    // ends with ][destination_account_name]
+    $.each($('input[name$="][destination_account_name]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transaction[' + i + '][destination_account_name]');
+        console.log('destination_account_name is now ' + input.attr('name'));
+    });
+    // ends with ][source_account_name]
+    $.each($('input[name$="][source_account_name]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transaction[' + i + '][source_account_name]');
+        console.log('source_account_name is now ' + input.attr('name'));
+    });
+    // ends with ][amount]
+    $.each($('input[name$="][amount]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transaction[' + i + '][amount]');
+        console.log('amount is now ' + input.attr('name'));
+    });
+    // ends with ][budget_id]
+    $.each($('input[name$="][budget_id]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transaction[' + i + '][budget_id]');
+        console.log('budget_id is now ' + input.attr('name'));
+    });
+    // ends with ][category]
+    $.each($('input[name$="][category]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transaction[' + i + '][category]');
+        console.log('category is now ' + input.attr('name'));
+    });
 }
 
 function calculateSum() {
