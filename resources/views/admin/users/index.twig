@@ -35,7 +35,8 @@
                                     </div>
                                 </td>
                                 <td>#{{ user.id }}</td>
-                                <td>{{ user.email }}</td>
+                                <td>
+                                    <a href="{{ route('admin.users.show',user.id) }}">{{ user.email }}</a></td>
                                 <td>
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}

@@ -28,7 +28,7 @@
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
-    "laravel/framework": "5.3.*",
+    "laravel/framework": "5.3.18",
     "davejamesmiller/laravel-breadcrumbs": "^3.0",
     "watson/validating": "^3.0",
     "doctrine/dbal": "^2.5",
@@ -76,6 +76,7 @@
     "post-update-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postUpdate",
       "php artisan firefly:upgrade-instructions",
+      "php artisan firefly:upgrade-database",
       "php artisan firefly:verify",
       "php artisan optimize"
     ]

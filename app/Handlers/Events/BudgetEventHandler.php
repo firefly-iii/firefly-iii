@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetLimitEventHandler.php
+ * BudgetEventHandler.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -13,36 +13,30 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\BudgetLimitStored;
-use FireflyIII\Events\BudgetLimitUpdated;
+
+use FireflyIII\Events\StoredBudgetLimit;
+use FireflyIII\Events\UpdatedBudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Database\QueryException;
 use Log;
 
 /**
- * Class BudgetLimitEventHandler
+ * Handles budget related events.
+ *
+ * Class BudgetEventHandler
  *
  * @package FireflyIII\Handlers\Events
  */
-class BudgetLimitEventHandler
+class BudgetEventHandler
 {
     /**
-     * Create the event listener.
+     * This method creates a new budget limit repetition when a new budget limit has been created.
      *
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * In a perfect world, the store() routine should be different from the update()
-     * routine. It would not have to check count() == 0 because there could be NO
-     * limit repetitions at this point. However, the database can be wrong so we check.
+     * @param StoredBudgetLimit $event
      *
-     * @param BudgetLimitStored $event
+     * @return bool
      */
-    public function store(BudgetLimitStored $event)
+    public function storeRepetition(StoredBudgetLimit $event):bool
     {
         $budgetLimit = $event->budgetLimit;
         $end         = $event->end;
@@ -71,12 +65,18 @@ class BudgetLimitEventHandler
 
         }
 
+        return true;
     }
 
+
     /**
-     * @param BudgetLimitUpdated $event
+     * Updates, if present the budget limit repetition part of a budget limit.
+     *
+     * @param UpdatedBudgetLimit $event
+     *
+     * @return bool
      */
-    public function update(BudgetLimitUpdated $event)
+    public function update(UpdatedBudgetLimit $event): bool
     {
         $budgetLimit = $event->budgetLimit;
         $end         = $event->end;
@@ -104,6 +104,7 @@ class BudgetLimitEventHandler
             $repetition->save();
 
         }
-    }
 
+        return true;
+    }
 }

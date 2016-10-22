@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Events\BudgetLimitStored;
-use FireflyIII\Events\BudgetLimitUpdated;
+use FireflyIII\Events\StoredBudgetLimit;
+use FireflyIII\Events\UpdatedBudgetLimit;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
@@ -555,7 +555,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $limit->save();
 
             // fire event to create or update LimitRepetition.
-            event(new BudgetLimitUpdated($limit, $end));
+            event(new UpdatedBudgetLimit($limit, $end));
 
             return $limit;
         }
@@ -568,7 +568,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $limit->repeat_freq = $repeatFreq;
         $limit->repeats     = 0;
         $limit->save();
-        event(new BudgetLimitStored($limit, $end));
+        event(new StoredBudgetLimit($limit, $end));
 
 
         // likewise, there should be a limit repetition to match the end date

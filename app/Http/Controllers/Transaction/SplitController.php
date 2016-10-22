@@ -15,19 +15,17 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use ExpandedForm;
-use FireflyIII\Crud\Split\JournalInterface;
-use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\SplitJournalFormRequest;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -42,6 +40,22 @@ use View;
  */
 class SplitController extends Controller
 {
+
+    /** @var  AccountRepositoryInterface */
+    private $accounts;
+
+    /** @var AttachmentHelperInterface */
+    private $attachments;
+
+    /** @var  BudgetRepositoryInterface */
+    private $budgets;
+
+    /** @var CurrencyRepositoryInterface */
+    private $currencies;
+
+    /** @var JournalTaskerInterface */
+    private $tasker;
+
     /**
      *
      */
@@ -50,47 +64,18 @@ class SplitController extends Controller
         parent::__construct();
         View::share('mainTitleIcon', 'fa-share-alt');
         View::share('title', trans('firefly.split-transactions'));
-    }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return View
-     */
-    public function create(TransactionJournal $journal)
-    {
-        $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
-        $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $piggyRepository    = app('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+        // some useful repositories:
+        $this->middleware(
+            function ($request, $next) {
+                $this->accounts    = app(AccountRepositoryInterface::class);
+                $this->budgets     = app(BudgetRepositoryInterface::class);
+                $this->tasker      = app(JournalTaskerInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->currencies  = app(CurrencyRepositoryInterface::class);
 
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-
-        $assetAccounts  = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
-        $sessionData    = session('journal-data', []);
-        $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $currencies     = ExpandedForm::makeSelectList($currencyRepository->get());
-        $budgets        = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
-        $piggyBanks     = ExpandedForm::makeSelectListWithEmpty($piggyRepository->getPiggyBanksWithAmount());
-        $subTitle       = trans('form.add_new_' . $sessionData['what']);
-        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $subTitleIcon   = 'fa-plus';
-        $preFilled      = [
-            'what'                        => $sessionData['what'] ?? 'withdrawal',
-            'journal_amount'              => $sessionData['amount'] ?? 0,
-            'journal_source_account_id'   => $sessionData['source_account_id'] ?? 0,
-            'journal_source_account_name' => $sessionData['source_account_name'] ?? '',
-            'description'                 => [$journal->description],
-            'destination_account_name'    => [$sessionData['destination_account_name']],
-            'destination_account_id'      => [$sessionData['destination_account_id']],
-            'amount'                      => [$sessionData['amount']],
-            'budget_id'                   => [$sessionData['budget_id']],
-            'category'                    => [$sessionData['category']],
-        ];
-
-        return view(
-            'split.journals.create',
-            compact('journal', 'piggyBanks', 'subTitle', 'optionalFields', 'subTitleIcon', 'preFilled', 'assetAccounts', 'currencies', 'budgets', 'uploadSize')
+                return $next($request);
+            }
         );
     }
 
@@ -102,17 +87,11 @@ class SplitController extends Controller
      */
     public function edit(Request $request, TransactionJournal $journal)
     {
-        $currencyRepository = app('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface');
-        $budgetRepository   = app('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $currencies     = ExpandedForm::makeSelectList($currencyRepository->get());
-        $assetAccounts  = ExpandedForm::makeSelectList($accountRepository->getAccountsByType(['Default account', 'Asset account']));
+        $currencies     = ExpandedForm::makeSelectList($this->currencies->get());
+        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $budgets        = ExpandedForm::makeSelectListWithEmpty($budgetRepository->getActiveBudgets());
+        $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = $this->arrayFromJournal($request, $journal);
         $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon   = 'fa-pencil';
@@ -127,7 +106,7 @@ class SplitController extends Controller
         Session::forget('transactions.edit-split.fromUpdate');
 
         return view(
-            'split.journals.edit',
+            'transactions.edit-split',
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
@@ -136,63 +115,31 @@ class SplitController extends Controller
         );
     }
 
-    /**
-     * @param JournalInterface        $repository
-     * @param SplitJournalFormRequest $request
-     * @param TransactionJournal      $journal
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function store(JournalInterface $repository, SplitJournalFormRequest $request, TransactionJournal $journal)
-    {
-        $data = $request->getSplitData();
-        foreach ($data['transactions'] as $transaction) {
-            $repository->storeTransaction($journal, $transaction);
-        }
-
-        $repository->markAsComplete($journal);
-
-        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
-        Preferences::mark();
-
-        if (intval($request->get('create_another')) === 1) {
-            // set value so create routine will not overwrite URL:
-            Session::put('transactions.create.fromStore', true);
-
-            return redirect(route('transactions.create', [$request->input('what')]))->withInput();
-        }
-
-        // redirect to previous URL.
-        return redirect(session('transactions.create.url'));
-    }
 
     /**
-     * @param TransactionJournal        $journal
-     * @param SplitJournalFormRequest   $request
-     * @param JournalInterface          $repository
-     * @param AttachmentHelperInterface $att
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(TransactionJournal $journal, SplitJournalFormRequest $request, JournalInterface $repository, AttachmentHelperInterface $att)
+    public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
-
-        $data    = $request->getSplitData();
-        $journal = $repository->updateJournal($journal, $data);
+        $data    = $this->arrayFromInput($request);
+        $journal = $repository->updateSplitJournal($journal, $data);
 
         // save attachments:
-        $att->saveAttachmentsForModel($journal);
+        $this->attachments->saveAttachmentsForModel($journal);
 
-        event(new TransactionJournalUpdated($journal));
+        event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
 
         // flash messages
-        if (count($att->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $att->getMessages()->get('attachments'));
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-
-        $type = strtolower($journal->transaction_type_type ?? TransactionJournal::transactionTypeStr($journal));
+        $type = strtolower(TransactionJournal::transactionTypeStr($journal));
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));
         Preferences::mark();
 
@@ -200,12 +147,45 @@ class SplitController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
-            return redirect(route('split.journal.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('transactions.edit-split', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
         return redirect(session('transactions.edit-split.url'));
 
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function arrayFromInput(Request $request): array
+    {
+        $array = [
+            'journal_description'            => $request->get('journal_description'),
+            'journal_source_account_id'      => $request->get('journal_source_account_id'),
+            'journal_source_account_name'    => $request->get('journal_source_account_name'),
+            'journal_destination_account_id' => $request->get('journal_destination_account_id'),
+            'currency_id'                    => $request->get('currency_id'),
+            'what'                           => $request->get('what'),
+            'date'                           => $request->get('date'),
+            // all custom fields:
+            'interest_date'                  => $request->get('interest_date'),
+            'book_date'                      => $request->get('book_date'),
+            'process_date'                   => $request->get('process_date'),
+            'due_date'                       => $request->get('due_date'),
+            'payment_date'                   => $request->get('payment_date'),
+            'invoice_date'                   => $request->get('invoice_date'),
+            'internal_reference'             => $request->get('internal_reference'),
+            'notes'                          => $request->get('notes'),
+            'tags'                           => explode(',', $request->get('tags')),
+
+            // transactions.
+            'transactions'                   => $this->getTransactionDataFromRequest($request),
+        ];
+
+        return $array;
     }
 
     /**
@@ -222,149 +202,79 @@ class SplitController extends Controller
             'journal_description'            => $request->old('journal_description', $journal->description),
             'journal_amount'                 => TransactionJournal::amountPositive($journal),
             'sourceAccounts'                 => $sourceAccounts,
-            'journal_source_account_id'      => $sourceAccounts->first()->id,
-            'journal_source_account_name'    => $sourceAccounts->first()->name,
-            'journal_destination_account_id' => $destinationAccounts->first()->id,
-            'transaction_currency_id'        => $request->old('transaction_currency_id', $journal->transaction_currency_id),
+            'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
+            'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
+            'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
+            'currency_id'                    => $request->old('currency_id', $journal->transaction_currency_id),
             'destinationAccounts'            => $destinationAccounts,
             'what'                           => strtolower(TransactionJournal::transactionTypeStr($journal)),
             'date'                           => $request->old('date', $journal->date),
-            'interest_date'                  => $request->old('interest_date', $journal->interest_date),
-            'book_date'                      => $request->old('book_date', $journal->book_date),
-            'process_date'                   => $request->old('process_date', $journal->process_date),
-            'description'                    => [],
-            'source_account_id'              => [],
-            'source_account_name'            => [],
-            'destination_account_id'         => [],
-            'destination_account_name'       => [],
-            'amount'                         => [],
-            'budget_id'                      => [],
-            'category'                       => [],
+            'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
+
+            // all custom fields:
+            'interest_date'                  => $request->old('interest_date', $journal->getMeta('interest_date')),
+            'book_date'                      => $request->old('book_date', $journal->getMeta('book_date')),
+            'process_date'                   => $request->old('process_date', $journal->getMeta('process_date')),
+            'due_date'                       => $request->old('due_date', $journal->getMeta('due_date')),
+            'payment_date'                   => $request->old('payment_date', $journal->getMeta('payment_date')),
+            'invoice_date'                   => $request->old('invoice_date', $journal->getMeta('invoice_date')),
+            'internal_reference'             => $request->old('internal_reference', $journal->getMeta('internal_reference')),
+            'notes'                          => $request->old('notes', $journal->getMeta('notes')),
+
+            // transactions.
+            'transactions'                   => $this->getTransactionDataFromJournal($journal),
         ];
-
-        // number of transactions present in old input:
-        $previousCount = count($request->old('description'));
-
-        if ($previousCount === 0) {
-            // build from scratch
-            $transactions                      = $this->transactionsFromJournal($request, $journal);
-            $array['description']              = $transactions['description'];
-            $array['source_account_id']        = $transactions['source_account_id'];
-            $array['source_account_name']      = $transactions['source_account_name'];
-            $array['destination_account_id']   = $transactions['destination_account_id'];
-            $array['destination_account_name'] = $transactions['destination_account_name'];
-            $array['amount']                   = $transactions['amount'];
-            $array['budget_id']                = $transactions['budget_id'];
-            $array['category']                 = $transactions['category'];
-
-            return $array;
-        }
-
-        $index = 0;
-        while ($index < $previousCount) {
-            $description     = $request->old('description')[$index] ?? '';
-            $destinationId   = $request->old('destination_account_id')[$index] ?? 0;
-            $destinationName = $request->old('destination_account_name')[$index] ?? '';
-            $sourceId        = $request->old('source_account_id')[$index] ?? 0;
-            $sourceName      = $request->old('source_account_name')[$index] ?? '';
-            $amount          = $request->old('amount')[$index] ?? '';
-            $budgetId        = $request->old('budget_id')[$index] ?? 0;
-            $categoryName    = $request->old('category')[$index] ?? '';
-
-
-            // any transfer not from the source:
-            $array['description'][]              = $description;
-            $array['source_account_id'][]        = $sourceId;
-            $array['source_account_name'][]      = $sourceName;
-            $array['destination_account_id'][]   = $destinationId;
-            $array['destination_account_name'][] = $destinationName;
-            $array['amount'][]                   = $amount;
-            $array['budget_id'][]                = intval($budgetId);
-            $array['category'][]                 = $categoryName;
-            $index++;
-        }
 
         return $array;
     }
 
     /**
-     * @param Request            $request
      * @param TransactionJournal $journal
      *
      * @return array
      */
-    private function transactionsFromJournal(Request $request, TransactionJournal $journal): array
+    private function getTransactionDataFromJournal(TransactionJournal $journal): array
     {
-        /** @var Collection $transactions */
-        $transactions = $journal->transactions()->get();
-
-        /*
-         * Splitted journals always have ONE source OR ONE destination.
-         * Withdrawals have ONE source (asset account)
-         * Deposits have ONE destination (asset account)
-         * Transfers have ONE of both (asset account)
-         */
-        /** @var Account $singular */
-        $singular = TransactionJournal::sourceAccountList($journal)->first();
-        if ($journal->transactionType->type == TransactionType::DEPOSIT) {
-            /** @var Account $singular */
-            $singular = TransactionJournal::destinationAccountList($journal)->first();
+        $transactions = $this->tasker->getTransactionsOverview($journal);
+        $return       = [];
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = [
+                'description'              => $transaction['description'],
+                'source_account_id'        => $transaction['source_account_id'],
+                'source_account_name'      => $transaction['source_account_name'],
+                'destination_account_id'   => $transaction['destination_account_id'],
+                'destination_account_name' => $transaction['destination_account_name'],
+                'amount'                   => round($transaction['destination_amount'], 2),
+                'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
+                'category'                 => $transaction['category'],
+            ];
         }
 
-        /*
-         * Loop all transactions. Collect info ONLY from the transaction that is NOT related to
-         * the singular account.
-         */
-        $index  = 0;
-        $return = [
-            'description'              => [],
-            'source_account_id'        => [],
-            'source_account_name'      => [],
-            'destination_account_id'   => [],
-            'destination_account_name' => [],
-            'amount'                   => [],
-            'budget_id'                => [],
-            'category'                 => [],
-        ];
+        return $return;
+    }
 
-        Log::debug('now at transactionsFromJournal');
-
-        /**
-         * @var int         $current
-         * @var Transaction $transaction
-         */
-        foreach ($transactions as $current => $transaction) {
-            $budget       = $transaction->budgets()->first();
-            $category     = $transaction->categories()->first();
-            $budgetId     = 0;
-            $categoryName = '';
-            if (!is_null($budget)) {
-                $budgetId = $budget->id;
-            }
-
-            if (!is_null($category)) {
-                $categoryName = $category->name;
-            }
-
-            $budgetId        = $request->old('budget_id')[$index] ?? $budgetId;
-            $categoryName    = $request->old('category')[$index] ?? $categoryName;
-            $amount          = $request->old('amount')[$index] ?? $transaction->amount;
-            $description     = $request->old('description')[$index] ?? $transaction->description;
-            $destinationName = $request->old('destination_account_name')[$index] ?? $transaction->account->name;
-            $sourceName      = $request->old('source_account_name')[$index] ?? $transaction->account->name;
-            $amount          = bccomp($amount, '0') === -1 ? bcmul($amount, '-1') : $amount;
-
-            if ($transaction->account_id !== $singular->id) {
-                $return['description'][]              = $description;
-                $return['destination_account_id'][]   = $transaction->account_id;
-                $return['destination_account_name'][] = $destinationName;
-                $return['source_account_name'][]      = $sourceName;
-                $return['amount'][]                   = $amount;
-                $return['budget_id'][]                = intval($budgetId);
-                $return['category'][]                 = $categoryName;
-                // only add one when "valid" transaction
-                $index++;
-            }
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getTransactionDataFromRequest(Request $request): array
+    {
+        $return       = [];
+        $transactions = $request->get('transactions');
+        foreach ($transactions as $transaction) {
+            $return[] = [
+                'description'              => $transaction['description'],
+                'source_account_id'        => $transaction['source_account_id'] ?? 0,
+                'source_account_name'      => $transaction['source_account_name'] ?? '',
+                'destination_account_id'   => $transaction['destination_account_id'] ?? 0,
+                'destination_account_name' => $transaction['destination_account_name'] ?? '',
+                'amount'                   => round($transaction['amount'] ?? 0, 2),
+                'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
+                'category'                 => $transaction['category'] ?? '',
+                'user'                     => auth()->user()->id, // needed for accounts.
+            ];
         }
 
         return $return;

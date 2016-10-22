@@ -9,86 +9,134 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Metadata</h3>
+                    <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover sortable">
-                        <tr>
-                            <td>{{ trans('list.amount') }}</td>
-                            <td>{{ journal|formatJournal }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ trans('list.date') }}</td>
-                            <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
-                        </tr>
-                        {% if journal.getMeta('interest_date') %}
-                            <tr>
-                                <td>{{ trans('list.interest_date') }}</td>
-                                <td>{{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.getMeta('book_date') %}
-                            <tr>
-                                <td>{{ trans('list.book_date') }}</td>
-                                <td>{{ journal.getMeta('book_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.getMeta('process_date') %}
-                            <tr>
-                                <td>{{ trans('list.process_date') }}</td>
-                                <td>{{ journal.getMeta('process_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.getMeta('due_date') %}
-                            <tr>
-                                <td>{{ trans('list.due_date') }}</td>
-                                <td>{{ journal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.getMeta('payment_date') %}
-                            <tr>
-                                <td>{{ trans('list.payment_date') }}</td>
-                                <td>{{ journal.getMeta('payment_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.getMeta('invoice_date') %}
-                            <tr>
-                                <td>{{ trans('list.invoice_date') }}</td>
-                                <td>{{ journal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
-                        {% endif %}
-
+                    <table class="table table-hover">
+                        <tbody>
                         <tr>
                             <td>{{ trans('list.type') }}</td>
                             <td>{{ journal.transactiontype.type|_ }}</td>
                         </tr>
                         <tr>
-                            <td>{{ trans('list.completed') }}</td>
-                            <td>
-                                {% if journal.completed %}
-                                    <span class="text-success">{{ 'yes'|_ }}</span>
-                                {% else %}
-                                    <span class="text-danger">{{ 'no'|_ }}</span>
-                                {% endif %}
-                            </td>
+                            <td>{{ trans('list.description') }}</td>
+                            <td>{{ journal.description }}</td>
                         </tr>
-                        {% for budget in journal.budgets %}
+                        <!-- source(s) -->
+                        <tr>
+                            <td>{{ 'source_accounts'|_ }}</td>
+                            <td>{{ sourceAccount(journal)|raw }}</td>
+                        </tr>
+
+                        <!-- destination(s) -->
+                        <tr>
+                            <td>{{ 'destination_accounts'|_ }}</td>
+                            <td>{{ destinationAccount(journal)|raw }}</td>
+                        </tr>
+                        <!-- total amount -->
+                        <tr>
+                            <td>{{ 'total_amount'|_ }}</td>
+                            <td>{{ journal|formatJournal }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width:30%;">{{ trans('list.date') }}</td>
+                            <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <div class="pull-right">
+                        <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a>
+                        <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- events, if present -->
+            {% if journal.piggyBankEvents|length > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        {% include 'list/piggy-bank-events' with {'events': events, 'showPiggyBank':true} %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transaction_journal_meta'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td>{{ 'categories'|_ }}</td>
+                            <td>{{ journalCategories(journal)|raw }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'budgets'|_ }}</td>
+                            <td>{{ journalBudgets(journal)|raw }}</td>
+                        </tr>
+                        {% if journal.hasMeta('book_date') %}
                             <tr>
-                                <td>{{ 'budget'|_ }}</td>
-                                <td><a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a></td>
+                                <td>{{ trans('list.book_date') }}</td>
+                                <td>{{ journal.getMeta('book_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
-                        {% endfor %}
-                        {% for category in journal.categories %}
+                        {% endif %}
+                        {% if journal.hasMeta('process_date') %}
                             <tr>
-                                <td>{{ 'category'|_ }}</td>
-                                <td><a href="{{ route('categories.show',category.id) }}">{{ category.name }}</a></td>
+                                <td>{{ trans('list.process_date') }}</td>
+                                <td>{{ journal.getMeta('process_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
-                        {% endfor %}
+
+                        {% endif %}
+                        {% if journal.hasMeta('interest_date') %}
+                            <tr>
+                                <td>{{ trans('list.interest_date') }}</td>
+                                <td>{{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+
+                        {% endif %}
+                        {% if journal.hasMeta('due_date') %}
+                            <tr>
+                                <td>{{ trans('list.due_date') }}</td>
+                                <td>{{ journal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+
+                        {% endif %}
+                        {% if journal.hasMeta('payment_date') %}
+                            <tr>
+                                <td>{{ trans('list.payment_date') }}</td>
+                                <td>{{ journal.getMeta('payment_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+
+                        {% endif %}
+                        {% if journal.hasMeta('invoice_date') %}
+                            <tr>
+                                <td>{{ trans('list.invoice_date') }}</td>
+                                <td>{{ journal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if journal.hasMeta('internal_reference') and journal.getMeta('internal_reference') != "" %}
+                            <tr>
+                                <td>{{ trans('list.internal_reference') }}</td>
+                                <td>{{ journal.getMeta('internal_reference') }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if journal.hasMeta('notes') and journal.getMeta('notes') != "" %}
+                            <tr>
+                                <td>{{ trans('list.notes') }}</td>
+                                <td>{{ journal.getMeta('notes')|nl2br }}</td>
+                            </tr>
+
+                        {% endif %}
+
                         {% if journal.bill %}
                             <tr>
                                 <td>{{ 'bill'|_ }}</td>
@@ -117,32 +165,12 @@
                                 </td>
                             </tr>
                         {% endif %}
-
-                        {% if journal.getMeta('internal_reference') %}
-                            <tr>
-                                <td>{{ trans('list.interal_reference') }}</td>
-                                <td>{{ journal.getMeta('internal_reference') }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.getMeta('notes') %}
-                            <tr>
-                                <td>{{ trans('list.notes') }}</td>
-                                <td>{{ journal.getMeta('notes')|nl2br }}</td>
-                            </tr>
-                        {% endif %}
-
+                        </tbody>
                     </table>
-                </div>
-                <div class="box-footer">
-                    <div class="pull-right">
-                        <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}">{{ 'edit'|_ }}</a>
-                        <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger">{{ 'delete'|_ }}</a>
-                    </div>
                 </div>
             </div>
 
-            <!-- attachments for unsplitted journals -->
+
             {% if journal.attachments|length > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
@@ -182,60 +210,103 @@
                     </div>
                 </div>
             {% endif %}
-
-            <!-- events, if present -->
-            {% if journal.piggyBankEvents|length > 0 %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        {% include 'list/piggy-bank-events' with {'events': events, 'showPiggyBank':true} %}
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            {% for t in transactions %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ t.account.name }}</h3>
-                    </div>
-                    <table class="table table-bordered table-striped">
-
-                        <tr>
-                            <td style="width:30%;">{{ 'account'|_ }}</td>
-                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a></td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'account_type'|_ }}</td>
-                            <td>{{ t.account.accounttype.type|_ }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'balance'|_ }}</td>
-                            <td>{{ t.before|formatAmount }} &rarr; {{ (t.before+t.amount)|formatAmount }}</td>
-                        </tr>
-                        {% if t.description %}
-                            <tr>
-                                <td>{{ trans('form.description') }}</td>
-                                <td>{{ t.description }}</td>
-                            </tr>
-                        {% endif %}
-                        <tr>
-                            <td>{{ 'category'|_ }}</td>
-                            <td>
-                                {{ transactionCategories(t)|raw }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'budget'|_ }}</td>
-                            <td>
-                                {{ transactionBudgets(t)|raw }}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            {% endfor %}
         </div>
     </div>
+
+    <!-- more than two transactions-->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Transactions</h3>
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ trans('list.description') }}</th>
+                        <th>{{ trans('list.source_account') }}</th>
+                        <th>&#916;</th>
+                        <th>{{ trans('list.destination_account') }}</th>
+                        <th>&#916;</th>
+                        <th>{{ trans('list.amount') }}</th>
+                        <th>{{ trans('list.budget') }}</th>
+                        <th>{{ trans('list.category') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>
+                                {% if transaction.description == "" %}
+                                    {{ journal.description }}
+                                {% else %}
+                                    {{ transaction.description }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
+                            </td>
+                            <td>
+                                {{ formatAmountWithCode(transaction.source_account_before,journal.transactionCurrency.code) }}
+                                &longrightarrow; {{ formatAmountWithCode(transaction.source_account_after,journal.transactionCurrency.code) }}
+                            </td>
+                            <td>
+                                <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
+                            </td>
+                            <td>
+                                {{ formatAmountWithCode(transaction.destination_account_before,journal.transactionCurrency.code) }}
+                                &longrightarrow; {{ formatAmountWithCode(transaction.destination_account_after,journal.transactionCurrency.code) }}
+                            </td>
+                            <td>
+                                {% if journal.transactiontype.type == 'Deposit' %}
+                                    <!-- deposit, positive amount with correct currency -->
+                                    {{ formatAmountWithCode(transaction.destination_amount, journal.transactionCurrency.code) }}
+
+                                {% endif %}
+                                {% if journal.transactiontype.type == 'Withdrawal' %}
+                                    <!-- withdrawal, negative amount with correct currency -->
+                                    {{ formatAmountWithCode(transaction.source_amount, journal.transactionCurrency.code) }}
+
+                                {% endif %}
+                                {% if journal.transactiontype.type == 'Transfer' %}
+                                    <!-- transfer, positive amount in blue -->
+                                    <span class="text-info">{{ formatAmountPlainWithCode(transaction.destination_amount, journal.transactionCurrency.code) }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ transactionIdBudgets(transaction.source_id) }}
+                            </td>
+                            <td>
+                                {{ transactionIdCategories(transaction.source_id) }}
+                            </td>
+                        </tr>
+                        {#
+                        <tr>
+                            <td>
+                                {% if (index+1) != transactions|length or what == 'transfer' %}
+                                    {{ t.description }}
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a> ({{ t.account.accounttype.type|_ }})</td>
+                            <td>{{ t.sum|formatAmount }}</td>
+                            <td>{{ t.before|formatAmount }} &rarr; {{ (t.sum+t.before)|formatAmount }}</td>
+                            <td>
+                                {% if (index+1) != transactions|length  or what == 'transfer' %}
+                                    {{ transactionBudgets(t)|raw }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if (index+1) != transactions|length  or what == 'transfer' %}
+                                    {{ transactionCategories(t)|raw }}
+                                {% endif %}
+                            </td>
+                            #}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- end -->
 {% endblock %}

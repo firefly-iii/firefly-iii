@@ -1,0 +1,137 @@
+{
+  "users": [
+    {
+      "email": "thegrumpydictator@gmail.com",
+      "password": "james"
+    },
+    {
+      "email": "thegrumpydictator+empty@gmail.com",
+      "password": "james"
+    },
+    {
+      "email": "thegrumpydictator+deleteme@gmail.com",
+      "password": "james"
+    }
+  ],
+  "roles": [
+    {
+      "user_id": 1,
+      "role": 1
+    }
+  ],
+  "accounts": [
+    {
+      "user_id": 1,
+      "account_type_id": 3,
+      "name": "Checking Account",
+      "iban": "NL11XOLA6707795988"
+    }
+  ],
+  "account-meta": [
+  ],
+  "bills": [
+    {
+      "name": "Some weird weekly bill",
+      "match": "weird,weekly,bill",
+      "amount_min": 30,
+      "amount_max": 35,
+      "user_id": 1,
+      "date": "2016-06-12",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "weekly",
+      "skip": 0
+    },
+
+
+    {
+      "name": "Rent",
+      "match": "rent,land,lord",
+      "amount_min": 795,
+      "amount_max": 805,
+      "user_id": 1,
+      "date": "2015-01-02",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "monthly",
+      "skip": 0
+    },
+
+    {
+      "name": "Netflix subscription per quarter",
+      "match": "netflix,subscription",
+      "amount_min": 36,
+      "amount_max": 36,
+      "user_id": 1,
+      "date": "2016-09-06",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "quarterly",
+      "skip": 0
+    },
+
+    {
+      "name": "Travel insurance",
+      "match": "abn,travel,insurance",
+      "amount_min": 55,
+      "amount_max": 62,
+      "user_id": 1,
+      "date": "2015-03-04",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "yearly",
+      "skip": 0
+    },
+
+    {
+      "name": "Health insurance",
+      "match": "insurer,insurance,health",
+      "amount_min": 120,
+      "amount_max": 140,
+      "user_id": 1,
+      "date": "2015-01-07",
+      "active": 1,
+      "automatch": 1,
+      "repeat_freq": "monthly",
+      "skip": 0
+    }
+  ],
+  "budgets": [
+  ],
+  "budget-limits": [
+  ],
+  "monthly-limits": [
+  ],
+  "categories": [
+  ],
+  "piggy-banks": [
+  ],
+  "piggy-events": [
+  ],
+  "rule-groups": [
+  ],
+  "rules": [
+  ],
+  "rule-triggers": [
+  ],
+  "rule-actions": [
+  ],
+  "tags": [
+  ],
+  "monthly-deposits": [
+  ],
+  "monthly-transfers": [
+  ],
+  "monthly-withdrawals": [
+  ],
+  "attachments": [
+  ],
+  "multi-withdrawals": [
+  ],
+  "multi-deposits": [
+  ],
+  "multi-transfers": [
+  ],
+  "import-jobs": [],
+  "currencies": []
+}

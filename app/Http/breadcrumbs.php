@@ -25,6 +25,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 
 /**
  * HOME
@@ -112,6 +113,13 @@ Breadcrumbs::register(
     'admin.users', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('admin.index');
     $breadcrumbs->push(trans('firefly.list_all_users'), route('admin.users'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.users.show', function (BreadCrumbGenerator $breadcrumbs, User $user) {
+    $breadcrumbs->parent('admin.users');
+    $breadcrumbs->push(trans('firefly.single_user_administration', ['email' => $user->email]), route('admin.users.show', [$user->id]));
 }
 );
 
@@ -598,9 +606,9 @@ Breadcrumbs::register(
  * SPLIT
  */
 Breadcrumbs::register(
-    'split.journal.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+    'transactions.edit-split', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('split.journal.edit', [$journal->id]));
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit-split', [$journal->id]));
 }
 );
 

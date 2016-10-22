@@ -80,6 +80,7 @@ Route::group(
      * Home Controller
      */
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
+    Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'testFlash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/routes', ['uses' => 'HomeController@routes']);
@@ -183,6 +184,7 @@ Route::group(
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
     Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
+    Route::get('/chart/account/revenue', ['uses' => 'Chart\AccountController@revenueAccounts']);
     Route::get('/chart/account/report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
     Route::get('/chart/account/{account}/{date}', ['uses' => 'Chart\AccountController@specificPeriod']);
@@ -362,14 +364,6 @@ Route::group(
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 
     /**
-     * Split controller
-     */
-
-    Route::get('/transaction/create-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@create', 'as' => 'split.journal.create']);
-    Route::post('/transaction/store-split/{unfinishedJournal}', ['uses' => 'Transaction\SplitController@store', 'as' => 'split.journal.store']);
-    Route::get('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'split.journal.edit']);
-    Route::post('/transaction/edit-split/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
-    /**
      * Tag Controller
      */
     Route::get('/tags', ['uses' => 'TagController@index', 'as' => 'tags.index']);
@@ -388,28 +382,29 @@ Route::group(
     /**
      * Transaction Controller
      */
-    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::get('/transaction/edit/{tj}', ['uses' => 'TransactionController@edit', 'as' => 'transactions.edit']);
-    Route::get('/transaction/delete/{tj}', ['uses' => 'TransactionController@delete', 'as' => 'transactions.delete']);
+
+    // normal controller
+    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
     Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
-    // transaction controller:
-    Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::post('/transaction/update/{tj}', ['uses' => 'TransactionController@update', 'as' => 'transactions.update']);
-    Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
-    // mass edit and mass delete.
+    // single controller
+    Route::get('/transactions/create/{what}', ['uses' => 'Transaction\SingleController@create', 'as' => 'transactions.create'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::get('/transaction/edit/{tj}', ['uses' => 'Transaction\SingleController@edit', 'as' => 'transactions.edit']);
+    Route::get('/transaction/delete/{tj}', ['uses' => 'Transaction\SingleController@delete', 'as' => 'transactions.delete']);
+    Route::post('/transactions/store/{what}', ['uses' => 'Transaction\SingleController@store', 'as' => 'transactions.store'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::post('/transaction/update/{tj}', ['uses' => 'Transaction\SingleController@update', 'as' => 'transactions.update']);
+    Route::post('/transaction/destroy/{tj}', ['uses' => 'Transaction\SingleController@destroy', 'as' => 'transactions.destroy']);
+
+    // mass controller:
     Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'Transaction\MassController@massEdit', 'as' => 'transactions.mass-edit']);
     Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'Transaction\MassController@massDelete', 'as' => 'transactions.mass-delete']);
     Route::post('/transactions/mass-update', ['uses' => 'Transaction\MassController@massUpdate', 'as' => 'transactions.mass-update']);
     Route::post('/transactions/mass-destroy', ['uses' => 'Transaction\MassController@massDestroy', 'as' => 'transactions.mass-destroy']);
+
+    // split (will be here):
+    Route::get('/transaction/split/edit/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'transactions.edit-split']);
+    Route::post('/transaction/split/update/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
 
     /**
      * POPUP Controllers
@@ -434,6 +429,7 @@ Route::group(
     // user manager
     Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
     Route::get('/admin/users/edit/{user}', ['uses' => 'Admin\UserController@edit', 'as' => 'admin.users.edit']);
+    Route::get('/admin/users/show/{user}', ['uses' => 'Admin\UserController@show', 'as' => 'admin.users.show']);
 
     // user domains:
     Route::get('/admin/domains', ['uses' => 'Admin\DomainController@domains', 'as' => 'admin.users.domains']);

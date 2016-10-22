@@ -191,6 +191,56 @@ class AccountController extends Controller
     }
 
     /**
+     * Shows the balances for all the user's revenue accounts.
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function revenueAccounts(AccountRepositoryInterface $repository)
+    {
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        $end   = clone session('end', Carbon::now()->endOfMonth());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('revenueAccounts');
+        $cache->addProperty('accounts');
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+        $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
+
+        $start->subDay();
+        $ids           = $accounts->pluck('id')->toArray();
+        $startBalances = Steam::balancesById($ids, $start);
+        $endBalances   = Steam::balancesById($ids, $end);
+
+        $accounts->each(
+            function (Account $account) use ($startBalances, $endBalances) {
+                $id                  = $account->id;
+                $startBalance        = $startBalances[$id] ?? '0';
+                $endBalance          = $endBalances[$id] ?? '0';
+                $diff                = bcsub($endBalance, $startBalance);
+                $diff                = bcmul($diff, '-1');
+                $account->difference = round($diff, 2);
+            }
+        );
+
+
+        $accounts = $accounts->sortByDesc(
+            function (Account $account) {
+                return $account->difference;
+            }
+        );
+
+        $data = $this->generator->revenueAccounts($accounts, $start, $end);
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+    /**
      * Shows an account's balance for a single month.
      *
      * @param Account $account

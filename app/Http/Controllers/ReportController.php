@@ -153,8 +153,6 @@ class ReportController extends Controller
      */
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        /** @var ARI $repos */
-        $repos = app(ARI::class);
         /** @var AccountTaskerInterface $tasker */
         $tasker    = app(AccountTaskerInterface::class);
         $auditData = [];

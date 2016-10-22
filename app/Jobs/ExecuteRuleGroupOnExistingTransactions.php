@@ -15,7 +15,7 @@ namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -155,10 +155,10 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
      */
     protected function collectJournals()
     {
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
+        /** @var JournalTaskerInterface $tasker */
+        $tasker = app(JournalTaskerInterface::class);
 
-        return $repository->getJournalsInRange($this->accounts, $this->startDate, $this->endDate);
+        return $tasker->getJournalsInRange($this->accounts, $this->startDate, $this->endDate);
     }
 
     /**

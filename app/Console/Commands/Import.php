@@ -32,14 +32,14 @@ class Import extends Command
      *
      * @var string
      */
-    protected $description = 'Import stuff into Firefly III.';
+    protected $description = 'This will start a new import.';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly:import {key}';
+    protected $signature = 'firefly:start-import {key}';
 
     /**
      * Create a new command instance.
@@ -57,9 +57,12 @@ class Import extends Command
      */
     public function handle()
     {
+        Log::debug('Start start-import command');
         $jobKey = $this->argument('key');
         $job    = ImportJob::whereKey($jobKey)->first();
         if (!$this->isValid($job)) {
+            Log::error('Job is not valid for some reason. Exit.');
+
             return;
         }
 

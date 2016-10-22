@@ -7,217 +7,254 @@
 {% block content %}
     <form method="POST" action="{{ route('preferences.update') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'pref_home_screen_accounts'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">{{ 'pref_home_screen_accounts_help'|_ }}</p>
-                        {% for account in accounts %}
-                            <div class="form-group">
-                                <div class="col-sm-10">
-                                    <div class="checkbox">
-                                        <label>
-                                            {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
-                                                <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"
-                                                       checked> {{ account.name }}
-                                            {% else %}
-                                                <input type="checkbox" name="frontPageAccounts[]"
-                                                       value="{{ account.id }}"> {{ account.name }}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <!-- start of preferences tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#general" data-toggle="tab" aria-expanded="true">{{ 'preferences_general'|_ }}</a></li>
+                        <li class=""><a href="#frontpage" data-toggle="tab" aria-expanded="false">{{ 'preferences_frontpage'|_ }}</a></li>
+                        <li class=""><a href="#security" data-toggle="tab" aria-expanded="false">{{ 'preferences_security'|_ }}</a></li>
+                        <li class=""><a href="#layout" data-toggle="tab" aria-expanded="false">{{ 'preferences_layout'|_ }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="general">
+                            <!-- general settings here -->
+                            <div class="row">
+                                <!-- general settings column A -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <!-- language -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_languages'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
+                                        {% for key, lang in Config.get('firefly.languages') %}
+                                            {% if lang.complete == true or (lang.complete == false and showIncomplete) %}
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="language" value="{{ key }}"
+                                                                {% if language == key %}
+                                                                    checked
+                                                                {% endif %}
+                                                        />
+                                                        {{ lang.name_locale }} ({{ lang.name_english }})
+                                                        {% if lang.complete == false %}
+                                                            <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
+                                                        {% endif %}
+                                                    </label>
+                                                </div>
                                             {% endif %}
-                                        </label>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- fiscal year -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_custom_fiscal_year'|_ }}</h3>
+                                        <p class="text-info">
+                                            {{ 'pref_custom_fiscal_year_help'|_ }}
+                                        </p>
+                                        {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
+                                        {{ ExpandedForm.checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
+                                        {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
+                                    </div>
+                                </div>
+
+                                <!-- general settings column B -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                                    <!-- transaction preferences -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_optional_fields_transaction'|_ }}</h3>
+                                        <p class="text-info">
+                                            {{ 'pref_optional_fields_transaction_help'|_ }}
+                                        </p>
+                                        <h4>{{ 'optional_tj_date_fields'|_ }}</h4>
+                                        {{ ExpandedForm.checkbox('tj[interest_date]','1', tjOptionalFields.interest_date,{ 'label' : 'pref_optional_tj_interest_date'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[book_date]','1', tjOptionalFields.book_date,{ 'label' : 'pref_optional_tj_book_date'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[process_date]','1', tjOptionalFields.process_date,{ 'label' : 'pref_optional_tj_process_date'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[due_date]','1', tjOptionalFields.due_date,{ 'label' : 'pref_optional_tj_due_date'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[payment_date]','1', tjOptionalFields.payment_date,{ 'label' : 'pref_optional_tj_payment_date'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[invoice_date]','1', tjOptionalFields.invoice_date,{ 'label' : 'pref_optional_tj_invoice_date'|_ }) }}
+
+                                        <h4>{{ 'optional_tj_business_fields'|_ }}</h4>
+                                        {{ ExpandedForm.checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
+
+                                        <h4>{{ 'optional_tj_attachment_fields'|_ }}</h4>
+                                        {{ ExpandedForm.checkbox('tj[attachments]','1', tjOptionalFields.attachments,{ 'label' : 'pref_optional_tj_attachments'|_ }) }}
                                     </div>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'pref_custom_fiscal_year'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">
-                            {{ 'pref_custom_fiscal_year_help'|_ }}
-                        </p>
-                        {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
-                        {{ ExpandedForm.checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
-                        {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
-                    </div>
-                </div>
-
-                <!-- transaction preferences -->
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'pref_optional_fields_transaction'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">
-                            {{ 'pref_optional_fields_transaction_help'|_ }}
-                        </p>
-                        <h4>{{ 'optional_tj_date_fields'|_ }}</h4>
-                        {{ ExpandedForm.checkbox('tj[interest_date]','1', tjOptionalFields.interest_date,{ 'label' : 'pref_optional_tj_interest_date'|_ }) }}
-                        {{ ExpandedForm.checkbox('tj[book_date]','1', tjOptionalFields.book_date,{ 'label' : 'pref_optional_tj_book_date'|_ }) }}
-                        {{ ExpandedForm.checkbox('tj[process_date]','1', tjOptionalFields.process_date,{ 'label' : 'pref_optional_tj_process_date'|_ }) }}
-                        {{ ExpandedForm.checkbox('tj[due_date]','1', tjOptionalFields.due_date,{ 'label' : 'pref_optional_tj_due_date'|_ }) }}
-                        {{ ExpandedForm.checkbox('tj[payment_date]','1', tjOptionalFields.payment_date,{ 'label' : 'pref_optional_tj_payment_date'|_ }) }}
-                        {{ ExpandedForm.checkbox('tj[invoice_date]','1', tjOptionalFields.invoice_date,{ 'label' : 'pref_optional_tj_invoice_date'|_ }) }}
-
-                        <h4>{{ 'optional_tj_business_fields'|_ }}</h4>
-                        {{ ExpandedForm.checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
-                        {{ ExpandedForm.checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
-
-                        <h4>{{ 'optional_tj_attachment_fields'|_ }}</h4>
-                        {{ ExpandedForm.checkbox('tj[attachments]','1', tjOptionalFields.attachments,{ 'label' : 'pref_optional_tj_attachments'|_ }) }}
-
-
-                    </div>
-                </div>
-
-
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'pref_view_range'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">{{ 'pref_view_range_help'|_ }}</p>
-
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="viewRange"
-                                       value="1D" {% if viewRange == '1D' %} checked {% endif %}>
-                                {{ 'pref_1D'|_ }}
-                            </label>
                         </div>
-
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="viewRange"
-                                       value="1W" {% if viewRange == '1W' %} checked {% endif %}>
-                                {{ 'pref_1W'|_ }}
-                            </label>
-                        </div>
-
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="viewRange"
-                                       value="1M" {% if viewRange == '1M' %} checked {% endif %}>
-                                {{ 'pref_1M'|_ }}
-                            </label>
-                        </div>
-
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="viewRange"
-                                       value="3M" {% if viewRange == '3M' %} checked {% endif %}>
-                                {{ 'pref_3M'|_ }}
-                            </label>
-                        </div>
-
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="viewRange"
-                                       value="6M" {% if viewRange == '6M' %} checked {% endif %}>
-                                {{ 'pref_6M'|_ }}
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="viewRange"
-                                       value="1Y" {% if viewRange == '1Y' %} checked {% endif %}>
-                                {{ 'pref_1Y'|_ }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'pref_languages'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
-                        {% for key, lang in Config.get('firefly.languages') %}
-                            {% if lang.complete == true or (lang.complete == false and showIncomplete) %}
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="language" value="{{ key }}"
-                                                {% if language == key %}
-                                                    checked
-                                                {% endif %}
-                                        />
-                                        {{ lang.name_locale }} ({{ lang.name_english }})
-                                        {% if lang.complete == false %}
-                                            <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
-                                        {% endif %}
-                                    </label>
+                        <div class="tab-pane" id="frontpage">
+                            <!-- frontpage settings here -->
+                            <div class="row">
+                                <!-- frontpage settings column a -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_home_screen_accounts'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_home_screen_accounts_help'|_ }}</p>
+                                        {% for account in accounts %}
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
+                                                                <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"
+                                                                       checked> {{ account.name }}
+                                                            {% else %}
+                                                                <input type="checkbox" name="frontPageAccounts[]"
+                                                                       value="{{ account.id }}"> {{ account.name }}
+                                                            {% endif %}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- page size -->
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'transaction_page_size_title'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">{{ 'transaction_page_size_help'|_ }}</p>
-                        {{ ExpandedForm.integer('transactionPageSize',transactionPageSize,{'label' : 'transaction_page_size_label'|_}) }}
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'pref_two_factor_auth'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
-                        <div class="form-group">
-                            <div class="col-sm-10">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="twoFactorAuthEnabled" value="1"
-                                                {% if is2faEnabled == '1' %} checked {% endif %}> {{ 'pref_enable_two_factor_auth'|_ }}
-                                    </label>
+                                <!-- frontpage settings column b -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <!-- show deposit chart -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_home_show_deposits'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_home_show_deposits_info'|_ }}</p>
+                                        <div class="form-group">
+                                            <div class="col-sm-10">
+                                                <div class="checkbox">
+                                                    <label>
+                                                            <input type="checkbox" name="showDepositsFrontpage[]" value="{{ showDepositsFrontpage }}"
+                                                                   {% if showDepositsFrontpage %}
+                                                                    checked
+                                                                   {% endif %}
+                                                                   > {{ 'pref_home_do_show_deposits'|_ }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="tab-pane" id="security">
+                            <!-- security settings here -->
+                            <div class="row">
+                                <!-- security settings column A -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
-                            {% if is2faEnabled == 1 and has2faSecret == true %}
+                                    <!-- 2fa -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_two_factor_auth'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
+                                        <div class="form-group">
+                                            <div class="col-sm-10">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="twoFactorAuthEnabled" value="1"
+                                                                {% if is2faEnabled == '1' %} checked {% endif %}> {{ 'pref_enable_two_factor_auth'|_ }}
+                                                    </label>
+                                                </div>
+                                            </div>
 
-                                <div class="col-sm-10">
-                                    <div class="checkbox">
-                                        <label>
-                                            <a href="{{ route('preferences.code') }}">{{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <a href="{{ route('preferences.delete-code') }}">{{ 'pref_two_factor_auth_remove_code'|_ }}</a>
-                                            {{ 'pref_two_factor_auth_remove_will_disable'|_ }}
-                                        </label>
+                                            {% if is2faEnabled == 1 and has2faSecret == true %}
+
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <a href="{{ route('preferences.code') }}">{{ 'pref_two_factor_auth_reset_code'|_ }}</a>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <a href="{{ route('preferences.delete-code') }}">{{ 'pref_two_factor_auth_remove_code'|_ }}</a>
+                                                            {{ 'pref_two_factor_auth_remove_will_disable'|_ }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
                                     </div>
                                 </div>
-                            {% endif %}
 
+                                <!-- security settings column B -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="layout">
+                            <!-- layout settings here -->
+                            <div class="row">
+                                <!-- layout settings column A -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <!-- view range -->
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_view_range'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_view_range_help'|_ }}</p>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="1D" {% if viewRange == '1D' %} checked {% endif %}>
+                                                {{ 'pref_1D'|_ }}
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="1W" {% if viewRange == '1W' %} checked {% endif %}>
+                                                {{ 'pref_1W'|_ }}
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="1M" {% if viewRange == '1M' %} checked {% endif %}>
+                                                {{ 'pref_1M'|_ }}
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="3M" {% if viewRange == '3M' %} checked {% endif %}>
+                                                {{ 'pref_3M'|_ }}
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="6M" {% if viewRange == '6M' %} checked {% endif %}>
+                                                {{ 'pref_6M'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="1Y" {% if viewRange == '1Y' %} checked {% endif %}>
+                                                {{ 'pref_1Y'|_ }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- end -->
+                                </div>
+
+                                <!-- layout settings column B -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="preferences-box">
+                                        <h3>{{ 'transaction_page_size_title'|_ }}</h3>
+                                        <p class="text-info">{{ 'transaction_page_size_help'|_ }}</p>
+                                        {{ ExpandedForm.integer('transactionPageSize',transactionPageSize,{'label' : 'transaction_page_size_label'|_}) }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">

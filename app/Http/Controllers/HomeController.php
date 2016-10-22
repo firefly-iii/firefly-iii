@@ -138,9 +138,10 @@ class HomeController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->endOfMonth());
-        $showTour = Preferences::get('tour', true)->data;
-        $accounts = $repository->getAccountsById($frontPage->data);
+        $end                   = session('end', Carbon::now()->endOfMonth());
+        $showTour              = Preferences::get('tour', true)->data;
+        $accounts              = $repository->getAccountsById($frontPage->data);
+        $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
         foreach ($accounts as $account) {
             $set = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
@@ -152,7 +153,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions')
+            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage')
         );
     }
 
@@ -195,6 +196,18 @@ class HomeController extends Controller
         return '<hr>';
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function testFlash()
+    {
+        Session::flash('success', 'This is a success message.');
+        Session::flash('info', 'This is an info message.');
+        Session::flash('warning', 'This is a warning.');
+        Session::flash('error', 'This is an error!');
+
+        return redirect(route('home'));
+    }
 
     /**
      * @param array  $array

@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Events\UserIsDeleted;
+use FireflyIII\Events\DeletedUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\User;
@@ -35,6 +35,9 @@ class ProfileController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        View::share('title', trans('firefly.profile'));
+        View::share('mainTitleIcon', 'fa-user');
     }
 
     /**
@@ -63,7 +66,10 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('profile.index')->with('title', trans('firefly.profile'))->with('subTitle', auth()->user()->email)->with('mainTitleIcon', 'fa-user');
+        $subTitle = auth()->user()->email;
+        $userId   = auth()->user()->id;
+
+        return view('profile.index', compact('subTitle', 'userId'));
     }
 
     /**
@@ -109,9 +115,6 @@ class ProfileController extends Controller
 
             return redirect(route('profile.delete-account'));
         }
-
-        // respond to deletion:
-        event(new UserIsDeleted(auth()->user(), $request->ip()));
 
         // store some stuff for the future:
         $registration = Preferences::get('registration_ip_address')->data;

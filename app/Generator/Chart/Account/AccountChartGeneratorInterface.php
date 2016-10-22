@@ -24,7 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountChartGeneratorInterface
 {
-
     /**
      * @param Collection $accounts
      * @param Carbon     $start
@@ -42,6 +41,15 @@ interface AccountChartGeneratorInterface
      * @return array
      */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function revenueAccounts(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Account $account

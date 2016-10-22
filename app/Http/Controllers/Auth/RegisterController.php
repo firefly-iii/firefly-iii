@@ -14,7 +14,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
 use Config;
-use FireflyIII\Events\UserRegistration;
+use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
@@ -102,7 +102,7 @@ class RegisterController extends Controller
         $user = $this->create($request->all());
 
         // trigger user registration event:
-        event(new UserRegistration($user, $request->ip()));
+        event(new RegisteredUser($user, $request->ip()));
 
         Auth::login($user);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetLimitStored.php
+ * UpdatedBudgetLimit.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -18,11 +18,11 @@ use FireflyIII\Models\BudgetLimit;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class BudgetLimitStored
+ * Class UpdatedBudgetLimit
  *
  * @package FireflyIII\Events
  */
-class BudgetLimitStored extends Event
+class UpdatedBudgetLimit extends Event
 {
 
     use SerializesModels;

@@ -15,7 +15,7 @@ namespace FireflyIII\Rules;
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -31,8 +31,8 @@ class TransactionMatcher
     private $limit = 10;
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
     private $range = 200;
-    /** @var  JournalRepositoryInterface */
-    private $repository;
+    /** @var  JournalTaskerInterface */
+    private $tasker;
     /** @var array */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
@@ -41,11 +41,11 @@ class TransactionMatcher
     /**
      * TransactionMatcher constructor. Typehint the repository.
      *
-     * @param JournalRepositoryInterface $repository
+     * @param JournalTaskerInterface $tasker
      */
-    public function __construct(JournalRepositoryInterface $repository)
+    public function __construct(JournalTaskerInterface $tasker)
     {
-        $this->repository = $repository;
+        $this->tasker = $tasker;
 
     }
 
@@ -76,7 +76,7 @@ class TransactionMatcher
         //   - the maximum number of transactions to search in have been searched 
         do {
             // Fetch a batch of transactions from the database
-            $paginator = $this->repository->getJournals($this->transactionTypes, $page, $pagesize);
+            $paginator = $this->tasker->getJournals($this->transactionTypes, $page, $pagesize);
             $set       = $paginator->getCollection();
 
 

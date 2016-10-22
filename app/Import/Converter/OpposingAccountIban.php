@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Import\Converter;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
@@ -69,11 +70,20 @@ class OpposingAccountIban extends BasicConverter implements ConverterInterface
             return $account;
         }
 
-        $account = $repository->store(
-            ['name'           => $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'import', 'virtualBalance' => 0, 'active' => true,
-             'openingBalance' => 0]
-        );
-        $this->setCertainty(100);
+        // the IBAN given may not be a valid IBAN. If not, we cannot store by
+        // iban and we have no opposing account. There should be some kind of fall back
+        // routine.
+        try {
+            $account = $repository->store(
+                ['name'           => $value, 'iban' => $value, 'user' => $this->user->id, 'accountType' => 'import', 'virtualBalance' => 0, 'active' => true,
+                 'openingBalance' => 0]
+            );
+            $this->setCertainty(100);
+        } catch (FireflyException $e) {
+            Log::error($e);
+
+            $account = new Account;
+        }
 
         return $account;
     }

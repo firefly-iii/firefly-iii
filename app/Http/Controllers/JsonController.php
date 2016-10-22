@@ -20,7 +20,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Input;
@@ -270,17 +270,17 @@ class JsonController extends Controller
     }
 
     /**
-     * @param JournalRepositoryInterface $repository
+     * @param JournalTaskerInterface     $tasker
      * @param                            $what
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function transactionJournals(JournalRepositoryInterface $repository, $what)
+    public function transactionJournals(JournalTaskerInterface $tasker, $what)
     {
         $descriptions = [];
         $type         = config('firefly.transactionTypesByWhat.' . $what);
         $types        = [$type];
-        $journals     = $repository->getJournals($types, 1, 50);
+        $journals     = $tasker->getJournals($types, 1, 50);
         foreach ($journals as $j) {
             $descriptions[] = $j->description;
         }

@@ -132,24 +132,22 @@ interface BillRepositoryInterface
     public function getOverallAverage($bill): string;
 
     /**
-     * @param Bill $bill
-     *
-     * @return Collection
-     */
-    public function getPossiblyRelatedJournals(Bill $bill): Collection;
-
-    /**
-     * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
-     * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
-     * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill (from the 14th to the 31th).
+     * Between start and end, tells you on which date(s) the bill is expected to hit.
      *
      * @param Bill   $bill
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return array
+     * @return Collection
      */
-    public function getRanges(Bill $bill, Carbon $start, Carbon $end): array;
+    public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getPossiblyRelatedJournals(Bill $bill): Collection;
 
     /**
      * @param Bill   $bill
@@ -168,11 +166,23 @@ interface BillRepositoryInterface
 
 
     /**
-     * @param Bill $bill
+     * Given a bill and a date, this method will tell you at which moment this bill expects its next
+     * transaction. Whether or not it is there already, is not relevant.
+     *
+     * @param Bill   $bill
+     * @param Carbon $date
      *
      * @return \Carbon\Carbon
      */
-    public function nextExpectedMatch(Bill $bill): Carbon;
+    public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
+
+    /**
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return \Carbon\Carbon
+     */
+    public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon;
 
     /**
      * @param Bill               $bill

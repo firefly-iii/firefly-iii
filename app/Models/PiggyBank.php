@@ -56,6 +56,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @mixin \Eloquent
  * @property boolean                                                             $active
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
  */
 class PiggyBank extends Model
 {
@@ -144,6 +145,14 @@ class PiggyBank extends Model
 
         return $balance;
 
+    }
+
+    /**
+     * Get all of the piggy bank's notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
     }
 
     /**

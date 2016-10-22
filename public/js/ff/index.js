@@ -37,6 +37,7 @@ function drawChart() {
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart', {beforeDraw: beforeDrawIsEmpty});
     columnChart('chart/category/frontpage', 'categories-chart', {beforeDraw: beforeDrawIsEmpty});
     columnChart('chart/account/expense', 'expense-accounts-chart', {beforeDraw: beforeDrawIsEmpty});
+    columnChart('chart/account/revenue', 'revenue-accounts-chart', {beforeDraw: beforeDrawIsEmpty});
 
 
     getBoxAmounts();
