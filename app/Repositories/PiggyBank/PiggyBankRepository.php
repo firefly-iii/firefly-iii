@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use Amount;
 use Carbon\Carbon;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\User;
@@ -176,6 +177,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $piggyBank = PiggyBank::create($data);
 
+        $this->updateNote($piggyBank, $data['note']);
+
         return $piggyBank;
     }
 
@@ -196,6 +199,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         $piggyBank->save();
 
+        $this->updateNote($piggyBank, $data['note']);
+
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $piggyBank->currentRelevantRep();
@@ -209,5 +214,32 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return $piggyBank;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $note
+     *
+     * @return bool
+     */
+    private function updateNote(PiggyBank $piggyBank, string $note): bool
+    {
+        if (strlen($note) === 0) {
+            $dbNote = $piggyBank->notes()->first();
+            if (!is_null($dbNote)) {
+                $dbNote->delete();
+            }
+
+            return true;
+        }
+        $dbNote= $piggyBank->notes()->first();
+        if (is_null($dbNote)) {
+            $dbNote= new Note();
+            $dbNote->noteable()->associate($piggyBank);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
     }
 }

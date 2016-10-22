@@ -168,6 +168,7 @@ class PiggyBankController extends Controller
                       'account_id'   => $piggyBank->account_id,
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
+                      'note'         => $piggyBank->notes()->first()->text,
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'piggy-banks');
@@ -346,10 +347,11 @@ class PiggyBankController extends Controller
      */
     public function show(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
+        $note     = $piggyBank->notes()->first();
         $events   = $repository->getEvents($piggyBank);
         $subTitle = e($piggyBank->name);
 
-        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle'));
+        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'note'));
 
     }
 
@@ -369,6 +371,7 @@ class PiggyBankController extends Controller
             'targetamount' => round($request->get('targetamount'), 2),
             'order'        => $repository->getMaxOrder() + 1,
             'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
+            'note'         => $request->get('note'),
         ];
 
         $piggyBank = $repository->store($piggyBankData);
@@ -402,6 +405,7 @@ class PiggyBankController extends Controller
             'account_id'   => intval($request->get('account_id')),
             'targetamount' => round($request->get('targetamount'), 2),
             'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
+            'note'         => $request->get('note'),
         ];
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
