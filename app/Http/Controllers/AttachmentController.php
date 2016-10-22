@@ -164,14 +164,8 @@ class AttachmentController extends Controller
      */
     public function update(AttachmentFormRequest $request, AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
-
-        $attachmentData = [
-            'title'       => $request->input('title'),
-            'description' => $request->input('description'),
-            'notes'       => $request->input('notes'),
-        ];
-
-        $repository->update($attachment, $attachmentData);
+        $data = $request->getAttachmentData();
+        $repository->update($attachment, $data);
 
         Session::flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();

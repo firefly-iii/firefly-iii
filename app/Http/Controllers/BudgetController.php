@@ -359,11 +359,8 @@ class BudgetController extends Controller
      */
     public function store(BudgetFormRequest $request, BudgetRepositoryInterface $repository)
     {
-        $budgetData = [
-            'name' => $request->input('name'),
-            'user' => auth()->user()->id,
-        ];
-        $budget     = $repository->store($budgetData);
+        $data = $request->getBudgetData();
+        $budget     = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
         Preferences::mark();
@@ -389,12 +386,8 @@ class BudgetController extends Controller
      */
     public function update(BudgetFormRequest $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $budgetData = [
-            'name'   => $request->input('name'),
-            'active' => intval($request->input('active')) == 1,
-        ];
-
-        $repository->update($budget, $budgetData);
+        $data = $request->getBudgetData();
+        $repository->update($budget, $data);
 
         Session::flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
         Preferences::mark();

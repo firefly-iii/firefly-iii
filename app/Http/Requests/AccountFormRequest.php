@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Input;
 
@@ -31,6 +32,29 @@ class AccountFormRequest extends Request
     {
         // Only allow logged in users
         return auth()->check();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAccountData(): array
+    {
+        return [
+            'name'                   => trim($this->input('name')),
+            'active'                 => intval($this->input('active')) === 1,
+            'accountType'            => $this->input('what'),
+            'virtualBalance'         => round($this->input('virtualBalance'), 2),
+            'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
+            'user'                   => auth()->user()->id,
+            'iban'                   => trim($this->input('iban')),
+            'accountNumber'          => trim($this->input('accountNumber')),
+            'accountRole'            => $this->input('accountRole'),
+            'openingBalance'         => round($this->input('openingBalance'), 2),
+            'openingBalanceDate'     => new Carbon((string)$this->input('openingBalanceDate')),
+            'openingBalanceCurrency' => intval($this->input('amount_currency_id_openingBalance')),
+            'ccType'                 => $this->input('ccType'),
+            'ccMonthlyPaymentDate'   => $this->input('ccMonthlyPaymentDate'),
+        ];
     }
 
     /**

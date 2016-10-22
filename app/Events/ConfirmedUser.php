@@ -29,7 +29,7 @@ class ConfirmedUser extends Event
     public $user;
 
     /**
-     * Create a new event instance.
+     * Create a new event instance. This event is triggered when a user confirms their new account.
      *
      * @param  User  $user
      * @param string $ipAddress
