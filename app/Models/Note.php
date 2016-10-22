@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use League\CommonMark\CommonMarkConverter;
 
 
 /**
@@ -42,6 +43,18 @@ class Note extends Model
 {
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['title', 'text'];
+
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getMarkdownAttribute(): string
+    {
+        $converter  = new CommonMarkConverter;
+        return $converter->convertToHtml($this->text);
+    }
 
     /**
      * Get all of the owning noteable models. Currently only piggy bank

@@ -17,13 +17,11 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
-use League\CommonMark\CommonMarkConverter;
 use Log;
 use Preferences;
 use Session;
@@ -349,11 +347,7 @@ class PiggyBankController extends Controller
      */
     public function show(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        /** @var Note $note */
-        $note       = $piggyBank->notes()->first();
-        $converter  = new CommonMarkConverter;
-        $note->text = $converter->convertToHtml($note->text);
-
+        $note     = $piggyBank->notes()->first();
         $events   = $repository->getEvents($piggyBank);
         $subTitle = e($piggyBank->name);
 
