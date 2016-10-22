@@ -19,7 +19,6 @@ use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
@@ -97,7 +96,7 @@ class Processor
     public function collectJournals(): bool
     {
         /** @var JournalTaskerInterface $tasker */
-        $tasker = app(JournalTaskerInterface::class);
+        $tasker         = app(JournalTaskerInterface::class);
         $this->journals = $tasker->getJournalsInRange($this->accounts, $this->settings['startDate'], $this->settings['endDate']);
 
         return true;

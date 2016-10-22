@@ -205,6 +205,7 @@ class HomeController extends Controller
         Session::flash('info', 'This is an info message.');
         Session::flash('warning', 'This is a warning.');
         Session::flash('error', 'This is an error!');
+
         return redirect(route('home'));
     }
 

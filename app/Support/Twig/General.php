@@ -16,7 +16,6 @@ namespace FireflyIII\Support\Twig;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Route;
 use Twig_Extension;

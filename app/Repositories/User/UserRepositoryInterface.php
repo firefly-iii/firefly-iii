@@ -32,22 +32,6 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
-     * @param int $userId
-     *
-     * @return User
-     */
-    public function find(int $userId): User;
-
-    /**
-     * Return basic user information.
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    public function getUserData(User $user): array;
-
-    /**
      * Gives a user a role.
      *
      * @param User   $user
@@ -63,4 +47,20 @@ interface UserRepositoryInterface
      * @return int
      */
     public function count(): int;
+
+    /**
+     * @param int $userId
+     *
+     * @return User
+     */
+    public function find(int $userId): User;
+
+    /**
+     * Return basic user information.
+     *
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getUserData(User $user): array;
 }

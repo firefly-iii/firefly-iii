@@ -62,6 +62,7 @@ class Import extends Command
         $job    = ImportJob::whereKey($jobKey)->first();
         if (!$this->isValid($job)) {
             Log::error('Job is not valid for some reason. Exit.');
+
             return;
         }
 

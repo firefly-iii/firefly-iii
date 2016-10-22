@@ -55,7 +55,7 @@ class Transaction extends Model
 {
 
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
-    protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount','identifier'];
+    protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier'];
     protected $hidden   = ['encrypted'];
     protected $rules
                         = [

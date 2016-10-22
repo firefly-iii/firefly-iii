@@ -267,7 +267,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->description             = $data['journal_description'];
         $journal->date                    = $data['date'];
         $journal->save();
-        
+
         // unlink all categories:
         $journal->categories()->detach();
         $journal->budgets()->detach();

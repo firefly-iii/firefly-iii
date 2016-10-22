@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Console\Commands;
 
 use Artisan;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
