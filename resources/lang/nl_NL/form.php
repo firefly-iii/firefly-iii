@@ -35,6 +35,7 @@ return [
     'asset_destination_account'      => 'Betaalrekening (doel)',
     'asset_source_account'           => 'Betaalrekening (bron)',
     'journal_description'            => 'Omschrijving',
+    'note'                           => 'Notities',
     'split_journal'                  => 'Splits deze transactie',
     'split_journal_explanation'      => 'Splits deze transactie in meerdere stukken',
     'currency'                       => 'Valuta',
