@@ -2,7 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1] - 2016-10-22
+### Added
+- Option to show deposit accounts on the front page.
+- Script to upgrade split transactions
+- Can now save notes on piggy banks.
+- Extend user admin options.
+- Run import jobs from the command line
 
+
+### Changed
+- New preferences screen layout.
+
+### Deprecated
+- ``firefly:import`` is now ``firefly:start-import``
+
+### Removed
+- Lots of old code
+
+### Fixed
+- #357, where non utf-8 files would break Firefly.
+- Tab delimiter is not properly loaded from import configuration (@roberthorlings)
+- System response to yearly bills
 
 ## [4.0.2] - 2016-10-14
 ### Added
