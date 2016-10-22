@@ -37,7 +37,7 @@ class AccountFormRequest extends Request
     /**
      * @return array
      */
-    public function getAccountDate(): array
+    public function getAccountData(): array
     {
         return [
             'name'                   => trim($this->input('name')),

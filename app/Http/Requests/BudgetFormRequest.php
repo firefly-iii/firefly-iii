@@ -29,8 +29,19 @@ class BudgetFormRequest extends Request
      */
     public function authorize()
     {
-        // Only allow logged in users
         return auth()->check();
+    }
+
+    /**
+     * @return array
+     */
+    public function getBudgetData(): array
+    {
+        return [
+            'name'   => trim($this->input('name')),
+            'user'   => auth()->user()->id,
+            'active' => intval($this->input('active')) == 1,
+        ];
     }
 
     /**
