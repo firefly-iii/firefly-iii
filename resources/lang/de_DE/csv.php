@@ -14,12 +14,12 @@ declare(strict_types = 1);
 return [
 
     'import_configure_title' => 'Konfigurieren Sie Ihren Import',
-    'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
+    'import_configure_intro' => 'Es gibt einige Optionen für Ihren CSV-Import. Bitte geben Sie an, ob Ihre CSV-Datei Überschriften in der ersten Spalte enthält und was das Datumsformat in Ihrem Datumsfeld ist. Dieses kann einige Experimente erfordern. Das Trennzeichen ist in der Regel ein ",", könnte aber auch ein "." sein. Bitte überprüfen Sie dieses sorgfältig.',
     'import_configure_form'  => 'Formular',
     'header_help'            => 'Hier auswählen, wenn die ersten Zeilen der CSV-Datei die Spaltenüberschriften sind',
-    'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'import_account_help'    => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'date_help'              => 'Datumsformat in ihrer CSV-Datei. Geben Sie das Format so an, wie es <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">diese Seite</a> zeigt. Die Standardeinstellung ergibt Daten die so aussehen: :dateExample.',
+    'delimiter_help'         => 'Wählen Sie das Trennzeichen, welches in ihrer Datei genutzt wird. Wenn Sie nicht sicher sind ist Komma die sicherste Option.',
+    'import_account_help'    => 'Wenn ihre CSV-Datei KEINE Informationen über ihre Girokonten enthält nutzen Sie bitte diese Dropdown-Liste um anzugeben, zu welchem Girokonto die Transaktionen in de CSV-Datei gehören.',
     'upload_not_writeable'   => 'Das graue Feld enthält einen Dateipfad. Dieser sollte schreibbar sein. Bitte stellen Sie sicher, dass er es ist.',
 
     // roles

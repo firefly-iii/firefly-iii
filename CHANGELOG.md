@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.1] - 2016-10-22
+## [4.1.1] - 2016-10-22
 ### Added
 - Option to show deposit accounts on the front page.
 - Script to upgrade split transactions

@@ -35,6 +35,7 @@ return [
     'asset_destination_account'      => '資產帳戶 （目標）',
     'asset_source_account'           => '資產帳戶 （來源）',
     'journal_description'            => '描述',
+    'note'                           => 'Notes',
     'split_journal'                  => '分割此交易',
     'split_journal_explanation'      => '分割這個交易為幾個部分',
     'currency'                       => '貨幣',

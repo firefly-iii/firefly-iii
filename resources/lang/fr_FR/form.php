@@ -35,6 +35,7 @@ return [
     'asset_destination_account'      => 'Compte d’actif (destination)',
     'asset_source_account'           => 'Compte d’actif (source)',
     'journal_description'            => 'Description',
+    'note'                           => 'Notes',
     'split_journal'                  => 'Ventiler cette opération',
     'split_journal_explanation'      => 'Diviser cette opération en plusieurs parties',
     'currency'                       => 'Devise',

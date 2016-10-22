@@ -35,6 +35,7 @@ return [
     'asset_destination_account'      => 'Girokonto (Ziel)',
     'asset_source_account'           => 'Girokonto (Quelle)',
     'journal_description'            => 'Beschreibung',
+    'note'                           => 'Notes',
     'split_journal'                  => 'Diese Überweisung aufteilen',
     'split_journal_explanation'      => 'Diese Überweisung in mehrere Teile aufteilen',
     'currency'                       => 'Währung',
@@ -140,11 +141,11 @@ return [
     // import
     'import_file'                    => 'Datei importieren',
     'configuration_file'             => 'Konfigurationsdatei',
-    'import_file_type'               => 'Import file type',
+    'import_file_type'               => 'Import-Dateityp',
     'csv_comma'                      => 'Ein Komma (,)',
     'csv_semicolon'                  => 'Ein Semikolon (;)',
     'csv_tab'                        => 'Ein Tab (unsichtbar)',
-    'csv_delimiter'                  => 'CSV field delimiter',
+    'csv_delimiter'                  => 'CSV-Trennzeichen',
     'csv_import_account'             => 'Standard Import-Konto',
     'csv_config'                     => 'CSV-Import Einstellungen',
 
