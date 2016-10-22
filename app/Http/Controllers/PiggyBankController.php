@@ -157,6 +157,7 @@ class PiggyBankController extends Controller
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;
+        $note         = $piggyBank->notes()->first();
         /*
          * Flash some data to fill the form.
          */
@@ -168,7 +169,7 @@ class PiggyBankController extends Controller
                       'account_id'   => $piggyBank->account_id,
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
-                      'note'         => $piggyBank->notes()->first()->text,
+                      'note'         => is_null($note) ? '' : $note->text,
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'piggy-banks');
