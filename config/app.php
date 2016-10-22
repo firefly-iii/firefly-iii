@@ -188,8 +188,8 @@ return [
 
 
         // own stuff:
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
+//        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+//        Barryvdh\Debugbar\ServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         TwigBridge\ServiceProvider::class,
         'PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider',
