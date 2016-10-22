@@ -372,7 +372,7 @@ class BillRepository implements BillRepositoryInterface
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
             Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             /*
-             * If $nextExpectedMatch is after $end, we continue:
+             * If nextExpectedMatch is after end, we continue:
              */
             if ($nextExpectedMatch > $end) {
                 Log::debug(
@@ -482,7 +482,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextDateMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            //return $cache->get();
+            return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
@@ -519,7 +519,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            //return $cache->get();
+            return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;

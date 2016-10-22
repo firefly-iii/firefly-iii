@@ -43,18 +43,18 @@ class SplitController extends Controller
 
     /** @var  AccountRepositoryInterface */
     private $accounts;
+
     /** @var AttachmentHelperInterface */
     private $attachments;
+
     /** @var  BudgetRepositoryInterface */
     private $budgets;
+
     /** @var CurrencyRepositoryInterface */
     private $currencies;
 
     /** @var JournalTaskerInterface */
     private $tasker;
-    //
-    //    /** @var  PiggyBankRepositoryInterface */
-    //    private $piggyBanks;
 
     /**
      *
@@ -68,10 +68,9 @@ class SplitController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->accounts = app(AccountRepositoryInterface::class);
-                $this->budgets  = app(BudgetRepositoryInterface::class);
-                $this->tasker   = app(JournalTaskerInterface::class);
-                //                $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
+                $this->accounts    = app(AccountRepositoryInterface::class);
+                $this->budgets     = app(BudgetRepositoryInterface::class);
+                $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
 
@@ -157,7 +156,7 @@ class SplitController extends Controller
     }
 
     /**
-     * @param Request            $request
+     * @param Request $request
      *
      * @return array
      */

@@ -92,16 +92,16 @@ class UserController extends Controller
         $subTitleIcon  = 'fa-user';
 
         // get IP info:
-        $defaultIp              = '0.0.0.0';
-        $registrationPreference = Preferences::getForUser($user, 'registration_ip_address');
-        $registration           = $defaultIp;
-        $confirmationPreference = Preferences::getForUser($user, 'confirmation_ip_address');
-        $confirmation           = $defaultIp;
-        if (!is_null($registrationPreference)) {
-            $registration = $registrationPreference->data;
+        $defaultIp    = '0.0.0.0';
+        $regPref      = Preferences::getForUser($user, 'registration_ip_address');
+        $registration = $defaultIp;
+        $conPref      = Preferences::getForUser($user, 'confirmation_ip_address');
+        $confirmation = $defaultIp;
+        if (!is_null($regPref)) {
+            $registration = $regPref->data;
         }
-        if (!is_null($confirmationPreference)) {
-            $confirmation = $confirmationPreference->data;
+        if (!is_null($conPref)) {
+            $confirmation = $conPref->data;
         }
 
         $registrationHost = '';
