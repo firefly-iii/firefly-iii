@@ -29,7 +29,7 @@ class ResentConfirmation extends Event
     public $user;
 
     /**
-     * Create a new event instance.
+     * Create a new event instance. This event is triggered when a users wants a new confirmation.
      *
      * @param  User  $user
      * @param string $ipAddress

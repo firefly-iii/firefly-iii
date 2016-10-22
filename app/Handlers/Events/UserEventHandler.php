@@ -63,7 +63,7 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function onUserLogout(): bool
+    public function logoutUser(): bool
     {
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');

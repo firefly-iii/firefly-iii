@@ -76,7 +76,7 @@ class BudgetEventHandler
      *
      * @return bool
      */
-    public function update(UpdatedBudgetLimit $event): bool
+    public function updateRepetition(UpdatedBudgetLimit $event): bool
     {
         $budgetLimit = $event->budgetLimit;
         $end         = $event->end;
