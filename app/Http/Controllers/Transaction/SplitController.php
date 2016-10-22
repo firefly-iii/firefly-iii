@@ -126,7 +126,7 @@ class SplitController extends Controller
      */
     public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
-        $data    = $this->arrayFromInput($request, $journal);
+        $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
 
         // save attachments:
@@ -158,18 +158,17 @@ class SplitController extends Controller
 
     /**
      * @param Request            $request
-     * @param TransactionJournal $journal
      *
      * @return array
      */
-    private function arrayFromInput(Request $request, TransactionJournal $journal): array
+    private function arrayFromInput(Request $request): array
     {
         $array = [
             'journal_description'            => $request->get('journal_description'),
             'journal_source_account_id'      => $request->get('journal_source_account_id'),
             'journal_source_account_name'    => $request->get('journal_source_account_name'),
             'journal_destination_account_id' => $request->get('journal_destination_account_id'),
-            'currency_id'        => $request->get('currency_id'),
+            'currency_id'                    => $request->get('currency_id'),
             'what'                           => $request->get('what'),
             'date'                           => $request->get('date'),
             // all custom fields:

@@ -86,10 +86,10 @@ class UserController extends Controller
      */
     public function show(UserRepositoryInterface $repository, User $user)
     {
-        $title                  = strval(trans('firefly.administration'));
-        $mainTitleIcon          = 'fa-hand-spock-o';
-        $subTitle               = strval(trans('firefly.single_user_administration', ['email' => $user->email]));
-        $subTitleIcon           = 'fa-user';
+        $title         = strval(trans('firefly.administration'));
+        $mainTitleIcon = 'fa-hand-spock-o';
+        $subTitle      = strval(trans('firefly.single_user_administration', ['email' => $user->email]));
+        $subTitleIcon  = 'fa-user';
 
         // get IP info:
         $defaultIp              = '0.0.0.0';

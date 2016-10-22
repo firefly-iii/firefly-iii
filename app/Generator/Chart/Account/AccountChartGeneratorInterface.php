@@ -31,15 +31,6 @@ interface AccountChartGeneratorInterface
      *
      * @return array
      */
-    public function revenueAccounts(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
     public function expenseAccounts(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
@@ -50,6 +41,15 @@ interface AccountChartGeneratorInterface
      * @return array
      */
     public function frontpage(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function revenueAccounts(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Account $account

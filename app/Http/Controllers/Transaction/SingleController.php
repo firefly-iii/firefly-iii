@@ -284,10 +284,11 @@ class SingleController extends Controller
     }
 
     /**
-     * @param JournalFormRequest $request
-     * @param TransactionJournal $journal
+     * @param JournalFormRequest         $request
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {

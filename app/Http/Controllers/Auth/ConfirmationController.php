@@ -13,8 +13,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use FireflyIII\Events\ResentConfirmation;
 use FireflyIII\Events\ConfirmedUser;
+use FireflyIII\Events\ResentConfirmation;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\Request;

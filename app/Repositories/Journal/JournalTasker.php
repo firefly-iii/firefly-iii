@@ -159,7 +159,8 @@ class JournalTasker implements JournalTaskerInterface
          *
          * from transactions as source
          *
-         * left join transactions as destination ON source.transaction_journal_id = destination.transaction_journal_id AND source.amount = destination.amount * -1 AND source.identifier = destination.identifier
+         * left join transactions as destination ON source.transaction_journal_id =
+         * destination.transaction_journal_id AND source.amount = destination.amount * -1 AND source.identifier = destination.identifier
          * -- left join source account name:
          * left join accounts as source_accounts ON source.account_id = source_accounts.id
          * left join accounts as destination_accounts ON destination.account_id = destination_accounts.id

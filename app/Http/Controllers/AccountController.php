@@ -114,12 +114,11 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
      * @param Account $account
      *
      * @return View
      */
-    public function edit(ARI $repository, Account $account)
+    public function edit(Account $account)
     {
 
         $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
