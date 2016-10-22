@@ -33,7 +33,7 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.date('targetdate') }}
-                    {{ ExpandedForm.textarea('note') }}
+                    {{ ExpandedForm.textarea('note', null, {helpText: trans('firefly.field_supports_markdown')}) }}
                 </div>
             </div>
 

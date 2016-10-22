@@ -70,6 +70,7 @@ return [
     'source_accounts'                           => 'Source account(s)',
     'destination_accounts'                      => 'Destination account(s)',
     'user_id_is'                                => 'Your user id is <strong>:user</strong>',
+    'field_supports_markdown'                   => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
 
     // repeat frequencies:
     'repeat_freq_monthly'                       => 'monthly',
