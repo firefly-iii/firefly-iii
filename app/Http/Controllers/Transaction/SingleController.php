@@ -15,8 +15,8 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use ExpandedForm;
-use FireflyIII\Events\TransactionJournalStored;
-use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
@@ -260,7 +260,7 @@ class SingleController extends Controller
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        event(new TransactionJournalStored($journal, $data['piggy_bank_id']));
+        event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();
@@ -304,7 +304,7 @@ class SingleController extends Controller
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        event(new TransactionJournalUpdated($journal));
+        event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
 
         $type = strtolower(TransactionJournal::transactionTypeStr($journal));

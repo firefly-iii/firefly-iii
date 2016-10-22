@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use ExpandedForm;
-use FireflyIII\Events\TransactionJournalUpdated;
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
@@ -132,7 +132,7 @@ class SplitController extends Controller
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal);
 
-        event(new TransactionJournalUpdated($journal));
+        event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
 
         // flash messages

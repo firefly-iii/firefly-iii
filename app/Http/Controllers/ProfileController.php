@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Events\UserIsDeleted;
+use FireflyIII\Events\DeletedUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\User;
@@ -115,9 +115,6 @@ class ProfileController extends Controller
 
             return redirect(route('profile.delete-account'));
         }
-
-        // respond to deletion:
-        event(new UserIsDeleted(auth()->user(), $request->ip()));
 
         // store some stuff for the future:
         $registration = Preferences::get('registration_ip_address')->data;

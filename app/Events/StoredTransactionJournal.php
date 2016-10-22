@@ -1,6 +1,6 @@
 <?php
 /**
- * UserRegistration.php
+ * StoredTransactionJournal.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -13,30 +13,34 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Events;
 
-use FireflyIII\User;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UserRegistration
+ * Class StoredTransactionJournal
  *
  * @package FireflyIII\Events
  */
-class UserRegistration extends Event
+class StoredTransactionJournal extends Event
 {
+
     use SerializesModels;
 
-    public $ipAddress;
-    public $user;
+    public $journal;
+    public $piggyBankId;
 
     /**
      * Create a new event instance.
      *
-     * @param  User  $user
-     * @param string $ipAddress
+     * @param TransactionJournal $journal
+     * @param int                $piggyBankId
      */
-    public function __construct(User $user, string $ipAddress)
+    public function __construct(TransactionJournal $journal, int $piggyBankId)
     {
-        $this->user      = $user;
-        $this->ipAddress = $ipAddress;
+        //
+        $this->journal     = $journal;
+        $this->piggyBankId = $piggyBankId;
+
     }
+
 }

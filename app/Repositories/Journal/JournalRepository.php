@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Journal;
 
 use DB;
-use FireflyIII\Events\TransactionStored;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;

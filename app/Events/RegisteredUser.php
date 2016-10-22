@@ -1,6 +1,6 @@
 <?php
 /**
- * UserIsConfirmed.php
+ * RegisteredUser.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -17,11 +17,11 @@ use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UserIsConfirmed
+ * Class RegisteredUser
  *
  * @package FireflyIII\Events
  */
-class UserIsConfirmed extends Event
+class RegisteredUser extends Event
 {
     use SerializesModels;
 

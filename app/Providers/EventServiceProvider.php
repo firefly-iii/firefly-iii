@@ -35,42 +35,50 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'FireflyIII\Events\TransactionJournalUpdated' => [
-                'FireflyIII\Handlers\Events\ScanForBillsAfterUpdate',
-                'FireflyIII\Handlers\Events\UpdateJournalConnection',
-                'FireflyIII\Handlers\Events\FireRulesForUpdate',
+            // new event handlers:
+            'FireflyIII\Events\ConfirmedUser'      => // is a User related event.
+                [
+                    'FireflyIII\Handlers\Events\UserEventHandler@storeConfirmationIpAddress',
+                ],
+            'FireflyIII\Events\RegisteredUser'     => // is a User related event.
+                [
+                    'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
+                    'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
+                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessage',
+                    'FireflyIII\Handlers\Events\UserEventHandler@storeRegistrationIpAddress',
+                ],
+            'FireflyIII\Events\ResentConfirmation' => // is a User related event.
+                [
+                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessageAgain',
+                ],
+            'FireflyIII\Events\StoredBudgetLimit'  => // is a Budget related event.
+                [
+                    'FireflyIII\Handlers\Events\BudgetEventHandler@storeRepetition',
+                ],
 
-            ],
+            'FireflyIII\Events\UpdatedBudgetLimit' => // is a Budget related event.
+                [
+                    'FireflyIII\Handlers\Events\BudgetEventHandler@updateRepetition',
+                ],
 
-            'FireflyIII\Events\BudgetLimitStored'        => [
-                'FireflyIII\Handlers\Events\BudgetLimitEventHandler@store',
-            ],
-            'FireflyIII\Events\BudgetLimitUpdated'       => [
-                'FireflyIII\Handlers\Events\BudgetLimitEventHandler@update',
-            ],
-            'FireflyIII\Events\TransactionStored'        => [
-                'FireflyIII\Handlers\Events\ConnectTransactionToPiggyBank',
-            ],
-            'FireflyIII\Events\TransactionJournalStored' => [
-                'FireflyIII\Handlers\Events\ScanForBillsAfterStore',
-                'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
-                'FireflyIII\Handlers\Events\FireRulesForStore',
-            ],
-            'Illuminate\Auth\Events\Logout'              => [
-                'FireflyIII\Handlers\Events\UserEventListener@onUserLogout',
-            ],
-            'FireflyIII\Events\UserRegistration'         => [
-                'FireflyIII\Handlers\Events\SendRegistrationMail',
-                'FireflyIII\Handlers\Events\AttachUserRole',
-                'FireflyIII\Handlers\Events\UserConfirmation@sendConfirmation',
-                'FireflyIII\Handlers\Events\UserSaveIpAddress@saveFromRegistration',
-            ],
-            'FireflyIII\Events\UserIsConfirmed'          => [
-                'FireflyIII\Handlers\Events\UserSaveIpAddress@saveFromConfirmation',
-            ],
-            'FireflyIII\Events\ResendConfirmation'       => [
-                'FireflyIII\Handlers\Events\UserConfirmation@resendConfirmation',
-            ],
+            'FireflyIII\Events\StoredTransactionJournal'  => // is a Transaction Journal related event.
+                [
+                    'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
+                    'FireflyIII\Handlers\Events\StoredJournalEventHandler@connectToPiggyBank',
+                    'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
+                ],
+            'FireflyIII\Events\UpdatedTransactionJournal' => // is a Transaction Journal related event.
+                [
+                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
+                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@connectToPiggyBank',
+                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
+                ],
+
+            // LARAVEL EVENTS:
+            'Illuminate\Auth\Events\Logout'               =>
+                [
+                    'FireflyIII\Handlers\Events\UserEventHandler@logoutUser',
+                ],
         ];
 
     /**
@@ -83,9 +91,6 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
         $this->registerDeleteEvents();
         $this->registerCreateEvents();
-
-
-        //
     }
 
     /**
