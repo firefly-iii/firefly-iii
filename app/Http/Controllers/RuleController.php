@@ -240,7 +240,6 @@ class RuleController extends Controller
     {
         $data                  = $request->getRuleData();
         $data['rule_group_id'] = $ruleGroup->id;
-        $data['user_id']       = auth()->user()->id;
 
         $rule = $repository->store($data);
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
@@ -353,7 +352,6 @@ class RuleController extends Controller
             $data = [
                 'rule_group_id'       => $repository->getFirstRuleGroup()->id,
                 'stop_processing'     => 0,
-                'user_id'             => auth()->user()->id,
                 'title'               => trans('firefly.default_rule_name'),
                 'description'         => trans('firefly.default_rule_description'),
                 'trigger'             => 'store-journal',
@@ -386,7 +384,6 @@ class RuleController extends Controller
 
         if ($repository->count() === 0) {
             $data = [
-                'user_id'     => auth()->user()->id,
                 'title'       => trans('firefly.default_rule_group_name'),
                 'description' => trans('firefly.default_rule_group_description'),
             ];

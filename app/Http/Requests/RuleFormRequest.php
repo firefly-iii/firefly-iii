@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\RuleGroup;
-use Input;
 
 /**
  * Class RuleFormRequest
@@ -66,8 +65,8 @@ class RuleFormRequest extends Request
         $contextActions = join(',', config('firefly.rule-actions-text'));
 
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
-        if (RuleGroup::find(Input::get('id'))) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval(Input::get('id'));
+        if (RuleGroup::find($this->get('id'))) {
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval($this->get('id'));
         }
 
         $rules = [

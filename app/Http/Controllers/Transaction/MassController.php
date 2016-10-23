@@ -209,7 +209,6 @@ class MassController extends Controller
                         'destination_account_id'    => intval($destAccountId),
                         'destination_account_name'  => $destAccountName,
                         'amount'                    => round($request->get('amount')[$journal->id], 4),
-                        'user'                      => auth()->user()->id,
                         'amount_currency_id_amount' => intval($request->get('amount_currency_id_amount_' . $journal->id)),
                         'date'                      => new Carbon($request->get('date')[$journal->id]),
                         'interest_date'             => $journal->interest_date,

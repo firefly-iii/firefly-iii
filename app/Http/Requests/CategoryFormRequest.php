@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Category;
-use Input;
 
 /**
  * Class CategoryFormRequest
@@ -40,7 +39,6 @@ class CategoryFormRequest extends Request
     {
         return [
             'name' => trim($this->input('name')),
-            'user' => auth()->user()->id,
         ];
     }
 
@@ -51,8 +49,8 @@ class CategoryFormRequest extends Request
     {
 
         $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        if (Category::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval(Input::get('id'));
+        if (Category::find($this->get('id'))) {
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval($this->get('id'));
         }
 
         return [

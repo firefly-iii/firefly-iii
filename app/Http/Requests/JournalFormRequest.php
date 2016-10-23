@@ -16,7 +16,6 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
-use Input;
 
 /**
  * Class JournalFormRequest
@@ -44,7 +43,6 @@ class JournalFormRequest extends Request
     {
         $data = [
             'what'                     => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
-            'user'                     => auth()->user()->id,
             'date'                     => new Carbon($this->get('date')),
             'tags'                     => explode(',', $this->getFieldOrEmptyString('tags')),
             'currency_id'              => intval($this->get('amount_currency_id_amount')),
@@ -80,7 +78,7 @@ class JournalFormRequest extends Request
      */
     public function rules()
     {
-        $what  = Input::get('what');
+        $what  = $this->get('what');
         $rules = [
             'what'                     => 'required|in:withdrawal,deposit,transfer',
             'date'                     => 'required|date',

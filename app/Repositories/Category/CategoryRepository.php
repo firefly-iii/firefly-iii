@@ -433,7 +433,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $newCategory = Category::firstOrCreateEncrypted(
             [
-                'user_id' => $data['user'],
+                'user_id' => $this->user->id,
                 'name'    => $data['name'],
             ]
         );

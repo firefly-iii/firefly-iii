@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
-use Input;
 
 /**
  * Class PiggyBankFormRequest
@@ -56,8 +55,8 @@ class PiggyBankFormRequest extends Request
 
         $nameRule       = 'required|between:1,255|uniquePiggyBankForUser';
         $targetDateRule = 'date';
-        if (intval(Input::get('id'))) {
-            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval(Input::get('id'));
+        if (intval($this->get('id'))) {
+            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval($this->get('id'));
         }
 
 

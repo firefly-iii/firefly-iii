@@ -500,7 +500,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $newBudget = new Budget(
             [
-                'user_id' => $data['user'],
+                'user_id' => $this->user->id,
                 'name'    => $data['name'],
             ]
         );

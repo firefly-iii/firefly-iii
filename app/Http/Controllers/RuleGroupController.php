@@ -205,7 +205,6 @@ class RuleGroupController extends Controller
     public function store(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository)
     {
         $data            = $request->getRuleGroupData();
-        $data['user_id'] = auth()->user()->id;
         $ruleGroup       = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title])));

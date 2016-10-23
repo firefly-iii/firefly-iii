@@ -388,7 +388,7 @@ class AccountRepository implements AccountRepositoryInterface
         // create it:
         $newAccount = new Account(
             [
-                'user_id'         => $data['user'],
+                'user_id'         => $this->user->id,
                 'account_type_id' => $accountType->id,
                 'name'            => $data['name'],
                 'virtual_balance' => $data['virtualBalance'],
@@ -417,13 +417,12 @@ class AccountRepository implements AccountRepositoryInterface
     protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
         $amount          = $data['openingBalance'];
-        $user            = $data['user'];
         $name            = $data['name'];
-        $opposing        = $this->storeOpposingAccount($amount, $user, $name);
+        $opposing        = $this->storeOpposingAccount($amount, $name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
-                'user_id'                 => $data['user'],
+                'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $data['openingBalanceCurrency'],
                 'description'             => 'Initial balance for "' . $account->name . '"',
@@ -458,16 +457,14 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param float  $amount
-     * @param int    $user
      * @param string $name
      *
      * @return Account
      */
-    protected function storeOpposingAccount(float $amount, int $user, string $name):Account
+    protected function storeOpposingAccount(float $amount, string $name):Account
     {
         $type         = $amount < 0 ? 'expense' : 'revenue';
         $opposingData = [
-            'user'           => $user,
             'accountType'    => $type,
             'name'           => $name . ' initial balance',
             'active'         => false,

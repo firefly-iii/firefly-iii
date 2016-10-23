@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Budget;
-use Input;
 
 /**
  * Class BudgetFormRequest
@@ -39,7 +38,6 @@ class BudgetFormRequest extends Request
     {
         return [
             'name'   => trim($this->input('name')),
-            'user'   => auth()->user()->id,
             'active' => intval($this->input('active')) == 1,
         ];
     }
@@ -51,8 +49,8 @@ class BudgetFormRequest extends Request
     {
 
         $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
-        if (Budget::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . intval(Input::get('id'));
+        if (Budget::find($this->get('id'))) {
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . intval($this->get('id'));
         }
 
         return [

@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Tag;
-use Input;
 
 /**
  * Class TagFormRequest
@@ -38,7 +37,7 @@ class TagFormRequest extends Request
      */
     public function collectTagData() :array
     {
-        if (Input::get('setTag') == 'true') {
+        if ($this->get('setTag') == 'true') {
             $latitude  = $this->get('latitude');
             $longitude = $this->get('longitude');
             $zoomLevel = $this->get('zoomLevel');
@@ -71,9 +70,9 @@ class TagFormRequest extends Request
     {
         $idRule  = '';
         $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag';
-        if (Tag::find(Input::get('id'))) {
+        if (Tag::find($this->get('id'))) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . Input::get('id');
+            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $this->get('id');
         }
 
         return [

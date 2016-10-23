@@ -273,7 +273,6 @@ class SplitController extends Controller
                 'amount'                   => round($transaction['amount'] ?? 0, 2),
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'] ?? '',
-                'user'                     => auth()->user()->id, // needed for accounts.
             ];
         }
 

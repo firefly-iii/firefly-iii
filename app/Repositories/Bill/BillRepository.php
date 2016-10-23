@@ -610,7 +610,7 @@ class BillRepository implements BillRepositoryInterface
                 'name'        => $data['name'],
                 'match'       => $data['match'],
                 'amount_min'  => $data['amount_min'],
-                'user_id'     => $data['user'],
+                'user_id'     => $this->user->id,
                 'amount_max'  => $data['amount_max'],
                 'date'        => $data['date'],
                 'repeat_freq' => $data['repeat_freq'],

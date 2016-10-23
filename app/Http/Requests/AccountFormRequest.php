@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use Input;
 
 /**
  * Class AccountFormRequest
@@ -45,7 +44,6 @@ class AccountFormRequest extends Request
             'accountType'            => $this->input('what'),
             'virtualBalance'         => round($this->input('virtualBalance'), 2),
             'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'user'                   => auth()->user()->id,
             'iban'                   => trim($this->input('iban')),
             'accountNumber'          => trim($this->input('accountNumber')),
             'accountRole'            => $this->input('accountRole'),
@@ -68,9 +66,9 @@ class AccountFormRequest extends Request
 
         $nameRule = 'required|min:1|uniqueAccountForUser';
         $idRule   = '';
-        if (Account::find(Input::get('id'))) {
+        if (Account::find($this->get('id'))) {
             $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|min:1|uniqueAccountForUser:' . Input::get('id');
+            $nameRule = 'required|min:1|uniqueAccountForUser:' . $this->get('id');
         }
 
         return [

@@ -107,7 +107,7 @@ class JournalRepository implements JournalRepositoryInterface
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
         $journal         = new TransactionJournal(
             [
-                'user_id'                 => $data['user'],
+                'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $data['currency_id'],
                 'description'             => $data['description'],
@@ -182,7 +182,7 @@ class JournalRepository implements JournalRepositoryInterface
         // store actual journal.
         $journal = new TransactionJournal(
             [
-                'user_id'                 => $data['user'],
+                'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $data['amount_currency_id_amount'],
                 'description'             => $data['description'],
@@ -478,7 +478,7 @@ class JournalRepository implements JournalRepositoryInterface
         if (strlen($data['source_account_name']) > 0) {
             $sourceType    = AccountType::where('type', 'Revenue account')->first();
             $sourceAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
+                ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
             );
 
             return [
@@ -488,7 +488,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
         $sourceType    = AccountType::where('type', 'Cash account')->first();
         $sourceAccount = Account::firstOrCreateEncrypted(
-            ['user_id' => $data['user'], 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
+            ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
         );
 
         return [
@@ -587,7 +587,7 @@ class JournalRepository implements JournalRepositoryInterface
             $destinationType    = AccountType::where('type', AccountType::EXPENSE)->first();
             $destinationAccount = Account::firstOrCreateEncrypted(
                 [
-                    'user_id'         => $data['user'],
+                    'user_id'         => $this->user->id,
                     'account_type_id' => $destinationType->id,
                     'name'            => $data['destination_account_name'],
                     'active'          => 1,
@@ -601,7 +601,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
         $destinationType    = AccountType::where('type', 'Cash account')->first();
         $destinationAccount = Account::firstOrCreateEncrypted(
-            ['user_id' => $data['user'], 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
+            ['user_id' => $this->user->id, 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
         );
 
         return [
