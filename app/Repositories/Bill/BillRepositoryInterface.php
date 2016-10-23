@@ -125,11 +125,20 @@ interface BillRepositoryInterface
     public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param $bill
+     * @param Bill $bill
      *
      * @return string
      */
-    public function getOverallAverage($bill): string;
+    public function getOverallAverage(Bill $bill): string;
+
+    /**
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
 
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.

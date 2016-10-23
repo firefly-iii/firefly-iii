@@ -137,23 +137,15 @@ class BillController extends Controller
         $bills = $repository->getBills();
         $bills->each(
             function (Bill $bill) use ($repository, $start, $end) {
-                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
-                $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
-                $journals                = $repository->getJournalsInRange($bill, $start, $end);
-                // loop journals, find average:
-                $average = '0';
-                $count   = $journals->count();
-                if ($count > 0) {
-                    $sum = '0';
-                    foreach ($journals as $journal) {
-                        $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
-                    }
-                    $average = bcdiv($sum, strval($count));
+
+                // paid in this period?
+                $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
+                $bill->payDates        = $repository->getPayDatesInRange($bill, $start, $end);
+                $lastDate        = clone $start;
+                if ($bill->paidDates->count() >= $bill->payDates->count()) {
+                    $lastDate = $end;
                 }
-
-                $bill->lastPaidAmount = $average;
-                $bill->paidInPeriod   = ($start <= $bill->lastFoundMatch) && ($end >= $bill->lastFoundMatch);
-
+                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastDate);
             }
         );
 

@@ -427,7 +427,8 @@ return [
     'rescanned_bill'                            => 'Rescanned everything.',
     'average_bill_amount_year'                  => 'Average bill amount (:year)',
     'average_bill_amount_overall'               => 'Average bill amount (overall)',
-
+    'not_or_not_yet'                            => 'Not (yet)',
+    'not_expected_period'                       => 'Not expected this period',
     // accounts:
     'details_for_asset'                         => 'Details for asset account ":name"',
     'details_for_expense'                       => 'Details for expense account ":name"',

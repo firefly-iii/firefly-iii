@@ -326,11 +326,11 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * @param $bill
+     * @param Bill $bill
      *
      * @return string
      */
-    public function getOverallAverage($bill): string
+    public function getOverallAverage(Bill $bill): string
     {
         $journals = $bill->transactionJournals()->get();
         $sum      = '0';
@@ -345,6 +345,21 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
+    }
+
+    /**
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
+    {
+        $dates = $bill->transactionJournals()->before($end)->after($start)->get(['transaction_journals.date'])->pluck('date');
+
+        return $dates;
+
     }
 
     /**
