@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
  * Class BudgetFormRequest
@@ -47,9 +47,10 @@ class BudgetFormRequest extends Request
      */
     public function rules()
     {
-
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
-        if (Budget::find($this->get('id'))) {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $nameRule   = 'required|between:1,100|uniqueObjectForUser:budgets,name';
+        if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . intval($this->get('id'));
         }
 

@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 
 /**
  * Class TagFormRequest
@@ -68,9 +68,11 @@ class TagFormRequest extends Request
      */
     public function rules()
     {
-        $idRule  = '';
-        $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag';
-        if (Tag::find($this->get('id'))) {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $idRule     = '';
+        $tagRule    = 'required|min:1|uniqueObjectForUser:tags,tag';
+        if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $idRule  = 'belongsToUser:tags';
             $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $this->get('id');
         }

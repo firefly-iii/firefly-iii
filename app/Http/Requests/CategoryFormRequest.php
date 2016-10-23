@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 
 /**
  * Class CategoryFormRequest
@@ -47,9 +47,10 @@ class CategoryFormRequest extends Request
      */
     public function rules()
     {
-
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        if (Category::find($this->get('id'))) {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $nameRule   = 'required|between:1,100|uniqueObjectForUser:categories,name';
+        if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval($this->get('id'));
         }
 
