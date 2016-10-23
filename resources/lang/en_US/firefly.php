@@ -73,6 +73,7 @@ return [
     'field_supports_markdown'                   => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
 
     // repeat frequencies:
+    'repeat_freq_yearly'                        => 'yearly',
     'repeat_freq_monthly'                       => 'monthly',
     'weekly'                                    => 'weekly',
     'quarterly'                                 => 'quarterly',

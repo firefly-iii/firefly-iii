@@ -114,17 +114,6 @@ interface BillRepositoryInterface
     public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator;
 
     /**
-     * Get all journals that were recorded on this bill between these dates.
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
-
-    /**
      * @param Bill $bill
      *
      * @return string
@@ -165,14 +154,6 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getYearAverage(Bill $bill, Carbon $date): string;
-
-    /**
-     * @param Bill $bill
-     *
-     * @return \Carbon\Carbon
-     */
-    public function lastFoundMatch(Bill $bill): Carbon;
-
 
     /**
      * Given a bill and a date, this method will tell you at which moment this bill expects its next

@@ -312,20 +312,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * Get all journals that were recorded on this bill between these dates.
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection
-    {
-        return $bill->transactionJournals()->before($end)->after($start)->get();
-    }
-
-    /**
      * @param Bill $bill
      *
      * @return string
@@ -464,21 +450,6 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
-    }
-
-    /**
-     * @param Bill $bill
-     *
-     * @return \Carbon\Carbon
-     */
-    public function lastFoundMatch(Bill $bill): Carbon
-    {
-        $last = $bill->transactionJournals()->orderBy('date', 'DESC')->first();
-        if ($last) {
-            return $last->date;
-        }
-
-        return Carbon::now()->addDays(2); // in the future!
     }
 
     /**
