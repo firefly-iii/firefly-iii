@@ -57,9 +57,13 @@ class JournalCollector extends BasicCollector implements CollectorInterface
          * possible category ids journals
          * possible budget ids for transactions
          * possible category ids for transactions
+         *
+         * possible IBAN and account numbers?
+         *
          */
         $journals     = $this->extractJournalIds();
         $transactions = $this->extractTransactionIds();
+
 
         // extend work set with category data from journals:
         $this->categoryDataForJournals($journals);
