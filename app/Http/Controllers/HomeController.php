@@ -164,36 +164,29 @@ class HomeController extends Controller
     public function routes()
     {
         // these routes are not relevant for the help pages:
-        $ignore = [
+        $ignore = ['login', 'registe', 'logout', 'two-fac', 'lost-two', 'confirm', 'resend', 'do_confirm', 'testFla', 'json.', 'piggy-banks.add',
+                   'piggy-banks.remove', 'preferences.', 'rules.rule.up', 'rules.rule.down', 'rules.rule-group.up', 'rules.rule-group.down', 'popup.report',
+                   'admin.users.domains.block-','import.json','help.'
         ];
         $routes = Route::getRoutes();
+
+        echo '<pre>';
+
         /** @var \Illuminate\Routing\Route $route */
         foreach ($routes as $route) {
-
             $name    = $route->getName();
             $methods = $route->getMethods();
-            $search  = [
-                '{account}', '{what}', '{rule}', '{tj}', '{category}', '{budget}', '{code}', '{date}', '{attachment}', '{bill}', '{limitrepetition}',
-                '{currency}', '{jobKey}', '{piggyBank}', '{ruleGroup}', '{rule}', '{route}', '{unfinishedJournal}',
-                '{reportType}', '{start_date}', '{end_date}', '{accountList}', '{tag}', '{journalList}',
 
-            ];
-            $replace = [1, 'asset', 1, 1, 1, 1, 'abc', '2016-01-01', 1, 1, 1, 1, 1, 1, 1, 1, 'index', 1,
-                        'default', '20160101', '20160131', '1,2', 1, '1,2',
-            ];
-            if (count($search) != count($replace)) {
-                echo 'count';
-                exit;
-            }
-            $url = str_replace($search, $replace, $route->getUri());
-
-            if (!is_null($name) && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo '<a href="/' . $url . '" title="' . $name . '">' . $name . '</a><br>' . "\n";
+            if (!is_null($name) && strlen($name) > 0 && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
+                echo sprintf('touch %s.md', $name)."\n";
 
             }
         }
+        echo '</pre>';
 
-        return '<hr>';
+        echo '<hr />';
+
+        return '&nbsp;';
     }
 
     /**

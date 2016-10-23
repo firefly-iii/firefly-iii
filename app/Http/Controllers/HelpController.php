@@ -41,11 +41,9 @@ class HelpController extends Controller
      */
     public function show(HelpInterface $help, string $route)
     {
+
         $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $content  = [
-            'text'  => '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>',
-            'title' => 'Help',
-        ];
+        $content  = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
 
         if (!$help->hasRoute($route)) {
             Log::error('No such route: ' . $route);
@@ -53,11 +51,9 @@ class HelpController extends Controller
             return Response::json($content);
         }
 
-        if ($help->inCache($route)) {
-            $content = [
-                'text'  => $help->getFromCache('help.' . $route . '.text.' . $language),
-                'title' => $help->getFromCache('help.' . $route . '.title.' . $language),
-            ];
+        if ($help->inCache($route, $language)) {
+            $content = $help->getFromCache($route, $language);
+            Log::debug('Help text was in cache.');
 
             return Response::json($content);
         }
