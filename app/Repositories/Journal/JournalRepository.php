@@ -267,6 +267,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->description             = $data['journal_description'];
         $journal->date                    = $data['date'];
         $journal->save();
+        Log::debug(sprintf('Updated split journal #%d', $journal->id));
 
         // unlink all categories:
         $journal->categories()->detach();
@@ -282,8 +283,6 @@ class JournalRepository implements JournalRepositoryInterface
                 }
                 Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
             }
-
-            return $journal;
         }
 
 
@@ -297,6 +296,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // store each transaction.
         $identifier = 0;
+        Log::debug(sprintf('Count %d transactions in updateSplitJournal()', count($data['transactions'])));
         foreach ($data['transactions'] as $transaction) {
             Log::debug(sprintf('Split journal update split transaction %d', $identifier));
             $transaction = $this->appendTransactionData($transaction, $data);

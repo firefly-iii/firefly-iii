@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
+use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -264,6 +265,7 @@ class SplitController extends Controller
         $return       = [];
         $transactions = $request->get('transactions');
         foreach ($transactions as $transaction) {
+
             $return[] = [
                 'description'              => $transaction['description'],
                 'source_account_id'        => $transaction['source_account_id'] ?? 0,
@@ -275,6 +277,7 @@ class SplitController extends Controller
                 'category'                 => $transaction['category'] ?? '',
             ];
         }
+        Log::debug(sprintf('Found %d splits in request data.', count($return)));
 
         return $return;
     }
