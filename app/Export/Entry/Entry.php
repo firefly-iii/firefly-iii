@@ -76,7 +76,7 @@ final class Entry
         // journal information:
         $entry->journal_id       = $object->transaction_journal_id;
         $entry->description      = $object->journal_encrypted === 1 ? Crypt::decrypt($object->journal_description) : $object->journal_description;
-        $entry->amount           = $object->amount; // always positive
+        $entry->amount           = round($object->amount, 2); // always positive
         $entry->date             = $object->date;
         $entry->transaction_type = $object->transaction_type;
         $entry->currency_code    = $object->transaction_currency_code;
