@@ -98,7 +98,6 @@ return [
     'export_end_range'               => 'End of export range',
     'export_format'                  => 'File format',
     'include_attachments'            => 'Include uploaded attachments',
-    'include_config'                 => 'Include configuration file',
     'include_old_uploads'            => 'Include imported data',
     'accounts'                       => 'Export transactions from these accounts',
     'delete_account'                 => 'Delete account ":name"',

@@ -99,7 +99,6 @@ return [
     'export_format_csv'                         => 'Comma separated values (CSV file)',
     'export_format_mt940'                       => 'MT940 compatible format',
     'export_included_accounts'                  => 'Export transactions from these accounts',
-    'include_config_help'                       => 'For easy re-import into Firefly III',
     'include_old_uploads_help'                  => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
     'do_export'                                 => 'Export',
     'export_status_never_started'               => 'The export has not started yet',

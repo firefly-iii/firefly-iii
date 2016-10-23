@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Attachment;
 use Illuminate\Support\Collection;
 
@@ -35,6 +36,14 @@ interface AttachmentRepositoryInterface
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBetween(Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Attachment $attachment

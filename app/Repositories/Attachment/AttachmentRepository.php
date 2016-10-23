@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Attachment;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
@@ -61,6 +62,24 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function get(): Collection
     {
         return $this->user->attachments()->get();
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBetween(Carbon $start, Carbon $end): Collection
+    {
+        $query = $this->user
+            ->attachments()
+            ->leftJoin('transaction_journals', 'attachments.attachable_id', '=', 'transaction_journals.id')
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            ->get(['attachments.*']);
+
+        return $query;
     }
 
     /**
