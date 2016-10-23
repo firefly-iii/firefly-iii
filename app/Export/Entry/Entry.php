@@ -34,6 +34,7 @@ use Crypt;
  */
 final class Entry
 {
+    //@formatter:off
     public $journal_id;
     public $date;
     public $description;
@@ -54,6 +55,7 @@ final class Entry
     public $budget_name;
     public $category_id;
     public $category_name;
+    //@formatter:on
 
     /**
      * Entry constructor.

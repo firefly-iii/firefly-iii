@@ -66,14 +66,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         // then collect current upload files:
         $this->collectModernUploads();
 
-
-        //        // grab upload directory.
-        //        $files = $this->uploadDisk->files();
-        //
-        //        foreach ($files as $entry) {
-        //            $this->processUpload($entry);
-        //        }
-
         return true;
     }
 

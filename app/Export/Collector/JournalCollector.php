@@ -72,6 +72,7 @@ class JournalCollector extends BasicCollector implements CollectorInterface
         $this->budgetDataForTransactions($transactions);
 
         $this->setEntries($this->workSet);
+
         return true;
     }
 
