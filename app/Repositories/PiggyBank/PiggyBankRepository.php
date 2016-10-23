@@ -175,7 +175,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function store(array $data): PiggyBank
     {
-        $piggyBank = PiggyBank::create($data);
+        $data['order'] = $this->getMaxOrder() + 1;
+        $piggyBank     = PiggyBank::create($data);
 
         $this->updateNote($piggyBank, $data['note']);
 
@@ -232,9 +233,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
             return true;
         }
-        $dbNote= $piggyBank->notes()->first();
+        $dbNote = $piggyBank->notes()->first();
         if (is_null($dbNote)) {
-            $dbNote= new Note();
+            $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);
         }
         $dbNote->text = trim($note);

@@ -364,18 +364,8 @@ class PiggyBankController extends Controller
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
-
-        $piggyBankData = [
-            'name'         => $request->get('name'),
-            'startdate'    => new Carbon,
-            'account_id'   => intval($request->get('account_id')),
-            'targetamount' => round($request->get('targetamount'), 2),
-            'order'        => $repository->getMaxOrder() + 1,
-            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
-            'note'         => $request->get('note'),
-        ];
-
-        $piggyBank = $repository->store($piggyBankData);
+        $data = $request->getPiggyBankData();
+        $piggyBank = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
@@ -400,16 +390,8 @@ class PiggyBankController extends Controller
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {
-        $piggyBankData = [
-            'name'         => $request->get('name'),
-            'startdate'    => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
-            'account_id'   => intval($request->get('account_id')),
-            'targetamount' => round($request->get('targetamount'), 2),
-            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
-            'note'         => $request->get('note'),
-        ];
-
-        $piggyBank = $repository->update($piggyBank, $piggyBankData);
+        $data = $request->getPiggyBankData();
+        $piggyBank = $repository->update($piggyBank, $data);
 
         Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();

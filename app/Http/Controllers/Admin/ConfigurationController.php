@@ -66,10 +66,10 @@ class ConfigurationController extends Controller
     public function store(ConfigurationRequest $request)
     {
         // get config values:
-        $singleUserMode = intval($request->get('single_user_mode')) === 1 ? true : false;
+        $data = $request->getConfigurationData();
 
         // store config values
-        FireflyConfig::set('single_user_mode', $singleUserMode);
+        FireflyConfig::set('single_user_mode', $data['single_user_mode']);
 
         // flash message
         Session::flash('success', strval(trans('firefly.configuration_updated')));

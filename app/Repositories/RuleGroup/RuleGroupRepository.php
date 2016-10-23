@@ -80,6 +80,21 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @param int $ruleGroupId
+     *
+     * @return RuleGroup
+     */
+    public function find(int $ruleGroupId): RuleGroup
+    {
+        $group = $this->user->ruleGroups()->find($ruleGroupId);
+        if (is_null($group)) {
+            return new RuleGroup;
+        }
+
+        return $group;
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection

@@ -238,23 +238,9 @@ class RuleController extends Controller
      */
     public function store(RuleFormRequest $request, RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
-
-
-        // process the rule itself:
-        $data = [
-            'rule_group_id'       => $ruleGroup->id,
-            'title'               => $request->get('title'),
-            'user_id'             => auth()->user()->id,
-            'trigger'             => $request->get('trigger'),
-            'description'         => $request->get('description'),
-            'rule-triggers'       => $request->get('rule-trigger'),
-            'rule-trigger-values' => $request->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
-            'rule-actions'        => $request->get('rule-action'),
-            'rule-action-values'  => $request->get('rule-action-value'),
-            'rule-action-stop'    => $request->get('rule-action-stop'),
-            'stop_processing'     => $request->get('stop_processing'),
-        ];
+        $data                  = $request->getRuleData();
+        $data['rule_group_id'] = $ruleGroup->id;
+        $data['user_id']       = auth()->user()->id;
 
         $rule = $repository->store($data);
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
@@ -341,21 +327,7 @@ class RuleController extends Controller
      */
     public function update(RuleRepositoryInterface $repository, RuleFormRequest $request, Rule $rule)
     {
-
-        // process the rule itself:
-        $data = [
-            'title'               => $request->get('title'),
-            'active'              => intval($request->get('active')) == 1,
-            'trigger'             => $request->get('trigger'),
-            'description'         => $request->get('description'),
-            'rule-triggers'       => $request->get('rule-trigger'),
-            'rule-trigger-values' => $request->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
-            'rule-actions'        => $request->get('rule-action'),
-            'rule-action-values'  => $request->get('rule-action-value'),
-            'rule-action-stop'    => $request->get('rule-action-stop'),
-            'stop_processing'     => intval($request->get('stop_processing')) == 1,
-        ];
+        $data = $request->getRuleData();
         $repository->update($rule, $data);
 
         Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
@@ -410,7 +382,7 @@ class RuleController extends Controller
     {
 
         /** @var RuleGroupRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface');
+        $repository = app(RuleGroupRepositoryInterface::class);
 
         if ($repository->count() === 0) {
             $data = [

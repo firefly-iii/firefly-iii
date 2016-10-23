@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers\Admin;
 
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -83,6 +84,7 @@ class DomainController extends Controller
      */
     public function toggleDomain(string $domain)
     {
+        $domain  = strtolower($domain);
         $blocked = FireflyConfig::get('blocked-domains', [])->data;
 
         if (in_array($domain, $blocked)) {
@@ -111,15 +113,16 @@ class DomainController extends Controller
      */
     private function getKnownDomains(): array
     {
-        $users    = User::get();
-        $set      = [];
-        $filtered = [];
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $users      = $repository->all();
+        $set        = [];
+        $filtered   = [];
         /** @var User $user */
         foreach ($users as $user) {
-            $email  = $user->email;
-            $parts  = explode('@', $email);
-            $domain = $parts[1];
-            $set[]  = $domain;
+            $email = $user->email;
+            $parts = explode('@', $email);
+            $set[] = strtolower($parts[1]);
         }
         $set = array_unique($set);
         // filter for already banned domains:
@@ -131,7 +134,6 @@ class DomainController extends Controller
                 $filtered[] = $domain;
             }
         }
-        asort($filtered);
 
         return $filtered;
     }

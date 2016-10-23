@@ -43,6 +43,13 @@ interface RuleGroupRepositoryInterface
     public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null): bool;
 
     /**
+     * @param int $ruleGroupId
+     *
+     * @return RuleGroup
+     */
+    public function find(int $ruleGroupId): RuleGroup;
+
+    /**
      * @return Collection
      */
     public function get(): Collection;

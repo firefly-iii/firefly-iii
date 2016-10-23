@@ -33,6 +33,16 @@ class ConfigurationRequest extends Request
     /**
      * @return array
      */
+    public function getConfigurationData(): array
+    {
+        return [
+            'single_user_mode' => intval($this->get('single_user_mode')) === 1,
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function rules()
     {
         $rules = [

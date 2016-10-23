@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
+use Carbon\Carbon;
 use Input;
 
 /**
@@ -30,6 +31,21 @@ class PiggyBankFormRequest extends Request
     {
         // Only allow logged in users
         return auth()->check();
+    }
+
+    /**
+     * @return array
+     */
+    public function getPiggyBankData(): array
+    {
+        return [
+            'name'         => trim($this->get('name')),
+            'startdate'    => new Carbon,
+            'account_id'   => intval($this->get('account_id')),
+            'targetamount' => round($this->get('targetamount'), 2),
+            'targetdate'   => strlen($this->get('targetdate')) > 0 ? new Carbon($this->get('targetdate')) : null,
+            'note'         => trim($this->get('note')),
+        ];
     }
 
     /**

@@ -36,6 +36,17 @@ class CategoryFormRequest extends Request
     /**
      * @return array
      */
+    public function getCategoryData(): array
+    {
+        return [
+            'name' => trim($this->input('name')),
+            'user' => auth()->user()->id,
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function rules()
     {
 
