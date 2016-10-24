@@ -40,11 +40,10 @@ class ExpandedForm
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = round($this->fillFieldValue($name, $value), 2);
-        var_dump($value);
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $options['min']  = '0.01';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
