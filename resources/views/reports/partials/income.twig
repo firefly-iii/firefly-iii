@@ -6,8 +6,8 @@
         <table class="table table-hover">
             <tbody>
             {% for income in incomes.getIncomes %}
-                {% if loop.index > incomeTopLength %}
-                    <tr class="collapse out incomesCollapsed">
+                {% if loop.index > listLength %}
+                    <tr class="overListLength">
                 {% else %}
                     <tr>
                 {% endif %}
@@ -23,15 +23,16 @@
 
                     {% endif %}
                 </td>
+
                 <td>{{ income.amount|formatAmount }}</td>
                 </tr>
             {% endfor %}
             </tbody>
             <tfoot>
-            {% if incomes.getIncomes|length > incomeTopLength %}
+            {% if incomes.getIncomes|length > listLength %}
                 <tr>
                     <td colspan="2" class="active">
-                        <a href="#" id="showIncomes">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
+                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{ number:listLength } ) }}</a>
                     </td>
                 </tr>
             {% endif %}

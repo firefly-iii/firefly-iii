@@ -8,11 +8,6 @@
 
 /* globals hideable */
 
-
-/**
- * Created by sander on 01/04/16.
- */
-
 $(function () {
     "use strict";
 

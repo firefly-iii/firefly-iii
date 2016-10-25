@@ -28,6 +28,7 @@ return [
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
     'resend_confirmation' => 3600,
     'confirmation_age'    => 14400, // four hours
+    'list_length'         => 10,
 
     'export_formats'           => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',

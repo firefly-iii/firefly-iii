@@ -22,7 +22,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -226,12 +225,7 @@ class ReportController extends Controller
      */
     private function defaultMonth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-
         // get report stuff!
-        $incomes    = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses   = $this->helper->getExpenseReport($start, $end, $accounts);
         $budgets    = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
         $categories = $this->helper->getCategoryReport($start, $end, $accounts);
         $balance    = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
@@ -247,8 +241,7 @@ class ReportController extends Controller
             compact(
                 'start', 'end', 'reportType',
                 'tags',
-                'incomes', 'incomeTopLength',
-                'expenses', 'expenseTopLength',
+                'incomes',
                 'budgets', 'balance',
                 'categories',
                 'bills',
@@ -268,13 +261,8 @@ class ReportController extends Controller
     private function defaultMultiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
 
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-        // list of users stuff:
         $budgets    = app(BudgetRepositoryInterface::class)->getActiveBudgets();
         $categories = app(CategoryRepositoryInterface::class)->getCategories();
-        $incomes    = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses   = $this->helper->getExpenseReport($start, $end, $accounts);
         $tags       = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
@@ -288,9 +276,7 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType',
-                'incomes', 'expenses',
-                'incomeTopLength', 'expenseTopLength', 'tags'
+                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'tags'
             )
         );
     }
@@ -305,11 +291,6 @@ class ReportController extends Controller
      */
     private function defaultYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
-
-        $incomes  = $this->helper->getIncomeReport($start, $end, $accounts);
-        $expenses = $this->helper->getExpenseReport($start, $end, $accounts);
         $tags     = $this->helper->tagReport($start, $end, $accounts);
         $budgets  = $this->budgetHelper->budgetYearOverview($start, $end, $accounts);
 
@@ -328,8 +309,7 @@ class ReportController extends Controller
         return view(
             'reports.default.year',
             compact(
-                'start', 'incomes', 'reportType', 'accountIds', 'end',
-                'expenses', 'incomeTopLength', 'expenseTopLength', 'tags', 'budgets'
+                'start', 'reportType', 'accountIds', 'end', 'tags', 'budgets'
             )
         );
     }

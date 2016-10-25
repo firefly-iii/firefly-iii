@@ -6,8 +6,8 @@
         <table class="table table-hover">
             <tbody>
             {% for expense in expenses.getExpenses %}
-                {% if loop.index > expenseTopLength %}
-                    <tr class="collapse out expenseCollapsed">
+                {% if loop.index > listLength %}
+                    <tr class="overListLength">
                 {% else %}
                     <tr>
                 {% endif %}
@@ -32,7 +32,7 @@
             {% if expenses.getExpenses|length > expenseTopLength %}
                 <tr>
                     <td colspan="2" class="active">
-                        <a href="#" id="showExpenses">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
+                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
                     </td>
                 </tr>
             {% endif %}

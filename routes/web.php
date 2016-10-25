@@ -317,9 +317,16 @@ Route::group(
     /**
      * Report AJAX data Controller:
      */
+    // account report
     Route::get(
-        '/reports/data/accountReport/{start_date}/{end_date}/{accountList}',
+        '/reports/data/account-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\AccountController@accountReport', 'as' => 'reports.data.accountReport']
+    );
+
+    // income report
+    Route::get(
+        '/reports/data/in-out-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@inOutReport', 'as' => 'reports.data.inOutReport']
     );
 
     /**

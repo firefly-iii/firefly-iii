@@ -75,10 +75,22 @@ class Range
 
             // set view variables.
             $this->configureView();
+
+            // set more view variables:
+            $this->configureList();
         }
 
         return $theNext($request);
 
+    }
+
+    /**
+     *
+     */
+    private function configureList()
+    {
+        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
+        View::share('listLength', $pref);
     }
 
     private function configureView()

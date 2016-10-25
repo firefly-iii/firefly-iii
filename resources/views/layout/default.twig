@@ -192,6 +192,9 @@
     var mon_thousands_sep = "{{ localeconv.mon_thousands_sep|escape('js') }}";
     var frac_digits = {{ localeconv.frac_digits }};
 
+    var showFullList = '{{ trans('firefly.show_full_list') }}';
+    var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength}) }}';
+
 
 </script>
 

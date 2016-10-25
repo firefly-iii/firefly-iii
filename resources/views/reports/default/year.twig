@@ -33,14 +33,12 @@
         <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="loading" id="accountReport">
             </div>
-            {% include 'reports/partials/income-vs-expenses.twig' %}
-
+            <div class="loading" id="incomeVsExpenseReport">
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            {% include 'reports/partials/income.twig' %}
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            {% include 'reports/partials/expenses.twig' %}
+        <div class="col-lg-3 col-md-3 col-sm-3 loading" id="incomeReport">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 loading" id="expenseReport">
         </div>
     </div>
     <div class="row">
@@ -125,18 +123,9 @@
         var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
-
-        var incomeTopLength = {{ incomeTopLength }};
-        var expenseTopLength = {{ expenseTopLength }};
-        var incomeRestShow = false; // starts hidden.
-        var expenseRestShow = false; // starts hidden.
-        var showTheRest = '{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}';
-        var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
-        var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
-        var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
-
         <!-- some URL's -->
         var accountReportUrl = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var inOutReportUrl = '{{ route('reports.data.inOutReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
     </script>
 
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>
