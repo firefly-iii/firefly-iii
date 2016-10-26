@@ -22,7 +22,14 @@
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 loading" id="accountReport">
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 loading" id="incomeReport">
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding loading" id="incomeReport">
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3 loading" id="expenseReport">
         </div>
@@ -39,8 +46,14 @@
             <!-- budgets -->
             {% include 'reports/partials/budgets.twig' %}
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-12 loading" id="categoryReport">
-            {# {% include 'reports/partials/categories.twig' %} #}
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding loading" id="categoryReport">
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
