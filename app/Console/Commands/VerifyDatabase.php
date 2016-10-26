@@ -15,6 +15,7 @@ namespace FireflyIII\Console\Commands;
 
 use Crypt;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
@@ -84,6 +85,9 @@ class VerifyDatabase extends Command
 
         // transfers with budgets.
         $this->reportTransfersBudgets();
+
+        // report on journals with the wrong types of accounts.
+        $this->reportIncorrectJournals();
     }
 
     /**
@@ -199,6 +203,45 @@ class VerifyDatabase extends Command
                 'Error: Account #' . $entry->account_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called "accounts" and change the "deleted_at" field to: "' . $date . '"'
             );
+        }
+    }
+
+    private function reportIncorrectJournals()
+    {
+        $configuration = [
+            // a withdrawal can not have revenue account:
+            TransactionType::WITHDRAWAL => [AccountType::REVENUE],
+
+            // deposit cannot have an expense account:
+            TransactionType::DEPOSIT    => [AccountType::EXPENSE],
+
+            // transfer cannot have either:
+            TransactionType::TRANSFER   => [AccountType::EXPENSE, AccountType::REVENUE],
+        ];
+        foreach ($configuration as $transactionType => $accountTypes) {
+            $set = TransactionJournal
+                ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+                ->leftJoin('users', 'users.id', '=', 'transaction_journals.user_id')
+                ->where('transaction_types.type', $transactionType)
+                ->whereIn('account_types.type', $accountTypes)
+                ->whereNull('transaction_journals.deleted_at')
+                ->get(['transaction_journals.id', 'transaction_journals.user_id', 'users.email', 'account_types.type as a_type', 'transaction_types.type']);
+            foreach ($set as $entry) {
+                $this->error(
+                    sprintf(
+                        'Transaction journal #%d (user #%d, %s) is of type "%s" but ' .
+                        'is linked to a "%s". The transaction journal should be recreated.',
+                        $entry->id,
+                        $entry->user_id,
+                        $entry->email,
+                        $entry->type,
+                        $entry->a_type
+                    )
+                );
+            }
         }
     }
 
