@@ -58,8 +58,11 @@ class Preference extends Model
             $data = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             Log::error('Could not decrypt preference.', ['id' => $this->id, 'name' => $this->name, 'data' => $value]);
-            throw new FireflyException('Could not decrypt preference #' . $this->id . '.');
+            throw new FireflyException(
+                sprintf('Could not decrypt preference #%d. If this error persists, please run "php artisan cache:clear" on the command line.', $this->id)
+            );
         }
+
 
         return json_decode($data);
     }
