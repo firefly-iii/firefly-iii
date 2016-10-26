@@ -10,8 +10,7 @@
 $(function () {
     "use strict";
 
-    // find the little info buttons and respond to them.
-    $('.firefly-info-button').click(clickInfoButton);
+
 
     // load the account report, which this report shows:
     loadAccountReport();
@@ -19,10 +18,19 @@ $(function () {
     // load income / expense / difference:
     loadInOutReport();
 
+    // trigger info click
+    triggerInfoClick();
+
     // trigger list length things:
     listLengthInitial();
 
 });
+
+function triggerInfoClick() {
+    "use strict";
+    // find the little info buttons and respond to them.
+    $('.firefly-info-button').unbind('clicl').click(clickInfoButton);
+}
 
 function listLengthInitial() {
     "use strict";
@@ -62,6 +70,7 @@ function placeInOutReport(data) {
     $('#expenseReport').removeClass('loading').html(data.expenses);
     $('#incomeVsExpenseReport').removeClass('loading').html(data.incomes_expenses);
     listLengthInitial();
+    triggerInfoClick();
 }
 
 function failInOutReport() {

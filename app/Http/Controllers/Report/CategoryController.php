@@ -1,6 +1,6 @@
 <?php
 /**
- * AccountController.php
+ * CategoryController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -15,44 +15,45 @@ namespace FireflyIII\Http\Controllers\Report;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
- * Class AccountController
+ * Class CategoryController
  *
  * @package FireflyIII\Http\Controllers\Report
  */
-class AccountController extends Controller
+class CategoryController extends Controller
 {
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param ReportHelperInterface $helper
+     * @param Carbon                $start
+     * @param Carbon                $end
+     * @param Collection            $accounts
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function accountReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function categoryReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('account-report');
+        $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
             return $cache->get();
         }
 
+        $categories = $helper->getCategoryReport($start, $end, $accounts);
 
-        $accountTasker = app(AccountTaskerInterface::class);
-        $accountReport = $accountTasker->getAccountReport($start, $end, $accounts);
-
-        $result = view('reports.partials.accounts', compact('accountReport'))->render();
+        $result = view('reports.partials.categories', compact('categories'))->render();
         $cache->store($result);
+
         return $result;
     }
+
 }

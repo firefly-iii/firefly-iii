@@ -227,7 +227,6 @@ class ReportController extends Controller
     {
         // get report stuff!
         $budgets    = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
-        $categories = $this->helper->getCategoryReport($start, $end, $accounts);
         $balance    = $this->balanceHelper->getBalanceReport($start, $end, $accounts);
         $bills      = $this->helper->getBillReport($start, $end, $accounts);
         $tags       = $this->helper->tagReport($start, $end, $accounts);
@@ -243,7 +242,6 @@ class ReportController extends Controller
                 'tags',
                 'incomes',
                 'budgets', 'balance',
-                'categories',
                 'bills',
                 'accountIds', 'reportType'
             )

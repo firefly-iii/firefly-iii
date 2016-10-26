@@ -329,6 +329,12 @@ Route::group(
         ['uses' => 'Report\InOutController@inOutReport', 'as' => 'reports.data.inOutReport']
     );
 
+    // category report:
+    Route::get(
+        '/reports/data/category-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\CategoryController@categoryReport', 'as' => 'reports.data.categoryReport']
+    );
+
     /**
      * Rules Controller
      */

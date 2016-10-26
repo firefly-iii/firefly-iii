@@ -12,7 +12,11 @@
             </thead>
             <tbody>
             {% for cat in categories.getCategories %}
-                <tr>
+                {% if loop.index > listLength %}
+                    <tr class="overListLength">
+                {% else %}
+                    <tr>
+                {% endif %}
                     <td>
                         <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
                     </td>
@@ -26,6 +30,14 @@
             {% endfor %}
             </tbody>
             <tfoot>
+            {% if categories.getCategories.count > expenseTopLength %}
+                <tr>
+                    <td colspan="2" class="active">
+                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+
             <tr>
                 <td><em>{{ 'sum'|_ }}</em></td>
                 <td>{{ categories.getTotal|formatAmount }}</td>

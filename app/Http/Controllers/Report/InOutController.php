@@ -17,6 +17,7 @@ namespace FireflyIII\Http\Controllers\Report;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
 
@@ -28,22 +29,38 @@ use Response;
 class InOutController extends Controller
 {
 
-
+    /**
+     * @param ReportHelperInterface $helper
+     * @param Carbon                $start
+     * @param Carbon                $end
+     * @param Collection            $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function inOutReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
     {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('in-out-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
 
-        $incomes          = $helper->getIncomeReport($start, $end, $accounts);
-        $expenses         = $helper->getExpenseReport($start, $end, $accounts);
-        $incomeTopLength  = 8;
-        $expenseTopLength = 8;
+        $incomes  = $helper->getIncomeReport($start, $end, $accounts);
+        $expenses = $helper->getExpenseReport($start, $end, $accounts);
 
-        return Response::json(
-            [
-                'income'           => view('reports.partials.income', compact('incomes', 'incomeTopLength'))->render(),
-                'expenses'         => view('reports.partials.expenses', compact('expenses', 'expenseTopLength'))->render(),
-                'incomes_expenses' => view('reports.partials.income-vs-expenses', compact('expenses', 'incomes'))->render(),
-            ]
-        );
+        $result = [
+            'income'           => view('reports.partials.income', compact('incomes'))->render(),
+            'expenses'         => view('reports.partials.expenses', compact('expenses'))->render(),
+            'incomes_expenses' => view('reports.partials.income-vs-expenses', compact('expenses', 'incomes'))->render(),
+        ];
+        $cache->store($result);
+
+        return Response::json($result);
+
     }
 
 }
