@@ -87,7 +87,14 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {% include 'reports/partials/balance.twig' %}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'budgets'|_ }} ({{ 'splitByAccount'|_|lower }})</h3>
+                </div>
+                <div class="box-body table-responsive no-padding loading" id="balanceReport">
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="row">
@@ -119,6 +126,7 @@
         var accountReportUrl = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
         var inOutReportUrl = '{{ route('reports.data.inOutReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
         var categoryReportUrl = '{{ route('reports.data.categoryReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var balanceReportUrl = '{{ route('reports.data.balanceReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>
     <script type="text/javascript" src="js/ff/reports/default/month.js"></script>

@@ -335,6 +335,12 @@ Route::group(
         ['uses' => 'Report\CategoryController@categoryReport', 'as' => 'reports.data.categoryReport']
     );
 
+    // balance report:
+    Route::get(
+        '/reports/data/balance-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BalanceController@balanceReport', 'as' => 'reports.data.balanceReport']
+    );
+
     /**
      * Rules Controller
      */
