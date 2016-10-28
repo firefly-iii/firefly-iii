@@ -604,8 +604,8 @@ return [
     'in'                                        => 'In',
     'out'                                       => 'Out',
     'topX'                                      => 'top :number',
-    'show_full_list' => 'Show entire list',
-    'show_only_top' => 'Show only top :number',
+    'show_full_list'                            => 'Show entire list',
+    'show_only_top'                             => 'Show only top :number',
     'sum_of_year'                               => 'Sum of year',
     'sum_of_years'                              => 'Sum of years',
     'average_of_year'                           => 'Average of year',
@@ -630,6 +630,9 @@ return [
     'balance_amount'                            => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
     'no_audit_activity'                         => 'No activity was recorded on account <a href=":url" title=":account_name">:account_name</a> between :start and :end.',
     'audit_end_balance'                         => 'Account balance of <a href=":url" title=":account_name">:account_name</a> at the end of :end was: :balance',
+    'reports_extra_options'                     => 'Extra options',
+    'report_has_no_extra_options'               => 'This report has no extra options',
+    'reports_submit'                            => 'View report',
 
     // charts:
     'chart'                                     => 'Chart',
