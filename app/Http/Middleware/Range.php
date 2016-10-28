@@ -70,11 +70,11 @@ class Range
             // set start, end and finish:
             $this->setRange();
 
-            // get variables for date range:
-            $this->datePicker();
-
             // set view variables.
             $this->configureView();
+
+            // get variables for date range:
+            $this->datePicker();
 
             // set more view variables:
             $this->configureList();
