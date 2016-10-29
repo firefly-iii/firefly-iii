@@ -137,6 +137,7 @@ return [
         'bill'              => 'FireflyIII\Models\Bill',
         'budget'            => 'FireflyIII\Models\Budget',
         'category'          => 'FireflyIII\Models\Category',
+        'transaction_type'  => 'FireflyIII\Models\TransactionType',
         'currency'          => 'FireflyIII\Models\TransactionCurrency',
         'limitrepetition'   => 'FireflyIII\Models\LimitRepetition',
         'piggyBank'         => 'FireflyIII\Models\PiggyBank',

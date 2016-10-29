@@ -15,6 +15,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\TransactionType
@@ -42,6 +43,25 @@ class TransactionType extends Model
     const OPENING_BALANCE = 'Opening balance';
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @param string $type
+     *
+     * @return Model|null|static
+     */
+    public static function routeBinder(string $type)
+    {
+        if (!auth()->check()) {
+            throw new NotFoundHttpException;
+        }
+        $transactionType = self::where('type', $type)->first();
+        if (!is_null($transactionType)) {
+            return $transactionType;
+        }
+        throw new NotFoundHttpException;
+
+    }
+
 
     /**
      * @return bool

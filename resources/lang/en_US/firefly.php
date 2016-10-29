@@ -242,6 +242,7 @@ return [
     'rule_action_set_source_account'             => 'Set source account to :action_value',
     'rule_action_set_destination_account_choice' => 'Set destination account to...',
     'rule_action_set_destination_account'        => 'Set destination account to :action_value',
+
     // tags
     'store_new_tag'                              => 'Store new tag',
     'update_tag'                                 => 'Update tag',
@@ -351,6 +352,21 @@ return [
     'title_deposit'                              => 'Revenue / income',
     'title_transfer'                             => 'Transfers',
     'title_transfers'                            => 'Transfers',
+
+    // convert stuff:
+    'convert_is_already_type_Withdrawal'         => 'This transaction is already a withdrawal',
+    'convert_is_already_type_Deposit'            => 'This transaction is already a deposit',
+    'convert_is_already_type_Transfer'           => 'This transaction is already a transfer',
+    'convert_to_Withdrawal'                      => 'Convert ":description" to a withdrawal',
+    'convert_to_Deposit'                         => 'Convert ":description" to a deposit',
+    'convert_to_Transfer'                        => 'Convert ":description" to a transfer',
+    'convert_options_WithdrawalDeposit'          => 'Convert a withdrawal into a deposit',
+    'convert_options_WithdrawalTransfer'         => 'Convert a withdrawal into a transfer',
+    'convert_options_DepositTransfer'            => 'Convert a deposit into a transfer',
+    'convert_options_DepositWithdrawal'          => 'Convert a deposit into a withdrawal',
+    'convert_options_TransferWithdrawal'         => 'Convert a transfer into a withdrawal',
+    'convert_options_TransferDeposit'            => 'Convert a transfer into a deposit',
+
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Create new withdrawal',
