@@ -41,8 +41,16 @@ class ExportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-file-archive-o');
-        View::share('title', trans('firefly.export_data'));
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-file-archive-o');
+                View::share('title', trans('firefly.export_data'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**

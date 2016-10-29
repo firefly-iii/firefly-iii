@@ -49,8 +49,18 @@ class ReportController extends Controller
     {
         parent::__construct();
 
-        View::share('title', trans('firefly.reports'));
-        View::share('mainTitleIcon', 'fa-line-chart');
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.reports'));
+                View::share('mainTitleIcon', 'fa-line-chart');
+
+                $this->helper       = app(ReportHelperInterface::class);
+                $this->budgetHelper = app(BudgetReportHelperInterface::class);
+
+                return $next($request);
+            }
+        );
 
     }
 
@@ -61,7 +71,7 @@ class ReportController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $this->createRepositories();
+
         /** @var Carbon $start */
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
@@ -92,7 +102,6 @@ class ReportController extends Controller
      */
     public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $this->createRepositories();
         // throw an error if necessary.
         if ($end < $start) {
             throw new FireflyException('End date cannot be before start date, silly!');
@@ -198,15 +207,6 @@ class ReportController extends Controller
         $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
 
         return view('reports.audit.report', compact('start', 'end', 'reportType', 'accountIds', 'accounts', 'auditData', 'hideable', 'defaultShow'));
-    }
-
-    /**
-     *
-     */
-    private function createRepositories()
-    {
-        $this->helper       = app(ReportHelperInterface::class);
-        $this->budgetHelper = app(BudgetReportHelperInterface::class);
     }
 
     /**

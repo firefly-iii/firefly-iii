@@ -45,8 +45,16 @@ class PiggyBankController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.piggyBanks'));
-        View::share('mainTitleIcon', 'fa-sort-amount-asc');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.piggyBanks'));
+                View::share('mainTitleIcon', 'fa-sort-amount-asc');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -364,7 +372,7 @@ class PiggyBankController extends Controller
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
-        $data = $request->getPiggyBankData();
+        $data      = $request->getPiggyBankData();
         $piggyBank = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => e($piggyBank->name)])));
@@ -390,7 +398,7 @@ class PiggyBankController extends Controller
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {
-        $data = $request->getPiggyBankData();
+        $data      = $request->getPiggyBankData();
         $piggyBank = $repository->update($piggyBank, $data);
 
         Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => e($piggyBank->name)])));

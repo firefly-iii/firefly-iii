@@ -53,6 +53,7 @@ class AccountController extends Controller
 
         $result = view('reports.partials.accounts', compact('accountReport'))->render();
         $cache->store($result);
+
         return $result;
     }
 }

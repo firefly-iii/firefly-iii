@@ -46,8 +46,16 @@ class AccountController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-credit-card');
-        View::share('title', trans('firefly.accounts'));
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-credit-card');
+                View::share('title', trans('firefly.accounts'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**

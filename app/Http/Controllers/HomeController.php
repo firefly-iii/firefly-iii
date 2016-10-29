@@ -26,7 +26,7 @@ use Log;
 use Preferences;
 use Route;
 use Session;
-
+use View;
 
 /**
  * Class HomeController
@@ -41,6 +41,8 @@ class HomeController extends Controller
     public function __construct()
     {
         parent::__construct();
+        View::share('title', 'Firefly III');
+        View::share('mainTitleIcon', 'fa-fire');
     }
 
     /**
@@ -128,11 +130,9 @@ class HomeController extends Controller
             return redirect(route('new-user.index'));
         }
 
-        $title         = 'Firefly';
-        $subTitle      = trans('firefly.welcomeBack');
-        $mainTitleIcon = 'fa-fire';
-        $transactions  = [];
-        $frontPage     = Preferences::get(
+        $subTitle     = trans('firefly.welcomeBack');
+        $transactions = [];
+        $frontPage    = Preferences::get(
             'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
@@ -166,7 +166,7 @@ class HomeController extends Controller
         // these routes are not relevant for the help pages:
         $ignore = ['login', 'registe', 'logout', 'two-fac', 'lost-two', 'confirm', 'resend', 'do_confirm', 'testFla', 'json.', 'piggy-banks.add',
                    'piggy-banks.remove', 'preferences.', 'rules.rule.up', 'rules.rule.down', 'rules.rule-group.up', 'rules.rule-group.down', 'popup.report',
-                   'admin.users.domains.block-','import.json','help.'
+                   'admin.users.domains.block-', 'import.json', 'help.',
         ];
         $routes = Route::getRoutes();
 
@@ -178,7 +178,7 @@ class HomeController extends Controller
             $methods = $route->getMethods();
 
             if (!is_null($name) && strlen($name) > 0 && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo sprintf('touch %s.md', $name)."\n";
+                echo sprintf('touch %s.md', $name) . "\n";
 
             }
         }

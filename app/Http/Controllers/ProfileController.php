@@ -36,8 +36,15 @@ class ProfileController extends Controller
     {
         parent::__construct();
 
-        View::share('title', trans('firefly.profile'));
-        View::share('mainTitleIcon', 'fa-user');
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.profile'));
+                View::share('mainTitleIcon', 'fa-user');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -45,9 +52,11 @@ class ProfileController extends Controller
      */
     public function changePassword()
     {
-        return view('profile.change-password')->with('title', auth()->user()->email)->with('subTitle', trans('firefly.change_your_password'))->with(
-            'mainTitleIcon', 'fa-user'
-        );
+        $title        = auth()->user()->email;
+        $subTitle     = strval(trans('firefly.change_your_password'));
+        $subTitleIcon = 'fa-key';
+
+        return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -55,9 +64,11 @@ class ProfileController extends Controller
      */
     public function deleteAccount()
     {
-        return view('profile.delete-account')->with('title', auth()->user()->email)->with('subTitle', trans('firefly.delete_account'))->with(
-            'mainTitleIcon', 'fa-user'
-        );
+        $title        = auth()->user()->email;
+        $subTitle     = strval(trans('firefly.delete_account'));
+        $subTitleIcon = 'fa-trash';
+
+        return view('profile.delete-account', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**

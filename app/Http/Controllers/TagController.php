@@ -50,15 +50,22 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Tags');
-        View::share('mainTitleIcon', 'fa-tags');
         View::share('hideTags', true);
-        $this->tagOptions = [
-            'nothing'        => trans('firefly.regular_tag'),
-            'balancingAct'   => trans('firefly.balancing_act'),
-            'advancePayment' => trans('firefly.advance_payment'),
-        ];
-        View::share('tagOptions', $this->tagOptions);
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', 'Tags');
+                View::share('mainTitleIcon', 'fa-tags');
+                $this->tagOptions = [
+                    'nothing'        => trans('firefly.regular_tag'),
+                    'balancingAct'   => trans('firefly.balancing_act'),
+                    'advancePayment' => trans('firefly.advance_payment'),
+                ];
+                View::share('tagOptions', $this->tagOptions);
+
+                return $next($request);
+            }
+        );
     }
 
     /**

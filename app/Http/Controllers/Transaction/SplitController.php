@@ -63,8 +63,7 @@ class SplitController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-share-alt');
-        View::share('title', trans('firefly.split-transactions'));
+
 
         // some useful repositories:
         $this->middleware(
@@ -74,6 +73,8 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
+                View::share('mainTitleIcon', 'fa-share-alt');
+                View::share('title', trans('firefly.split-transactions'));
 
                 return $next($request);
             }

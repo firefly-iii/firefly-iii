@@ -42,8 +42,16 @@ class RuleController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.rules'));
-        View::share('mainTitleIcon', 'fa-random');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.rules'));
+                View::share('mainTitleIcon', 'fa-random');
+
+                return $next($request);
+            }
+        );
     }
 
     /**

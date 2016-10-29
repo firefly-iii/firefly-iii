@@ -59,8 +59,6 @@ class SingleController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.transactions'));
-        View::share('mainTitleIcon', 'fa-repeat');
 
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
@@ -75,10 +73,12 @@ class SingleController extends Controller
                 $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
 
+                View::share('title', trans('firefly.transactions'));
+                View::share('mainTitleIcon', 'fa-repeat');
+
                 return $next($request);
             }
         );
-
 
     }
 

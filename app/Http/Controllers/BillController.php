@@ -38,8 +38,16 @@ class BillController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.bills'));
-        View::share('mainTitleIcon', 'fa-calendar-o');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.bills'));
+                View::share('mainTitleIcon', 'fa-calendar-o');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -140,7 +148,7 @@ class BillController extends Controller
 
                 // paid in this period?
                 $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
-                $bill->payDates        = $repository->getPayDatesInRange($bill, $start, $end);
+                $bill->payDates  = $repository->getPayDatesInRange($bill, $start, $end);
                 $lastDate        = clone $start;
                 if ($bill->paidDates->count() >= $bill->payDates->count()) {
                     $lastDate = $end;

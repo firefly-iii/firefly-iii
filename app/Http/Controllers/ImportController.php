@@ -41,8 +41,15 @@ class ImportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-archive');
-        View::share('title', trans('firefly.import_data_full'));
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-archive');
+                View::share('title', trans('firefly.import_data_full'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**

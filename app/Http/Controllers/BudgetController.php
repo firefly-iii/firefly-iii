@@ -47,9 +47,17 @@ class BudgetController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.budgets'));
-        View::share('mainTitleIcon', 'fa-tasks');
+
         View::share('hideBudgets', true);
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.budgets'));
+                View::share('mainTitleIcon', 'fa-tasks');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -359,8 +367,8 @@ class BudgetController extends Controller
      */
     public function store(BudgetFormRequest $request, BudgetRepositoryInterface $repository)
     {
-        $data = $request->getBudgetData();
-        $budget     = $repository->store($data);
+        $data   = $request->getBudgetData();
+        $budget = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
         Preferences::mark();

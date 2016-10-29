@@ -37,8 +37,15 @@ class ConfigurationController extends Controller
     {
         parent::__construct();
 
-        View::share('title', strval(trans('firefly.administration')));
-        View::share('mainTitleIcon', 'fa-hand-spock-o');
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', strval(trans('firefly.administration')));
+                View::share('mainTitleIcon', 'fa-hand-spock-o');
+
+                return $next($request);
+            }
+        );
 
     }
 
