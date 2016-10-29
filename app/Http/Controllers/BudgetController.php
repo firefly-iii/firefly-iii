@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -199,10 +200,12 @@ class BudgetController extends Controller
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $startAsString     = $start->format('Y-m-d');
         $endAsString       = $end->format('Y-m-d');
+        Log::debug('Now at /budgets');
 
         // loop the budgets:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
+            Log::debug(sprintf('Now at budget #%d ("%s")', $budget->id, $budget->name));
             $budget->spent    = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
             $allRepetitions   = $repository->getAllBudgetLimitRepetitions($start, $end);
             $otherRepetitions = new Collection;
@@ -290,13 +293,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param BudgetRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Budget                     $budget
      *
      * @return View
-     * @throws FireflyException
      */
-    public function show(BudgetRepositoryInterface $repository, Budget $budget)
+    public function show(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
     {
         /** @var Carbon $start */
         $start    = session('first', Carbon::create()->startOfYear());
@@ -308,6 +311,7 @@ class BudgetController extends Controller
         $count    = $journals->count();
         $journals = $journals->slice($offset, $pageSize);
         $journals = new LengthAwarePaginator($journals, $count, $pageSize);
+        $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
 
         $journals->setPath('/budgets/show/' . $budget->id);
 
@@ -318,7 +322,7 @@ class BudgetController extends Controller
 
         /** @var LimitRepetition $entry */
         foreach ($set as $entry) {
-            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $entry->startdate, $entry->enddate);
+            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->startdate, $entry->enddate);
             $limits->push($entry);
         }
 
@@ -326,15 +330,17 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
-     * @param LimitRepetition           $repetition
+     * @param BudgetRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Budget                     $budget
+     * @param LimitRepetition            $repetition
      *
      * @return View
      * @throws FireflyException
      */
-    public function showWithRepetition(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition)
-    {
+    public function showWithRepetition(
+        BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget, LimitRepetition $repetition
+    ) {
         if ($repetition->budgetLimit->budget->id != $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
@@ -348,11 +354,13 @@ class BudgetController extends Controller
         $journals = $journals->slice($offset, $pageSize);
         $journals = new LengthAwarePaginator($journals, $count, $pageSize);
         $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+        $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+
 
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
 
 
-        $repetition->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
+        $repetition->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
         $limits            = new Collection([$repetition]);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
