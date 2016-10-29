@@ -64,30 +64,35 @@ class ConvertController extends Controller
         $positiveAmount = TransactionJournal::amountPositive($journal);
         $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $sourceType     = $journal->transactionType;
+        $subTitle       = trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
+        $subTitleIcon   = 'fa-exchange';
 
-        $subTitle     = trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
-        $subTitleIcon = 'fa-exchange';
-
+        // cannot convert to its own type.
         if ($sourceType->type === $destinationType->type) {
             Session::flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
+
+        // cannot convert split.
         if ($journal->transactions()->count() > 2) {
             Session::flash('error', trans('firefly.cannot_convert_split_journl'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
+
+        // get source and destination account:
         $sourceAccount      = TransactionJournal::sourceAccountList($journal)->first();
         $destinationAccount = TransactionJournal::destinationAccountList($journal)->first();
 
         return view(
-            'transactions.convert', compact(
-                                      'sourceType', 'destinationType', 'journal', 'assetAccounts',
-                                      'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType',
-                                      'subTitle', 'subTitleIcon'
+            'transactions.convert',
+            compact(
+                'sourceType', 'destinationType', 'journal', 'assetAccounts',
+                'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType',
+                'subTitle', 'subTitleIcon'
 
-                                  )
+            )
         );
 
 
@@ -95,8 +100,35 @@ class ConvertController extends Controller
         //  or to transfer requires
     }
 
-    public function submit(Request $request)
+    /**
+     * @param Request            $request
+     * @param TransactionType    $destinationType
+     * @param TransactionJournal $journal
+     */
+    public function submit(Request $request, TransactionType $destinationType, TransactionJournal $journal)
     {
+        $sourceType     = $journal->transactionType;
+
+        // cannot convert to its own type.
+        if ($sourceType->type === $destinationType->type) {
+            Session::flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
+
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+
+        // cannot convert split.
+        if ($journal->transactions()->count() > 2) {
+            Session::flash('error', trans('firefly.cannot_convert_split_journl'));
+
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+
+        // try the conversion with the given data:
+
+
+
+
+
         echo '<pre>';
 
         var_dump($request->all());

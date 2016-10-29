@@ -218,7 +218,7 @@
                             <p>
                                 <i class="fa fa-exchange" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.convert', ['withdrawal', journal.id]) }}">
-                                    Convert this {{ journal.transactionType.type }} to a withdrawal.
+                                    {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
                                 </a>
                             </p>
                         {% endif %}
@@ -226,7 +226,7 @@
                             <p>
                                 <i class="fa fa-exchange" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.convert', ['deposit', journal.id]) }}">
-                                    Convert this {{ journal.transactionType.type }} to a deposit.
+                                    {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
                                 </a>
                             </p>
                         {% endif %}
@@ -235,7 +235,7 @@
                             <p>
                                 <i class="fa fa-exchange" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.convert', ['transfer', journal.id]) }}">
-                                    Convert this {{ journal.transactionType.type }} to a transfer.
+                                    {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
                                 </a>
                             </p>
                         {% endif %}
@@ -251,7 +251,7 @@
 
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Transactions</h3>
+                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <table class="table table-bordered table-striped">
                     <thead>

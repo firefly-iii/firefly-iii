@@ -40,13 +40,19 @@
                         {# ONE #}
                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                             <p><em>
-                                    If you convert this withdrawal into a deposit, {{ positiveAmount|formatAmount }}
-                                    will be deposited into <a href="{{ route('accounts.show',[sourceAccount.id]) }}">{{ sourceAccount.name }}</a>
-                                    instead of taken from it.
+                                    {{ trans('firefly.convert_explanation_withdrawal_deposit',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
                                 </em>
                             </p>
                             <p><em>
-                                    Please pick the revenue account where the money will come from.
+                                    {{ 'convert_please_set_revenue_source'|_ }}
                                 </em>
                             </p>
 
@@ -56,15 +62,21 @@
                         {# TWO #}
                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
                             <p><em>
-                                    If you convert this withdrawal into a transfer, {{ positiveAmount|formatAmount }}
-                                    will be transferred from <a href="{{ route('accounts.show',[sourceAccount.id]) }}">{{ sourceAccount.name }}</a>
-                                    to a new asset account, instead of being paid to
-                                    <a href="{{ route('accounts.show',[destinationAccount.id]) }}">{{ destinationAccount.name }}</a>.
+                                    {{ trans('firefly.convert_explanation_withdrawal_transfer',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
                                 </em></p>
 
                             <p>
                                 <em>
-                                    Please pick the asset account where the money will go to.
+                                    {{ 'convert_please_set_asset_destination'|_ }}
+
                                 </em>
                             </p>
                             {{ ExpandedForm.select('destination_account_asset', assetAccounts) }}
@@ -76,14 +88,21 @@
                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
                             <p>
                                 <em>
-                                    If you convert this deposit into a withdrawal, {{ positiveAmount|formatAmount }}
-                                    will be removed from <a href="{{ route('accounts.show',[destinationAccount.id]) }}">{{ destinationAccount.name }}</a>
-                                    instead of added to it.
+                                    {{ trans('firefly.convert_explanation_deposit_withdrawal',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
                                 </em>
                             </p>
                             <p>
                                 <em>
-                                    Please pick the expense account where the money will go to.
+                                    {{ 'convert_please_set_expense_destination'|_ }}
+
                                 </em>
                             </p>
                             {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
@@ -95,14 +114,21 @@
 
                             <p>
                                 <em>
-                                    If you convert this deposit into a transfer, {{ positiveAmount|formatAmount }} will be transferred
-                                    from an asset account of your choice into
-                                    <a href="{{ route('accounts.show',[destinationAccount.id]) }}">{{ destinationAccount.name }}</a>.
+                                    {{ trans('firefly.convert_explanation_deposit_transfer',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
                                 </em>
                             </p>
                             <p>
                                 <em>
-                                    Please pick the asset account where the money will come from.
+                                    {{ 'convert_please_set_asset_source'|_ }}
+
                                 </em>
                             </p>
 
@@ -114,17 +140,21 @@
 
                             <p>
                                 <em>
-                                    If you convert this transfer into a withdrawal, {{ positiveAmount|formatAmount }}
-                                    will go from <a href="{{ route('accounts.show',[sourceAccount.id]) }}">{{ sourceAccount.name }}</a>
-                                    to a new destination as an expense, instead of to
-                                    <a href="{{ route('accounts.show',[destinationAccount.id]) }}">{{ destinationAccount.name }}</a>
-                                    as a transfer.
+                                    {{ trans('firefly.convert_explanation_transfer_withdrawal',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
                                 </em>
                             </p>
 
                             <p>
                                 <em>
-                                    Please pick the expense account where the money will go to.
+                                    {{ 'convert_please_set_expense_destination'|_ }}
                                 </em>
                             </p>
 
@@ -135,17 +165,24 @@
                         {# SIX #}
                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
 
+
                             <p>
                                 <em>
-                                    If you convert this transfer into a deposit, {{ positiveAmount|formatAmount }}
-                                    will be deposited into account <a href="{{ route('accounts.show',[destinationAccount.id]) }}">{{ destinationAccount.name }}</a>
-                                    instead of being transferred there.
+                                    {{ trans('firefly.convert_explanation_transfer_deposit',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
                                 </em>
                             </p>
 
                             <p>
                                 <em>
-                                    Please pick the revenue account where the money will come from.
+                                    {{ 'convert_please_set_revenue_source'|_ }}
                                 </em>
                             </p>
 
