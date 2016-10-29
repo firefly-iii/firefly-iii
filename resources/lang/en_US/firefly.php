@@ -241,6 +241,7 @@ return [
     'rule_action_set_source_account_choice'      => 'Set source account to...',
     'rule_action_set_source_account'             => 'Set source account to :action_value',
     'rule_action_set_destination_account_choice' => 'Set destination account to...',
+    'rule_action_set_destination_account'        => 'Set destination account to :action_value',
     // tags
     'store_new_tag'                              => 'Store new tag',
     'update_tag'                                 => 'Update tag',
