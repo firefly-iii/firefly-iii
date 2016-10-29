@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BudgetRepository
@@ -351,6 +352,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         // collect amount of transaction journals, which is easy:
         $budgetIds         = $budgets->pluck('id')->toArray();
         $accountIds        = $accounts->pluck('id')->toArray();
+
+        Log::debug('spentInPeriod: Now in spentInPeriod for these budgets: ', $budgetIds);
+        Log::debug('spentInPeriod: and these accounts: ', $accountIds);
+        Log::debug(sprintf('spentInPeriod: Start date is "%s", end date is "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
+
         $fromJournalsQuery = TransactionJournal
             ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -376,6 +382,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $fromJournalsQuery->whereIn('transactions.account_id', $accountIds);
         }
         $first = strval($fromJournalsQuery->sum('transactions.amount'));
+        Log::debug(sprintf('spentInPeriod: Result from first query: %s', $first));
         unset($fromJournalsQuery);
 
         // collect amount from transactions:
@@ -408,6 +415,9 @@ class BudgetRepository implements BudgetRepositoryInterface
             $fromTransactionsQuery->whereIn('transactions.account_id', $accountIds);
         }
         $second = strval($fromTransactionsQuery->sum('transactions.amount'));
+        Log::debug(sprintf('spentInPeriod: Result from second query: %s', $second));
+
+        Log::debug(sprintf('spentInPeriod: FINAL: %s', bcadd($first, $second)));
 
         return bcadd($first, $second);
     }
