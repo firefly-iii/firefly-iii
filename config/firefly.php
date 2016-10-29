@@ -184,6 +184,9 @@ return [
         'set_description'     => 'FireflyIII\Rules\Actions\SetDescription',
         'append_description'  => 'FireflyIII\Rules\Actions\AppendDescription',
         'prepend_description' => 'FireflyIII\Rules\Actions\PrependDescription',
+
+        'set_source_account' => 'FireflyIII\Rules\Actions\SetSourceAccount',
+        //'set_destination_account'          => 'FireflyIII\Rules\Actions\SetDestinationAccount',
     ],
     'rule-actions-text'        => [
         'set_category',
