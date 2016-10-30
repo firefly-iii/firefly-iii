@@ -2,7 +2,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.4] - 2016-10-30
+### Added
+- New Dockerfile thanks to @schoentoon
+- Added changing the destination account as rule action.
+- Added changing the source account as rule action.
+- Can convert transactions into different types.
+
+### Changed
+- Changed the export routine to be more future-proof.
+- Improved help routine.
+- Integrated CrowdIn translations.
+- Simplified reports
+- Change error message to refer to solution.
+
+### Fixed
+- #367 thanks to @HungryFeline
+- #366 thanks to @3mz3t
+- #362 and #341 thanks to @bnw
+- #355 thanks to @roberthorlings
+
+## [4.1.3] - 2016-10-22
+### Fixed
+- Some event handlers called the wrong method.
+
+## [4.1.2] - 2016-10-22
+
+### Fixed
+- A bug is fixed in the journal event handler that prevented Firefly III from actually storing journals.
+
 ## [4.1.1] - 2016-10-22
+
 ### Added
 - Option to show deposit accounts on the front page.
 - Script to upgrade split transactions
