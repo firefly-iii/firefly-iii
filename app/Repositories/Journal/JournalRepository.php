@@ -26,7 +26,9 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Log;
+use Preferences;
 
 /**
  * Class JournalRepository
@@ -49,6 +51,41 @@ class JournalRepository implements JournalRepositoryInterface
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param TransactionType    $type
+     * @param Account            $source
+     * @param Account            $destination
+     *
+     * @return MessageBag
+     */
+    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag
+    {
+        // default message bag that shows errors for everything.
+        $messages = new MessageBag;
+        $messages->add('source_account_revenue', trans('firefly.invalid_convert_selection'));
+        $messages->add('destination_account_asset', trans('firefly.invalid_convert_selection'));
+        $messages->add('destination_account_expense', trans('firefly.invalid_convert_selection'));
+        $messages->add('source_account_asset', trans('firefly.invalid_convert_selection'));
+
+        if ($source->id === $destination->id || is_null($source->id) || is_null($destination->id)) {
+            return $messages;
+        }
+
+        $sourceTransaction             = $journal->transactions()->where('amount', '<', 0)->first();
+        $destinationTransaction        = $journal->transactions()->where('amount', '>', 0)->first();
+        $sourceTransaction->account_id = $source->id;
+        $sourceTransaction->save();
+        $destinationTransaction->account_id = $destination->id;
+        $destinationTransaction->save();
+        $journal->transaction_type_id = $type->id;
+        $journal->save();
+        Preferences::mark();
+        $messages = new MessageBag;
+
+        return $messages;
     }
 
     /**
@@ -94,7 +131,6 @@ class JournalRepository implements JournalRepositoryInterface
 
         return $entry;
     }
-
 
     /**
      * @param array $data

@@ -13,7 +13,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use Illuminate\Support\MessageBag;
 
 /**
  * Interface JournalRepositoryInterface
@@ -31,6 +34,15 @@ interface JournalRepositoryInterface
      * @return bool
      */
     public function delete(TransactionJournal $journal): bool;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param TransactionType    $type
+     * @param array              $data
+     *
+     * @return MessageBag
+     */
+    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
     /**
      * Find a specific journal

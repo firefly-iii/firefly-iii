@@ -383,6 +383,11 @@ return [
     'convert_explanation_deposit_transfer'       => 'If you convert this deposit into a transfer, :amount will be transferred from an asset account of your choice into <a href=":destinationRoute">:destinationName</a>.',
     'convert_explanation_transfer_withdrawal'    => 'If you convert this transfer into a withdrawal, :amount will go from <a href=":sourceRoute">:sourceName</a> to a new destination as an expense, instead of to <a href=":destinationRoute">:destinationName</a> as a transfer.',
     'convert_explanation_transfer_deposit'       => 'If you convert this transfer into a deposit, :amount will be deposited into account <a href=":destinationRoute">:destinationName</a> instead of being transferred there.',
+    'converted_to_Withdrawal'                    => 'The transaction has been converted to a withdrawal',
+    'converted_to_Deposit'                       => 'The transaction has been converted to a deposit',
+    'converted_to_Transfer'                      => 'The transaction has been converted to a transfer',
+
+
     // create new stuff:
     'create_new_withdrawal'                      => 'Create new withdrawal',
     'create_new_deposit'                         => 'Create new deposit',
