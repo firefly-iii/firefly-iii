@@ -1,45 +1,39 @@
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">{{ 'income'|_ }}</h3>
-    </div>
-    <div class="box-body table-responsive no-padding">
-        <table class="table table-hover">
-            <tbody>
-            {% for income in incomes.getIncomes %}
-                {% if loop.index > incomeTopLength %}
-                    <tr class="collapse out incomesCollapsed">
-                {% else %}
-                    <tr>
-                {% endif %}
-                <td>
-                    <a href="{{ route('accounts.show',income.id) }}" title="{{ income.name }}">{{ income.name }}</a>
-                    {% if income.count > 1 %}
-                        <br/>
-                        <small>
-                            {{ income.count }} {{ 'transactions'|_|lower }}
-                            <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="income-entry"
-                               data-account-id="{{ income.id }}"></i>
-                        </small>
-
-                    {% endif %}
-                </td>
-                <td>{{ income.amount|formatAmount }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            {% if incomes.getIncomes|length > incomeTopLength %}
-                <tr>
-                    <td colspan="2" class="active">
-                        <a href="#" id="showIncomes">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
-                    </td>
-                </tr>
-            {% endif %}
+<table class="table table-hover">
+    <tbody>
+    {% for income in incomes.getIncomes %}
+        {% if loop.index > listLength %}
+            <tr class="overListLength">
+        {% else %}
             <tr>
-                <td><em>{{ 'sum'|_ }}</em></td>
-                <td>{{ incomes.getTotal|formatAmount }}</td>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
+        {% endif %}
+        <td>
+            <a href="{{ route('accounts.show',income.id) }}" title="{{ income.name }}">{{ income.name }}</a>
+            {% if income.count > 1 %}
+                <br/>
+                <small>
+                    {{ income.count }} {{ 'transactions'|_|lower }}
+                    <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="income-entry"
+                       data-account-id="{{ income.id }}"></i>
+                </small>
+
+            {% endif %}
+        </td>
+
+        <td>{{ income.amount|formatAmount }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% if incomes.getIncomes|length > listLength %}
+        <tr>
+            <td colspan="2" class="active">
+                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{ number:listLength } ) }}</a>
+            </td>
+        </tr>
+    {% endif %}
+    <tr>
+        <td><em>{{ 'sum'|_ }}</em></td>
+        <td>{{ incomes.getTotal|formatAmount }}</td>
+    </tr>
+    </tfoot>
+</table>

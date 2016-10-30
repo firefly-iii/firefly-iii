@@ -43,8 +43,16 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.categories'));
-        View::share('mainTitleIcon', 'fa-bar-chart');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.categories'));
+                View::share('mainTitleIcon', 'fa-bar-chart');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -264,11 +272,8 @@ class CategoryController extends Controller
      */
     public function store(CategoryFormRequest $request, CRI $repository)
     {
-        $categoryData = [
-            'name' => trim($request->input('name')),
-            'user' => auth()->user()->id,
-        ];
-        $category     = $repository->store($categoryData);
+        $data     = $request->getCategoryData();
+        $category = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
         Preferences::mark();
@@ -292,11 +297,8 @@ class CategoryController extends Controller
      */
     public function update(CategoryFormRequest $request, CRI $repository, Category $category)
     {
-        $categoryData = [
-            'name' => $request->input('name'),
-        ];
-
-        $repository->update($category, $categoryData);
+        $data = $request->getCategoryData();
+        $repository->update($category, $data);
 
         Session::flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
         Preferences::mark();

@@ -22,12 +22,13 @@ return [
         'single_user_mode' => true,
     ],
     'chart'               => 'chartjs',
-    'version'             => '4.1.1',
+    'version'             => '4.1.4',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
     'resend_confirmation' => 3600,
     'confirmation_age'    => 14400, // four hours
+    'list_length'         => 10,
 
     'export_formats'           => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
@@ -136,6 +137,7 @@ return [
         'bill'              => 'FireflyIII\Models\Bill',
         'budget'            => 'FireflyIII\Models\Budget',
         'category'          => 'FireflyIII\Models\Category',
+        'transaction_type'  => 'FireflyIII\Models\TransactionType',
         'currency'          => 'FireflyIII\Models\TransactionCurrency',
         'limitrepetition'   => 'FireflyIII\Models\LimitRepetition',
         'piggyBank'         => 'FireflyIII\Models\PiggyBank',
@@ -183,6 +185,9 @@ return [
         'set_description'     => 'FireflyIII\Rules\Actions\SetDescription',
         'append_description'  => 'FireflyIII\Rules\Actions\AppendDescription',
         'prepend_description' => 'FireflyIII\Rules\Actions\PrependDescription',
+
+        'set_source_account'      => 'FireflyIII\Rules\Actions\SetSourceAccount',
+        'set_destination_account' => 'FireflyIII\Rules\Actions\SetDestinationAccount',
     ],
     'rule-actions-text'        => [
         'set_category',

@@ -33,7 +33,7 @@ return [
     'split_number'          => 'Split #',
     'destination'           => 'Doel',
     'source'                => 'Bron',
-    'expectedMatch'         => 'Wordt verwacht',
+    'next_expected_match'   => 'Volgende verwachte match',
     'automatch'             => 'Automatisch herkennen?',
     'repeat_freq'           => 'Herhaling',
     'description'           => 'Omschrijving',

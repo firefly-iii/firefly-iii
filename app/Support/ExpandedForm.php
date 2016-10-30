@@ -93,7 +93,7 @@ class ExpandedForm
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $value           = round($this->fillFieldValue($name, $value), 2);
         $options['step'] = 'any';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = Amt::getAllCurrencies();

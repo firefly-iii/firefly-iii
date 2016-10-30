@@ -14,8 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use Input;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AccountFormRequest
@@ -45,7 +44,6 @@ class AccountFormRequest extends Request
             'accountType'            => $this->input('what'),
             'virtualBalance'         => round($this->input('virtualBalance'), 2),
             'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'user'                   => auth()->user()->id,
             'iban'                   => trim($this->input('iban')),
             'accountNumber'          => trim($this->input('accountNumber')),
             'accountRole'            => $this->input('accountRole'),
@@ -62,15 +60,17 @@ class AccountFormRequest extends Request
      */
     public function rules()
     {
+        /** @var AccountRepositoryInterface $repository */
+        $repository     = app(AccountRepositoryInterface::class);
         $accountRoles   = join(',', array_keys(config('firefly.accountRoles')));
         $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
 
         $nameRule = 'required|min:1|uniqueAccountForUser';
         $idRule   = '';
-        if (Account::find(Input::get('id'))) {
+        if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|min:1|uniqueAccountForUser:' . Input::get('id');
+            $nameRule = 'required|min:1|uniqueAccountForUser:' . $this->get('id');
         }
 
         return [

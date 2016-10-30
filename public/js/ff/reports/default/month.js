@@ -1,15 +1,51 @@
-/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds , picker:true, minDate, expenseRestShow:true, incomeRestShow:true, year, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
+/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds, lineChart, categoryReportUrl, balanceReportUrl */
 
 
 $(function () {
     "use strict";
     drawChart();
 
-    // click open the top X income list:
-    $('#showIncomes').click(showIncomes);
-    // click open the top X expense list:
-    $('#showExpenses').click(showExpenses);
+    loadCategoryReport();
+    loadBalanceReport();
 });
+
+function loadCategoryReport() {
+    "use strict";
+    console.log('Going to grab ' + categoryReportUrl);
+    $.get(categoryReportUrl).done(placeCategoryReport).fail(failCategoryReport);
+}
+
+function loadBalanceReport() {
+    "use strict";
+    console.log('Going to grab ' + categoryReportUrl);
+    $.get(balanceReportUrl).done(placeBalanceReport).fail(failBalanceReport);
+}
+
+function placeBalanceReport(data) {
+    "use strict";
+    $('#balanceReport').removeClass('loading').html(data);
+    listLengthInitial();
+    triggerInfoClick();
+}
+
+function placeCategoryReport(data) {
+    "use strict";
+    $('#categoryReport').removeClass('loading').html(data);
+    listLengthInitial();
+    triggerInfoClick();
+}
+
+function failBalanceReport() {
+    "use strict";
+    console.log('Fail balance report data!');
+    $('#balanceReport').removeClass('loading').addClass('general-chart-error');
+}
+
+function failCategoryReport() {
+    "use strict";
+    console.log('Fail category report data!');
+    $('#categoryReport').removeClass('loading').addClass('general-chart-error');
+}
 
 
 function drawChart() {
@@ -18,47 +54,4 @@ function drawChart() {
     // month view:
     // draw account chart
     lineChart('chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
-}
-
-
-function showIncomes() {
-    "use strict";
-    if (incomeRestShow) {
-        // hide everything, make button say "show"
-        $('#showIncomes').text(showTheRest);
-        $('.incomesCollapsed').removeClass('in').addClass('out');
-
-        // toggle:
-        incomeRestShow = false;
-    } else {
-        // show everything, make button say "hide".
-        $('#showIncomes').text(hideTheRest);
-        $('.incomesCollapsed').removeClass('out').addClass('in');
-
-        // toggle:
-        incomeRestShow = true;
-    }
-
-    return false;
-}
-
-function showExpenses() {
-    "use strict";
-    if (expenseRestShow) {
-        // hide everything, make button say "show"
-        $('#showExpenses').text(showTheRestExpense);
-        $('.expenseCollapsed').removeClass('in').addClass('out');
-
-        // toggle:
-        expenseRestShow = false;
-    } else {
-        // show everything, make button say "hide".
-        $('#showExpenses').text(hideTheRestExpense);
-        $('.expenseCollapsed').removeClass('out').addClass('in');
-
-        // toggle:
-        expenseRestShow = true;
-    }
-
-    return false;
 }

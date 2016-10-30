@@ -15,9 +15,11 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -44,8 +46,16 @@ class AccountController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-credit-card');
-        View::share('title', trans('firefly.accounts'));
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-credit-card');
+                View::share('title', trans('firefly.accounts'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -146,7 +156,7 @@ class AccountController extends Controller
             'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => round($account->virtual_balance, 2),
+            'virtualBalance'       => $account->virtual_balance,
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'accounts');
@@ -200,6 +210,9 @@ class AccountController extends Controller
      */
     public function show(AccountTaskerInterface $tasker, ARI $repository, Account $account)
     {
+        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
+            return $this->redirectToOriginalAccount($account);
+        }
         // show journals from current period only:
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $subTitle     = $account->name;
@@ -330,7 +343,7 @@ class AccountController extends Controller
      */
     public function update(AccountFormRequest $request, ARI $repository, Account $account)
     {
-        $data    = $request->getAccountData();
+        $data = $request->getAccountData();
         $repository->update($account, $data);
 
         Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
@@ -362,5 +375,30 @@ class AccountController extends Controller
         }
 
         return '';
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
+     */
+    private function redirectToOriginalAccount(Account $account)
+    {
+        /** @var Transaction $transaction */
+        $transaction = $account->transactions()->first();
+        if (is_null($transaction)) {
+            throw new FireflyException('Expected a transaction. This account has none. BEEP, error.');
+        }
+
+        $journal = $transaction->transactionJournal;
+        /** @var Transaction $opposingTransaction */
+        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
+
+        if (is_null($opposingTransaction)) {
+            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.');
+        }
+
+        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
     }
 }

@@ -312,25 +312,11 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * Get all journals that were recorded on this bill between these dates.
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end): Collection
-    {
-        return $bill->transactionJournals()->before($end)->after($start)->get();
-    }
-
-    /**
-     * @param $bill
+     * @param Bill $bill
      *
      * @return string
      */
-    public function getOverallAverage($bill): string
+    public function getOverallAverage(Bill $bill): string
     {
         $journals = $bill->transactionJournals()->get();
         $sum      = '0';
@@ -345,6 +331,21 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
+    }
+
+    /**
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
+    {
+        $dates = $bill->transactionJournals()->before($end)->after($start)->get(['transaction_journals.date'])->pluck('date');
+
+        return $dates;
+
     }
 
     /**
@@ -449,21 +450,6 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
-    }
-
-    /**
-     * @param Bill $bill
-     *
-     * @return \Carbon\Carbon
-     */
-    public function lastFoundMatch(Bill $bill): Carbon
-    {
-        $last = $bill->transactionJournals()->orderBy('date', 'DESC')->first();
-        if ($last) {
-            return $last->date;
-        }
-
-        return Carbon::now()->addDays(2); // in the future!
     }
 
     /**
@@ -610,7 +596,7 @@ class BillRepository implements BillRepositoryInterface
                 'name'        => $data['name'],
                 'match'       => $data['match'],
                 'amount_min'  => $data['amount_min'],
-                'user_id'     => $data['user'],
+                'user_id'     => $this->user->id,
                 'amount_max'  => $data['amount_max'],
                 'date'        => $data['date'],
                 'repeat_freq' => $data['repeat_freq'],

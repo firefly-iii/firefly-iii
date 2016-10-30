@@ -37,8 +37,15 @@ class ConfigurationController extends Controller
     {
         parent::__construct();
 
-        View::share('title', strval(trans('firefly.administration')));
-        View::share('mainTitleIcon', 'fa-hand-spock-o');
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', strval(trans('firefly.administration')));
+                View::share('mainTitleIcon', 'fa-hand-spock-o');
+
+                return $next($request);
+            }
+        );
 
     }
 
@@ -66,10 +73,10 @@ class ConfigurationController extends Controller
     public function store(ConfigurationRequest $request)
     {
         // get config values:
-        $singleUserMode = intval($request->get('single_user_mode')) === 1 ? true : false;
+        $data = $request->getConfigurationData();
 
         // store config values
-        FireflyConfig::set('single_user_mode', $singleUserMode);
+        FireflyConfig::set('single_user_mode', $data['single_user_mode']);
 
         // flash message
         Session::flash('success', strval(trans('firefly.configuration_updated')));

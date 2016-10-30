@@ -27,7 +27,7 @@ class BasicCollector
     /** @var ExportJob */
     protected $job;
     /** @var Collection */
-    private $files;
+    private $entries;
 
     /**
      * BasicCollector constructor.
@@ -36,24 +36,24 @@ class BasicCollector
      */
     public function __construct(ExportJob $job)
     {
-        $this->files = new Collection;
-        $this->job   = $job;
+        $this->entries = new Collection;
+        $this->job     = $job;
     }
 
     /**
      * @return Collection
      */
-    public function getFiles(): Collection
+    public function getEntries(): Collection
     {
-        return $this->files;
+        return $this->entries;
     }
 
     /**
-     * @param Collection $files
+     * @param Collection $entries
      */
-    public function setFiles(Collection $files)
+    public function setEntries(Collection $entries)
     {
-        $this->files = $files;
+        $this->entries = $entries;
     }
 
 

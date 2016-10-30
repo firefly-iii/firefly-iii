@@ -1,0 +1,213 @@
+{% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, destinationType, journal) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('transactions.convert.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8" class="form-horizontal" id="store"
+          enctype="multipart/form-data">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-10 col-md-12 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ ('convert_options_'~sourceType.type~destinationType.type)|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.staticText('type', sourceType.type|_) }}
+                        {{ ExpandedForm.staticText('description', '<a href="'~route('transactions.show', journal.id)~'">'~journal.description~'</a>') }}
+                        {{ ExpandedForm.staticText('date', journal.date.formatLocalized(monthAndDayFormat)) }}
+
+                        {# in case of withdrawal #}
+                        {% if sourceType.type == "Withdrawal" %}
+                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                            {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                        {% endif %}
+
+                        {# in case of deposit #}
+                        {% if sourceType.type == "Deposit" %}
+                            {{ ExpandedForm.staticText('source_account_revenue', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                        {% endif %}
+
+                        {# in case of transfer #}
+                        {% if sourceType.type == "Transfer" %}
+                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                        {% endif %}
+
+                        {# ONE #}
+                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                            <p><em>
+                                    {{ trans('firefly.convert_explanation_withdrawal_deposit',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
+                                </em>
+                            </p>
+                            <p><em>
+                                    {{ 'convert_please_set_revenue_source'|_ }}
+                                </em>
+                            </p>
+
+                            {{ ExpandedForm.text('source_account_revenue', destinationAccount.name) }}
+                        {% endif %}
+
+                        {# TWO #}
+                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+                            <p><em>
+                                    {{ trans('firefly.convert_explanation_withdrawal_transfer',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
+                                </em></p>
+
+                            <p>
+                                <em>
+                                    {{ 'convert_please_set_asset_destination'|_ }}
+
+                                </em>
+                            </p>
+                            {{ ExpandedForm.select('destination_account_asset', assetAccounts) }}
+
+
+                        {% endif %}
+
+                        {# THREE #}
+                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
+                            <p>
+                                <em>
+                                    {{ trans('firefly.convert_explanation_deposit_withdrawal',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
+                                </em>
+                            </p>
+                            <p>
+                                <em>
+                                    {{ 'convert_please_set_expense_destination'|_ }}
+
+                                </em>
+                            </p>
+                            {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
+
+                        {% endif %}
+
+                        {# FOUR #}
+                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
+
+                            <p>
+                                <em>
+                                    {{ trans('firefly.convert_explanation_deposit_transfer',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
+                                </em>
+                            </p>
+                            <p>
+                                <em>
+                                    {{ 'convert_please_set_asset_source'|_ }}
+
+                                </em>
+                            </p>
+
+                            {{ ExpandedForm.select('source_account_asset', assetAccounts) }}
+                        {% endif %}
+
+                        {# FIVE #}
+                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
+
+                            <p>
+                                <em>
+                                    {{ trans('firefly.convert_explanation_transfer_withdrawal',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
+                                </em>
+                            </p>
+
+                            <p>
+                                <em>
+                                    {{ 'convert_please_set_expense_destination'|_ }}
+                                </em>
+                            </p>
+
+                            {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
+
+                        {% endif %}
+
+                        {# SIX #}
+                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
+
+
+                            <p>
+                                <em>
+                                    {{ trans('firefly.convert_explanation_transfer_deposit',
+                                    {
+                                        amount: positiveAmount|formatAmount,
+                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                        sourceName: sourceAccount.name,
+                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                        destinationName: destinationAccount.name,
+                                    })|raw
+                                    }}
+                                </em>
+                            </p>
+
+                            <p>
+                                <em>
+                                    {{ 'convert_please_set_revenue_source'|_ }}
+                                </em>
+                            </p>
+
+                            {{ ExpandedForm.text('source_account_revenue', sourceAccount.name) }}
+
+                        {% endif %}
+
+                    </div>
+                    <div class="box-footer">
+                        <a href="{{ route('transactions.show', journal.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>
+                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                            {{ trans('form.convert_'~sourceType.type) }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="css/bootstrap-tagsinput.css" type="text/css" rel="stylesheet" media="all">
+{% endblock %}

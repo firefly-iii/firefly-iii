@@ -70,15 +70,27 @@ class Range
             // set start, end and finish:
             $this->setRange();
 
+            // set view variables.
+            $this->configureView();
+
             // get variables for date range:
             $this->datePicker();
 
-            // set view variables.
-            $this->configureView();
+            // set more view variables:
+            $this->configureList();
         }
 
         return $theNext($request);
 
+    }
+
+    /**
+     *
+     */
+    private function configureList()
+    {
+        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
+        View::share('listLength', $pref);
     }
 
     private function configureView()

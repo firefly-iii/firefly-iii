@@ -41,8 +41,16 @@ class ExportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-file-archive-o');
-        View::share('title', trans('firefly.export_data'));
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-file-archive-o');
+                View::share('title', trans('firefly.export_data'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -133,7 +141,6 @@ class ExportController extends Controller
             'endDate'            => new Carbon($request->get('export_end_range')),
             'exportFormat'       => $request->get('exportFormat'),
             'includeAttachments' => intval($request->get('include_attachments')) === 1,
-            'includeConfig'      => intval($request->get('include_config')) === 1,
             'includeOldUploads'  => intval($request->get('include_old_uploads')) === 1,
             'job'                => $job,
         ];
@@ -175,15 +182,6 @@ class ExportController extends Controller
             $job->change('export_status_collecting_old_uploads');
             $processor->collectOldUploads();
             $job->change('export_status_collected_old_uploads');
-        }
-
-        /*
-         * Generate / collect config file.
-         */
-        if ($settings['includeConfig']) {
-            $job->change('export_status_creating_config_file');
-            $processor->createConfigFile();
-            $job->change('export_status_created_config_file');
         }
 
         /*

@@ -46,10 +46,18 @@ class Controller extends BaseController
         View::share('hideBills', false);
         View::share('hideTags', false);
 
-        // save some formats:
-        $this->monthFormat       = (string)trans('config.month');
-        $this->monthAndDayFormat = (string)trans('config.month_and_day');
-        $this->dateTimeFormat    = (string)trans('config.date_time');
+
+        // translations:
+
+        $this->middleware(
+            function ($request, $next) {
+                $this->monthFormat       = (string)trans('config.month');
+                $this->monthAndDayFormat = (string)trans('config.month_and_day');
+                $this->dateTimeFormat    = (string)trans('config.date_time');
+
+                return $next($request);
+            }
+        );
 
     }
 

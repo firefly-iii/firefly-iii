@@ -173,7 +173,10 @@ class ReportController extends Controller
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $category   = $repository->find(intval($attributes['categoryId']));
-        $journals   = $repository->journalsInPeriod(new Collection([$category]), $attributes['accounts'], [], $attributes['startDate'], $attributes['endDate']);
+        $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $journals   = $repository->journalsInPeriod(
+            new Collection([$category]), $attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']
+        );
         $view       = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
         return $view;

@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
-use Input;
 
 /**
  * Class BillFormRequest
@@ -46,7 +45,6 @@ class BillFormRequest extends Request
             'amount_currency_id_amount_max' => intval($this->get('amount_currency_id_amount_max')),
             'amount_max'                    => round($this->get('amount_max'), 2),
             'date'                          => new Carbon($this->get('date')),
-            'user'                          => auth()->user()->id,
             'repeat_freq'                   => $this->get('repeat_freq'),
             'skip'                          => intval($this->get('skip')),
             'automatch'                     => intval($this->get('automatch')) === 1,
@@ -61,9 +59,9 @@ class BillFormRequest extends Request
     {
         $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name';
         $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match';
-        if (intval(Input::get('id')) > 0) {
-            $nameRule .= ',' . intval(Input::get('id'));
-            $matchRule .= ',' . intval(Input::get('id'));
+        if (intval($this->get('id')) > 0) {
+            $nameRule .= ',' . intval($this->get('id'));
+            $matchRule .= ',' . intval($this->get('id'));
         }
 
         $rules = [

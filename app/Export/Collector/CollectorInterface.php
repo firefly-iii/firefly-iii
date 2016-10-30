@@ -25,7 +25,7 @@ interface CollectorInterface
     /**
      * @return Collection
      */
-    public function getFiles(): Collection;
+    public function getEntries(): Collection;
 
     /**
      * @return bool
@@ -33,9 +33,9 @@ interface CollectorInterface
     public function run(): bool;
 
     /**
-     * @param Collection $files
+     * @param Collection $entries
      *
      */
-    public function setFiles(Collection $files);
+    public function setEntries(Collection $entries);
 
 }

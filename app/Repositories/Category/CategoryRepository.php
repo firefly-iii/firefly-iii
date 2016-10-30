@@ -241,6 +241,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         if (count($types) > 0) {
             $query->transactionTypes($types);
         }
+
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
@@ -275,7 +276,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
 
-        $second = $query->get(['transaction_journals.*']);
+        $second = $query->get(['transaction_journals.*','transaction_types.type as transaction_type_type']);
 
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);
@@ -433,7 +434,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $newCategory = Category::firstOrCreateEncrypted(
             [
-                'user_id' => $data['user'],
+                'user_id' => $this->user->id,
                 'name'    => $data['name'],
             ]
         );

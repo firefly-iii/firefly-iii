@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Journal;
 use Carbon\Carbon;
 use Crypt;
 use DB;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;

@@ -25,6 +25,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 
 /**
@@ -595,12 +596,23 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.show', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
 
-    $what = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+    $what = strtolower($journal->transactionType->type);
     $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
-
 }
 );
+
+Breadcrumbs::register(
+    'transactions.convert', function (BreadCrumbGenerator $breadcrumbs, TransactionType $destinationType, TransactionJournal $journal) {
+
+    $breadcrumbs->parent('transactions.show', $journal);
+    $breadcrumbs->push(
+        trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]),
+        route('transactions.convert', [strtolower($destinationType->type), $journal->id])
+    );
+}
+);
+
 
 /**
  * SPLIT

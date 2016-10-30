@@ -17,6 +17,7 @@ namespace FireflyIII\Http\Controllers\Report;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -36,9 +37,23 @@ class AccountController extends Controller
      */
     public function accountReport(Carbon $start, Carbon $end, Collection $accounts)
     {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('account-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+
         $accountTasker = app(AccountTaskerInterface::class);
         $accountReport = $accountTasker->getAccountReport($start, $end, $accounts);
 
-        return view('reports.partials.accounts', compact('accountReport'));
+        $result = view('reports.partials.accounts', compact('accountReport'))->render();
+        $cache->store($result);
+
+        return $result;
     }
 }

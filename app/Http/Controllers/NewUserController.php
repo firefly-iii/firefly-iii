@@ -32,6 +32,13 @@ class NewUserController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        $this->middleware(
+            function ($request, $next) {
+
+                return $next($request);
+            }
+        );
     }
 
 
@@ -107,7 +114,6 @@ class NewUserController extends Controller
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
             'active'                 => true,
-            'user'                   => auth()->user()->id,
             'accountRole'            => 'defaultAsset',
             'openingBalance'         => round($request->input('bank_balance'), 2),
             'openingBalanceDate'     => new Carbon,
@@ -133,7 +139,6 @@ class NewUserController extends Controller
             'accountType'            => 'asset',
             'virtualBalance'         => 0,
             'active'                 => true,
-            'user'                   => auth()->user()->id,
             'accountRole'            => 'savingAsset',
             'openingBalance'         => round($request->input('savings_balance'), 2),
             'openingBalanceDate'     => new Carbon,
@@ -158,7 +163,6 @@ class NewUserController extends Controller
             'accountType'            => 'asset',
             'virtualBalance'         => round($request->get('credit_card_limit'), 2),
             'active'                 => true,
-            'user'                   => auth()->user()->id,
             'accountRole'            => 'ccAsset',
             'openingBalance'         => null,
             'openingBalanceDate'     => null,

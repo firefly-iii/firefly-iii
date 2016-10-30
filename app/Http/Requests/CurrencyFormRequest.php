@@ -13,8 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Input;
-
 /**
  * Class BillFormRequest
  *
@@ -55,7 +53,7 @@ class CurrencyFormRequest extends Request
             'name'   => 'required|max:48|min:1|unique:transaction_currencies,name',
             'symbol' => 'required|min:1|max:8|unique:transaction_currencies,symbol',
         ];
-        if (intval(Input::get('id')) > 0) {
+        if (intval($this->get('id')) > 0) {
             $rules = [
                 'code'   => 'required|min:3|max:3',
                 'name'   => 'required|max:48|min:1',

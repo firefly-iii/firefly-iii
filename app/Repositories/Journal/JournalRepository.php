@@ -26,7 +26,9 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Log;
+use Preferences;
 
 /**
  * Class JournalRepository
@@ -49,6 +51,41 @@ class JournalRepository implements JournalRepositoryInterface
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param TransactionType    $type
+     * @param Account            $source
+     * @param Account            $destination
+     *
+     * @return MessageBag
+     */
+    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag
+    {
+        // default message bag that shows errors for everything.
+        $messages = new MessageBag;
+        $messages->add('source_account_revenue', trans('firefly.invalid_convert_selection'));
+        $messages->add('destination_account_asset', trans('firefly.invalid_convert_selection'));
+        $messages->add('destination_account_expense', trans('firefly.invalid_convert_selection'));
+        $messages->add('source_account_asset', trans('firefly.invalid_convert_selection'));
+
+        if ($source->id === $destination->id || is_null($source->id) || is_null($destination->id)) {
+            return $messages;
+        }
+
+        $sourceTransaction             = $journal->transactions()->where('amount', '<', 0)->first();
+        $destinationTransaction        = $journal->transactions()->where('amount', '>', 0)->first();
+        $sourceTransaction->account_id = $source->id;
+        $sourceTransaction->save();
+        $destinationTransaction->account_id = $destination->id;
+        $destinationTransaction->save();
+        $journal->transaction_type_id = $type->id;
+        $journal->save();
+        Preferences::mark();
+        $messages = new MessageBag;
+
+        return $messages;
     }
 
     /**
@@ -95,7 +132,6 @@ class JournalRepository implements JournalRepositoryInterface
         return $entry;
     }
 
-
     /**
      * @param array $data
      *
@@ -107,7 +143,7 @@ class JournalRepository implements JournalRepositoryInterface
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
         $journal         = new TransactionJournal(
             [
-                'user_id'                 => $data['user'],
+                'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $data['currency_id'],
                 'description'             => $data['description'],
@@ -182,7 +218,7 @@ class JournalRepository implements JournalRepositoryInterface
         // store actual journal.
         $journal = new TransactionJournal(
             [
-                'user_id'                 => $data['user'],
+                'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $data['amount_currency_id_amount'],
                 'description'             => $data['description'],
@@ -267,6 +303,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->description             = $data['journal_description'];
         $journal->date                    = $data['date'];
         $journal->save();
+        Log::debug(sprintf('Updated split journal #%d', $journal->id));
 
         // unlink all categories:
         $journal->categories()->detach();
@@ -282,8 +319,6 @@ class JournalRepository implements JournalRepositoryInterface
                 }
                 Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
             }
-
-            return $journal;
         }
 
 
@@ -297,6 +332,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // store each transaction.
         $identifier = 0;
+        Log::debug(sprintf('Count %d transactions in updateSplitJournal()', count($data['transactions'])));
         foreach ($data['transactions'] as $transaction) {
             Log::debug(sprintf('Split journal update split transaction %d', $identifier));
             $transaction = $this->appendTransactionData($transaction, $data);
@@ -478,7 +514,7 @@ class JournalRepository implements JournalRepositoryInterface
         if (strlen($data['source_account_name']) > 0) {
             $sourceType    = AccountType::where('type', 'Revenue account')->first();
             $sourceAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $data['user'], 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
+                ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
             );
 
             return [
@@ -488,7 +524,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
         $sourceType    = AccountType::where('type', 'Cash account')->first();
         $sourceAccount = Account::firstOrCreateEncrypted(
-            ['user_id' => $data['user'], 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
+            ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
         );
 
         return [
@@ -587,7 +623,7 @@ class JournalRepository implements JournalRepositoryInterface
             $destinationType    = AccountType::where('type', AccountType::EXPENSE)->first();
             $destinationAccount = Account::firstOrCreateEncrypted(
                 [
-                    'user_id'         => $data['user'],
+                    'user_id'         => $this->user->id,
                     'account_type_id' => $destinationType->id,
                     'name'            => $data['destination_account_name'],
                     'active'          => 1,
@@ -601,7 +637,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
         $destinationType    = AccountType::where('type', 'Cash account')->first();
         $destinationAccount = Account::firstOrCreateEncrypted(
-            ['user_id' => $data['user'], 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
+            ['user_id' => $this->user->id, 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
         );
 
         return [

@@ -136,13 +136,13 @@ function resetSplits() {
     // ends with ][description]
     $.each($('input[name$="][description]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transaction[' + i + '][description]');
+        input.attr('name', 'transactions[' + i + '][description]');
         console.log('description is now ' + input.attr('name'));
     });
     // ends with ][destination_account_name]
     $.each($('input[name$="][destination_account_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transaction[' + i + '][destination_account_name]');
+        input.attr('name', 'transactions[' + i + '][destination_account_name]');
         console.log('destination_account_name is now ' + input.attr('name'));
     });
     // ends with ][source_account_name]
@@ -154,19 +154,19 @@ function resetSplits() {
     // ends with ][amount]
     $.each($('input[name$="][amount]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transaction[' + i + '][amount]');
+        input.attr('name', 'transactions[' + i + '][amount]');
         console.log('amount is now ' + input.attr('name'));
     });
     // ends with ][budget_id]
     $.each($('input[name$="][budget_id]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transaction[' + i + '][budget_id]');
+        input.attr('name', 'transactions[' + i + '][budget_id]');
         console.log('budget_id is now ' + input.attr('name'));
     });
     // ends with ][category]
     $.each($('input[name$="][category]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transaction[' + i + '][category]');
+        input.attr('name', 'transactions[' + i + '][category]');
         console.log('category is now ' + input.attr('name'));
     });
 }

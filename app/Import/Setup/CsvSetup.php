@@ -369,6 +369,11 @@ class CsvSetup implements SetupInterface
 
         foreach ($results as $rowIndex => $row) {
 
+            // skip first row?
+            if ($rowIndex === 0 && $config['has-headers']) {
+                continue;
+            }
+
             // run specifics here:
             // and this is the point where the specifix go to work.
             foreach ($config['specifics'] as $name => $enabled) {

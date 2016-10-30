@@ -19,6 +19,7 @@ use DB;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -305,6 +306,8 @@ class AccountTasker implements AccountTaskerInterface
      * - Expense accounts (where money is spent) should only return earnings (the account gets money).
      * - Revenue accounts (where money comes from) should only return expenses (they spend money).
      *
+     *
+     *
      * @param array  $accounts
      * @param Carbon $start
      * @param Carbon $end
@@ -325,6 +328,7 @@ class AccountTasker implements AccountTaskerInterface
                 $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
             }
             )
+
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
             ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
             ->where('transaction_journals.user_id', $this->user->id)
@@ -361,6 +365,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param Carbon $end
      * @param bool   $incoming
      *
+     * Opening balances are ignored.
+     *
      * @return Collection
      */
     protected function financialReport(array $accounts, Carbon $start, Carbon $end, bool $incoming): Collection
@@ -371,12 +377,14 @@ class AccountTasker implements AccountTaskerInterface
         $query        = Transaction
             ::distinct()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
             ->leftJoin(
                 'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
                 $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
             }
             )
             ->leftJoin('accounts as other_account', 'other_account.id', '=', 'other_side.account_id')
+            ->where('transaction_types.type','!=', TransactionType::OPENING_BALANCE)
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
             ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
             ->where('transaction_journals.user_id', $this->user->id)

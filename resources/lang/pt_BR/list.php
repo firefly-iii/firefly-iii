@@ -33,7 +33,7 @@ return [
     'split_number'          => 'Dividir #',
     'destination'           => 'Destino',
     'source'                => 'Fonte',
-    'expectedMatch'         => 'Equivalente esperado',
+    'next_expected_match'   => 'Next expected match',
     'automatch'             => 'Auto match?',
     'repeat_freq'           => 'Repetições',
     'description'           => 'Descrição',

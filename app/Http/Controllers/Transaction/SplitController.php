@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
+use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -62,8 +63,7 @@ class SplitController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-share-alt');
-        View::share('title', trans('firefly.split-transactions'));
+
 
         // some useful repositories:
         $this->middleware(
@@ -73,6 +73,8 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
+                View::share('mainTitleIcon', 'fa-share-alt');
+                View::share('title', trans('firefly.split-transactions'));
 
                 return $next($request);
             }
@@ -264,6 +266,7 @@ class SplitController extends Controller
         $return       = [];
         $transactions = $request->get('transactions');
         foreach ($transactions as $transaction) {
+
             $return[] = [
                 'description'              => $transaction['description'],
                 'source_account_id'        => $transaction['source_account_id'] ?? 0,
@@ -273,9 +276,9 @@ class SplitController extends Controller
                 'amount'                   => round($transaction['amount'] ?? 0, 2),
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'] ?? '',
-                'user'                     => auth()->user()->id, // needed for accounts.
             ];
         }
+        Log::debug(sprintf('Found %d splits in request data.', count($return)));
 
         return $return;
     }

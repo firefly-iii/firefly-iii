@@ -284,10 +284,8 @@ Route::group(
     Route::post('/piggy-banks/store', ['uses' => 'PiggyBankController@store', 'as' => 'piggy-banks.store']);
     Route::post('/piggy-banks/update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'piggy-banks.update']);
     Route::post('/piggy-banks/destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'piggy-banks.destroy']);
-
     Route::post('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy-banks.add']);
     Route::post('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy-banks.remove']);
-
     Route::post('/piggy-banks/sort', ['uses' => 'PiggyBankController@order', 'as' => 'piggy-banks.order']);
 
     /**
@@ -317,9 +315,28 @@ Route::group(
     /**
      * Report AJAX data Controller:
      */
+    // account report
     Route::get(
-        '/reports/data/accountReport/{start_date}/{end_date}/{accountList}',
+        '/reports/data/account-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\AccountController@accountReport', 'as' => 'reports.data.accountReport']
+    );
+
+    // income report
+    Route::get(
+        '/reports/data/in-out-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@inOutReport', 'as' => 'reports.data.inOutReport']
+    );
+
+    // category report:
+    Route::get(
+        '/reports/data/category-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\CategoryController@categoryReport', 'as' => 'reports.data.categoryReport']
+    );
+
+    // balance report:
+    Route::get(
+        '/reports/data/balance-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BalanceController@balanceReport', 'as' => 'reports.data.balanceReport']
     );
 
     /**
@@ -405,6 +422,10 @@ Route::group(
     // split (will be here):
     Route::get('/transaction/split/edit/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'transactions.edit-split']);
     Route::post('/transaction/split/update/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
+
+    // convert controller:
+    Route::get('transactions/convert/{transaction_type}/{tj}', ['uses' => 'Transaction\ConvertController@convert', 'as' => 'transactions.convert']);
+    Route::post('transactions/convert/{transaction_type}/{tj}', ['uses' => 'Transaction\ConvertController@submit', 'as' => 'transactions.convert.post']);
 
     /**
      * POPUP Controllers

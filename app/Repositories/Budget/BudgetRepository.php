@@ -19,6 +19,7 @@ use FireflyIII\Events\UpdatedBudgetLimit;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BudgetRepository
@@ -347,79 +349,75 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string
     {
-        // first collect actual transaction journals (fairly easy)
-        $query = $this->user
-            ->transactionJournals()
+        // collect amount of transaction journals, which is easy:
+        $budgetIds         = $budgets->pluck('id')->toArray();
+        $accountIds        = $accounts->pluck('id')->toArray();
+
+        Log::debug('spentInPeriod: Now in spentInPeriod for these budgets: ', $budgetIds);
+        Log::debug('spentInPeriod: and these accounts: ', $accountIds);
+        Log::debug(sprintf('spentInPeriod: Start date is "%s", end date is "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
+
+        $fromJournalsQuery = TransactionJournal
+            ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+                'transactions', function (JoinClause $join) {
+                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', '0');
             }
             )
-            ->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
-            );
-        $query->whereNull('source.deleted_at');
-        $query->whereNull('destination.deleted_at');
-        $query->where('transaction_journals.completed', 1);
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            ->whereNull('transaction_journals.deleted_at')
+            ->whereNull('transactions.deleted_at')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('transaction_types.type', 'Withdrawal');
 
-        if ($end >= $start) {
-            $query->before($end)->after($start);
-        }
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->where(
-            // source.account_id in accountIds XOR destination.account_id in accountIds
-                function (Builder $query) use ($accountIds) {
-                    $query->where(
-                        function (Builder $q1) use ($accountIds) {
-                            $q1->whereIn('source.account_id', $accountIds)
-                               ->whereNotIn('destination.account_id', $accountIds);
-                        }
-                    )->orWhere(
-                        function (Builder $q2) use ($accountIds) {
-                            $q2->whereIn('destination.account_id', $accountIds)
-                               ->whereNotIn('source.account_id', $accountIds);
-                        }
-                    );
-                }
-            );
-        }
+        // add budgets:
         if ($budgets->count() > 0) {
-            $budgetIds = $budgets->pluck('id')->toArray();
-            $query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $query->whereIn('budget_transaction_journal.budget_id', $budgetIds);
-
+            $fromJournalsQuery->whereIn('budget_transaction_journal.budget_id', $budgetIds);
         }
 
-        // that should do it:
-        $ids   = $query->distinct()->get(['transaction_journals.id'])->pluck('id')->toArray();
-        $first = '0';
-        if (count($ids) > 0) {
-            $first = strval(
-                $this->user->transactions()
-                           ->whereIn('transaction_journal_id', $ids)
-                           ->where('amount', '<', '0')
-                           ->whereNull('transactions.deleted_at')
-                           ->sum('amount')
-            );
-        }
-        // then collection transactions (harder)
-        $query = $this->user->transactions()
-                            ->where('transactions.amount', '<', 0)
-                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 23:59:59'));
+        // add accounts:
         if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->whereIn('transactions.account_id', $accountIds);
+            $fromJournalsQuery->whereIn('transactions.account_id', $accountIds);
         }
+        $first = strval($fromJournalsQuery->sum('transactions.amount'));
+        Log::debug(sprintf('spentInPeriod: Result from first query: %s', $first));
+        unset($fromJournalsQuery);
+
+        // collect amount from transactions:
+        /**
+         * select transactions.id, budget_transaction.budget_id , transactions.amount
+         *
+         *
+         * and budget_transaction.budget_id in (1,61)
+         * and transactions.account_id in (2)
+         */
+        $fromTransactionsQuery = Transaction
+            ::leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id')
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->whereNull('transactions.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transactions.amount', '<', 0)
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('transaction_types.type', 'Withdrawal');
+
+        // add budgets:
         if ($budgets->count() > 0) {
-            $budgetIds = $budgets->pluck('id')->toArray();
-            $query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
-            $query->whereIn('budget_transaction.budget_id', $budgetIds);
+            $fromTransactionsQuery->whereIn('budget_transaction.budget_id', $budgetIds);
         }
-        $second = strval($query->sum('transactions.amount'));
+
+        // add accounts:
+        if ($accounts->count() > 0) {
+            $fromTransactionsQuery->whereIn('transactions.account_id', $accountIds);
+        }
+        $second = strval($fromTransactionsQuery->sum('transactions.amount'));
+        Log::debug(sprintf('spentInPeriod: Result from second query: %s', $second));
+
+        Log::debug(sprintf('spentInPeriod: FINAL: %s', bcadd($first, $second)));
 
         return bcadd($first, $second);
     }
@@ -500,7 +498,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $newBudget = new Budget(
             [
-                'user_id' => $data['user'],
+                'user_id' => $this->user->id,
                 'name'    => $data['name'],
             ]
         );

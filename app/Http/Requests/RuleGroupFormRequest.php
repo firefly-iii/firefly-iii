@@ -20,8 +20,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Models\RuleGroup;
-use Input;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 
 /**
  * Class RuleGroupFormRequest
@@ -43,12 +42,24 @@ class RuleGroupFormRequest extends Request
     /**
      * @return array
      */
+    public function getRuleGroupData(): array
+    {
+        return [
+            'title'       => trim($this->input('title')),
+            'description' => trim($this->input('description')),
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function rules()
     {
-
-        $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
-        if (RuleGroup::find(Input::get('id'))) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval(Input::get('id'));
+        /** @var RuleGroupRepositoryInterface $repository */
+        $repository = app(RuleGroupRepositoryInterface::class, [auth()->user()]);
+        $titleRule  = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
+        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval($this->get('id'));
         }
 
         return [

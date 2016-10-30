@@ -5,8 +5,8 @@
         <th>{{ trans('list.name') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
         <th colspan="2">{{ trans('list.matchingAmount') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
+        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">{{ trans('list.paid_current_period') }}</th>
+        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">{{ trans('list.next_expected_match') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.automatch') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
@@ -35,37 +35,41 @@
             <td data-value="{{ entry.amount_max }}">
                 {{ entry.amount_max|formatAmount }}
             </td>
-            {% if not entry.lastFoundMatch.isFuture %}
-                <td class="hidden-sm hidden-xs
-                {% if entry.active %}
-                    {% if entry.paidInPeriod %}
-                        bg-success
-                    {% else %}
-                        bg-danger
-                    {% endif %}
-                {% endif %}
-                " data-value="{{ entry.lastFoundMatch.format('U') }}">
-                    {{ entry.lastFoundMatch.formatLocalized(monthAndDayFormat) }}
-                    {% if entry.active and entry.paidInPeriod %}
-                        ({{ entry.lastPaidAmount|formatAmountPlain }})
-                    {% endif %}
+
+            {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
+                <td class="text-muted">
+                    {{ 'not_expected_period'|_ }}
                 </td>
-            {% else %}
-                <td class="hidden-sm hidden-xs" data-value="0">
-                    <em>{{ 'unknown'|_ }}</em>
+                <td class=" hidden-sm hidden-xs">
+                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
-
-            {% if entry.nextExpectedMatch.year == 1900 %}
-                <td class="hidden-sm hidden-xs" data-value="0">
-                    <em>{{ 'unknown'|_ }}</em>
+            {% if entry.paidDates.count() == 0 and entry.payDates.count() > 0 and entry.active %}
+                <td class="text-danger">
+                    {{ 'not_or_not_yet'|_ }}
                 </td>
-            {% else %}
-                <td class="hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('U') }}">
-                    ~ {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                <td class=" hidden-sm hidden-xs">
+                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
-
+            {% if entry.paidDates.count() == entry.payDates.count() and entry.payDates.count() > 0 and entry.active %}
+                <td class="text-success">
+                    {% for date in entry.paidDates %}
+                        {{ date.formatLocalized(monthAndDayFormat) }}<br/>
+                    {% endfor %}
+                </td>
+                <td class=" hidden-sm hidden-xs">
+                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                </td>
+            {% endif %}
+            {% if not entry.active %}
+                <td class="text-muted">
+                    ~
+                </td>
+                <td class="text-muted hidden-sm hidden-xs">
+                    ~
+                </td>
+            {% endif %}
             <td class="hidden-sm hidden-xs" data-value="{{ entry.active }}">
                 {% if entry.active %}
                     <i class="fa fa-fw fa-check"></i>

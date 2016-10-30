@@ -15,13 +15,13 @@ namespace FireflyIII\Export;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Collector\AttachmentCollector;
+use FireflyIII\Export\Collector\JournalCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
+use Log;
 use Storage;
 use ZipArchive;
 
@@ -39,8 +39,6 @@ class Processor
     public $exportFormat;
     /** @var  bool */
     public $includeAttachments;
-    /** @var  bool */
-    public $includeConfig;
     /** @var  bool */
     public $includeOldUploads;
     /** @var  ExportJob */
@@ -68,7 +66,6 @@ class Processor
         $this->accounts           = $settings['accounts'];
         $this->exportFormat       = $settings['exportFormat'];
         $this->includeAttachments = $settings['includeAttachments'];
-        $this->includeConfig      = $settings['includeConfig'];
         $this->includeOldUploads  = $settings['includeOldUploads'];
         $this->job                = $settings['job'];
         $this->journals           = new Collection;
@@ -84,8 +81,9 @@ class Processor
     {
         /** @var AttachmentCollector $attachmentCollector */
         $attachmentCollector = app(AttachmentCollector::class, [$this->job]);
+        $attachmentCollector->setDates($this->settings['startDate'], $this->settings['endDate']);
         $attachmentCollector->run();
-        $this->files = $this->files->merge($attachmentCollector->getFiles());
+        $this->files = $this->files->merge($attachmentCollector->getEntries());
 
         return true;
     }
@@ -95,9 +93,13 @@ class Processor
      */
     public function collectJournals(): bool
     {
-        /** @var JournalTaskerInterface $tasker */
-        $tasker         = app(JournalTaskerInterface::class);
-        $this->journals = $tasker->getJournalsInRange($this->accounts, $this->settings['startDate'], $this->settings['endDate']);
+        /** @var JournalCollector $collector */
+        $collector = app(JournalCollector::class, [$this->job]);
+        $collector->setDates($this->settings['startDate'], $this->settings['endDate']);
+        $collector->setAccounts($this->settings['accounts']);
+        $collector->run();
+        $this->journals = $collector->getEntries();
+        Log::debug(sprintf('Count %d journals in collectJournals() ', $this->journals->count()));
 
         return true;
     }
@@ -111,7 +113,7 @@ class Processor
         $uploadCollector = app(UploadCollector::class, [$this->job]);
         $uploadCollector->run();
 
-        $this->files = $this->files->merge($uploadCollector->getFiles());
+        $this->files = $this->files->merge($uploadCollector->getEntries());
 
         return true;
     }
@@ -122,22 +124,11 @@ class Processor
     public function convertJournals(): bool
     {
         $count = 0;
-        /** @var TransactionJournal $journal */
-        foreach ($this->journals as $journal) {
-            $this->exportEntries->push(Entry::fromJournal($journal));
+        foreach ($this->journals as $object) {
+            $this->exportEntries->push(Entry::fromObject($object));
             $count++;
         }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function createConfigFile(): bool
-    {
-        $this->configurationMaker = app(ConfigurationFile::class, [$this->job]);
-        $this->files->push($this->configurationMaker->make());
+        Log::debug(sprintf('Count %d entries in exportEntries (convertJournals)', $this->exportEntries->count()));
 
         return true;
     }

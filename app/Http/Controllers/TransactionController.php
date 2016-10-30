@@ -35,8 +35,16 @@ class TransactionController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.transactions'));
-        View::share('mainTitleIcon', 'fa-repeat');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.transactions'));
+                View::share('mainTitleIcon', 'fa-repeat');
+
+                return $next($request);
+            }
+        );
 
     }
 

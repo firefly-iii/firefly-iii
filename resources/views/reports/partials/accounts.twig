@@ -1,37 +1,30 @@
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">{{ 'accountBalances'|_ }}</h3>
-    </div>
-    <div class="box-body table-responsive no-padding">
-        <table class="table table-hover sortable">
-            <thead>
-            <tr>
-                <th>{{ 'name'|_ }}</th>
-                <th>{{ 'balanceStart'|_ }}</th>
-                <th>{{ 'balanceEnd'|_ }}</th>
-                <th>{{ 'difference'|_ }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for account in accountReport.getAccounts %}
-                <tr>
-                    <td>
-                        <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
-                    </td>
-                    <td data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>
-                    <td data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
-                    <td data-value="{{ (account.endBalance - account.startBalance) }}">{{ (account.endBalance - account.startBalance)|formatAmount }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <td><em>{{ 'sumOfSums'|_ }}</em></td>
-                <td>{{ accountReport.getStart|formatAmount }}</td>
-                <td>{{ accountReport.getEnd|formatAmount }}</td>
-                <td>{{ accountReport.getDifference|formatAmount }}</td>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th>{{ 'name'|_ }}</th>
+        <th>{{ 'balanceStart'|_ }}</th>
+        <th>{{ 'balanceEnd'|_ }}</th>
+        <th>{{ 'difference'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for account in accountReport.getAccounts %}
+        <tr>
+            <td>
+                <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+            </td>
+            <td data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>
+            <td data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
+            <td data-value="{{ (account.endBalance - account.startBalance) }}">{{ (account.endBalance - account.startBalance)|formatAmount }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td><em>{{ 'sumOfSums'|_ }}</em></td>
+        <td>{{ accountReport.getStart|formatAmount }}</td>
+        <td>{{ accountReport.getEnd|formatAmount }}</td>
+        <td>{{ accountReport.getDifference|formatAmount }}</td>
+    </tr>
+    </tfoot>
+</table>
