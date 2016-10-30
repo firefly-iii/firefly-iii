@@ -33,7 +33,7 @@ return [
     'split_number'          => 'Segmenter en',
     'destination'           => 'Destination',
     'source'                => 'Source',
-    'expectedMatch'         => 'Correspondance attendue',
+    'next_expected_match'   => 'Next expected match',
     'automatch'             => 'Correspondance automatique ?',
     'repeat_freq'           => 'Répétitions',
     'description'           => 'Description',
