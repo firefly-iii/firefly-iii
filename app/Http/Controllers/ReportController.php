@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -37,8 +36,6 @@ use View;
  */
 class ReportController extends Controller
 {
-    /** @var BudgetReportHelperInterface */
-    protected $budgetHelper;
     /** @var ReportHelperInterface */
     protected $helper;
 
@@ -55,8 +52,7 @@ class ReportController extends Controller
                 View::share('title', trans('firefly.reports'));
                 View::share('mainTitleIcon', 'fa-line-chart');
 
-                $this->helper       = app(ReportHelperInterface::class);
-                $this->budgetHelper = app(BudgetReportHelperInterface::class);
+                $this->helper = app(ReportHelperInterface::class);
 
                 return $next($request);
             }
@@ -219,10 +215,8 @@ class ReportController extends Controller
      */
     private function defaultMonth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        // get report stuff!
-        $budgets = $this->budgetHelper->getBudgetReport($start, $end, $accounts);
-        $bills   = $this->helper->getBillReport($start, $end, $accounts);
-        $tags    = $this->helper->tagReport($start, $end, $accounts);
+        $bills = $this->helper->getBillReport($start, $end, $accounts);
+        $tags  = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = join(',', $accounts->pluck('id')->toArray());
@@ -233,9 +227,9 @@ class ReportController extends Controller
             compact(
                 'start', 'end',
                 'tags',
-                'budgets',
                 'bills',
-                'accountIds', 'reportType'
+                'accountIds',
+                'reportType'
             )
         );
     }
@@ -281,8 +275,7 @@ class ReportController extends Controller
      */
     private function defaultYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $tags    = $this->helper->tagReport($start, $end, $accounts);
-        $budgets = $this->budgetHelper->budgetYearOverview($start, $end, $accounts);
+        $tags = $this->helper->tagReport($start, $end, $accounts);
 
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
@@ -299,7 +292,8 @@ class ReportController extends Controller
         return view(
             'reports.default.year',
             compact(
-                'start', 'reportType', 'accountIds', 'end', 'tags', 'budgets'
+                'start', 'reportType',
+                'accountIds', 'end', 'tags'
             )
         );
     }

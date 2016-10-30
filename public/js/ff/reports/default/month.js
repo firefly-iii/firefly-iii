@@ -1,4 +1,4 @@
-/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds, lineChart, categoryReportUrl, balanceReportUrl */
+/* globals google, budgetReportUrl, startDate ,reportURL, endDate , reportType ,accountIds, lineChart, categoryReportUrl, balanceReportUrl */
 
 
 $(function () {
@@ -7,6 +7,7 @@ $(function () {
 
     loadCategoryReport();
     loadBalanceReport();
+    loadBudgetReport();
 });
 
 function loadCategoryReport() {
@@ -15,10 +16,24 @@ function loadCategoryReport() {
     $.get(categoryReportUrl).done(placeCategoryReport).fail(failCategoryReport);
 }
 
+function loadBudgetReport() {
+    "use strict";
+    console.log('Going to grab ' + budgetReportUrl);
+    $.get(budgetReportUrl).done(placeBudgetReport).fail(failBudgetReport);
+}
+
+
 function loadBalanceReport() {
     "use strict";
     console.log('Going to grab ' + categoryReportUrl);
     $.get(balanceReportUrl).done(placeBalanceReport).fail(failBalanceReport);
+}
+
+function placeBudgetReport(data) {
+    "use strict";
+    $('#budgetReport').removeClass('loading').html(data);
+    listLengthInitial();
+    triggerInfoClick();
 }
 
 function placeBalanceReport(data) {
@@ -33,6 +48,12 @@ function placeCategoryReport(data) {
     $('#categoryReport').removeClass('loading').html(data);
     listLengthInitial();
     triggerInfoClick();
+}
+
+function failBudgetReport() {
+    "use strict";
+    console.log('Fail budget report data!');
+    $('#budgetReport').removeClass('loading').addClass('general-chart-error');
 }
 
 function failBalanceReport() {

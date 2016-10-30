@@ -1,4 +1,4 @@
-/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds , picker:true, minDate, year, month, columnChart, lineChart, stackedColumnChart */
+/* globals google, accountIds, budgetYearOverviewUrl */
 
 var chartDrawn;
 var budgetChart;
@@ -7,7 +7,28 @@ $(function () {
     chartDrawn = false;
     drawChart();
 
+    //
+    loadBudgetOverview();
 });
+
+function loadBudgetOverview() {
+    "use strict";
+    console.log('Going to grab ' + budgetYearOverviewUrl);
+    $.get(budgetYearOverviewUrl).done(placeBudgetOverview).fail(failBudgetOverview);
+}
+
+function placeBudgetOverview(data) {
+    "use strict";
+    $('#budgetOverview').removeClass('loading').html(data);
+    $('.budget-chart-activate').on('click', clickBudgetChart);
+}
+
+function failBudgetOverview() {
+    "use strict";
+    console.log('Fail budget overview data!');
+    $('#budgetOverview').removeClass('loading').addClass('general-chart-error');
+}
+
 
 
 function drawChart() {
@@ -17,7 +38,7 @@ function drawChart() {
     columnChart('chart/report/in-out/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-chart');
     columnChart('chart/report/in-out-sum/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'income-expenses-sum-chart');
 
-    $('.budget-chart-activate').on('click', clickBudgetChart);
+
 }
 
 function clickBudgetChart(e) {

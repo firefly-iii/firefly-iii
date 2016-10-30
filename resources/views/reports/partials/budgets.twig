@@ -1,87 +1,79 @@
-<div class="box">
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>{{ 'budget'|_ }}</th>
+        <th>{{ 'date'|_ }}</th>
+        <th>{{ 'budgeted'|_ }}</th>
+        <th>{{ 'spent'|_ }}</th>
+        <th>{{ 'left'|_ }}</th>
+        <th>{{ 'overspent'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for budgetLine in budgets.getBudgetLines %}
+        <tr>
+            <td>
+                {% if budgetLine.getBudget.id %}
+                    <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
+                {% else %}
+                    <em>{{ 'no_budget'|_ }}</em>
+                {% endif %}
+            </td>
+            <td>
+                {% if budgetLine.getRepetition.id %}
+                    <a href="{{ route('budgets.showWithRepetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
+                        {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
+                        &mdash;
+                        {{ budgetLine.getRepetition.enddate.formatLocalized(monthAndDayFormat) }}
+                    </a>
+                {% endif %}
+            </td>
+            <td>
+                {% if budgetLine.getRepetition.id %}
+                    {{ budgetLine.getRepetition.amount|formatAmount }}
+                {% else %}
+                    {{ 0|formatAmount }}
+                {% endif %}
+            </td>
+            <td>
+                {% if budgetLine.getSpent != 0 %}
+                    {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
+                                                              data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"
+                ></i>
+                {% endif %}
 
-    <div class="box-header with-border">
-        <h3 class="box-title">{{ 'budgets'|_ }}</h3>
-    </div>
-    <div class="box-body table-responsive no-padding">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>{{ 'budget'|_ }}</th>
-                <th>{{ 'date'|_ }}</th>
-                <th>{{ 'budgeted'|_ }}</th>
-                <th>{{ 'spent'|_ }}</th>
-                <th>{{ 'left'|_ }}</th>
-                <th>{{ 'overspent'|_ }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for budgetLine in budgets.getBudgetLines %}
-                <tr>
-                    <td>
-                        {% if budgetLine.getBudget.id %}
-                            <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
-                        {% else %}
-                            <em>{{ 'no_budget'|_ }}</em>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if budgetLine.getRepetition.id %}
-                            <a href="{{ route('budgets.showWithRepetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
-                                {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
-                                &mdash;
-                                {{ budgetLine.getRepetition.enddate.formatLocalized(monthAndDayFormat) }}
-                            </a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if budgetLine.getRepetition.id %}
-                            {{ budgetLine.getRepetition.amount|formatAmount }}
-                        {% else %}
-                            {{ 0|formatAmount }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if budgetLine.getSpent != 0 %}
-                            {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
-                                                                      data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"
-                        ></i>
-                        {% endif %}
+                {% if budgetLine.getSpent == 0 %}
+                    {{ budgetLine.getSpent|formatAmount }}
+                {% endif %}
 
-                        {% if budgetLine.getSpent == 0 %}
-                            {{ budgetLine.getSpent|formatAmount }}
-                        {% endif %}
-
-                    </td>
-                    <td>
-                        {% if(budgetLine.getOverspent == 0) %}
-                            {{ budgetLine.getLeft|formatAmount }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if budgetLine.getOverspent != 0 %}
-                            {{ budgetLine.getOverspent|formatAmount }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="2"><em>{{ 'sum'|_ }}</em></td>
-                <td>{{ budgets.getBudgeted|formatAmount }}</td>
-                <td>
-                    {% if budgets.getSpent != 0 %}
-                        <span class="text-danger">{{ budgets.getSpent|formatAmountPlain }}</span>
-                    {% endif %}
-                    {% if budgets.getSpent == 0 %}
-                        {{ budgets.getSpent|formatAmount }}
-                    {% endif %}
-                </td>
-                <td>{{ budgets.getLeft|formatAmount }}</td>
-                <td><span class="text-danger">{{ budgets.getOverspent|formatAmountPlain }}</span></td>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
+            </td>
+            <td>
+                {% if(budgetLine.getOverspent == 0) %}
+                    {{ budgetLine.getLeft|formatAmount }}
+                {% endif %}
+            </td>
+            <td>
+                {% if budgetLine.getOverspent != 0 %}
+                    {{ budgetLine.getOverspent|formatAmount }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2"><em>{{ 'sum'|_ }}</em></td>
+        <td>{{ budgets.getBudgeted|formatAmount }}</td>
+        <td>
+            {% if budgets.getSpent != 0 %}
+                <span class="text-danger">{{ budgets.getSpent|formatAmountPlain }}</span>
+            {% endif %}
+            {% if budgets.getSpent == 0 %}
+                {{ budgets.getSpent|formatAmount }}
+            {% endif %}
+        </td>
+        <td>{{ budgets.getLeft|formatAmount }}</td>
+        <td><span class="text-danger">{{ budgets.getOverspent|formatAmountPlain }}</span></td>
+    </tr>
+    </tfoot>
+</table>

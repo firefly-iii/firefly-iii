@@ -323,6 +323,7 @@ class CsvSetup implements SetupInterface
 
         foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
             if ($mustBeMapped) {
+
                 $column = $config['column-roles'][$index] ?? '_ignore';
 
                 // is valid column?
