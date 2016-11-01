@@ -260,10 +260,9 @@ class CategoryRepository implements CategoryRepositoryInterface
         // then collection transactions (harder)
         $query = $this->user->transactionJournals()->distinct()
                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
-
+                            ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id')
+                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         if (count($types) > 0) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
             $query->whereIn('transaction_types.type', $types);
         }
         if ($accounts->count() > 0) {
@@ -276,7 +275,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
 
-        $second = $query->get(['transaction_journals.*','transaction_types.type as transaction_type_type']);
+        $second = $query->get(['transaction_journals.*', 'transaction_types.type as transaction_type_type']);
 
         $complete = $complete->merge($first);
         $complete = $complete->merge($second);

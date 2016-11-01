@@ -22,7 +22,7 @@ return [
         'single_user_mode' => true,
     ],
     'chart'               => 'chartjs',
-    'version'             => '4.1.4',
+    'version'             => '4.1.5',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],

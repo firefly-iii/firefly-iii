@@ -42,8 +42,9 @@ class HelpController extends Controller
     public function show(HelpInterface $help, string $route)
     {
 
-        $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $content  = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
+        $language    = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+        $content     = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
+        $alternative = false;
 
         if (!$help->hasRoute($route)) {
             Log::error('No such route: ' . $route);
@@ -60,6 +61,21 @@ class HelpController extends Controller
 
         $content = $help->getFromGithub($language, $route);
 
+        // get backup language content (try English):
+        if (strlen($content) === 0) {
+            $language    = 'en_US';
+            $content     = $help->getFromGithub($language, $route);
+            $alternative = true;
+        }
+
+        if ($alternative && strlen($content) > 0) {
+            $content = '<p><em>' . strval(trans('firefly.help_may_not_be_your_language')) . '</em></p>' . $content;
+        }
+
+        if (strlen($content) === 0) {
+            $content = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
+        }
+        
         $help->putInCache($route, $language, $content);
 
         return Response::json($content);

@@ -339,6 +339,18 @@ Route::group(
         ['uses' => 'Report\BalanceController@balanceReport', 'as' => 'reports.data.balanceReport']
     );
 
+    // budget report:
+    Route::get(
+        '/reports/data/budget-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BudgetController@budgetReport', 'as' => 'reports.data.budgetReport']
+    );
+    // budget year overview
+    Route::get(
+        '/reports/data/budget-year-overview/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BudgetController@budgetYearOverview', 'as' => 'reports.data.budgetYearOverview']
+    );
+
+
     /**
      * Rules Controller
      */
@@ -401,15 +413,21 @@ Route::group(
      */
 
     // normal controller
-    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
     Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
     // single controller
-    Route::get('/transactions/create/{what}', ['uses' => 'Transaction\SingleController@create', 'as' => 'transactions.create'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::get('/transactions/create/{what}', ['uses' => 'Transaction\SingleController@create', 'as' => 'transactions.create'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
     Route::get('/transaction/edit/{tj}', ['uses' => 'Transaction\SingleController@edit', 'as' => 'transactions.edit']);
     Route::get('/transaction/delete/{tj}', ['uses' => 'Transaction\SingleController@delete', 'as' => 'transactions.delete']);
-    Route::post('/transactions/store/{what}', ['uses' => 'Transaction\SingleController@store', 'as' => 'transactions.store'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
+    Route::post('/transactions/store/{what}', ['uses' => 'Transaction\SingleController@store', 'as' => 'transactions.store'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
     Route::post('/transaction/update/{tj}', ['uses' => 'Transaction\SingleController@update', 'as' => 'transactions.update']);
     Route::post('/transaction/destroy/{tj}', ['uses' => 'Transaction\SingleController@destroy', 'as' => 'transactions.destroy']);
 
