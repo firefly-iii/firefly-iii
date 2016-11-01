@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.5] - 2016-11-01
+### Changed
+- Report parts are loaded using AJAX, making a lot of code more simple.
+- Help content will fall back to English.
+- Help content is translated through Crowdin.
+
+### Fixed
+- Issue #370
+
 ## [4.1.4] - 2016-10-30
 ### Added
 - New Dockerfile thanks to @schoentoon
