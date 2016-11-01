@@ -118,34 +118,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
     }
 
     /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function multiYear(Collection $entries): array
-    {
-        // get labels from one of the categories (assuming there's at least one):
-        $first = $entries->first();
-        $data  = ['count' => 0, 'labels' => array_keys($first['spent']), 'datasets' => [],];
-
-        // then, loop all entries and create datasets:
-        foreach ($entries as $entry) {
-            $name   = $entry['name'];
-            $spent  = $entry['spent'];
-            $earned = $entry['earned'];
-            if (array_sum(array_values($spent)) != 0) {
-                $data['datasets'][] = ['label' => 'Spent in category ' . $name, 'data' => array_values($spent)];
-            }
-            if (array_sum(array_values($earned)) != 0) {
-                $data['datasets'][] = ['label' => 'Earned in category ' . $name, 'data' => array_values($earned)];
-            }
-        }
-        $data['count'] = count($data['datasets']);
-
-        return $data;
-    }
-
-    /**
      *
      * @param Collection $entries
      *

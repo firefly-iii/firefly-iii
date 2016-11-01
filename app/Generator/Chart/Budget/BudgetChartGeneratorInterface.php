@@ -40,13 +40,6 @@ interface BudgetChartGeneratorInterface
 
     /**
      * @param Collection $entries
-     *
-     * @return array
-     */
-    public function multiYear(Collection $entries): array;
-
-    /**
-     * @param Collection $entries
      * @param string     $viewRange
      *
      * @return array
