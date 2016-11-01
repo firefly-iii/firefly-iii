@@ -408,7 +408,9 @@ class TransactionJournal extends TransactionJournalSupport
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
-        $query->whereIn('transaction_types.type', $types);
+        if (count($types) > 0) {
+            $query->whereIn('transaction_types.type', $types);
+        }
     }
 
     /**
