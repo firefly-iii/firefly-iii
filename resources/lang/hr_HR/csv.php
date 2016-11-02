@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => 'Configure your import',
     'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
-    'import_configure_form'  => 'Form',
+    'import_configure_form'  => 'Basic CSV import options',
     'header_help'            => 'Check this if the first row of your CSV file are the column titles',
     'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
@@ -24,7 +24,6 @@ return [
 
     // roles
     'column_roles_title'     => 'Define column roles',
-    'column_roles_text'      => '<p>Firefly III cannot guess what data each column contains. You must tell Firefly which kinds of data to expect. The example data can guide you into picking the correct type from the dropdown. If a column cannot be matched to a useful data type, please let me know <a href="https://github.com/JC5/firefly-iii/issues/new">by creating an issue</a>.</p><p>Some values in your CSV file, such as account names or categories, may already exist in your Firefly III database. If you select "map these values" Firefly will not attempt to search for matching values itself but allow you to match the CSV values against the values in your database. This allows you to fine-tune the import.</p>',
     'column_roles_table'     => 'Table',
     'column_name'            => 'Name of column',
     'column_example'         => 'Column example data',
