@@ -163,13 +163,12 @@ class ReportHelper implements ReportHelperInterface
         foreach ($budgets as $budget) {
             $data[$budget->id] = [
                 'name'    => $budget->name,
-                'entries' => [],
+                'entries' => $this->filterAmounts($queryResult, $budget->id, $years),
+                'sum'     => '0',
             ];
-            foreach ($years as $year) {
-                // filter query result here!
-                $data[$budget->id]['entries'][$year] = $this->filterAmount($queryResult, $budget->id, $year);
-            }
         }
+        // filter out empty ones and fill sum:
+        $data = $this->getBudgetMultiYearMeta($data);
 
         return $data;
     }
@@ -387,27 +386,28 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * @param Collection $set
-     * @param int        $budgetId
-     * @param int        $year
+     * @param array $data
      *
-     * @return string
+     * @return array
      */
-    protected function filterAmount(Collection $set, int $budgetId, int $year): string
+    protected function getBudgetMultiYearMeta(array $data): array
     {
-        /** @var stdClass $object */
-        $result = $set->filter(
-            function (TransactionJournal $object) use ($budgetId, $year) {
-                return intval($object->the_year) === $year && $budgetId === intval($object->budget_id);
+        /**
+         * @var int   $budgetId
+         * @var array $set
+         */
+        foreach ($data as $budgetId => $set) {
+            $sum = '0';
+            foreach ($set['entries'] as $amount) {
+                $sum = bcadd($amount, $sum);
             }
-        );
-        $amount = '0';
-        if (!is_null($result->first())) {
-            $amount = $result->first()->sum_of_period;
+            $data[$budgetId]['sum'] = $sum;
+            if (bccomp('0', $sum) === 0) {
+                unset($data[$budgetId]);
+            }
         }
 
-        return $amount;
-
+        return $data;
     }
 
     /**
@@ -435,6 +435,34 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Collection $set
+     * @param int        $budgetId
+     * @param array      $years
+     *
+     * @return array
+     */
+    private function filterAmounts(Collection $set, int $budgetId, array $years):array
+    {
+        $arr = [];
+        foreach ($years as $year) {
+            /** @var stdClass $object */
+            $result = $set->filter(
+                function (TransactionJournal $object) use ($budgetId, $year) {
+                    return intval($object->the_year) === $year && $budgetId === intval($object->budget_id);
+                }
+            );
+            $amount = '0';
+            if (!is_null($result->first())) {
+                $amount = $result->first()->sum_of_period;
+            }
+
+            $arr[$year] = $amount;
+        }
+
+        return $arr;
     }
 
 

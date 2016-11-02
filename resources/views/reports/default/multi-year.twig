@@ -113,15 +113,13 @@
                                         <a href="{{ route('budgets.show', id) }}">{{ info.name }}</a>
                                     {% endif %}
                                 </td>
-                                {% set sum = 0 %}
                                 {% for amount in info.entries %}
                                     <td data-value="{{ amount }}">
                                         {{ amount|formatAmount }}
                                     </td>
-                                    {% set sum = sum + amount %}
                                 {% endfor %}
-                                <td data-value="{{ sum }}">
-                                    {{ sum|formatAmount }}
+                                <td data-value="{{ info.sum }}">
+                                    {{ info.sum|formatAmount }}
                                 </td>
                             </tr>
                         {% endfor %}
