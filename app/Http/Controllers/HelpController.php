@@ -75,7 +75,7 @@ class HelpController extends Controller
         if (strlen($content) === 0) {
             $content = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
         }
-        
+
         $help->putInCache($route, $language, $content);
 
         return Response::json($content);

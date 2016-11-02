@@ -210,7 +210,7 @@ class Transaction extends Twig_Extension
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
+            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$id]));
 
         }, ['is_safe' => ['html']]
         );
@@ -276,7 +276,7 @@ class Transaction extends Twig_Extension
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
+            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$id]));
 
         }, ['is_safe' => ['html']]
         );
@@ -294,16 +294,16 @@ class Transaction extends Twig_Extension
 
             switch ($transaction->transaction_type_type) {
                 case TransactionType::WITHDRAWAL:
-                    $txt = '<i class="fa fa-long-arrow-left fa-fw" title="' . trans('firefly.withdrawal') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>' . trans('firefly.withdrawal'));
                     break;
                 case TransactionType::DEPOSIT:
-                    $txt = '<i class="fa fa-long-arrow-right fa-fw" title="' . trans('firefly.deposit') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
                     break;
                 case TransactionType::TRANSFER:
-                    $txt = '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
                     break;
                 case TransactionType::OPENING_BALANCE:
-                    $txt = '<i class="fa-fw fa fa-ban" title="' . trans('firefly.openingBalance') . '"></i>';
+                    $txt = sprintf('<i class="fa-fw fa fa-ban" title="%s"></i>', trans('firefly.openingBalance'));
                     break;
                 default:
                     $txt = '';

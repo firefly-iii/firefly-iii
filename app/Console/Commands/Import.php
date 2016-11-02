@@ -66,7 +66,7 @@ class Import extends Command
             return;
         }
 
-        $this->line('Going to import job with key "' . $job->key . '" of type ' . $job->file_type);
+        $this->line(sprintf('Going to import job with key "%s" of type "%s"', $job->key, $job->file_type));
 
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);

@@ -35,7 +35,9 @@ class Help implements HelpInterface
      */
     public function getFromCache(string $route, string $language): string
     {
-        return Cache::get('help.' . $route . '.' . $language);
+        $line = sprintf('help.%s.%s', $route, $language);
+
+        return Cache::get($line);
     }
 
     /**
@@ -93,7 +95,8 @@ class Help implements HelpInterface
      */
     public function inCache(string $route, string $language):bool
     {
-        $result = Cache::has('help.' . $route . '.' . $language);
+        $line = sprintf('help.%s.%s', $route, $language);
+        $result = Cache::has($line);
         if ($result) {
             Log::debug(sprintf('Cache has this entry: %s', 'help.' . $route . '.' . $language));
         }
@@ -115,7 +118,7 @@ class Help implements HelpInterface
      */
     public function putInCache(string $route, string $language, string $content)
     {
-        $key = 'help.' . $route . '.' . $language;
+        $key = sprintf('help.%s.%s', $route, $language);
         Log::debug(sprintf('Will store entry in cache: %s', $key));
         Cache::put($key, $content, 10080); // a week.
     }
