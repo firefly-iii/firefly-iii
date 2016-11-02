@@ -844,14 +844,9 @@ return [
     'import_complete_text'             => 'De import kan beginnen. Alle configuratie is opgeslagen. Download dit bestand. Het kan schelen als je de import opnieuw moet doen. Om daadwerkelijk te beginnen, gebruik je of het commando in je console, of de website. Afhankelijk van hoe je Firefly III hebt ingesteld, geeft de console-methode meer feedback.',
     'import_download_config'           => 'Download importconfiguratie',
     'import_start_import'              => 'Import starten',
-    'import_intro_beta'                => 'De importfunctie van Firefly III is in bèta. Er zijn al veel bestanden geprobeerd, en elk individueel component zou moeten werken. Gecombineerd echter, kan er wat stuk gaan. Als jouw bestand problemen geeft, lees dan <a href="https://github.com/JC5/firefly-iii/wiki/Submit-issues-with-sensitive-data-in-them">deze wikipagina</a> zodat ik eventuele bugs kan fixen.',
     'import_data'                      => 'Importeer data',
     'import_data_full'                 => 'Gegevens importeren in Firefly III',
     'import'                           => 'Import',
-    'import_intro_what_it_does'        => 'Vanaf deze pagina kan je gegevens importeren in Firefly III. Exporteer ze eerst vanuit je internetbankieren of financiële software. Upload dat bestandje hier. Firefly III zal de transacties omzetten. Je zult wel wat hints moeten geven. Selecteer alsjeblieft een bestand en volg de instructies.',
-    'import_intro_import_conf_title'   => 'Importconfiguratie',
-    'import_intro_beta_warning'        => 'Waarschuwing',
-    'import_intro_import_conf_text'    => 'Zoals je wel zult ontdekken heeft de import-routine veel opties. Deze opties verschillen voornamelijk per bank (of softwarepakket). Grote kans dat iemand anders je al voor was en zijn of haar <em>configuratiebestand</em> heeft gedeeld. Kijk vlug op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong> of er al een bestand is voor jouw bank (of softwarepakket). Als die er is, download dit bestand dan en selecteer deze. Het kan veel tijd schelen!',
     'import_file_help'                 => 'Selecteer je bestand',
     'import_status_settings_complete'  => 'De import is klaar om te beginnen.',
     'import_status_import_complete'    => 'Het importeren is voltooid.',
@@ -867,11 +862,9 @@ return [
     'import_double'                    => 'Rij: #:row: Deze rij is al geimporteerd en is opgeslagen als <a href=":link">:description</a>.',
     'import_finished_all'              => 'Het importeren is voltooid. Hieronder zie je de resultaten.',
     'import_with_key'                  => 'Import met code \':key\'',
-
-    'import_share_configuration' => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
-
-    'import_finished_report' => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
-    'import_finished_link'   => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-
-
+    'import_share_configuration'       => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
+    'import_finished_report'           => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
+    'import_finished_link'             => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'need_at_least_one_account'        => 'You need at least one asset account to be able to create piggy banks',
+    'see_help_top_right'               => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
 ];
