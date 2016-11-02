@@ -844,14 +844,9 @@ return [
     'import_complete_text'             => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
     'import_download_config'           => 'Download configuration',
     'import_start_import'              => 'Start import',
-    'import_intro_beta'                => 'The import function of Firefly III is in beta. Many users of Firefly III have tried many different files. Although each individual compontent of this import routine works (really), the combination might break. If your file cannot be imported by Firefly, please read <a href="https://github.com/JC5/firefly-iii/wiki/Submit-issues-with-sensitive-data-in-them">this wiki page</a> so I can fix the problem you have run into.',
     'import_data'                      => 'Import data',
     'import_data_full'                 => 'Import data into Firefly III',
     'import'                           => 'Import',
-    'import_intro_what_it_does'        => 'This page allows you to import data into Firefly III. To do so, export data from your bank, or from another financial management system. Upload that file here. Firefly III will convert the data. You need to give it some directions. Please select a file and follow the instructions.',
-    'import_intro_import_conf_title'   => 'Import "configuration"',
-    'import_intro_beta_warning'        => 'Warning',
-    'import_intro_import_conf_text'    => 'As you will discover over the next few pages, this import routine has a lot of settings. These settings are mainly dependent on the bank (or financial management software) your file comes from. There is a good chance somebody else already imported such a file and has shared their <em>configuration file</em>. Please visit the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong> to see if there already is a configuration available for your bank or system. If there is, you should download this configuration file and upload it here as well. It will save you a lot of time!',
     'import_file_help'                 => 'Select your file',
     'import_status_settings_complete'  => 'The import is ready to start.',
     'import_status_import_complete'    => 'The import has completed.',
@@ -871,5 +866,5 @@ return [
     'import_finished_report'           => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
     'import_finished_link'             => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'need_at_least_one_account'        => 'You need at least one asset account to be able to create piggy banks',
-
+    'see_help_top_right'               => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
 ];
