@@ -95,24 +95,34 @@
                     <table class="table table-hover sortable">
                         <thead>
                         <tr>
-                            <th>Budget</th>
+                            <th>{{ 'budget'|_ }}</th>
                             {% for year in years %}
                                 <th>{{ year }}</th>
                             {% endfor %}
-
+                            <th>{{ 'sum'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
-
                         {% for id, info in budgetMultiYear %}
                             <tr>
-                                <td><a href="{{ route('budgets.show', id) }}">{{ info.name }}</a></td>
+                                <td>
+                                    {% if id == 0 %}
+                                        <a href="{{ route('budgets.noBudget') }}">{{ info.name }}</a>
+
+                                    {% else %}
+                                        <a href="{{ route('budgets.show', id) }}">{{ info.name }}</a>
+                                    {% endif %}
+                                </td>
+                                {% set sum = 0 %}
                                 {% for amount in info.entries %}
-                                    <td>
+                                    <td data-value="{{ amount }}">
                                         {{ amount|formatAmount }}
                                     </td>
+                                    {% set sum = sum + amount %}
                                 {% endfor %}
-
+                                <td data-value="{{ sum }}">
+                                    {{ sum|formatAmount }}
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -185,8 +185,8 @@
                         <h3 class="box-title">{{ 'inactiveBudgets'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {% for index,budget in inactive %}
-                            {% if index != inactive|length-1 %}
+                        {% for budget in inactive %}
+                            {% if loop.index == inactive.count() %}
                                 <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
                             {% else %}
                                 <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
