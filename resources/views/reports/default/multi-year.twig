@@ -69,9 +69,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            {% include 'reports/partials/tags.twig' %}
-        </div>
     </div>
 
     <div class="row">
@@ -82,6 +79,44 @@
                 </div>
                 <div class="box-body">
                     <canvas id="net-worth" style="width:100%;height:400px;" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                </div>
+                <div class="box-body no-padding table-responsive">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th>Budget</th>
+                            {% for year in years %}
+                                <th>{{ year }}</th>
+                            {% endfor %}
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for id, info in budgetMultiYear %}
+                            <tr>
+                                <td><a href="{{ route('budgets.show', id) }}">{{ info.name }}</a></td>
+                                {% for amount in info.entries %}
+                                    <td>
+                                        {{ amount|formatAmount }}
+                                    </td>
+                                {% endfor %}
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

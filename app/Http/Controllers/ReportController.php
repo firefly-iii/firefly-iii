@@ -21,8 +21,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Session;
@@ -244,6 +242,11 @@ class ReportController extends Controller
      */
     private function defaultMultiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
+        // need all budgets
+        // need all years.
+        $years           = $this->helper->listOfYears($start, $end);
+        $budgetMultiYear = $this->helper->getBudgetMultiYear($start, $end, $accounts);
+
 
         // and some id's, joined:
         $accountIds = [];
@@ -256,7 +259,8 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'accounts', 'start', 'end', 'accountIds', 'reportType'
+                'accounts', 'start', 'end', 'accountIds', 'reportType',
+                'years', 'budgetMultiYear'
             )
         );
     }
