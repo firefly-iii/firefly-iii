@@ -1,4 +1,4 @@
-/* globals startDate, showOnlyTop, showFullList, endDate, reportType, accountIds, inOutReportUrl, accountReportUrl */
+/* globals startDate, showOnlyTop, showFullList, endDate, reportType, expenseReportUri, accountIds, incExpReportUri,accountReportUri, incomeReportUri */
 /*
  * all.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -13,23 +13,19 @@ $(function () {
 
 
     // load the account report, which this report shows:
-    loadAccountReport();
+    loadAjaxPartial('accountReport', accountReportUri);
 
-    // load income / expense / difference:
-    loadInOutReport();
-
-    // trigger info click
-    triggerInfoClick();
-
-    // trigger list length things:
-    listLengthInitial();
+    // load income and expense reports:
+    loadAjaxPartial('incomeReport',incomeReportUri);
+    loadAjaxPartial('expenseReport',expenseReportUri);
+    loadAjaxPartial('incomeVsExpenseReport',incExpReportUri);
 
 });
 
 function triggerInfoClick() {
     "use strict";
     // find the little info buttons and respond to them.
-    $('.firefly-info-button').unbind('clicl').click(clickInfoButton);
+    $('.firefly-info-button').unbind('click').click(clickInfoButton);
 }
 
 function listLengthInitial() {
@@ -56,44 +52,6 @@ function triggerList(e) {
     link.text(showOnlyTop);
 
     return false;
-}
-
-function loadInOutReport() {
-    "use strict";
-    console.log('Going to grab ' + inOutReportUrl);
-    $.get(inOutReportUrl).done(placeInOutReport).fail(failInOutReport);
-}
-
-function placeInOutReport(data) {
-    "use strict";
-    $('#incomeReport').removeClass('loading').html(data.income);
-    $('#expenseReport').removeClass('loading').html(data.expenses);
-    $('#incomeVsExpenseReport').removeClass('loading').html(data.incomes_expenses);
-    listLengthInitial();
-    triggerInfoClick();
-}
-
-function failInOutReport() {
-    "use strict";
-    console.log('Fail in/out report data!');
-    $('#incomeReport').removeClass('loading').addClass('general-chart-error');
-    $('#expenseReport').removeClass('loading').addClass('general-chart-error');
-    $('#incomeVsExpenseReport').removeClass('loading').addClass('general-chart-error');
-}
-
-function loadAccountReport() {
-    "use strict";
-    $.get(accountReportUrl).done(placeAccountReport).fail(failAccountReport);
-}
-
-function placeAccountReport(data) {
-    "use strict";
-    $('#accountReport').removeClass('loading').html(data);
-}
-
-function failAccountReport(data) {
-    "use strict";
-    $('#accountReport').removeClass('loading').addClass('general-chart-error');
 }
 
 function clickInfoButton(e) {
@@ -125,8 +83,7 @@ function respondInfoButton(data) {
     "use strict";
     // remove wait cursor
     $('body').removeClass('waiting');
-    $('#defaultModal').empty().html(data.html);
-    $('#defaultModal').modal('show');
+    $('#defaultModal').empty().html(data.html).modal('show');
 
 }
 
@@ -150,6 +107,12 @@ function displayAjaxPartial(data, holder) {
 
     // find a sortable table and make it sortable:
     $.bootstrapSortable(true);
+
+    // find the info click things and respond to them:
+    triggerInfoClick();
+
+    // trigger list thing
+    listLengthInitial();
 }
 
 function failAjaxPartial(uri, holder) {

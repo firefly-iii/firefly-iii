@@ -316,10 +316,20 @@ Route::group(
         ['uses' => 'Report\AccountController@accountReport', 'as' => 'reports.data.accountReport']
     );
 
-    // income report
+    // income and expenses report
     Route::get(
-        '/reports/data/in-out-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\InOutController@inOutReport', 'as' => 'reports.data.inOutReport']
+        '/reports/data/inc-exp-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@incExpReport', 'as' => 'reports.data.incExpReport']
+    );
+    // (income report):
+    Route::get(
+        '/reports/data/income-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@incomeReport', 'as' => 'reports.data.incomeReport']
+    );
+    // (expense report):
+    Route::get(
+        '/reports/data/expense-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@expenseReport', 'as' => 'reports.data.expenseReport']
     );
 
     // category report:

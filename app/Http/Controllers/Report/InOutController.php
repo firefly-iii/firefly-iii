@@ -19,7 +19,6 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Response;
 
 /**
  * Class InOutController
@@ -37,29 +36,83 @@ class InOutController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function inOutReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    public function expenseReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('in-out-report');
+        $cache->addProperty('expense-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return $cache->get();
+        }
+
+        $expenses = $helper->getExpenseReport($start, $end, $accounts);
+
+        $result = view('reports.partials.expenses', compact('expenses'))->render();
+        $cache->store($result);
+
+        return $result;
+
+    }
+
+    /**
+     * @param ReportHelperInterface $helper
+     * @param Carbon                $start
+     * @param Carbon                $end
+     * @param Collection            $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incExpReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('inc-exp-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
         }
 
         $incomes  = $helper->getIncomeReport($start, $end, $accounts);
         $expenses = $helper->getExpenseReport($start, $end, $accounts);
 
-        $result = [
-            'income'           => view('reports.partials.income', compact('incomes'))->render(),
-            'expenses'         => view('reports.partials.expenses', compact('expenses'))->render(),
-            'incomes_expenses' => view('reports.partials.income-vs-expenses', compact('expenses', 'incomes'))->render(),
-        ];
+        $result = view('reports.partials.income-vs-expenses', compact('expenses', 'incomes'))->render();
         $cache->store($result);
 
-        return Response::json($result);
+        return $result;
+
+    }
+
+    /**
+     * @param ReportHelperInterface $helper
+     * @param Carbon                $start
+     * @param Carbon                $end
+     * @param Collection            $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incomeReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('income-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $incomes = $helper->getIncomeReport($start, $end, $accounts);
+
+        $result = view('reports.partials.income', compact('incomes'))->render();
+        $cache->store($result);
+
+        return $result;
 
     }
 

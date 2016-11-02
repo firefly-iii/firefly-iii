@@ -1,4 +1,4 @@
-/* globals google, accountIds, budgetYearOverviewUrl */
+/* globals google, accountIds, budgetYearOverviewUri */
 
 var chartDrawn;
 var budgetChart;
@@ -7,29 +7,8 @@ $(function () {
     chartDrawn = false;
     drawChart();
 
-    //
-    loadBudgetOverview();
+    loadAjaxPartial('budgetOverview',budgetYearOverviewUri);
 });
-
-function loadBudgetOverview() {
-    "use strict";
-    console.log('Going to grab ' + budgetYearOverviewUrl);
-    $.get(budgetYearOverviewUrl).done(placeBudgetOverview).fail(failBudgetOverview);
-}
-
-function placeBudgetOverview(data) {
-    "use strict";
-    $('#budgetOverview').removeClass('loading').html(data);
-    $('.budget-chart-activate').on('click', clickBudgetChart);
-}
-
-function failBudgetOverview() {
-    "use strict";
-    console.log('Fail budget overview data!');
-    $('#budgetOverview').removeClass('loading').addClass('general-chart-error');
-}
-
-
 
 function drawChart() {
     "use strict";
