@@ -196,6 +196,7 @@ Route::group(
 
     // budgets:
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
+    Route::get('/chart/budget/period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@period']);
 
     // this chart is used in reports:
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
@@ -215,6 +216,7 @@ Route::group(
     Route::get('/chart/report/in-out/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
     Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
     Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
+
 
     /**
      * IMPORT CONTROLLER

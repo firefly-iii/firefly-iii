@@ -11,14 +11,13 @@ $(function () {
     "use strict";
 
 
-
     // load the account report, which this report shows:
     loadAjaxPartial('accountReport', accountReportUri);
 
     // load income and expense reports:
-    loadAjaxPartial('incomeReport',incomeReportUri);
-    loadAjaxPartial('expenseReport',expenseReportUri);
-    loadAjaxPartial('incomeVsExpenseReport',incExpReportUri);
+    loadAjaxPartial('incomeReport', incomeReportUri);
+    loadAjaxPartial('expenseReport', expenseReportUri);
+    loadAjaxPartial('incomeVsExpenseReport', incExpReportUri);
 
 });
 
@@ -106,13 +105,19 @@ function displayAjaxPartial(data, holder) {
     // call some often needed recalculations and what-not:
 
     // find a sortable table and make it sortable:
-    $.bootstrapSortable(true);
+    if (typeof $.bootstrapSortable === "function") {
+        $.bootstrapSortable(true);
+    }
 
     // find the info click things and respond to them:
     triggerInfoClick();
 
     // trigger list thing
     listLengthInitial();
+
+    // trigger thing for budgets:
+    $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
+
 }
 
 function failAjaxPartial(uri, holder) {
