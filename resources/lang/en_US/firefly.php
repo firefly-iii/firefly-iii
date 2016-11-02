@@ -867,11 +867,9 @@ return [
     'import_double'                    => 'Row #:row: This row has been imported before, and is stored in <a href=":link">:description</a>.',
     'import_finished_all'              => 'The import has finished. Please check out the results below.',
     'import_with_key'                  => 'Import with key \':key\'',
-
-    'import_share_configuration' => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
-
-    'import_finished_report' => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
-    'import_finished_link'   => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-
+    'import_share_configuration'       => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
+    'import_finished_report'           => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
+    'import_finished_link'             => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'need_at_least_one_account'        => 'You need at least one asset account to be able to create piggy banks',
 
 ];
