@@ -26,6 +26,8 @@ use Route;
  */
 class Help implements HelpInterface
 {
+    /** @var string */
+    protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36';
 
     /**
      * @param string $route
@@ -51,9 +53,10 @@ class Help implements HelpInterface
 
         $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
         Log::debug(sprintf('Trying to get %s...', $uri));
+        $opt     = ['useragent' => $this->userAgent];
         $content = '';
         try {
-            $result = Requests::get($uri);
+            $result = Requests::get($uri, [], $opt);
         } catch (Requests_Exception $e) {
             Log::error($e);
 
@@ -70,6 +73,9 @@ class Help implements HelpInterface
             Log::debug('Content is longer than zero. Expect something.');
             $converter = new CommonMarkConverter();
             $content   = $converter->convertToHtml($content);
+        }
+        if (strlen($content) === 0) {
+            Log::warning('Raw content length is zero.');
         }
 
         return $content;
@@ -95,7 +101,7 @@ class Help implements HelpInterface
      */
     public function inCache(string $route, string $language):bool
     {
-        $line = sprintf('help.%s.%s', $route, $language);
+        $line   = sprintf('help.%s.%s', $route, $language);
         $result = Cache::has($line);
         if ($result) {
             Log::debug(sprintf('Cache has this entry: %s', 'help.' . $route . '.' . $language));
@@ -119,7 +125,11 @@ class Help implements HelpInterface
     public function putInCache(string $route, string $language, string $content)
     {
         $key = sprintf('help.%s.%s', $route, $language);
-        Log::debug(sprintf('Will store entry in cache: %s', $key));
-        Cache::put($key, $content, 10080); // a week.
+        if (strlen($content) > 0) {
+            Log::debug(sprintf('Will store entry in cache: %s', $key));
+            Cache::put($key, $content, 10080); // a week.
+            return;
+        }
+        Log::info(sprintf('Will not cache %s because content is empty.', $key));
     }
 }

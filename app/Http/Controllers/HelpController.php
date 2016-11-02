@@ -44,7 +44,6 @@ class HelpController extends Controller
 
         $language    = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         $content     = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
-        $alternative = false;
 
         if (!$help->hasRoute($route)) {
             Log::error('No such route: ' . $route);
@@ -54,7 +53,7 @@ class HelpController extends Controller
 
         if ($help->inCache($route, $language)) {
             $content = $help->getFromCache($route, $language);
-            Log::debug('Help text was in cache.');
+            Log::debug(sprintf('Help text %s was in cache.', $language));
 
             return Response::json($content);
         }
@@ -63,13 +62,15 @@ class HelpController extends Controller
 
         // get backup language content (try English):
         if (strlen($content) === 0) {
-            $language    = 'en_US';
-            $content     = $help->getFromGithub($language, $route);
-            $alternative = true;
-        }
-
-        if ($alternative && strlen($content) > 0) {
-            $content = '<p><em>' . strval(trans('firefly.help_may_not_be_your_language')) . '</em></p>' . $content;
+            $language = 'en_US';
+            if ($help->inCache($route, $language)) {
+                Log::debug(sprintf('Help text %s was in cache.', $language));
+                $content = $help->getFromCache($route, $language);
+            }
+            if (!$help->inCache($route, $language)) {
+                $content = $help->getFromGithub($language, $route);
+                $content = '<p><em>' . strval(trans('firefly.help_may_not_be_your_language')) . '</em></p>' . $content;
+            }
         }
 
         if (strlen($content) === 0) {
