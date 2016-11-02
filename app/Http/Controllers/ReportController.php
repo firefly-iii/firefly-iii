@@ -244,8 +244,7 @@ class ReportController extends Controller
     {
         // need all budgets
         // need all years.
-        $years           = $this->helper->listOfYears($start, $end);
-        $budgetMultiYear = $this->helper->getBudgetMultiYear($start, $end, $accounts);
+
 
 
         // and some id's, joined:
@@ -259,8 +258,7 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'accounts', 'start', 'end', 'accountIds', 'reportType',
-                'years', 'budgetMultiYear'
+                'accounts', 'start', 'end', 'accountIds', 'reportType'
             )
         );
     }

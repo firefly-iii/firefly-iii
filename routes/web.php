@@ -345,6 +345,12 @@ Route::group(
         ['uses' => 'Report\BudgetController@budgetYearOverview', 'as' => 'reports.data.budgetYearOverview']
     );
 
+    // budget multi year overview
+    Route::get(
+        '/reports/data/budget-multi-year/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BudgetController@budgetMultiYear', 'as' => 'reports.data.budgetMultiYear']
+    );
+
 
     /**
      * Rules Controller

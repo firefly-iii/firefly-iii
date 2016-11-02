@@ -91,40 +91,8 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
-                <div class="box-body no-padding table-responsive">
-                    <table class="table table-hover sortable">
-                        <thead>
-                        <tr>
-                            <th>{{ 'budget'|_ }}</th>
-                            {% for year in years %}
-                                <th>{{ year }}</th>
-                            {% endfor %}
-                            <th>{{ 'sum'|_ }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for id, info in budgetMultiYear %}
-                            <tr>
-                                <td>
-                                    {% if id == 0 %}
-                                        <a href="{{ route('budgets.noBudget') }}">{{ info.name }}</a>
+                <div class="box-body no-padding table-responsive loading" id="budgetMultiYear">
 
-                                    {% else %}
-                                        <a href="{{ route('budgets.show', id) }}">{{ info.name }}</a>
-                                    {% endif %}
-                                </td>
-                                {% for amount in info.entries %}
-                                    <td data-value="{{ amount }}">
-                                        {{ amount|formatAmount }}
-                                    </td>
-                                {% endfor %}
-                                <td data-value="{{ info.sum }}">
-                                    {{ info.sum|formatAmount }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -152,6 +120,7 @@
         <!-- some URL's -->
         var accountReportUrl = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
         var inOutReportUrl = '{{ route('reports.data.inOutReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var budgetMultiUrl = '{{ route('reports.data.budgetMultiYear', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
 
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>

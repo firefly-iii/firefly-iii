@@ -1,12 +1,12 @@
-/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds , picker:true, minDate, year, month, columnChart, lineChart, stackedColumnChart */
+/* globals budgetMultiUrl, accountIds */
 
 
 $(function () {
     "use strict";
     drawChart();
 
+    loadAjaxPartial('budgetMultiYear', budgetMultiUrl);
 });
-
 
 function drawChart() {
     "use strict";

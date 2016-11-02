@@ -294,7 +294,7 @@ class Transaction extends Twig_Extension
 
             switch ($transaction->transaction_type_type) {
                 case TransactionType::WITHDRAWAL:
-                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>' . trans('firefly.withdrawal'));
+                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
                     break;
                 case TransactionType::DEPOSIT:
                     $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));

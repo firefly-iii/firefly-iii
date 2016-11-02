@@ -129,3 +129,32 @@ function respondInfoButton(data) {
     $('#defaultModal').modal('show');
 
 }
+
+function loadAjaxPartial(holder, uri) {
+    "use strict";
+    console.log('Going to grab URI ' + uri);
+    $.get(uri).done(function (data) {
+        displayAjaxPartial(data, holder);
+    }).fail(function () {
+        failAjaxPartial(uri, holder);
+    });
+}
+
+function displayAjaxPartial(data, holder) {
+    "use strict";
+    console.log('Display stuff in ' + holder);
+    var obj = $('#' + holder);
+    obj.removeClass('loading').html(data);
+
+    // call some often needed recalculations and what-not:
+
+    // find a sortable table and make it sortable:
+    $.bootstrapSortable(true);
+}
+
+function failAjaxPartial(uri, holder) {
+    "use strict";
+    console.log('Failed to load' + uri);
+    $('#' + holder).removeClass('loading').addClass('general-chart-error');
+
+}

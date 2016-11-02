@@ -12,7 +12,7 @@
                 </div>
                 <div class="box-body table-responsive">
                     {% if domains|length > 0 %}
-                        <table class="table table-condensed table-sortable">
+                        <table class="table table-condensed sortable">
                             <thead>
                             <tr>
                                 <th style="width:20%;">&nbsp;</th>
@@ -59,7 +59,7 @@
                             {{ 'all_domains_is_filtered'|_ }}
 
                         </p>
-                        <table class="table table-condensed table-sortable">
+                        <table class="table table-condensed sortable">
                             <thead>
                             <tr>
                                 <th style="width:20%;">&nbsp;</th>
@@ -117,4 +117,10 @@
     </div>
 
 
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
 {% endblock %}

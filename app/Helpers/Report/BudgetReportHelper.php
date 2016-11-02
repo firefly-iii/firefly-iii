@@ -15,13 +15,17 @@ namespace FireflyIII\Helpers\Report;
 
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use stdClass;
 
 /**
  * Class BudgetReportHelper
@@ -95,6 +99,66 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $cache->store($return);
 
         return $return;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getBudgetMultiYear(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        $accountIds = $accounts->pluck('id')->toArray();
+        $query      = TransactionJournal
+            ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin(
+                'transactions', function (JoinClause $join) {
+                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+            }
+            )
+            ->whereNull('transaction_journals.deleted_at')
+            ->whereNull('transactions.deleted_at')
+            ->where('transaction_types.type', 'Withdrawal')
+            ->where('transaction_journals.user_id', auth()->user()->id);
+
+        if (count($accountIds) > 0) {
+            $query->whereIn('transactions.account_id', $accountIds);
+        }
+        $query->groupBy(['budget_transaction_journal.budget_id', 'the_year']);
+        $queryResult = $query->get(
+            [
+                'budget_transaction_journal.budget_id',
+                DB::raw('DATE_FORMAT(transaction_journals.date,"%Y") AS the_year'),
+                DB::raw('SUM(transactions.amount) as sum_of_period'),
+            ]
+        );
+
+        $data    = [];
+        $budgets = $this->repository->getBudgets();
+        $years   = $this->listOfYears($start, $end);
+
+        // do budget "zero"
+        $emptyBudget       = new Budget;
+        $emptyBudget->id   = 0;
+        $emptyBudget->name = strval(trans('firefly.no_budget'));
+        $budgets->push($emptyBudget);
+
+
+        // get all budgets and years.
+        foreach ($budgets as $budget) {
+            $data[$budget->id] = [
+                'name'    => $budget->name,
+                'entries' => $this->filterAmounts($queryResult, $budget->id, $years),
+                'sum'     => '0',
+            ];
+        }
+        // filter out empty ones and fill sum:
+        $data = $this->getBudgetMultiYearMeta($data);
+
+        return $data;
     }
 
     /**
@@ -183,30 +247,21 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
-     * and sum up everything in the array in the given range.
-     *
      * @param Carbon $start
      * @param Carbon $end
-     * @param array  $array
      *
-     * @return string
+     * @return array
      */
-    protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
+    public function listOfYears(Carbon $start, Carbon $end): array
     {
-        $sum          = '0';
-        $currentStart = clone $start; // to not mess with the original one
-        $currentEnd   = clone $end; // to not mess with the original one
-
-        while ($currentStart <= $currentEnd) {
-            $date = $currentStart->format('Y-m-d');
-            if (isset($array[$date])) {
-                $sum = bcadd($sum, $array[$date]);
-            }
-            $currentStart->addDay();
+        $begin = clone $start;
+        $years = [];
+        while ($begin < $end) {
+            $years[] = $begin->year;
+            $begin->addYear();
         }
 
-        return $sum;
+        return $years;
     }
 
     /**
@@ -245,6 +300,59 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         }
 
         return $headers;
+    }
+
+    /**
+     * @param Collection $set
+     * @param int        $budgetId
+     * @param array      $years
+     *
+     * @return array
+     */
+    private function filterAmounts(Collection $set, int $budgetId, array $years):array
+    {
+        $arr = [];
+        foreach ($years as $year) {
+            /** @var stdClass $object */
+            $result = $set->filter(
+                function (TransactionJournal $object) use ($budgetId, $year) {
+                    return intval($object->the_year) === $year && $budgetId === intval($object->budget_id);
+                }
+            );
+            $amount = '0';
+            if (!is_null($result->first())) {
+                $amount = $result->first()->sum_of_period;
+            }
+
+            $arr[$year] = $amount;
+        }
+
+        return $arr;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    private function getBudgetMultiYearMeta(array $data): array
+    {
+        /**
+         * @var int   $budgetId
+         * @var array $set
+         */
+        foreach ($data as $budgetId => $set) {
+            $sum = '0';
+            foreach ($set['entries'] as $amount) {
+                $sum = bcadd($amount, $sum);
+            }
+            $data[$budgetId]['sum'] = $sum;
+            if (bccomp('0', $sum) === 0) {
+                unset($data[$budgetId]);
+            }
+        }
+
+        return $data;
     }
 
     /**
