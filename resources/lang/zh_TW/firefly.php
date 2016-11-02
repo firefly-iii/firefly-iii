@@ -72,6 +72,8 @@ return [
     'destination_accounts'                       => '目標帳戶',
     'user_id_is'                                 => 'Your user id is <strong>:user</strong>',
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
+    'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticker on Github</a>.',
+
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
