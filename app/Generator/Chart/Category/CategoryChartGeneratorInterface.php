@@ -50,13 +50,6 @@ interface CategoryChartGeneratorInterface
      *
      * @return array
      */
-    public function multiYear(Collection $entries): array;
-
-    /**
-     * @param Collection $entries
-     *
-     * @return array
-     */
     public function period(Collection $entries): array;
 
     /**

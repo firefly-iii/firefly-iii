@@ -102,40 +102,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 
     /**
      * @param Collection $entries
-     *
-     * @return array
-     */
-    public function multiYear(Collection $entries): array
-    {
-        // dataset:
-        $data = [
-            'count'    => 0,
-            'labels'   => [],
-            'datasets' => [],
-        ];
-        // get labels from one of the budgets (assuming there's at least one):
-        $first = $entries->first();
-        $keys  = array_keys($first['budgeted']);
-        foreach ($keys as $year) {
-            $data['labels'][] = strval($year);
-        }
-
-        // then, loop all entries and create datasets:
-        foreach ($entries as $entry) {
-            $name               = $entry['name'];
-            $spent              = $entry['spent'];
-            $budgeted           = $entry['budgeted'];
-            $data['datasets'][] = ['label' => 'Spent on ' . $name, 'data' => array_values($spent)];
-            $data['datasets'][] = ['label' => 'Budgeted for ' . $name, 'data' => array_values($budgeted)];
-        }
-        $data['count'] = count($data['datasets']);
-
-        return $data;
-
-    }
-
-    /**
-     * @param Collection $entries
      * @param string     $viewRange
      *
      * @return array

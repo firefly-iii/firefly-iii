@@ -21,8 +21,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Session;
@@ -244,10 +242,11 @@ class ReportController extends Controller
      */
     private function defaultMultiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
+        // need all budgets
+        // need all years.
+        $years           = $this->helper->listOfYears($start, $end);
+        $budgetMultiYear = $this->helper->getBudgetMultiYear($start, $end, $accounts);
 
-        $budgets    = app(BudgetRepositoryInterface::class)->getActiveBudgets();
-        $categories = app(CategoryRepositoryInterface::class)->getCategories();
-        $tags       = $this->helper->tagReport($start, $end, $accounts);
 
         // and some id's, joined:
         $accountIds = [];
@@ -260,7 +259,8 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'budgets', 'accounts', 'categories', 'start', 'end', 'accountIds', 'reportType', 'tags'
+                'accounts', 'start', 'end', 'accountIds', 'reportType',
+                'years', 'budgetMultiYear'
             )
         );
     }
@@ -275,8 +275,6 @@ class ReportController extends Controller
      */
     private function defaultYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
     {
-        $tags = $this->helper->tagReport($start, $end, $accounts);
-
         Session::flash('gaEventCategory', 'report');
         Session::flash('gaEventAction', 'year');
         Session::flash('gaEventLabel', $start->format('Y'));
@@ -293,7 +291,7 @@ class ReportController extends Controller
             'reports.default.year',
             compact(
                 'start', 'reportType',
-                'accountIds', 'end', 'tags'
+                'accountIds', 'end'
             )
         );
     }
