@@ -72,7 +72,7 @@ return [
     'destination_accounts'                       => 'Doelrekening(en)',
     'user_id_is'                                 => 'Je gebruikersnummer is <strong>:user</strong>',
     'field_supports_markdown'                    => 'Dit veld ondersteunt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
-    'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticker on Github</a>.',
+    'need_more_help'                             => 'Als je meer hulp nodig hebt met Firefly III, <a href="https://github.com/JC5/firefly-iii/issues">open dan een ticket op Github</a>.',
 
 
     // repeat frequencies:
