@@ -4,16 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.1.6] - 2016-11-05
 ### Added
+- New budget table for multi year report.
 
 ### Changed
-
-### Deprecated
-
-### Removed
+- Greatly expanded help pages and their function.
 
 ### Fixed
-
-### Security
+- #375, thanks to @schoentoon which made it impossible to resurrect currencies.
+- #370 thanks to @ksmolder
 
 
 ## [4.1.5] - 2016-11-01
