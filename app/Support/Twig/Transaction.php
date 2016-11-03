@@ -125,7 +125,7 @@ class Transaction extends Twig_Extension
                 && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0
             ) {
                 // not equal?
-                return ' (' . Amount::formatWithCode($code, $amount, true) . ')';
+                return sprintf(' (%s)', Amount::formatWithCode($code, $amount, true));
             }
 
             return '';
