@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => '匯入設定',
     'import_configure_intro' => '這裡有一些 CSV 匯入選項。請檢查你的 CSV 檔的第一列是否包含欄位名稱，和你的日期格式是什麼。你可能需要嘗試幾次來調整正確。欄位分隔符號是通常 ","，但也可能是";"；仔細檢查這一點。',
-    'import_configure_form'  => '表單',
+    'import_configure_form'  => 'Basic CSV import options',
     'header_help'            => 'CSV 檔的第一行是標題',
     'date_help'              => 'CSV 內的日期格式。請跟從<a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">這頁</a>內的格式來填寫。 系統預設能夠解析像這樣的日期： :dateExample 。',
     'delimiter_help'         => '請選擇你的檔案中所使用的欄位分隔符號。如果不肯定的話，逗號是最安全的選項。',
@@ -24,7 +24,6 @@ return [
 
     // roles
     'column_roles_title'     => '定義欄的內容',
-    'column_roles_text'      => '<p>Firefly III 猜不出每一欄中儲存了什麼資料。你必須告訴 Firefly 每一欄中有什麼資料。 下列的示範資料可以幫助你從列表中選擇正確類型。如果有欄位不能配對到有用的類型，請<a href="https://github.com/JC5/firefly-iii/issues/new">告訴我 (只有英語版本)</a>。</p><p>你的 CSV 檔中某些欄位可能已經存在於 Firefly III 的資料庫內，例如帳號名稱，或類別。如果你選擇「配對這些資料」， Firefly 會請你手動配對 CSV 檔和資料庫內的資料。這容許你微調你的匯入設定。</p>',
     'column_roles_table'     => '表格',
     'column_name'            => '欄位名稱',
     'column_example'         => '欄的示例資料',
