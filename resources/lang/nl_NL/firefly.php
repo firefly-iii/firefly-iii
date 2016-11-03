@@ -865,6 +865,6 @@ return [
     'import_share_configuration'       => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
     'import_finished_report'           => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
     'import_finished_link'             => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'need_at_least_one_account'        => 'You need at least one asset account to be able to create piggy banks',
-    'see_help_top_right'               => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
+    'need_at_least_one_account'        => 'Je moet minstens één betaalrekening hebben voor je spaarpotjes kan maken',
+    'see_help_top_right'               => 'Meer informatie vind je in de help pagina\'s. Gebruik daarvoor het icoontje rechtsboven in de hoek.',
 ];
