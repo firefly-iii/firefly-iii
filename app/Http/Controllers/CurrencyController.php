@@ -129,7 +129,7 @@ class CurrencyController extends Controller
 
         Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
         if (auth()->user()->hasRole('owner')) {
-            $currency->delete();
+            $currency->forceDelete();
         }
 
         return redirect(session('currency.delete.url'));
