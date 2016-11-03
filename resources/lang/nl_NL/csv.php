@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => 'Import configureren',
     'import_configure_intro' => 'Hier zie je enkele opties voor jouw CSV bestand. Geef aan of je CSV bestand kolomtitels bevat, en hoe het datumveld is opgebouwd. Hier moet je wellicht wat experimenteren. Het scheidingsteken is meestal een ",", maar dat kan ook een ";" zijn. Controleer dit zorgvuldig.',
-    'import_configure_form'  => 'Basic CSV import options',
+    'import_configure_form'  => 'Standaard CSV import opties',
     'header_help'            => 'Vink hier als de eerste rij kolomtitels bevat',
     'date_help'              => 'Datum/tijd formaat in jouw CSV bestand. Volg het formaat zoals ze het <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">op deze pagina</a> uitleggen. Het standaardformaat ziet er zo uit: :dateExample.',
     'delimiter_help'         => 'Kies het veldscheidingsteken dat in jouw bestand wordt gebruikt. Als je het niet zeker weet, is de komma de beste optie.',
